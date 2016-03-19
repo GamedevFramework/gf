@@ -1,0 +1,12 @@
+[submodule "library/vendor/gamecontrollerdb"]
+	path = library/vendor/gamecontrollerdb
+	url = https://github.com/gabomdq/SDL_GameControllerDB.git
+[submodule "library/vendor/tinyxml2"]
+	path = library/vendor/tinyxml2
+	url = https://github.com/leethomason/tinyxml2.git
+[submodule "library/vendor/stb"]
+	path = library/vendor/stb
+	url = https://github.com/nothings/stb.git
+[submodule "tests/googletest"]
+	path = tests/googletest
+	url = https://github.com/google/googletest.git
