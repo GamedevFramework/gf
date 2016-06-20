@@ -51,7 +51,7 @@ PROJECT_BRIEF          = "A C++11 framework for 2D games"
 # and the maximum width should not exceed 200 pixels. Doxygen will copy the logo
 # to the output directory.
 
-PROJECT_LOGO           = 
+PROJECT_LOGO           = @CMAKE_SOURCE_DIR@/gf_logo.png
 
 # The OUTPUT_DIRECTORY tag is used to specify the (relative or absolute) path
 # into which the generated documentation will be written. If a relative path is
@@ -1038,7 +1038,7 @@ VERBATIM_HEADERS       = YES
 # compiled with the --with-libclang option.
 # The default value is: NO.
 
-CLANG_ASSISTED_PARSING = NO
+CLANG_ASSISTED_PARSING = YES
 
 # If clang assisted parsing is enabled you can provide the compiler with command
 # line options that you would normally use when invoking the compiler. Note that
