@@ -1,0 +1,128 @@
+/**
+
+@defgroup core Core classes and functions
+@brief All the core generic classes and functions.
+
+- Math classes: gf::Vector, gf::Matrix, gf::Rect, gf::Range, gf::Direction, gf::Array2D
+- Stream classes: gf::InputStream, gf::FileInputStream, gf::MemoryInputStream
+- Utility classes: gf::Clock, gf::Time, gf::Random, gf::SystemInfo, gf::Singleton
+- Noise classes: gf::GradientNoise, gf::FractalNoise, gf::PerlinNoise
+
+@defgroup window Window classes
+@brief All the classes related to window management.
+
+@defgroup graphics Graphics classes
+@brief All the classes related to graphics.
+
+@defgroup game Game classes
+@brief All the classes related to game systems and game entities
+
+- Entities and models classes: gf::Entity, gf::EntityManager, gf::Model, gf::ModelManager
+- Application messages classes: gf::MessageManager, gf::Message
+- Resources classes: gf::AssetManager, gf::ResourceCache, gf::ResourceManager
+
+@mainpage
+
+@tableofcontents
+
+__Gamedev Framework (gf)__ is a framework to build 2D games in C++11. It is based on [SDL](https://www.libsdl.org/) and [OpenGL ES 2.0](https://www.khronos.org/opengles/2_X/), and presents an API that is very similar to the graphics module of [SFML](http://www.sfml-dev.org/) (see @ref differences_with_sfml) with additional features. It is _not_ a [game engine](https://en.wikipedia.org/wiki/Game_engine), it is more something like a framework, similar to [libGDX](https://libgdx.badlogicgames.com/) in the Java world.
+
+Gamedev Framework (gf) is licensed under the terms and conditions of the [zlib/libpng license](https://opensource.org/licenses/Zlib).
+
+@sa [The Engine FAQ on /r/gamedev wiki](https://www.reddit.com/r/gamedev/wiki/engine_faq)
+
+@section first First example
+
+~~~{.cc}
+#include <gf/Event.h>
+#include <gf/Font.h>
+#include <gf/RenderWindow.h>
+#include <gf/Sprite.h>
+#include <gf/Text.h>
+#include <gf/Window.h>
+
+int main() {
+  // Create the main window and the renderer
+
+  gf::Window window("Example", { 640, 480 });
+  gf::RenderWindow renderer(window);
+
+  // Load a sprite to display
+
+  gf::Texture texture;
+  if (!texture.loadFromFile("sprite.png")) {
+    return EXIT_FAILURE;
+  }
+
+  gf::Sprite sprite(texture);
+  sprite.setPosition({ 300, 200 });
+
+  // Create a graphical text to display
+
+  gf::Font font;
+  if (!font.loadFromFile("DroidSans.ttf")) {
+    return EXIT_FAILURE;
+  }
+
+  gf::Text text("Hello gf!", font, 50);
+  text.setPosition({ 100, 100 });
+
+  renderer.clear(gf::Color::White);
+
+  // Start the game loop
+
+  while (window.isOpen()) {
+
+    // Process events
+
+    gf::Event event;
+
+    while (window.pollEvent(event)) {
+      switch (event.type) {
+        case gf::EventType::Closed:
+          window.close();
+          break;
+
+        default:
+          break;
+      }
+    }
+
+    // Draw the entities
+
+    renderer.clear();
+    renderer.draw(sprite);
+    renderer.draw(text);
+    renderer.display();
+  }
+
+  return 0;
+}
+~~~
+
+@section documentation Documentation
+
+1. Introduction to gf
+  - @ref features
+  - @ref build_and_install
+  - @ref differences_with_sfml
+  - @ref recommanded_libraries
+2. Tutorial on gf
+  - @ref start_game
+3. User documentation
+  1. Core classes
+    - @ref noise
+  2. Graphics classes
+    - @ref shader
+4. Developper's corner
+  - @ref devel
+  - @ref opengl
+  - @ref road_to_v1
+
+@section source Source
+
+The source code is available on [github](https://github.com/GamedevFramework/gf).
+
+
+
+*/

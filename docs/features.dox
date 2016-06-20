@@ -1,0 +1,20 @@
+/**
+@page features Features of Gamedev Framework (gf)
+
+- Basics
+  - Vector and matrix library
+  - Multiple monitors handling
+  - Complete window events
+  - Complte input events, including gamepads
+  - Easy fullscreen
+  - Views (a.k.a. cameras)
+- Graphics
+  - Sprites and animated sprites
+  - Text and fonts
+  - NinePatch
+  - Sprite batch
+  - Texture atlas
+  - Tile layers
+  - Post-processing effects
+
+*/

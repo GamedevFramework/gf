@@ -1,0 +1,24 @@
+body, table, div, p, dl {
+  font: sans-serif;
+  font-size: 12pt;
+}
+
+.textblock a {
+  text-decoration: underline;
+}
+
+.textblock h1 {
+  font-size: 18pt;
+}
+
+.textblock h2 {
+  font-size: 16pt;
+}
+
+div.line {
+  font-size: 11pt;
+}
+
+img {
+  max-width: 50%;
+}

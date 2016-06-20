@@ -1,0 +1,30 @@
+/**
+@page road_to_v1 Road to version 1.0
+
+@section v1 gf 1.0
+
+Gamedev Framework aims to publish a stable version 1.0 as soon as possible.
+
+Here are the the roadmap that will lead to version 1.0:
+
+- Set the version number of the dependencies, especially SDL
+- Decide on the features to be implemented
+- Port to Windows
+- Implement everything
+- Write documentation
+- Try to make some tests with basic classes
+
+For now, the _possible_ features not yet implemented are:
+
+- Tweening library
+- Geometry algorithms (Delaunay triangulation, convex hull, ...)
+- Collision detection
+- Particles
+- Widgets / Immediate Mode GUI
+- _Put your own feature_: [open an issue](https://github.com/GamedevFramework/gf/issues) with the ["enhancement" label](https://github.com/GamedevFramework/gf/labels/enhancement)
+
+@section guarantees Guarantees until 1.0
+
+Until 1.0, there is no strong guarantee on a stable ABI or stable API. Yet, we try to keep the API and ABI as stable as possible until 1.0.
+
+*/

@@ -1,0 +1,33 @@
+/**
+
+@page opengl OpenGL in gf
+
+@tableofcontents
+
+@section gl_why Why OpenGL ES 2.0?
+
+Gamedev Framework is based on Open GL ES 2.0. This choice is motivated by the following facts:
+
+- OpenGL ES 2.0 is quite old (2007) but is everywhere from desktop computers to mobile devices. Open GL ES 3.0 is too young (2012).
+- WebGL is based on OpenGL ES 2.0, so as soon as there is a browser that supports WebGL, there is a driver that has the features for OpenGL ES 2.0.
+- The features of OpenGL ES 2.0 reflects the modern way of doing OpenGL (bye bye `glBegin()`, hello shaders).
+- Some features are missing in OpenGL ES 2.0 compared to OpenGL but it's not really a problem for 2D
+- It has been present in [Mesa 3D](http://www.mesa3d.org/) since Mesa 3D 8.0 in 2012.
+
+@section Conventions
+
+@subsection gl_textures Textures
+
+In OpenGL, texture data should be uploaded beginning with the lower left corner. In gf, textures are uploaded beginning with the upper left corner, meaning that they are horizontally flipped in graphical memory. This is not a problem.
+
+Indeed, texture coordinates normally range from @f$ 0 @f$ to @f$ 1 @f$, @f$ (0,0) @f$ being the lower left corner. In gf, the convention is that @f$ (0,0) @f$ represents the upper left corner, which is more intuitive for a graphical application.
+
+@sa [glTexImage2D](http://docs.gl/es2/glTexImage2D), [open.gl: Textures objects and parameters](https://open.gl/textures)
+
+@subsection gl_matrices Matrices
+
+In OpenGL, matrices are defined in column major order. In gf, gf::Matrix is defined in row major order. So, when uploaded directly, the matrix is transposed. As a consequence, in the shader, instead of doing a matrix-vector multiplication, we have to do a vector-matrix multiplication and that's it.
+
+@sa [glUniformMatrix{2|3|4}fv](http://docs.gl/es2/glUniform), [Stack Overflow: Using row-major in OpenGL shader](http://stackoverflow.com/questions/16893536/using-row-major-in-opengl-shader)
+
+*/
