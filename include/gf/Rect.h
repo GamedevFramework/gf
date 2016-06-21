@@ -140,7 +140,7 @@ inline namespace v1 {
      * @param rectPosition Position of the top left corner of the rectangle
      * @param rectSize Size of the rectangle
      */
-    constexpr Rect(const Vector<T, 2>& rectPosition, const Vector<T, 2>& rectSize) noexcept
+    Rect(const Vector<T, 2>& rectPosition, const Vector<T, 2>& rectSize) noexcept
     : position(rectPosition), size(rectSize)
     {
 

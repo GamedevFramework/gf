@@ -34,31 +34,31 @@ inline namespace v1 {
    * @ingroup core
    * @brief The @f$ \pi @f$ constant
    */
-  GF_API constexpr float Pi = 3.14159265358979323846f;
+  constexpr float Pi = 3.14159265358979323846f;
 
   /**
    * @ingroup core
    * @brief The @f$ \frac{\pi}{2} @f$ constant
    */
-  GF_API constexpr float Pi2 = Pi / 2;
+  constexpr float Pi2 = Pi / 2;
 
   /**
    * @ingroup core
    * @brief The @f$ \frac{\pi}{4} @f$ constant
    */
-  GF_API constexpr float Pi4 = Pi / 4;
+  constexpr float Pi4 = Pi / 4;
 
   /**
    * @ingroup core
    * @brief The @f$ \sqrt{2} @f$ constant
    */
-  GF_API constexpr float Sqrt2 = 1.41421356237309504880f;
+  constexpr float Sqrt2 = 1.41421356237309504880f;
 
   /**
    * @ingroup core
    * @brief The @f$ \frac{1}{\sqrt{2}} @f$ constant
    */
-  GF_API constexpr float InvSqrt2 = 1 / Sqrt2;
+  constexpr float InvSqrt2 = 1 / Sqrt2;
 
 
   /**

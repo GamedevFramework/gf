@@ -38,11 +38,11 @@ inline namespace v1 {
     }
 
     // generate permutation
-    std::uniform_int_distribution<uint8_t> dist(0, 255);
+    std::uniform_int_distribution<std::size_t> dist(0, 255);
 
     for (unsigned i = 0; i < 2560; ++i) {
-      uint8_t j = dist(engine.getEngine());
-      uint8_t k = dist(engine.getEngine());
+      auto j = dist(engine.getEngine());
+      auto k = dist(engine.getEngine());
       std::swap(perm[j], perm[k]);
     }
   }

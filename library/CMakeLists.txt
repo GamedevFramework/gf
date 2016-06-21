@@ -105,7 +105,7 @@ target_link_libraries(gf0
 
 # workaround for Travis-CI
 # see: https://bugs.launchpad.net/ubuntu/+source/gcc-5/+bug/1568899
-if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   target_link_libraries(gf0
     gcc_s
     gcc

@@ -49,7 +49,7 @@ int main() {
 
   gf::Sprite sprite(texture);
   sprite.setPosition({ 320, 240 });
-  sprite.setScale({ 0.8, 0.8 });
+  sprite.setScale({ 0.8f, 0.8f });
   sprite.setAnchor(gf::Anchor::Center);
 
   std::cout << "Gamedev Framework (gf) example #12: Sprite\n";
