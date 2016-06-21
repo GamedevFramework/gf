@@ -83,11 +83,11 @@ TEST(Vector2Test, AltFields) {
   EXPECT_EQ(42, vec.u);
   EXPECT_EQ(42, vec.s);
   EXPECT_EQ(42, vec.width);
-  EXPECT_EQ(42, vec.row);
+  EXPECT_EQ(42, vec.col);
 
   EXPECT_EQ(69, vec.y);
   EXPECT_EQ(69, vec.v);
   EXPECT_EQ(69, vec.t);
   EXPECT_EQ(69, vec.height);
-  EXPECT_EQ(69, vec.col);
+  EXPECT_EQ(69, vec.row);
 }
