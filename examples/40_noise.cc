@@ -21,6 +21,7 @@
 #include <cassert>
 #include <algorithm>
 #include <tuple>
+#include <iostream>
 
 #include <gf/Array2D.h>
 #include <gf/Event.h>
