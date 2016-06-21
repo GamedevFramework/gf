@@ -48,4 +48,6 @@ before_script:
   - mkdir build
   - cd build
   - cmake -DCMAKE_CXX_COMPILER=$CXX_COMPILER -DCMAKE_C_COMPILER=$C_COMPILER ..
-script: make
+script:
+  - make
+  - ./tests/gf_tests
