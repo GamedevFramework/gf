@@ -29,8 +29,6 @@ __Gamedev Framework (gf)__ is a framework to build 2D games in C++11. It is base
 
 Gamedev Framework (gf) is licensed under the terms and conditions of the [zlib/libpng license](https://opensource.org/licenses/Zlib).
 
-@sa [The Engine FAQ on /r/gamedev wiki](https://www.reddit.com/r/gamedev/wiki/engine_faq)
-
 @section first First example
 
 ~~~{.cc}
