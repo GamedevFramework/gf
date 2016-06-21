@@ -21,8 +21,24 @@ find_package(SDL2 REQUIRED)
 find_package(Boost REQUIRED COMPONENTS filesystem system)
 find_package(Freetype REQUIRED)
 
-add_definitions(-Wall -Wextra -g -O2 -std=c++11) # -pg)
-# set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pg")
+if(MSVC)
+  set(GF_COMMON_FLAGS "/W4")
+  set(CMAKE_CXX_FLAGS_DEBUG           "${GF_COMMON_FLAGS} ${CMAKE_CXX_FLAGS_DEBUG}")
+  set(CMAKE_CXX_FLAGS_MINSIZEREL      "${GF_COMMON_FLAGS} ${CMAKE_CXX_FLAGS_MINSIZEREL}")
+  set(CMAKE_CXX_FLAGS_RELEASE         "${GF_COMMON_FLAGS} ${CMAKE_CXX_FLAGS_RELEASE}")
+  set(CMAKE_CXX_FLAGS_RELWITHDEBINFO  "${GF_COMMON_FLAGS} ${CMAKE_CXX_FLAGS_RELWITHDEBINFO}")
+  # default is RelWithDebInfo
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_RELWITHDEBINFO}")
+else()
+  # assume it's a GNU-like compiler (GCC, clang)
+  set(GF_COMMON_FLAGS "-Wall -Wextra -std=c++11")
+  set(CMAKE_CXX_FLAGS_DEBUG           "${GF_COMMON_FLAGS} -O0 -g")
+  set(CMAKE_CXX_FLAGS_MINSIZEREL      "${GF_COMMON_FLAGS} -Os -DNDEBUG")
+  set(CMAKE_CXX_FLAGS_RELEASE         "${GF_COMMON_FLAGS} -O3 -DNDEBUG")
+  set(CMAKE_CXX_FLAGS_RELWITHDEBINFO  "${GF_COMMON_FLAGS} -O2 -g")
+  # default is RelWithDebInfo
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_RELWITHDEBINFO}")
+endif()
 
 add_subdirectory(library)
 
