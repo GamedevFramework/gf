@@ -21,8 +21,9 @@
 #include <cstdlib>
 #include <cstdio>
 
-#include <iostream>
 #include <chrono>
+#include <iostream>
+#include <numeric>
 
 #include <gf/Clock.h>
 #include <gf/Event.h>
