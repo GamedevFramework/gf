@@ -1,26 +1,64 @@
 sudo: required
 dist: trusty
 language: cpp
-compiler:
-  - clang
-  - gcc
-branches:
-  only:
-    - master
-    - develop
+
 addons:
   apt:
-    sources:
-      - ubuntu-toolchain-r-test # gcc 4.9
-    packages:
+    packages: &common_packages
       - cmake
-      - g++-4.9
       - libboost-filesystem-dev
       - libboost-dev
       - libfreetype6-dev
       - libsdl2-dev
+
+matrix:
+  include:
+    - compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - *common_packages
+            - g++-4.9
+      env: CXX_COMPILER=g++-4.9 C_COMPILER=gcc-4.9
+    - compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - *common_packages
+            - g++-5
+      env: CXX_COMPILER=g++-5 C_COMPILER=gcc-5
+    - compiler: clang
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-3.6
+          packages:
+            - *common_packages
+            - clang-3.6
+      env: CXX_COMPILER=clang++-3.6 C_COMPILER=clang-3.6
+    - compiler: clang
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-3.7
+          packages:
+            - *common_packages
+            - clang-3.7
+      env: CXX_COMPILER=clang++-3.7 C_COMPILER=clang-3.7
+
+branches:
+  only:
+    - master
+    - develop
+
 before_script:
   - mkdir build
   - cd build
-  - cmake ..
+  - cmake -DCMAKE_CXX_COMPILER=$CXX_COMPILER -DCMAKE_C_COMPILER=$C_COMPILER ..
 script: make
