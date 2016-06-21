@@ -9,7 +9,6 @@ option(GF_DEBUG "Activate debug build" ON)
 option(GF_BUILD_EXAMPLES "Build examples" ON)
 option(GF_BUILD_TESTS "Build tests" ON)
 option(GF_BUILD_DOCUMENTATION "Build documentation (needs Doxygen)" ON)
-option(GF_BUILD_DOCUMENTATION_WITH_CLANG "Build documentation with clang" OFF)
 
 include(GNUInstallDirs)
 set(GF_DATADIR ${CMAKE_INSTALL_FULL_DATADIR})
@@ -58,12 +57,6 @@ install(
 
 if (GF_BUILD_DOCUMENTATION)
   find_package(Doxygen)
-
-  if (GF_BUILD_DOCUMENTATION_WITH_CLANG)
-    set(GF_DOC_CLANG "YES")
-  else()
-    set(GF_DOC_CLANG "NO")
-  endif()
 
   if(DOXYGEN_FOUND)
     configure_file("${CMAKE_SOURCE_DIR}/Doxyfile.cmake" "${CMAKE_BINARY_DIR}/Doxyfile" @ONLY)
