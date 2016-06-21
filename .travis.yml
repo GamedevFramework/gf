@@ -12,11 +12,9 @@ addons:
   apt:
     sources:
       - ubuntu-toolchain-r-test # gcc 4.9
-      - llvm-toolchain-precise-3.8 # clang 3.8
     packages:
       - cmake
       - g++-4.9
-      - clang-3.8
       - libboost-filesystem-dev
       - libboost-dev
       - libfreetype6-dev
