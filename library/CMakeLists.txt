@@ -1,7 +1,7 @@
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h @ONLY)
 
-add_library(gf0
+add_library(gf0 SHARED
   # core
   Clock.cc
   Direction.cc
@@ -103,11 +103,11 @@ target_link_libraries(gf0
   ${FREETYPE_LIBRARIES}
 )
 
-# set_target_properties(gf0
-#   PROPERTIES
-#   VERSION ${PROJECT_VERSION}
-#   SOVERSION ${PROJECT_VERSION_MAJOR}
-# )
+set_target_properties(gf0
+  PROPERTIES
+  VERSION ${PROJECT_VERSION}
+  SOVERSION ${PROJECT_VERSION_MAJOR}
+)
 
 install(
   TARGETS gf0
