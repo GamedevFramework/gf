@@ -18,6 +18,8 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
+#include <iostream>
+
 #include <gf/Event.h>
 #include <gf/Font.h>
 #include <gf/RenderWindow.h>
