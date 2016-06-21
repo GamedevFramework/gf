@@ -24,13 +24,13 @@ You have to install the following dependencies:
 
 For Debian/Ubuntu:
 
-~~~{.sh}
+```sh
 apt-get install libsdl2-dev libboost-filesystem-dev libboost-dev libfreetype6-dev cmake
-~~~
+```
 
 Then:
 
-~~~{.sh}
+```sh
 git clone https://github.com/GamedevFramework/gf.git
 cd gf
 git submodule update --init
@@ -38,10 +38,10 @@ mkdir build
 cd build
 cmake ../
 make
-~~~
+```
 
 An finally:
 
-~~~{.sh}
+```sh
 make install # may require root permissions
-~~~
+```
