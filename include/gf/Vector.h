@@ -969,7 +969,7 @@ inline namespace v1 {
    * @relates Vector
    * @brief Right scalar addition
    */
-  template<typename T, typename U, std::size_t N>
+  template<typename T, typename U, std::size_t N, typename E = typename std::enable_if<std::is_arithmetic<U>::value, U>::type>
   GF_API inline
   Vector<typename std::common_type<T,U>::type, N> operator+(const Vector<T, N>& lhs, U rhs) {
     Vector<typename std::common_type<T,U>::type, N> out;
@@ -985,7 +985,7 @@ inline namespace v1 {
    * @relates Vector
    * @brief Left scalar addition
    */
-  template<typename T, typename U, std::size_t N>
+  template<typename T, typename U, std::size_t N, typename E = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
   GF_API inline
   Vector<typename std::common_type<T,U>::type, N> operator+(T lhs, const Vector<U, N>& rhs) {
     Vector<typename std::common_type<T,U>::type, N> out;
@@ -1033,7 +1033,7 @@ inline namespace v1 {
    * @relates Vector
    * @brief Right scalar substraction
    */
-  template<typename T, typename U, std::size_t N>
+  template<typename T, typename U, std::size_t N, typename E = typename std::enable_if<std::is_arithmetic<U>::value, U>::type>
   GF_API inline
   Vector<typename std::common_type<T,U>::type, N> operator-(const Vector<T, N>& lhs, U rhs) {
     Vector<typename std::common_type<T,U>::type, N> out;
@@ -1049,7 +1049,7 @@ inline namespace v1 {
    * @relates Vector
    * @brief Left scalar substraction
    */
-  template<typename T, typename U, std::size_t N>
+  template<typename T, typename U, std::size_t N, typename E = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
   GF_API inline
   Vector<typename std::common_type<T,U>::type, N> operator-(T lhs, const Vector<U, N>& rhs) {
     Vector<typename std::common_type<T,U>::type, N> out;
@@ -1096,7 +1096,7 @@ inline namespace v1 {
    * @relates Vector
    * @brief Right scalar multiplication
    */
-  template<typename T, typename U, std::size_t N>
+  template<typename T, typename U, std::size_t N, typename E = typename std::enable_if<std::is_arithmetic<U>::value, U>::type>
   GF_API inline
   Vector<typename std::common_type<T,U>::type, N> operator*(const Vector<T, N>& lhs, U rhs) {
     Vector<typename std::common_type<T,U>::type, N> out;
@@ -1126,7 +1126,7 @@ inline namespace v1 {
    * @relates Vector
    * @brief Left scalar multiplication
    */
-  template<typename T, typename U, std::size_t N>
+  template<typename T, typename U, std::size_t N, typename E = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
   GF_API inline
   Vector<typename std::common_type<T,U>::type, N> operator*(T lhs, const Vector<U, N>& rhs) {
     Vector<typename std::common_type<T,U>::type, N> out;
@@ -1172,7 +1172,7 @@ inline namespace v1 {
    * @relates Vector
    * @brief Right scalar division
    */
-  template<typename T, typename U, std::size_t N>
+  template<typename T, typename U, std::size_t N, typename E = typename std::enable_if<std::is_arithmetic<U>::value, U>::type>
   GF_API inline
   Vector<typename std::common_type<T,U>::type, N> operator/(const Vector<T, N>& lhs, U rhs) {
     Vector<typename std::common_type<T,U>::type, N> out;
@@ -1202,7 +1202,7 @@ inline namespace v1 {
    * @relates Vector
    * @brief Left scalar division
    */
-  template<typename T, typename U, std::size_t N>
+  template<typename T, typename U, std::size_t N, typename E = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
   GF_API inline
   Vector<typename std::common_type<T,U>::type, N> operator/(T lhs, const Vector<U, N>& rhs) {
     Vector<typename std::common_type<T,U>::type, N> out;
