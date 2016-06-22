@@ -152,6 +152,16 @@ inline namespace v1 {
     Font& operator=(const Font&) = delete;
 
     /**
+     * @brief Move constructor
+     */
+    Font(Font&& other);
+
+    /**
+     * @brief Move assignement
+	   */
+    Font& operator=(Font&& other);
+
+    /**
      * @brief Load the font from a file
      *
      * The supported font formats are: TrueType, Type 1, CFF,

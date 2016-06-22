@@ -128,6 +128,23 @@ inline namespace v1 {
     }
   }
 
+  Font::Font(Font&& other)
+  : m_library(other.m_library)
+  , m_stroker(other.m_stroker)
+  , m_face(other.m_face)
+  , m_currentCharacterSize(other.m_currentCharacterSize)
+  , m_cache(std::move(other.m_cache))
+  {
+    other.m_library = other.m_stroker = other.m_face = nullptr;
+  }
+
+  Font& Font::operator=(Font&& other) {
+    std::swap(m_library, other.m_library);
+    std::swap(m_stroker, other.m_stroker);
+    std::swap(m_face, other.m_face);
+    std::swap(m_cache, other.m_cache);
+    return *this;
+  }
 
   bool Font::loadFromFile(const Path& filename) {
     if (m_library == nullptr) {
