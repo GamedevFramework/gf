@@ -64,6 +64,16 @@ inline namespace v1 {
     }
 
     /**
+     * @brief Deleted copy constructor
+     */
+    ResourceCache(const ResourceCache&) = delete;
+
+    /**
+     * @brief Deleted copy assignment
+     */
+    ResourceCache& operator=(const ResourceCache&) = delete;
+
+    /**
      * @brief Get a ressource
      *
      * If the ressource exists in the cache, it is returned immediately.

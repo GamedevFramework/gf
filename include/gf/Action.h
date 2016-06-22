@@ -53,6 +53,16 @@ inline namespace v1 {
     Action(std::string name);
 
     /**
+     * @brief Deleted copy constructor
+     */
+    Action(const Action&) = delete;
+
+    /**
+     * @brief Deleted copy assignment
+     */
+    Action& operator=(const Action&) = delete;
+
+    /**
      * @brief Get the name of the action.
      *
      * @return the name of the action.
