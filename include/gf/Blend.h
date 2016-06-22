@@ -207,7 +207,7 @@ inline namespace v1 {
    *
    * @sa gf::BlendMode
    */
-  GF_API constexpr BlendMode BlendAlpha
+  constexpr BlendMode BlendAlpha
   #ifndef DOXYGEN_SHOULD_SKIP_THIS
   = BlendMode(
     BlendFactor::SrcAlpha, BlendFactor::OneMinusSrcAlpha, BlendEquation::Add,
@@ -224,7 +224,7 @@ inline namespace v1 {
    *
    * @sa gf::BlendMode
    */
-  GF_API constexpr BlendMode BlendAdd
+  constexpr BlendMode BlendAdd
   #ifndef DOXYGEN_SHOULD_SKIP_THIS
   = BlendMode(
     BlendFactor::SrcAlpha, BlendFactor::One, BlendEquation::Add,
@@ -241,7 +241,7 @@ inline namespace v1 {
    *
    * @sa gf::BlendMode
    */
-  GF_API constexpr BlendMode BlendMultiply
+  constexpr BlendMode BlendMultiply
   #ifndef DOXYGEN_SHOULD_SKIP_THIS
   = BlendMode (BlendFactor::DstColor, BlendFactor::Zero)
   #endif
@@ -255,7 +255,7 @@ inline namespace v1 {
    *
    * @sa gf::BlendMode
    */
-  GF_API constexpr BlendMode BlendNone
+  constexpr BlendMode BlendNone
   #ifndef DOXYGEN_SHOULD_SKIP_THIS
   = BlendMode(BlendFactor::One, BlendFactor::Zero)
   #endif

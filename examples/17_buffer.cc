@@ -89,7 +89,7 @@ int main() {
   spriteGeometry.setLocalBounds(spriteBounds);
   spriteGeometry.setTexture(texture);
   spriteGeometry.setPosition({ 500.0f, 200.0f });
-  spriteGeometry.setScale({ 0.8, 0.8 });
+  spriteGeometry.setScale({ 0.8f, 0.8f });
   spriteGeometry.setAnchor(gf::Anchor::Center);
 
   /*

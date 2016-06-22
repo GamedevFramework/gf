@@ -60,7 +60,7 @@ static int map[MapHeight][MapWidth] = {
   { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, },
 };
 
-static constexpr int TileSize = 128;
+static constexpr unsigned TileSize = 128;
 
 int main() {
   gf::Vector2u screenSize(640, 480);
@@ -126,19 +126,19 @@ int main() {
               break;
 
             case gf::Scancode::Left:
-              view.move({ -TileSize / 2, 0 });
+              view.move({ -TileSize / 2.0f, 0 });
               break;
 
             case gf::Scancode::Right:
-              view.move({ TileSize / 2, 0 });
+              view.move({ TileSize / 2.0f, 0 });
               break;
 
             case gf::Scancode::Up:
-              view.move({ 0, -TileSize / 2 });
+              view.move({ 0, -TileSize / 2.0f });
               break;
 
             case gf::Scancode::Down:
-              view.move({ 0, TileSize / 2 });
+              view.move({ 0, TileSize / 2.0f });
               break;
 
             case gf::Scancode::Num1:

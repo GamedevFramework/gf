@@ -128,7 +128,7 @@ inline namespace v1 {
     int height = 0;
     int n = 0;
 
-    uint8_t *ptr = stbi_load(filename.c_str(), &width, &height, &n, STBI_rgb_alpha);
+    uint8_t *ptr = stbi_load(filename.string().c_str(), &width, &height, &n, STBI_rgb_alpha);
 
     if (width == 0 || height == 0 || ptr == nullptr) {
       Log::warning(Log::Graphics, "Could not load image from file '%s': %s\n", filename.c_str(), stbi_failure_reason());
