@@ -22,13 +22,17 @@
 #define GF_PORTABILITY_H
 
 #ifdef _WIN32
-  #if GF_EXPORT_SYMBOLS
-    #define GF_API __declspec(dllexport)
-  #else
-    #define GF_API __declspec(dllimport)
-  #endif
+  #define GF_API_EXPORT __declspec(dllexport)
+  #define GF_API_IMPORT __declspec(dllimport)
 #else
-  #define GF_API
+  #define GF_API_EXPORT
+  #define GF_API_IMPORT
+#endif
+
+#if GF_EXPORT_SYMBOLS
+  #define GF_API GF_API_EXPORT
+#else
+  #define GF_API GF_API_IMPORT
 #endif
 
 #endif // GF_PORTABILITY_H
