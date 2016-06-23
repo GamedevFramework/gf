@@ -126,19 +126,19 @@ int main() {
               break;
 
             case gf::Scancode::Left:
-              view.move({ -TileSize / 2.0f, 0 });
+              view.move({ -0.5f * TileSize, 0 });
               break;
 
             case gf::Scancode::Right:
-              view.move({ TileSize / 2.0f, 0 });
+              view.move({ 0.5f * TileSize, 0 });
               break;
 
             case gf::Scancode::Up:
-              view.move({ 0, -TileSize / 2.0f });
+              view.move({ 0, -0.5f * TileSize });
               break;
 
             case gf::Scancode::Down:
-              view.move({ 0, TileSize / 2.0f });
+              view.move({ 0, 0.5f * TileSize });
               break;
 
             case gf::Scancode::Num1:
