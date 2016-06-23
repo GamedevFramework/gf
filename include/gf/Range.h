@@ -186,10 +186,13 @@ inline namespace v1 {
    */
   typedef Range<std::size_t> RangeZ;
 
+// MSVC does not like extern template
+#ifndef _MSC_VER
   extern template struct Range<float>;
   extern template struct Range<int>;
   extern template struct Range<unsigned>;
   extern template struct Range<std::size_t>;
+#endif
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

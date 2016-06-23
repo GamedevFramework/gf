@@ -23,9 +23,12 @@
 namespace gf {
 inline namespace v1 {
 
+// MSVC does not like extern template
+#ifndef _MSC_VER
   template struct Matrix<float, 2, 2>;
   template struct Matrix<float, 3, 3>;
   template struct Matrix<float, 4, 4>;
+#endif
 
 }
 }

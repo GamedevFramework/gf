@@ -866,6 +866,8 @@ inline namespace v1 {
    */
   typedef Vector<uint8_t, 4> Color4u;
 
+// MSVC does not like extern template
+#ifndef _MSC_VER
   extern template struct Vector<float, 2>;
   extern template struct Vector<float, 3>;
   extern template struct Vector<float, 4>;
@@ -892,6 +894,7 @@ inline namespace v1 {
 
   extern template struct Vector<uint8_t, 3>;
   extern template struct Vector<uint8_t, 4>;
+#endif
 
   /**
    * @relates Vector

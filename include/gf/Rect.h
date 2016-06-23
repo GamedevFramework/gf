@@ -323,10 +323,13 @@ inline namespace v1 {
    */
   typedef Rect<std::size_t> RectZ;
 
+// MSVC does not like extern template
+#ifndef _MSC_VER
   extern template struct Rect<float>;
   extern template struct Rect<int>;
   extern template struct Rect<unsigned>;
   extern template struct Rect<std::size_t>;
+#endif
 
   /**
    * @relates Rect

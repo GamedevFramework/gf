@@ -23,6 +23,8 @@
 namespace gf {
 inline namespace v1 {
 
+// MSVC does not like extern template
+#ifndef _MSC_VER
   template struct Vector<float, 2>;
   template struct Vector<float, 3>;
   template struct Vector<float, 4>;
@@ -49,6 +51,7 @@ inline namespace v1 {
 
   template struct Vector<uint8_t, 3>;
   template struct Vector<uint8_t, 4>;
+#endif
 
 }
 }

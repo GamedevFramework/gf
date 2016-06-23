@@ -23,10 +23,13 @@
 namespace gf {
 inline namespace v1 {
 
+// MSVC does not like extern template
+#ifndef _MSC_VER
   template struct Range<float>;
   template struct Range<int>;
   template struct Range<unsigned>;
   template struct Range<std::size_t>;
+#endif
 
 }
 }

@@ -327,9 +327,12 @@ inline namespace v1 {
    */
   typedef Matrix<float, 4, 4> Matrix4f;
 
+// MSVC does not like extern template
+#ifndef _MSC_VER
   extern template struct Matrix<float, 2, 2>;
   extern template struct Matrix<float, 3, 3>;
   extern template struct Matrix<float, 4, 4>;
+#endif
 
   /*
    * equality operations
