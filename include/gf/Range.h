@@ -39,7 +39,7 @@ inline namespace v1 {
    *
    */
   template<typename T>
-  struct GF_API Range {
+  struct Range {
     T lo; ///< The lower endpoint (included)
     T hi; ///< The higher endpoint (excluded)
 

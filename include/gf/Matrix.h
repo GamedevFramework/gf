@@ -182,7 +182,7 @@ inline namespace v1 {
    * @sa transform, translate, translation, rotate, rotation, scale, scaling
    */
   template<typename T>
-  struct GF_API Matrix<T, 3, 3> {
+  struct Matrix<T, 3, 3> {
     /**
      * @brief The value type of the elements of the matrix
      */

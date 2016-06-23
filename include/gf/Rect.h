@@ -85,7 +85,7 @@ inline namespace v1 {
    * ~~~
    */
   template<typename T>
-  struct GF_API Rect {
+  struct Rect {
     /**
      * An anonymous union to handle the various representations
      */

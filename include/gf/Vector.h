@@ -58,7 +58,7 @@ inline namespace v1 {
    * by Nathan Reed.
    */
   template<typename T, std::size_t N>
-  struct GF_API Vector {
+  struct Vector {
     #ifndef DOXYGEN_SHOULD_SKIP_THIS
     static_assert(N > 0, "N must be strictly positive");
     #endif

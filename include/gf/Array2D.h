@@ -52,7 +52,7 @@ inline namespace v1 {
    * @sa gf::Matrix
    */
   template<class T>
-  class GF_API Array2D {
+  class Array2D {
   public:
     /**
      * @brief Default constructor
