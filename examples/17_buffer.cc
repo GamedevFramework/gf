@@ -69,7 +69,7 @@ int main() {
 
   gf::Texture texture;
 
-  if (!texture.loadFromFile("11_bomb.png")) {
+  if (!texture.loadFromFile("12_bomb.png")) {
     return EXIT_FAILURE;
   }
 
