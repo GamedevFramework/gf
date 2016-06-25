@@ -41,7 +41,7 @@ inline namespace v1 {
     std::ifstream file(filename.string());
 
     if (!file) {
-      Log::error(Log::Graphics, "File for shader does not exist: '%s'\n", filename.c_str());
+      Log::error(Log::Graphics, "File for shader does not exist: '%s'\n", filename.string().c_str());
       return "";
     }
 
@@ -52,7 +52,7 @@ inline namespace v1 {
       content.append(1, '\n');
     }
 
-    Log::debug(Log::Graphics, "Shader loaded from file: '%s'\n", filename.c_str());
+    Log::debug(Log::Graphics, "Shader loaded from file: '%s'\n", filename.string().c_str());
 
     return content;
   }

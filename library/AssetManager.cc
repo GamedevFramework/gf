@@ -52,7 +52,7 @@ inline namespace v1 {
       }
     }
 
-    Log::error(Log::Resources, "Could not find the following file: %s\n", relativePath.c_str());
+    Log::error(Log::Resources, "Could not find the following file: %s\n", relativePath.string().c_str());
     return Path();
   }
 
