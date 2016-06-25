@@ -45,7 +45,7 @@ inline namespace v1 {
       return "";
     }
 
-    std::string content, line;
+    std::string content;
 
     for (std::string line; std::getline(file, line); ) {
       content.append(line);

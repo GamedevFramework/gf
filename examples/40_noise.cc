@@ -173,10 +173,7 @@ int main() {
           switch (event.key.keycode) {
             case gf::Keycode::S:
               std::cout << "# Capture the image\n";
-              {
-                gf::Image image = texture.copyToImage();
-                image.saveToFile("noise.png");
-              }
+              image.saveToFile("noise.png");
               break;
 
             default:
