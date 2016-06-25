@@ -79,7 +79,7 @@ inline namespace v1 {
     }
 
     assert(false);
-    return -1;
+    return 0;
   };
 
   static int getAlignment(BareTexture::Format format) {
