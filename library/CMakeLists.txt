@@ -122,7 +122,15 @@ install(
   TARGETS gf0
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
+
+if(WIN32)
+  install(
+    TARGETS gf0 
+    RUNTIME DESTINATION "${CMAKE_INSTALL_DOCDIR}/examples"
+  )
+endif()
 
 install(
   FILES "${CMAKE_CURRENT_SOURCE_DIR}/vendor/gamecontrollerdb/gamecontrollerdb.txt"
