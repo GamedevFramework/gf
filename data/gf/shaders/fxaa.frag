@@ -369,8 +369,8 @@ void main(void)
     gl_FragColor = v_color * FxaaPixelShader(v_texCoords,
         u_texture,         // sampler2D tex,
         1.0 / u_framebufferSize, // vec2 fxaaQualityRcpFrame,
-        0.75f,             // float fxaaQualitySubpix,
-        0.166f,            // float fxaaQualityEdgeThreshold,
-        0.0833f            // float fxaaQualityEdgeThresholdMin,
+        0.75,              // float fxaaQualitySubpix,
+        0.166,             // float fxaaQualityEdgeThreshold,
+        0.0833             // float fxaaQualityEdgeThresholdMin,
     );
 }
