@@ -100,8 +100,15 @@ inline namespace v1 {
       return *m_single;
     }
 
-  private:
+    void reset() noexcept {
+      m_single = nullptr;
+    }
 
+    bool isValid() const noexcept {
+      return m_single != nullptr;
+    }
+
+  private:
     friend class SingletonStorage<T>;
 
     T *m_single;

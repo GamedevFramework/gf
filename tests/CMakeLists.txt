@@ -3,6 +3,7 @@ add_executable(gf_tests
   main.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/googletest/googletest/src/gtest-all.cc
   testRange.cc
+  testSingleton.cc
   testVector.cc
   testVector1.cc
   testVector2.cc
