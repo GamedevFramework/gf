@@ -52,7 +52,7 @@ inline namespace v1 {
    */
   struct GF_API Message {
     /**
-     * @brief The default (invalid) id
+     * @brief The default (invalid) type
      *
      * It must be redefined in child classes.
      */
@@ -81,8 +81,8 @@ inline namespace v1 {
    * sent in a message handler. It can be a free function:
    *
    * ~~~{.cc}
-   * gf::MessageStatus onHeroPosition(gf::Id id, gf::Message *msg) {
-   *   assert(id == HeroPosition::type);
+   * gf::MessageStatus onHeroPosition(gf::Id type, gf::Message *msg) {
+   *   assert(type == HeroPosition::type);
    *   auto heroPosition = static_cast<HeroPosition*>(msg);
    *
    *   // do something with heroPosition->position ...
@@ -100,8 +100,8 @@ inline namespace v1 {
    *
    * ~~~{.cc}
    * struct Foo {
-   *   gf::MessageStatus onHeroPosition(gf::Id id, gf::Message *msg) {
-   *     assert(id == HeroPosition::type);
+   *   gf::MessageStatus onHeroPosition(gf::Id type, gf::Message *msg) {
+   *     assert(type == HeroPosition::type);
    *     auto heroPosition = static_cast<HeroPosition*>(msg);
    *
    *     // do something with heroPosition->position ...

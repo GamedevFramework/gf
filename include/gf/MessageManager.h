@@ -81,6 +81,11 @@ inline namespace v1 {
     MessageManager();
 
     /**
+     * @name Registering an handler
+     * @{
+     */
+
+    /**
      * @brief Register a message handler for a type of message
      *
      * ~~~{.cc}
@@ -136,7 +141,7 @@ inline namespace v1 {
      * };
      *
      * class Bar {
-     *   gf::MessageStatus onFoo(gf::Id id, gf::Message *msg) {
+     *   gf::MessageStatus onFoo(gf::Id type, gf::Message *msg) {
      *     // do something useful
      *     return gf::MessageStatus::Keep;
      *   }
@@ -168,7 +173,7 @@ inline namespace v1 {
      * };
      *
      * class Bar {
-     *   gf::MessageStatus onFoo(gf::Id id, gf::Message *msg) {
+     *   gf::MessageStatus onFoo(gf::Id type, gf::Message *msg) {
      *     // do something useful
      *     return gf::MessageStatus::Keep;
      *   }
@@ -191,6 +196,13 @@ inline namespace v1 {
       return registerHandler(E::type, std::bind(pm, obj, std::placeholders::_1, std::placeholders::_2));
     }
 
+    /** @} */
+
+    /**
+     * @name Removing an handler
+     * @{
+     */
+
     /**
      * @brief Remove a handler
      *
@@ -208,6 +220,13 @@ inline namespace v1 {
         removeHandler(id);
       }
     }
+
+    /** @} */
+
+    /**
+     * @name Sending a message
+     * @{
+     */
 
     /**
      * @brief Send a message
@@ -262,6 +281,8 @@ inline namespace v1 {
       static_assert(E::type != InvalidId, "E must define its type");
       sendMessage(E::type, message);
     }
+
+    /** @} */
 
   private:
     struct Handler {
