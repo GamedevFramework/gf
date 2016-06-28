@@ -12,7 +12,7 @@ In modern OpenGL, the rendering pipeline is programmable. Not everything is prog
 
 The data you send to shaders is prepared in the main program and is called vertices. Vertices represent the geometry of what you have to draw. A vertex is a kind of super point: it contains the coordinates of the object but also the texture coordinates of the point, sometimes (in 3D) the normal of the surface at that point, and many more possible things.
 
-All the vertices are sent to the graphics cards that pass them to the _vertex shader_ which is responsible of transforming the coordinates of the vertex from the game world (2D or 3D) to the screen. After this first pass, the vertices goes in the rasterize which computes the color of each pixel. Then, the pixels goes through a _fragment shader_ which can compute the final color of the pixel and sometimes other attributes.
+All the vertices are sent to the graphics card that passes them to the _vertex shader_ which is responsible of transforming the coordinates of the vertex from the game world (2D or 3D) to the screen. After this first pass, the vertices go in the rasterizer which computes the color of each pixel. Then, the pixels go through a _fragment shader_ which can compute the final color of the pixel and sometimes other attributes.
 
 And that's it, basically!
 
