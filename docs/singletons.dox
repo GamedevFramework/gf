@@ -1,8 +1,25 @@
 /**
 
-@page singletons Singletons
+@page singletons Safe singletons
+
+Gamedev Framwork (gf) provides two classes to define singletons: gf::Singleton and gf::SingletonStorage. It implements a variant of the [singleton pattern](https://en.wikipedia.org/wiki/Singleton_pattern).
+
+@section singletons_howto How to use singleton classes?
+
+gf::Singleton is a wrapper around a pointer. The pointer is provided by a gf::SingletonStorage
 
 
+~~~{.cc}
+// a global variable
+gf::Singleton<gf::MessageManager> gMessageManager;
+
+
+
+~~~
+
+@section singletons_why Why two classes?
+
+Short answer: to prevent the [static initialization order fiasco](https://isocpp.org/wiki/faq/ctors#static-init-order).
 
 
 */
