@@ -54,7 +54,7 @@ inline namespace v1 {
    * @sa gf::SingletonStorage
    */
   template<typename T>
-  class GF_API Singleton {
+  class Singleton {
   public:
     /**
      * @brief Default constructor.
@@ -147,7 +147,7 @@ inline namespace v1 {
    * @sa gf::Singleton
    */
   template<typename T>
-  class GF_API SingletonStorage {
+  class SingletonStorage {
   public:
     /**
      * @brief Construct a storage for a singleton.
