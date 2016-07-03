@@ -100,10 +100,20 @@ inline namespace v1 {
       return *m_single;
     }
 
+    /**
+     * @brief Reset the singleton
+     *
+     * After a call to this function, the singleton must be accessed anymore.
+     */
     void reset() noexcept {
       m_single = nullptr;
     }
 
+    /**
+     * @brief Check if the singleton has been initialized
+     *
+     * @return True if the singleton is valid
+     */
     bool isValid() const noexcept {
       return m_single != nullptr;
     }
