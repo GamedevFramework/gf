@@ -56,7 +56,7 @@ inline namespace v1 {
    * @sa gf::Array2D
    */
   template<typename T, std::size_t ROWS, std::size_t COLS>
-  struct GF_API Matrix {
+  struct Matrix {
     #ifndef DOXYGEN_SHOULD_SKIP_THIS
     static_assert(ROWS > 0, "ROWS must be strictly positive");
     static_assert(COLS > 0, "COLS must be strictly positive");
@@ -116,7 +116,7 @@ inline namespace v1 {
    * - gf::Matrix2f with `float` as `T`
    */
   template<typename T>
-  struct GF_API Matrix<T, 2, 2> {
+  struct Matrix<T, 2, 2> {
     /**
      * @brief The value type of the elements of the matrix
      */
@@ -252,7 +252,7 @@ inline namespace v1 {
    * - gf::Matrix4f with `float` as `T`
    */
   template<typename T>
-  struct GF_API Matrix<T, 4, 4> {
+  struct Matrix<T, 4, 4> {
     /**
      * @brief The value type of the elements of the matrix
      */
@@ -312,18 +312,24 @@ inline namespace v1 {
   /**
    * @ingroup core
    * @brief A float square matrix of size 2
+   *
+   * @sa Matrix<T, 2, 2>
    */
   typedef Matrix<float, 2, 2> Matrix2f;
 
   /**
    * @ingroup core
    * @brief A float square matrix of size 3
+   *
+   * @sa Matrix<T, 3, 3>
    */
   typedef Matrix<float, 3, 3> Matrix3f;
 
   /**
    * @ingroup core
    * @brief A float square matrix of size 4
+   *
+   * @sa Matrix<T, 4, 4>
    */
   typedef Matrix<float, 4, 4> Matrix4f;
 

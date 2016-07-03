@@ -240,7 +240,7 @@ inline namespace v1 {
    * ~~~
    */
   template <typename T>
-  struct GF_API Vector<T, 2> {
+  struct Vector<T, 2> {
     /**
      * @brief Default constructor
      *
@@ -416,7 +416,7 @@ inline namespace v1 {
    * ~~~
    */
   template <typename T>
-  struct GF_API Vector<T, 3> {
+  struct Vector<T, 3> {
     /**
      * @brief Default constructor
      *
@@ -597,7 +597,7 @@ inline namespace v1 {
    * ~~~
    */
   template <typename T>
-  struct GF_API Vector<T, 4> {
+  struct Vector<T, 4> {
     /**
      * @brief Default constructor
      *
