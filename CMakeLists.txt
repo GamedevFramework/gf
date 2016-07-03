@@ -18,6 +18,15 @@ option(GF_BUILD_DOCUMENTATION "Build documentation (needs Doxygen)" ON)
 include(GNUInstallDirs)
 set(GF_DATADIR ${CMAKE_INSTALL_FULL_DATADIR})
 
+if(MSVC)
+  message(STATUS "Environment variables:")
+  message(STATUS "- BOOST_INCLUDEDIR: $ENV{BOOST_INCLUDEDIR}")
+  message(STATUS "- BOOST_LIBRARYDIR: $ENV{BOOST_LIBRARYDIR}")
+  message(STATUS "- SDL2DIR: $ENV{SDL2DIR}")
+  message(STATUS "- SDL2ARCH: $ENV{SDL2ARCH}")
+  message(STATUS "- FREETYPE_DIR: $ENV{FREETYPE_DIR}")
+endif()
+
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
 set(SDL2_BUILDING_LIBRARY TRUE)

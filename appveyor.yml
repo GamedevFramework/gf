@@ -5,7 +5,7 @@ branches:
    - master
 skip_tags: true
 image: Visual Studio 2015
-clone_folder: c:\projects\GF
+clone_folder: C:\projects\GF
 
 install:
   - cmd: git submodule update --init
@@ -15,12 +15,14 @@ install:
   - cmd: .\boost.exe /DIR="C:\projects\boost\" /VERYSILENT
   - cmd: 7z x ".\SDL2-devel-2.0.4-VC.zip" -o"C:\projects\SDL\"
   - cmd: 7z x ".\freetype-2.3.5-1-lib.zip" -o"C:\projects\freetype\"
-  - cmd: set BOOST_ROOT="C:\projects\boost\"
-  - cmd: set BOOST_INCLUDEDIR="C:\projects\boost\boost\"
-  - cmd: set BOOST_LIBRARYDIR="C:\projects\boost\lib32-msvc-14.0\"
-  - cmd: set SDL2DIR="C:\projects\SDL\SDL2-2.0.4\"
-  - cmd: set SDL2ARCH="x86"
-  - cmd: set FREETYPE_DIR="C:\projects\freetype\"
+
+environment:
+  BOOST_ROOT: C:\projects\boost\
+  BOOST_INCLUDEDIR: C:\projects\boost\boost\
+  BOOST_LIBRARYDIR: C:\projects\boost\lib32-msvc-14.0\
+  SDL2DIR: C:\projects\SDL\SDL2-2.0.4\
+  SDL2ARCH: x86
+  FREETYPE_DIR: C:\projects\freetype\
 
 cache:
   - boost.exe
