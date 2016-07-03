@@ -5,7 +5,7 @@
     <tab type="mainpage" visible="yes" title=""/>
     <tab type="pages" visible="no" title="" intro=""/><!-- CHANGE: no instead of yes -->
     <tab type="modules" visible="yes" title="" intro=""/>
-    <tab type="namespaces" visible="yes" title="">
+    <tab type="namespaces" visible="no" title=""><!-- CHANGE: no instead of yes -->
       <tab type="namespacelist" visible="yes" title="" intro=""/>
       <tab type="namespacemembers" visible="yes" title="" intro=""/>
     </tab>
