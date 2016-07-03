@@ -12,6 +12,11 @@ See the [online documentation for Gamedev Framework (gf)](http://gamedevframewor
 
 Gamedev Framework (gf) is very open to contributions. See [the contribution guidelines](CONTRIBUTING.md).
 
+## Build status
+
+- Travis CI: [![Build Status](https://travis-ci.org/GamedevFramework/gf.svg?branch=develop)](https://travis-ci.org/GamedevFramework/gf)
+- AppVeyor: [![Build status](https://ci.appveyor.com/api/projects/status/orf21jbkpoweigjf?svg=true)](https://ci.appveyor.com/project/jube/gf)
+
 ## Quick install
 
 You have to install the following dependencies:
