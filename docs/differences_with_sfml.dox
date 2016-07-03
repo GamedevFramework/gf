@@ -49,7 +49,7 @@ parent class gf::BareTexture.
 Multiple inheritance is bad. In gf, everything has been done to remove the
 various cases of multiple inheritance that exist in SFML.
 
-First, there is no NonCopyable class. C++11 provides an easy way to make a
+First, there is no `NonCopyable` class. C++11 provides an easy way to make a
 class non-copyable with deleted constructors. So every instance of NonCopyable
 has been replaced with deleted copy constructor and assignement.
 
@@ -98,7 +98,7 @@ features related to games that are not described here.
 gf::Monitor is a class that represents a monitor. You can list the monitors
 and get their position, size and modes.
 
-gf::Path is a typedef for boost::filesystem::path. It is used everywhere a
+gf::Path is a typedef for `boost::filesystem::path`. It is used everywhere a
 path is needed.
 
 gf provides more drawables that are useful in games: gf::NinePatch is a
@@ -139,7 +139,7 @@ to handle most of the game controllers properly.
 
 @section sfml_missing Missing features
 
-There is no Style in gf::Text. This is a choice. Generally, when you need an adapted font if you want italic or bold text.
+There is no Style in gf::Text. This is a choice. Generally, you need an adapted font if you want italic or bold text.
 
 Some part of the system module of SFML are missing. Especially the classes related to threads, `sf::String`. `sf::Utf`.
 
