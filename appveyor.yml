@@ -19,6 +19,7 @@ install:
   - cmd: set BOOST_INCLUDEDIR="C:\projects\boost\boost\"
   - cmd: set BOOST_LIBRARYDIR="C:\projects\boost\lib32-msvc-14.0\"
   - cmd: set SDL2DIR="C:\projects\SDL\SDL2-2.0.4\"
+  - cmd: set SDL2ARCH="x86"
   - cmd: set FREETYPE_DIR="C:\projects\freetype\"
 
 cache:
