@@ -13,14 +13,17 @@ install:
   - ps: Start-FileDownload 'https://sourceforge.net/projects/gnuwin32/files/freetype/2.3.5-1/freetype-2.3.5-1-lib.zip'
   - cmd: git submodule update --init
   - cmd: .\boost.exe /DIR="C:\projects\boost\" /VERYSILENT
-  - cmd: 7z x 'SDL2-devel-2.0.4-VC.zip' -o"C:\projects\SDL\"
-  - cmd: 7z x 'freetype-2.3.5-1-lib.zip' -o"C:\projects\freetype\"
+  - cmd: 7z x '.\SDL2-devel-2.0.4-VC.zip' -o"C:\projects\SDL\"
+  - cmd: 7z x '.\freetype-2.3.5-1-lib.zip' -o"C:\projects\freetype\"
   - cmd: set BOOST_ROOT="C:\projects\boost\"
   - cmd: set BOOST_INCLUDEDIR="C:\projects\boost\boost\"
   - cmd: set BOOST_LIBRARYDIR="C:\projects\boost\lib32-msvc-14.0\"
   - cmd: set SDL2DIR="C:\projects\SDL\SDL2-2.0.4\"
   - cmd: set FREETYPE_DIR="C:\projects\freetype\"
 
+cache:
+  - boost.exe
+  
 before_build:
   - cmd: cd C:\projects\GF
   - cmd: mkdir build 
