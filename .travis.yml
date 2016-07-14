@@ -1,0 +1,52 @@
+sudo: required
+dist: trusty
+language: cpp
+
+addons:
+  apt:
+    packages: &common_packages
+      - cmake
+      - libboost-filesystem-dev
+      - libboost-dev
+      - libfreetype6-dev
+      - libsdl2-dev
+
+matrix:
+  include:
+    - compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - *common_packages
+            - g++-4.9
+      env: CXX_COMPILER=g++-4.9 C_COMPILER=gcc-4.9
+    - compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - *common_packages
+            - g++-5
+      env: CXX_COMPILER=g++-5 C_COMPILER=gcc-5
+    - compiler: clang
+      addons:
+        apt:
+          packages:
+            - *common_packages
+            - clang
+      env: CXX_COMPILER=clang++ C_COMPILER=clang
+
+branches:
+  only:
+    - master
+    - develop
+
+before_script:
+  - mkdir build
+  - cd build
+  - cmake -DCMAKE_CXX_COMPILER=$CXX_COMPILER -DCMAKE_C_COMPILER=$C_COMPILER -DCMAKE_BUILD_TYPE=Release -DGF_DEBUG=OFF ..
+script:
+  - make && ./tests/gf_tests

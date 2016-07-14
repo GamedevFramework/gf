@@ -1,0 +1,26 @@
+/**
+@page features Features of Gamedev Framework (gf)
+
+Gamedev Framework (gf) is a game framework, it provides some useful features for developping 2D games. Here is a short list of some of the main features of gf:
+
+- Basics
+  - Vector and matrix library
+  - Multiple monitors handling
+  - Complete window events
+  - Complte input events, including gamepads
+  - Easy fullscreen
+  - Views (a.k.a. cameras)
+- Graphics
+  - Sprites and animated sprites
+  - Text and fonts
+  - NinePatch
+  - Sprite batch
+  - Texture atlas
+  - Tile layers
+  - Post-processing effects
+
+If you are looking for a full game engine, you should take a look at [the list of game engines on Wikipedia](https://en.wikipedia.org/wiki/List_of_game_engines).
+
+@sa [The Engine FAQ on /r/gamedev wiki](https://www.reddit.com/r/gamedev/wiki/engine_faq)
+
+*/

@@ -1,0 +1,151 @@
+/**
+@page differences_with_sfml Differences with SFML
+
+@tableofcontents
+
+Gamedev Framework (gf) tries to be compatible with SFML as much as possible.
+Nevertheless, there are some differences. Some of these differences are
+design choices while others are just missing features. This page tries to list
+all the differences so that porting applications from SFML to Gamedev Framework
+(gf) might be easier.
+
+@section sfml_geometry Geometry and colors
+
+This is probably the most important difference with SFML. Gamedev Framework
+is built on a general purpose vector and matrix library that can be used
+directly. gf::Vector and gf::Matrix provides all the necessary operations
+and functions.
+
+As a consequence, there is no transform class. gf::Matrix3f is used instead
+to represent an affine transformation in the 2D plane. Usual transformations
+(translation, rotation, scaling) are provided as free functions.
+
+In the same idea, there is no special color class. A color is just a vector.
+A difference with SFML is that gf::Color4f uses floats to represents the
+four channels instead of bytes. Predefined colors can be accessed like SFML
+ones (e.g. gf::Color::Red).
+
+Another big difference is that gf uses radians everywhere instead of degrees.
+You may have to change your function calls to transform degrees in radians.
+But generally, you would do the contrary: transform radians in degrees just
+for SFML.
+
+@section sfml_textures Textures
+
+Contrary to SFML, texture coordinates are not given in pixels but in
+normalized coordinates (between 0 and 1). @f$ (0,0) @f$ represents the
+top-left corner while @f$ (1,1) @f$ represents the bottom-right corner.
+In case you change the resolution of your texture while keeping the same
+aspect ratio, you do not have to change the texture coordinates everywhere.
+
+Gamedev Framework also has a special texture for fonts (gf::AlphaTexture).
+It is used internally by gf::Font and it only has a single alpha channel
+to represent the font texture. The common operations between gf::Texture
+(which is the same as SFML Texture) and gf::AlphaTexture are put in the
+parent class gf::BareTexture.
+
+@section sfml_inheritance No multiple inheritance
+
+Multiple inheritance is bad. In gf, everything has been done to remove the
+various cases of multiple inheritance that exist in SFML.
+
+First, there is no `NonCopyable` class. C++11 provides an easy way to make a
+class non-copyable with deleted constructors. So every instance of NonCopyable
+has been replaced with deleted copy constructor and assignement.
+
+In SFML, drawable and transformable are two separate things. Yet, every
+transformable is a drawable. One could imagine to create a class that is
+transformable and not drawable but, in the library, it is not the case. So
+in gf, gf::Transformable inherits gf::Drawable.
+
+Finally, another case of multiple inheritance is SFML render targets. In gf,
+render targets have been decoupled. For example, gf::RenderWindow is not a
+gf::Window (contrary to SFML), but it uses a window at initialization.
+
+@section sfml_consistency Consistency
+
+Another field where SFML is sometimes surprising is consistency.
+
+For example, the `setTexture()` method can take a pointer for shapes and a
+reference for sprites. It is explained by the fact that you can give a shape
+a null pointer to disable the texture. In gf, both method takes a reference
+for consistency and a gf::Shape::unsetTexture() method is provided if you want
+to disable the texture of the shape. This seems to be less surprising for the
+user (that hardly ever disables a texture in a shape).
+
+If you want to set the color of an entity, there are two methods in SFML
+depending on the class: `setColor()` and `setFillColor()`. The second is
+used when the entity also has an outline color. And sometimes, the first
+method is deprecated in favor of the second (e.g. for text). In gf, there is
+only `setColor()` for every class, including those that have an outline color.
+
+Naming of rectangles in SFML put the type first whereas it is put as a suffix
+for vectors. In gf, types are put as suffixes for all templated classes
+(gf::Rect, gf::Range, gf::Vector, gf::Matrix). So `IntRect` becomes gf::RectI,
+and `FloatRect` becomes gf::RectF.
+
+
+@section sfml_others Others small differences
+
+In gf::Inpustream, there is no error code for the return of the methods.
+
+@section sfml_features Additional features
+
+Gamedev Framwork provides additional features that are not present in SFML.
+Here are only the features related to graphics, gf also has more high-level
+features related to games that are not described here.
+
+gf::Monitor is a class that represents a monitor. You can list the monitors
+and get their position, size and modes.
+
+gf::Path is a typedef for `boost::filesystem::path`. It is used everywhere a
+path is needed.
+
+gf provides more drawables that are useful in games: gf::NinePatch is a
+[nine patch](http://developer.android.com/guide/topics/graphics/2d-graphics.html#nine-patch)
+that can be used for UI rendering. gf::AnimatedSprite is a sprite with several
+frames that is used to render a simple graphic animation. gf::PostProcessing
+is a class that apply a gf::Effect to a texture. gf::StarShape is a gf::Shape
+that looks like a star. gf::TileLayer is a class to render tile maps, gf::Curve
+is a family of curves (gf::Line, gf::QuadraticBezierCurve, gf::CubicBezierCurve,
+gf::CompoundCurve).
+
+gf::TextureAtlas provides a texture atlas. It is capable of loading a XML
+file containing the atlas.
+
+gf::SpriteBatch is a simple sprite batch that is able to optimize the
+rendering of a great quantity of sprites that share the same characteristics
+(e.g. same texture).
+
+gf::VertexBuffer represents a vertex buffer. A vertex buffer can be drawn with
+a gf::BufferedGeometry drawable.
+
+gf provides several views that adapts automatically to window size change.
+Different policy can be chosen (see gf::AdaptativeView).
+
+In addition to primary and secondary colors, gf provides tertiary colors
+(whose name are rather standardized): gf::Color::Orange, gf::Color::Rose,
+gf::Color::Chartreuse, gf::Color::Spring, gf::Color::Violet, gf::Color::Azure.
+Moreover, gf provides gf::Color::lighter() and gf::Color::darker() that can
+be used to compute a lighter and darker color, while keeping the same hue.
+
+Several drawables have a `setAnchor()` method (see gf::Anchor). This method
+calls `setOrigin()` with the correct values according to the specified
+anchor and the local bounds of the drawables.
+
+gf provides a binding to the excellent [Game Controller API of SDL](https://wiki.libsdl.org/CategoryGameController)
+through the gf::Gamepad class. It loads the [SDL_GameControllerDB](https://github.com/gabomdq/SDL_GameControllerDB)
+to handle most of the game controllers properly.
+
+@section sfml_missing Missing features
+
+There is no Style in gf::Text. This is a choice. Generally, you need an adapted font if you want italic or bold text.
+
+Some part of the system module of SFML are missing. Especially the classes related to threads, `sf::String`. `sf::Utf`.
+
+@section sfml_modules Missing modules
+
+
+There is no network module and no audio module. See @ref recommanded_libraries.
+
+*/

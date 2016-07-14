@@ -1,0 +1,39 @@
+
+macro(add_gf_example NAME)
+  add_executable("${NAME}" "${NAME}.cc")
+  target_link_libraries("${NAME}" gf0)
+  install(
+    TARGETS "${NAME}"
+    DESTINATION "${CMAKE_INSTALL_DOCDIR}/examples"
+  )
+endmacro()
+
+add_gf_example(00_simple)
+add_gf_example(01_monitors)
+add_gf_example(02_window)
+add_gf_example(03_inputs)
+add_gf_example(04_renderer)
+add_gf_example(05_triangle)
+add_gf_example(06_views)
+add_gf_example(07_fullscreen)
+add_gf_example(08_colors)
+
+add_gf_example(10_shapes)
+add_gf_example(11_curves)
+add_gf_example(12_sprite)
+add_gf_example(13_animation)
+add_gf_example(14_spritebatch)
+add_gf_example(15_atlas)
+add_gf_example(16_text)
+add_gf_example(17_buffer)
+add_gf_example(18_tilelayer)
+add_gf_example(19_ninepatch)
+
+add_gf_example(30_postprocessing)
+add_gf_example(31_pipeline)
+add_gf_example(32_colorblind)
+
+add_gf_example(40_noise)
+
+add_gf_example(98_logo)
+add_gf_example(99_index)

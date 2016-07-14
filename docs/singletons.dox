@@ -1,0 +1,35 @@
+/**
+
+@page singletons Safe singletons
+
+Gamedev Framwork (gf) provides two classes to define singletons: gf::Singleton and gf::SingletonStorage. It implements a variant of the [singleton pattern](https://en.wikipedia.org/wiki/Singleton_pattern).
+
+@section singletons_howto How to use singleton classes?
+
+gf::Singleton is a wrapper around a pointer. The pointer is provided by a gf::SingletonStorage that is allocated in the stack. As soon as the storage is allocated, the singleton can be used like a global variable.
+
+~~~{.cc}
+// a global variable
+gf::Singleton<gf::MessageManager> gMessageManager;
+
+int main() {
+  // allocate storage for the singleton
+  gf::SingletonStorage<gf::MessageManager> storageForMessageManager(gMessageManager);
+
+  // from now on, you can access the singleton like a global variable
+  gMessageManager().sendMessage<Ping>(nullptr);
+}
+~~~
+
+But beware: [singletons are bad](http://stackoverflow.com/questions/137975/what-is-so-bad-about-singletons). You should try to create as few singletons as possible. Game development is one example where singletons can be used. Just because a game is a very complex piece of code and that singletons sometimes make the code more readable. Just know what you are doing.
+
+@section singletons_why Why two classes?
+
+Short answer: to prevent the [static initialization order fiasco](https://isocpp.org/wiki/faq/ctors#static-init-order).
+
+Long answer. Global variables are initialized at the start of the `main` function. The order of initialization depends on the compiler so that it can be quite messy if a global variable needs another global variable. This is called the static initialization order fiasco. There is no direct and simple workaround for this problem.
+
+One solution is to use two classes. The first class is gf::Singleton and simply holds a pointer. Global variables of this type can be safely defined as the order of initialization is not relevant. The second class is gf::SingletonStorage and is allocated in the `main` function. It serves two purposes: provide an allocated object to the singleton; handle the lifetime of the object. Indeed, objects can be initialized like any other variables so the order is well specified. A bonus is the automatic deallocation at the end of the program.
+
+
+*/

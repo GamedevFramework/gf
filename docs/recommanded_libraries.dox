@@ -1,0 +1,26 @@
+/**
+
+@page recommanded_libraries Recommanded libraries
+
+gf does not provide everything, its main focus is on graphics. Here is a list of recommanded C++ libraries that can be used:
+
+@section recommanded_libraries_threading Threading
+
+- No need for an external thread library, C++11 provides [threads, mutexes, condition variables and futures](http://en.cppreference.com/w/cpp/thread).
+
+@section recommanded_libraries_network Network
+
+- [Asio](http://think-async.com/) or [Boost.Asio](http://www.boost.org/doc/libs/release/libs/asio/): This library will be integrated in the future C++ standard, so it can be used safely if you want a future-proof networking library (Boost Software License).
+- [ENet](http://enet.bespin.org/): It's a reliable UDP networking library used in the game industry (MIT licence).
+
+@section recommanded_libraries_audio Audio
+
+- [SFML Audio](http://www.sfml-dev.org/tutorials/2.3/#audio-module): This part of SFML is independent and can be used without the rest of SFML, it is a simple abstraction above [OpenAL](https://www.openal.org/) (zlib/libpng license).
+- [PortAudio](http://portaudio.com/): This library is a low-level audio I/O library (MIT license).
+- [SoLoud](http://sol.gfxile.net/soloud/index.html): This library if an easy to use audio engine for games (zlib/libpng license).
+
+@section recommanded_libraries_physics Physics
+
+- [Box2D](http://box2d.org/): This library is a 2D physics engine for games (zlib/libpng license).
+
+*/

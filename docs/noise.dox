@@ -1,0 +1,58 @@
+/**
+
+@page noise Making noise
+
+@section noise_introduction Introduction
+
+A coherent noise is a pseudo-random function. It can be used to create textures, or maps. The most well-known type of noise is probably Perlin noise. Noise functions, in general, can be the basic bricks for [procedural generation](https://en.wikipedia.org/wiki/Procedural_generation) of content.
+
+Gamedev Framework (gf) provides several kind of 2D noise.
+
+@sa [What is coherent noise? - libnoise](http://libnoise.sourceforge.net/coherentnoise/index.html)
+
+@section noise_basic Basic noises
+
+Basic noises are basic functions to produce noise.
+
+@subsection noise_gradient_noise Gradient noise
+
+Gradient noise is a lattice noise based on gradients organised in a grid.
+
+@image html gradient_noise.png
+
+@sa gf::GradientNoise
+@sa [Gradient noise - Wikipedia](https://en.wikipedia.org/wiki/Gradient_noise)
+
+
+@subsection noise_simplex_noise Simplex noise
+
+@image html simplex_noise.png
+
+Simplex noise is a lattice noise based on gradients organised in a simplex (triangles in 2D).
+
+@sa gf::SimplexNoise
+@sa [Simplex noise - Wikipedia](https://en.wikipedia.org/wiki/Simplex_noise)
+
+
+@subsection noise_opensimplex_noise OpenSimplex noise
+
+OpenSimplex noise is a lattice noise very similar to simplex noise.
+
+@image html opensimplex_noise.png
+
+@sa gf::OpenSimplexNoise
+@sa [OpenSimplex noise - Wikipedia](https://en.wikipedia.org/wiki/OpenSimplex_noise)
+
+
+@section noise_fractal Fractal noises
+
+@subsection noise_perlin_noise Perlin noise
+
+Perlin noise is the combination of a fractal noise and a gradient noise.
+
+@image html perlin_noise.png
+
+@sa gf::PerlinNoise
+@sa [Perlin noise - Wikipedia](https://en.wikipedia.org/wiki/Perlin_noise)
+
+*/
