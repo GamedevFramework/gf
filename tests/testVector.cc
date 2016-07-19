@@ -47,4 +47,11 @@ TEST(VectorTest, RangeFor) {
     EXPECT_EQ(expected, elem);
     ++expected;
   }
+
+  expected = 1;
+
+  for (int elem : vec) {
+    EXPECT_EQ(expected, elem);
+    ++expected;
+  }
 }
