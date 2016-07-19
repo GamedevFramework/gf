@@ -187,6 +187,80 @@ inline namespace v1 {
     }
 
     /**
+     * @brief Typedef for iterate through the elements.
+     *
+     * This is only a pointer to the element.
+     */
+    typedef T *Iterator;
+    /**
+     * @brief Typedef for iterate through the const elements.
+     *
+     * This is only a pointer to the const element.
+     */
+    typedef T const *ConstIterator;
+
+    /**
+     * @brief Iterator.to the first element.
+     *
+     * @return A pointer to the first element.
+     */
+    inline
+    Iterator begin(void) {
+      return &(data[0]);
+    }
+
+    /**
+     * @brief Iterator to the element after the last one.
+     *
+     * @return An invalid pointer that is the adress after the last element.
+     */
+    inline
+    Iterator end(void) {
+      return &(data[N]);
+    }
+
+    /**
+     * @brief Iterator.to the first element (const version).
+     *
+     * @return A pointer on the first const element.
+     */
+    inline
+    ConstIterator begin(void) const {
+      return &(data[0]);
+    }
+
+    /**
+     * @brief Iterator on the element after the last one (const version).
+     *
+     * @return An invalid pointer that is the adress after the last const
+     * element.
+     */
+    inline
+    ConstIterator end(void) const {
+      return &(data[N]);
+    }
+    /**
+     * @brief Iterator.on the first element (const version).
+     *
+     * @return A pointer on the first const element.
+     */
+    inline
+    ConstIterator cbegin(void) const {
+      return &(data[0]);
+    }
+
+    /**
+     * @brief Iterator on the element after the last one (const version).
+     *
+     * @return An invalid pointer that is the adress after the last const
+     * element.
+     */
+    inline
+    ConstIterator cend(void) const {
+      return &(data[N]);
+    }
+
+    /**
      * @brief The internal representation of the vector
      *
      * A vector is represented with an array of `N` values of type `T`. It
@@ -348,6 +422,80 @@ inline namespace v1 {
      */
     T& operator[](std::size_t i) {
       return data[i];
+    }
+
+    /**
+     * @brief Typedef for iterate through the elements.
+     *
+     * This is only a pointer to the element.
+     */
+    typedef T *Iterator;
+    /**
+     * @brief Typedef for iterate through the const elements.
+     *
+     * This is only a pointer to the const element.
+     */
+    typedef T const *ConstIterator;
+
+    /**
+     * @brief Iterator.to the first element.
+     *
+     * @return A pointer to the first element.
+     */
+    inline
+    Iterator begin(void) {
+      return &(data[0]);
+    }
+
+    /**
+     * @brief Iterator to the element after the last one.
+     *
+     * @return An invalid pointer that is the adress after the last element.
+     */
+    inline
+    Iterator end(void) {
+      return &(data[2]);
+    }
+
+    /**
+     * @brief Iterator.to the first element (const version).
+     *
+     * @return A pointer on the first const element.
+     */
+    inline
+    ConstIterator begin(void) const {
+      return &(data[0]);
+    }
+
+    /**
+     * @brief Iterator on the element after the last one (const version).
+     *
+     * @return An invalid pointer that is the adress after the last const
+     * element.
+     */
+    inline
+    ConstIterator end(void) const {
+      return &(data[2]);
+    }
+    /**
+     * @brief Iterator.on the first element (const version).
+     *
+     * @return A pointer on the first const element.
+     */
+    inline
+    ConstIterator cbegin(void) const {
+      return &(data[0]);
+    }
+
+    /**
+     * @brief Iterator on the element after the last one (const version).
+     *
+     * @return An invalid pointer that is the adress after the last const
+     * element.
+     */
+    inline
+    ConstIterator cend(void) const {
+      return &(data[2]);
     }
 
     /**
@@ -541,6 +689,80 @@ inline namespace v1 {
     }
 
     /**
+     * @brief Typedef for iterate through the elements.
+     *
+     * This is only a pointer to the element.
+     */
+    typedef T *Iterator;
+    /**
+     * @brief Typedef for iterate through the const elements.
+     *
+     * This is only a pointer to the const element.
+     */
+    typedef T const *ConstIterator;
+
+    /**
+     * @brief Iterator.to the first element.
+     *
+     * @return A pointer to the first element.
+     */
+    inline
+    Iterator begin(void) {
+      return &(data[0]);
+    }
+
+    /**
+     * @brief Iterator to the element after the last one.
+     *
+     * @return An invalid pointer that is the adress after the last element.
+     */
+    inline
+    Iterator end(void) {
+      return &(data[3]);
+    }
+
+    /**
+     * @brief Iterator.to the first element (const version).
+     *
+     * @return A pointer on the first const element.
+     */
+    inline
+    ConstIterator begin(void) const {
+      return &(data[0]);
+    }
+
+    /**
+     * @brief Iterator on the element after the last one (const version).
+     *
+     * @return An invalid pointer that is the adress after the last const
+     * element.
+     */
+    inline
+    ConstIterator end(void) const {
+      return &(data[3]);
+    }
+    /**
+     * @brief Iterator.on the first element (const version).
+     *
+     * @return A pointer on the first const element.
+     */
+    inline
+    ConstIterator cbegin(void) const {
+      return &(data[0]);
+    }
+
+    /**
+     * @brief Iterator on the element after the last one (const version).
+     *
+     * @return An invalid pointer that is the adress after the last const
+     * element.
+     */
+    inline
+    ConstIterator cend(void) const {
+      return &(data[3]);
+    }
+
+    /**
      * An anonymous union to handle the various representations
      */
     union {
@@ -709,6 +931,80 @@ inline namespace v1 {
      */
     T& operator[](std::size_t i) {
       return data[i];
+    }
+
+    /**
+     * @brief Typedef for iterate through the elements.
+     *
+     * This is only a pointer to the element.
+     */
+    typedef T *Iterator;
+    /**
+     * @brief Typedef for iterate through the const elements.
+     *
+     * This is only a pointer to the const element.
+     */
+    typedef T const *ConstIterator;
+
+    /**
+     * @brief Iterator.to the first element.
+     *
+     * @return A pointer to the first element.
+     */
+    inline
+    Iterator begin(void) {
+      return &(data[0]);
+    }
+
+    /**
+     * @brief Iterator to the element after the last one.
+     *
+     * @return An invalid pointer that is the adress after the last element.
+     */
+    inline
+    Iterator end(void) {
+      return &(data[4]);
+    }
+
+    /**
+     * @brief Iterator.to the first element (const version).
+     *
+     * @return A pointer on the first const element.
+     */
+    inline
+    ConstIterator begin(void) const {
+      return &(data[0]);
+    }
+
+    /**
+     * @brief Iterator on the element after the last one (const version).
+     *
+     * @return An invalid pointer that is the adress after the last const
+     * element.
+     */
+    inline
+    ConstIterator end(void) const {
+      return &(data[4]);
+    }
+    /**
+     * @brief Iterator.on the first element (const version).
+     *
+     * @return A pointer on the first const element.
+     */
+    inline
+    ConstIterator cbegin(void) const {
+      return &(data[0]);
+    }
+
+    /**
+     * @brief Iterator on the element after the last one (const version).
+     *
+     * @return An invalid pointer that is the adress after the last const
+     * element.
+     */
+    inline
+    ConstIterator cend(void) const {
+      return &(data[4]);
     }
 
     /**
