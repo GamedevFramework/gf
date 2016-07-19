@@ -186,6 +186,68 @@ inline namespace v1 {
       return data[i];
     }
 
+
+    /**
+     * @brief Iterator.to the first element.
+     *
+     * @return A pointer to the first element.
+     */
+    inline
+    T *begin(void) {
+      return &(data[0]);
+    }
+
+    /**
+     * @brief Iterator to the element after the last one.
+     *
+     * @return An invalid pointer that is the adress after the last element.
+     */
+    inline
+    T *end(void) {
+      return &(data[N]);
+    }
+
+    /**
+     * @brief Iterator.to the first element (const version).
+     *
+     * @return A pointer on the first const element.
+     */
+    inline
+    T const *begin(void) const {
+      return &(data[0]);
+    }
+
+    /**
+     * @brief Iterator on the element after the last one (const version).
+     *
+     * @return An invalid pointer that is the adress after the last const
+     * element.
+     */
+    inline
+    T const *end(void) const {
+      return &(data[N]);
+    }
+    /**
+     * @brief Iterator.on the first element (const version).
+     *
+     * @return A pointer on the first const element.
+     */
+    inline
+    T const *cbegin(void) const {
+      return &(data[0]);
+    }
+
+    /**
+     * @brief Iterator on the element after the last one (const version).
+     *
+     * @return An invalid pointer that is the adress after the last const
+     * element.
+     */
+    inline
+    T const *cend(void) const {
+      return &(data[N]);
+    }
+
     /**
      * @brief The internal representation of the vector
      *
@@ -348,6 +410,68 @@ inline namespace v1 {
      */
     T& operator[](std::size_t i) {
       return data[i];
+    }
+
+
+    /**
+     * @brief Iterator.to the first element.
+     *
+     * @return A pointer to the first element.
+     */
+    inline
+    T *begin(void) {
+      return &(data[0]);
+    }
+
+    /**
+     * @brief Iterator to the element after the last one.
+     *
+     * @return An invalid pointer that is the adress after the last element.
+     */
+    inline
+    T *end(void) {
+      return &(data[2]);
+    }
+
+    /**
+     * @brief Iterator.to the first element (const version).
+     *
+     * @return A pointer on the first const element.
+     */
+    inline
+    T const *begin(void) const {
+      return &(data[0]);
+    }
+
+    /**
+     * @brief Iterator on the element after the last one (const version).
+     *
+     * @return An invalid pointer that is the adress after the last const
+     * element.
+     */
+    inline
+    T const *end(void) const {
+      return &(data[2]);
+    }
+    /**
+     * @brief Iterator.on the first element (const version).
+     *
+     * @return A pointer on the first const element.
+     */
+    inline
+    T const *cbegin(void) const {
+      return &(data[0]);
+    }
+
+    /**
+     * @brief Iterator on the element after the last one (const version).
+     *
+     * @return An invalid pointer that is the adress after the last const
+     * element.
+     */
+    inline
+    T const *cend(void) const {
+      return &(data[2]);
     }
 
     /**
@@ -540,6 +664,68 @@ inline namespace v1 {
       return data[i];
     }
 
+
+    /**
+     * @brief Iterator.to the first element.
+     *
+     * @return A pointer to the first element.
+     */
+    inline
+    T *begin(void) {
+      return &(data[0]);
+    }
+
+    /**
+     * @brief Iterator to the element after the last one.
+     *
+     * @return An invalid pointer that is the adress after the last element.
+     */
+    inline
+    T *end(void) {
+      return &(data[3]);
+    }
+
+    /**
+     * @brief Iterator.to the first element (const version).
+     *
+     * @return A pointer on the first const element.
+     */
+    inline
+    T const *begin(void) const {
+      return &(data[0]);
+    }
+
+    /**
+     * @brief Iterator on the element after the last one (const version).
+     *
+     * @return An invalid pointer that is the adress after the last const
+     * element.
+     */
+    inline
+    T const *end(void) const {
+      return &(data[3]);
+    }
+    /**
+     * @brief Iterator.on the first element (const version).
+     *
+     * @return A pointer on the first const element.
+     */
+    inline
+    T const *cbegin(void) const {
+      return &(data[0]);
+    }
+
+    /**
+     * @brief Iterator on the element after the last one (const version).
+     *
+     * @return An invalid pointer that is the adress after the last const
+     * element.
+     */
+    inline
+    T const *cend(void) const {
+      return &(data[3]);
+    }
+
     /**
      * An anonymous union to handle the various representations
      */
@@ -709,6 +895,68 @@ inline namespace v1 {
      */
     T& operator[](std::size_t i) {
       return data[i];
+    }
+
+
+    /**
+     * @brief Iterator.to the first element.
+     *
+     * @return A pointer to the first element.
+     */
+    inline
+    T *begin(void) {
+      return &(data[0]);
+    }
+
+    /**
+     * @brief Iterator to the element after the last one.
+     *
+     * @return An invalid pointer that is the adress after the last element.
+     */
+    inline
+    T *end(void) {
+      return &(data[4]);
+    }
+
+    /**
+     * @brief Iterator.to the first element (const version).
+     *
+     * @return A pointer on the first const element.
+     */
+    inline
+    T const *begin(void) const {
+      return &(data[0]);
+    }
+
+    /**
+     * @brief Iterator on the element after the last one (const version).
+     *
+     * @return An invalid pointer that is the adress after the last const
+     * element.
+     */
+    inline
+    T const *end(void) const {
+      return &(data[4]);
+    }
+    /**
+     * @brief Iterator.on the first element (const version).
+     *
+     * @return A pointer on the first const element.
+     */
+    inline
+    T const *cbegin(void) const {
+      return &(data[0]);
+    }
+
+    /**
+     * @brief Iterator on the element after the last one (const version).
+     *
+     * @return An invalid pointer that is the adress after the last const
+     * element.
+     */
+    inline
+    T const *cend(void) const {
+      return &(data[4]);
     }
 
     /**
