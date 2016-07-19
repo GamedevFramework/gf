@@ -186,18 +186,6 @@ inline namespace v1 {
       return data[i];
     }
 
-    /**
-     * @brief Typedef for iterate through the elements.
-     *
-     * This is only a pointer to the element.
-     */
-    typedef T *Iterator;
-    /**
-     * @brief Typedef for iterate through the const elements.
-     *
-     * This is only a pointer to the const element.
-     */
-    typedef T const *ConstIterator;
 
     /**
      * @brief Iterator.to the first element.
@@ -205,7 +193,7 @@ inline namespace v1 {
      * @return A pointer to the first element.
      */
     inline
-    Iterator begin(void) {
+    T *begin(void) {
       return &(data[0]);
     }
 
@@ -215,7 +203,7 @@ inline namespace v1 {
      * @return An invalid pointer that is the adress after the last element.
      */
     inline
-    Iterator end(void) {
+    T *end(void) {
       return &(data[N]);
     }
 
@@ -225,7 +213,7 @@ inline namespace v1 {
      * @return A pointer on the first const element.
      */
     inline
-    ConstIterator begin(void) const {
+    T const *begin(void) const {
       return &(data[0]);
     }
 
@@ -236,7 +224,7 @@ inline namespace v1 {
      * element.
      */
     inline
-    ConstIterator end(void) const {
+    T const *end(void) const {
       return &(data[N]);
     }
     /**
@@ -245,7 +233,7 @@ inline namespace v1 {
      * @return A pointer on the first const element.
      */
     inline
-    ConstIterator cbegin(void) const {
+    T const *cbegin(void) const {
       return &(data[0]);
     }
 
@@ -256,7 +244,7 @@ inline namespace v1 {
      * element.
      */
     inline
-    ConstIterator cend(void) const {
+    T const *cend(void) const {
       return &(data[N]);
     }
 
@@ -424,18 +412,6 @@ inline namespace v1 {
       return data[i];
     }
 
-    /**
-     * @brief Typedef for iterate through the elements.
-     *
-     * This is only a pointer to the element.
-     */
-    typedef T *Iterator;
-    /**
-     * @brief Typedef for iterate through the const elements.
-     *
-     * This is only a pointer to the const element.
-     */
-    typedef T const *ConstIterator;
 
     /**
      * @brief Iterator.to the first element.
@@ -443,7 +419,7 @@ inline namespace v1 {
      * @return A pointer to the first element.
      */
     inline
-    Iterator begin(void) {
+    T *begin(void) {
       return &(data[0]);
     }
 
@@ -453,7 +429,7 @@ inline namespace v1 {
      * @return An invalid pointer that is the adress after the last element.
      */
     inline
-    Iterator end(void) {
+    T *end(void) {
       return &(data[2]);
     }
 
@@ -463,7 +439,7 @@ inline namespace v1 {
      * @return A pointer on the first const element.
      */
     inline
-    ConstIterator begin(void) const {
+    T const *begin(void) const {
       return &(data[0]);
     }
 
@@ -474,7 +450,7 @@ inline namespace v1 {
      * element.
      */
     inline
-    ConstIterator end(void) const {
+    T const *end(void) const {
       return &(data[2]);
     }
     /**
@@ -483,7 +459,7 @@ inline namespace v1 {
      * @return A pointer on the first const element.
      */
     inline
-    ConstIterator cbegin(void) const {
+    T const *cbegin(void) const {
       return &(data[0]);
     }
 
@@ -494,7 +470,7 @@ inline namespace v1 {
      * element.
      */
     inline
-    ConstIterator cend(void) const {
+    T const *cend(void) const {
       return &(data[2]);
     }
 
@@ -688,18 +664,6 @@ inline namespace v1 {
       return data[i];
     }
 
-    /**
-     * @brief Typedef for iterate through the elements.
-     *
-     * This is only a pointer to the element.
-     */
-    typedef T *Iterator;
-    /**
-     * @brief Typedef for iterate through the const elements.
-     *
-     * This is only a pointer to the const element.
-     */
-    typedef T const *ConstIterator;
 
     /**
      * @brief Iterator.to the first element.
@@ -707,7 +671,7 @@ inline namespace v1 {
      * @return A pointer to the first element.
      */
     inline
-    Iterator begin(void) {
+    T *begin(void) {
       return &(data[0]);
     }
 
@@ -717,7 +681,7 @@ inline namespace v1 {
      * @return An invalid pointer that is the adress after the last element.
      */
     inline
-    Iterator end(void) {
+    T *end(void) {
       return &(data[3]);
     }
 
@@ -727,7 +691,7 @@ inline namespace v1 {
      * @return A pointer on the first const element.
      */
     inline
-    ConstIterator begin(void) const {
+    T const *begin(void) const {
       return &(data[0]);
     }
 
@@ -738,7 +702,7 @@ inline namespace v1 {
      * element.
      */
     inline
-    ConstIterator end(void) const {
+    T const *end(void) const {
       return &(data[3]);
     }
     /**
@@ -747,7 +711,7 @@ inline namespace v1 {
      * @return A pointer on the first const element.
      */
     inline
-    ConstIterator cbegin(void) const {
+    T const *cbegin(void) const {
       return &(data[0]);
     }
 
@@ -758,7 +722,7 @@ inline namespace v1 {
      * element.
      */
     inline
-    ConstIterator cend(void) const {
+    T const *cend(void) const {
       return &(data[3]);
     }
 
@@ -933,18 +897,6 @@ inline namespace v1 {
       return data[i];
     }
 
-    /**
-     * @brief Typedef for iterate through the elements.
-     *
-     * This is only a pointer to the element.
-     */
-    typedef T *Iterator;
-    /**
-     * @brief Typedef for iterate through the const elements.
-     *
-     * This is only a pointer to the const element.
-     */
-    typedef T const *ConstIterator;
 
     /**
      * @brief Iterator.to the first element.
@@ -952,7 +904,7 @@ inline namespace v1 {
      * @return A pointer to the first element.
      */
     inline
-    Iterator begin(void) {
+    T *begin(void) {
       return &(data[0]);
     }
 
@@ -962,7 +914,7 @@ inline namespace v1 {
      * @return An invalid pointer that is the adress after the last element.
      */
     inline
-    Iterator end(void) {
+    T *end(void) {
       return &(data[4]);
     }
 
@@ -972,7 +924,7 @@ inline namespace v1 {
      * @return A pointer on the first const element.
      */
     inline
-    ConstIterator begin(void) const {
+    T const *begin(void) const {
       return &(data[0]);
     }
 
@@ -983,7 +935,7 @@ inline namespace v1 {
      * element.
      */
     inline
-    ConstIterator end(void) const {
+    T const *end(void) const {
       return &(data[4]);
     }
     /**
@@ -992,7 +944,7 @@ inline namespace v1 {
      * @return A pointer on the first const element.
      */
     inline
-    ConstIterator cbegin(void) const {
+    T const *cbegin(void) const {
       return &(data[0]);
     }
 
@@ -1003,7 +955,7 @@ inline namespace v1 {
      * element.
      */
     inline
-    ConstIterator cend(void) const {
+    T const *cend(void) const {
       return &(data[4]);
     }
 
