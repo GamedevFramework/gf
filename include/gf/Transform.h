@@ -62,6 +62,17 @@ inline namespace v1 {
    */
   GF_API RectF transform(const Matrix3f& mat, const RectF& rect);
 
+
+  /**
+   * @ingroup core
+   * @brief Identity transform
+   *
+   * @return The identity matrix
+   */
+  GF_API constexpr Matrix3f identityTransform() {
+    return Matrix3f(1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+  }
+
   /**
    * @ingroup core
    * @brief Get a translation matrix

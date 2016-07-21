@@ -646,6 +646,8 @@ inline namespace v1 {
   /**
    * @relates Matrix
    * @brief Identity matrix
+   *
+   * @sa gf::identityTransform()
    */
   template<typename MatrixType>
   GF_API inline
@@ -663,15 +665,6 @@ inline namespace v1 {
     }
 
     return out;
-  }
-
-  /**
-   * @relates Matrix
-   * @brief Identity matrix (specialization for gf::Matrix3f)
-   */
-  template<>
-  GF_API constexpr Matrix3f identity<Matrix3f>() {
-    return Matrix3f(1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
   }
 
   /**
