@@ -238,20 +238,6 @@ inline namespace v1 {
     }
 
     /**
-     * @brief Get the default view of the render target
-     *
-     * The default view has the initial size of the render target,
-     * and never changes after the target has been created.
-     *
-     * @return The default view of the render target
-     *
-     * @sa setView(), getView()
-     */
-    const View& getDefaultView() const {
-      return m_defaultView;
-    }
-
-    /**
      * @brief Get the viewport of a view, applied to this render target
      *
      * The viewport is defined in the view as a ratio, this function
@@ -400,11 +386,9 @@ inline namespace v1 {
 
   private:
     View m_view;
-    View m_defaultView;
     Shader m_defaultShader;
     Shader m_defaultAlphaShader;
     Texture m_defaultTexture;
-
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
