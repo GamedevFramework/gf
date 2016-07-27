@@ -60,7 +60,7 @@ int main() {
 
   bool toggle;
 
-  renderer.clear(gf::Color::White);
+  renderer.clear(gf::Color::Grey());
 
   while (window.isOpen()) {
     gf::Event event;

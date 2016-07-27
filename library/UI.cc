@@ -31,6 +31,60 @@
 #include "priv/Debug.h"
 #include "priv/Utils.h"
 
+static std::string niceNum(float num, float precision) {
+  float accpow = std::floor(std::log10(precision));
+
+  int digits = 0;
+
+  if (num < 0) {
+    digits = static_cast<int>(std::fabs(num / std::pow(10, accpow) - 0.5f));
+  } else {
+    digits = static_cast<int>(std::fabs(num / std::pow(10, accpow) + 0.5f));
+  }
+
+  std::string result;
+
+  if (digits > 0) {
+    int curpow = static_cast<int>(accpow);
+
+    for (int i = 0; i < curpow; ++i) {
+      result += '0';
+    }
+
+    while (digits > 0) {
+      char adigit = (digits % 10) + '0';
+
+      if (curpow == 0 && result.length() > 0) {
+        result += '.';
+        result += adigit;
+      } else {
+        result += adigit;
+      }
+
+      digits /= 10;
+      curpow += 1;
+    }
+
+    for (int i = curpow; i < 0; ++i) {
+      result += '0';
+    }
+
+    if (curpow <= 0) {
+      result += ".0";
+    }
+
+    if (num < 0) {
+      result += '-';
+    }
+
+    std::reverse(result.begin(), result.end());
+  } else {
+    result = "0";
+  }
+
+  return result;
+}
+
 
 namespace gf {
 inline namespace v1 {
@@ -467,7 +521,7 @@ inline namespace v1 {
       addRectCommand(slider, 4.0f, isHot(id) ? Color4f{ 1.0f, 0.75f, 0.0f, 0.5f } : Color4f{ 1.0f, 1.0f, 1.0f, 0.25f });
     }
 
-    std::string str = std::to_string(static_cast<long>(*val));
+    std::string str = niceNum(*val, vinc);
 
     Vector2f textPos = space.getTopLeft() + m_layout.sliderHeight / 2;
     textPos.y -= m_layout.textHeight / 2;
