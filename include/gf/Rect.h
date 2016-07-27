@@ -147,11 +147,24 @@ inline namespace v1 {
     }
 
     /**
+     * @brief Get the position of the rectangle
+     *
+     * It is a synonym for the `position` member
+     *
+     * @return The position of the rectangle
+     * @sa getSize()
+     */
+    constexpr Vector<T, 2> getPosition() const noexcept {
+      return position;
+    }
+
+    /**
      * @brief Get the size of the rectangle
      *
      * It is a synonym for the `size` member
      *
      * @return The size of the rectangle
+     * @sa getPosition()
      */
     constexpr Vector<T, 2> getSize() const noexcept {
       return size;
