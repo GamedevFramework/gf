@@ -97,14 +97,14 @@ int main() {
     }
   }
 
-  renderer.clear(gf::Color::darker(gf::Color::Spring));
-
   std::cout << "Gamedev Framework (gf) example #18: Tile Layer\n";
   std::cout << "This example shows a tile layer.\n";
   std::cout << "How to use:\n";
   std::cout << "\tUp/Down/Left/Right: move the view\n";
   std::cout << "\tPageUp/PageDown: Zoom in/out\n";
   std::cout << "\t1/2: Rotate\n";
+
+  renderer.clear(gf::Color::darker(gf::Color::Spring));
 
   while (window.isOpen()) {
     gf::Event event;

@@ -55,6 +55,8 @@ int main() {
   std::cout << "Gamedev Framework (gf) example #12: Sprite\n";
   std::cout << "This example prints a sprite of a bomb.\n";
 
+  renderer.clear(gf::Color::White);
+
   while (window.isOpen()) {
     gf::Event event;
 
@@ -69,7 +71,7 @@ int main() {
       }
     }
 
-    renderer.clear(gf::Color::White);
+    renderer.clear();
     renderer.draw(sprite);
     renderer.display();
   }

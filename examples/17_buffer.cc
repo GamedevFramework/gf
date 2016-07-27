@@ -130,6 +130,8 @@ int main() {
   std::cout << "Gamedev Framework (gf) example #17: Buffer\n";
   std::cout << "This example prints various geometries using vertex buffers.\n";
 
+  renderer.clear(gf::Color::White);
+
   while (window.isOpen()) {
     gf::Event event;
 
@@ -144,7 +146,7 @@ int main() {
       }
     }
 
-    renderer.clear(gf::Color::White);
+    renderer.clear();
     renderer.draw(textGeometry);
     renderer.draw(shapeGeometry);
     renderer.draw(spriteGeometry);

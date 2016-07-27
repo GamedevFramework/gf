@@ -99,6 +99,8 @@ int main() {
   std::cout << "\t4: Switch to ExtendView\n";
   std::cout << "Current view: StretchView\n";
 
+  renderer.clear(gf::Color::Black);
+
   while (window.isOpen()) {
     gf::Event event;
 
@@ -142,7 +144,7 @@ int main() {
       views.update(event);
     }
 
-    renderer.clear(gf::Color::Black);
+    renderer.clear();
 
     renderer.setView(*currentView);
     renderer.draw(extendedBackground);

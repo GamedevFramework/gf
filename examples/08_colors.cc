@@ -59,6 +59,8 @@ int main() {
   std::cout << "Gamedev Framework (gf) example #08: Colors\n";
   std::cout << "This example prints primary, secondary and tertiary colors with different variations of lightness/darkness.\n";
 
+  renderer.clear(gf::Color::Grey());
+
   while (window.isOpen()) {
     gf::Event event;
 
@@ -74,7 +76,7 @@ int main() {
     }
 
 
-    renderer.clear(gf::Color::Grey());
+    renderer.clear();
 
     float x = PaddingX;
 

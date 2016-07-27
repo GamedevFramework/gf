@@ -66,6 +66,8 @@ int main() {
   std::cout << "Gamedev Framework (gf) example #16: Text\n";
   std::cout << "This example prints two text to show outlining and text justifying.\n";
 
+  renderer.clear(gf::Color::White);
+
   while (window.isOpen()) {
     gf::Event event;
 
@@ -80,7 +82,7 @@ int main() {
       }
     }
 
-    renderer.clear(gf::Color::White);
+    renderer.clear();
     renderer.draw(text);
     renderer.draw(paragraph);
     renderer.display();

@@ -66,6 +66,8 @@ int main() {
   std::cout << "This example prints an animated sprite of a walking skeleton.\n";
   std::cout << "The animation is composed of 8 frames.\n";
 
+  renderer.clear(gf::Color::White);
+
   while (window.isOpen()) {
     gf::Event event;
 
@@ -83,7 +85,7 @@ int main() {
     gf::Time time = clock.restart();
     animatedSprite.update(time.asSeconds());
 
-    renderer.clear(gf::Color::White);
+    renderer.clear();
     renderer.draw(animatedSprite);
     renderer.display();
   }

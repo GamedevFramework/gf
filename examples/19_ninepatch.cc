@@ -51,6 +51,8 @@ int main() {
   std::cout << "Gamedev Framework (gf) example #19: Nine Patch\n";
   std::cout << "This example prints a nine patch in three formats.\n";
 
+  renderer.clear(gf::Color::White);
+
   while (window.isOpen()) {
     gf::Event event;
 
@@ -65,7 +67,7 @@ int main() {
       }
     }
 
-    renderer.clear(gf::Color::White);
+    renderer.clear();
 
     patch.setSize({ 300.0f, 100.0f });
     patch.setPosition({ 20.0f, 20.0f });

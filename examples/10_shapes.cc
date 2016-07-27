@@ -65,6 +65,8 @@ int main() {
   std::cout << "Gamedev Framework (gf) example #10: Shapes\n";
   std::cout << "This example prints various shapes.\n";
 
+  renderer.clear(gf::Color::White);
+
   while (window.isOpen()) {
     gf::Event event;
 
@@ -79,7 +81,7 @@ int main() {
       }
     }
 
-    renderer.clear(gf::Color::White);
+    renderer.clear();
     renderer.draw(rectShape);
     renderer.draw(circleShape);
     renderer.draw(starShape);

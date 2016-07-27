@@ -93,6 +93,8 @@ int main() {
   std::cout << "\tS: Capture the image in 'noise.png'\n";
   std::cout << "Current noise: Perlin noise (Gradient noise + Fractal)\n";
 
+  renderer.clear(gf::Color::White);
+
   while (window.isOpen()) {
     gf::Event event;
 
@@ -186,7 +188,7 @@ int main() {
       }
     }
 
-    renderer.clear(gf::Color::White);
+    renderer.clear();
     renderer.draw(sprite);
     renderer.display();
   }

@@ -66,6 +66,8 @@ int main() {
   std::cout << "Gamedev Framework (gf) example #15: Texture atlas\n";
   std::cout << "This example prints two sprites that come from a texture atlas.\n";
 
+  renderer.clear(gf::Color::White);
+
   while (window.isOpen()) {
     gf::Event event;
 
@@ -80,7 +82,7 @@ int main() {
       }
     }
 
-    renderer.clear(gf::Color::White);
+    renderer.clear();
     renderer.draw(brickRed06);
     renderer.draw(brickBlack01);
     renderer.display();

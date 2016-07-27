@@ -76,6 +76,8 @@ int main() {
   std::cout << "How to use:\n";
   std::cout << "\tF: Change between fullscreen/windowed\n";
 
+  renderer.clear(gf::Color::Black);
+
   while (window.isOpen()) {
     gf::Event event;
 
@@ -110,7 +112,7 @@ int main() {
 
     renderer.setView(extendView);
 
-    renderer.clear(gf::Color::Black);
+    renderer.clear();
     renderer.draw(extendedBackground);
     renderer.draw(background);
     renderer.draw(triangle, 3, gf::PrimitiveType::Triangles);
