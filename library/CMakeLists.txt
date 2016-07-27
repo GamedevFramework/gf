@@ -74,6 +74,8 @@ add_library(gf0 SHARED
   Model.cc
   ModelContainer.cc
   ResourceManager.cc
+  # ui
+  UI.cc
   # priv
   priv/Debug.cc
   # vendor
