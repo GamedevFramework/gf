@@ -97,7 +97,7 @@ int main() {
           window.close();
           break;
 
-         case gf::EventType::KeyPressed:
+        case gf::EventType::KeyPressed:
           switch (event.key.scancode) {
             case gf::Scancode::Return:
               useBatch = !useBatch;
@@ -143,6 +143,7 @@ int main() {
               } else {
                 std::cout << "Please stop benchmark before changing the number of cars.\n";
               }
+              break;
 
             default:
               break;
