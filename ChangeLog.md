@@ -6,6 +6,9 @@
   - Add Vector::begin()/Vector::end() for direct iteration
   - Add Rect::getPosition()
   - Replace the specialization of identity() for Matrix3f by identityTransform()
+- Window:
+  - Add mouse cursor visibility
+  - Add mouse cursor grab
 - Graphics:
   - Remove RenderTarget::getDefaultView()
   - Add mipmap generation support for textures
