@@ -38,22 +38,42 @@ int main() {
   gf::Window window("12_sprite", { 640, 480 }, hints);
   gf::RenderWindow renderer(window);
 
-  gf::Texture texture;
-  bool loaded = texture.loadFromFile("12_bomb.png");
+  bool smooth = true;
 
-  if (!loaded) {
+  gf::Texture texture;
+
+  if (!texture.loadFromFile("12_bomb.png")) {
     return EXIT_FAILURE;
   }
 
-  texture.setSmooth();
+  texture.setSmooth(smooth);
 
   gf::Sprite sprite(texture);
-  sprite.setPosition({ 320, 240 });
+  sprite.setPosition({ 160, 240 });
   sprite.setScale({ 0.8f, 0.8f });
   sprite.setAnchor(gf::Anchor::Center);
 
+  gf::Texture textureWithMipmap;
+
+  if (!textureWithMipmap.loadFromFile("12_bomb.png")) {
+    return EXIT_FAILURE;
+  }
+
+  textureWithMipmap.setSmooth(smooth);
+  textureWithMipmap.generateMipmap();
+
+  gf::Sprite spriteWithMipmap(textureWithMipmap);
+  spriteWithMipmap.setPosition({ 480, 240 });
+  spriteWithMipmap.setScale({ 0.8f, 0.8f });
+  spriteWithMipmap.setAnchor(gf::Anchor::Center);
+
   std::cout << "Gamedev Framework (gf) example #12: Sprite\n";
-  std::cout << "This example prints a sprite of a bomb.\n";
+  std::cout << "This example prints two sprites of a bomb.\n";
+  std::cout << "The left sprite does not use mipmaps whereas the right sprite uses mipmaps.\n";
+  std::cout << "How to use:\n";
+  std::cout << "\tSpace: Toggle texture smoothness\n";
+  std::cout << "\tPageUp/PageDown: Zoom in/out\n";
+  std::cout << "Using texture smoothness: " << (smooth ? "yes" : "no") << '\n';
 
   renderer.clear(gf::Color::White);
 
@@ -66,6 +86,30 @@ int main() {
           window.close();
           break;
 
+        case gf::EventType::KeyPressed:
+          switch (event.key.scancode) {
+            case gf::Scancode::Space:
+              smooth = !smooth;
+              texture.setSmooth(smooth);
+              textureWithMipmap.setSmooth(smooth);
+              std::cout << "Using texture smoothness: " << (smooth ? "yes" : "no") << '\n';
+              break;
+
+            case gf::Scancode::PageUp:
+              sprite.scale(0.8);
+              spriteWithMipmap.scale(0.8);
+              break;
+
+            case gf::Scancode::PageDown:
+              sprite.scale(1.25);
+              spriteWithMipmap.scale(1.25);
+              break;
+
+            default:
+              break;
+          }
+          break;
+
         default:
           break;
       }
@@ -73,6 +117,7 @@ int main() {
 
     renderer.clear();
     renderer.draw(sprite);
+    renderer.draw(spriteWithMipmap);
     renderer.display();
   }
 
