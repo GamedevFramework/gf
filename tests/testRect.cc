@@ -76,8 +76,6 @@ TEST(RectTest, IsEmpty) {
 
   gf::RectI ri4{0, 5, 0, 0};
   EXPECT_TRUE(ri4.isEmpty());
-
-  static_assert(gf::RectI().isEmpty(), "Rect::isEmpty");
 }
 
 TEST(RectTest, ContainsVector) {
