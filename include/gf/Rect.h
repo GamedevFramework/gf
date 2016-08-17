@@ -341,7 +341,6 @@ inline namespace v1 {
   extern template struct Rect<float>;
   extern template struct Rect<int>;
   extern template struct Rect<unsigned>;
-  extern template struct Rect<std::size_t>;
 #endif
 
   /**

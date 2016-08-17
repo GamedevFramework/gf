@@ -41,10 +41,6 @@ inline namespace v1 {
   template struct Vector<unsigned, 3>;
   template struct Vector<unsigned, 4>;
 
-  template struct Vector<std::size_t, 2>;
-  template struct Vector<std::size_t, 3>;
-  template struct Vector<std::size_t, 4>;
-
   template struct Vector<bool, 2>;
   template struct Vector<bool, 3>;
   template struct Vector<bool, 4>;

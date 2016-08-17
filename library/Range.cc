@@ -28,7 +28,6 @@ inline namespace v1 {
   template struct Range<float>;
   template struct Range<int>;
   template struct Range<unsigned>;
-  template struct Range<std::size_t>;
 #endif
 
 }

@@ -191,7 +191,6 @@ inline namespace v1 {
   extern template struct Range<float>;
   extern template struct Range<int>;
   extern template struct Range<unsigned>;
-  extern template struct Range<std::size_t>;
 #endif
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

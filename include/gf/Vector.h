@@ -1132,10 +1132,6 @@ inline namespace v1 {
   extern template struct Vector<unsigned, 3>;
   extern template struct Vector<unsigned, 4>;
 
-  extern template struct Vector<std::size_t, 2>;
-  extern template struct Vector<std::size_t, 3>;
-  extern template struct Vector<std::size_t, 4>;
-
   extern template struct Vector<bool, 2>;
   extern template struct Vector<bool, 3>;
   extern template struct Vector<bool, 4>;
