@@ -18,6 +18,14 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
+
+/*
+ * This file is the same as the example in the documentation index. It is here
+ * to verify that the code compiles. It is not meant to be executed as there
+ * is no 'sprite.png' or 'DroidSans.ttf' files in the directory.
+ *
+ */
+
 #include <gf/Event.h>
 #include <gf/Font.h>
 #include <gf/RenderWindow.h>
