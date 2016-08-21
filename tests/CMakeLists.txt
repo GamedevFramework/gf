@@ -2,6 +2,7 @@
 add_executable(gf_tests
   main.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/googletest/googletest/src/gtest-all.cc
+  testCirc.cc
   testRange.cc
   testRect.cc
   testSingleton.cc
