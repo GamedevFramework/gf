@@ -1145,7 +1145,7 @@ inline namespace v1 {
    * @brief Equality operator between two vectors
    */
   template<typename T, std::size_t N>
-  GF_API inline
+  inline
   bool operator==(const Vector<T, N>& lhs, const Vector<T, N>& rhs) {
     for (std::size_t i = 0; i < N; ++i) {
       if (lhs.data[i] != rhs.data[i]) {
@@ -1161,7 +1161,7 @@ inline namespace v1 {
    * @brief Inequality operator between two vectors
    */
   template<typename T, std::size_t N>
-  GF_API inline
+  inline
   bool operator!=(const Vector<T, N>& lhs, const Vector<T, N>& rhs) {
     return !(lhs == rhs);
   }
@@ -1171,7 +1171,7 @@ inline namespace v1 {
    * @brief Component-wise unary minus
    */
   template<typename T, std::size_t N>
-  GF_API inline
+  inline
   Vector<T, N> operator-(const Vector<T, N>& val) {
     Vector<T, N> out;
 
@@ -1187,7 +1187,7 @@ inline namespace v1 {
    * @brief Component-wise addition
    */
   template<typename T, typename U, std::size_t N>
-  GF_API inline
+  inline
   Vector<typename std::common_type<T,U>::type, N> operator+(const Vector<T, N>& lhs, const Vector<U, N>& rhs) {
     Vector<typename std::common_type<T,U>::type, N> out;
 
@@ -1203,7 +1203,7 @@ inline namespace v1 {
    * @brief Component-wise addition and assignment
    */
   template<typename T, typename U, std::size_t N>
-  GF_API inline
+  inline
   Vector<T, N>& operator+=(Vector<T, N>& lhs, const Vector<U, N>& rhs) {
     for (std::size_t i = 0; i < N; ++i) {
       lhs.data[i] += rhs.data[i];
@@ -1217,7 +1217,7 @@ inline namespace v1 {
    * @brief Right scalar addition
    */
   template<typename T, typename U, std::size_t N, typename E = typename std::enable_if<std::is_arithmetic<U>::value, U>::type>
-  GF_API inline
+  inline
   Vector<typename std::common_type<T,U>::type, N> operator+(const Vector<T, N>& lhs, U rhs) {
     Vector<typename std::common_type<T,U>::type, N> out;
 
@@ -1233,7 +1233,7 @@ inline namespace v1 {
    * @brief Left scalar addition
    */
   template<typename T, typename U, std::size_t N, typename E = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
-  GF_API inline
+  inline
   Vector<typename std::common_type<T,U>::type, N> operator+(T lhs, const Vector<U, N>& rhs) {
     Vector<typename std::common_type<T,U>::type, N> out;
 
@@ -1250,7 +1250,7 @@ inline namespace v1 {
    * @brief Component-wise substraction
    */
   template<typename T, typename U, std::size_t N>
-  GF_API inline
+  inline
   Vector<typename std::common_type<T,U>::type, N> operator-(const Vector<T, N>& lhs, const Vector<U, N>& rhs) {
     Vector<typename std::common_type<T,U>::type, N> out;
 
@@ -1266,7 +1266,7 @@ inline namespace v1 {
    * @brief Component-wise substraction and assignment
    */
   template<typename T, typename U, std::size_t N>
-  GF_API inline
+  inline
   Vector<T, N>& operator-=(Vector<T, N>& lhs, const Vector<U, N>& rhs) {
     for (std::size_t i = 0; i < N; ++i) {
       lhs.data[i] -= rhs.data[i];
@@ -1281,7 +1281,7 @@ inline namespace v1 {
    * @brief Right scalar substraction
    */
   template<typename T, typename U, std::size_t N, typename E = typename std::enable_if<std::is_arithmetic<U>::value, U>::type>
-  GF_API inline
+  inline
   Vector<typename std::common_type<T,U>::type, N> operator-(const Vector<T, N>& lhs, U rhs) {
     Vector<typename std::common_type<T,U>::type, N> out;
 
@@ -1297,7 +1297,7 @@ inline namespace v1 {
    * @brief Left scalar substraction
    */
   template<typename T, typename U, std::size_t N, typename E = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
-  GF_API inline
+  inline
   Vector<typename std::common_type<T,U>::type, N> operator-(T lhs, const Vector<U, N>& rhs) {
     Vector<typename std::common_type<T,U>::type, N> out;
 
@@ -1314,7 +1314,7 @@ inline namespace v1 {
    * @brief Component-wise multiplication
    */
   template<typename T, typename U, std::size_t N>
-  GF_API inline
+  inline
   Vector<typename std::common_type<T,U>::type, N> operator*(const Vector<T, N>& lhs, const Vector<U, N>& rhs) {
     Vector<typename std::common_type<T,U>::type, N> out;
 
@@ -1330,7 +1330,7 @@ inline namespace v1 {
    * @brief Component-wise multiplication and assignment
    */
   template<typename T, typename U, std::size_t N>
-  GF_API inline
+  inline
   Vector<T, N>& operator*=(Vector<T, N>& lhs, const Vector<U, N>& rhs) {
     for (std::size_t i = 0; i < N; ++i) {
       lhs.data[i] *= rhs.data[i];
@@ -1344,7 +1344,7 @@ inline namespace v1 {
    * @brief Right scalar multiplication
    */
   template<typename T, typename U, std::size_t N, typename E = typename std::enable_if<std::is_arithmetic<U>::value, U>::type>
-  GF_API inline
+  inline
   Vector<typename std::common_type<T,U>::type, N> operator*(const Vector<T, N>& lhs, U rhs) {
     Vector<typename std::common_type<T,U>::type, N> out;
 
@@ -1360,7 +1360,7 @@ inline namespace v1 {
    * @brief Right scalar multiplication and assignment
    */
   template<typename T, typename U, std::size_t N>
-  GF_API inline
+  inline
   Vector<T, N>& operator*=(Vector<T, N>& lhs, U rhs) {
     for (std::size_t i = 0; i < N; ++i) {
       lhs.data[i] *= rhs;
@@ -1374,7 +1374,7 @@ inline namespace v1 {
    * @brief Left scalar multiplication
    */
   template<typename T, typename U, std::size_t N, typename E = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
-  GF_API inline
+  inline
   Vector<typename std::common_type<T,U>::type, N> operator*(T lhs, const Vector<U, N>& rhs) {
     Vector<typename std::common_type<T,U>::type, N> out;
 
@@ -1390,7 +1390,7 @@ inline namespace v1 {
    * @brief Component-wise division
    */
   template<typename T, typename U, std::size_t N>
-  GF_API inline
+  inline
   Vector<typename std::common_type<T,U>::type, N> operator/(const Vector<T, N>& lhs, const Vector<U, N>& rhs) {
     Vector<typename std::common_type<T,U>::type, N> out;
 
@@ -1406,7 +1406,7 @@ inline namespace v1 {
    * @brief Component-wise division and assignment
    */
   template<typename T, typename U, std::size_t N>
-  GF_API inline
+  inline
   Vector<T, N>& operator/=(Vector<T, N>& lhs, const Vector<U, N>& rhs) {
     for (std::size_t i = 0; i < N; ++i) {
       lhs.data[i] /= rhs.data[i];
@@ -1420,7 +1420,7 @@ inline namespace v1 {
    * @brief Right scalar division
    */
   template<typename T, typename U, std::size_t N, typename E = typename std::enable_if<std::is_arithmetic<U>::value, U>::type>
-  GF_API inline
+  inline
   Vector<typename std::common_type<T,U>::type, N> operator/(const Vector<T, N>& lhs, U rhs) {
     Vector<typename std::common_type<T,U>::type, N> out;
 
@@ -1436,7 +1436,7 @@ inline namespace v1 {
    * @brief Right scalar division and assignment
    */
   template<typename T, typename U, std::size_t N>
-  GF_API inline
+  inline
   Vector<T, N>& operator/=(Vector<T, N>& lhs, U rhs) {
     for (std::size_t i = 0; i < N; ++i) {
       lhs.data[i] /= rhs;
@@ -1450,7 +1450,7 @@ inline namespace v1 {
    * @brief Left scalar division
    */
   template<typename T, typename U, std::size_t N, typename E = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
-  GF_API inline
+  inline
   Vector<typename std::common_type<T,U>::type, N> operator/(T lhs, const Vector<U, N>& rhs) {
     Vector<typename std::common_type<T,U>::type, N> out;
 
@@ -1466,7 +1466,7 @@ inline namespace v1 {
    * @brief Component-wise logical or operator
    */
   template<std::size_t N>
-  GF_API inline
+  inline
   Vector<bool, N> operator||(const Vector<bool, N>& lhs, const Vector<bool, N>& rhs) {
     Vector<bool, N> out;
 
@@ -1482,7 +1482,7 @@ inline namespace v1 {
    * @brief Component-wise logical and operator
    */
   template<std::size_t N>
-  GF_API inline
+  inline
   Vector<bool, N> operator&&(const Vector<bool, N>& lhs, const Vector<bool, N>& rhs) {
     Vector<bool, N> out;
 
@@ -1498,7 +1498,7 @@ inline namespace v1 {
    * @brief Scalar product
    */
   template<typename T, std::size_t N>
-  GF_API inline
+  inline
   T dot(const Vector<T, N>& lhs, const Vector<T, N>& rhs) {
     T out{0};
 
@@ -1514,7 +1514,7 @@ inline namespace v1 {
    * @brief Component-wise minimum
    */
   template<typename T, std::size_t N>
-  GF_API inline
+  inline
   Vector<T, N> min(const Vector<T, N>& lhs, const Vector<T, N>& rhs) {
     Vector<T, N> out;
 
@@ -1530,7 +1530,7 @@ inline namespace v1 {
    * @brief Component-wise maximum
    */
   template<typename T, std::size_t N>
-  GF_API inline
+  inline
   Vector<T, N> max(const Vector<T, N>& lhs, const Vector<T, N>& rhs) {
     Vector<T, N> out;
 
@@ -1546,7 +1546,7 @@ inline namespace v1 {
    * @brief Component-wise absolute value
    */
   template<typename T, std::size_t N>
-  GF_API inline
+  inline
   Vector<T, N> abs(const Vector<T, N>& val) {
     Vector<T, N> out;
 
@@ -1563,7 +1563,7 @@ inline namespace v1 {
    * @brief Component-wise equality operator
    */
   template<typename T, std::size_t N>
-  GF_API inline
+  inline
   Vector<bool, N> equals(const Vector<T, N>& lhs, const Vector<T, N>& rhs) {
     Vector<bool, N> out;
 
@@ -1579,7 +1579,7 @@ inline namespace v1 {
    * @brief Component-wise comparison operator
    */
   template<typename T, std::size_t N>
-  GF_API inline
+  inline
   Vector<bool, N> lessThan(const Vector<T, N>& lhs, const Vector<T, N>& rhs) {
     Vector<bool, N> out;
 
@@ -1596,7 +1596,7 @@ inline namespace v1 {
    */
   template<typename T, std::size_t N>
   inline
-  GF_API Vector<bool, N> greaterThan(const Vector<T, N>& lhs, const Vector<T, N>& rhs) {
+  Vector<bool, N> greaterThan(const Vector<T, N>& lhs, const Vector<T, N>& rhs) {
     Vector<bool, N> out;
 
     for (std::size_t i = 0; i < N; ++i) {
@@ -1611,7 +1611,7 @@ inline namespace v1 {
    * @brief Component-wise selection operator
    */
   template<typename T, std::size_t N>
-  GF_API inline
+  inline
   Vector<T, N> select(const Vector<bool, N>& cond, const Vector<T, N>& lhs, const Vector<T, N>& rhs) {
     Vector<T, N> out;
 
@@ -1630,7 +1630,7 @@ inline namespace v1 {
    *
    */
   template<typename T, std::size_t N>
-  GF_API inline
+  inline
   Vector<T, N> clamp(const Vector<T, N>& val, const Vector<T, N>& lo, const Vector<T, N>& hi) {
     Vector<T, N> out;
 
@@ -1648,7 +1648,7 @@ inline namespace v1 {
    * Relative to two values.
    */
   template<typename T, std::size_t N>
-  GF_API inline
+  inline
   Vector<T, N> clamp(const Vector<T, N>& val, T lo, T hi) {
     Vector<T, N> out;
 
@@ -1664,7 +1664,7 @@ inline namespace v1 {
    * @brief Component-wise lerp function
    */
   template<typename T, typename U, std::size_t N>
-  GF_API inline
+  inline
   Vector<typename std::common_type<T,U>::type, N> lerp(const Vector<T, N>& lhs, const Vector<T, N>& rhs, U t) {
     return t * lhs + (1 - t) * rhs;
   }
@@ -1685,7 +1685,7 @@ inline namespace v1 {
    * @sa manhattanDistance
    */
   template<typename T, std::size_t N>
-  GF_API inline
+  inline
   T manhattanLength(const Vector<T, N>& vec) {
     T out{0};
 
@@ -1710,7 +1710,7 @@ inline namespace v1 {
    * @sa euclideanLength, squareDistance
    */
   template<typename T, std::size_t N>
-  GF_API inline
+  inline
   T squareLength(const Vector<T, N>& vec) {
     T out{0};
 
@@ -1737,7 +1737,7 @@ inline namespace v1 {
    * @sa euclideanDistance
    */
   template<typename T, std::size_t N>
-  GF_API inline
+  inline
   T euclideanLength(const Vector<T, N>& vec) {
     return std::sqrt(squareLength(vec));
   }
@@ -1758,7 +1758,7 @@ inline namespace v1 {
    * @sa chebyshevDistance
    */
   template<typename T, std::size_t N>
-  GF_API inline
+  inline
   T chebyshevLength(const Vector<T, N>& vec) {
     T out = std::abs(vec.data[0]);
 
@@ -1784,7 +1784,7 @@ inline namespace v1 {
    * @sa manhattanLength
    */
   template<typename T, std::size_t N>
-  GF_API inline
+  inline
   T manhattanDistance(const Vector<T, N>& lhs, const Vector<T, N>& rhs) {
     return manhattanLength(lhs - rhs);
   }
@@ -1803,7 +1803,7 @@ inline namespace v1 {
    * @sa squareLength, euclideanDistance
    */
   template<typename T, std::size_t N>
-  GF_API inline
+  inline
   T squareDistance(const Vector<T, N>& lhs, const Vector<T, N>& rhs) {
     return squareLength(lhs - rhs);
   }
@@ -1822,7 +1822,7 @@ inline namespace v1 {
    * @sa euclideanLength
    */
   template<typename T, std::size_t N>
-  GF_API inline
+  inline
   T euclideanDistance(const Vector<T, N>& lhs, const Vector<T, N>& rhs) {
     return euclideanLength(lhs - rhs);
   }
@@ -1841,7 +1841,7 @@ inline namespace v1 {
    * @sa chebyshevLength
    */
   template<typename T, std::size_t N>
-  GF_API inline
+  inline
   T chebyshevDistance(const Vector<T, N>& lhs, const Vector<T, N>& rhs) {
     return chebyshevDistance(lhs - rhs);
   }
@@ -1858,7 +1858,7 @@ inline namespace v1 {
    * @returns A normalized vector
    */
   template<typename T, std::size_t N>
-  GF_API inline
+  inline
   Vector<T, N> normalize(const Vector<T, N>& vec) {
     T length = euclideanLength(vec);
     return vec / length;
@@ -1872,7 +1872,7 @@ inline namespace v1 {
    * @return A unit vector
    */
   template<typename T>
-  GF_API inline
+  inline
   Vector<T, 2> unit(T angle) {
     return { std::cos(angle), std::sin(angle) };
   }
@@ -1885,7 +1885,7 @@ inline namespace v1 {
    * @returns A perpendicular vector
    */
   template<typename T>
-  GF_API constexpr
+  constexpr
   Vector<T, 2> perp(const Vector<T, 2>& vec) {
     return { -vec.y, vec.x };
   }
@@ -1899,7 +1899,7 @@ inline namespace v1 {
    * @return The cross product of the two vectors
    */
   template<typename T>
-  GF_API constexpr
+  constexpr
   Vector<T, 3> cross(const Vector<T, 3>& lhs, const Vector<T, 3>& rhs) {
     return {
       lhs.y * rhs.z - lhs.z * rhs.y,

@@ -349,7 +349,7 @@ inline namespace v1 {
    * @brief Equality operator between two matrices
    */
   template<typename T, std::size_t ROWS, std::size_t COLS>
-  GF_API inline
+  inline
   bool operator==(const Matrix<T, ROWS, COLS>& lhs, const Matrix<T, ROWS, COLS>& rhs) {
     for (std::size_t i = 0; i < ROWS; ++i) {
       for (std::size_t j = 0; j < COLS; ++j) {
@@ -367,7 +367,7 @@ inline namespace v1 {
    * @brief Inequality operator between two matrices
    */
   template<typename T, std::size_t ROWS, std::size_t COLS>
-  GF_API inline
+  inline
   bool operator!=(const Matrix<T, ROWS, COLS>& lhs, const Matrix<T, ROWS, COLS>& rhs) {
     return !(lhs == rhs);
   }
@@ -381,7 +381,7 @@ inline namespace v1 {
    * @brief Component-wise unary minus
    */
   template<typename T, std::size_t ROWS, std::size_t COLS>
-  GF_API inline
+  inline
   Matrix<T, ROWS, COLS> operator-(const Matrix<T, ROWS, COLS>& val) {
     Matrix<T, ROWS, COLS> out;
 
@@ -403,7 +403,7 @@ inline namespace v1 {
    * @brief Component-wise addition
    */
   template<typename T, std::size_t ROWS, std::size_t COLS>
-  GF_API inline
+  inline
   Matrix<T, ROWS, COLS> operator+(const Matrix<T, ROWS, COLS>& lhs, const Matrix<T, ROWS, COLS>& rhs) {
     Matrix<T, ROWS, COLS> out;
 
@@ -421,7 +421,7 @@ inline namespace v1 {
    * @brief Component-wise addition and assignment
    */
   template<typename T, std::size_t ROWS, std::size_t COLS>
-  GF_API inline
+  inline
   Matrix<T, ROWS, COLS>& operator+=(Matrix<T, ROWS, COLS>& lhs, const Matrix<T, ROWS, COLS>& rhs) {
     for (std::size_t i = 0; i < ROWS; ++i) {
       for (std::size_t j = 0; j < COLS; ++j) {
@@ -438,7 +438,7 @@ inline namespace v1 {
    * @brief Component-wise substraction
    */
   template<typename T, std::size_t ROWS, std::size_t COLS>
-  GF_API inline
+  inline
   Matrix<T, ROWS, COLS> operator-(const Matrix<T, ROWS, COLS>& lhs, const Matrix<T, ROWS, COLS>& rhs) {
     Matrix<T, ROWS, COLS> out;
 
@@ -456,7 +456,7 @@ inline namespace v1 {
    * @brief Component-wise substraction and assignment
    */
   template<typename T, std::size_t ROWS, std::size_t COLS>
-  GF_API inline
+  inline
   Matrix<T, ROWS, COLS>& operator-=(Matrix<T, ROWS, COLS>& lhs, const Matrix<T, ROWS, COLS>& rhs) {
     for (std::size_t i = 0; i < ROWS; ++i) {
       for (std::size_t j = 0; j < COLS; ++j) {
@@ -476,7 +476,7 @@ inline namespace v1 {
    * @brief Right scalar multiplication
    */
   template<typename T, std::size_t ROWS, std::size_t COLS>
-  GF_API inline
+  inline
   Matrix<T, ROWS, COLS> operator*(const Matrix<T, ROWS, COLS>& lhs, T rhs) {
     Matrix<T, ROWS, COLS> out;
 
@@ -494,7 +494,7 @@ inline namespace v1 {
    * @brief Right scalar multiplication and assignment
    */
   template<typename T, std::size_t ROWS, std::size_t COLS>
-  GF_API inline
+  inline
   Matrix<T, ROWS, COLS>& operator*=(Matrix<T, ROWS, COLS>& lhs, T rhs) {
     for (std::size_t i = 0; i < ROWS; ++i) {
       for (std::size_t j = 0; j < COLS; ++j) {
@@ -510,7 +510,7 @@ inline namespace v1 {
    * @brief Left scalar multiplication
    */
   template<typename T, std::size_t ROWS, std::size_t COLS>
-  GF_API inline
+  inline
   Matrix<T, ROWS, COLS> operator*(T lhs, const Matrix<T, ROWS, COLS>& rhs) {
     Matrix<T, ROWS, COLS> out;
 
@@ -528,7 +528,7 @@ inline namespace v1 {
    * @brief Right scalar division
    */
   template<typename T, std::size_t ROWS, std::size_t COLS>
-  GF_API inline
+  inline
   Matrix<T, ROWS, COLS> operator/(const Matrix<T, ROWS, COLS>& lhs, T rhs) {
     Matrix<T, ROWS, COLS> out;
 
@@ -546,7 +546,7 @@ inline namespace v1 {
    * @brief Right scalar division and assignment
    */
   template<typename T, std::size_t ROWS, std::size_t COLS>
-  GF_API inline
+  inline
   Matrix<T, ROWS, COLS>& operator/=(Matrix<T, ROWS, COLS>& lhs, T rhs) {
     for (std::size_t i = 0; i < ROWS; ++i) {
       for (std::size_t j = 0; j < COLS; ++j) {
@@ -562,7 +562,7 @@ inline namespace v1 {
    * @brief Matrix-vector multiplication
    */
   template<typename T, std::size_t S1, std::size_t S2>
-  GF_API inline
+  inline
   Vector<T, S1> operator*(const Matrix<T, S1, S2>& lhs, const Vector<T, S2>& rhs) {
     Vector<T, S1> out;
 
@@ -584,7 +584,7 @@ inline namespace v1 {
    * @brief Vector-matrix multiplication
    */
   template<typename T, std::size_t S1, std::size_t S2>
-  GF_API inline
+  inline
   Vector<T, S2> operator*(const Vector<T, S1>& lhs, const Matrix<T, S1, S2>& rhs) {
     Vector<T, S2> out;
 
@@ -607,7 +607,7 @@ inline namespace v1 {
    * @brief Matrix-matrix multiplication
    */
   template<typename T, std::size_t S1, std::size_t S2, std::size_t S3>
-  GF_API inline
+  inline
   Matrix<T, S1, S3> operator*(const Matrix<T, S1, S2>& lhs, const Matrix<T, S2, S3>& rhs) {
     Matrix<T, S1, S3> out;
 
@@ -633,7 +633,7 @@ inline namespace v1 {
    * This operation is only available for square matrices.
    */
   template<typename T, std::size_t N>
-  GF_API inline
+  inline
   Matrix<T, N, N>& operator*=(Matrix<T, N, N>& lhs, const Matrix<T, N, N>& rhs) {
     lhs = lhs * rhs;
     return lhs;
@@ -650,7 +650,7 @@ inline namespace v1 {
    * @sa gf::identityTransform()
    */
   template<typename MatrixType>
-  GF_API inline
+  inline
   MatrixType identity() {
     static_assert(MatrixType::Rows == MatrixType::Cols, "identity() is only defined for square matrices.");
 
@@ -672,7 +672,7 @@ inline namespace v1 {
    * @brief Transposition of a matrix
    */
   template<typename T, std::size_t S1, std::size_t S2>
-  GF_API inline
+  inline
   Matrix<T, S2, S1> transpose(const Matrix<T, S1, S2>& mat) {
     Matrix<T, S2, S1> out;
 
@@ -692,7 +692,7 @@ inline namespace v1 {
    * @brief Inversion of a 2x2 matrix
    */
   template<typename T>
-  GF_API inline
+  inline
   Matrix<T, 2, 2> invert(const Matrix<T, 2, 2>& mat) {
     Matrix<T, 2, 2> out;
 
@@ -711,7 +711,7 @@ inline namespace v1 {
    * @brief Inversion of a 3x3 matrix
    */
   template<typename T>
-  GF_API inline
+  inline
   Matrix<T, 3, 3> invert(const Matrix<T, 3, 3>& mat) {
     Matrix<T, 3, 3> out;
 
