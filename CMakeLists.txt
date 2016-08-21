@@ -88,3 +88,5 @@ if (GF_BUILD_DOCUMENTATION)
     add_custom_target(doc ${DOXYGEN_EXECUTABLE} "${CMAKE_BINARY_DIR}/Doxyfile")
   endif(DOXYGEN_FOUND)
 endif()
+
+add_subdirectory(games/gf_pong)
