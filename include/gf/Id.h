@@ -41,7 +41,7 @@ inline namespace v1 {
    * @ingroup core
    * @brief The invalid id (which is 0)
    */
-  GF_API constexpr Id InvalidId = 0;
+  constexpr Id InvalidId = 0;
 
   /**
    * @ingroup core

@@ -130,6 +130,10 @@ if(WIN32)
     TARGETS gf0 
     RUNTIME DESTINATION "${CMAKE_INSTALL_DOCDIR}/examples"
   )
+  install(
+    TARGETS gf0 
+    RUNTIME DESTINATION games
+  )
 endif()
 
 install(
