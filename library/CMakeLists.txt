@@ -63,6 +63,7 @@ add_library(gf0 SHARED
   ViewContainer.cc
   # game
   AssetManager.cc
+  Collision.cc
   Controls.cc
   Entity.cc
   EntityContainer.cc
