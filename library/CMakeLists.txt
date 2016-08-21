@@ -3,6 +3,7 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_BINARY_DI
 
 add_library(gf0 SHARED
   # core
+  Circ.cc
   Clock.cc
   Direction.cc
   Image.cc
