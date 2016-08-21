@@ -1,5 +1,12 @@
 # gf Pong!
 
+## How to play
+
+- S/X: Up/Down for the left paddle
+- Up/Down: Up/Down for the right paddle
+- F: Toggle fullscreen
+- Escape: Stop the game
+
 ## Screenshot
 
 ![gf Pong!](gf_pong.png)
