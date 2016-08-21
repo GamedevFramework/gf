@@ -349,7 +349,7 @@ inline namespace v1 {
    *
    * @param lhs First rectangle
    * @param rhs Second rectangle
-   * @return True if the two rectangle are the same
+   * @return True if the two rectangles are the same
    */
   template<typename T>
   inline
@@ -363,7 +363,7 @@ inline namespace v1 {
    *
    * @param lhs First rectangle
    * @param rhs Second rectangle
-   * @return True if the two rectangle are different
+   * @return True if the two rectangles are different
    */
   template<typename T>
   inline
