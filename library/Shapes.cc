@@ -36,6 +36,13 @@ inline namespace v1 {
     updateGeometry();
   }
 
+  RectangleShape::RectangleShape(const RectF& rect)
+  : m_size(rect.size)
+  {
+    updateGeometry();
+    setPosition(rect.position);
+  }
+
   void RectangleShape::setSize(Vector2f size) {
     if (m_size == size) {
       return;
@@ -70,6 +77,14 @@ inline namespace v1 {
   , m_pointCount(pointCount)
   {
     updateGeometry();
+  }
+
+  CircleShape::CircleShape(const CircF& circ, std::size_t pointCount)
+  : m_radius(circ.radius)
+  , m_pointCount(pointCount)
+  {
+    updateGeometry();
+    setPosition(circ.center - circ.radius);
   }
 
   void CircleShape::setRadius(float radius) {

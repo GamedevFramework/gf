@@ -27,7 +27,9 @@
 #include <cstddef>
 #include <vector>
 
+#include "Circ.h"
 #include "Portability.h"
+#include "Rect.h"
 #include "Shape.h"
 #include "Vector.h"
 
@@ -66,6 +68,16 @@ inline namespace v1 {
      * @param size Size of the rectangle
      */
     RectangleShape(Vector2f size = Vector2f{ 0.0f, 0.0f });
+
+    /**
+     * @brief Constructor with a rectangle
+     *
+     * The shape takes the size of the rectangle and the position of the
+     * rectangle.
+     *
+     * @param rect A rectangle with a size and a position
+     */
+    explicit RectangleShape(const RectF& rect);
 
     /**
      * @brief Set the size of the rectangle
@@ -134,6 +146,17 @@ inline namespace v1 {
      * @param pointCount Number of points composing the circle
      */
     CircleShape(float radius = 0, std::size_t pointCount = 30);
+
+    /**
+     * @brief Constructor with a circle
+     *
+     * The shape takes the radius of the circle and the position of the
+     * circle.
+     *
+     * @param circ A circle with a radius and a position
+     * @param pointCount Number of points composing the circle
+     */
+    explicit CircleShape(const CircF& circ, std::size_t pointCount = 30);
 
     /**
      * @brief Set the radius of the circle
