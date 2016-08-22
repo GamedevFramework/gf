@@ -51,7 +51,7 @@ inline namespace v1 {
    * @param m Data to fill if there is a collision
    * @return True if there is a collision
    */
-  bool collides(const CircF& lhs, const CircF& rhs, Manifold& m);
+  GF_API bool collides(const CircF& lhs, const CircF& rhs, Manifold& m);
 
   /**
    * @relates Manifold
@@ -62,7 +62,7 @@ inline namespace v1 {
    * @param m Data to fill if there is a collision
    * @return True if there is a collision
    */
-  bool collides(const RectF& lhs, const CircF& rhs, Manifold& m);
+  GF_API bool collides(const RectF& lhs, const CircF& rhs, Manifold& m);
 
   /**
    * @relates Manifold
@@ -73,7 +73,7 @@ inline namespace v1 {
    * @param m Data to fill if there is a collision
    * @return True if there is a collision
    */
-  bool collides(const CircF& lhs, const RectF& rhs, Manifold& m);
+  GF_API bool collides(const CircF& lhs, const RectF& rhs, Manifold& m);
 
   /**
    * @relates Manifold
@@ -84,7 +84,7 @@ inline namespace v1 {
    * @param m Data to fill if there is a collision
    * @return True if there is a collision
    */
-  bool collides(const RectF& lhs, const RectF& rhs, Manifold& m);
+  GF_API bool collides(const RectF& lhs, const RectF& rhs, Manifold& m);
 
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

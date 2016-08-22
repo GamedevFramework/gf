@@ -96,7 +96,7 @@ inline namespace v1 {
    * @sa gf::Step
    */
   template<typename T>
-  GF_API constexpr
+  constexpr
   T linearStep(T t) {
     return t;
   }
@@ -117,7 +117,7 @@ inline namespace v1 {
    * @sa gf::Step
    */
   template<typename T>
-  GF_API constexpr
+  constexpr
   T cubicStep(T t) {
     return (-2 * t + 3) * t * t;
   }
@@ -140,7 +140,7 @@ inline namespace v1 {
    * @sa gf::Step
    */
   template<typename T>
-  GF_API constexpr
+  constexpr
   T quinticStep(T t) {
     return ((6 * t - 15) * t + 10) * t * t * t;
   }
@@ -154,7 +154,7 @@ inline namespace v1 {
    * @sa gf::Step
    */
   template<typename T>
-  GF_API inline
+  inline
   T cosineStep(T t) {
     return (1 - std::cos(Pi * t)) * 0.5;
   }
@@ -173,7 +173,7 @@ inline namespace v1 {
    * @returns A value between the first and second value
    */
   template<typename T, typename U>
-  GF_API inline
+  inline
   T lerp(T lhs, T rhs, U t) {
     return (1 - t) * lhs + t * rhs;
   }
@@ -191,7 +191,7 @@ inline namespace v1 {
    * @returns The clamped value
    */
   template<typename T>
-  GF_API constexpr
+  constexpr
   T clamp(T val, T lo, T hi) {
     return val < lo ? lo : (val > hi ? hi : val);
   }
@@ -206,7 +206,7 @@ inline namespace v1 {
    * @returns The square of the value
    */
   template<typename T>
-  GF_API constexpr
+  constexpr
   T square(T val) {
     return val * val;
   }

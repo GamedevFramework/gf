@@ -95,7 +95,7 @@ inline namespace v1 {
    * Two render states are equals if their blend mode, their transform
    * matrix, their texture and their shader are the same.
    */
-  GF_API inline
+  inline
   bool operator==(const RenderStates& lhs, const RenderStates& rhs) {
     return lhs.mode == rhs.mode && lhs.transform == rhs.transform && lhs.texture == rhs.texture && lhs.shader == rhs.shader;
   }

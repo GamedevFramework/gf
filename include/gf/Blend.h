@@ -270,7 +270,7 @@ inline namespace v1 {
    * @param rhs Second blend mode
    * @return True if the blend modes are the same
    */
-  GF_API constexpr bool operator==(const BlendMode& lhs, const BlendMode& rhs) {
+  constexpr bool operator==(const BlendMode& lhs, const BlendMode& rhs) {
     return lhs.colorSrcFactor == rhs.colorSrcFactor
         && lhs.colorDstFactor == rhs.colorDstFactor
         && lhs.colorEquation  == rhs.colorEquation

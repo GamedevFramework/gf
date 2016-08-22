@@ -43,7 +43,7 @@ inline namespace v1 {
    * @param point The point to transform
    * @return The transformed point
    */
-  GF_API inline
+  inline
   Vector2f transform(const Matrix3f& mat, Vector2f point) {
     Vector3f homogeneousPoint{point, 1.0f};
     Vector3f result = mat * homogeneousPoint;
@@ -69,7 +69,7 @@ inline namespace v1 {
    *
    * @return The identity matrix
    */
-  GF_API constexpr Matrix3f identityTransform() {
+  constexpr Matrix3f identityTransform() {
     return Matrix3f(1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
   }
 
@@ -80,7 +80,7 @@ inline namespace v1 {
    * @param offset The offset of the translation
    * @return A translation by `offset`
    */
-  GF_API inline
+  inline
   Matrix3f translation(Vector2f offset) {
     return Matrix3f{
       1.0f, 0.0f, offset.x,
@@ -105,7 +105,7 @@ inline namespace v1 {
    * @param angle The angle of the rotation (in radians)
    * @return A rotation of `angle` radians
    */
-  GF_API inline
+  inline
   Matrix3f rotation(float angle) {
     float cos = std::cos(angle);
     float sin = std::sin(angle);
@@ -124,7 +124,7 @@ inline namespace v1 {
    * @param center The center of the rotation
    * @return A rotation of `angle` radians of origin `center`
    */
-  GF_API inline
+  inline
   Matrix3f rotation(float angle, Vector2f center) {
     float cos = std::cos(angle);
     float sin = std::sin(angle);
@@ -161,7 +161,7 @@ inline namespace v1 {
    * @param factor The scaling factor
    * @return A scaling by `factor`
    */
-  GF_API inline
+  inline
   Matrix3f scaling(Vector2f factor) {
     return Matrix3f{
       factor.x,     0.0f, 0.0f,
@@ -178,7 +178,7 @@ inline namespace v1 {
    * @param center The center of the scaling
    * @return A scaling by `factor` of origin `center`
    */
-  GF_API inline
+  inline
   Matrix3f scaling(Vector2f factor, Vector2f center) {
     return Matrix3f{
       factor.x,     0.0f, center.x * (1.0f - factor.x),

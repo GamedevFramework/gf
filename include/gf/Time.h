@@ -170,7 +170,7 @@ inline namespace v1 {
    * @param lhs Second time
    * @return True if the first time and the second time are the same
    */
-  GF_API inline
+  inline
   bool operator==(const Time& rhs, const Time& lhs) {
     return rhs.asDuration() == lhs.asDuration();
   }
@@ -183,7 +183,7 @@ inline namespace v1 {
    * @param lhs Second time
    * @return True if the first time and the second time are different
    */
-  GF_API inline
+  inline
   bool operator!=(const Time& rhs, const Time& lhs) {
     return rhs.asDuration() != lhs.asDuration();
   }
@@ -196,7 +196,7 @@ inline namespace v1 {
    * @param lhs Second time
    * @return True if the first time is lesser than the second time
    */
-  GF_API inline
+  inline
   bool operator<(const Time& rhs, const Time& lhs) {
     return rhs.asDuration() < lhs.asDuration();
   }
@@ -209,7 +209,7 @@ inline namespace v1 {
    * @param lhs Second time
    * @return True if the first time is greater than the second time
    */
-  GF_API inline
+  inline
   bool operator>(const Time& rhs, const Time& lhs) {
     return rhs.asDuration() > lhs.asDuration();
   }
@@ -222,7 +222,7 @@ inline namespace v1 {
    * @param lhs Second time
    * @return True if the first time is lesser or equal than the second time
    */
-  GF_API inline
+  inline
   bool operator<=(const Time& rhs, const Time& lhs) {
     return rhs.asDuration() <= lhs.asDuration();
   }
@@ -235,7 +235,7 @@ inline namespace v1 {
    * @param lhs Second time
    * @return True if the first time is greater or equal than the second time
    */
-  GF_API inline
+  inline
   bool operator>=(const Time& rhs, const Time& lhs) {
     return rhs.asDuration() >= lhs.asDuration();
   }

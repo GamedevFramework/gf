@@ -262,7 +262,7 @@ inline namespace v1 {
   };
 
   #ifndef DOXYGEN_SHOULD_SKIP_THIS
-  GF_API constexpr int getKeycodeFromScancode(Scancode scancode) {
+  constexpr int getKeycodeFromScancode(Scancode scancode) {
     return static_cast<int>(scancode) | (1 << 30);
   }
   #endif
