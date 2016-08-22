@@ -14,6 +14,7 @@ add_library(gf0 SHARED
   Math.cc
   Matrix.cc
   Noise.cc
+  Orientation.cc
   Random.cc
   Range.cc
   Rect.cc
