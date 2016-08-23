@@ -68,6 +68,12 @@ inline namespace v1 {
     return m_tiles(position);
   }
 
+  void TileLayer::clear() {
+    for (int& tile : m_tiles) {
+      tile = NoTile;
+    }
+  }
+
   void TileLayer::draw(RenderTarget& target, RenderStates states) {
     if (m_texture == nullptr) {
       return;

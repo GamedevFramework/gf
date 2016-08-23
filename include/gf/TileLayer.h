@@ -182,6 +182,11 @@ inline namespace v1 {
      */
     int getTile(Vector2u position) const;
 
+    /**
+     * @brief Remove all the tiles
+     */
+    void clear();
+
     /** @} */
 
     virtual void draw(RenderTarget& target, RenderStates states) override;
