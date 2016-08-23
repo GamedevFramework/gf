@@ -35,13 +35,15 @@ inline namespace v1 {
    *
    * gf::Direction represents one of the four main directions. A special value
    * is added to represent the center, it indicates no direction.
+   *
+   * @sa gf::Orientation
    */
   enum class Direction : int {
-    Center = -1,
-    Up = 0,
-    Right = 1,
-    Down = 2,
-    Left = 3,
+    Center  = -1, ///< The center, indicates no direction
+    Up      =  0, ///< The up direction
+    Right   =  1, ///< The right direction
+    Down    =  2, ///< The down direction
+    Left    =  3, ///< The left direction
   };
 
   /**
