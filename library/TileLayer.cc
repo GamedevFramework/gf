@@ -33,10 +33,11 @@ inline namespace v1 {
 
   TileLayer::TileLayer(Vector2u layerSize)
   : m_layerSize(layerSize)
-  , m_tileSize(0, 0)
+  , m_blockSize(0, 0)
   , m_texture(nullptr)
-  , m_margin(0)
-  , m_spacing(0)
+  , m_tileSize(0, 0)
+  , m_margin(0, 0)
+  , m_spacing(0, 0)
   , m_tiles(layerSize, NoTile)
   , m_rect(0, 0, 0, 0)
   , m_vertices(PrimitiveType::Triangles)
@@ -52,12 +53,24 @@ inline namespace v1 {
     m_tileSize = tileSize;
   }
 
-  void TileLayer::setMargin(unsigned margin) {
+  void TileLayer::setMargin(Vector2u margin) {
     m_margin = margin;
   }
 
-  void TileLayer::setSpacing(unsigned spacing) {
+  void TileLayer::setSpacing(Vector2u spacing) {
     m_spacing = spacing;
+  }
+
+  void TileLayer::setBlockSize(Vector2u blockSize) {
+    m_blockSize = blockSize;
+  }
+
+  Vector2u TileLayer::getBlockSize() const {
+    if (m_blockSize.height == 0 && m_blockSize.width == 0) {
+      return m_tileSize;
+    }
+
+    return m_blockSize;
   }
 
   void TileLayer::setTile(Vector2u position, int tile) {
@@ -79,6 +92,8 @@ inline namespace v1 {
       return;
     }
 
+    gf::Vector2u blockSize = getBlockSize();
+
     // compute the viewable part of the layer
 
     const View& view = target.getView();
@@ -88,16 +103,16 @@ inline namespace v1 {
     size.width = size.height = gf::Sqrt2 * std::max(size.width, size.height);
 
     RectF world(center - size / 2, size);
-    RectF local = gf::transform(getInverseTransform(), world).extend(std::max(m_tileSize.width, m_tileSize.height));
+    RectF local = gf::transform(getInverseTransform(), world).extend(std::max(blockSize.width, blockSize.height));
 
-    RectF layer({ 0.0f, 0.0f }, m_layerSize * m_tileSize);
+    RectF layer({ 0.0f, 0.0f }, m_layerSize * blockSize);
 
     RectU rect(0, 0, 0, 0);
     RectF intersection;
 
     if (local.intersects(layer, intersection)) {
-      rect.position = intersection.position / m_tileSize + 0.5f;
-      rect.size = intersection.size / m_tileSize + 0.5f;
+      rect.position = intersection.position / blockSize + 0.5f;
+      rect.size = intersection.size / blockSize + 0.5f;
     }
 
     // build vertex array (if necessary)
@@ -126,6 +141,7 @@ inline namespace v1 {
     m_vertices.reserve(m_rect.height * m_rect.width * 6);
 
     Vector2u tilesetSize = (m_texture->getSize() - 2 * m_margin + m_spacing) / (m_tileSize + m_spacing);
+    Vector2u blockSize = getBlockSize();
 
     Vector2u local;
 
@@ -142,7 +158,7 @@ inline namespace v1 {
 
         // position
 
-        RectF position(cell * m_tileSize, m_tileSize);
+        RectF position(cell * blockSize, blockSize);
 
         // texture coords
 
