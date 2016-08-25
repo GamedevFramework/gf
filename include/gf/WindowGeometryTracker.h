@@ -60,7 +60,7 @@ inline namespace v1 {
      * @return The computed `x` coordinate
      * @sa getXRatio()
      */
-    float getXCentered(float width);
+    float getXCentered(float width) const;
 
     /**
      * @brief Compute `x` for a right aligned element
@@ -71,7 +71,7 @@ inline namespace v1 {
      * @param width The width of the element
      * @return The computed `x` coordinate
      */
-    float getXFromRight(float width);
+    float getXFromRight(float width) const;
 
     /**
      * @brief Compute `x` for an element at some percent from the left
@@ -85,7 +85,7 @@ inline namespace v1 {
      * @param width The width of the element
      * @return The computed `x` coordinate
      */
-    float getXRatio(float ratio, float width);
+    float getXRatio(float ratio, float width) const;
 
 
     /**
@@ -98,7 +98,7 @@ inline namespace v1 {
      * @sa getYRatio()
      * @return The computed `y` coordinate
      */
-    float getYCentered(float height);
+    float getYCentered(float height) const;
 
     /**
      * @brief Compute `y` for a bottom aligned element
@@ -109,7 +109,7 @@ inline namespace v1 {
      * @param height The height of the element
      * @return The computed `y` coordinate
      */
-    float getYFromBottom(float height);
+    float getYFromBottom(float height) const;
 
     /**
      * @brief Compute `y` for an element at some percent from the top
@@ -123,7 +123,7 @@ inline namespace v1 {
      * @param height The height of the element
      * @return The computed `y` coordinate
      */
-    float getYRatio(float ratio, float height);
+    float getYRatio(float ratio, float height) const;
 
     /**
      * @brief Get a position relative to a corner
@@ -141,7 +141,7 @@ inline namespace v1 {
      * @param pos The position
      * @return The computed position
      */
-    Vector2f getCornerPosition(const Vector2f& pos);
+    Vector2f getCornerPosition(const Vector2f& pos) const;
 
     /**
      * @brief Update the geometry thanks to the event

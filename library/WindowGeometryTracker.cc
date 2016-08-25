@@ -34,32 +34,32 @@ inline namespace v1 {
 
   }
 
-  float WindowGeometryTracker::getXCentered(float width) {
+  float WindowGeometryTracker::getXCentered(float width) const {
     return getXRatio(0.5f, width);
   }
 
-  float WindowGeometryTracker::getXFromRight(float width) {
+  float WindowGeometryTracker::getXFromRight(float width) const {
     return m_screenSize.width - width;
   }
 
-  float WindowGeometryTracker::getXRatio(float ratio, float width) {
+  float WindowGeometryTracker::getXRatio(float ratio, float width) const {
     return (m_screenSize.width - width) * ratio;
   }
 
 
-  float WindowGeometryTracker::getYCentered(float height) {
+  float WindowGeometryTracker::getYCentered(float height) const {
     return getYRatio(0.5f, height);
   }
 
-  float WindowGeometryTracker::getYFromBottom(float height) {
+  float WindowGeometryTracker::getYFromBottom(float height) const {
     return m_screenSize.height - height;
   }
 
-  float WindowGeometryTracker::getYRatio(float ratio, float height) {
+  float WindowGeometryTracker::getYRatio(float ratio, float height) const {
     return (m_screenSize.height - height) * ratio;
   }
 
-  Vector2f WindowGeometryTracker::getCornerPosition(const Vector2f& pos) {
+  Vector2f WindowGeometryTracker::getCornerPosition(const Vector2f& pos) const {
     return gf::select(gf::greaterThan(pos, { 0.0f, 0.0f }), pos, m_screenSize + pos);
   }
 
