@@ -30,7 +30,7 @@ inline namespace v1 {
     float r = lhs.radius + rhs.radius;
     float d2 = gf::squareLength(n);
 
-    if (d2 > r * r) {
+    if (d2 > gf::square(r)) {
       return false;
     }
 
@@ -53,8 +53,7 @@ inline namespace v1 {
     Vector2f closest = n;
     Vector2f extent = lhs.size / 2;
 
-    closest.x = gf::clamp(closest.x, -extent.x, extent.x);
-    closest.y = gf::clamp(closest.y, -extent.y, extent.y);
+    closest = gf::clamp(closest, -extent, extent);
 
     bool inside = false;
 
@@ -81,7 +80,7 @@ inline namespace v1 {
     float d2 = gf::squareLength(normal);
     float r = rhs.radius;
 
-    if (d2 > r * r && !inside) {
+    if (d2 > gf::square(r) && !inside) {
       return false;
     }
 
@@ -106,10 +105,7 @@ inline namespace v1 {
 
   bool collides(const RectF& lhs, const RectF& rhs, Manifold& m) {
     Vector2f n = rhs.getCenter() - lhs.getCenter();
-
-    Vector2f leftExtent = lhs.size / 2;
-    Vector2f rightExtent = rhs.size / 2;
-    Vector2f overlap = leftExtent + rightExtent - gf::abs(n);
+    Vector2f overlap = lhs.size / 2 + rhs.size / 2 - gf::abs(n);
 
     if (overlap.x <= 0) {
       return false;
@@ -119,7 +115,7 @@ inline namespace v1 {
       return false;
     }
 
-    if (overlap.x > overlap.y) {
+    if (overlap.x < overlap.y) {
       if (n.x < 0) {
         m.normal = { -1.0f, 0.0f };
       } else {
