@@ -127,6 +127,7 @@ install(
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+  EXPORT gfConfig
 )
 
 if(WIN32)
@@ -143,4 +144,10 @@ endif()
 install(
   FILES "${CMAKE_CURRENT_SOURCE_DIR}/vendor/gamecontrollerdb/gamecontrollerdb.txt"
   DESTINATION "${CMAKE_INSTALL_DATADIR}/gf"
+)
+
+install(
+  EXPORT gfConfig
+  NAMESPACE gf::
+  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/gf"
 )
