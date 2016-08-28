@@ -93,7 +93,18 @@ inline namespace v1 {
     static constexpr Color4f Transparent{0.0f, 0.0f, 0.0f, 0.0f};
 
     /**
+     * @brief Opaque predefined color
+     *
+     * @param value The opacity value
+     */
+    static constexpr Color4f Opaque(float value = 0.5f) {
+      return { 1.0f, 1.0f, 1.0f, value };
+    }
+
+    /**
      * @brief Grey predefined color
+     *
+     * @param value The grey value
      */
     static constexpr Color4f Grey(float value = 0.5f) {
       return { value, value, value, 1.0f };
