@@ -129,8 +129,8 @@ inline namespace v1 {
     float cos = std::cos(angle);
     float sin = std::sin(angle);
     return Matrix3f{
-       cos, -sin, center.x * (1 - cos) + center.x * sin,
-       sin,  cos, center.y * (1 - cos) - center.y * sin,
+       cos, -sin, center.x * (1 - cos) + center.y * sin,
+       sin,  cos, center.y * (1 - cos) - center.x * sin,
       0.0f, 0.0f, 1.0f
     };
   }
