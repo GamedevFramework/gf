@@ -65,7 +65,7 @@ inline namespace v1 {
     /**
      * @brief The value type of the elements of the matrix
      */
-    typedef T value_type;
+    using value_type = T;
 
     /**
      * @brief The number of rows in the matrix
@@ -120,7 +120,7 @@ inline namespace v1 {
     /**
      * @brief The value type of the elements of the matrix
      */
-    typedef T value_type;
+    using value_type = T;
 
     /**
      * @brief The number of rows in the matrix
@@ -186,7 +186,7 @@ inline namespace v1 {
     /**
      * @brief The value type of the elements of the matrix
      */
-    typedef T value_type;
+    using value_type = T;
 
     /**
      * @brief The number of rows in the matrix
@@ -256,7 +256,7 @@ inline namespace v1 {
     /**
      * @brief The value type of the elements of the matrix
      */
-    typedef T value_type;
+    using value_type = T;
 
     /**
      * @brief The number of rows in the matrix
@@ -315,7 +315,7 @@ inline namespace v1 {
    *
    * @sa Matrix<T, 2, 2>
    */
-  typedef Matrix<float, 2, 2> Matrix2f;
+  using Matrix2f = Matrix<float, 2, 2>;
 
   /**
    * @ingroup core
@@ -323,7 +323,7 @@ inline namespace v1 {
    *
    * @sa Matrix<T, 3, 3>
    */
-  typedef Matrix<float, 3, 3> Matrix3f;
+  using Matrix3f = Matrix<float, 3, 3>;
 
   /**
    * @ingroup core
@@ -331,7 +331,7 @@ inline namespace v1 {
    *
    * @sa Matrix<T, 4, 4>
    */
-  typedef Matrix<float, 4, 4> Matrix4f;
+  using Matrix4f = Matrix<float, 4, 4>;
 
 // MSVC does not like extern template
 #ifndef _MSC_VER

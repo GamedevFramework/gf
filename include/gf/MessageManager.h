@@ -42,7 +42,7 @@ inline namespace v1 {
    *
    * @sa gf::MessageHandler
    */
-  typedef uint64_t MessageHandlerId;
+  using MessageHandlerId = uint64_t;
 
   /**
    * @ingroup game

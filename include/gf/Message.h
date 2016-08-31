@@ -118,7 +118,7 @@ inline namespace v1 {
    *
    * @sa gf::MessageManager, gf::Message, gf::Id
    */
-  typedef std::function<MessageStatus(Id, Message *)> MessageHandler;
+  using MessageHandler = std::function<MessageStatus(Id, Message *)>;
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

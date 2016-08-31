@@ -986,133 +986,133 @@ inline namespace v1 {
    * @ingroup core
    * @brief A float vector with 2 components
    */
-  typedef Vector<float, 2> Vector2f;
+  using Vector2f = Vector<float, 2>;
 
   /**
    * @ingroup core
    * @brief A float vector with 3 components
    */
-  typedef Vector<float, 3> Vector3f;
+  using Vector3f = Vector<float, 3>;
 
   /**
    * @ingroup core
    * @brief A float vector with 4 components
    */
-  typedef Vector<float, 4> Vector4f;
+  using Vector4f = Vector<float, 4>;
 
   /**
    * @ingroup core
    * @brief A double vector with 2 components
    */
-  typedef Vector<double, 2> Vector2d;
+  using Vector2d = Vector<double, 2>;
 
   /**
    * @ingroup core
    * @brief A double vector with 3 components
    */
-  typedef Vector<double, 3> Vector3d;
+  using Vector3d = Vector<double, 3>;
 
   /**
    * @ingroup core
    * @brief A double vector with 4 components
    */
-  typedef Vector<double, 4> Vector4d;
+  using Vector4d = Vector<double, 4>;
 
   /**
    * @ingroup core
    * @brief A int vector with 2 components
    */
-  typedef Vector<int, 2> Vector2i;
+  using Vector2i = Vector<int, 2>;
 
   /**
    * @ingroup core
    * @brief A int vector with 3 components
    */
-  typedef Vector<int, 3> Vector3i;
+  using Vector3i = Vector<int, 3>;
 
   /**
    * @ingroup core
    * @brief A int vector with 4 components
    */
-  typedef Vector<int, 4> Vector4i;
+  using Vector4i = Vector<int, 4>;
 
   /**
    * @ingroup core
    * @brief A unsigned vector with 2 components
    */
-  typedef Vector<unsigned, 2> Vector2u;
+  using Vector2u = Vector<unsigned, 2>;
 
   /**
    * @ingroup core
    * @brief A unsigned vector with 3 components
    */
-  typedef Vector<unsigned, 3> Vector3u;
+  using Vector3u = Vector<unsigned, 3>;
 
   /**
    * @ingroup core
    * @brief A unsigned vector with 4 components
    */
-  typedef Vector<unsigned, 4> Vector4u;
+  using Vector4u = Vector<unsigned, 4>;
 
   /**
    * @ingroup core
    * @brief A std::size_t vector with 2 components
    */
-  typedef Vector<std::size_t, 2> Vector2z;
+  using Vector2z = Vector<std::size_t, 2>;
 
   /**
    * @ingroup core
    * @brief A std::size_t vector with 3 components
    */
-  typedef Vector<std::size_t, 3> Vector3z;
+  using Vector3z = Vector<std::size_t, 3>;
 
   /**
    * @ingroup core
    * @brief A std::size_t vector with 4 components
    */
-  typedef Vector<std::size_t, 4> Vector4z;
+  using Vector4z = Vector<std::size_t, 4>;
 
   /**
    * @ingroup core
    * @brief A bool vector with 2 components
    */
-  typedef Vector<bool, 2> Vector2b;
+  using Vector2b = Vector<bool, 2>;
 
   /**
    * @ingroup core
    * @brief A bool vector with 3 components
    */
-  typedef Vector<bool, 3> Vector3b;
+  using Vector3b = Vector<bool, 3>;
 
   /**
    * @ingroup core
    * @brief A bool vector with 4 components
    */
-  typedef Vector<bool, 4> Vector4b;
+  using Vector4b = Vector<bool, 4>;
 
   /**
    * @ingroup core
    * @brief A float color vector with 3 components
    */
-  typedef Vector<float, 3> Color3f;
+  using Color3f = Vector<float, 3>;
 
   /**
    * @ingroup core
    * @brief A float color vector with 4 components
    */
-  typedef Vector<float, 4> Color4f;
+  using Color4f = Vector<float, 4>;
 
   /**
    * @ingroup core
    * @brief A uint8_t color vector with 3 components
    */
-  typedef Vector<uint8_t, 3> Color3u;
+  using Color3u = Vector<uint8_t, 3>;
 
   /**
    * @ingroup core
    * @brief A uint8_t color vector with 4 components
    */
-  typedef Vector<uint8_t, 4> Color4u;
+  using Color4u = Vector<uint8_t, 4>;
 
 // MSVC does not like extern template
 #ifndef _MSC_VER

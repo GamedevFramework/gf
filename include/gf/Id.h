@@ -35,7 +35,7 @@ inline namespace v1 {
    * @ingroup core
    * @brief An identifier
    */
-  typedef uint64_t Id;
+  using Id = uint64_t;
 
   /**
    * @ingroup core

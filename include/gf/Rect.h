@@ -316,25 +316,25 @@ inline namespace v1 {
    * @ingroup core
    * @brief A `float` rectangle
    */
-  typedef Rect<float> RectF;
+  using RectF = Rect<float>;
 
   /**
    * @ingroup core
    * @brief A `int` rectangle
    */
-  typedef Rect<int> RectI;
+  using RectI = Rect<int>;
 
   /**
    * @ingroup core
    * @brief A `unsigned` rectangle
    */
-  typedef Rect<unsigned> RectU;
+  using RectU = Rect<unsigned>;
 
   /**
    * @ingroup core
    * @brief A `std::size_t` rectangle
    */
-  typedef Rect<std::size_t> RectZ;
+  using RectZ = Rect<std::size_t>;
 
 // MSVC does not like extern template
 #ifndef _MSC_VER

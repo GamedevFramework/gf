@@ -51,7 +51,7 @@ inline namespace v1 {
     /**
      * @brief A resource loader
      */
-    typedef std::function<std::unique_ptr<T>(const Path&)> Loader;
+    using Loader = std::function<std::unique_ptr<T>(const Path&)>;
 
     /**
      * @brief Constructor
