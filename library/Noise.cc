@@ -30,8 +30,11 @@
 
 namespace gf {
 inline namespace v1 {
+  Noise::~Noise() {
 
-  static void generatePermutation(Random& engine, std::array<uint8_t, 256>& perm) {
+  }
+
+  static void generatePermutation(Random& random, std::array<uint8_t, 256>& perm) {
     // initialize permutation
     for (int i = 0; i < 256; ++i) {
       perm[i] = static_cast<uint8_t>(i);
@@ -41,8 +44,8 @@ inline namespace v1 {
     std::uniform_int_distribution<std::size_t> dist(0, 255);
 
     for (unsigned i = 0; i < 2560; ++i) {
-      auto j = dist(engine.getEngine());
-      auto k = dist(engine.getEngine());
+      auto j = dist(random.getEngine());
+      auto k = dist(random.getEngine());
       std::swap(perm[j], perm[k]);
     }
   }
@@ -62,7 +65,7 @@ inline namespace v1 {
     generatePermutation(random, m_perm);
   }
 
-  double GradientNoise::operator()(double x, double y) const {
+  double GradientNoise::getValue(double x, double y) {
     uint8_t qx = static_cast<uint8_t>(std::fmod(x, 256));
     double rx = std::fmod(x, 1);
     assert(rx >= 0.0 && rx <= 1.0);
@@ -88,7 +91,7 @@ inline namespace v1 {
   }
 
 
-  double FractalNoise::operator()(double x, double y) const {
+  double FractalNoise::getValue(double x, double y) {
     double value = 0.0;
     double frequency = 1.0;
     double amplitude = 1.0;
@@ -114,7 +117,7 @@ inline namespace v1 {
 
   }
 
-  double PerlinNoise::operator()(double x, double y) const {
+  double PerlinNoise::getValue(double x, double y) {
     return m_fractal(x, y);
   }
 
@@ -125,7 +128,7 @@ inline namespace v1 {
   }
 
 
-  double SimplexNoise::operator()(double x, double y) const {
+  double SimplexNoise::getValue(double x, double y) {
     static constexpr double K = .366025403784438646763723170752; // (sqrt(3) - 1) / 2
     static constexpr double C = .211324865405187117745425609748; // K / (1 + 2 * K)
 
@@ -223,7 +226,7 @@ inline namespace v1 {
     generatePermutation(random, m_perm);
   }
 
-  double OpenSimplexNoise::operator()(double x, double y) const {
+  double OpenSimplexNoise::getValue(double x, double y) {
     static constexpr double StretchConstant2D = -0.211324865405187117745425609748; // (1 / sqrt(2 + 1) - 1) / 2;
     static constexpr double SquishConstant2D = 0.366025403784438646763723170752;   // (sqrt(2 + 1) - 1) / 2;
 
@@ -412,7 +415,7 @@ inline namespace v1 {
 
   }
 
-  double WorleyNoise::operator()(double x, double y) {
+  double WorleyNoise::getValue(double x, double y) {
     double rx = std::fmod(x, 1);
     double ry = std::fmod(y, 1);
 

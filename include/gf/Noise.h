@@ -38,13 +38,47 @@ inline namespace v1 {
   class Random;
 
   /**
+   * @brief A noise function
+   */
+  class GF_API Noise {
+  public:
+    /**
+     * @brief Virtual destructor
+     */
+    virtual ~Noise();
+
+    /**
+     * @brief Take a noise value
+     *
+     * @param x The x coordinate of the noise value
+     * @param y The y coordinate of the noise value
+     * @return The noise value
+     */
+    virtual double getValue(double x, double y) = 0;
+
+    /**
+     * @brief Take a noise value
+     *
+     * @param x The x coordinate of the noise value
+     * @param y The y coordinate of the noise value
+     * @return The noise value
+     *
+     * @sa getValue()
+     */
+    double operator()(double x, double y) {
+      return getValue(x, y);
+    }
+  };
+
+
+  /**
    * @ingroup core
    * @brief Gradient noise
    *
    * [Gradient noise](https://en.wikipedia.org/wiki/Gradient_noise) is a
    * lattice-based noise based on gradients.
    */
-  class GF_API GradientNoise {
+  class GF_API GradientNoise : public Noise {
   public:
     /**
      * @brief Constructor
@@ -56,14 +90,7 @@ inline namespace v1 {
      */
     GradientNoise(Random& random, Step<double> step);
 
-    /**
-     * @brief Take a noise value
-     *
-     * @param x The x coordinate of the noise value
-     * @param y The y coordinate of the noise value
-     * @return The noise value
-     */
-    double operator()(double x, double y) const;
+    virtual double getValue(double x, double y) override;
 
   private:
     Step<double> m_step;
@@ -82,7 +109,7 @@ inline namespace v1 {
    * in adding several octaves of a basic noise at different amplitudes.
    *
    */
-  class GF_API FractalNoise {
+  class GF_API FractalNoise : public Noise {
   public:
     /**
      * @brief Constructor
@@ -105,14 +132,7 @@ inline namespace v1 {
 
     }
 
-    /**
-     * @brief Take a noise value
-     *
-     * @param x The x coordinate of the noise value
-     * @param y The y coordinate of the noise value
-     * @return The noise value
-     */
-    double operator()(double x, double y) const;
+    virtual double getValue(double x, double y) override;
 
   private:
     std::function<double(double,double)> m_noise;
@@ -134,7 +154,7 @@ inline namespace v1 {
    *
    * @sa gf::GradientNoise, gf::FractalNoise
    */
-  class GF_API PerlinNoise {
+  class GF_API PerlinNoise : public Noise {
   public:
     /**
      * @brief Constructor
@@ -145,14 +165,7 @@ inline namespace v1 {
      */
     PerlinNoise(Random& random, double scale, std::size_t octaves = 8);
 
-    /**
-     * @brief Take a noise value
-     *
-     * @param x The x coordinate of the noise value
-     * @param y The y coordinate of the noise value
-     * @return The noise value
-     */
-    double operator()(double x, double y) const;
+    virtual double getValue(double x, double y) override;
 
   private:
     GradientNoise m_gradient;
@@ -171,7 +184,7 @@ inline namespace v1 {
    *
    * @sa gf::GradientNoise
    */
-  class GF_API SimplexNoise {
+  class GF_API SimplexNoise : public Noise {
   public:
     /**
      * @brief Constructor
@@ -180,15 +193,7 @@ inline namespace v1 {
      */
     SimplexNoise(Random& random);
 
-    /**
-     * @brief Take a noise value
-     *
-     * @param x The x coordinate of the noise value
-     * @param y The y coordinate of the noise value
-     * @return The noise value
-     */
-    double operator()(double x, double y) const;
-
+    virtual double getValue(double x, double y) override;
 
   private:
     std::array<uint8_t, 256> m_perm;
@@ -205,7 +210,7 @@ inline namespace v1 {
    *
    * @sa gf::SimplexNoise
    */
-  class GF_API OpenSimplexNoise {
+  class GF_API OpenSimplexNoise : public Noise {
   public:
     /**
      * @brief Constructor
@@ -214,15 +219,7 @@ inline namespace v1 {
      */
     OpenSimplexNoise(Random& random);
 
-    /**
-     * @brief Take a noise value
-     *
-     * @param x The x coordinate of the noise value
-     * @param y The y coordinate of the noise value
-     * @return The noise value
-     */
-    double operator()(double x, double y) const;
-
+    virtual double getValue(double x, double y) override;
 
   private:
     std::array<uint8_t, 256> m_perm;
@@ -239,7 +236,7 @@ inline namespace v1 {
    * based noise. It is also known as Voronoi noise or cellular noise or
    * simply cell noise.
    */
-  class GF_API WorleyNoise {
+  class GF_API WorleyNoise : public Noise {
   public:
     /**
      * @brief Constructor
@@ -251,14 +248,7 @@ inline namespace v1 {
      */
     WorleyNoise(Random& random, std::size_t count, Distance2<double> distance, std::vector<double> coeffs);
 
-    /**
-     * @brief Take a noise value
-     *
-     * @param x The x coordinate of the noise value
-     * @param y The y coordinate of the noise value
-     * @return The noise value
-     */
-    double operator()(double x, double y);
+    virtual double getValue(double x, double y) override;
 
   private:
     std::size_t m_count;
