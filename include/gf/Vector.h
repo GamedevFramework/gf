@@ -1682,7 +1682,7 @@ inline namespace v1 {
    * @param vec A vector.
    * @returns The Manhattan length of the vector
    *
-   * @sa manhattanDistance
+   * @sa manhattanDistance()
    */
   template<typename T, std::size_t N>
   inline
@@ -1707,7 +1707,7 @@ inline namespace v1 {
    * @param vec A vector.
    * @returns The square Euclidean length of the vector
    *
-   * @sa euclideanLength, squareDistance
+   * @sa euclideanLength(), squareDistance()
    */
   template<typename T, std::size_t N>
   inline
@@ -1734,7 +1734,7 @@ inline namespace v1 {
    * @param vec A vector.
    * @returns The Euclidean length of the vector
    *
-   * @sa euclideanDistance
+   * @sa euclideanDistance()
    */
   template<typename T, std::size_t N>
   inline
@@ -1755,7 +1755,7 @@ inline namespace v1 {
    * @param vec A vector.
    * @returns The Chebyshev length of the vector
    *
-   * @sa chebyshevDistance
+   * @sa chebyshevDistance()
    */
   template<typename T, std::size_t N>
   inline
@@ -1769,6 +1769,43 @@ inline namespace v1 {
     return out;
   }
 
+  /**
+   * @ingroup core
+   * @brief A distance function
+   *
+   * A distance function is a function that gives the distance between two vectors.
+   *
+   * ~~~
+   * gf::Distance<float, 3> distFn = gf::manhattanDistance<float, 3>;
+   * Vector3f vec1 = ...;
+   * Vector3f vec2 = ...;
+   *
+   * float distance = distFn(vec1, vec2);
+   * ~~~
+   *
+   * @sa manhattanDistance(), squareDistance(), euclideanDistance(), chebyshevDistance()
+   * @sa gf::Distance2, gf::Distance3
+   */
+  template<typename T, std::size_t N>
+  using Distance = T (*)(const Vector<T, N>&, const Vector<T, N>&);
+
+  /**
+   * @ingroup core
+   * @brief A distance function for 2D vectors
+   *
+   * @sa gf::Distance
+   */
+  template<typename T>
+  using Distance2 = Distance<T, 2>;
+
+  /**
+   * @ingroup core
+   * @brief A distance function for 3D vectors
+   *
+   * @sa gf::Distance
+   */
+  template<typename T>
+  using Distance3 = Distance<T, 3>;
 
   /**
    * @relates Vector
@@ -1781,7 +1818,7 @@ inline namespace v1 {
    * @param rhs A second vector
    * @returns The Manhattan distance between the two vectors
    *
-   * @sa manhattanLength
+   * @sa manhattanLength()
    */
   template<typename T, std::size_t N>
   inline
@@ -1800,7 +1837,7 @@ inline namespace v1 {
    * @param rhs A second vector
    * @returns The square Euclidean distance between the two vectors
    *
-   * @sa squareLength, euclideanDistance
+   * @sa squareLength(), euclideanDistance()
    */
   template<typename T, std::size_t N>
   inline
@@ -1819,7 +1856,7 @@ inline namespace v1 {
    * @param rhs A second vector
    * @returns The Euclidean distance between the two vectors
    *
-   * @sa euclideanLength
+   * @sa euclideanLength()
    */
   template<typename T, std::size_t N>
   inline
@@ -1838,7 +1875,7 @@ inline namespace v1 {
    * @param rhs A second vector
    * @returns The Chebyshev distance between the two vectors
    *
-   * @sa chebyshevLength
+   * @sa chebyshevLength()
    */
   template<typename T, std::size_t N>
   inline
