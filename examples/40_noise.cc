@@ -90,6 +90,8 @@ int main() {
   std::cout << "\t4: Simplex noise\n";
   std::cout << "\t5: OpenSimplex noise + Fractal\n";
   std::cout << "\t6: OpenSimplex noise\n";
+  std::cout << "\t7: Worley noise + Fractal\n";
+  std::cout << "\t8: Worley noise\n";
   std::cout << "\tS: Capture the image in 'noise.png'\n";
   std::cout << "Current noise: Perlin noise (Gradient noise + Fractal)\n";
 
@@ -163,6 +165,27 @@ int main() {
               {
                 gf::OpenSimplexNoise noise(random);
                 generateArrayFromNoise(array, noise, 10.0f);
+                generateImageFromArray(image, array);
+                texture.update(image);
+              }
+              break;
+
+            case gf::Scancode::Num7:
+              std::cout << "Current noise: Worley noise + Fractal\n";
+              {
+                gf::WorleyNoise noise(random, 20, gf::euclideanDistance, { -1.0, 1.0 });
+                gf::FractalNoise fractal(noise, 1.0f, 6);
+                generateArrayFromNoise(array, fractal);
+                generateImageFromArray(image, array);
+                texture.update(image);
+              }
+              break;
+
+            case gf::Scancode::Num8:
+              std::cout << "Current noise: Worley noise\n";
+              {
+                gf::WorleyNoise noise(random, 20, gf::euclideanDistance, { -1.0, 1.0 });
+                generateArrayFromNoise(array, noise);
                 generateImageFromArray(image, array);
                 texture.update(image);
               }
