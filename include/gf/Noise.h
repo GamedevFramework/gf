@@ -231,10 +231,23 @@ inline namespace v1 {
   };
 
 
+  /**
+   * @ingroup core
+   * @brief Worley noise
+   *
+   * [Worley noise](https://en.wikipedia.org/wiki/Worley_noise) is a point
+   * based noise. It is also known as Voronoi noise or cellular noise or
+   * simply cell noise.
+   */
   class GF_API WorleyNoise {
   public:
     /**
      * @brief Constructor
+     *
+     * @param random A random engine
+     * @param count The number of points
+     * @param distance A distance function
+     * @param coeffs The coefficients for the noise
      */
     WorleyNoise(Random& random, std::size_t count, Distance2<double> distance, std::vector<double> coeffs);
 
