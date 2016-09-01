@@ -231,6 +231,29 @@ inline namespace v1 {
   };
 
 
+  class GF_API WorleyNoise {
+  public:
+    /**
+     * @brief Constructor
+     */
+    WorleyNoise(Random& random, std::size_t count, Distance2<double> distance, std::vector<double> coeffs);
+
+    /**
+     * @brief Take a noise value
+     *
+     * @param x The x coordinate of the noise value
+     * @param y The y coordinate of the noise value
+     * @return The noise value
+     */
+    double operator()(double x, double y);
+
+  private:
+    std::size_t m_count;
+    Distance2<double> m_distance;
+    std::vector<double> m_coeffs;
+    std::vector<Vector2d> m_cells;
+  };
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif

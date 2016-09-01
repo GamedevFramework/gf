@@ -360,5 +360,78 @@ inline namespace v1 {
     uint8_t index = m_perm.at(static_cast<uint8_t>(i + m_perm.at(j)));
     return gradients[index % 8];
   }
+
+
+  WorleyNoise::WorleyNoise(Random& random, std::size_t count, Distance2<double> distance, std::vector<double> coeffs)
+  : m_count(count)
+  , m_distance(distance)
+  , m_coeffs(std::move(coeffs))
+  {
+    // generate cells
+
+    m_cells.reserve(m_count * 4);
+
+    for (std::size_t i = 0; i < m_count; ++i) {
+      auto x = random.computeUniformFloat(0.0, 1.0);
+      auto y = random.computeUniformFloat(0.0, 1.0);
+
+      m_cells.push_back({x, y});
+
+      if (x < 0.5) {
+        if (y < 0.5) {
+          m_cells.push_back({x + 1.0, y      });
+          m_cells.push_back({x      , y + 1.0});
+          m_cells.push_back({x + 1.0, y + 1.0});
+        } else {
+          m_cells.push_back({x + 1.0, y      });
+          m_cells.push_back({x      , y - 1.0});
+          m_cells.push_back({x + 1.0, y - 1.0});
+        }
+      } else {
+        if (y < 0.5) {
+          m_cells.push_back({x - 1.0, y      });
+          m_cells.push_back({x      , y + 1.0});
+          m_cells.push_back({x - 1.0, y + 1.0});
+        } else {
+          m_cells.push_back({x - 1.0, y      });
+          m_cells.push_back({x      , y - 1.0});
+          m_cells.push_back({x - 1.0, y - 1.0});
+        }
+      }
+    }
+
+    // some sanity checks
+
+    if (m_coeffs.empty()) {
+      m_coeffs.push_back(1.0);
+    }
+
+    if (m_coeffs.size() > m_cells.size()) {
+      m_coeffs.resize(m_cells.size());
+    }
+
+  }
+
+  double WorleyNoise::operator()(double x, double y) {
+    double rx = std::fmod(x, 1);
+    double ry = std::fmod(y, 1);
+
+    auto size = m_coeffs.size();
+
+    Vector2d here{rx, ry};
+
+    std::partial_sort(m_cells.begin(), m_cells.begin() + size, m_cells.end(), [&here, this](const Vector2d& lhs, const Vector2d& rhs) {
+      return m_distance(here, lhs) < m_distance(here, rhs);
+    });
+
+    double value = 0.0;
+
+    for (decltype(size) i = 0; i < size; ++i) {
+      value += m_coeffs[i] * m_distance(here, m_cells[i]);
+    }
+
+    return value;
+  }
+
 }
 }
