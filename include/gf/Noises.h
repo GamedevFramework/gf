@@ -25,6 +25,7 @@
 #include <cstdint>
 #include <array>
 #include <functional>
+#include <vector>
 
 #include "Math.h"
 #include "Noise.h"
