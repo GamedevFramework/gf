@@ -27,13 +27,13 @@
 #include <gf/Event.h>
 #include <gf/Image.h>
 #include <gf/Math.h>
-#include <gf/Noise.h>
+#include <gf/Noises.h>
 #include <gf/Random.h>
 #include <gf/RenderWindow.h>
 #include <gf/Sprite.h>
 #include <gf/Window.h>
 
-static void generateArrayFromNoise(gf::Array2D<double>& array, std::function<double(double, double)> noise, double scale = 1.0) {
+static void generateArrayFromNoise(gf::Array2D<double>& array, gf::Noise2D& noise, double scale = 1.0) {
   for (auto row : array.getRowRange()) {
     double y = static_cast<double>(row) / array.getRows() * scale;
     for (auto col : array.getColRange()) {
@@ -59,7 +59,7 @@ static void generateImageFromArray(gf::Image& image, const gf::Array2D<double>& 
 
 int main() {
   gf::Random random;
-  gf::PerlinNoise perlin(random, 1.0f);
+  gf::PerlinNoise2D perlin(random, 1.0f);
 
   constexpr unsigned Size = 480;
 
@@ -111,7 +111,7 @@ int main() {
             case gf::Scancode::Num1:
               std::cout << "Current noise: Perlin noise (Gradient noise + Fractal)\n";
               {
-                gf::PerlinNoise noise(random, 1.0f);
+                gf::PerlinNoise2D noise(random, 1.0f);
                 generateArrayFromNoise(array, noise, 10.0f);
                 generateImageFromArray(image, array);
                 texture.update(image);
@@ -121,7 +121,7 @@ int main() {
             case gf::Scancode::Num2:
               std::cout << "Current noise: Gradient noise\n";
               {
-                gf::GradientNoise noise(random, gf::cubicStep);
+                gf::GradientNoise2D noise(random, gf::cubicStep);
                 generateArrayFromNoise(array, noise, 10.0f);
                 generateImageFromArray(image, array);
                 texture.update(image);
@@ -131,8 +131,8 @@ int main() {
             case gf::Scancode::Num3:
               std::cout << "Current noise: Simplex noise + Fractal\n";
               {
-                gf::SimplexNoise noise(random);
-                gf::FractalNoise fractal(noise, 1.0f);
+                gf::SimplexNoise2D noise(random);
+                gf::FractalNoise2D fractal(noise, 1.0f);
                 generateArrayFromNoise(array, fractal, 10.0f);
                 generateImageFromArray(image, array);
                 texture.update(image);
@@ -142,7 +142,7 @@ int main() {
             case gf::Scancode::Num4:
               std::cout << "Current noise: Simplex noise\n";
               {
-                gf::SimplexNoise noise(random);
+                gf::SimplexNoise2D noise(random);
                 generateArrayFromNoise(array, noise, 10.0f);
                 generateImageFromArray(image, array);
                 texture.update(image);
@@ -152,8 +152,8 @@ int main() {
             case gf::Scancode::Num5:
               std::cout << "Current noise: OpenSimplex noise + Fractal\n";
               {
-                gf::OpenSimplexNoise noise(random);
-                gf::FractalNoise fractal(noise, 1.0f);
+                gf::OpenSimplexNoise2D noise(random);
+                gf::FractalNoise2D fractal(noise, 1.0f);
                 generateArrayFromNoise(array, fractal, 10.0f);
                 generateImageFromArray(image, array);
                 texture.update(image);
@@ -163,7 +163,7 @@ int main() {
             case gf::Scancode::Num6:
               std::cout << "Current noise: OpenSimplex noise\n";
               {
-                gf::OpenSimplexNoise noise(random);
+                gf::OpenSimplexNoise2D noise(random);
                 generateArrayFromNoise(array, noise, 10.0f);
                 generateImageFromArray(image, array);
                 texture.update(image);
@@ -173,8 +173,8 @@ int main() {
             case gf::Scancode::Num7:
               std::cout << "Current noise: Worley noise + Fractal\n";
               {
-                gf::WorleyNoise noise(random, 20, gf::euclideanDistance, { -1.0, 1.0 });
-                gf::FractalNoise fractal(noise, 1.0f, 6);
+                gf::WorleyNoise2D noise(random, 20, gf::euclideanDistance, { -1.0, 1.0 });
+                gf::FractalNoise2D fractal(noise, 1.0f, 6);
                 generateArrayFromNoise(array, fractal);
                 generateImageFromArray(image, array);
                 texture.update(image);
@@ -184,7 +184,7 @@ int main() {
             case gf::Scancode::Num8:
               std::cout << "Current noise: Worley noise\n";
               {
-                gf::WorleyNoise noise(random, 20, gf::euclideanDistance, { -1.0, 1.0 });
+                gf::WorleyNoise2D noise(random, 20, gf::euclideanDistance, { -1.0, 1.0 });
                 generateArrayFromNoise(array, noise);
                 generateImageFromArray(image, array);
                 texture.update(image);
