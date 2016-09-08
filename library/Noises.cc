@@ -23,6 +23,7 @@
 #include <cassert>
 #include <cmath>
 #include <algorithm>
+#include <numeric>
 #include <random>
 
 #include <gf/Math.h>
