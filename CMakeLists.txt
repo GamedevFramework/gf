@@ -92,4 +92,5 @@ endif()
 
 if (GF_BUILD_GAMES)
   add_subdirectory(games/gf_pong)
+  add_subdirectory(games/gf_2048)
 endif()
