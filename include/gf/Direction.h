@@ -47,6 +47,7 @@ inline namespace v1 {
   };
 
   /**
+   * @ingroup core
    * @brief Get a unit vector from a direction
    *
    * @param direction The direction
@@ -55,6 +56,7 @@ inline namespace v1 {
   GF_API Vector2f unit(Direction direction);
 
   /**
+   * @ingroup core
    * @brief Get a vector from a direction
    *
    * The vector has its coordinates at -1, 0 or 1 depending on the direction.
@@ -67,6 +69,7 @@ inline namespace v1 {
   GF_API Vector2i displacement(Direction direction);
 
   /**
+   * @ingroup core
    * @brief Get an angle from a direction
    *
    * Up is at angle 0 and angle grows clockwise.
@@ -77,6 +80,7 @@ inline namespace v1 {
   GF_API float angle(Direction direction);
 
   /**
+   * @ingroup core
    * @brief Get the opposite direction
    *
    * @param direction The direction
@@ -85,6 +89,7 @@ inline namespace v1 {
   GF_API Direction opposite(Direction direction);
 
   /**
+   * @ingroup core
    * @brief Get the orthogonal direction clockwise
    *
    * @param direction The direction
@@ -93,6 +98,7 @@ inline namespace v1 {
   GF_API Direction orthogonalCW(Direction direction);
 
   /**
+   * @ingroup core
    * @brief Get the orthogonal direction counter-clockwise
    *
    * @param direction The direction
@@ -101,6 +107,7 @@ inline namespace v1 {
   GF_API Direction orthogonalCCW(Direction direction);
 
   /**
+   * @ingroup core
    * @brief Get the next direction clockwise
    *
    * @param direction The direction
@@ -109,6 +116,7 @@ inline namespace v1 {
   GF_API Direction nextCW(Direction direction);
 
   /**
+   * @ingroup core
    * @brief Get the next direction counter-clockwise
    *
    * @param direction The direction

@@ -53,6 +53,7 @@ inline namespace v1 {
 
 
   /**
+   * @ingroup core
    * @brief Get a unit vector from an orientation
    *
    * @param orientation The orientation
@@ -61,6 +62,7 @@ inline namespace v1 {
   GF_API Vector2f unit(Orientation orientation);
 
   /**
+   * @ingroup core
    * @brief Get a vector from an orientation
    *
    * The vector has its coordinates at -1, 0 or 1 depending on the orientation.
@@ -73,6 +75,7 @@ inline namespace v1 {
   GF_API Vector2i displacement(Orientation orientation);
 
   /**
+   * @ingroup core
    * @brief Get an angle from a orientation
    *
    * North is at angle 0 and angle grows clockwise.
@@ -83,6 +86,7 @@ inline namespace v1 {
   GF_API float angle(Orientation orientation);
 
   /**
+   * @ingroup core
    * @brief Get the opposite orientation
    *
    * @param orientation The orientation
@@ -91,6 +95,7 @@ inline namespace v1 {
   GF_API Orientation opposite(Orientation orientation);
 
   /**
+   * @ingroup core
    * @brief Get the orthogonal orientation clockwise
    *
    * @param orientation The orientation
@@ -99,6 +104,7 @@ inline namespace v1 {
   GF_API Orientation orthogonalCW(Orientation orientation);
 
   /**
+   * @ingroup core
    * @brief Get the orthogonal orientation counter-clockwise
    *
    * @param orientation The orientation
@@ -107,6 +113,7 @@ inline namespace v1 {
   GF_API Orientation orthogonalCCW(Orientation orientation);
 
   /**
+   * @ingroup core
    * @brief Get the next orientation clockwise
    *
    * @param orientation The orientation
@@ -115,6 +122,7 @@ inline namespace v1 {
   GF_API Orientation nextCW(Orientation orientation);
 
   /**
+   * @ingroup core
    * @brief Get the next orientation counter-clockwise
    *
    * @param orientation The orientation
