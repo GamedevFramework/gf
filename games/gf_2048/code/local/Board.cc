@@ -20,6 +20,9 @@
  */
 #include "Board.h"
 
+#include <array>
+#include <algorithm>
+
 #include <gf/Color.h>
 #include <gf/RenderTarget.h>
 #include <gf/Shapes.h>
