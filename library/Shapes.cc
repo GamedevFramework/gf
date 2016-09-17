@@ -198,6 +198,15 @@ inline namespace v1 {
     updateGeometry();
   }
 
+  RoundedRectangleShape::RoundedRectangleShape(const RectF& rect, float radius, std::size_t cornerPointCount)
+  : m_size(rect.size)
+  , m_radius(radius)
+  , m_cornerPointCount(cornerPointCount)
+  {
+    updateGeometry();
+    setPosition(rect.position)
+  }
+
   void RoundedRectangleShape::setSize(Vector2f size) {
     if (m_size == size) {
       return;
