@@ -204,7 +204,7 @@ inline namespace v1 {
   , m_cornerPointCount(cornerPointCount)
   {
     updateGeometry();
-    setPosition(rect.position)
+    setPosition(rect.position);
   }
 
   void RoundedRectangleShape::setSize(Vector2f size) {
