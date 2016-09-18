@@ -26,8 +26,10 @@
 
 #include "Drawable.h"
 #include "Event.h"
+#include "Flags.h"
 #include "Portability.h"
 #include "Rect.h"
+#include "Text.h"
 #include "Vector.h"
 
 namespace gf {
@@ -37,49 +39,59 @@ inline namespace v1 {
 
   class Font;
 
-  namespace ui {
-    typedef uint64_t Flags;
+  enum class UIProperties : uint64_t {
+    Enabled         = 0x0001,
+    Hot             = 0x0002,
+    Active          = 0x0004,
 
-    //
-    static constexpr Flags Selected = 0x0001;
-    static constexpr Flags Disabled = 0x0002;
-
-    // text alignment
-    static constexpr Flags AlignedLeft   = 0x1000;
-    static constexpr Flags AlignedRight  = 0x2000;
-    static constexpr Flags AlignedCenter = 0x4000;
-
-    // special commands
-    static constexpr Flags NoScissor = 0x10000;
-  }
-
-  struct UILayout {
-    float buttonHeight = 20.0f;
-    float sliderHeight = 20.0f;
-    float sliderMarkerWidth = 10.0f;
-    float checkSize = 8.0f;
-    float defaultSpacing = 4.0f;
-    float textHeight = 12.0f;
-    float scrollAreaPadding = 6.0f;
-    float scrollAreaCorner = 6.0f;
-    float indentSize = 16.0f;
-    float areaHeader = 20.0f;
+    Selectable      = 0x0100,
+    Draggable       = 0x0200,
+    Reactive        = 0x0400,
+    Underlying      = 0x0800,
+    Useless         = 0x1000,
   };
 
+  using UIFlags = Flags<UIProperties>;
+
+  struct UILayout {
+    // general
+    float widgetHeight = 20.0f;
+    float textHeight = 12.0f;
+    float defaultSpacing = 4.0f;
+    float areaHeader = 20.0f;
+    float scrollAreaPadding = 6.0f;
+    float scrollAreaCorner = 6.0f;
+    // widget specific
+    float buttonCorner = 9.0f;
+    float itemCorner = 2.0f;
+    float checkSize = 11.0f;
+    float checkCorner = 4.0f;
+    float sliderCorner = 4.0f;
+    float sliderMarkerWidth = 10.0f;
+    // misc
+    float indentSize = 16.0f;
+  };
+
+  enum class UIIcon {
+    Check,
+    RightTriangle,
+    DownTriangle,
+  };
 
   class UIRenderer {
   public:
-    virtual void drawRect(RenderTarget& target, const RectF& rect, float corner, const Color4f& color, ui::Flags flags) const = 0;
-    virtual void drawText(RenderTarget& target, const std::string& text, unsigned size, Vector2f pos, float width, const Color4f& color, ui::Flags flags) const = 0;
+    virtual void drawRect(RenderTarget& target, const RectF& rect, float corner, UIFlags flags) const = 0;
+    virtual void drawText(RenderTarget& target, const std::string& text, unsigned size, Vector2f pos, float width, Text::Alignment alignment, UIFlags flags) const = 0;
+    virtual void drawIcon(RenderTarget& target, Vector2f pos, UIIcon icon, UIFlags flags) const = 0;
   };
 
   class DefaultUIRenderer : public UIRenderer {
   public:
     DefaultUIRenderer(gf::Font& font);
 
-    virtual void drawRect(RenderTarget& target, const RectF& rect, float corner, const Color4f& color, ui::Flags flags) const override;
-    virtual void drawText(RenderTarget& target, const std::string& text, unsigned size, Vector2f pos, float width, const Color4f& color, ui::Flags flags) const override;
-
+    virtual void drawRect(RenderTarget& target, const RectF& rect, float corner, UIFlags flags) const override;
+    virtual void drawText(RenderTarget& target, const std::string& text, unsigned size, Vector2f pos, float width, Text::Alignment alignment, UIFlags flags) const override;
+    void drawIcon(RenderTarget& target, Vector2f pos, UIIcon icon, UIFlags flags) const override;
   private:
     gf::Font *m_font;
   };
@@ -115,21 +127,33 @@ inline namespace v1 {
 
   private:
     const UIRenderer& m_renderer;
-    UILayout m_layout;
+    const UILayout& m_layout;
 
     enum class CommandType {
+      Scissor,
       Rect,
       Text,
-      Scissor,
+      Icon,
     };
 
     struct Command {
       CommandType type;
-      ui::Flags flags;
-      Color4f color;
+      UIFlags flags;
     };
 
     std::vector<Command> m_commands;
+
+    enum class ScissorAction {
+      Set,
+      Reset,
+    };
+
+    struct ScissorCommand {
+      ScissorAction action;
+      RectF rect;
+    };
+
+    std::vector<ScissorCommand> m_scissorCommands;
 
     struct RectCommand {
       RectF rect;
@@ -143,14 +167,24 @@ inline namespace v1 {
       float width;
       std::string text;
       unsigned size;
+      Text::Alignment alignment;
     };
 
     std::vector<TextCommand> m_textCommands;
 
+    struct IconCommand {
+      Vector2f pos;
+      UIIcon icon;
+    };
+
+    std::vector<IconCommand> m_iconCommands;
+
     void resetCommandQueue();
-    void addScissorCommand(const RectF& rect, ui::Flags flags = 0);
-    void addRectCommand(const RectF& rect, float corner, const Color4f& color, ui::Flags flags = 0);
-    void addTextCommand(Vector2f pos, float width, const std::string& text, unsigned size, const Color4f& color, ui::Flags flags = 0);
+    void addScissorCommand(ScissorAction action, const RectF& rect = RectF());
+    void addRectCommand(const RectF& rect, float corner, UIFlags flags);
+    void addTextCommand(Vector2f pos, float width, const std::string& text, unsigned size, Text::Alignment alignment, UIFlags flags);
+    void addIconCommand(Vector2f pos, UIIcon icon, UIFlags flags);
+
 
   private:
     uint64_t m_areaId;
@@ -231,6 +265,14 @@ inline namespace v1 {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif
+
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+template<>
+struct EnableBitmaskOperators<UIProperties> {
+  static constexpr bool value = true;
+};
+#endif
+
 }
 
 #endif // GF_UI_H

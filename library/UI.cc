@@ -98,45 +98,92 @@ inline namespace v1 {
 
   }
 
-  void DefaultUIRenderer::drawRect(RenderTarget& target, const RectF& rect, float corner, const Color4f& color, ui::Flags flags) const {
-    GF_UNUSED(flags);
+  static Color4f getRectColor(UIFlags flags) {
+    if (flags.test(UIProperties::Selectable)) {
+      if (flags.test(UIProperties::Active)) {
+        return Color4f{ 0.5f, 0.5f, 0.5f, 0.75f };
+      }
 
-    if (corner > 0) {
-      gf::RoundedRectangleShape shape(rect.size, corner);
-      shape.setColor(color);
-      shape.setPosition(rect.position);
-      target.draw(shape);
-    } else {
-      gf::RectangleShape shape(rect.size);
-      shape.setColor(color);
-      shape.setPosition(rect.position);
-      target.draw(shape);
+      return Color4f{ 0.5f, 0.5f, 0.5f, 0.375f };
     }
 
+    if (flags.test(UIProperties::Draggable)) {
+      if (flags.test(UIProperties::Active)) {
+        return Color4f{ 1.0f, 0.75f, 0.0f, 0.75f };
+      }
+
+      if (flags.test(UIProperties::Hot)) {
+        return Color4f{ 1.0f, 0.75f, 0.0f, 0.375f };
+      }
+
+      return Color4f{ 1.0f, 1.0f, 1.0f, 0.25f };
+    }
+
+    if (flags.test(UIProperties::Reactive)) {
+      if (flags.test(UIProperties::Active)) {
+        return Color4f{ 1.0f, 0.75f, 0.0f, 0.75f };
+      }
+
+      if (flags.test(UIProperties::Hot)) {
+        return Color4f{ 1.0f, 0.75f, 0.0f, 0.375f };
+      }
+
+      return Color::Transparent;
+    }
+
+    if (flags.test(UIProperties::Underlying)) {
+      return Color4f{ 0.0f, 0.0f, 0.0f, 0.75f };
+    }
+
+    if (flags.test(UIProperties::Useless)) {
+      return Color4f{ 1.0f, 1.0f, 1.0f, 0.125f };
+    }
+
+    return Color::Transparent;
   }
 
-  void DefaultUIRenderer::drawText(RenderTarget& target, const std::string& str, unsigned size, Vector2f pos, float width, const Color4f& color, ui::Flags flags) const {
+  void DefaultUIRenderer::drawRect(RenderTarget& target, const RectF& rect, float corner, UIFlags flags) const {
+    if (corner > 0) {
+      gf::RoundedRectangleShape shape(rect, corner);
+      shape.setColor(getRectColor(flags));
+      target.draw(shape);
+    } else {
+      gf::RectangleShape shape(rect);
+      shape.setColor(getRectColor(flags));
+      target.draw(shape);
+    }
+  }
+
+  static Color4f getTextColor(UIFlags flags) {
+    if (flags.test(UIProperties::Selectable) || flags.test(UIProperties::Draggable)) {
+      if (flags.test(UIProperties::Hot)) {
+        return Color4f{ 1.0f, 0.75f, 0.0f, 1.0f };
+      }
+
+      if (flags.test(UIProperties::Enabled)) {
+        return Color4f{ 1.0f, 1.0f, 1.0f, 0.8f };
+      }
+
+      return Color4f{ 0.5f, 0.5f, 0.5f, 0.8f };
+    }
+
+    if (flags.test(UIProperties::Reactive)) {
+      if (flags.test(UIProperties::Enabled)) {
+        return Color4f{ 1.0f, 1.0f, 1.0f, 0.8f };
+      }
+
+      return Color4f{ 0.5f, 0.5f, 0.5f, 0.8f };
+    }
+
+    return Color4f{ 1.0f, 1.0f, 1.0f, 0.8f };
+  }
+
+  void DefaultUIRenderer::drawText(RenderTarget& target, const std::string& str, unsigned size, Vector2f pos, float width, Text::Alignment alignment, UIFlags flags) const {
     gf::Text text;
     text.setParagraphWidth(width);
-
-    Text::Alignment alignment = Text::Alignment::Justify;
-
-    if (flags & ui::AlignedLeft) {
-      alignment = Text::Alignment::Left;
-    }
-
-    if (flags & ui::AlignedRight) {
-      alignment = Text::Alignment::Right;
-    }
-
-    if (flags & ui::AlignedCenter) {
-      alignment = Text::Alignment::Center;
-    }
-
     text.setAlignment(alignment);
-
     text.setCharacterSize(size);
-    text.setColor(color);
+    text.setColor(getTextColor(flags));
     text.setString(str);
     text.setFont(*m_font);
     text.setPosition(pos);
@@ -144,6 +191,64 @@ inline namespace v1 {
     target.draw(text);
   }
 
+  static Color4f getIconColor(UIFlags flags) {
+    if (flags.test(UIProperties::Active)) {
+      return Color4f{ 1.0f, 1.0f, 1.0f, 1.0f };
+    }
+
+    return Color4f{ 1.0f, 1.0f, 1.0f, 0.7f };
+  }
+
+  void DefaultUIRenderer::drawIcon(RenderTarget& target, Vector2f pos, UIIcon icon, UIFlags flags) const {
+    Color4f color = getIconColor(flags);
+
+    switch (icon) {
+      case UIIcon::Check: {
+        gf::RectangleShape shape({ 6.0f, 6.0f });
+        shape.setColor(color);
+        shape.setPosition(pos);
+        shape.setAnchor(gf::Anchor::Center);
+        target.draw(shape);
+        break;
+      }
+      case UIIcon::RightTriangle: {
+        gf::CircleShape shape(5.0f, 3);
+        shape.setColor(color);
+        shape.setPosition(pos);
+        shape.setAnchor(gf::Anchor::Center);
+        shape.setRotation(gf::Pi / 2);
+        target.draw(shape);
+        break;
+      }
+      case UIIcon::DownTriangle: {
+        gf::CircleShape shape(5.0f, 3);
+        shape.setColor(color);
+        shape.setPosition(pos);
+        shape.setAnchor(gf::Anchor::Center);
+        shape.setRotation(gf::Pi);
+        target.draw(shape);
+        break;
+      }
+    }
+  }
+
+  static UIFlags getStateFlags(bool active, bool hot = true, bool enabled = true) {
+    UIFlags flags;
+
+    if (enabled) {
+      flags |= UIProperties::Enabled;
+
+      if (hot) {
+        flags |= UIProperties::Hot;
+
+        if (active) {
+          flags |= UIProperties::Active;
+        }
+      }
+    }
+
+    return flags;
+  }
 
 
   /*
@@ -232,16 +337,16 @@ inline namespace v1 {
     m_insideScrollArea = inWidget(area, false);
     m_insideCurrentScroll = m_insideScrollArea;
 
-    addRectCommand(area, m_layout.scrollAreaCorner, Color4f{ 0.0f, 0.0f, 0.0f, 0.75f });
-    addTextCommand(headerPosition, area.width, name, m_layout.textHeight, Color4f{ 1.0f, 1.0f, 1.0f, 0.5f }, ui::AlignedLeft);
+    addRectCommand(area, m_layout.scrollAreaCorner, UIProperties::Underlying);
+    addTextCommand(headerPosition, area.width, name, m_layout.textHeight, Text::Alignment::Left, UIFlags());
 
-    addScissorCommand({ position.x, position.y, m_widgetW, m_scrollRect.height });
+    addScissorCommand(ScissorAction::Set, { position.x, position.y, m_widgetW, m_scrollRect.height });
 
     return m_insideScrollArea;
   }
 
   void UI::endScrollArea() {
-    addScissorCommand(RectF(), ui::NoScissor);
+    addScissorCommand(ScissorAction::Reset);
 
     // scroll bar
 
@@ -284,19 +389,11 @@ inline namespace v1 {
 
       // background
 
-      addRectCommand(m_scrollRect, m_scrollRect.width / 2 - 1, Color4f{0.0f, 0.0f, 0.0f, 0.75f});
+      addRectCommand(m_scrollRect, m_scrollRect.width / 2 - 1, UIProperties::Underlying);
 
       // thumb
 
-      if (isActive(thumbId)) {
-        addRectCommand(thumbRect, thumbRect.width / 2 - 1, Color4f{ 1.0f, 0.75f, 0.0f, 0.75f });
-      } else {
-        if (isHot(thumbId)) {
-          addRectCommand(thumbRect, thumbRect.width / 2 - 1, Color4f{ 1.0f, 0.75f, 0.0f, 0.375f });
-        } else {
-          addRectCommand(thumbRect, thumbRect.width / 2 - 1, Color4f{ 1.0f, 1.0f, 1.0f, 0.25f });
-        }
-      }
+      addRectCommand(thumbRect, thumbRect.width / 2 - 1, getStateFlags(isActive(thumbId), isHot(thumbId)) | UIProperties::Draggable);
 
       // mouse scrolling
 
@@ -333,7 +430,7 @@ inline namespace v1 {
     m_widgetY += m_layout.defaultSpacing;
 
     RectF line = reserveWidget(1.0f);
-    addRectCommand(line, 0, Color4f{ 1.0f, 1.0f, 1.0f, 0.125f });
+    addRectCommand(line, 0, UIProperties::Useless);
 
     m_widgetY += m_layout.defaultSpacing * 2;
   }
@@ -341,86 +438,67 @@ inline namespace v1 {
   bool UI::button(const std::string& text, bool enabled) {
     uint64_t id = generateId();
 
-    RectF space = reserveWidget(m_layout.buttonHeight);
+    RectF space = reserveWidget(m_layout.widgetHeight);
 
     bool over = enabled && inWidget(space);
     bool res = processWidget(id, over);
 
-    addRectCommand(space, m_layout.buttonHeight / 2 - 1, Color4f{ 0.5f, 0.5f, 0.5f, isActive(id) ? 0.75f : 0.375f });
+    addRectCommand(space, m_layout.buttonCorner, getStateFlags(isActive(id)) | UIProperties::Selectable);
 
-    Vector2f textPos = space.getTopLeft() + m_layout.buttonHeight / 2;
+    Vector2f textPos = space.getTopLeft() + m_layout.widgetHeight / 2;
     textPos.y -= m_layout.textHeight / 2;
 
-    if (enabled) {
-      if (isHot(id)) {
-        addTextCommand(textPos, space.width, text, m_layout.textHeight, Color4f{ 1.0f, 0.75f, 0.0f, 1.0f }, ui::AlignedLeft);
-      } else {
-        addTextCommand(textPos, space.width, text, m_layout.textHeight, Color4f{ 1.0f, 1.0f, 1.0f, 0.8f }, ui::AlignedLeft);
-      }
-    } else {
-      addTextCommand(textPos, space.width, text, m_layout.textHeight, Color4f{ 0.5f, 0.5f, 0.5f, 0.8f }, ui::AlignedLeft);
-    }
+
+    addTextCommand(textPos, space.width, text, m_layout.textHeight, Text::Alignment::Left,
+        getStateFlags(true, isHot(id), enabled) | UIProperties::Selectable);
 
     return res;
   }
 
   bool UI::item(const std::string& text, bool enabled) {
     uint64_t id = generateId();
-    RectF space = reserveWidget(m_layout.buttonHeight);
+    RectF space = reserveWidget(m_layout.widgetHeight);
 
     bool over = enabled && inWidget(space);
     bool res = processWidget(id, over);
 
-    if (isHot(id)) {
-      addRectCommand(space, 2.0f, Color4f{ 1.0f, 0.75f, 0.0f, isActive(id) ? 0.75f : 0.375f });
-    }
+    addRectCommand(space, m_layout.itemCorner, getStateFlags(isActive(id), isHot(id)) | UIProperties::Reactive);
 
-    Vector2f textPos = space.getTopLeft() + m_layout.buttonHeight / 2;
+    Vector2f textPos = space.getTopLeft() + m_layout.widgetHeight / 2;
     textPos.y -= m_layout.textHeight / 2;
 
-    if (enabled) {
-      addTextCommand(textPos, space.width, text, m_layout.textHeight, Color4f{1.0f, 1.0f, 1.0f, 0.8f}, ui::AlignedLeft);
-    } else {
-      addTextCommand(textPos, space.width, text, m_layout.textHeight, Color4f{0.5f, 0.5f, 0.5f, 0.8f}, ui::AlignedLeft);
-    }
+    addTextCommand(textPos, space.width, text, m_layout.textHeight, Text::Alignment::Left,
+        getStateFlags(true, true, enabled) | UIProperties::Reactive);
 
     return res;
   }
 
   bool UI::check(const std::string& text, bool checked, bool enabled) {
     uint64_t id = generateId();
-    RectF space = reserveWidget(m_layout.buttonHeight);
+    RectF space = reserveWidget(m_layout.widgetHeight);
 
     bool over = enabled && inWidget(space);
     bool res = processWidget(id, over);
 
-    RectF checkMark;
-    checkMark.position = space.position + m_layout.buttonHeight / 2 - m_layout.checkSize / 2;
-    checkMark.size = { m_layout.checkSize, m_layout.checkSize };
+    UIFlags flags = getStateFlags(isActive(id), isHot(id), enabled);
 
-    RectF checkBox = checkMark.extend(3.0f);
+    RectF checkBox;
+    checkBox.position = space.position + m_layout.widgetHeight / 2 - m_layout.checkSize / 2;
+    checkBox.size = { m_layout.checkSize, m_layout.checkSize };
 
-    addRectCommand(checkBox, 4.0f, Color4f{0.5f, 0.5f, 0.5f, isActive(id) ? 0.75f : 0.375f });
+    addRectCommand(checkBox, m_layout.checkCorner, flags | UIProperties::Selectable);
 
     if (checked) {
-      if (enabled) {
-        addRectCommand(checkMark, m_layout.checkSize / 2 - 1, Color4f{ 1.0f, 1.0f, 1.0f, isActive(id) ? 1.0f : 0.8f });
-      } else {
-        addRectCommand(checkMark, m_layout.checkSize / 2 - 1, Color4f{ 0.5f, 0.5f, 0.5f, 0.8f });
-      }
+      addIconCommand(checkBox.getCenter(), UIIcon::Check, flags);
     }
 
-    Vector2f textPos = space.getTopLeft() + m_layout.buttonHeight / 2;
-    textPos.x += m_layout.buttonHeight / 2;
+    Vector2f textPos = space.getTopLeft() + m_layout.widgetHeight / 2;
+    textPos.x += m_layout.widgetHeight / 2;
     textPos.y -= m_layout.textHeight / 2;
 
-    float textWidth = space.width - m_layout.buttonHeight / 2;
+    float textWidth = space.width - m_layout.widgetHeight / 2;
 
-    if (enabled) {
-      addTextCommand(textPos, textWidth, text, m_layout.textHeight, isHot(id) ? Color4f{ 1.0f, 0.75f, 0.0f, 1.0f } : Color4f{ 1.0f, 1.0f, 1.0f, 0.8f }, ui::AlignedLeft);
-    } else {
-      addTextCommand(textPos, textWidth, text, m_layout.textHeight, Color4f{ 0.5f, 0.5f, 0.5f, 0.8f }, ui::AlignedLeft);
-    }
+    addTextCommand(textPos, textWidth, text, m_layout.textHeight, Text::Alignment::Left, flags | UIProperties::Selectable);
 
     return res;
   }
@@ -429,62 +507,57 @@ inline namespace v1 {
     GF_UNUSED(subtext);
 
     uint64_t id = generateId();
-    RectF space = reserveWidget(m_layout.buttonHeight, false);
+    RectF space = reserveWidget(m_layout.widgetHeight, false);
 
     bool over = enabled && inWidget(space);
     bool res = processWidget(id, over);
 
-    RectF collapseMark;
-    collapseMark.position = space.position + m_layout.buttonHeight / 2 - m_layout.checkSize / 2;
-    collapseMark.size = { m_layout.checkSize, m_layout.checkSize };
+    UIFlags flags = getStateFlags(isActive(id), isHot(id), enabled);
+
+    Vector2f iconPos = space.position + m_layout.widgetHeight / 2;
 
     if (checked) {
-      // TODO: draw an icon instead of a rectangle
-      addRectCommand(collapseMark, 0, Color4f{ 1.0f, 1.0f, 1.0f, isActive(id) ? 1.0f : 0.8f });
+      addIconCommand(iconPos, UIIcon::DownTriangle, flags);
     } else {
-      addRectCommand(collapseMark, 0, Color4f{ 0.5f, 0.5f, 0.5f, isActive(id) ? 1.0f : 0.8f });
+      addIconCommand(iconPos, UIIcon::RightTriangle, flags);
     }
 
-    Vector2f textPos = space.getTopLeft() + m_layout.buttonHeight / 2;
-    textPos.x += m_layout.buttonHeight / 2;
+    Vector2f textPos = space.getTopLeft() + m_layout.widgetHeight / 2;
+    textPos.x += m_layout.widgetHeight / 2;
     textPos.y -= m_layout.textHeight / 2;
 
-    float textWidth = space.width - m_layout.buttonHeight / 2;
+    float textWidth = space.width - m_layout.widgetHeight / 2;
 
-    if (enabled) {
-      addTextCommand(textPos, textWidth, text, m_layout.textHeight, isHot(id) ? Color4f{ 1.0f, 0.75f, 0.0f, 1.0f } : Color4f{ 1.0f, 1.0f, 1.0f, 0.8f }, ui::AlignedLeft);
-    } else {
-      addTextCommand(textPos, textWidth, text, m_layout.textHeight, Color4f{ 0.5f, 0.5f, 0.5f, 0.8f }, ui::AlignedLeft);
-    }
+    addTextCommand(textPos, textWidth, text, m_layout.textHeight, Text::Alignment::Left, flags | UIProperties::Selectable);
 
     return res;
   }
 
   void UI::label(const std::string& text) {
-    RectF space = reserveWidget(m_layout.buttonHeight, false);
-    Vector2f textPos = space.getTopLeft() + m_layout.buttonHeight / 2;
+    RectF space = reserveWidget(m_layout.widgetHeight, false);
+    Vector2f textPos = space.getTopLeft() + m_layout.widgetHeight / 2;
     textPos.y -= m_layout.textHeight / 2;
 
-    float textWidth = space.width - m_layout.buttonHeight;
+    float textWidth = space.width - m_layout.widgetHeight;
 
-    addTextCommand(textPos, textWidth, text, m_layout.textHeight, Color4f{1.0f, 1.0f, 1.0f, 1.0f}, ui::AlignedLeft);
+    addTextCommand(textPos, textWidth, text, m_layout.textHeight, Text::Alignment::Left, UIFlags());
   }
 
   void UI::value(const std::string& text) {
-    RectF space = reserveWidget(m_layout.buttonHeight, false);
-    Vector2f textPos = space.getTopLeft() + m_layout.buttonHeight / 2;
+    RectF space = reserveWidget(m_layout.widgetHeight, false);
+    Vector2f textPos = space.getTopLeft() + m_layout.widgetHeight / 2;
     textPos.y -= m_layout.textHeight / 2;
 
-    float textWidth = space.width - m_layout.buttonHeight;
+    float textWidth = space.width - m_layout.widgetHeight;
 
-    addTextCommand(textPos, textWidth, text, m_layout.textHeight, Color4f{1.0f, 1.0f, 1.0f, 0.8f}, ui::AlignedRight);
+    addTextCommand(textPos, textWidth, text, m_layout.textHeight, Text::Alignment::Right, UIFlags());
   }
 
   bool UI::slider(const std::string& text, float *val, float vmin, float vmax, float vinc, bool enabled) {
     uint64_t id = generateId();
-    RectF space = reserveWidget(m_layout.sliderHeight);
+    RectF space = reserveWidget(m_layout.widgetHeight);
 
-    addRectCommand(space, 4.0f, Color4f{ 0.0f, 0.0f, 0.0f, 0.5f });
+    addRectCommand(space, m_layout.sliderCorner, UIProperties::Underlying);
 
     float range = space.width - m_layout.sliderMarkerWidth;
     float u = gf::clamp((*val - vmin) / (vmax - vmin), 0.0f, 1.0f);
@@ -493,7 +566,7 @@ inline namespace v1 {
     RectF slider;
     slider.position = space.position;
     slider.left += m;
-    slider.size = { m_layout.sliderMarkerWidth, m_layout.sliderHeight };
+    slider.size = { m_layout.sliderMarkerWidth, m_layout.widgetHeight };
 
     bool over = enabled && inWidget(slider);
     bool res = processWidget(id, over);
@@ -515,26 +588,19 @@ inline namespace v1 {
       }
     }
 
-    if (isActive(id)) {
-      addRectCommand(slider, 4.0f, Color4f{ 1.0f, 1.0f, 1.0f, 1.0f });
-    } else {
-      addRectCommand(slider, 4.0f, isHot(id) ? Color4f{ 1.0f, 0.75f, 0.0f, 0.5f } : Color4f{ 1.0f, 1.0f, 1.0f, 0.25f });
-    }
+    UIFlags flags = getStateFlags(isActive(id), isHot(id), enabled);
+
+    addRectCommand(slider, m_layout.sliderCorner, flags | UIProperties::Draggable);
 
     std::string str = niceNum(*val, vinc);
 
-    Vector2f textPos = space.getTopLeft() + m_layout.sliderHeight / 2;
+    Vector2f textPos = space.getTopLeft() + m_layout.widgetHeight / 2;
     textPos.y -= m_layout.textHeight / 2;
 
-    float textWidth = space.width - m_layout.sliderHeight;
+    float textWidth = space.width - m_layout.widgetHeight;
 
-    if (enabled) {
-      addTextCommand(textPos, textWidth, text, m_layout.textHeight, isHot(id) ? Color4f{ 1.0f, 0.75f, 0.0f, 1.0f } : Color4f{ 1.0f, 1.0f, 1.0f, 0.8f }, ui::AlignedLeft);
-      addTextCommand(textPos, textWidth, str, m_layout.textHeight, isHot(id) ? Color4f{ 1.0f, 0.75f, 0.0f, 1.0f } : Color4f{ 1.0f, 1.0f, 1.0f, 0.8f }, ui::AlignedRight);
-    } else {
-      addTextCommand(textPos, textWidth, text, m_layout.textHeight, Color4f{ 0.5f, 0.5f, 0.5f, 0.8f }, ui::AlignedLeft);
-      addTextCommand(textPos, textWidth, str, m_layout.textHeight, Color4f{ 0.5f, 0.5f, 0.5f, 0.8f }, ui::AlignedRight);
-    }
+    addTextCommand(textPos, textWidth, text, m_layout.textHeight, Text::Alignment::Left, flags | UIProperties::Draggable);
+    addTextCommand(textPos, textWidth, str, m_layout.textHeight, Text::Alignment::Right,  flags | UIProperties::Draggable);
 
     return res || valChanged;
   }
@@ -544,8 +610,10 @@ inline namespace v1 {
 
     clearInput();
 
+    std::size_t scissorIndex = 0;
     std::size_t rectIndex = 0;
     std::size_t textIndex = 0;
+    std::size_t iconIndex = 0;
 
     // save scissor status
 
@@ -559,18 +627,8 @@ inline namespace v1 {
 
     for (const Command& cmd : m_commands) {
       switch (cmd.type) {
-        case CommandType::Rect:
-          m_renderer.drawRect(target, m_rectCommands[rectIndex].rect, m_rectCommands[rectIndex].corner, cmd.color, cmd.flags);
-          rectIndex++;
-          break;
-
-        case CommandType::Text:
-          m_renderer.drawText(target, m_textCommands[textIndex].text, m_textCommands[textIndex].size, m_textCommands[textIndex].pos, m_textCommands[textIndex].width, cmd.color, cmd.flags);
-          textIndex++;
-          break;
-
         case CommandType::Scissor:
-          if (cmd.flags & ui::NoScissor) {
+          if (m_scissorCommands[scissorIndex].action == ScissorAction::Reset) {
             if (scissorTest == GL_FALSE) {
               glCheck(glDisable(GL_SCISSOR_TEST));
             } else {
@@ -583,11 +641,26 @@ inline namespace v1 {
 
             auto size = target.getSize();
 
-            RectF rect = m_rectCommands[rectIndex].rect;
+            RectF rect = m_scissorCommands[scissorIndex].rect;
             glCheck(glScissor(rect.left, size.y - (rect.top + rect.height), rect.width, rect.height));
           }
 
+          scissorIndex++;
+          break;
+
+        case CommandType::Rect:
+          m_renderer.drawRect(target, m_rectCommands[rectIndex].rect, m_rectCommands[rectIndex].corner, cmd.flags);
           rectIndex++;
+          break;
+
+        case CommandType::Text:
+          m_renderer.drawText(target, m_textCommands[textIndex].text, m_textCommands[textIndex].size, m_textCommands[textIndex].pos, m_textCommands[textIndex].width, m_textCommands[textIndex].alignment, cmd.flags);
+          textIndex++;
+          break;
+
+        case CommandType::Icon:
+          m_renderer.drawIcon(target, m_iconCommands[iconIndex].pos, m_iconCommands[iconIndex].icon, cmd.flags);
+          iconIndex++;
           break;
       }
     }
@@ -595,23 +668,30 @@ inline namespace v1 {
 
   void UI::resetCommandQueue() {
     m_commands.clear();
+    m_scissorCommands.clear();
     m_rectCommands.clear();
     m_textCommands.clear();
+    m_iconCommands.clear();
   }
 
-  void UI::addScissorCommand(const RectF& rect, ui::Flags flags) {
-    m_commands.push_back({ CommandType::Scissor, flags, Color::White });
-    m_rectCommands.push_back({ rect, 0.0f });
+  void UI::addScissorCommand(ScissorAction action, const RectF& rect) {
+    m_commands.push_back({ CommandType::Scissor, UIFlags() });
+    m_scissorCommands.push_back({ action, rect });
   }
 
-  void UI::addRectCommand(const RectF& rect, float corner, const Color4f& color, ui::Flags flags) {
-    m_commands.push_back({ CommandType::Rect, flags, color });
+  void UI::addRectCommand(const RectF& rect, float corner, UIFlags flags) {
+    m_commands.push_back({ CommandType::Rect, flags });
     m_rectCommands.push_back({ rect, corner });
   }
 
-  void UI::addTextCommand(Vector2f pos, float width, const std::string& text, unsigned size, const Color4f& color, ui::Flags flags) {
-    m_commands.push_back({ CommandType::Text, flags, color });
-    m_textCommands.push_back({ pos, width, text, size });
+  void UI::addTextCommand(Vector2f pos, float width, const std::string& text, unsigned size, Text::Alignment alignment, UIFlags flags) {
+    m_commands.push_back({ CommandType::Text, flags });
+    m_textCommands.push_back({ pos, width, text, size, alignment });
+  }
+
+  void UI::addIconCommand(Vector2f pos, UIIcon icon, UIFlags flags) {
+    m_commands.push_back({ CommandType::Icon, flags });
+    m_iconCommands.push_back({ pos, icon });
   }
 
 
