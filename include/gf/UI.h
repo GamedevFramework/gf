@@ -24,12 +24,12 @@
 #include <cstdint>
 #include <vector>
 
+#include "Alignment.h"
 #include "Drawable.h"
 #include "Event.h"
 #include "Flags.h"
 #include "Portability.h"
 #include "Rect.h"
-#include "Text.h"
 #include "Vector.h"
 
 namespace gf {
@@ -81,7 +81,7 @@ inline namespace v1 {
   class UIRenderer {
   public:
     virtual void drawRect(RenderTarget& target, const RectF& rect, float corner, UIFlags flags) const = 0;
-    virtual void drawText(RenderTarget& target, const std::string& text, unsigned size, Vector2f pos, float width, Text::Alignment alignment, UIFlags flags) const = 0;
+    virtual void drawText(RenderTarget& target, const std::string& text, unsigned size, Vector2f pos, float width, Alignment alignment, UIFlags flags) const = 0;
     virtual void drawIcon(RenderTarget& target, Vector2f pos, UIIcon icon, UIFlags flags) const = 0;
   };
 
@@ -90,7 +90,7 @@ inline namespace v1 {
     DefaultUIRenderer(gf::Font& font);
 
     virtual void drawRect(RenderTarget& target, const RectF& rect, float corner, UIFlags flags) const override;
-    virtual void drawText(RenderTarget& target, const std::string& text, unsigned size, Vector2f pos, float width, Text::Alignment alignment, UIFlags flags) const override;
+    virtual void drawText(RenderTarget& target, const std::string& text, unsigned size, Vector2f pos, float width, Alignment alignment, UIFlags flags) const override;
     void drawIcon(RenderTarget& target, Vector2f pos, UIIcon icon, UIFlags flags) const override;
   private:
     gf::Font *m_font;
@@ -169,7 +169,7 @@ inline namespace v1 {
       float width;
       std::string text;
       unsigned size;
-      Text::Alignment alignment;
+      Alignment alignment;
     };
 
     std::vector<TextCommand> m_textCommands;
@@ -184,7 +184,7 @@ inline namespace v1 {
     void resetCommandQueue();
     void addScissorCommand(ScissorAction action, const RectF& rect = RectF());
     void addRectCommand(const RectF& rect, float corner, UIFlags flags);
-    void addTextCommand(Vector2f pos, float width, const std::string& text, unsigned size, Text::Alignment alignment, UIFlags flags);
+    void addTextCommand(Vector2f pos, float width, const std::string& text, unsigned size, Alignment alignment, UIFlags flags);
     void addIconCommand(Vector2f pos, UIIcon icon, UIFlags flags);
 
 

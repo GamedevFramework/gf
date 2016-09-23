@@ -178,7 +178,7 @@ inline namespace v1 {
     return Color4f{ 1.0f, 1.0f, 1.0f, 0.8f };
   }
 
-  void DefaultUIRenderer::drawText(RenderTarget& target, const std::string& str, unsigned size, Vector2f pos, float width, Text::Alignment alignment, UIFlags flags) const {
+  void DefaultUIRenderer::drawText(RenderTarget& target, const std::string& str, unsigned size, Vector2f pos, float width, Alignment alignment, UIFlags flags) const {
     gf::Text text;
     text.setParagraphWidth(width);
     text.setAlignment(alignment);
@@ -338,7 +338,7 @@ inline namespace v1 {
     m_insideCurrentScroll = m_insideScrollArea;
 
     addRectCommand(area, m_layout.scrollAreaCorner, UIProperties::Underlying);
-    addTextCommand(headerPosition, area.width, name, m_layout.textHeight, Text::Alignment::Left, UIFlags());
+    addTextCommand(headerPosition, area.width, name, m_layout.textHeight, Alignment::Left, UIFlags());
 
     addScissorCommand(ScissorAction::Set, { position.x, position.y, m_widgetW, m_scrollRect.height });
 
@@ -449,7 +449,7 @@ inline namespace v1 {
     textPos.y -= m_layout.textHeight / 2;
 
 
-    addTextCommand(textPos, space.width, text, m_layout.textHeight, Text::Alignment::Left,
+    addTextCommand(textPos, space.width, text, m_layout.textHeight, Alignment::Left,
         getStateFlags(true, isHot(id), enabled) | UIProperties::Selectable);
 
     return res;
@@ -467,7 +467,7 @@ inline namespace v1 {
     Vector2f textPos = space.getTopLeft() + m_layout.widgetHeight / 2;
     textPos.y -= m_layout.textHeight / 2;
 
-    addTextCommand(textPos, space.width, text, m_layout.textHeight, Text::Alignment::Left,
+    addTextCommand(textPos, space.width, text, m_layout.textHeight, Alignment::Left,
         getStateFlags(true, true, enabled) | UIProperties::Reactive);
 
     return res;
@@ -498,7 +498,7 @@ inline namespace v1 {
 
     float textWidth = space.width - m_layout.widgetHeight / 2;
 
-    addTextCommand(textPos, textWidth, text, m_layout.textHeight, Text::Alignment::Left, flags | UIProperties::Selectable);
+    addTextCommand(textPos, textWidth, text, m_layout.textHeight, Alignment::Left, flags | UIProperties::Selectable);
 
     return res;
   }
@@ -528,7 +528,7 @@ inline namespace v1 {
 
     float textWidth = space.width - m_layout.widgetHeight / 2;
 
-    addTextCommand(textPos, textWidth, text, m_layout.textHeight, Text::Alignment::Left, flags | UIProperties::Selectable);
+    addTextCommand(textPos, textWidth, text, m_layout.textHeight, Alignment::Left, flags | UIProperties::Selectable);
 
     return res;
   }
@@ -540,7 +540,7 @@ inline namespace v1 {
 
     float textWidth = space.width - m_layout.widgetHeight;
 
-    addTextCommand(textPos, textWidth, text, m_layout.textHeight, Text::Alignment::Left, UIFlags());
+    addTextCommand(textPos, textWidth, text, m_layout.textHeight, Alignment::Left, UIFlags());
   }
 
   void UI::value(const std::string& text) {
@@ -550,7 +550,7 @@ inline namespace v1 {
 
     float textWidth = space.width - m_layout.widgetHeight;
 
-    addTextCommand(textPos, textWidth, text, m_layout.textHeight, Text::Alignment::Right, UIFlags());
+    addTextCommand(textPos, textWidth, text, m_layout.textHeight, Alignment::Right, UIFlags());
   }
 
   bool UI::slider(const std::string& text, float *val, float vmin, float vmax, float vinc, bool enabled) {
@@ -599,8 +599,8 @@ inline namespace v1 {
 
     float textWidth = space.width - m_layout.widgetHeight;
 
-    addTextCommand(textPos, textWidth, text, m_layout.textHeight, Text::Alignment::Left, flags | UIProperties::Draggable);
-    addTextCommand(textPos, textWidth, str, m_layout.textHeight, Text::Alignment::Right,  flags | UIProperties::Draggable);
+    addTextCommand(textPos, textWidth, text, m_layout.textHeight, Alignment::Left, flags | UIProperties::Draggable);
+    addTextCommand(textPos, textWidth, str, m_layout.textHeight, Alignment::Right,  flags | UIProperties::Draggable);
 
     return res || valChanged;
   }
@@ -625,7 +625,7 @@ inline namespace v1 {
 
     float textWidth = choiceBox.width - m_layout.widgetHeight;
 
-    addTextCommand(textPos, textWidth, choices[choice], m_layout.textHeight, Text::Alignment::Center, UIFlags());
+    addTextCommand(textPos, textWidth, choices[choice], m_layout.textHeight, Alignment::Center, flags | UIProperties::Selectable);
 
     return res;
   }
@@ -709,7 +709,7 @@ inline namespace v1 {
     m_rectCommands.push_back({ rect, corner });
   }
 
-  void UI::addTextCommand(Vector2f pos, float width, const std::string& text, unsigned size, Text::Alignment alignment, UIFlags flags) {
+  void UI::addTextCommand(Vector2f pos, float width, const std::string& text, unsigned size, Alignment alignment, UIFlags flags) {
     m_commands.push_back({ CommandType::Text, flags });
     m_textCommands.push_back({ pos, width, text, size, alignment });
   }
