@@ -57,7 +57,7 @@ int main() {
   paragraph.setFont(font);
   paragraph.setCharacterSize(12);
   paragraph.setParagraphWidth(200.0f);
-  paragraph.setAlignment(gf::Text::Alignment::Justify);
+  paragraph.setAlignment(gf::Alignment::Justify);
   paragraph.setString("Line breaking, also known as word wrapping, is the process of breaking a section of text into lines such that it will fit in the available width of a page, window or other display area.\nIn text display, line wrap is the feature of continuing on a new line when a line is full, such that each line fits in the viewable window, allowing text to be read from top to bottom without any horizontal scrolling.\nWord wrap is the additional feature of most text editors, word processors, and web browsers, of breaking lines between words rather than within words, when possible. Word wrap makes it unnecessary to hard-code newline delimiters within paragraphs, and allows the display of text to adapt flexibly and dynamically to displays of varying sizes.");
   // Text from: https://en.wikipedia.org/wiki/Line_wrap_and_word_wrap
   paragraph.setPosition({ 10.0f, 50.0f });
