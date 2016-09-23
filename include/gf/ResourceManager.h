@@ -87,7 +87,9 @@ inline namespace v1 {
      * @throw std::runtime_error If the resource is not found
      */
     T& getResource(AssetManager& assetManager, const Path& filename) {
-      auto it = m_cache.find(filename);
+      std::size_t h = boost::filesystem::hash_value(filename);
+
+      auto it = m_cache.find(h);
 
       if (it != m_cache.end()) {
         return *it->second;
@@ -105,7 +107,7 @@ inline namespace v1 {
         throw std::runtime_error("Resource not loaded");
       }
 
-      auto inserted = m_cache.emplace(filename, std::move(ptr));
+      auto inserted = m_cache.emplace(h, std::move(ptr));
 
       if (inserted.second) {
         return *inserted.first->second;
@@ -116,7 +118,7 @@ inline namespace v1 {
 
   private:
     Loader m_loader;
-    std::map<Path, std::unique_ptr<T>> m_cache;
+    std::map<std::size_t, std::unique_ptr<T>> m_cache;
   };
 
 
