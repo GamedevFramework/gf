@@ -123,6 +123,8 @@ inline namespace v1 {
 
     bool slider(const std::string& text, float *val, float vmin, float vmax, float vinc, bool enabled = true);
 
+    bool cycle(const std::vector<std::string>& choices, std::size_t choice, bool enabled = true);
+
     virtual void draw(RenderTarget &target, RenderStates states) override;
 
   private:

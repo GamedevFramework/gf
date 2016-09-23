@@ -58,6 +58,9 @@ int main() {
   float value1 = 50.0f;
   float value2 = 30.0f;
 
+  std::vector<std::string> choices = { "First Choice", "Next Choice", "Last Choice" };
+  std::size_t choice = 0;
+
   bool toggle;
 
   renderer.clear(gf::Color::Grey());
@@ -135,6 +138,12 @@ int main() {
     ui.label("Indented");
     ui.unindent();
     ui.label("Unindented");
+
+    toggle = ui.cycle(choices, choice);
+
+    if (toggle) {
+      choice = (choice + 1) % choices.size();
+    }
 
     ui.endScrollArea();
 

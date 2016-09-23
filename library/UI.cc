@@ -605,6 +605,31 @@ inline namespace v1 {
     return res || valChanged;
   }
 
+  bool UI::cycle(const std::vector<std::string>& choices, std::size_t choice, bool enabled) {
+    uint64_t id = generateId();
+    RectF space = reserveWidget(m_layout.widgetHeight);
+
+    bool over = enabled && inWidget(space);
+    bool res = processWidget(id, over);
+
+    UIFlags flags = getStateFlags(isActive(id), isHot(id), enabled);
+
+    RectF choiceBox = space;
+//     choiceBox.width -= 2 * m_layout.widgetHeight;
+//     choiceBox.left += m_layout.widgetHeight;
+
+    addRectCommand(choiceBox, m_layout.sliderCorner, UIProperties::Underlying);
+
+    Vector2f textPos = choiceBox.getTopLeft() + m_layout.widgetHeight / 2;
+    textPos.y -= m_layout.textHeight / 2;
+
+    float textWidth = choiceBox.width - m_layout.widgetHeight;
+
+    addTextCommand(textPos, textWidth, choices[choice], m_layout.textHeight, Text::Alignment::Center, UIFlags());
+
+    return res;
+  }
+
   void UI::draw(RenderTarget &target, RenderStates states) {
     GF_UNUSED(states);
 
