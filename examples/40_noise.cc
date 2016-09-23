@@ -173,7 +173,7 @@ int main() {
             case gf::Scancode::Num7:
               std::cout << "Current noise: Worley noise + Fractal\n";
               {
-                gf::WorleyNoise2D noise(random, 20, gf::euclideanDistance, { -1.0, 1.0 });
+                gf::WorleyNoise2D noise(random, 20, gf::squareDistance, { -1.0, 1.0 });
                 gf::FractalNoise2D fractal(noise, 1.0f, 6);
                 generateArrayFromNoise(array, fractal);
                 generateImageFromArray(image, array);
@@ -184,7 +184,7 @@ int main() {
             case gf::Scancode::Num8:
               std::cout << "Current noise: Worley noise\n";
               {
-                gf::WorleyNoise2D noise(random, 20, gf::euclideanDistance, { -1.0, 1.0 });
+                gf::WorleyNoise2D noise(random, 20, gf::squareDistance, { -1.0, 1.0 });
                 generateArrayFromNoise(array, noise);
                 generateImageFromArray(image, array);
                 texture.update(image);
