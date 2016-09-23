@@ -1742,6 +1742,22 @@ inline namespace v1 {
     return std::sqrt(squareLength(vec));
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+  // specializations of euclideanLength for Vector2f and Vector2d using std::hypot
+
+  template<>
+  inline
+  float euclideanLength<float, 2>(const Vector<float, 2>& vec) {
+    return std::hypot(vec.x, vec.y);
+  }
+
+  template<>
+  inline
+  double euclideanLength<double, 2>(const Vector<double, 2>& vec) {
+    return std::hypot(vec.x, vec.y);
+  }
+#endif
+
   /**
    * @relates Vector
    * @brief Chebyshev length of a vector
