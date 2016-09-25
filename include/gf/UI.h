@@ -68,14 +68,16 @@ inline namespace v1 {
     float checkCorner = 4.0f;
     float sliderCorner = 4.0f;
     float sliderMarkerWidth = 10.0f;
+    float cycleCorner = 4.0f;
     // misc
     float indentSize = 16.0f;
   };
 
   enum class UIIcon {
     Check,
-    RightTriangle,
-    DownTriangle,
+    Collapsed,
+    Expanded,
+    Loop,
   };
 
   class UIRenderer {

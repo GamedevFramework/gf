@@ -211,7 +211,8 @@ inline namespace v1 {
         target.draw(shape);
         break;
       }
-      case UIIcon::RightTriangle: {
+
+      case UIIcon::Collapsed: {
         gf::CircleShape shape(5.0f, 3);
         shape.setColor(color);
         shape.setPosition(pos);
@@ -220,7 +221,8 @@ inline namespace v1 {
         target.draw(shape);
         break;
       }
-      case UIIcon::DownTriangle: {
+
+      case UIIcon::Expanded: {
         gf::CircleShape shape(5.0f, 3);
         shape.setColor(color);
         shape.setPosition(pos);
@@ -228,6 +230,16 @@ inline namespace v1 {
         shape.setRotation(gf::Pi);
         target.draw(shape);
         break;
+      }
+
+      case UIIcon::Loop: {
+        gf::CircleShape shape(4.0f);
+        shape.setColor(gf::Color::Transparent);
+        shape.setOutlineThickness(2.0f);
+        shape.setOutlineColor(color);
+        shape.setPosition(pos);
+        shape.setAnchor(gf::Anchor::Center);
+        target.draw(shape);
       }
     }
   }
@@ -517,9 +529,9 @@ inline namespace v1 {
     Vector2f iconPos = space.position + m_layout.widgetHeight / 2;
 
     if (checked) {
-      addIconCommand(iconPos, UIIcon::DownTriangle, flags);
+      addIconCommand(iconPos, UIIcon::Expanded, flags);
     } else {
-      addIconCommand(iconPos, UIIcon::RightTriangle, flags);
+      addIconCommand(iconPos, UIIcon::Collapsed, flags);
     }
 
     Vector2f textPos = space.getTopLeft() + m_layout.widgetHeight / 2;
@@ -618,14 +630,22 @@ inline namespace v1 {
 //     choiceBox.width -= 2 * m_layout.widgetHeight;
 //     choiceBox.left += m_layout.widgetHeight;
 
-    addRectCommand(choiceBox, m_layout.sliderCorner, UIProperties::Underlying);
+    addRectCommand(choiceBox, m_layout.cycleCorner, UIProperties::Underlying);
+
+    RectF loopBox;
+    loopBox.position = choiceBox.position;
+    loopBox.left += (choiceBox.width - m_layout.widgetHeight);
+    loopBox.size = { m_layout.widgetHeight, m_layout.widgetHeight };
+
+    addRectCommand(loopBox, m_layout.cycleCorner, flags | UIProperties::Selectable);
+    addIconCommand(loopBox.getCenter(), UIIcon::Loop, flags);
 
     Vector2f textPos = choiceBox.getTopLeft() + m_layout.widgetHeight / 2;
     textPos.y -= m_layout.textHeight / 2;
 
     float textWidth = choiceBox.width - m_layout.widgetHeight;
 
-    addTextCommand(textPos, textWidth, choices[choice], m_layout.textHeight, Alignment::Center, flags | UIProperties::Selectable);
+    addTextCommand(textPos, textWidth, choices[choice], m_layout.textHeight, Alignment::Left, flags | UIProperties::Selectable);
 
     return res;
   }
