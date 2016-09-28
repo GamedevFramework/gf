@@ -25,13 +25,17 @@
 
 #include <gf/Array2D.h>
 #include <gf/Event.h>
+#include <gf/Font.h>
 #include <gf/Image.h>
 #include <gf/Math.h>
 #include <gf/Noises.h>
 #include <gf/Random.h>
 #include <gf/RenderWindow.h>
 #include <gf/Sprite.h>
+#include <gf/UI.h>
 #include <gf/Window.h>
+
+#include "config.h"
 
 static void generateArrayFromNoise(gf::Array2D<double>& array, gf::Noise2D& noise, double scale = 1.0) {
   for (auto row : array.getRowRange()) {
@@ -57,23 +61,97 @@ static void generateImageFromArray(gf::Image& image, const gf::Array2D<double>& 
   }
 }
 
+static void generate(gf::Texture& texture, gf::Image& image, gf::Array2D<double>& array, gf::Noise2D& noise, double scale = 1.0) {
+  generateArrayFromNoise(array, noise, scale);
+  generateImageFromArray(image, array);
+  texture.update(image);
+}
+
+enum class NoiseFunction : std::size_t {
+  Gradient      = 0,
+  Simplex       = 1,
+  OpenSimplex   = 2,
+  Worley        = 3,
+};
+
+enum class StepFunction : std::size_t {
+  Linear  = 0,
+  Cubic   = 1,
+  Quintic = 2,
+  Cosine  = 3,
+};
+
+static gf::Step<double> getStepFunction(StepFunction func) {
+  switch (func) {
+    case StepFunction::Linear:
+      return gf::linearStep;
+    case StepFunction::Cubic:
+      return gf::cubicStep;
+    case StepFunction::Quintic:
+      return gf::quinticStep;
+    case StepFunction::Cosine:
+      return gf::cosineStep;
+  }
+
+  assert(false);
+  return gf::linearStep;
+}
+
+enum class DistanceFunction : std::size_t {
+  Euclidean = 0,
+  Manhattan = 1,
+  Chebyshev = 2,
+};
+
+static gf::Distance2<double> getDistanceFunction(DistanceFunction func) {
+  switch (func) {
+    case DistanceFunction::Euclidean:
+      return gf::squareDistance;
+    case DistanceFunction::Manhattan:
+      return gf::manhattanDistance;
+    case DistanceFunction::Chebyshev:
+      return gf::chebyshevDistance;
+  }
+
+  assert(false);
+  return gf::squareDistance;
+}
+
+enum class CombinationFunction : std::size_t {
+  F1    = 0,
+  F2    = 1,
+  F2F1  = 2,
+};
+
+static std::vector<double> getCombinationVector(CombinationFunction func) {
+  switch (func) {
+    case CombinationFunction::F1:
+      return { 1.0 };
+    case CombinationFunction::F2:
+      return { 0.0, 1.0 };
+    case CombinationFunction::F2F1:
+      return { -1.0, 1.0 };
+  }
+
+  assert(false);
+  return { 1.0 };
+}
+
+
 int main() {
   gf::Random random;
-  gf::PerlinNoise2D perlin(random, 1.0f);
 
-  constexpr unsigned Size = 480;
+  constexpr unsigned Size = 512;
+  constexpr unsigned ExtraSize = 200;
 
   gf::Array2D<double> array({ Size, Size });
-  generateArrayFromNoise(array, perlin, 10.0f);
-
   gf::Image image;
   image.create({ Size, Size });
-  generateImageFromArray(image, array);
 
   gf::WindowHints hints;
   hints.resizable = false;
 
-  gf::Window window("40_noise", { Size, Size }, hints);
+  gf::Window window("gf noise", { Size + ExtraSize, Size }, hints);
   gf::RenderWindow renderer(window);
 
   gf::Texture texture;
@@ -81,19 +159,36 @@ int main() {
 
   gf::Sprite sprite(texture);
 
-  std::cout << "Gamedev Framework (gf) example #40: Noise\n";
-  std::cout << "This example prints various type of noise\n";
-  std::cout << "How to use:\n";
-  std::cout << "\t1: Perlin noise (Gradient noise + Fractal)\n";
-  std::cout << "\t2: Gradient noise\n";
-  std::cout << "\t3: Simplex noise + Fractal\n";
-  std::cout << "\t4: Simplex noise\n";
-  std::cout << "\t5: OpenSimplex noise + Fractal\n";
-  std::cout << "\t6: OpenSimplex noise\n";
-  std::cout << "\t7: Worley noise + Fractal\n";
-  std::cout << "\t8: Worley noise\n";
-  std::cout << "\tS: Capture the image in 'noise.png'\n";
-  std::cout << "Current noise: Perlin noise (Gradient noise + Fractal)\n";
+  gf::Font font;
+  gf::Path fontPath(GF_DATADIR);
+
+  if (!font.loadFromFile(fontPath / "DroidSans.ttf")) {
+    return EXIT_FAILURE;
+  }
+
+  gf::DefaultUIRenderer uiRenderer(font);
+  gf::UILayout layout;
+  gf::UI ui(uiRenderer, layout);
+
+  float scrollArea = 0.0f;
+
+  // noise states
+
+  double scale = 10.0;
+
+  std::vector<std::string> noiseChoices = { "Gradient", "Simplex", "OpenSimplex", "Worley" }; // keep in line with NoiseFunction
+  std::size_t noiseChoice = 0;
+
+  std::vector<std::string> stepChoices = { "Linear", "Cubic", "Quintic", "Cosine" }; // keep in line with StepFunction
+  std::size_t stepChoice = 2;
+
+  std::vector<std::string> distanceChoices = { "Euclidean", "Manhattan", "Chebyshev" }; // keep in line with DistanceFunction
+  std::size_t distanceChoice = 0;
+
+  float pointCount = 20;
+
+  std::vector<std::string> combinationChoices = { "F1", "F2", "F2F1" };
+  std::size_t combinationChoice = 2;
 
   renderer.clear(gf::Color::White);
 
@@ -106,113 +201,100 @@ int main() {
           window.close();
           break;
 
-         case gf::EventType::KeyPressed:
-           switch (event.key.scancode) {
-            case gf::Scancode::Num1:
-              std::cout << "Current noise: Perlin noise (Gradient noise + Fractal)\n";
-              {
-                gf::PerlinNoise2D noise(random, 1.0f);
-                generateArrayFromNoise(array, noise, 10.0f);
-                generateImageFromArray(image, array);
-                texture.update(image);
-              }
-              break;
-
-            case gf::Scancode::Num2:
-              std::cout << "Current noise: Gradient noise\n";
-              {
-                gf::GradientNoise2D noise(random, gf::cubicStep);
-                generateArrayFromNoise(array, noise, 10.0f);
-                generateImageFromArray(image, array);
-                texture.update(image);
-              }
-              break;
-
-            case gf::Scancode::Num3:
-              std::cout << "Current noise: Simplex noise + Fractal\n";
-              {
-                gf::SimplexNoise2D noise(random);
-                gf::FractalNoise2D fractal(noise, 1.0f);
-                generateArrayFromNoise(array, fractal, 10.0f);
-                generateImageFromArray(image, array);
-                texture.update(image);
-              }
-              break;
-
-            case gf::Scancode::Num4:
-              std::cout << "Current noise: Simplex noise\n";
-              {
-                gf::SimplexNoise2D noise(random);
-                generateArrayFromNoise(array, noise, 10.0f);
-                generateImageFromArray(image, array);
-                texture.update(image);
-              }
-              break;
-
-            case gf::Scancode::Num5:
-              std::cout << "Current noise: OpenSimplex noise + Fractal\n";
-              {
-                gf::OpenSimplexNoise2D noise(random);
-                gf::FractalNoise2D fractal(noise, 1.0f);
-                generateArrayFromNoise(array, fractal, 10.0f);
-                generateImageFromArray(image, array);
-                texture.update(image);
-              }
-              break;
-
-            case gf::Scancode::Num6:
-              std::cout << "Current noise: OpenSimplex noise\n";
-              {
-                gf::OpenSimplexNoise2D noise(random);
-                generateArrayFromNoise(array, noise, 10.0f);
-                generateImageFromArray(image, array);
-                texture.update(image);
-              }
-              break;
-
-            case gf::Scancode::Num7:
-              std::cout << "Current noise: Worley noise + Fractal\n";
-              {
-                gf::WorleyNoise2D noise(random, 20, gf::euclideanDistance, { -1.0, 1.0 });
-                gf::FractalNoise2D fractal(noise, 1.0f, 6);
-                generateArrayFromNoise(array, fractal);
-                generateImageFromArray(image, array);
-                texture.update(image);
-              }
-              break;
-
-            case gf::Scancode::Num8:
-              std::cout << "Current noise: Worley noise\n";
-              {
-                gf::WorleyNoise2D noise(random, 20, gf::euclideanDistance, { -1.0, 1.0 });
-                generateArrayFromNoise(array, noise);
-                generateImageFromArray(image, array);
-                texture.update(image);
-              }
-              break;
-
-            default:
-              break;
-          }
-
-          switch (event.key.keycode) {
-            case gf::Keycode::S:
-              std::cout << "# Capture the image\n";
-              image.saveToFile("noise.png");
-              break;
-
-            default:
-              break;
-          }
-          break;
-
         default:
           break;
       }
+
+      ui.update(event);
     }
+
+    ui.clear();
+
+    ui.beginScrollArea("Noise", gf::RectF(Size, 0, ExtraSize, Size), &scrollArea);
+
+    ui.separatorLine();
+
+    if (ui.cycle(noiseChoices, noiseChoice)) {
+      noiseChoice = (noiseChoice + 1) % noiseChoices.size();
+    }
+
+    NoiseFunction noiseFunction = static_cast<NoiseFunction>(noiseChoice);
+
+    switch (noiseFunction) {
+      case NoiseFunction::Gradient:
+        ui.separator();
+
+        ui.label("Step function:");
+        if (ui.cycle(stepChoices, stepChoice)) {
+          stepChoice = (stepChoice + 1) % stepChoices.size();
+        }
+        break;
+
+      case NoiseFunction::Worley:
+        ui.separator();
+
+        ui.slider("Point count", &pointCount, 5, 40, 1);
+
+        ui.label("Distance function:");
+        if (ui.cycle(distanceChoices, distanceChoice)) {
+          distanceChoice = (distanceChoice + 1) % distanceChoices.size();
+        }
+
+        ui.label("Combination:");
+        if (ui.cycle(combinationChoices, combinationChoice)) {
+          combinationChoice = (combinationChoice + 1) % combinationChoices.size();
+        }
+
+      default:
+        break;
+    }
+
+
+
+    ui.separatorLine();
+
+    if (ui.button("Generate")) {
+      switch (noiseFunction) {
+        case NoiseFunction::Gradient: {
+          StepFunction stepFunction = static_cast<StepFunction>(stepChoice);
+          gf::Step<double> step = getStepFunction(stepFunction);
+
+          gf::GradientNoise2D noise(random, step);
+          generate(texture, image, array, noise, scale);
+          break;
+        }
+
+        case NoiseFunction::Simplex: {
+          gf::SimplexNoise2D noise(random);
+          generate(texture, image, array, noise, scale);
+          break;
+        }
+
+        case NoiseFunction::OpenSimplex: {
+          gf::OpenSimplexNoise2D noise(random);
+          generate(texture, image, array, noise, scale);
+          break;
+        }
+
+        case NoiseFunction::Worley: {
+          DistanceFunction distanceFunction = static_cast<DistanceFunction>(distanceChoice);
+          gf::Distance2<double> distance = getDistanceFunction(distanceFunction);
+
+          CombinationFunction combinationFunction = static_cast<CombinationFunction>(combinationChoice);
+          std::vector<double> combination = getCombinationVector(combinationFunction);
+
+          gf::WorleyNoise2D noise(random, pointCount, distance, combination);
+          generate(texture, image, array, noise, 1.0);
+          break;
+        }
+      }
+    }
+
+    ui.endScrollArea();
 
     renderer.clear();
     renderer.draw(sprite);
+    renderer.draw(ui);
     renderer.display();
   }
 
