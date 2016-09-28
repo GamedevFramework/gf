@@ -174,8 +174,6 @@ int main() {
 
   // noise states
 
-  double scale = 10.0;
-
   std::vector<std::string> noiseChoices = { "Gradient", "Simplex", "OpenSimplex", "Worley" }; // keep in line with NoiseFunction
   std::size_t noiseChoice = 0;
 
@@ -189,6 +187,14 @@ int main() {
 
   std::vector<std::string> combinationChoices = { "F1", "F2", "F2F1" };
   std::size_t combinationChoice = 2;
+
+  bool fractal = false;
+
+  float scale = 1.0;
+  float octaves = 8;
+  float lacunarity = 2.0;
+  float persistence = 0.5;
+  float dimension = 1.0;
 
   renderer.clear(gf::Color::White);
 
@@ -218,12 +224,13 @@ int main() {
       noiseChoice = (noiseChoice + 1) % noiseChoices.size();
     }
 
+    ui.separator();
+    ui.slider("Scale", &scale, 0.1, 20, 0.1);
+
     NoiseFunction noiseFunction = static_cast<NoiseFunction>(noiseChoice);
 
     switch (noiseFunction) {
       case NoiseFunction::Gradient:
-        ui.separator();
-
         ui.label("Step function:");
         if (ui.cycle(stepChoices, stepChoice)) {
           stepChoice = (stepChoice + 1) % stepChoices.size();
@@ -231,8 +238,6 @@ int main() {
         break;
 
       case NoiseFunction::Worley:
-        ui.separator();
-
         ui.slider("Point count", &pointCount, 5, 40, 1);
 
         ui.label("Distance function:");
@@ -249,7 +254,16 @@ int main() {
         break;
     }
 
+    ui.separatorLine();
 
+    if (ui.check("Fractal", fractal)) {
+      fractal = !fractal;
+    }
+
+    ui.slider("Octaves", &octaves, 1, 15, 1, fractal);
+    ui.slider("Lacunarity", &lacunarity, 1, 3, 0.1, fractal);
+    ui.slider("Persistence", &persistence, 0.1, 1, 0.1, fractal);
+    ui.slider("Dimension", &dimension, 0.1, 10, 0.1, fractal);
 
     ui.separatorLine();
 
@@ -260,19 +274,37 @@ int main() {
           gf::Step<double> step = getStepFunction(stepFunction);
 
           gf::GradientNoise2D noise(random, step);
-          generate(texture, image, array, noise, scale);
+
+          if (fractal) {
+            gf::FractalNoise2D fractalNoise(noise, 1, octaves, lacunarity, persistence, dimension);
+            generate(texture, image, array, fractalNoise, scale);
+          } else {
+            generate(texture, image, array, noise, scale);
+          }
           break;
         }
 
         case NoiseFunction::Simplex: {
           gf::SimplexNoise2D noise(random);
-          generate(texture, image, array, noise, scale);
+
+          if (fractal) {
+            gf::FractalNoise2D fractalNoise(noise, 1, octaves, lacunarity, persistence, dimension);
+            generate(texture, image, array, fractalNoise, scale);
+          } else {
+            generate(texture, image, array, noise, scale);
+          }
           break;
         }
 
         case NoiseFunction::OpenSimplex: {
           gf::OpenSimplexNoise2D noise(random);
-          generate(texture, image, array, noise, scale);
+
+          if (fractal) {
+            gf::FractalNoise2D fractalNoise(noise, 1, octaves, lacunarity, persistence, dimension);
+            generate(texture, image, array, fractalNoise, scale);
+          } else {
+            generate(texture, image, array, noise, scale);
+          }
           break;
         }
 
@@ -284,7 +316,13 @@ int main() {
           std::vector<double> combination = getCombinationVector(combinationFunction);
 
           gf::WorleyNoise2D noise(random, pointCount, distance, combination);
-          generate(texture, image, array, noise, 1.0);
+
+          if (fractal) {
+            gf::FractalNoise2D fractalNoise(noise, 1, octaves, lacunarity, persistence, dimension);
+            generate(texture, image, array, fractalNoise, scale);
+          } else {
+            generate(texture, image, array, noise, scale);
+          }
           break;
         }
       }

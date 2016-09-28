@@ -97,5 +97,5 @@ if(GF_BUILD_GAMES)
 endif()
 
 if(GF_BUILD_TOOLS)
-  add_subdirectory(tools/gf_noise)
+  add_subdirectory(tools)
 endif()
