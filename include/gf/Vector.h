@@ -1880,7 +1880,7 @@ inline namespace v1 {
   template<typename T, std::size_t N>
   inline
   T chebyshevDistance(const Vector<T, N>& lhs, const Vector<T, N>& rhs) {
-    return chebyshevDistance(lhs - rhs);
+    return chebyshevLength(lhs - rhs);
   }
 
   /**
