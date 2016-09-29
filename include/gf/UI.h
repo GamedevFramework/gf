@@ -118,7 +118,7 @@ inline namespace v1 {
     bool button(const std::string& text, bool enabled = true);
     bool item(const std::string& text, bool enabled = true);
     bool check(const std::string& text, bool checked, bool enabled = true);
-    bool collapse(const std::string& text, const std::string& subtext, bool checked, bool enabled = true);
+    bool collapse(const std::string& text, bool checked, bool enabled = true);
 
     void label(const std::string& text);
     void value(const std::string& text);

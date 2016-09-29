@@ -515,9 +515,7 @@ inline namespace v1 {
     return res;
   }
 
-  bool UI::collapse(const std::string& text, const std::string& subtext, bool checked, bool enabled) {
-    GF_UNUSED(subtext);
-
+  bool UI::collapse(const std::string& text, bool checked, bool enabled) {
     uint64_t id = generateId();
     RectF space = reserveWidget(m_layout.widgetHeight, false);
 

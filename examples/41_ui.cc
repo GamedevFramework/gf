@@ -105,7 +105,7 @@ int main() {
       checked2 = !checked2;
     }
 
-    toggle = ui.collapse("Collapse", "subtext", checked3);
+    toggle = ui.collapse("Collapse", checked3);
 
     if (checked3) {
       ui.indent();
@@ -122,7 +122,7 @@ int main() {
       checked3 = !checked3;
     }
 
-    toggle = ui.collapse("Disabled collapse", "subtext", checked4, false);
+    toggle = ui.collapse("Disabled collapse", checked4, false);
 
     if (toggle) {
       checked4 = !checked4;

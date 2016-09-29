@@ -448,7 +448,7 @@ int main() {
 
     ui.separatorLine();
 
-    if (ui.collapse("Fractal", "subtext", fractalExpanded)) {
+    if (ui.collapse("Fractal", fractalExpanded)) {
       fractalExpanded = !fractalExpanded;
     }
 
@@ -478,7 +478,7 @@ int main() {
 
     ui.separatorLine();
 
-    if (ui.collapse("Rendering", "subtext", renderingExpanded)) {
+    if (ui.collapse("Rendering", renderingExpanded)) {
       renderingExpanded = !renderingExpanded;
     }
 
