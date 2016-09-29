@@ -24,6 +24,8 @@
 #include <iostream>
 
 #include <gf/Array2D.h>
+#include <gf/Color.h>
+#include <gf/ColorRamp.h>
 #include <gf/Event.h>
 #include <gf/Font.h>
 #include <gf/Image.h>
@@ -37,6 +39,39 @@
 
 #include "config.h"
 
+enum class Rendering : std::size_t {
+  Grayscale = 0,
+  Colored   = 1,
+};
+
+struct RenderingParams {
+  Rendering rendering;
+  // for colored rendering
+  bool shaded;
+  float waterLevel;
+};
+
+enum class Fractal : std::size_t {
+  None  = 0,
+  FBm   = 1,
+};
+
+struct FractalParams {
+  Fractal fractal;
+  float octaves;
+  float lacunarity;
+  float persistence;
+  float dimension;
+};
+
+static double valueWithWaterLevel(double value, double waterLevel) {
+  if (value < waterLevel) {
+    return value / waterLevel * 0.5;
+  }
+
+  return (value - waterLevel) / (1.0 - waterLevel) * 0.5 + 0.5;
+}
+
 static void generateArrayFromNoise(gf::Array2D<double>& array, gf::Noise2D& noise, double scale = 1.0) {
   for (auto row : array.getRowRange()) {
     double y = static_cast<double>(row) / array.getRows() * scale;
@@ -45,25 +80,166 @@ static void generateArrayFromNoise(gf::Array2D<double>& array, gf::Noise2D& nois
       array({ col, row }) = noise(x, y);
     }
   }
-}
 
-static void generateImageFromArray(gf::Image& image, const gf::Array2D<double>& array) {
+  // normalize
   double min = *std::min_element(array.begin(), array.end());
   double max = *std::max_element(array.begin(), array.end());
 
+  for (auto& val : array) {
+    val = (val - min) / (max - min);
+    assert(0.0 <= val && val <= 1.0);
+  }
+}
+
+static void generateShadedImage(gf::Image& image, const RenderingParams& renderingParams, const gf::Array2D<double>& array) {
+
+  static constexpr gf::Vector3d Light = { -1, -1, 0 };
+
+  gf::Array2D<double> factor(array.getSize());
+
   for (auto row : array.getRowRange()) {
     for (auto col : array.getColRange()) {
-      double normalized = (array({ col, row }) - min) / (max - min);
-      assert(0.0 <= normalized && normalized <= 1.0);
-      uint8_t val = static_cast<uint8_t>(normalized * 255);
-      image.setPixel({ col, row }, { val, val, val, 255 });
+      double x = col;
+      double y = row;
+
+      // compute the normal vector
+      gf::Vector3d normal(0, 0, 0);
+      unsigned count = 0;
+
+      gf::Vector3d p{x, y, array({ row, col })};
+
+      if (col > 0 && row > 0) {
+        gf::Vector3d pn{x    , y - 1, array({ row - 1, col     })};
+        gf::Vector3d pw{x - 1, y    , array({ row    , col - 1 })};
+
+        gf::Vector3d v3 = cross(p - pw, p - pn);
+        assert(v3.z > 0);
+
+        normal += v3;
+        count += 1;
+      }
+
+      if (col > 0 && row < array.getRows() - 1) {
+        gf::Vector3d pw{x - 1, y    , array({ row    , col - 1 })};
+        gf::Vector3d ps{x    , y + 1, array({ row + 1, col     })};
+
+        gf::Vector3d v3 = cross(p - ps, p - pw);
+        assert(v3.z > 0);
+
+        normal += v3;
+        count += 1;
+      }
+
+      if (col < array.getCols() - 1 && row > 0) {
+        gf::Vector3d pe{x + 1, y    , array({ row    , col + 1 })};
+        gf::Vector3d pn{x    , y - 1, array({ row - 1, col     })};
+
+        gf::Vector3d v3 = cross(p - pn, p - pe);
+        assert(v3.z > 0);
+
+        normal += v3;
+        count += 1;
+      }
+
+      if (col < array.getCols() - 1 && row < array.getRows() - 1) {
+        gf::Vector3d pe{x + 1, y    , array({ row    , col + 1 })};
+        gf::Vector3d ps{x    , y + 1, array({ row + 1, col     })};
+
+        gf::Vector3d v3 = cross(p - pe, p - ps);
+        assert(v3.z > 0);
+
+        normal += v3;
+        count += 1;
+      }
+
+      normal = gf::normalize(normal / count);
+      double d = gf::dot(Light, normal);
+      d = gf::clamp(0.5 + 35 * d, 0.0, 1.0);
+      factor({ row, col }) = d;
+    }
+  }
+
+  for (auto row : array.getRowRange()) {
+    for (auto col : array.getColRange()) {
+      if (array({ row, col }) < renderingParams.waterLevel) {
+        continue;
+      }
+
+      double d = factor({row, col});
+
+      gf::Color4u pixel = image.getPixel({ col, row });
+
+      gf::Color4u lo = gf::lerp(pixel, gf::Color4u(0x33, 0x11, 0x33, 0xFF), 0.7);
+      gf::Color4u hi = gf::lerp(pixel, gf::Color4u(0xFF, 0xFF, 0xCC, 0xFF), 0.3);
+
+      if (d < 0.5) {
+        image.setPixel({ col, row }, gf::lerp(lo, pixel, 2 * d));
+      } else {
+        image.setPixel({ col, row }, gf::lerp(pixel, hi, 2 * d - 1));
+      }
+
     }
   }
 }
 
-static void generate(gf::Texture& texture, gf::Image& image, gf::Array2D<double>& array, gf::Noise2D& noise, double scale = 1.0) {
-  generateArrayFromNoise(array, noise, scale);
-  generateImageFromArray(image, array);
+
+static void generateImageFromArray(gf::Image& image, const RenderingParams& renderingParams, const gf::Array2D<double>& array) {
+  switch (renderingParams.rendering) {
+    case Rendering::Grayscale:
+      for (auto row : array.getRowRange()) {
+        for (auto col : array.getColRange()) {
+          uint8_t val = static_cast<uint8_t>(array({ row, col }) * 255);
+          image.setPixel({ col, row }, { val, val, val, 255 });
+        }
+      }
+      break;
+
+    case Rendering::Colored: {
+      // see: http://www.blitzbasic.com/codearcs/codearcs.php?code=2415
+      gf::ColorRamp ramp;
+      ramp.addColorStop(0.000f, gf::Color::rgba(  2,  43,  68)); // very dark blue: deep water
+      ramp.addColorStop(0.250f, gf::Color::rgba(  9,  62,  92)); // dark blue: water
+      ramp.addColorStop(0.490f, gf::Color::rgba( 17,  82, 112)); // blue: shallow water
+      ramp.addColorStop(0.500f, gf::Color::rgba( 69, 108, 118)); // light blue: shore
+      ramp.addColorStop(0.501f, gf::Color::rgba( 42, 102,  41)); // green: grass
+      ramp.addColorStop(0.750f, gf::Color::rgba(115, 128,  77)); // light green: veld
+      ramp.addColorStop(0.850f, gf::Color::rgba(153, 143,  92)); // brown: tundra
+      ramp.addColorStop(0.950f, gf::Color::rgba(179, 179, 179)); // grey: rocks
+      ramp.addColorStop(1.000f, gf::Color::rgba(255, 255, 255)); // white: snow
+
+      for (auto row : array.getRowRange()) {
+        for (auto col : array.getColRange()) {
+          double val = valueWithWaterLevel(array({ row, col }), renderingParams.waterLevel);
+          gf::Color4f color = ramp.computeColor(val);
+          image.setPixel({ col, row }, gf::Color::convert(color));
+        }
+      }
+
+      if (renderingParams.shaded) {
+        generateShadedImage(image, renderingParams, array);
+      }
+      break;
+    }
+  }
+
+}
+
+static void generate(gf::Texture& texture, gf::Image& image, const RenderingParams& renderingParams, gf::Array2D<double>& array, gf::Noise2D& noise, const FractalParams& fractalParams, double scale = 1.0) {
+
+  switch (fractalParams.fractal) {
+    case Fractal::None:
+      generateArrayFromNoise(array, noise, scale);
+      break;
+
+    case Fractal::FBm: {
+      gf::FractalNoise2D fractalNoise(noise, 1, fractalParams.octaves, fractalParams.lacunarity, fractalParams.persistence, fractalParams.dimension);
+      generateArrayFromNoise(array, fractalNoise, scale);
+      break;
+    }
+
+  }
+
+  generateImageFromArray(image, renderingParams, array);
   texture.update(image);
 }
 
@@ -188,13 +364,29 @@ int main() {
   std::vector<std::string> combinationChoices = { "F1", "F2", "F2F1" };
   std::size_t combinationChoice = 2;
 
-  bool fractal = false;
+  bool fractalExpanded = false;
+
+  std::vector<std::string> fractalChoices = { "None", "fBm" };
+  std::size_t fractalChoice = 0;
 
   float scale = 1.0;
-  float octaves = 8;
-  float lacunarity = 2.0;
-  float persistence = 0.5;
-  float dimension = 1.0;
+
+  FractalParams fractalParams;
+  fractalParams.fractal = Fractal::None;
+  fractalParams.octaves = 8;
+  fractalParams.lacunarity = 2.0;
+  fractalParams.persistence = 0.5;
+  fractalParams.dimension = 1.0;
+
+  bool renderingExpanded = false;
+
+  std::vector<std::string> renderingChoices = { "Grayscale", "Colored" };
+  std::size_t renderingChoice = 0;
+
+  RenderingParams renderingParams;
+  renderingParams.rendering = Rendering::Grayscale;
+  renderingParams.shaded = false;
+  renderingParams.waterLevel = 0.5;
 
   renderer.clear(gf::Color::White);
 
@@ -216,7 +408,7 @@ int main() {
 
     ui.clear();
 
-    ui.beginScrollArea("Noise", gf::RectF(Size, 0, ExtraSize, Size), &scrollArea);
+    ui.beginScrollArea("Noise parameters", gf::RectF(Size, 0, ExtraSize, Size), &scrollArea);
 
     ui.separatorLine();
 
@@ -256,14 +448,64 @@ int main() {
 
     ui.separatorLine();
 
-    if (ui.check("Fractal", fractal)) {
-      fractal = !fractal;
+    if (ui.collapse("Fractal", "subtext", fractalExpanded)) {
+      fractalExpanded = !fractalExpanded;
     }
 
-    ui.slider("Octaves", &octaves, 1, 15, 1, fractal);
-    ui.slider("Lacunarity", &lacunarity, 1, 3, 0.1, fractal);
-    ui.slider("Persistence", &persistence, 0.1, 1, 0.1, fractal);
-    ui.slider("Dimension", &dimension, 0.1, 10, 0.1, fractal);
+    if (fractalExpanded) {
+      ui.indent();
+
+      if (ui.cycle(fractalChoices, fractalChoice)) {
+        fractalChoice = (fractalChoice + 1) % fractalChoices.size();
+      }
+
+      fractalParams.fractal = static_cast<Fractal>(fractalChoice);
+
+      switch (fractalParams.fractal) {
+        case Fractal::None:
+          break;
+
+        case Fractal::FBm:
+          ui.slider("Octaves", &fractalParams.octaves, 1, 15, 1);
+          ui.slider("Lacunarity", &fractalParams.lacunarity, 1, 3, 0.1);
+          ui.slider("Persistence", &fractalParams.persistence, 0.1, 1, 0.1);
+          ui.slider("Dimension", &fractalParams.dimension, 0.1, 10, 0.1);
+          break;
+      }
+
+      ui.unindent();
+    }
+
+    ui.separatorLine();
+
+    if (ui.collapse("Rendering", "subtext", renderingExpanded)) {
+      renderingExpanded = !renderingExpanded;
+    }
+
+    if (renderingExpanded) {
+      ui.indent();
+
+      if (ui.cycle(renderingChoices, renderingChoice)) {
+        renderingChoice = (renderingChoice + 1) % renderingChoices.size();
+      }
+
+      renderingParams.rendering = static_cast<Rendering>(renderingChoice);
+
+      switch (renderingParams.rendering) {
+        case Rendering::Grayscale:
+          break;
+
+        case Rendering::Colored:
+          ui.slider("Water level", &renderingParams.waterLevel, 0, 1, 0.05);
+
+          if (ui.check("Shaded", renderingParams.shaded)) {
+            renderingParams.shaded = !renderingParams.shaded;
+          }
+          break;
+      }
+
+      ui.unindent();
+    }
 
     ui.separatorLine();
 
@@ -274,37 +516,19 @@ int main() {
           gf::Step<double> step = getStepFunction(stepFunction);
 
           gf::GradientNoise2D noise(random, step);
-
-          if (fractal) {
-            gf::FractalNoise2D fractalNoise(noise, 1, octaves, lacunarity, persistence, dimension);
-            generate(texture, image, array, fractalNoise, scale);
-          } else {
-            generate(texture, image, array, noise, scale);
-          }
+          generate(texture, image, renderingParams, array, noise, fractalParams, scale);
           break;
         }
 
         case NoiseFunction::Simplex: {
           gf::SimplexNoise2D noise(random);
-
-          if (fractal) {
-            gf::FractalNoise2D fractalNoise(noise, 1, octaves, lacunarity, persistence, dimension);
-            generate(texture, image, array, fractalNoise, scale);
-          } else {
-            generate(texture, image, array, noise, scale);
-          }
+          generate(texture, image, renderingParams, array, noise, fractalParams, scale);
           break;
         }
 
         case NoiseFunction::OpenSimplex: {
           gf::OpenSimplexNoise2D noise(random);
-
-          if (fractal) {
-            gf::FractalNoise2D fractalNoise(noise, 1, octaves, lacunarity, persistence, dimension);
-            generate(texture, image, array, fractalNoise, scale);
-          } else {
-            generate(texture, image, array, noise, scale);
-          }
+          generate(texture, image, renderingParams, array, noise, fractalParams, scale);
           break;
         }
 
@@ -316,17 +540,12 @@ int main() {
           std::vector<double> combination = getCombinationVector(combinationFunction);
 
           gf::WorleyNoise2D noise(random, pointCount, distance, combination);
-
-          if (fractal) {
-            gf::FractalNoise2D fractalNoise(noise, 1, octaves, lacunarity, persistence, dimension);
-            generate(texture, image, array, fractalNoise, scale);
-          } else {
-            generate(texture, image, array, noise, scale);
-          }
+          generate(texture, image, renderingParams, array, noise, fractalParams, scale);
           break;
         }
       }
     }
+
 
     ui.endScrollArea();
 
