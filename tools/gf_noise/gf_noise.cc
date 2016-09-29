@@ -468,8 +468,8 @@ int main() {
         case Fractal::FBm:
           ui.slider("Octaves", &fractalParams.octaves, 1, 15, 1);
           ui.slider("Lacunarity", &fractalParams.lacunarity, 1, 3, 0.1);
-          ui.slider("Persistence", &fractalParams.persistence, 0.1, 1, 0.1);
-          ui.slider("Dimension", &fractalParams.dimension, 0.1, 10, 0.1);
+          ui.slider("Persistence", &fractalParams.persistence, 0.1, 0.9, 0.1);
+          ui.slider("Dimension", &fractalParams.dimension, 0.1, 1.9, 0.1);
           break;
       }
 
@@ -546,6 +546,9 @@ int main() {
       }
     }
 
+    if (ui.button("Save to noise.png")) {
+      image.saveToFile("noise.png");
+    }
 
     ui.endScrollArea();
 
