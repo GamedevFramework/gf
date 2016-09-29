@@ -22,6 +22,7 @@
 #define GF_UI_H
 
 #include <cstdint>
+#include <string>
 #include <vector>
 
 #include "Alignment.h"
