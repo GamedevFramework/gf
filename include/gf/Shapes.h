@@ -396,6 +396,18 @@ inline namespace v1 {
     RoundedRectangleShape(Vector2f size = Vector2f{ 0.0f, 0.0f }, float radius = 0.0f, std::size_t cornerPointCount = 8);
 
     /**
+     * @brief Constructor with a rectangle
+     *
+     * The shape takes the size of the rectangle and the position of the
+     * rectangle.
+     *
+     * @param rect A rectangle with a size and a position
+     * @param radius Radius of the corner
+     * @param cornerPointCount Number of points in the corner
+     */
+    explicit RoundedRectangleShape(const RectF& rect, float radius = 0.0f, std::size_t cornerPointCount = 8);
+
+    /**
      * @brief Set the size of the rectangle
      *
      * @param size New size of the rectangle

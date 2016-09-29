@@ -65,7 +65,7 @@ int main() {
 
   gf::RectangleShape extendedBackground(extendedWorld.size);
   extendedBackground.setPosition(extendedWorld.position);
-  extendedBackground.setColor(gf::Color::Grey());
+  extendedBackground.setColor(gf::Color::Gray());
 
   bool fullscreen = false;
 

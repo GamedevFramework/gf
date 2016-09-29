@@ -6,6 +6,7 @@ add_library(gf0 SHARED
   Circ.cc
   Clock.cc
   Direction.cc
+  Flags.cc
   Image.cc
   InputStream.cc
   InputStreams.cc
@@ -74,6 +75,8 @@ add_library(gf0 SHARED
   Model.cc
   ModelContainer.cc
   ResourceManager.cc
+  # ui
+  UI.cc
   # priv
   priv/Debug.cc
   # vendor

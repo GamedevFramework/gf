@@ -82,7 +82,7 @@ int main() {
 
   gf::RectangleShape extendedBackground(extendedWorld.size);
   extendedBackground.setPosition(extendedWorld.position);
-  extendedBackground.setColor(gf::Color::Grey());
+  extendedBackground.setColor(gf::Color::Gray());
 
   gf::RectangleShape hud({ 64.0f, 64.0f });
   hud.setPosition({ 10.0f, 10.0f });

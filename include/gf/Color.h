@@ -102,11 +102,11 @@ inline namespace v1 {
     }
 
     /**
-     * @brief Grey predefined color
+     * @brief Gray predefined color
      *
-     * @param value The grey value
+     * @param value The gray value
      */
-    static constexpr Color4f Grey(float value = 0.5f) {
+    static constexpr Color4f Gray(float value = 0.5f) {
       return { value, value, value, 1.0f };
     }
 
@@ -183,6 +183,22 @@ inline namespace v1 {
      * @returns The corresponding color
      */
     static Color4f rgba(uint32_t color);
+
+    /**
+     * @brief Get a color from a 8-bit color
+     *
+     * @param color A 8-bit color
+     * @return The corresponding color
+     */
+    static Color4f rgba(Color4u color);
+
+    /**
+     * @brief Convert a color to a 4 8-bit channel
+     *
+     * @param color A color
+     * @return The corresponding 8-bit color
+     */
+    static Color4u convert(Color4f color);
 
   };
 
