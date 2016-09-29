@@ -102,11 +102,11 @@ inline namespace v1 {
     }
 
     /**
-     * @brief Grey predefined color
+     * @brief Gray predefined color
      *
-     * @param value The grey value
+     * @param value The gray value
      */
-    static constexpr Color4f Grey(float value = 0.5f) {
+    static constexpr Color4f Gray(float value = 0.5f) {
       return { value, value, value, 1.0f };
     }
 

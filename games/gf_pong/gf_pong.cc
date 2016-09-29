@@ -114,7 +114,7 @@ int main() {
 
   // main loop
 
-  renderer.clear(gf::Color::Grey(0.2f));
+  renderer.clear(gf::Color::Gray(0.2f));
 
   gf::Clock clock;
   bool fullscreen = false;
