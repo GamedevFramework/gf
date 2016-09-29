@@ -165,5 +165,18 @@ inline namespace v1 {
     return rgba(c >> 24, c >> 16, c >> 8, c);
   }
 
+  Color4f Color::rgba(Color4u color) {
+    return rgba(color.r, color.g, color.b, color.a);
+  }
+
+  Color4u Color::convert(Color4f color) {
+    return {
+      static_cast<uint8_t>(color.r * 255),
+      static_cast<uint8_t>(color.g * 255),
+      static_cast<uint8_t>(color.b * 255),
+      static_cast<uint8_t>(color.a * 255)
+    };
+  }
+
 }
 }
