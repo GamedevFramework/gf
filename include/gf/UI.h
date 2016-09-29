@@ -54,7 +54,7 @@ inline namespace v1 {
 
   using UIFlags = Flags<UIProperties>;
 
-  struct UILayout {
+  struct GF_API UILayout {
     // general
     float widgetHeight = 20.0f;
     float textHeight = 12.0f;
@@ -81,14 +81,14 @@ inline namespace v1 {
     Loop,
   };
 
-  class UIRenderer {
+  class GF_API UIRenderer {
   public:
     virtual void drawRect(RenderTarget& target, const RectF& rect, float corner, UIFlags flags) const = 0;
     virtual void drawText(RenderTarget& target, const std::string& text, unsigned size, Vector2f pos, float width, Alignment alignment, UIFlags flags) const = 0;
     virtual void drawIcon(RenderTarget& target, Vector2f pos, UIIcon icon, UIFlags flags) const = 0;
   };
 
-  class DefaultUIRenderer : public UIRenderer {
+  class GF_API DefaultUIRenderer : public UIRenderer {
   public:
     DefaultUIRenderer(gf::Font& font);
 
@@ -99,7 +99,7 @@ inline namespace v1 {
     gf::Font *m_font;
   };
 
-  class UI : public Drawable {
+  class GF_API UI : public Drawable {
   public:
     UI(const UIRenderer& renderer, const UILayout& layout);
 
