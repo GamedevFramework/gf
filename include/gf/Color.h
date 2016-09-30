@@ -185,18 +185,18 @@ inline namespace v1 {
     static Color4f rgba(uint32_t color);
 
     /**
-     * @brief Get a color from a 8-bit color
+     * @brief Get a color from a 32-bit color
      *
-     * @param color A 8-bit color
+     * @param color A 32-bit color
      * @return The corresponding color
      */
     static Color4f rgba(Color4u color);
 
     /**
-     * @brief Convert a color to a 4 8-bit channel
+     * @brief Convert a color to a 32-bit color
      *
      * @param color A color
-     * @return The corresponding 8-bit color
+     * @return The corresponding 32-bit color
      */
     static Color4u convert(Color4f color);
 
