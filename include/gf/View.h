@@ -345,6 +345,40 @@ inline namespace v1 {
   class GF_API AdaptativeView : public View {
   public:
     /**
+     * @brief Default constructor
+     *
+     * This constructor creates a default view of @f$(0, 0, 1000, 1000)@f$.
+     */
+    AdaptativeView()
+    : View()
+    {
+
+    }
+
+    /**
+     * @brief Construct the view from a rectangle
+     *
+     * @param rect Rectangle defining the zone to display
+     */
+    explicit AdaptativeView(const RectF& rect)
+    : View(rect)
+    {
+
+    }
+
+    /**
+     * @brief Construct the view from its center and size
+     *
+     * @param center Center of the zone to display
+     * @param size Size of the zone to display
+     */
+    AdaptativeView(Vector2f center, Vector2f size)
+    : View(center, size)
+    {
+
+    }
+
+    /**
      * @brief Callback when the screen has just been resized
      *
      * @param screenSize The new size of the screen

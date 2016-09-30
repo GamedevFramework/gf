@@ -44,6 +44,40 @@ inline namespace v1 {
    */
   class GF_API StretchView : public AdaptativeView {
   public:
+    /**
+     * @brief Default constructor
+     *
+     * This constructor creates a default view of @f$(0, 0, 1000, 1000)@f$.
+     */
+    StretchView()
+    : AdaptativeView()
+    {
+
+    }
+
+    /**
+     * @brief Construct the view from a rectangle
+     *
+     * @param rect Rectangle defining the zone to display
+     */
+    explicit StretchView(const RectF& rect)
+    : AdaptativeView(rect)
+    {
+
+    }
+
+    /**
+     * @brief Construct the view from its center and size
+     *
+     * @param center Center of the zone to display
+     * @param size Size of the zone to display
+     */
+    StretchView(Vector2f center, Vector2f size)
+    : AdaptativeView(center, size)
+    {
+
+    }
+
     virtual void onScreenResize(Vector2u screenSize) override;
   };
 
@@ -61,6 +95,40 @@ inline namespace v1 {
    */
   class GF_API FitView : public AdaptativeView {
   public:
+    /**
+     * @brief Default constructor
+     *
+     * This constructor creates a default view of @f$(0, 0, 1000, 1000)@f$.
+     */
+    FitView()
+    : AdaptativeView()
+    {
+
+    }
+
+    /**
+     * @brief Construct the view from a rectangle
+     *
+     * @param rect Rectangle defining the zone to display
+     */
+    explicit FitView(const RectF& rect)
+    : AdaptativeView(rect)
+    {
+
+    }
+
+    /**
+     * @brief Construct the view from its center and size
+     *
+     * @param center Center of the zone to display
+     * @param size Size of the zone to display
+     */
+    FitView(Vector2f center, Vector2f size)
+    : AdaptativeView(center, size)
+    {
+
+    }
+
     virtual void onScreenResize(Vector2u screenSize) override;
   };
 
@@ -77,10 +145,47 @@ inline namespace v1 {
    */
   class GF_API FillView : public AdaptativeView {
   public:
+    /**
+     * @brief Default constructor
+     *
+     * This constructor creates a default view of @f$(0, 0, 1000, 1000)@f$.
+     */
+    FillView()
+    : AdaptativeView()
+    {
+
+    }
+
+    /**
+     * @brief Construct the view from a rectangle
+     *
+     * @param rect Rectangle defining the zone to display
+     */
+    explicit FillView(const RectF& rect)
+    : AdaptativeView(rect)
+    {
+      resizeWorld(getSize());
+    }
+
+    /**
+     * @brief Construct the view from its center and size
+     *
+     * @param center Center of the zone to display
+     * @param size Size of the zone to display
+     */
+    FillView(Vector2f center, Vector2f size)
+    : AdaptativeView(center, size)
+    {
+      resizeWorld(getSize());
+    }
+
     virtual void onScreenResize(Vector2u screenSize) override;
 
   protected:
     virtual void onWorldResize(Vector2f worldSize) override;
+
+  private:
+    void resizeWorld(Vector2f worldSize);
 
   private:
     Vector2f m_worldSize;
@@ -100,10 +205,47 @@ inline namespace v1 {
    */
   class GF_API ExtendView : public AdaptativeView {
   public:
+    /**
+     * @brief Default constructor
+     *
+     * This constructor creates a default view of @f$(0, 0, 1000, 1000)@f$.
+     */
+    ExtendView()
+    : AdaptativeView()
+    {
+
+    }
+
+    /**
+     * @brief Construct the view from a rectangle
+     *
+     * @param rect Rectangle defining the zone to display
+     */
+    explicit ExtendView(const RectF& rect)
+    : AdaptativeView(rect)
+    {
+      resizeWorld(getSize());
+    }
+
+    /**
+     * @brief Construct the view from its center and size
+     *
+     * @param center Center of the zone to display
+     * @param size Size of the zone to display
+     */
+    ExtendView(Vector2f center, Vector2f size)
+    : AdaptativeView(center, size)
+    {
+      resizeWorld(getSize());
+    }
+
     virtual void onScreenResize(Vector2u screenSize) override;
 
   protected:
     virtual void onWorldResize(Vector2f worldSize) override;
+
+  private:
+    void resizeWorld(Vector2f worldSize);
 
   private:
     Vector2f m_worldSize;

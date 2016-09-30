@@ -20,6 +20,8 @@
  */
 #include <gf/Views.h>
 
+#include <iostream>
+
 #include "priv/Utils.h"
 
 namespace gf {
@@ -81,9 +83,12 @@ inline namespace v1 {
   };
 
   void FillView::onWorldResize(Vector2f worldSize) {
-    m_worldSize = worldSize;
+    resizeWorld(worldSize);
   };
 
+  void FillView::resizeWorld(Vector2f worldSize) {
+    m_worldSize = worldSize;
+  }
 
   void ExtendView::onScreenResize(Vector2u screenSize) {
     float worldRatio = m_worldSize.width / m_worldSize.height;
@@ -103,9 +108,12 @@ inline namespace v1 {
   };
 
   void ExtendView::onWorldResize(Vector2f worldSize) {
-    m_worldSize = worldSize;
+    resizeWorld(worldSize);
   }
 
+  void ExtendView::resizeWorld(Vector2f worldSize) {
+    m_worldSize = worldSize;
+  }
 
   void ScreenView::onScreenResize(Vector2u screenSize) {
     RectF screen(0.0f, 0.0f, screenSize.width, screenSize.height);

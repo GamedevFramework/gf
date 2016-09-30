@@ -41,20 +41,16 @@ int main() {
    */
   gf::ViewContainer views;
 
-  gf::StretchView stretchView;
-  stretchView.reset(world);
+  gf::StretchView stretchView(world);
   views.addView(stretchView);
 
-  gf::FitView fitView;
-  fitView.reset(world);
+  gf::FitView fitView(world);
   views.addView(fitView);
 
-  gf::FillView fillView;
-  fillView.reset(world);
+  gf::FillView fillView(world);
   views.addView(fillView);
 
-  gf::ExtendView extendView;
-  extendView.reset(world);
+  gf::ExtendView extendView(world);
   views.addView(extendView);
 
   gf::ScreenView screenView;
