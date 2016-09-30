@@ -29,7 +29,7 @@ if(MSVC)
   message(STATUS "- FREETYPE_DIR: $ENV{FREETYPE_DIR}")
 endif()
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 set(SDL2_BUILDING_LIBRARY TRUE)
 find_package(SDL2 REQUIRED)
@@ -62,17 +62,17 @@ if(GF_BUILD_TESTS)
 endif()
 
 install(
-  DIRECTORY "${CMAKE_SOURCE_DIR}/include/gf"
+  DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include/gf"
   DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
 install(
-  DIRECTORY "${CMAKE_SOURCE_DIR}/data/gf"
+  DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/data/gf"
   DESTINATION ${CMAKE_INSTALL_DATADIR}
 )
 
 install(
-  DIRECTORY "${CMAKE_SOURCE_DIR}/examples"
+  DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/examples"
   DESTINATION "${CMAKE_INSTALL_DOCDIR}"
   FILES_MATCHING
   PATTERN "*.cc"
@@ -86,8 +86,8 @@ if (GF_BUILD_DOCUMENTATION)
   find_package(Doxygen)
 
   if(DOXYGEN_FOUND)
-    configure_file("${CMAKE_SOURCE_DIR}/Doxyfile.cmake" "${CMAKE_BINARY_DIR}/Doxyfile" @ONLY)
-    add_custom_target(doc ${DOXYGEN_EXECUTABLE} "${CMAKE_BINARY_DIR}/Doxyfile")
+    configure_file("${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.cmake" "${CMAKE_CURRENT_BINARY_DIR}/Doxyfile" @ONLY)
+    add_custom_target(doc ${DOXYGEN_EXECUTABLE} "${CMAKE_CURRENT_BINARY_DIR}/Doxyfile")
   endif(DOXYGEN_FOUND)
 endif()
 
@@ -97,5 +97,10 @@ if(GF_BUILD_GAMES)
 endif()
 
 if(GF_BUILD_TOOLS)
-  add_subdirectory(tools)
+  add_subdirectory(tools/gf_noise)
+
+  install(
+    DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/data/gf_tools"
+    DESTINATION ${CMAKE_INSTALL_DATADIR}
+  )
 endif()

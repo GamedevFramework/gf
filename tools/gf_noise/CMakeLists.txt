@@ -9,3 +9,8 @@ target_include_directories(gf_noise
 )
 
 target_link_libraries(gf_noise gf0)
+
+install(
+  TARGETS gf_noise
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
