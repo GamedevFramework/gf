@@ -89,9 +89,14 @@ static std::string niceNum(float num, float precision) {
 namespace gf {
 inline namespace v1 {
 
+  UIRenderer::~UIRenderer() {
+    // nothing by default
+  }
+
   /*
    * DefaultUIRenderer
    */
+
   DefaultUIRenderer::DefaultUIRenderer(gf::Font& font)
   : m_font(&font)
   {
@@ -625,9 +630,6 @@ inline namespace v1 {
     UIFlags flags = getStateFlags(isActive(id), isHot(id), enabled);
 
     RectF choiceBox = space;
-//     choiceBox.width -= 2 * m_layout.widgetHeight;
-//     choiceBox.left += m_layout.widgetHeight;
-
     addRectCommand(choiceBox, m_layout.cycleCorner, UIProperties::Underlying);
 
     RectF loopBox;
