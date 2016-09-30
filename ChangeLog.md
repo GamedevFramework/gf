@@ -9,6 +9,7 @@
   - Add Circ (similar to Rect)
   - Add collision detection for Rect/Circ
   - Add Orientation with the same free functions as Direction
+  - Add 3D noise classes
   - Move Alignment outside Text
   - Add enum based Flags
   - Fix lerp for vectors
