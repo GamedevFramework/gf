@@ -317,8 +317,8 @@ static std::vector<double> getCombinationVector(CombinationFunction func) {
 int main() {
   gf::Random random;
 
-  constexpr unsigned Size = 512;
-  constexpr unsigned ExtraSize = 200;
+  constexpr unsigned Size = 1024;
+  constexpr unsigned ExtraSize = 250;
 
   gf::Array2D<double> array({ Size, Size });
   gf::Image image;
