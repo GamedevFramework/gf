@@ -23,7 +23,7 @@
 - Resources: gf::Image, gf::Font, gf::Animation
 - Drawables: gf::Drawable, gf::VertexArray, gf::PostProcessing, gf::Transformable, gf::Shape, gf::Curve, gf::Sprite, gf::Text, gf::NinePatch, gf::BufferedGeometry, gf::TileLayer
 - Targets: gf::RenderTarget, gf::RenderWindow, gf::RenderTexture, gf::RenderPipeline, gf::View
-- Utility: gf::SpriteBatch, gf::Color, gf::ColorRamp
+- Utility: gf::SpriteBatch, gf::Color, gf::ColorRamp, gf::UI
 
 @defgroup game Game classes
 @brief All the classes related to game systems and game entities

@@ -41,6 +41,7 @@ inline namespace v1 {
   class Font;
 
   /**
+   * @ingroup graphics
    * @brief Properties of a user interface
    *
    * @sa gf::UI, gf::UIFlags
@@ -58,6 +59,7 @@ inline namespace v1 {
   };
 
   /**
+   * @ingroup graphics
    * @brief The flags corresponding to user interface properties
    *
    * @sa gf::UI, gf::Flags, gf::UIProperties
@@ -65,6 +67,7 @@ inline namespace v1 {
   using UIFlags = Flags<UIProperties>;
 
   /**
+   * @ingroup graphics
    * @brief Layout of a user interface
    *
    * The layout contains several metrics that are used to compute the size
@@ -93,6 +96,7 @@ inline namespace v1 {
   };
 
   /**
+   * @ingroup graphics
    * @brief An icon of a user interface
    *
    * @sa gf::UI, gf::UIRenderer
@@ -105,6 +109,7 @@ inline namespace v1 {
   };
 
   /**
+   * @ingroup graphics
    * @brief A renderer for a user interface
    *
    * The renderer is responsible for displaying the elements of the widgets.
@@ -155,6 +160,7 @@ inline namespace v1 {
   };
 
   /**
+   * @ingroup graphics
    * @brief The default renderer for user interface
    *
    * @sa gf::UI, gf::UIRenderer
@@ -178,6 +184,7 @@ inline namespace v1 {
   };
 
   /**
+   * @ingroup graphics
    * @brief An immediate mode user interface class
    *
    * ~~~{.cc}
