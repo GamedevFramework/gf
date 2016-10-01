@@ -20,6 +20,7 @@
  */
 #include <cassert>
 #include <algorithm>
+#include <fstream>
 #include <tuple>
 #include <iostream>
 
@@ -242,6 +243,27 @@ static void generate(gf::Texture& texture, gf::Image& image, const RenderingPara
   generateImageFromArray(image, renderingParams, array);
   texture.update(image);
 }
+
+static void exportToPortableGraymap(const gf::Array2D<double>& array, const char *filename) {
+  static constexpr unsigned Max = 65536;
+
+  std::ofstream out(filename);
+
+  out << "P2\n";
+  out << array.getCols() << ' ' << array.getRows() << '\n';
+  out << Max << '\n';
+
+  for (auto row : array.getRowRange()) {
+    for (auto col : array.getColRange()) {
+      unsigned value = static_cast<unsigned>(array({ row, col }) * Max);
+      assert(value <= Max);
+      out << value << ' ';
+    }
+
+    out << '\n';
+  }
+}
+
 
 enum class NoiseFunction : std::size_t {
   Gradient      = 0,
@@ -546,8 +568,14 @@ int main() {
       }
     }
 
-    if (ui.button("Save to noise.png")) {
+    ui.separator();
+
+    if (ui.button("Save to 'noise.png'")) {
       image.saveToFile("noise.png");
+    }
+
+    if (ui.button("Save to 'noise.pnm'")) {
+      exportToPortableGraymap(array, "noise.pnm");
     }
 
     ui.endScrollArea();
