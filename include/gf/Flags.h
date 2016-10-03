@@ -84,7 +84,7 @@ inline namespace v1 {
      *
      * @returns A bitfield where all flags have been inverted
      */
-    constexpr Flags<E> operator~() {
+    constexpr Flags<E> operator~() const {
       return Flags(~m_data);
     }
 
