@@ -4,3 +4,4 @@ macro(add_gf_snippet NAME)
 endmacro()
 
 add_gf_snippet(doc_index)
+add_gf_snippet(doc_messages)
