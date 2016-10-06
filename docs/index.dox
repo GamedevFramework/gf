@@ -42,7 +42,7 @@ Gamedev Framework (gf) is licensed under the terms and conditions of the [zlib/l
 
 @section first First example
 
-@snippet snippets/index.cc index
+@snippet snippets/doc_index.cc index
 
 @section documentation Documentation
 

@@ -74,7 +74,7 @@ private:
     // verify that we have the right message type
     assert(id == HeroPosition::type);
 
-    // we can now safely cast the message..
+    // we can now safely cast the message...
     auto heroPosition = static_cast<HeroPosition*>(msg);
 
     // and use its data to update the ennemy
