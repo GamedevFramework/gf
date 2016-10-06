@@ -42,72 +42,7 @@ Gamedev Framework (gf) is licensed under the terms and conditions of the [zlib/l
 
 @section first First example
 
-~~~{.cc}
-#include <gf/Event.h>
-#include <gf/Font.h>
-#include <gf/RenderWindow.h>
-#include <gf/Sprite.h>
-#include <gf/Text.h>
-#include <gf/Window.h>
-
-int main() {
-  // Create the main window and the renderer
-
-  gf::Window window("Example", { 640, 480 });
-  gf::RenderWindow renderer(window);
-
-  // Load a sprite to display
-
-  gf::Texture texture;
-  if (!texture.loadFromFile("sprite.png")) {
-    return EXIT_FAILURE;
-  }
-
-  gf::Sprite sprite(texture);
-  sprite.setPosition({ 300, 200 });
-
-  // Create a graphical text to display
-
-  gf::Font font;
-  if (!font.loadFromFile("DroidSans.ttf")) {
-    return EXIT_FAILURE;
-  }
-
-  gf::Text text("Hello gf!", font, 50);
-  text.setPosition({ 100, 100 });
-
-  renderer.clear(gf::Color::White);
-
-  // Start the game loop
-
-  while (window.isOpen()) {
-
-    // Process events
-
-    gf::Event event;
-
-    while (window.pollEvent(event)) {
-      switch (event.type) {
-        case gf::EventType::Closed:
-          window.close();
-          break;
-
-        default:
-          break;
-      }
-    }
-
-    // Draw the entities
-
-    renderer.clear();
-    renderer.draw(sprite);
-    renderer.draw(text);
-    renderer.display();
-  }
-
-  return 0;
-}
-~~~
+@snippet snippets/index.cc index
 
 @section documentation Documentation
 
@@ -116,7 +51,8 @@ int main() {
   - @ref build_and_install
   - @ref differences_with_sfml
   - @ref recommanded_libraries
-2. Tutorial on gf
+2. Tutorials on gf
+  - @ref gamedev_101
   - @ref start_game
 3. User documentation
   1. Core classes
