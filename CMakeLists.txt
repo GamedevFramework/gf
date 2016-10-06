@@ -89,6 +89,8 @@ if (GF_BUILD_DOCUMENTATION)
     configure_file("${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.cmake" "${CMAKE_CURRENT_BINARY_DIR}/Doxyfile" @ONLY)
     add_custom_target(doc ${DOXYGEN_EXECUTABLE} "${CMAKE_CURRENT_BINARY_DIR}/Doxyfile")
   endif(DOXYGEN_FOUND)
+
+  add_subdirectory(docs/snippets)
 endif()
 
 if(GF_BUILD_GAMES)
