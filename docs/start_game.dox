@@ -1,6 +1,10 @@
 /**
 @page start_game Start a game with gf
 
+Here is a template you can use to start your game. Do not forget to [choose a license](http://choosealicense.com/) and add the relevant text at the beginning of the file.
 
+This template uses high level features (gf::ActionContainer, gf::ViewContainer, gf::EntityContainer) instead of low-level features presented in @ref gamedev_101. You may also need some other features, depending on your game (gf::MessageManager, gf::ResourceManager, gf::Random, etc).
+
+@snippet snippets/doc_full_template.cc full
 
 */
