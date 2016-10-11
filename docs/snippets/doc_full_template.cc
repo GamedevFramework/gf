@@ -34,6 +34,7 @@
 int main() {
   static constexpr gf::Vector2u ScreenSize(1024, 576);
   static constexpr gf::Vector2f ViewSize(100.0f, 100.0f); // dummy values
+  static constexpr gf::Vector2f ViewCenter(0.0f, 0.0f); // dummy values
 
   // initialization
 
@@ -44,8 +45,7 @@ int main() {
 
   gf::ViewContainer views;
 
-  gf::ExtendView mainView;
-  mainView.setSize(ViewSize);
+  gf::ExtendView mainView(ViewCenter, ViewSize);
   views.addView(mainView);
 
   gf::ScreenView hudView;

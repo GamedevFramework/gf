@@ -39,6 +39,8 @@
 #include "config.h"
 
 int main() {
+  static constexpr gf::Vector2u ScreenSize(500, 500);
+
   gf::Log::setLevel(gf::Log::Info);
 
   // setup resource directory
@@ -54,18 +56,17 @@ int main() {
 
   gf::WindowHints hints;
   hints.resizable = false;
-  gf::Window window("gf 2048!", { 500, 500 }, hints);
+  gf::Window window("gf 2048!", ScreenSize, hints);
   gf::RenderWindow renderer(window);
 
   // add cameras
 
   gf::ViewContainer views;
 
-  gf::FitView mainView;
-  auto viewRect = Board::getView();
-  mainView.setSize(viewRect.getSize());
-  mainView.setCenter(viewRect.getCenter());
+  gf::FitView mainView(Board::getView());
   views.addView(mainView);
+
+  views.onScreenResize(ScreenSize);
 
   // add actions
 

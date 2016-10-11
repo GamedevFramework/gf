@@ -40,6 +40,8 @@
 #include "local/Singletons.h"
 
 int main() {
+  static constexpr gf::Vector2u ScreenSize(1024, 576);
+
   gf::Log::setLevel(gf::Log::Info);
 
   // setup singletons
@@ -48,7 +50,7 @@ int main() {
 
   // initialize window
 
-  gf::Window window("gf Pong!", { 1024, 576 });
+  gf::Window window("gf Pong!", ScreenSize);
   gf::RenderWindow renderer(window);
 
   // add cameras
@@ -58,6 +60,8 @@ int main() {
   gf::FitView mainView;
   mainView.setSize({ Ground::Width, Ground::Height });
   views.addView(mainView);
+
+  views.onScreenResize(ScreenSize);
 
   // add actions
 
