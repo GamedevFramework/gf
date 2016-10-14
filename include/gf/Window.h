@@ -331,6 +331,37 @@ inline namespace v1 {
 
     /** @} */
 
+
+    /**
+     * @name Input management
+     * @{
+     */
+
+    /**
+     * @brief Show or hide the mouse cursor
+     *
+     * The mouse cursor is visible by default.
+     *
+     * @param visible True to show the mouse cursor, false to hide it
+     */
+    void setMouseCursorVisible(bool visible);
+
+    /**
+     * @brief Grab or release the mouse cursor
+     *
+     * If set, grabs the mouse cursor inside this window's client
+     * area so it may no longer be moved outside its bounds.
+     * Note that grabbing is only active while the window has
+     * focus and calling this function for fullscreen windows
+     * won't have any effect (fullscreen windows always grab the
+     * cursor).
+     *
+     * @param grabbed True to enable, false to disable
+     */
+    void setMouseCursorGrabbed(bool grabbed);
+
+    /** @} */
+
   private:
     Library m_lib; // to automatically initialize SDL
 

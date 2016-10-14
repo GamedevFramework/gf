@@ -93,9 +93,20 @@ inline namespace v1 {
     static constexpr Color4f Transparent{0.0f, 0.0f, 0.0f, 0.0f};
 
     /**
-     * @brief Grey predefined color
+     * @brief Opaque predefined color
+     *
+     * @param value The opacity value
      */
-    static constexpr Color4f Grey(float value = 0.5f) {
+    static constexpr Color4f Opaque(float value = 0.5f) {
+      return { 1.0f, 1.0f, 1.0f, value };
+    }
+
+    /**
+     * @brief Gray predefined color
+     *
+     * @param value The gray value
+     */
+    static constexpr Color4f Gray(float value = 0.5f) {
       return { value, value, value, 1.0f };
     }
 
@@ -154,8 +165,42 @@ inline namespace v1 {
      */
     static Color4f darker(Color4f color, float percent = 0.5f);
 
-  };
+    /**
+     * @brief Get a color from 4 8-bit channels
+     *
+     * @param r The red channel
+     * @param g The green channel
+     * @param b The blue channel
+     * @param a The alpha channel
+     * @returns The corresponding color
+     */
+    static Color4f rgba(uint8_t r, uint8_t g, uint8_t b, uint8_t a = 255);
 
+    /**
+     * @brief Get a color from 32-bit value
+     *
+     * @param color The 32-bit color
+     * @returns The corresponding color
+     */
+    static Color4f rgba(uint32_t color);
+
+    /**
+     * @brief Get a color from a 32-bit color
+     *
+     * @param color A 32-bit color
+     * @return The corresponding color
+     */
+    static Color4f rgba(Color4u color);
+
+    /**
+     * @brief Convert a color to a 32-bit color
+     *
+     * @param color A color
+     * @return The corresponding 32-bit color
+     */
+    static Color4u convert(Color4f color);
+
+  };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

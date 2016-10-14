@@ -41,20 +41,16 @@ int main() {
    */
   gf::ViewContainer views;
 
-  gf::StretchView stretchView;
-  stretchView.reset(world);
+  gf::StretchView stretchView(world);
   views.addView(stretchView);
 
-  gf::FitView fitView;
-  fitView.reset(world);
+  gf::FitView fitView(world);
   views.addView(fitView);
 
-  gf::FillView fillView;
-  fillView.reset(world);
+  gf::FillView fillView(world);
   views.addView(fillView);
 
-  gf::ExtendView extendView;
-  extendView.reset(world);
+  gf::ExtendView extendView(world);
   views.addView(extendView);
 
   gf::ScreenView screenView;
@@ -82,7 +78,7 @@ int main() {
 
   gf::RectangleShape extendedBackground(extendedWorld.size);
   extendedBackground.setPosition(extendedWorld.position);
-  extendedBackground.setColor(gf::Color::Grey());
+  extendedBackground.setColor(gf::Color::Gray());
 
   gf::RectangleShape hud({ 64.0f, 64.0f });
   hud.setPosition({ 10.0f, 10.0f });
@@ -98,6 +94,8 @@ int main() {
   std::cout << "\t3: Switch to FillView\n";
   std::cout << "\t4: Switch to ExtendView\n";
   std::cout << "Current view: StretchView\n";
+
+  renderer.clear(gf::Color::Black);
 
   while (window.isOpen()) {
     gf::Event event;
@@ -142,7 +140,7 @@ int main() {
       views.update(event);
     }
 
-    renderer.clear(gf::Color::Black);
+    renderer.clear();
 
     renderer.setView(*currentView);
     renderer.draw(extendedBackground);

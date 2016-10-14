@@ -166,32 +166,31 @@ inline namespace v1 {
    * @ingroup core
    * @brief A float range
    */
-  typedef Range<float> RangeF;
+  using RangeF = Range<float>;
 
   /**
    * @ingroup core
    * @brief A int range
    */
-  typedef Range<int> RangeI;
+  using RangeI = Range<int>;
 
   /**
    * @ingroup core
    * @brief A unsigned range
    */
-  typedef Range<unsigned> RangeU;
+  using RangeU = Range<unsigned>;
 
   /**
    * @ingroup core
    * @brief A `std::size_t` range
    */
-  typedef Range<std::size_t> RangeZ;
+  using RangeZ = Range<std::size_t>;
 
 // MSVC does not like extern template
 #ifndef _MSC_VER
   extern template struct Range<float>;
   extern template struct Range<int>;
   extern template struct Range<unsigned>;
-  extern template struct Range<std::size_t>;
 #endif
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

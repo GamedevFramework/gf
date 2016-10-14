@@ -9,6 +9,10 @@ Gamedev Framework (gf) follows the [successful Git branching model from Vincent 
 
 ![successful Git branching model](http://nvie.com/img/git-model@2x.png)
 
+@section devel_versioning Versioning
+
+gf uses [Semantic Versioning 2.0.0](http://semver.org/).
+
 @section devel_coding_style Coding style and guidelines
 
 1. Follow the existing style.

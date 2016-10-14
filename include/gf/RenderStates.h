@@ -27,6 +27,7 @@
 #include "Blend.h"
 #include "Matrix.h"
 #include "Portability.h"
+#include "Transform.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -80,7 +81,7 @@ inline namespace v1 {
    */
   struct GF_API RenderStates {
     BlendMode mode = BlendAlpha; ///< The blending mode
-    Matrix3f transform = identity<Matrix3f>(); ///< The transform matrix
+    Matrix3f transform = identityTransform(); ///< The transform matrix
     const BareTexture *texture = nullptr; ///< The texture
     Shader *shader = nullptr; ///< The shader
     float lineWidth = 0.0f; ///< The line width
@@ -94,7 +95,7 @@ inline namespace v1 {
    * Two render states are equals if their blend mode, their transform
    * matrix, their texture and their shader are the same.
    */
-  GF_API inline
+  inline
   bool operator==(const RenderStates& lhs, const RenderStates& rhs) {
     return lhs.mode == rhs.mode && lhs.transform == rhs.transform && lhs.texture == rhs.texture && lhs.shader == rhs.shader;
   }

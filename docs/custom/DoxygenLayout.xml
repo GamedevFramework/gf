@@ -3,6 +3,7 @@
   <!-- Navigation index tabs for HTML output -->
   <navindex>
     <tab type="mainpage" visible="yes" title=""/>
+    <tab type="user" url="documentation.html" title="Documentation" />
     <tab type="pages" visible="no" title="" intro=""/><!-- CHANGE: no instead of yes -->
     <tab type="modules" visible="yes" title="" intro=""/>
     <tab type="namespaces" visible="no" title=""><!-- CHANGE: no instead of yes -->

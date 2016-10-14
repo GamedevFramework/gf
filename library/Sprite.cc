@@ -34,7 +34,7 @@ inline namespace v1 {
   , m_textureRect(0, 0, 1, 1)
   , m_bounds(0, 0, 0, 0)
   {
-
+    updateTexCoords();
   }
 
   Sprite::Sprite(const Texture& texture)

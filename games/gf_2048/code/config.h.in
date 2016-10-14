@@ -1,0 +1,6 @@
+#ifndef CONFIG_H
+#define CONFIG_H
+
+#define GF_2048_DATA_DIR "@GF_2048_DATA_DIR@"
+
+#endif // CONFIG_H

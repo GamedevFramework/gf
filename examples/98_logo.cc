@@ -46,12 +46,12 @@ int main() {
   text.setPosition({ 100, 100 });
   text.setAnchor(gf::Anchor::Center);
 
-  renderer.clear({ 1.0f, 1.0f, 1.0f, 0.0f }); // transparent white
-
   std::cout << "Gamedev Framework (gf) example #98: Logo\n";
   std::cout << "This example prints the logo of Gamedev Framework (gf)\n";
   std::cout << "How to use:\n";
   std::cout << "\tS: Capture the image in 'gf_logo.png'\n";
+
+  renderer.clear({ 1.0f, 1.0f, 1.0f, 0.0f }); // transparent white
 
   while (window.isOpen()) {
     gf::Event event;

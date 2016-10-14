@@ -147,11 +147,24 @@ inline namespace v1 {
     }
 
     /**
+     * @brief Get the position of the rectangle
+     *
+     * It is a synonym for the `position` member
+     *
+     * @return The position of the rectangle
+     * @sa getSize()
+     */
+    constexpr Vector<T, 2> getPosition() const noexcept {
+      return position;
+    }
+
+    /**
      * @brief Get the size of the rectangle
      *
      * It is a synonym for the `size` member
      *
      * @return The size of the rectangle
+     * @sa getPosition()
      */
     constexpr Vector<T, 2> getSize() const noexcept {
       return size;
@@ -303,32 +316,31 @@ inline namespace v1 {
    * @ingroup core
    * @brief A `float` rectangle
    */
-  typedef Rect<float> RectF;
+  using RectF = Rect<float>;
 
   /**
    * @ingroup core
    * @brief A `int` rectangle
    */
-  typedef Rect<int> RectI;
+  using RectI = Rect<int>;
 
   /**
    * @ingroup core
    * @brief A `unsigned` rectangle
    */
-  typedef Rect<unsigned> RectU;
+  using RectU = Rect<unsigned>;
 
   /**
    * @ingroup core
    * @brief A `std::size_t` rectangle
    */
-  typedef Rect<std::size_t> RectZ;
+  using RectZ = Rect<std::size_t>;
 
 // MSVC does not like extern template
 #ifndef _MSC_VER
   extern template struct Rect<float>;
   extern template struct Rect<int>;
   extern template struct Rect<unsigned>;
-  extern template struct Rect<std::size_t>;
 #endif
 
   /**
@@ -337,7 +349,7 @@ inline namespace v1 {
    *
    * @param lhs First rectangle
    * @param rhs Second rectangle
-   * @return True if the two rectangle are the same
+   * @return True if the two rectangles are the same
    */
   template<typename T>
   inline
@@ -351,7 +363,7 @@ inline namespace v1 {
    *
    * @param lhs First rectangle
    * @param rhs Second rectangle
-   * @return True if the two rectangle are different
+   * @return True if the two rectangles are different
    */
   template<typename T>
   inline

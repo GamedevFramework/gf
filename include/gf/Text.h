@@ -26,6 +26,7 @@
 
 #include <string>
 
+#include "Alignment.h"
 #include "Portability.h"
 #include "Transformable.h"
 #include "Vector.h"
@@ -88,17 +89,6 @@ inline namespace v1 {
    */
   class GF_API Text : public Transformable {
   public:
-    /**
-     * @brief The alignement of the text
-     */
-    enum class Alignment {
-      None,    ///< No alignement
-      Left,    ///< Left alignement
-      Right,   ///< Right alignement
-      Center,  ///< Centered alignment
-      Justify, ///< Justified alignment
-    };
-
     /**
      * @brief Default constructor
      *

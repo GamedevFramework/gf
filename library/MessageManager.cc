@@ -27,7 +27,7 @@ namespace gf {
 inline namespace v1 {
 
   MessageManager::MessageManager()
-  : m_current_id(0)
+  : m_currentId(0)
   {
   }
 
@@ -41,7 +41,7 @@ inline namespace v1 {
       assert(inserted);
     }
 
-    MessageHandlerId id = m_current_id++;
+    MessageHandlerId id = m_currentId++;
     it->second.push_back({ id, handler });
     return id;
   }

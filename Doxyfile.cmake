@@ -840,7 +840,7 @@ RECURSIVE              = YES
 # Note that relative paths are relative to the directory from which doxygen is
 # run.
 
-EXCLUDE                = 
+EXCLUDE                = @CMAKE_SOURCE_DIR@/docs/snippets
 
 # The EXCLUDE_SYMLINKS tag can be used to select whether or not files or
 # directories that are symbolic links (a Unix file system feature) are excluded
@@ -873,7 +873,8 @@ EXCLUDE_SYMBOLS        =
 # that contain example code fragments that are included (see the \include
 # command).
 
-EXAMPLE_PATH           = @CMAKE_SOURCE_DIR@/examples
+EXAMPLE_PATH           = @CMAKE_SOURCE_DIR@/examples \
+                         @CMAKE_SOURCE_DIR@/docs
 
 # If the value of the EXAMPLE_PATH tag contains directories, you can use the
 # EXAMPLE_PATTERNS tag to specify one or more wildcard pattern (like *.cpp and

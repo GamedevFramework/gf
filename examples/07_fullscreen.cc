@@ -65,7 +65,7 @@ int main() {
 
   gf::RectangleShape extendedBackground(extendedWorld.size);
   extendedBackground.setPosition(extendedWorld.position);
-  extendedBackground.setColor(gf::Color::Grey());
+  extendedBackground.setColor(gf::Color::Gray());
 
   bool fullscreen = false;
 
@@ -75,6 +75,8 @@ int main() {
   std::cout << "\t- a red square that should stay at the top left of the window (like a HUD)\n";
   std::cout << "How to use:\n";
   std::cout << "\tF: Change between fullscreen/windowed\n";
+
+  renderer.clear(gf::Color::Black);
 
   while (window.isOpen()) {
     gf::Event event;
@@ -110,7 +112,7 @@ int main() {
 
     renderer.setView(extendView);
 
-    renderer.clear(gf::Color::Black);
+    renderer.clear();
     renderer.draw(extendedBackground);
     renderer.draw(background);
     renderer.draw(triangle, 3, gf::PrimitiveType::Triangles);

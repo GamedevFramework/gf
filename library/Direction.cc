@@ -27,119 +27,84 @@
 namespace gf {
 inline namespace v1 {
 
-  Vector2f Direction::getUnit() const {
-    switch (m_dir) {
-      case -1: // center
+  Vector2f unit(Direction direction) {
+    switch (direction) {
+      case Direction::Center:
         return {  0.0f,  0.0f };
-      case 0: // north
+      case Direction::Up:
         return {  0.0f, -1.0f };
-      case 1: // north-east
-        return {  InvSqrt2, -InvSqrt2 };
-      case 2: // east
+      case Direction::Right:
         return {  1.0f,  0.0f };
-      case 3: // south-east
-        return {  InvSqrt2,  InvSqrt2 };
-      case 4: // south
+      case Direction::Down:
         return {  0.0f,  1.0f };
-      case 5: // south-west
-        return { -InvSqrt2,  InvSqrt2 };
-      case 6: // west
+      case Direction::Left:
         return { -1.0f,  0.0f };
-      case 7: // north-west
-        return { -InvSqrt2, -InvSqrt2 };
-      default:
-        break;
     }
 
     assert(false);
-    return { 0, 0 };
+    return { 0.0f, 0.0f };
   }
 
-  Vector2i Direction::getVector() const {
-    switch (m_dir) {
-      case -1: // center
+  Vector2i displacement(Direction direction) {
+    switch (direction) {
+      case Direction::Center:
         return {  0,  0 };
-      case 0: // north
+      case Direction::Up:
         return {  0, -1 };
-      case 1: // north-east
-        return {  1, -1 };
-      case 2: // east
+      case Direction::Right:
         return {  1,  0 };
-      case 3: // south-east
-        return {  1,  1 };
-      case 4: // south
+      case Direction::Down:
         return {  0,  1 };
-      case 5: // south-west
-        return { -1,  1 };
-      case 6: // west
+      case Direction::Left:
         return { -1,  0 };
-      case 7: // north-west
-        return { -1, -1 };
-      default:
-        break;
     }
 
     assert(false);
     return { 0, 0 };
   }
 
-  float Direction::getAngle() const {
-    if (m_dir != -1) {
-      return m_dir * Pi / 4;
+  float angle(Direction direction) {
+    if (direction == Direction::Center) {
+      return 0.0f;
     }
 
-    return 0.0f;
+    return static_cast<int>(direction) * Pi / 2;
   }
 
-  Direction Direction::getOppositeDirection() const {
-    if (m_dir != -1) {
-      return Direction{m_dir + 4 % 8};
+  Direction opposite(Direction direction) {
+    if (direction == Direction::Center) {
+      return Direction::Center;
     }
 
-    return Center;
+    int val = static_cast<int>(direction);
+    return static_cast<Direction>((val + 2) % 4);
   }
 
-  Direction Direction::getOrthogonalDirectionCW() const {
-    if (m_dir != -1) {
-      return Direction{m_dir + 2 % 8};
+  Direction orthogonalCW(Direction direction) {
+    if (direction == Direction::Center) {
+      return Direction::Center;
     }
 
-    return Center;
+    int val = static_cast<int>(direction);
+    return static_cast<Direction>((val + 1) % 4);
   }
 
-  Direction Direction::getOrthogonalDirectionCCW() const {
-    if (m_dir != -1) {
-      return Direction{m_dir + 6 % 8};
+  Direction orthogonalCCW(Direction direction) {
+    if (direction == Direction::Center) {
+      return Direction::Center;
     }
 
-    return Center;
+    int val = static_cast<int>(direction);
+    return static_cast<Direction>((val + 3) % 4);
   }
 
-  Direction Direction::getNextDirectionCW() const {
-    if (m_dir != -1) {
-      return Direction{m_dir + 1 % 8};
-    }
-
-    return Center;
+  Direction nextCW(Direction direction) {
+    return orthogonalCW(direction);
   }
 
-  Direction Direction::getNextDirectionCCW() const {
-    if (m_dir != -1) {
-      return Direction{m_dir + 7 % 8};
-    }
-
-    return Center;
+  Direction nextCCW(Direction direction) {
+    return orthogonalCCW(direction);
   }
-
-  const Direction Direction::Center = Direction{-1};
-  const Direction Direction::North = Direction{0};
-  const Direction Direction::NorthEast = Direction{1};
-  const Direction Direction::East = Direction{2};
-  const Direction Direction::SouthEast = Direction{3};
-  const Direction Direction::South = Direction{4};
-  const Direction Direction::SouthWest = Direction{5};
-  const Direction Direction::West = Direction{6};
-  const Direction Direction::NorthWest = Direction{7};
 
 }
 }

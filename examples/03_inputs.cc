@@ -68,12 +68,20 @@ int main() {
   gf::WindowHints hints;
   hints.resizable = false;
 
+  bool cursorVisible = true;
+  bool cursorGrabbed = false;
+
   gf::Gamepad::initialize();
 
   gf::Window window("03_inputs", { 640, 480 }, hints);
 
   std::cout << "Gamedev Framework (gf) example #03: Inputs\n";
   std::cout << "This example prints all input events\n";
+  std::cout << "How to use:\n";
+  std::cout << "\t1: Toggle cursor visibility\n";
+  std::cout << "\t2: Toggle cursor grab\n";
+  std::cout << "Cursor visibility: " << (cursorVisible ? "yes" : "no") << '\n';
+  std::cout << "Cursor grab: " << (cursorGrabbed ? "yes" : "no") << '\n';
 
   while (window.isOpen()) {
     gf::Event event;
@@ -89,8 +97,15 @@ int main() {
 
           if (event.key.keycode == gf::Keycode::Escape) {
             window.close();
+          } else if (event.key.scancode == gf::Scancode::Num1) {
+            cursorVisible = !cursorVisible;
+            window.setMouseCursorVisible(cursorVisible);
+            std::cout << "Cursor visibility: " << (cursorVisible ? "yes" : "no") << '\n';
+          } else if (event.key.scancode == gf::Scancode::Num2) {
+            cursorGrabbed = !cursorGrabbed;
+            window.setMouseCursorGrabbed(cursorGrabbed);
+            std::cout << "Cursor grab: " << (cursorGrabbed ? "yes" : "no") << '\n';
           }
-
           break;
 
         case gf::EventType::KeyReleased:

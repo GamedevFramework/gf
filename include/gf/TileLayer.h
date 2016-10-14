@@ -127,7 +127,17 @@ inline namespace v1 {
      * @param margin The margin, in pixels
      * @sa getMargin()
      */
-    void setMargin(unsigned margin);
+    void setMargin(unsigned margin) {
+      setMargin({ margin, margin });
+    }
+
+    /**
+     * @brief Set the margin of the tileset
+     *
+     * @param margin The margin, in pixels
+     * @sa getMargin()
+     */
+    void setMargin(Vector2u margin);
 
     /**
      * @brief Get the margin of the tileset
@@ -135,7 +145,7 @@ inline namespace v1 {
      * @return The margin, in pixels
      * @sa setMargin()
      */
-    unsigned getMargin() const {
+    Vector2u getMargin() const {
       return m_margin;
     }
 
@@ -145,7 +155,17 @@ inline namespace v1 {
      * @param spacing The spacing, in pixels
      * @sa getSpacing()
      */
-    void setSpacing(unsigned spacing);
+    void setSpacing(unsigned spacing) {
+      setSpacing({ spacing, spacing });
+    }
+
+    /**
+     * @brief Set the spacing of the tileset
+     *
+     * @param spacing The spacing, in pixels
+     * @sa getSpacing()
+     */
+    void setSpacing(Vector2u spacing);
 
     /**
      * @brief Get the spacing of the tileset
@@ -153,7 +173,7 @@ inline namespace v1 {
      * @return The spacing, in pixels
      * @sa setSpacing()
      */
-    unsigned getSpacing() const {
+    Vector2u getSpacing() const {
       return m_spacing;
     }
 
@@ -163,6 +183,27 @@ inline namespace v1 {
      * @name Tile definition
      * @{
      */
+
+    /**
+     * @brief Set the block size
+     *
+     * The block size is the size of tiles in the layer. If not specified,
+     * it is the same as the tile size.
+     *
+     * @param blockSize The new size of the block, in pixels
+     * @sa getBlockSize()
+     */
+    void setBlockSize(Vector2u blockSize);
+
+    /**
+     * @brief Get the block size
+     *
+     * The block size is the size of tiles in the layer. If not specified,
+     * it is the same as the tile size.
+     *
+     * @return The block size
+     */
+    Vector2u getBlockSize() const;
 
     /**
      * @brief Set a tile
@@ -182,6 +223,11 @@ inline namespace v1 {
      */
     int getTile(Vector2u position) const;
 
+    /**
+     * @brief Remove all the tiles
+     */
+    void clear();
+
     /** @} */
 
     virtual void draw(RenderTarget& target, RenderStates states) override;
@@ -191,12 +237,12 @@ inline namespace v1 {
 
   private:
     Vector2u m_layerSize;
-    Vector2u m_tileSize;
+    Vector2u m_blockSize;
 
     const Texture *m_texture;
-
-    unsigned m_margin;
-    unsigned m_spacing;
+    Vector2u m_tileSize;
+    Vector2u m_margin;
+    Vector2u m_spacing;
 
     Array2D<int> m_tiles;
 

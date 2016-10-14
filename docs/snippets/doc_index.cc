@@ -18,6 +18,9 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
+
+/// [index]
+
 #include <gf/Event.h>
 #include <gf/Font.h>
 #include <gf/RenderWindow.h>
@@ -82,3 +85,5 @@ int main() {
 
   return 0;
 }
+
+/// [index]

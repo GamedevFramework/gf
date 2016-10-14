@@ -482,5 +482,13 @@ inline namespace v1 {
     SDL_GL_SwapWindow(m_window);
   }
 
+  void Window::setMouseCursorVisible(bool visible) {
+    SDL_ShowCursor(visible ? SDL_ENABLE : SDL_DISABLE);
+  }
+
+  void Window::setMouseCursorGrabbed(bool grabbed) {
+    SDL_SetWindowGrab(m_window, grabbed ? SDL_TRUE : SDL_FALSE);
+  }
+
 }
 }

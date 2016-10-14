@@ -22,6 +22,7 @@
 #define GF_FILESYSTEM_H
 
 #include <boost/filesystem.hpp>
+#include <boost/functional/hash.hpp>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

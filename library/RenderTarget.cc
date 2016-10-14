@@ -414,8 +414,7 @@ inline namespace v1 {
 
   void RenderTarget::initializeViews() {
     auto size = getSize();
-    m_defaultView.reset({ 0.0f, 0.0f, static_cast<float>(size.width), static_cast<float>(size.height) });
-    m_view = m_defaultView;
+    m_view.reset({ 0.0f, 0.0f, static_cast<float>(size.width), static_cast<float>(size.height) });
   }
 
   void RenderTarget::initializeShader() {

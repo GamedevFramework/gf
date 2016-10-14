@@ -86,6 +86,8 @@ int main() {
   std::cout << "\tPageUp/PageDown: Increase/Decrease the number of cars (min: 2)\n";
   std::cout << "Using direct rendering with " <<  carsCount << " cars...\n";
 
+  renderer.clear(gf::Color::White);
+
   while (window.isOpen()) {
     gf::Event event;
 
@@ -95,7 +97,7 @@ int main() {
           window.close();
           break;
 
-         case gf::EventType::KeyPressed:
+        case gf::EventType::KeyPressed:
           switch (event.key.scancode) {
             case gf::Scancode::Return:
               useBatch = !useBatch;
@@ -141,6 +143,7 @@ int main() {
               } else {
                 std::cout << "Please stop benchmark before changing the number of cars.\n";
               }
+              break;
 
             default:
               break;
@@ -155,7 +158,7 @@ int main() {
     gf::Time time = clock.restart();
     offset += time.asSeconds() * gf::Pi / 4;
 
-    renderer.clear(gf::Color::White);
+    renderer.clear();
 
     auto start = std::chrono::high_resolution_clock::now();
 

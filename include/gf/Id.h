@@ -35,13 +35,13 @@ inline namespace v1 {
    * @ingroup core
    * @brief An identifier
    */
-  typedef uint64_t Id;
+  using Id = uint64_t;
 
   /**
    * @ingroup core
    * @brief The invalid id (which is 0)
    */
-  GF_API constexpr Id InvalidId = 0;
+  constexpr Id InvalidId = 0;
 
   /**
    * @ingroup core
@@ -59,7 +59,7 @@ inline namespace v1 {
    * @param str The string
    * @param sz The size of the string
    */
-  GF_API constexpr Id hash(const char *str, std::size_t sz) {
+  constexpr Id hash(const char *str, std::size_t sz) {
     return sz == 0 ? 0xcbf29ce484222325 : (str[sz - 1] ^ hash(str, sz - 1)) * 0x100000001b3;
   }
 
@@ -71,7 +71,7 @@ inline namespace v1 {
    * for computing an id at runtime. For computing an id from a string
    * at compile time, you should use the the user-defined literal `_id`.
    */
-  GF_API inline Id hash(const std::string& str) {
+  inline Id hash(const std::string& str) {
     return hash(str.c_str(), str.size());
   }
 

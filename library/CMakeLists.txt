@@ -3,8 +3,10 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_BINARY_DI
 
 add_library(gf0 SHARED
   # core
+  Circ.cc
   Clock.cc
   Direction.cc
+  Flags.cc
   Image.cc
   InputStream.cc
   InputStreams.cc
@@ -13,6 +15,8 @@ add_library(gf0 SHARED
   Math.cc
   Matrix.cc
   Noise.cc
+  Noises.cc
+  Orientation.cc
   Random.cc
   Range.cc
   Rect.cc
@@ -27,6 +31,7 @@ add_library(gf0 SHARED
   Gamepad.cc
   Monitor.cc
   Window.cc
+  WindowGeometryTracker.cc
   # graphics
   AnimatedSprite.cc
   Animation.cc
@@ -62,6 +67,7 @@ add_library(gf0 SHARED
   ViewContainer.cc
   # game
   AssetManager.cc
+  Collision.cc
   Controls.cc
   Entity.cc
   EntityContainer.cc
@@ -69,6 +75,8 @@ add_library(gf0 SHARED
   Model.cc
   ModelContainer.cc
   ResourceManager.cc
+  # ui
+  UI.cc
   # priv
   priv/Debug.cc
   # vendor
@@ -120,6 +128,7 @@ set_target_properties(gf0
 
 install(
   TARGETS gf0
+  EXPORT gfConfig
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
@@ -130,9 +139,19 @@ if(WIN32)
     TARGETS gf0 
     RUNTIME DESTINATION "${CMAKE_INSTALL_DOCDIR}/examples"
   )
+  install(
+    TARGETS gf0 
+    RUNTIME DESTINATION games
+  )
 endif()
 
 install(
   FILES "${CMAKE_CURRENT_SOURCE_DIR}/vendor/gamecontrollerdb/gamecontrollerdb.txt"
   DESTINATION "${CMAKE_INSTALL_DATADIR}/gf"
+)
+
+install(
+  EXPORT gfConfig
+  NAMESPACE gf::
+  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/gf"
 )

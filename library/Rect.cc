@@ -28,7 +28,6 @@ inline namespace v1 {
   template struct Rect<float>;
   template struct Rect<int>;
   template struct Rect<unsigned>;
-  template struct Rect<std::size_t>;
 #endif
 
 }

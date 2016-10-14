@@ -40,6 +40,7 @@ inline namespace v1 {
   , m_size{0, 0}
   , m_smooth(false)
   , m_repeated(false)
+  , m_mipmap(false)
   {
 
   }
@@ -57,6 +58,7 @@ inline namespace v1 {
   , m_size(other.m_size)
   , m_smooth(other.m_smooth)
   , m_repeated(other.m_repeated)
+  , m_mipmap(other.m_mipmap)
   {
     other.m_name = 0;
   }
@@ -67,6 +69,7 @@ inline namespace v1 {
     std::swap(m_size, other.m_size);
     std::swap(m_smooth, other.m_smooth);
     std::swap(m_repeated, other.m_repeated);
+    std::swap(m_mipmap, other.m_mipmap);
     return *this;
   }
 
@@ -94,6 +97,14 @@ inline namespace v1 {
     return 4;
   };
 
+  static GLenum getMinFilter(bool smooth, bool mipmap) {
+    if (mipmap) {
+      return smooth ? GL_LINEAR_MIPMAP_LINEAR : GL_NEAREST_MIPMAP_LINEAR;
+    }
+
+    return smooth ? GL_LINEAR : GL_NEAREST;
+  }
+
   bool BareTexture::create(Vector2u size, const uint8_t *data) {
     if (size.width == 0 || size.height == 0) {
       return false;
@@ -116,7 +127,7 @@ inline namespace v1 {
     glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, m_repeated ? GL_REPEAT : GL_CLAMP_TO_EDGE));
     glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, m_repeated ? GL_REPEAT : GL_CLAMP_TO_EDGE));
     glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, m_smooth ? GL_LINEAR : GL_NEAREST));
-    glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, m_smooth ? GL_LINEAR : GL_NEAREST));
+    glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, getMinFilter(m_smooth, m_mipmap)));
 
     return true;
   }
@@ -134,7 +145,7 @@ inline namespace v1 {
 
     glCheck(glBindTexture(GL_TEXTURE_2D, m_name));
     glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, m_smooth ? GL_LINEAR : GL_NEAREST));
-    glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, m_smooth ? GL_LINEAR : GL_NEAREST));
+    glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, getMinFilter(m_smooth, m_mipmap)));
   }
 
   void BareTexture::setRepeated(bool repeated) {
@@ -165,11 +176,13 @@ inline namespace v1 {
       return;
     }
 
+    m_mipmap = false;
 
     glCheck(glPixelStorei(GL_UNPACK_ALIGNMENT, getAlignment(m_format)));
 
     glCheck(glBindTexture(GL_TEXTURE_2D, m_name));
     glCheck(glTexSubImage2D(GL_TEXTURE_2D, 0, rect.left, rect.top, rect.width, rect.height, getEnum(m_format), GL_UNSIGNED_BYTE, data));
+    glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, getMinFilter(m_smooth, m_mipmap)));
   }
 
   RectF BareTexture::computeTextureCoords(const RectU& rect) const {
@@ -179,6 +192,20 @@ inline namespace v1 {
       static_cast<float>(rect.width) / m_size.width,
       static_cast<float>(rect.height) / m_size.height,
     };
+  }
+
+  bool BareTexture::generateMipmap() {
+    if (m_name == 0) {
+      return false;
+    }
+
+    m_mipmap = true;
+
+    glCheck(glBindTexture(GL_TEXTURE_2D, m_name));
+    glCheck(glGenerateMipmap(GL_TEXTURE_2D));
+    glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, getMinFilter(m_smooth, m_mipmap)));
+
+    return true;
   }
 
   void BareTexture::bind(const BareTexture *texture) {

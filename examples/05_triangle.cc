@@ -50,6 +50,8 @@ int main() {
   std::cout << "This example prints the hello world triangle of OpenGL.\n";
   std::cout << "You can click on the screen to see the screen coordinates and world coordinates.\n";
 
+  renderer.clear(gf::Color::White);
+
   while (window.isOpen()) {
     gf::Event event;
 
@@ -71,7 +73,7 @@ int main() {
       }
     }
 
-    renderer.clear(gf::Color::White);
+    renderer.clear();
     renderer.draw(triangle, 3, gf::PrimitiveType::Triangles);
     renderer.display();
   }

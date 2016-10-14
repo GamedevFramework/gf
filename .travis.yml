@@ -47,6 +47,6 @@ branches:
 before_script:
   - mkdir build
   - cd build
-  - cmake -DCMAKE_CXX_COMPILER=$CXX_COMPILER -DCMAKE_C_COMPILER=$C_COMPILER -DCMAKE_BUILD_TYPE=Release -DGF_DEBUG=OFF ..
+  - cmake -DCMAKE_CXX_COMPILER=$CXX_COMPILER -DCMAKE_C_COMPILER=$C_COMPILER -DCMAKE_BUILD_TYPE=Release -DGF_DEBUG=OFF -DGF_BUILD_GAMES=ON -DGF_BUILD_TOOLS=ON ..
 script:
   - make && ./tests/gf_tests

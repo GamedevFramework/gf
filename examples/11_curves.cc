@@ -102,6 +102,8 @@ int main() {
   std::cout << "Gamedev Framework (gf) example #11: Curves\n";
   std::cout << "This example prints various curves.\n";
 
+  renderer.clear(gf::Color::White);
+
   while (window.isOpen()) {
     gf::Event event;
 
@@ -116,7 +118,7 @@ int main() {
       }
     }
 
-    renderer.clear(gf::Color::White);
+    renderer.clear();
     renderer.draw(line);
     renderer.draw(quadratic);
     renderer.draw(cubic);

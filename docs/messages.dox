@@ -18,12 +18,7 @@ In this section, we will see how to defined and use messages in your game.
 
 A message is just a structure with your own fields. In gf, a message must derive from gf::Message and define a static unique type.
 
-~~~{.cc}
-struct HeroPosition : public gf::Message {
-  static const Id type = "HeroPosition"_id; // compile-time definition
-  gf::Vector2f position;
-};
-~~~
+@snippet snippets/doc_messages.cc message
 
 This piece of code defines a message `HeroPosition` with a single field: `position`. The type of the message is `"HeroPosition"_id` that is transformed at compile time in an integer of type `gf::Id`.
 
@@ -31,63 +26,17 @@ This piece of code defines a message `HeroPosition` with a single field: `positi
 
 To send a message, you need a gf::MessageManager. Here, we suppose we have a global variable called `messageManager` of this type (see also @ref singletons).
 
+@snippet snippets/doc_messages.cc manager
+
 Then, you only have to call gf::MessageManager::sendMessage() with an instance of your message.
 
-~~~{.cc}
-gf::MessageManager messageManager;
-
-
-class Hero {
-public:
-
-  void update(float dt) {
-    // compute new position
-    m_position = ...;
-
-    // broadcast the new position
-    HeroPosition message;
-    message.position = m_position;
-    messageManager.sendMessage(&message);
-  }
-
-private:
-  gf::Vector2f m_position;
-};
-~~~
+@snippet snippets/doc_messages.cc send
 
 @subsection messages_recv Receiving a message
 
 To receive a message, you have to register a message handler in the message manager. A message handler is a function that will be called when a message of a given type is sent. This function can be a free function, or a member function. gf::MessageManager provides a shortcut for this last (very comon) case.
 
-~~~{.cc}
-gf::MessageManager messageManager;
-
-class Ennemy {
-public:
-  Enemy() {
-    // register an handler: the onHeroPosition method
-    messageManager.registerHandler<HeroPosition>(&Ennemy::onHeroPosition, this);
-  }
-
-private:
-  gf::MessageStatus onHeroPosition(gf::Id id, gf::Message *msg) {
-    // verify that we have the right message type
-    assert(id == HeroPosition::type);
-
-    // we can now safely cast the message..
-    auto heroPosition = static_cast<HeroPosition*>(msg);
-
-    // and use its data to update the ennemy
-    m_target = heroPosition->position;
-
-    // we keep this handler for future messages
-    return gf::MessageStatus::Keep;
-  }
-
-private:
-  gf::Vector2f m_target;
-};
-~~~
+@snippet snippets/doc_messages.cc recv
 
 @section messages_more More about gf::MessageManager
 
@@ -105,34 +54,6 @@ A common error is to register an handler as a method of an object and to delete 
 
 A good way to prevent this type of error for short life objects is to keep the handler ids and to remove the handlers in the destructor of the class.
 
-~~~{.cc}
-gf::MessageManager messageManager;
-
-class ShortLife {
-  ShortLife() {
-    m_onFoo = messageManager.registerHandler<Foo>(&ShortLife::onFoo, this);
-    // register the same function for two message types: that makes two different handlers
-    m_onBar = messageManager.registerHandler<Bar>(&ShortLife::onBarOrBaz, this);
-    m_onBaz = messageManager.registerHandler<Baz>(&ShortLife::onBarOrBaz, this);
-  }
-
-  ~ShortLife() {
-    messageManager.removeHandlers({ m_onFoo, m_onBar, m_onBaz });
-  }
-
-private:
-  gf::MessageStatus onFoo(gf::Id id, gf::Message *msg) {
-    // do something useful
-    return gf::MessageStatus::Keep;
-  }
-
-  gf::MessageStatus onBarOrBaz(gf::Id id, gf::Message *msg) {
-    // do something useful
-    return gf::MessageStatus::Keep;
-  }
-
-  gf::MessageHandlerId m_onFoo, m_onBar, m_onBaz;
-};
-~~~
+@snippet snippets/doc_messages.cc short
 
 */

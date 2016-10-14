@@ -48,8 +48,8 @@ inline namespace v1 {
 
     // inputs events
     KeyPressed,   ///< A key was pressed (data in event.key)
-    KeyRepeated,  ///< A key was released (data in event.key)
-    KeyReleased,  ///< A key was repeated (data in event.key)
+    KeyRepeated,  ///< A key was repeated (data in event.key)
+    KeyReleased,  ///< A key was released (data in event.key)
 
     MouseWheelScrolled,   ///< The mouse wheel was scrolled (data in event.mouseWheel)
     MouseButtonPressed,   ///< A mouse button was pressed (data in event.mouseButton)

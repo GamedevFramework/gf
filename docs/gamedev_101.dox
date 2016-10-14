@@ -1,0 +1,210 @@
+/**
+
+@page gamedev_101 Gamedev 101
+
+@tableofcontents
+
+The aim of this tutorial is to teach you the basics of game development. More precisely, you will learn the structure of a game, and the main aspects of its development. To follow this tutorial, you must have some knowledge about programming, especially in C++. You don't have to be an expert.
+
+@section gamedev_101_overview Overview
+
+A game is split in two main steps. The first step is the initialization of the game.The second step is the main loop.
+
+@subsection gamedev_101_init Initialization
+
+During initialization, your goal is to setup the window and to load the resources.
+
+For the setup of the window, you just have to indicate a title and the initial size of the window. In gf, the window is responsible for handling all the events, inputs from the player and window events (like resizing). To be able to draw something in the window, you have to define a renderer for that window.
+
+@snippet snippets/doc_simple_template.cc init
+
+Then you have to load all the resources that the game need. Or at least, you have to load enough resources for your game to start. But at the beginning (and for quite a long time), you can load everything in the initialization phase.
+
+What resources? Well, basically everything. Images must be loaded and transfered in the GPU memory: they are then called textures. Fonts must be loaded in the main memory, ready to be used for text rendering. Sounds must be loaded in the main memory, ready to be played. And then, all the game-related data must be loaded: levels, maps, characters, quests, etc.
+
+gf helps you for the loading of multimedia resources. gf::Texture and gf::Font can be loaded directly from a file.
+
+~~~{.cc}
+gf::Font font;
+font.loadFromFile("path/to/Arial.ttf");
+
+gf::Texture texture;
+texture.loadFromFile("path/to/image.png");
+~~~
+
+If all your multimedia data is in a single directory, you can also use a gf::ResourceManager. You juste have to indicate the directory and then load textures and fonts with a relative path. The main advantage of a resource manager is that the resources are loaded only once and kept in a cache for the subsequent uses.
+
+~~~{.cc}
+gf::ResourceManager resources;
+resources.addSearchDir("path/to/data");
+
+gf::Font& font = resources.getFont("Arial.ttf");
+gf::Texture& texture = resources.getTexture("image.png");
+
+gf::Font& anotherFont == resources.getFont("Arial.ttf"); // the font is not loaded a second time
+~~~
+
+@subsection gamedev_101_game_loop The game loop
+
+The game loop is the most important part of your game. It's where everything will happen. It must be very fast: at least 60 times per seconds. That means you have 16.6&nbsp;ms to do all you have to do: easy!
+
+A game loop is divided in three steps:
+
+1. Process the input from the player
+2. Update the state of the game
+3. Draw everything
+
+The game loop finishes when the player closes the window or quits the game. So, in the `main` function, after initialization, you have a loop like this.
+
+~~~{.cc}
+// game loop
+
+while (window.isOpen()) {
+  // 1. input
+
+  // 2. update
+
+  // 3. draw
+
+}
+~~~
+
+@subsubsection gamedev_101_input Process input
+
+On each frame, you get the input from the player. This is done with the help of the library you use. For gf, it's the mission of gf::Window to give you the input. In fact, you have to deal with the input from the player and the window events (like resizing). For now, we will forget about window events except the event for closing the window.
+
+The events are given in a gf::Event structure. This structure has a `type` field that indicates the type of event. For example, if `type` is gf::EventType::KeyPressed, that means the user pressed a keyboard key and you get the specific data in the `key` field.
+
+@snippet snippets/doc_simple_template.cc input
+
+For each user event, you define the action that must be taken into account for the update of the state.
+
+@subsubsection gamedev_101_update Update
+
+Before updating the state of the game, you need to know the amount of time that has passed since the last update. This time is needed in many cases, especially for everything that deals with physics (even a simple movement). The idea in the update step is that you must modify the state as if a small amount of time had passed. As a game is a (soft) real-time application, this small amount of time is the real amount of time that has passed.
+
+Before the game loop, you must declare a clock that will be used to measure time.
+
+@snippet snippets/doc_simple_template.cc clock
+
+Then, in the game loop, you can measure the time since the last update.
+
+@snippet snippets/doc_simple_template.cc update
+
+You get `dt` in seconds. If your display is at 60&nbsp;Hz and is synchronized, then `dt` will be roughly @f$ \frac{1}{60} @f$ seconds. But it can be very different. You cannot assume that it is exactly @f$ \frac{1}{60} @f$ seconds.
+
+Then, you have to update your game state. This can be very different from one game to another. It depends on the objects of your game. Here are a few examples:
+
+- Update the position of an object thanks to its velocity
+- Update the state of an animation i.e. define the frame to display
+- Update the behavior of a non-playing character
+- Update the physics simulation of the world
+
+
+@subsubsection gamedev_101_draw Draw
+
+The last step in the game loop is to draw everything. Yes, you draw everything on each frame. The bad idea here is to think that you can only draw the items that have changed since the last frame. Desktop graphical interfaces work like that. But not games. In games, it's far easier to draw everything from scratch on each frame. The reason is simple: there may be several thousands of elements to draw and it's easier to draw everything that to track what have changed since the last frame. Moreover, GPUs are designed to work this way.
+
+Before the game loop, you can clear the display with a color that will be used every time you clear the display in the game loop.
+
+@snippet snippets/doc_simple_template.cc clear
+
+Then, in the game loop, you start the drawing step by clearing the display. Then you draw everything. The order is important, because you do not want the background of the game to be drawn last, you want to draw it first.
+
+In fact, when you draw something, it's not put on the sreen immediately. In most cases, double buffering is used to prevent flicker or tearing. That means that your drawing commands arrive in the back buffer. Then, when you have finished, you call `display()` that exchanges the front buffer and the back buffer.
+
+@snippet snippets/doc_simple_template.cc draw
+
+
+@subsection gamedev_101_template Simple template
+
+Here is a simple template you can use as a starter:
+
+@snippet snippets/doc_simple_template.cc simple
+
+
+@subsection gamedev_101_entities Game entities
+
+An entity (a.k.a. game object) is an element of the game. It can be anything that is involved in the game. As a consequence, an entity needs to be updated and/or rendered every frame. C++ is an object oriented language. So, instead of putting the code directly in the game loop, you can have a base class with an `update` method and a `render` method. That is exactly what gf::Entity is.
+
+For your game entites, you can derive from gf::Entity, but it's not mandatory.
+
+~~~{.cc}
+class MyEntity : public gf::Entity {
+public:
+  virtual void update(float dt) override;
+
+  virtual void render(gf::RenderTarget& target) override;
+
+private:
+  // data of my entity
+};
+~~~
+
+@section gamedev_101_it_moves It moves!
+
+In this section, we show a simple example of a square that will move thanks to the keyboard arrows.
+
+@subsection gamedev_101_square_entity The square entity
+
+The only entity here is the square. The square is defined by:
+
+- a _position_, that is the center of the square
+- the _velocity_ the square, this value will be given by the arrows
+- the _size_ of the square
+- a _color_
+
+The update step of this entity is very simple, we compute the new position thanks to its velocity. As a velocity is a distance divided by a time, we multiply the velocity by `dt` to obtain the difference between the previous position and the current one.
+
+The draw step consists in drawing a rectangle. We use gf::RectangleShape to achieve this goal. We can set the size, the position and the color of the shape. The only difficulty is that the position of the rectangle is fixed at the center of the square. So we call `setAnchor` to set the anchor to the center of the square. The anchor is the base point of the shape.
+
+@snippet snippets/doc_it_moves.cc square
+
+We declare an entity of type `Square` at the initialization of the game. We put it at the center of the screen and make it red.
+
+@snippet snippets/doc_it_moves.cc entity
+
+Then, we declare a variable to store the current velocity. The velocity will be changed by the keyboard arrows. We also declare a constant called `Speed` that represents the maximum speed that can be reached horizontally or vertically. This constant is in pixels per seconds.
+
+@snippet snippets/doc_it_moves.cc velocity
+
+
+@subsection gamedev_101_square_game_loop Inside the game loop
+
+We enter the game loop and process the input events. In our case, pressing an arrow key moves the square. And releasing the key stops the square. Horizontal speed and vertical speed are treated separately. Pressing add a constant speed, releasing substract a constant speed. So, for example, if you press both left and right, the square does not move.
+
+@snippet snippets/doc_it_moves.cc events
+
+The rest of the game loop is quite straightforward as everything is done in the `Square` class. In the update step, we set the velocity that was computed in the previous step. And then, we call `update`.
+
+@snippet snippets/doc_it_moves.cc update
+
+Finally, we draw the square.
+
+@snippet snippets/doc_it_moves.cc render
+
+And that's all!
+
+
+@subsection gamedev_101_it_moves_full Full example
+
+Here is the full source code for the example:
+
+@snippet snippets/doc_it_moves.cc all
+
+And here is a screenshot of the result.
+
+@image html it_moves.png
+
+
+@section gamedev_101_conclusion Conclusion
+
+In this tutorial, we have explained the structure of a game and we have created a simple example of entity that moves. Now, you can imagine that the square is just a character, or a race car, or anything else. You can start a real game.
+
+
+@section gamedev_101_references References
+
+- @ref start_game
+- [Game Programming Patterns](http://gameprogrammingpatterns.com/contents.html)
+
+*/

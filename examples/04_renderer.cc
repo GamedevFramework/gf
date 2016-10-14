@@ -35,6 +35,8 @@ int main() {
   std::cout << "Gamedev Framework (gf) example #04: Renderer\n";
   std::cout << "This example prints a red screen.\n";
 
+  renderer.clear(gf::Color::Red);
+
   while (window.isOpen()) {
     gf::Event event;
 
@@ -50,7 +52,7 @@ int main() {
     }
 
 
-    renderer.clear(gf::Color::Red);
+    renderer.clear();
 
     renderer.display();
   }

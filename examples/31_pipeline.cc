@@ -65,7 +65,6 @@ int main() {
   starShape.setPosition({ 400.0f, 50.0f });
   starShape.setColor(gf::Color::Yellow);
 
-  renderer.clear(gf::Color::White);
   bool withEffects = false;
 
   std::cout << "Gamedev Framework (gf) example #31: Pipeline\n";
@@ -73,6 +72,8 @@ int main() {
   std::cout << "The effects are: EdgeEffect + AntiAliasingEffect\n";
   std::cout << "How to use:\n";
   std::cout << "\tSpace: Activate/deactivate effects\n";
+
+  renderer.clear(gf::Color::White);
 
   while (window.isOpen()) {
     gf::Event event;

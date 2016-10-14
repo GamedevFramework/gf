@@ -31,7 +31,7 @@ before_build:
   - cmd: cd C:\projects\GF
   - cmd: mkdir build 
   - cmd: cd build 
-  - cmd: cmake -DGF_DEBUG=OFF ..
+  - cmd: cmake -DGF_DEBUG=OFF -DGF_BUILD_GAMES=ON -DGF_BUILD_TOOLS=ON ..
 
 configuration: Release
   

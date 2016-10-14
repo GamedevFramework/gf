@@ -42,7 +42,7 @@ inline namespace v1 {
    *
    * @sa gf::MessageHandler
    */
-  typedef uint64_t MessageHandlerId;
+  using MessageHandlerId = uint64_t;
 
   /**
    * @ingroup game
@@ -290,7 +290,7 @@ inline namespace v1 {
       MessageHandler handler;
     };
 
-    MessageHandlerId m_current_id;
+    MessageHandlerId m_currentId;
     std::map<Id, std::vector<Handler>> m_handlers;
   };
 

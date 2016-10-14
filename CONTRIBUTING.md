@@ -48,9 +48,10 @@ simple enough for most people.
 2. Make sure you read the developpers' documentation. It gives some precious
    advice for developpers so that they can make code that integrates nicely
    in the existing tree.
-3. Code, this is generally the easy part. Respect the existing style. Make some
-   unit tests if it applies. Write useful and clever comments if your code is
-   tricky.
+3. Code, this is generally the easy part. Always use the `develop` branch or a
+   feature branch that branch off from the `develop` branch. Respect the
+   existing style. Make some unit tests if it applies. Write useful and clever
+   comments if your code is tricky.
 4. Make the associated documentation for your feature. This means at least a
    Doxygen documentation. Make a simple example in the `examples` directory.
    If you can, make a tutorial to explain how to use your feature.

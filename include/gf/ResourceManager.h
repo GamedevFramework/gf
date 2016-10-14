@@ -24,6 +24,7 @@
 #include <functional>
 #include <map>
 #include <memory>
+#include <stdexcept>
 
 #include "AssetManager.h"
 #include "Font.h"
@@ -37,7 +38,7 @@ inline namespace v1 {
 
   /**
    * @ingroup game
-   * @brief A generic cache for ressources
+   * @brief A generic cache for resources
    *
    * This function is a low-level class that is used in gf::ResourceManager.
    * It is generic enough so that you can use it for your own purpose.
@@ -48,14 +49,14 @@ inline namespace v1 {
   class GF_API ResourceCache {
   public:
     /**
-     * @brief A ressource loader
+     * @brief A resource loader
      */
-    typedef std::function<std::unique_ptr<T>(const Path&)> Loader;
+    using Loader = std::function<std::unique_ptr<T>(const Path&)>;
 
     /**
      * @brief Constructor
      *
-     * @param loader A ressource loader
+     * @param loader A resource loader
      */
     explicit ResourceCache(Loader loader)
     : m_loader(std::move(loader))
@@ -74,53 +75,56 @@ inline namespace v1 {
     ResourceCache& operator=(const ResourceCache&) = delete;
 
     /**
-     * @brief Get a ressource
+     * @brief Get a resource
      *
-     * If the ressource exists in the cache, it is returned immediately.
+     * If the resource exists in the cache, it is returned immediately.
      * Otherwise, it is searched thanks to an asset manager and put in the
-     * cache.
+     * cache. If the resource is not found, an exception is thrown.
      *
      * @param assetManager An asset manager
-     * @param filename The filename of the ressource
-     * @return The ressource or `nullptr` if it has not been found
+     * @param filename The filename of the resource
+     * @return A reference to the resource
+     * @throw std::runtime_error If the resource is not found
      */
-    T *getResource(AssetManager& assetManager, const Path& filename) {
-      auto it = m_cache.find(filename);
+    T& getResource(AssetManager& assetManager, const Path& filename) {
+      std::size_t h = boost::filesystem::hash_value(filename);
+
+      auto it = m_cache.find(h);
 
       if (it != m_cache.end()) {
-        return it->second.get();
+        return *it->second;
       }
 
       Path absolutePath = assetManager.getAbsolutePath(filename);
 
       if (absolutePath.empty()) {
-        return nullptr;
+        throw std::runtime_error("Path not found");
       }
 
       auto ptr = m_loader(absolutePath);
 
       if (!ptr) {
-        return nullptr;
+        throw std::runtime_error("Resource not loaded");
       }
 
-      auto inserted = m_cache.emplace(filename, std::move(ptr));
+      auto inserted = m_cache.emplace(h, std::move(ptr));
 
       if (inserted.second) {
-        return inserted.first->second.get();
+        return *inserted.first->second;
       }
 
-      return nullptr;
+      throw std::runtime_error("Resource not inserted in the cache");
     }
 
   private:
     Loader m_loader;
-    std::map<Path, std::unique_ptr<T>> m_cache;
+    std::map<std::size_t, std::unique_ptr<T>> m_cache;
   };
 
 
   /**
    * @ingroup game
-   * @brief A ressource manager
+   * @brief A resource manager
    *
    * @sa gf::ResourceCache
    */
@@ -135,9 +139,10 @@ inline namespace v1 {
      * @brief Get a texture
      *
      * @param path A path to the texture
-     * @return A texture or `nullptr` if it has not been found
+     * @return A reference to the texture
+     * @throw std::runtime_error If the texture is not found
      */
-    Texture *getTexture(const Path& path) {
+    Texture& getTexture(const Path& path) {
       return m_textures.getResource(*this, path);
     }
 
@@ -145,9 +150,10 @@ inline namespace v1 {
      * @brief Get a font
      *
      * @param path A path to the font
-     * @return A font or `nullptr` if it has not been found
+     * @return A reference to the font
+     * @throw std::runtime_error If the font is not found
      */
-    Font *getFont(const Path& path) {
+    Font& getFont(const Path& path) {
       return m_fonts.getResource(*this, path);
     }
 

@@ -37,10 +37,10 @@ inline namespace v1 {
   : m_string()
   , m_font(nullptr)
   , m_characterSize(0)
-  , m_color(gf::Color::Black)
+  , m_color(Color::Black)
   , m_vertices(PrimitiveType::Triangles)
   , m_bounds(0.0f, 0.0f, 0.0f, 0.0f)
-  , m_outlineColor(gf::Color::Black)
+  , m_outlineColor(Color::Black)
   , m_outlineThickness(0.0f)
   , m_outlineVertices(PrimitiveType::Triangles)
   , m_paragraphWidth(0.0f)
@@ -53,10 +53,10 @@ inline namespace v1 {
   : m_string(std::move(string))
   , m_font(&font)
   , m_characterSize(characterSize)
-  , m_color(gf::Color::Black)
+  , m_color(Color::Black)
   , m_vertices(PrimitiveType::Triangles)
   , m_bounds(0.0f, 0.0f, 0.0f, 0.0f)
-  , m_outlineColor(gf::Color::Black)
+  , m_outlineColor(Color::Black)
   , m_outlineThickness(0.0f)
   , m_outlineVertices(PrimitiveType::Triangles)
   , m_paragraphWidth(0.0f)
@@ -342,7 +342,7 @@ inline namespace v1 {
 
       Paragraph paragraph;
 
-      if (m_align == Text::Alignment::None) {
+      if (m_align == Alignment::None) {
         Line line;
         line.words = std::move(words);
         line.indent = 0.0f;
@@ -359,22 +359,22 @@ inline namespace v1 {
             auto wordCount = currentLine.words.size();
 
             switch (m_align) {
-              case Text::Alignment::Left:
+              case Alignment::Left:
                 currentLine.indent = 0.0f;
                 currentLine.spacing = spaceWidth;
                 break;
 
-              case Text::Alignment::Right:
+              case Alignment::Right:
                 currentLine.indent = m_paragraphWidth - currentWidth;
                 currentLine.spacing = spaceWidth;
                 break;
 
-              case Text::Alignment::Center:
+              case Alignment::Center:
                 currentLine.indent = (m_paragraphWidth - currentWidth) / 2;
                 currentLine.spacing = spaceWidth;
                 break;
 
-              case Text::Alignment::Justify:
+              case Alignment::Justify:
                 currentLine.indent = 0.0f;
 
                 if (wordCount > 1) {
@@ -385,7 +385,7 @@ inline namespace v1 {
 
                 break;
 
-              case Text::Alignment::None:
+              case Alignment::None:
                 assert(false);
                 break;
             }
@@ -406,23 +406,23 @@ inline namespace v1 {
         // add the last line
         if (!currentLine.words.empty()) {
             switch (m_align) {
-              case Text::Alignment::Left:
-              case Text::Alignment::Justify:
+              case Alignment::Left:
+              case Alignment::Justify:
                 currentLine.indent = 0.0f;
                 currentLine.spacing = spaceWidth;
                 break;
 
-              case Text::Alignment::Right:
+              case Alignment::Right:
                 currentLine.indent = m_paragraphWidth - currentWidth;
                 currentLine.spacing = spaceWidth;
                 break;
 
-              case Text::Alignment::Center:
+              case Alignment::Center:
                 currentLine.indent = (m_paragraphWidth - currentWidth) / 2;
                 currentLine.spacing = spaceWidth;
                 break;
 
-              case Text::Alignment::None:
+              case Alignment::None:
                 assert(false);
                 break;
             }

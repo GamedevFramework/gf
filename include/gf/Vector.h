@@ -186,6 +186,68 @@ inline namespace v1 {
       return data[i];
     }
 
+
+    /**
+     * @brief Iterator.to the first element.
+     *
+     * @return A pointer to the first element.
+     */
+    inline
+    T *begin(void) {
+      return &(data[0]);
+    }
+
+    /**
+     * @brief Iterator to the element after the last one.
+     *
+     * @return An invalid pointer that is the adress after the last element.
+     */
+    inline
+    T *end(void) {
+      return &(data[N]);
+    }
+
+    /**
+     * @brief Iterator.to the first element (const version).
+     *
+     * @return A pointer on the first const element.
+     */
+    inline
+    T const *begin(void) const {
+      return &(data[0]);
+    }
+
+    /**
+     * @brief Iterator on the element after the last one (const version).
+     *
+     * @return An invalid pointer that is the adress after the last const
+     * element.
+     */
+    inline
+    T const *end(void) const {
+      return &(data[N]);
+    }
+    /**
+     * @brief Iterator.on the first element (const version).
+     *
+     * @return A pointer on the first const element.
+     */
+    inline
+    T const *cbegin(void) const {
+      return &(data[0]);
+    }
+
+    /**
+     * @brief Iterator on the element after the last one (const version).
+     *
+     * @return An invalid pointer that is the adress after the last const
+     * element.
+     */
+    inline
+    T const *cend(void) const {
+      return &(data[N]);
+    }
+
     /**
      * @brief The internal representation of the vector
      *
@@ -348,6 +410,68 @@ inline namespace v1 {
      */
     T& operator[](std::size_t i) {
       return data[i];
+    }
+
+
+    /**
+     * @brief Iterator.to the first element.
+     *
+     * @return A pointer to the first element.
+     */
+    inline
+    T *begin(void) {
+      return &(data[0]);
+    }
+
+    /**
+     * @brief Iterator to the element after the last one.
+     *
+     * @return An invalid pointer that is the adress after the last element.
+     */
+    inline
+    T *end(void) {
+      return &(data[2]);
+    }
+
+    /**
+     * @brief Iterator.to the first element (const version).
+     *
+     * @return A pointer on the first const element.
+     */
+    inline
+    T const *begin(void) const {
+      return &(data[0]);
+    }
+
+    /**
+     * @brief Iterator on the element after the last one (const version).
+     *
+     * @return An invalid pointer that is the adress after the last const
+     * element.
+     */
+    inline
+    T const *end(void) const {
+      return &(data[2]);
+    }
+    /**
+     * @brief Iterator.on the first element (const version).
+     *
+     * @return A pointer on the first const element.
+     */
+    inline
+    T const *cbegin(void) const {
+      return &(data[0]);
+    }
+
+    /**
+     * @brief Iterator on the element after the last one (const version).
+     *
+     * @return An invalid pointer that is the adress after the last const
+     * element.
+     */
+    inline
+    T const *cend(void) const {
+      return &(data[2]);
     }
 
     /**
@@ -540,6 +664,68 @@ inline namespace v1 {
       return data[i];
     }
 
+
+    /**
+     * @brief Iterator.to the first element.
+     *
+     * @return A pointer to the first element.
+     */
+    inline
+    T *begin(void) {
+      return &(data[0]);
+    }
+
+    /**
+     * @brief Iterator to the element after the last one.
+     *
+     * @return An invalid pointer that is the adress after the last element.
+     */
+    inline
+    T *end(void) {
+      return &(data[3]);
+    }
+
+    /**
+     * @brief Iterator.to the first element (const version).
+     *
+     * @return A pointer on the first const element.
+     */
+    inline
+    T const *begin(void) const {
+      return &(data[0]);
+    }
+
+    /**
+     * @brief Iterator on the element after the last one (const version).
+     *
+     * @return An invalid pointer that is the adress after the last const
+     * element.
+     */
+    inline
+    T const *end(void) const {
+      return &(data[3]);
+    }
+    /**
+     * @brief Iterator.on the first element (const version).
+     *
+     * @return A pointer on the first const element.
+     */
+    inline
+    T const *cbegin(void) const {
+      return &(data[0]);
+    }
+
+    /**
+     * @brief Iterator on the element after the last one (const version).
+     *
+     * @return An invalid pointer that is the adress after the last const
+     * element.
+     */
+    inline
+    T const *cend(void) const {
+      return &(data[3]);
+    }
+
     /**
      * An anonymous union to handle the various representations
      */
@@ -711,6 +897,68 @@ inline namespace v1 {
       return data[i];
     }
 
+
+    /**
+     * @brief Iterator.to the first element.
+     *
+     * @return A pointer to the first element.
+     */
+    inline
+    T *begin(void) {
+      return &(data[0]);
+    }
+
+    /**
+     * @brief Iterator to the element after the last one.
+     *
+     * @return An invalid pointer that is the adress after the last element.
+     */
+    inline
+    T *end(void) {
+      return &(data[4]);
+    }
+
+    /**
+     * @brief Iterator.to the first element (const version).
+     *
+     * @return A pointer on the first const element.
+     */
+    inline
+    T const *begin(void) const {
+      return &(data[0]);
+    }
+
+    /**
+     * @brief Iterator on the element after the last one (const version).
+     *
+     * @return An invalid pointer that is the adress after the last const
+     * element.
+     */
+    inline
+    T const *end(void) const {
+      return &(data[4]);
+    }
+    /**
+     * @brief Iterator.on the first element (const version).
+     *
+     * @return A pointer on the first const element.
+     */
+    inline
+    T const *cbegin(void) const {
+      return &(data[0]);
+    }
+
+    /**
+     * @brief Iterator on the element after the last one (const version).
+     *
+     * @return An invalid pointer that is the adress after the last const
+     * element.
+     */
+    inline
+    T const *cend(void) const {
+      return &(data[4]);
+    }
+
     /**
      * An anonymous union to handle the various representations
      */
@@ -738,133 +986,133 @@ inline namespace v1 {
    * @ingroup core
    * @brief A float vector with 2 components
    */
-  typedef Vector<float, 2> Vector2f;
+  using Vector2f = Vector<float, 2>;
 
   /**
    * @ingroup core
    * @brief A float vector with 3 components
    */
-  typedef Vector<float, 3> Vector3f;
+  using Vector3f = Vector<float, 3>;
 
   /**
    * @ingroup core
    * @brief A float vector with 4 components
    */
-  typedef Vector<float, 4> Vector4f;
+  using Vector4f = Vector<float, 4>;
 
   /**
    * @ingroup core
    * @brief A double vector with 2 components
    */
-  typedef Vector<double, 2> Vector2d;
+  using Vector2d = Vector<double, 2>;
 
   /**
    * @ingroup core
    * @brief A double vector with 3 components
    */
-  typedef Vector<double, 3> Vector3d;
+  using Vector3d = Vector<double, 3>;
 
   /**
    * @ingroup core
    * @brief A double vector with 4 components
    */
-  typedef Vector<double, 4> Vector4d;
+  using Vector4d = Vector<double, 4>;
 
   /**
    * @ingroup core
    * @brief A int vector with 2 components
    */
-  typedef Vector<int, 2> Vector2i;
+  using Vector2i = Vector<int, 2>;
 
   /**
    * @ingroup core
    * @brief A int vector with 3 components
    */
-  typedef Vector<int, 3> Vector3i;
+  using Vector3i = Vector<int, 3>;
 
   /**
    * @ingroup core
    * @brief A int vector with 4 components
    */
-  typedef Vector<int, 4> Vector4i;
+  using Vector4i = Vector<int, 4>;
 
   /**
    * @ingroup core
    * @brief A unsigned vector with 2 components
    */
-  typedef Vector<unsigned, 2> Vector2u;
+  using Vector2u = Vector<unsigned, 2>;
 
   /**
    * @ingroup core
    * @brief A unsigned vector with 3 components
    */
-  typedef Vector<unsigned, 3> Vector3u;
+  using Vector3u = Vector<unsigned, 3>;
 
   /**
    * @ingroup core
    * @brief A unsigned vector with 4 components
    */
-  typedef Vector<unsigned, 4> Vector4u;
+  using Vector4u = Vector<unsigned, 4>;
 
   /**
    * @ingroup core
    * @brief A std::size_t vector with 2 components
    */
-  typedef Vector<std::size_t, 2> Vector2z;
+  using Vector2z = Vector<std::size_t, 2>;
 
   /**
    * @ingroup core
    * @brief A std::size_t vector with 3 components
    */
-  typedef Vector<std::size_t, 3> Vector3z;
+  using Vector3z = Vector<std::size_t, 3>;
 
   /**
    * @ingroup core
    * @brief A std::size_t vector with 4 components
    */
-  typedef Vector<std::size_t, 4> Vector4z;
+  using Vector4z = Vector<std::size_t, 4>;
 
   /**
    * @ingroup core
    * @brief A bool vector with 2 components
    */
-  typedef Vector<bool, 2> Vector2b;
+  using Vector2b = Vector<bool, 2>;
 
   /**
    * @ingroup core
    * @brief A bool vector with 3 components
    */
-  typedef Vector<bool, 3> Vector3b;
+  using Vector3b = Vector<bool, 3>;
 
   /**
    * @ingroup core
    * @brief A bool vector with 4 components
    */
-  typedef Vector<bool, 4> Vector4b;
+  using Vector4b = Vector<bool, 4>;
 
   /**
    * @ingroup core
    * @brief A float color vector with 3 components
    */
-  typedef Vector<float, 3> Color3f;
+  using Color3f = Vector<float, 3>;
 
   /**
    * @ingroup core
    * @brief A float color vector with 4 components
    */
-  typedef Vector<float, 4> Color4f;
+  using Color4f = Vector<float, 4>;
 
   /**
    * @ingroup core
    * @brief A uint8_t color vector with 3 components
    */
-  typedef Vector<uint8_t, 3> Color3u;
+  using Color3u = Vector<uint8_t, 3>;
 
   /**
    * @ingroup core
    * @brief A uint8_t color vector with 4 components
    */
-  typedef Vector<uint8_t, 4> Color4u;
+  using Color4u = Vector<uint8_t, 4>;
 
 // MSVC does not like extern template
 #ifndef _MSC_VER
@@ -884,10 +1132,6 @@ inline namespace v1 {
   extern template struct Vector<unsigned, 3>;
   extern template struct Vector<unsigned, 4>;
 
-  extern template struct Vector<std::size_t, 2>;
-  extern template struct Vector<std::size_t, 3>;
-  extern template struct Vector<std::size_t, 4>;
-
   extern template struct Vector<bool, 2>;
   extern template struct Vector<bool, 3>;
   extern template struct Vector<bool, 4>;
@@ -901,7 +1145,7 @@ inline namespace v1 {
    * @brief Equality operator between two vectors
    */
   template<typename T, std::size_t N>
-  GF_API inline
+  inline
   bool operator==(const Vector<T, N>& lhs, const Vector<T, N>& rhs) {
     for (std::size_t i = 0; i < N; ++i) {
       if (lhs.data[i] != rhs.data[i]) {
@@ -917,7 +1161,7 @@ inline namespace v1 {
    * @brief Inequality operator between two vectors
    */
   template<typename T, std::size_t N>
-  GF_API inline
+  inline
   bool operator!=(const Vector<T, N>& lhs, const Vector<T, N>& rhs) {
     return !(lhs == rhs);
   }
@@ -927,7 +1171,7 @@ inline namespace v1 {
    * @brief Component-wise unary minus
    */
   template<typename T, std::size_t N>
-  GF_API inline
+  inline
   Vector<T, N> operator-(const Vector<T, N>& val) {
     Vector<T, N> out;
 
@@ -943,7 +1187,7 @@ inline namespace v1 {
    * @brief Component-wise addition
    */
   template<typename T, typename U, std::size_t N>
-  GF_API inline
+  inline
   Vector<typename std::common_type<T,U>::type, N> operator+(const Vector<T, N>& lhs, const Vector<U, N>& rhs) {
     Vector<typename std::common_type<T,U>::type, N> out;
 
@@ -959,7 +1203,7 @@ inline namespace v1 {
    * @brief Component-wise addition and assignment
    */
   template<typename T, typename U, std::size_t N>
-  GF_API inline
+  inline
   Vector<T, N>& operator+=(Vector<T, N>& lhs, const Vector<U, N>& rhs) {
     for (std::size_t i = 0; i < N; ++i) {
       lhs.data[i] += rhs.data[i];
@@ -973,7 +1217,7 @@ inline namespace v1 {
    * @brief Right scalar addition
    */
   template<typename T, typename U, std::size_t N, typename E = typename std::enable_if<std::is_arithmetic<U>::value, U>::type>
-  GF_API inline
+  inline
   Vector<typename std::common_type<T,U>::type, N> operator+(const Vector<T, N>& lhs, U rhs) {
     Vector<typename std::common_type<T,U>::type, N> out;
 
@@ -989,7 +1233,7 @@ inline namespace v1 {
    * @brief Left scalar addition
    */
   template<typename T, typename U, std::size_t N, typename E = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
-  GF_API inline
+  inline
   Vector<typename std::common_type<T,U>::type, N> operator+(T lhs, const Vector<U, N>& rhs) {
     Vector<typename std::common_type<T,U>::type, N> out;
 
@@ -1006,7 +1250,7 @@ inline namespace v1 {
    * @brief Component-wise substraction
    */
   template<typename T, typename U, std::size_t N>
-  GF_API inline
+  inline
   Vector<typename std::common_type<T,U>::type, N> operator-(const Vector<T, N>& lhs, const Vector<U, N>& rhs) {
     Vector<typename std::common_type<T,U>::type, N> out;
 
@@ -1022,7 +1266,7 @@ inline namespace v1 {
    * @brief Component-wise substraction and assignment
    */
   template<typename T, typename U, std::size_t N>
-  GF_API inline
+  inline
   Vector<T, N>& operator-=(Vector<T, N>& lhs, const Vector<U, N>& rhs) {
     for (std::size_t i = 0; i < N; ++i) {
       lhs.data[i] -= rhs.data[i];
@@ -1037,7 +1281,7 @@ inline namespace v1 {
    * @brief Right scalar substraction
    */
   template<typename T, typename U, std::size_t N, typename E = typename std::enable_if<std::is_arithmetic<U>::value, U>::type>
-  GF_API inline
+  inline
   Vector<typename std::common_type<T,U>::type, N> operator-(const Vector<T, N>& lhs, U rhs) {
     Vector<typename std::common_type<T,U>::type, N> out;
 
@@ -1053,7 +1297,7 @@ inline namespace v1 {
    * @brief Left scalar substraction
    */
   template<typename T, typename U, std::size_t N, typename E = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
-  GF_API inline
+  inline
   Vector<typename std::common_type<T,U>::type, N> operator-(T lhs, const Vector<U, N>& rhs) {
     Vector<typename std::common_type<T,U>::type, N> out;
 
@@ -1070,7 +1314,7 @@ inline namespace v1 {
    * @brief Component-wise multiplication
    */
   template<typename T, typename U, std::size_t N>
-  GF_API inline
+  inline
   Vector<typename std::common_type<T,U>::type, N> operator*(const Vector<T, N>& lhs, const Vector<U, N>& rhs) {
     Vector<typename std::common_type<T,U>::type, N> out;
 
@@ -1086,7 +1330,7 @@ inline namespace v1 {
    * @brief Component-wise multiplication and assignment
    */
   template<typename T, typename U, std::size_t N>
-  GF_API inline
+  inline
   Vector<T, N>& operator*=(Vector<T, N>& lhs, const Vector<U, N>& rhs) {
     for (std::size_t i = 0; i < N; ++i) {
       lhs.data[i] *= rhs.data[i];
@@ -1100,7 +1344,7 @@ inline namespace v1 {
    * @brief Right scalar multiplication
    */
   template<typename T, typename U, std::size_t N, typename E = typename std::enable_if<std::is_arithmetic<U>::value, U>::type>
-  GF_API inline
+  inline
   Vector<typename std::common_type<T,U>::type, N> operator*(const Vector<T, N>& lhs, U rhs) {
     Vector<typename std::common_type<T,U>::type, N> out;
 
@@ -1116,7 +1360,7 @@ inline namespace v1 {
    * @brief Right scalar multiplication and assignment
    */
   template<typename T, typename U, std::size_t N>
-  GF_API inline
+  inline
   Vector<T, N>& operator*=(Vector<T, N>& lhs, U rhs) {
     for (std::size_t i = 0; i < N; ++i) {
       lhs.data[i] *= rhs;
@@ -1130,7 +1374,7 @@ inline namespace v1 {
    * @brief Left scalar multiplication
    */
   template<typename T, typename U, std::size_t N, typename E = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
-  GF_API inline
+  inline
   Vector<typename std::common_type<T,U>::type, N> operator*(T lhs, const Vector<U, N>& rhs) {
     Vector<typename std::common_type<T,U>::type, N> out;
 
@@ -1146,7 +1390,7 @@ inline namespace v1 {
    * @brief Component-wise division
    */
   template<typename T, typename U, std::size_t N>
-  GF_API inline
+  inline
   Vector<typename std::common_type<T,U>::type, N> operator/(const Vector<T, N>& lhs, const Vector<U, N>& rhs) {
     Vector<typename std::common_type<T,U>::type, N> out;
 
@@ -1162,7 +1406,7 @@ inline namespace v1 {
    * @brief Component-wise division and assignment
    */
   template<typename T, typename U, std::size_t N>
-  GF_API inline
+  inline
   Vector<T, N>& operator/=(Vector<T, N>& lhs, const Vector<U, N>& rhs) {
     for (std::size_t i = 0; i < N; ++i) {
       lhs.data[i] /= rhs.data[i];
@@ -1176,7 +1420,7 @@ inline namespace v1 {
    * @brief Right scalar division
    */
   template<typename T, typename U, std::size_t N, typename E = typename std::enable_if<std::is_arithmetic<U>::value, U>::type>
-  GF_API inline
+  inline
   Vector<typename std::common_type<T,U>::type, N> operator/(const Vector<T, N>& lhs, U rhs) {
     Vector<typename std::common_type<T,U>::type, N> out;
 
@@ -1192,7 +1436,7 @@ inline namespace v1 {
    * @brief Right scalar division and assignment
    */
   template<typename T, typename U, std::size_t N>
-  GF_API inline
+  inline
   Vector<T, N>& operator/=(Vector<T, N>& lhs, U rhs) {
     for (std::size_t i = 0; i < N; ++i) {
       lhs.data[i] /= rhs;
@@ -1206,7 +1450,7 @@ inline namespace v1 {
    * @brief Left scalar division
    */
   template<typename T, typename U, std::size_t N, typename E = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
-  GF_API inline
+  inline
   Vector<typename std::common_type<T,U>::type, N> operator/(T lhs, const Vector<U, N>& rhs) {
     Vector<typename std::common_type<T,U>::type, N> out;
 
@@ -1222,7 +1466,7 @@ inline namespace v1 {
    * @brief Component-wise logical or operator
    */
   template<std::size_t N>
-  GF_API inline
+  inline
   Vector<bool, N> operator||(const Vector<bool, N>& lhs, const Vector<bool, N>& rhs) {
     Vector<bool, N> out;
 
@@ -1238,7 +1482,7 @@ inline namespace v1 {
    * @brief Component-wise logical and operator
    */
   template<std::size_t N>
-  GF_API inline
+  inline
   Vector<bool, N> operator&&(const Vector<bool, N>& lhs, const Vector<bool, N>& rhs) {
     Vector<bool, N> out;
 
@@ -1254,7 +1498,7 @@ inline namespace v1 {
    * @brief Scalar product
    */
   template<typename T, std::size_t N>
-  GF_API inline
+  inline
   T dot(const Vector<T, N>& lhs, const Vector<T, N>& rhs) {
     T out{0};
 
@@ -1270,7 +1514,7 @@ inline namespace v1 {
    * @brief Component-wise minimum
    */
   template<typename T, std::size_t N>
-  GF_API inline
+  inline
   Vector<T, N> min(const Vector<T, N>& lhs, const Vector<T, N>& rhs) {
     Vector<T, N> out;
 
@@ -1286,7 +1530,7 @@ inline namespace v1 {
    * @brief Component-wise maximum
    */
   template<typename T, std::size_t N>
-  GF_API inline
+  inline
   Vector<T, N> max(const Vector<T, N>& lhs, const Vector<T, N>& rhs) {
     Vector<T, N> out;
 
@@ -1302,7 +1546,7 @@ inline namespace v1 {
    * @brief Component-wise absolute value
    */
   template<typename T, std::size_t N>
-  GF_API inline
+  inline
   Vector<T, N> abs(const Vector<T, N>& val) {
     Vector<T, N> out;
 
@@ -1319,7 +1563,7 @@ inline namespace v1 {
    * @brief Component-wise equality operator
    */
   template<typename T, std::size_t N>
-  GF_API inline
+  inline
   Vector<bool, N> equals(const Vector<T, N>& lhs, const Vector<T, N>& rhs) {
     Vector<bool, N> out;
 
@@ -1335,7 +1579,7 @@ inline namespace v1 {
    * @brief Component-wise comparison operator
    */
   template<typename T, std::size_t N>
-  GF_API inline
+  inline
   Vector<bool, N> lessThan(const Vector<T, N>& lhs, const Vector<T, N>& rhs) {
     Vector<bool, N> out;
 
@@ -1352,7 +1596,7 @@ inline namespace v1 {
    */
   template<typename T, std::size_t N>
   inline
-  GF_API Vector<bool, N> greaterThan(const Vector<T, N>& lhs, const Vector<T, N>& rhs) {
+  Vector<bool, N> greaterThan(const Vector<T, N>& lhs, const Vector<T, N>& rhs) {
     Vector<bool, N> out;
 
     for (std::size_t i = 0; i < N; ++i) {
@@ -1367,7 +1611,7 @@ inline namespace v1 {
    * @brief Component-wise selection operator
    */
   template<typename T, std::size_t N>
-  GF_API inline
+  inline
   Vector<T, N> select(const Vector<bool, N>& cond, const Vector<T, N>& lhs, const Vector<T, N>& rhs) {
     Vector<T, N> out;
 
@@ -1386,7 +1630,7 @@ inline namespace v1 {
    *
    */
   template<typename T, std::size_t N>
-  GF_API inline
+  inline
   Vector<T, N> clamp(const Vector<T, N>& val, const Vector<T, N>& lo, const Vector<T, N>& hi) {
     Vector<T, N> out;
 
@@ -1404,7 +1648,7 @@ inline namespace v1 {
    * Relative to two values.
    */
   template<typename T, std::size_t N>
-  GF_API inline
+  inline
   Vector<T, N> clamp(const Vector<T, N>& val, T lo, T hi) {
     Vector<T, N> out;
 
@@ -1420,9 +1664,9 @@ inline namespace v1 {
    * @brief Component-wise lerp function
    */
   template<typename T, typename U, std::size_t N>
-  GF_API inline
+  inline
   Vector<typename std::common_type<T,U>::type, N> lerp(const Vector<T, N>& lhs, const Vector<T, N>& rhs, U t) {
-    return t * lhs + (1 - t) * rhs;
+    return (1 - t) * lhs + t * rhs;
   }
 
   /**
@@ -1438,10 +1682,10 @@ inline namespace v1 {
    * @param vec A vector.
    * @returns The Manhattan length of the vector
    *
-   * @sa manhattanDistance
+   * @sa manhattanDistance()
    */
   template<typename T, std::size_t N>
-  GF_API inline
+  inline
   T manhattanLength(const Vector<T, N>& vec) {
     T out{0};
 
@@ -1463,10 +1707,10 @@ inline namespace v1 {
    * @param vec A vector.
    * @returns The square Euclidean length of the vector
    *
-   * @sa euclideanLength, squareDistance
+   * @sa euclideanLength(), squareDistance()
    */
   template<typename T, std::size_t N>
-  GF_API inline
+  inline
   T squareLength(const Vector<T, N>& vec) {
     T out{0};
 
@@ -1490,13 +1734,29 @@ inline namespace v1 {
    * @param vec A vector.
    * @returns The Euclidean length of the vector
    *
-   * @sa euclideanDistance
+   * @sa euclideanDistance()
    */
   template<typename T, std::size_t N>
-  GF_API inline
+  inline
   T euclideanLength(const Vector<T, N>& vec) {
     return std::sqrt(squareLength(vec));
   }
+
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+  // specializations of euclideanLength for Vector2f and Vector2d using std::hypot
+
+  template<>
+  inline
+  float euclideanLength<float, 2>(const Vector<float, 2>& vec) {
+    return std::hypot(vec.x, vec.y);
+  }
+
+  template<>
+  inline
+  double euclideanLength<double, 2>(const Vector<double, 2>& vec) {
+    return std::hypot(vec.x, vec.y);
+  }
+#endif
 
   /**
    * @relates Vector
@@ -1511,10 +1771,10 @@ inline namespace v1 {
    * @param vec A vector.
    * @returns The Chebyshev length of the vector
    *
-   * @sa chebyshevDistance
+   * @sa chebyshevDistance()
    */
   template<typename T, std::size_t N>
-  GF_API inline
+  inline
   T chebyshevLength(const Vector<T, N>& vec) {
     T out = std::abs(vec.data[0]);
 
@@ -1525,6 +1785,43 @@ inline namespace v1 {
     return out;
   }
 
+  /**
+   * @ingroup core
+   * @brief A distance function
+   *
+   * A distance function is a function that gives the distance between two vectors.
+   *
+   * ~~~
+   * gf::Distance<float, 3> distFn = gf::manhattanDistance<float, 3>;
+   * Vector3f vec1 = ...;
+   * Vector3f vec2 = ...;
+   *
+   * float distance = distFn(vec1, vec2);
+   * ~~~
+   *
+   * @sa manhattanDistance(), squareDistance(), euclideanDistance(), chebyshevDistance()
+   * @sa gf::Distance2, gf::Distance3
+   */
+  template<typename T, std::size_t N>
+  using Distance = T (*)(const Vector<T, N>&, const Vector<T, N>&);
+
+  /**
+   * @ingroup core
+   * @brief A distance function for 2D vectors
+   *
+   * @sa gf::Distance
+   */
+  template<typename T>
+  using Distance2 = Distance<T, 2>;
+
+  /**
+   * @ingroup core
+   * @brief A distance function for 3D vectors
+   *
+   * @sa gf::Distance
+   */
+  template<typename T>
+  using Distance3 = Distance<T, 3>;
 
   /**
    * @relates Vector
@@ -1537,10 +1834,10 @@ inline namespace v1 {
    * @param rhs A second vector
    * @returns The Manhattan distance between the two vectors
    *
-   * @sa manhattanLength
+   * @sa manhattanLength()
    */
   template<typename T, std::size_t N>
-  GF_API inline
+  inline
   T manhattanDistance(const Vector<T, N>& lhs, const Vector<T, N>& rhs) {
     return manhattanLength(lhs - rhs);
   }
@@ -1556,10 +1853,10 @@ inline namespace v1 {
    * @param rhs A second vector
    * @returns The square Euclidean distance between the two vectors
    *
-   * @sa squareLength, euclideanDistance
+   * @sa squareLength(), euclideanDistance()
    */
   template<typename T, std::size_t N>
-  GF_API inline
+  inline
   T squareDistance(const Vector<T, N>& lhs, const Vector<T, N>& rhs) {
     return squareLength(lhs - rhs);
   }
@@ -1575,10 +1872,10 @@ inline namespace v1 {
    * @param rhs A second vector
    * @returns The Euclidean distance between the two vectors
    *
-   * @sa euclideanLength
+   * @sa euclideanLength()
    */
   template<typename T, std::size_t N>
-  GF_API inline
+  inline
   T euclideanDistance(const Vector<T, N>& lhs, const Vector<T, N>& rhs) {
     return euclideanLength(lhs - rhs);
   }
@@ -1594,12 +1891,12 @@ inline namespace v1 {
    * @param rhs A second vector
    * @returns The Chebyshev distance between the two vectors
    *
-   * @sa chebyshevLength
+   * @sa chebyshevLength()
    */
   template<typename T, std::size_t N>
-  GF_API inline
+  inline
   T chebyshevDistance(const Vector<T, N>& lhs, const Vector<T, N>& rhs) {
-    return chebyshevDistance(lhs - rhs);
+    return chebyshevLength(lhs - rhs);
   }
 
   /**
@@ -1614,7 +1911,7 @@ inline namespace v1 {
    * @returns A normalized vector
    */
   template<typename T, std::size_t N>
-  GF_API inline
+  inline
   Vector<T, N> normalize(const Vector<T, N>& vec) {
     T length = euclideanLength(vec);
     return vec / length;
@@ -1628,7 +1925,7 @@ inline namespace v1 {
    * @return A unit vector
    */
   template<typename T>
-  GF_API inline
+  inline
   Vector<T, 2> unit(T angle) {
     return { std::cos(angle), std::sin(angle) };
   }
@@ -1641,7 +1938,7 @@ inline namespace v1 {
    * @returns A perpendicular vector
    */
   template<typename T>
-  GF_API constexpr
+  constexpr
   Vector<T, 2> perp(const Vector<T, 2>& vec) {
     return { -vec.y, vec.x };
   }
@@ -1655,7 +1952,7 @@ inline namespace v1 {
    * @return The cross product of the two vectors
    */
   template<typename T>
-  GF_API constexpr
+  constexpr
   Vector<T, 3> cross(const Vector<T, 3>& lhs, const Vector<T, 3>& rhs) {
     return {
       lhs.y * rhs.z - lhs.z * rhs.y,
