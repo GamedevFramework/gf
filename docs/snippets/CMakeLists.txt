@@ -5,4 +5,6 @@ endmacro()
 
 add_gf_snippet(doc_full_template)
 add_gf_snippet(doc_index)
+add_gf_snippet(doc_it_moves)
 add_gf_snippet(doc_messages)
+add_gf_snippet(doc_simple_template)
