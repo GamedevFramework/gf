@@ -18,6 +18,7 @@
 #include "Level.h"
 
 #include <iostream>
+#include <numeric>
 
 #include <gf/Collision.h>
 #include <gf/Direction.h>
@@ -733,7 +734,7 @@ namespace huaca {
         switch (m_world[x][y].tile) {
           case Tile::Wall:
             m_wallLayer.setTile(coords, random.computeUniformInteger(0, WallTileCount - 1));
-            m_walls.push_back(gf::RectF(coords * BlockSize, { BlockSize, BlockSize }));
+            m_walls.push_back(gf::RectF(coords * BlockSize, gf::Vector2f(BlockSize, BlockSize)));
             break;
           default:
             m_groundLayer.setTile(coords, gf::clamp(random.computeUniformInteger(-10, GroundTileCount - 1), 0, GroundTileCount - 1));
