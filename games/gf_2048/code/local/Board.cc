@@ -55,8 +55,8 @@ static bool isOnSide(gf::Vector2u pos, gf::Direction dir) {
 
 
 bool Board::move(gf::Direction dir) {
-  std::array<unsigned, 4> xIndices = { 0, 1, 2, 3 };
-  std::array<unsigned, 4> yIndices = { 0, 1, 2, 3 };
+  std::array<unsigned, 4> xIndices{ 0, 1, 2, 3 };
+  std::array<unsigned, 4> yIndices{ 0, 1, 2, 3 };
 
   auto vec = gf::displacement(dir);
 
