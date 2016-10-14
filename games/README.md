@@ -15,3 +15,10 @@ The famous [2048](https://en.wikipedia.org/wiki/2048_%28video_game%29) game.
 
 
 ![gf 2048!](gf_2048/gf_2048.png)
+
+
+## Huaca
+
+You have been trapped in an inca temple, you have to escape. Find the ritual and you will get to the next level.
+
+![Huaca](huaca/huaca.png)
