@@ -1,6 +1,6 @@
 # ChangeLog for gf
 
-## gf 0.2.0 (??)
+## gf 0.2.0 (14 Oct 2016)
 
 - Core module
   - Add Vector::begin()/Vector::end() for direct iteration
@@ -31,6 +31,7 @@
   - Add gf_pong
   - Add gf_2048
   - Add gf_noise
+  - Add huaca
 
 
 ## gf 0.1.0 (14 Jul 2016)
