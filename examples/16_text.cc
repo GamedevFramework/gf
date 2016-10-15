@@ -29,11 +29,7 @@
 #include <gf/Window.h>
 
 int main() {
-
-  gf::WindowHints hints;
-  hints.resizable = false;
-
-  gf::Window window("16_text", { 640, 480 }, hints);
+  gf::Window window("16_text", { 640, 480 }, ~gf::WindowHints::Resizable);
   gf::RenderWindow renderer(window);
 
   gf::Font font;

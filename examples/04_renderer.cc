@@ -26,10 +26,7 @@
 #include <gf/Window.h>
 
 int main() {
-  gf::WindowHints hints;
-  hints.resizable = false;
-
-  gf::Window window("04_renderer", { 640, 480 }, hints);
+  gf::Window window("04_renderer", { 640, 480 }, ~gf::WindowHints::Resizable);
   gf::RenderWindow renderer(window);
 
   std::cout << "Gamedev Framework (gf) example #04: Renderer\n";

@@ -32,11 +32,7 @@
 #include <gf/Window.h>
 
 int main() {
-
-  gf::WindowHints hints;
-  hints.resizable = false;
-
-  gf::Window window("10_shapes", { 640, 480 }, hints);
+  gf::Window window("10_shapes", { 640, 480 }, ~gf::WindowHints::Resizable);
   gf::RenderWindow renderer(window);
 
   gf::RectangleShape rectShape({ 250.0f, 100.0f });

@@ -26,6 +26,7 @@
 
 #include <string>
 
+#include "Flags.h"
 #include "Library.h"
 #include "Portability.h"
 #include "Vector.h"
@@ -43,11 +44,27 @@ inline namespace v1 {
    * @ingroup window
    * @brief Hints for window creation
    */
-  struct GF_API WindowHints {
-    bool resizable = true;  ///< Is the window resizable?
-    bool visible = true;    ///< Is the window visible?
-    bool decorated = true;  ///< Is the window decorated?
+  enum class WindowHints : uint32_t {
+    Resizable = 0x0001, ///< Is the window resizable?
+    Visible   = 0x0002, ///< Is the window visible?
+    Decorated = 0x0004, ///< Is the window decorated?
   };
+
+  /**
+   * @ingroup window
+   * @brief Flags for window creation
+   */
+  using WindowFlags = Flags<WindowHints>;
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+}
+
+template<>
+struct EnableBitmaskOperators<WindowHints> {
+  static constexpr bool value = true;
+};
+
+inline namespace v1 {
+#endif
 
   /**
    * @ingroup window
@@ -68,7 +85,7 @@ inline namespace v1 {
      * @param hints Some hints for the creation of the window
      * @sa gf::WindowHints
      */
-    Window(const std::string& title, Vector2u size, WindowHints hints = WindowHints());
+    Window(const std::string& title, Vector2u size, WindowFlags hints = ~WindowFlags());
 
     /**
      * @brief Destructor
@@ -375,6 +392,7 @@ inline namespace v1 {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif
+
 }
 
 #endif // GL_WINDOW_H

@@ -346,10 +346,7 @@ int main() {
   gf::Image image;
   image.create({ Size, Size });
 
-  gf::WindowHints hints;
-  hints.resizable = false;
-
-  gf::Window window("gf noise", { Size + ExtraSize, Size }, hints);
+  gf::Window window("gf noise", { Size + ExtraSize, Size }, ~gf::WindowHints::Resizable);
   gf::RenderWindow renderer(window);
 
   gf::Texture texture;

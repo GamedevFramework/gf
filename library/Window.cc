@@ -39,20 +39,20 @@
 namespace gf {
 inline namespace v1 {
 
-  static Uint32 getFlagsFromHints(const WindowHints& hints) {
+  static Uint32 getFlagsFromHints(WindowFlags hints) {
     Uint32 flags = SDL_WINDOW_OPENGL;
 
-    if (hints.resizable) {
+    if (hints.test(WindowHints::Resizable)) {
       flags |= SDL_WINDOW_RESIZABLE;
     }
 
-    if (hints.visible) {
+    if (hints.test(WindowHints::Visible)) {
       flags |= SDL_WINDOW_SHOWN;
     } else {
       flags |= SDL_WINDOW_HIDDEN;
     }
 
-    if (!hints.decorated) {
+    if (!hints.test(WindowHints::Decorated)) {
       flags |= SDL_WINDOW_BORDERLESS;
     }
 
@@ -75,7 +75,7 @@ inline namespace v1 {
     return context;
   }
 
-  Window::Window(const std::string& title, Vector2u size, WindowHints hints)
+  Window::Window(const std::string& title, Vector2u size, WindowFlags hints)
   : m_window(nullptr)
   , m_context(nullptr)
   , m_shouldClose(false)

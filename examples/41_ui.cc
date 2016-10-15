@@ -32,11 +32,7 @@
 
 
 int main() {
-
-  gf::WindowHints hints;
-  hints.resizable = false;
-
-  gf::Window window("41_ui", { 640, 480 }, hints);
+  gf::Window window("41_ui", { 640, 480 }, ~gf::WindowHints::Resizable);
   gf::RenderWindow renderer(window);
 
   gf::Font font;

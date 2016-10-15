@@ -54,9 +54,7 @@ int main() {
 
   // initialize window
 
-  gf::WindowHints hints;
-  hints.resizable = false;
-  gf::Window window("gf 2048!", ScreenSize, hints);
+  gf::Window window("gf 2048!", ScreenSize, ~gf::WindowHints::Resizable);
   gf::RenderWindow renderer(window);
 
   // add cameras

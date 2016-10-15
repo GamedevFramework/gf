@@ -65,15 +65,12 @@ std::ostream& operator<<(std::ostream& o, const gf::Event::GamepadAxisEvent& eve
 }
 
 int main() {
-  gf::WindowHints hints;
-  hints.resizable = false;
-
   bool cursorVisible = true;
   bool cursorGrabbed = false;
 
   gf::Gamepad::initialize();
 
-  gf::Window window("03_inputs", { 640, 480 }, hints);
+  gf::Window window("03_inputs", { 640, 480 }, ~gf::WindowHints::Resizable);
 
   std::cout << "Gamedev Framework (gf) example #03: Inputs\n";
   std::cout << "This example prints all input events\n";
