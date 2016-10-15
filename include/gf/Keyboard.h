@@ -21,6 +21,7 @@
 #ifndef GF_KEYBOARD_H
 #define GF_KEYBOARD_H
 
+#include "Flags.h"
 #include "Portability.h"
 
 namespace gf {
@@ -30,14 +31,31 @@ inline namespace v1 {
 
   /**
    * @ingroup window
-   * @brief State of modifiers
+   * @brief Modifier enumeration
    */
-  struct GF_API Modifiers {
-    bool shift;   ///< Is the Shift key pressed?
-    bool control; ///< Is the Control key pressed?
-    bool alt;     ///< Is the Alt key pressed?
-    bool super;   ///< Is the Super key pressed?
+  enum class Mod : unsigned {
+    Shift   = 0x0001, ///< Is the Shift key pressed?
+    Control = 0x0002, ///< Is the Control key pressed?
+    Alt     = 0x0004, ///< Is the Alt key pressed?
+    Super   = 0x0008, ///< Is the Super key pressed?
   };
+
+  /**
+   * @ingroup window
+   * @brief Keyboard modifiers
+   */
+  using Modifiers = Flags<Mod>;
+
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+}
+
+template<>
+struct EnableBitmaskOperators<Modifiers> {
+  static constexpr bool value = true;
+};
+
+inline namespace v1 {
+#endif
 
   /**
    * @ingroup window

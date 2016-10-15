@@ -250,7 +250,7 @@ inline namespace v1 {
   }
 
   static UIFlags getStateFlags(bool active, bool hot = true, bool enabled = true) {
-    UIFlags flags;
+    UIFlags flags(None);
 
     if (enabled) {
       flags |= UIProperties::Enabled;

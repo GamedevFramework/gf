@@ -26,6 +26,8 @@
 
 #include <type_traits>
 
+#include "Types.h"
+
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
@@ -55,6 +57,14 @@ inline namespace v1 {
    * bool b = seahawk.test(AnimalProperties::HasClaws); // false
    * ~~~
    *
+   * If you do not initialize flags, then the state is undefined. You can use
+   * semantic constants gf::All and gf::None to set all the flags or none.
+   *
+   * ~~~{.cc}
+   * gf::Flags<AnimalProperties> unicorn(gf::All);
+   *
+   * gf::Flags<AnimalProperties> rat(gf::None);
+   * ~~~
    */
   template<typename E>
   class Flags {
@@ -62,8 +72,16 @@ inline namespace v1 {
     /**
      * @brief Default constructor
      */
-    constexpr Flags()
-    : m_data{0}
+    Flags() = default;
+
+    constexpr Flags(NoneType)
+    : m_data(0)
+    {
+
+    }
+
+    constexpr Flags(AllType)
+    : m_data(~0)
     {
 
     }

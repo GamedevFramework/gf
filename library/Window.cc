@@ -281,6 +281,28 @@ inline namespace v1 {
     return GamepadAxis::Invalid;
   }
 
+  static Modifiers getModifiersFromMod(Uint16 mod) {
+    Modifiers modifiers(None);
+
+    if ((mod & KMOD_SHIFT) != 0) {
+      modifiers |= Mod::Shift;
+    }
+
+    if ((mod & KMOD_CTRL) != 0) {
+      modifiers |= Mod::Control;
+    }
+
+    if ((mod & KMOD_ALT) != 0) {
+      modifiers |= Mod::Alt;
+    }
+
+    if ((mod & KMOD_GUI) != 0) {
+      modifiers |= Mod::Super;
+    }
+
+    return modifiers;
+  }
+
 
   static bool translateEvent(Uint32 windowId, const SDL_Event *in, Event& out) {
     switch (in->type) {
@@ -336,10 +358,7 @@ inline namespace v1 {
 
         out.key.keycode = static_cast<Keycode>(in->key.keysym.sym);
         out.key.scancode = static_cast<Scancode>(in->key.keysym.scancode);
-        out.key.modifiers.shift = ((in->key.keysym.mod & KMOD_SHIFT) != 0);
-        out.key.modifiers.control = ((in->key.keysym.mod & KMOD_CTRL) != 0);
-        out.key.modifiers.alt = ((in->key.keysym.mod & KMOD_ALT) != 0);
-        out.key.modifiers.super = ((in->key.keysym.mod & KMOD_GUI) != 0);
+        out.key.modifiers = getModifiersFromMod(in->key.keysym.mod);
         break;
 
       case SDL_KEYUP:
@@ -347,10 +366,7 @@ inline namespace v1 {
         out.type = EventType::KeyReleased;
         out.key.keycode = static_cast<Keycode>(in->key.keysym.sym);
         out.key.scancode = static_cast<Scancode>(in->key.keysym.scancode);
-        out.key.modifiers.shift = ((in->key.keysym.mod & KMOD_SHIFT) != 0);
-        out.key.modifiers.control = ((in->key.keysym.mod & KMOD_CTRL) != 0);
-        out.key.modifiers.alt = ((in->key.keysym.mod & KMOD_ALT) != 0);
-        out.key.modifiers.super = ((in->key.keysym.mod & KMOD_GUI) != 0);
+        out.key.modifiers = getModifiersFromMod(in->key.keysym.mod);
         break;
 
       case SDL_MOUSEWHEEL:

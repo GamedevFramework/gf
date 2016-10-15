@@ -85,7 +85,7 @@ inline namespace v1 {
      * @param hints Some hints for the creation of the window
      * @sa gf::WindowHints
      */
-    Window(const std::string& title, Vector2u size, WindowFlags hints = ~WindowFlags());
+    Window(const std::string& title, Vector2u size, WindowFlags hints = WindowFlags(All));
 
     /**
      * @brief Destructor

@@ -25,7 +25,10 @@
 #include <gf/Window.h>
 
 std::ostream& operator<<(std::ostream& o, const gf::Modifiers& mods) {
-  return o << (mods.shift ? " shift" : "") << (mods.control ? " control" : "") << (mods.alt ? " alt" : "") << (mods.super ? " super" : "");
+  return o << (mods.test(gf::Mod::Shift) ? " shift" : "")
+           << (mods.test(gf::Mod::Control) ? " control" : "")
+           << (mods.test(gf::Mod::Alt) ? " alt" : "")
+           << (mods.test(gf::Mod::Super) ? " super" : "");
 }
 
 std::ostream& operator<<(std::ostream& o, gf::Keycode keycode) {
