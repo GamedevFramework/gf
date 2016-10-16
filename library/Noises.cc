@@ -161,6 +161,62 @@ inline namespace v1 {
 
 
   /*
+   * BetterGradient
+   */
+
+  BetterGradientNoise2D::BetterGradientNoise2D(Random& random)
+  {
+    // initialize permutation
+
+    generatePermutation(random, m_permX);
+    generatePermutation(random, m_permY);
+
+    // distributions
+
+    std::uniform_real_distribution<double> distAngle(0.0f, 2.0f * Pi);
+
+    // generate 2D gradients
+
+    for (auto& vec : m_gradients2D) {
+      double angle = distAngle(random.getEngine());
+      vec = gf::unit(angle);
+    }
+  }
+
+  double BetterGradientNoise2D::getValue(double x, double y) {
+    uint8_t qx = static_cast<uint8_t>(std::fmod(x, 256));
+    double rx = std::fmod(x, 1);
+    assert(rx >= 0.0 && rx <= 1.0);
+
+    uint8_t qy = static_cast<uint8_t>(std::fmod(y, 256));
+    double ry = std::fmod(y, 1);
+    assert(ry >= 0.0 && ry <= 1.0);
+
+    double value = 0.0f;
+
+    for (int j = -1; j <= 2; ++j) {
+      for (int i = -1; i <= 2; ++i) {
+        Vector2d r(rx - i, ry - j);
+        double d = gf::squareLength(r);
+
+        if (d < 4) {
+          double t = 1 - d / 4;
+          value += dot(at(qx + i, qy + j), r) * t * t * t * t * (4 * t - 3);
+        }
+      }
+    }
+
+    return value;
+  }
+
+  const Vector2d& BetterGradientNoise2D::at(uint8_t i, uint8_t j) const {
+    uint8_t index = m_permX.at(i) ^ m_permY.at(j);
+    return m_gradients2D.at(index);
+  }
+
+
+
+  /*
    * Fractal
    */
 

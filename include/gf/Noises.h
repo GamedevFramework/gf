@@ -101,6 +101,38 @@ inline namespace v1 {
 
   /**
    * @ingroup core
+   * @brief Better gradient 2D noise
+   *
+   * An implementation of the better gradient noise of Kensler et al.,
+   * especially the new hash function and filter kernel. This noise is
+   * slower than gradient noise but gives better results.
+   *
+   * @sa [Better Gradient Noise. A. Kensler, A. Knoll, P. Shirley. 2008](https://www.cs.utah.edu/~aek/research/noise.pdf)
+   */
+  class GF_API BetterGradientNoise2D : public Noise2D {
+  public:
+    /**
+     * @brief Constructor
+     *
+     * @param random A random engine
+     * @param step A step
+     *
+     * @sa gf::Step
+     */
+    BetterGradientNoise2D(Random& random);
+
+    virtual double getValue(double x, double y) override;
+
+  private:
+    std::array<uint8_t, 256> m_permX;
+    std::array<uint8_t, 256> m_permY;
+    std::array<Vector2d, 256> m_gradients2D;
+
+    const Vector2d& at(uint8_t i, uint8_t j) const;
+  };
+
+  /**
+   * @ingroup core
    * @brief Fractal 2D noise
    *
    * Fractal noise is based of fractional Brownian motion (fBm). It consists

@@ -266,10 +266,11 @@ static void exportToPortableGraymap(const gf::Array2D<double>& array, const char
 
 
 enum class NoiseFunction : std::size_t {
-  Gradient      = 0,
-  Simplex       = 1,
-  OpenSimplex   = 2,
-  Worley        = 3,
+  Gradient        = 0,
+  BetterGradient  = 1,
+  Simplex         = 2,
+  OpenSimplex     = 3,
+  Worley          = 4,
 };
 
 enum class StepFunction : std::size_t {
@@ -369,7 +370,7 @@ int main() {
 
   // noise states
 
-  std::vector<std::string> noiseChoices = { "Gradient", "Simplex", "OpenSimplex", "Worley" }; // keep in line with NoiseFunction
+  std::vector<std::string> noiseChoices = { "Gradient", "Better Gradient", "Simplex", "OpenSimplex", "Worley" }; // keep in line with NoiseFunction
   std::size_t noiseChoice = 0;
 
   std::vector<std::string> stepChoices = { "Linear", "Cubic", "Quintic", "Cosine" }; // keep in line with StepFunction
@@ -535,6 +536,12 @@ int main() {
           gf::Step<double> step = getStepFunction(stepFunction);
 
           gf::GradientNoise2D noise(random, step);
+          generate(texture, image, renderingParams, array, noise, fractalParams, scale);
+          break;
+        }
+
+        case NoiseFunction::BetterGradient: {
+          gf::BetterGradientNoise2D noise(random);
           generate(texture, image, renderingParams, array, noise, fractalParams, scale);
           break;
         }
