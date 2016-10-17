@@ -1190,6 +1190,176 @@ inline namespace v1 {
   }
 
 
+  /*
+   * Wavelet
+   */
+
+  static std::ptrdiff_t positiveMod(std::ptrdiff_t x, std::ptrdiff_t n) {
+    std::ptrdiff_t r = x % n;
+    return r < 0 ? r + n : r;
+  }
+
+  static void waveletDownsample(const double *from, double *to, std::ptrdiff_t n, std::ptrdiff_t stride) {
+    static constexpr std::ptrdiff_t DownCoeffsCount = 16;
+    static constexpr double DownCoeffs[2 * DownCoeffsCount] = {
+      0.000334f, -0.001528f,  0.000410f,  0.003545f, -0.000938f, -0.008233f,  0.002172f,  0.019120f,
+     -0.005040f, -0.044412f,  0.011655f,  0.103311f, -0.025936f, -0.243780f,  0.033979f,  0.655340f,
+      0.655340f,  0.033979f, -0.243780f, -0.025936f,  0.103311f,  0.011655f, -0.044412f, -0.005040f,
+      0.019120f,  0.002172f, -0.008233f, -0.000938f,  0.003546f,  0.000410f, -0.001528f,  0.000334f,
+    };
+
+    const double *coeffs = &DownCoeffs[DownCoeffsCount];
+
+    for (std::ptrdiff_t i = 0; i < n/2; ++i) {
+      double value = 0;
+
+      for (std::ptrdiff_t k = 2 * i - DownCoeffsCount; k <=  2 * i - DownCoeffsCount; ++k) {
+        std::ptrdiff_t index = k - 2 * i;
+        assert(0 <= index && index < 2 * DownCoeffsCount);
+        value += coeffs[k - 2 * i] * from[positiveMod(k, n) * stride];
+      }
+
+      to[i * stride] = value;
+    }
+  }
+
+  static void waveletUpsample(const double *from, double *to, std::ptrdiff_t n, std::ptrdiff_t stride) {
+    static constexpr std::ptrdiff_t UpCoeffsCount = 2;
+    static constexpr double UpCoeff[2 * UpCoeffsCount] = {
+      0.25, 0.75, 0.75, 0.25
+    };
+
+    const double *coeffs = &UpCoeff[UpCoeffsCount];
+
+    for (std::ptrdiff_t i = 0; i < n; ++i) {
+      double value = 0;
+
+      for (std::ptrdiff_t k = i/2; k <= i/2 + 1; ++k) {
+        std::ptrdiff_t index = i - 2 * k;
+        assert(0 <= index && index < 2 * UpCoeffsCount);
+        value += coeffs[index] * from[positiveMod(k, n/2) * stride];
+      }
+
+      to[i * stride] = value;
+    }
+  }
+
+  WaveletNoise3D::WaveletNoise3D(Random& random, std::ptrdiff_t n)
+  : m_n(n + n % 2)
+  {
+    std::size_t sz = m_n * m_n * m_n;
+    m_data.resize(sz);
+
+    std::vector<double> tmp1(sz);
+    std::vector<double> tmp2(sz);
+
+    // step 1: fill the tile with numbers in the range -1 to 1
+
+    for (auto& value : m_data) {
+      value = random.computeUniformFloat(-1.0, 1.0);
+    }
+
+    // step 2 and 3: downsample and upsample the tile
+
+    for (std::ptrdiff_t iy = 0; iy < m_n; ++iy) {
+      for (std::ptrdiff_t iz = 0; iz < m_n; ++iz) {
+        // each x row
+        std::ptrdiff_t i = iy * m_n + iz * m_n * m_n;
+        waveletDownsample(&m_data[i], &tmp1[i], m_n, 1);
+        waveletUpsample(&tmp1[i], &tmp2[i], m_n, 1);
+      }
+    }
+
+    for (std::ptrdiff_t ix = 0; ix < m_n; ++ix) {
+      for (std::ptrdiff_t iz = 0; iz < m_n; ++iz) {
+        // each y row
+        std::ptrdiff_t i = ix + iz * m_n * m_n;
+        waveletDownsample(&tmp2[i], &tmp1[i], m_n, m_n);
+        waveletUpsample(&tmp1[i], &tmp2[i], m_n, m_n);
+      }
+    }
+
+    for (std::ptrdiff_t ix = 0; ix < m_n; ++ix) {
+      for (std::ptrdiff_t iy = 0; iy < m_n; ++iy) {
+        // each z row
+        std::ptrdiff_t i = ix + iy * m_n;
+        waveletDownsample(&tmp2[i], &tmp1[i], m_n, m_n * m_n);
+        waveletUpsample(&tmp1[i], &tmp2[i], m_n, m_n * m_n);
+      }
+    }
+
+    // step 4: substract out the coarse-scale contribution
+
+    for (std::ptrdiff_t i = 0; i < m_n * m_n * m_n; ++i) {
+      m_data[i] -= tmp2[i];
+    }
+
+    // avoid event/odd variance difference by adding off-offset version of noise to itself
+
+    std::ptrdiff_t offset = m_n / 2;
+
+    if (offset % 2 == 0) {
+      ++offset;
+    }
+
+    std::ptrdiff_t k = 0;
+
+    for (std::ptrdiff_t ix = 0; ix < m_n; ++ix) {
+      for (std::ptrdiff_t iy = 0; iy < m_n; ++iy) {
+        for (std::ptrdiff_t iz = 0; iz < m_n; ++iz) {
+          std::ptrdiff_t index = positiveMod(ix + offset, m_n)
+                               + positiveMod(iy + offset, m_n) * m_n
+                               + positiveMod(iz + offset, m_n) * m_n * m_n;
+          assert(0 <= index && index < m_n * m_n * m_n);
+          tmp1[k++] = m_data[index];
+        }
+      }
+    }
+
+    for (std::ptrdiff_t i = 0; i < m_n * m_n * m_n; ++i) {
+      m_data[i] += tmp1[i];
+    }
+  }
+
+  double WaveletNoise3D::getValue(double x, double y, double z) {
+    double p[3] = { x, y, z };
+
+    std::ptrdiff_t f[3];
+    std::ptrdiff_t c[3];
+    std::ptrdiff_t mid[3];
+
+    double w[3][3];
+    double value = 0;
+
+    // evaluate quadratic B-spline basis functions
+
+    for (std::ptrdiff_t i = 0; i < 3; ++i) {
+      mid[i] = std::ceil(p[i] - 0.5);
+      double t = mid[i] - (p[i] - 0.5);
+      w[i][0] = t * t / 2;
+      w[i][2] = (1 - t) * (1 - t) / 2;
+      w[i][1] = w[i][0] - w[i][2];
+    }
+
+    // evaluate noise by weighting noise coefficients by basis function values
+
+    for (f[2] = -1; f[2] <= 1; ++f[2]) {
+      for (f[1] = -1; f[1] <= 1; ++f[1]) {
+        for (f[0] = -1; f[0] <= 1; ++f[0]) {
+          double weight = 1;
+
+          for (std::ptrdiff_t i = 0; i < 3; ++i) {
+            c[i] = positiveMod(mid[i] + f[i], m_n);
+            weight *= w[i][f[i] + 1];
+          }
+
+          value += weight * m_data[c[0] + c[1] * m_n + c[2] * m_n * m_n];
+        }
+      }
+    }
+
+    return value;
+  }
 
   /*
    * Worley

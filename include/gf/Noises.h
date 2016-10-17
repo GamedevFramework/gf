@@ -115,9 +115,6 @@ inline namespace v1 {
      * @brief Constructor
      *
      * @param random A random engine
-     * @param step A step
-     *
-     * @sa gf::Step
      */
     BetterGradientNoise2D(Random& random);
 
@@ -338,6 +335,27 @@ inline namespace v1 {
     const Vector3d& at(uint8_t i, uint8_t j, uint8_t k) const;
   };
 
+  /**
+   * @ingroup core
+   * @brief Wavelet 3D noise
+   *
+   */
+  class GF_API WaveletNoise3D : public Noise3D {
+  public:
+    /**
+     * @brief Constructor
+     *
+     * @param random A random engine
+     * @param n Wavelet tile size
+     */
+    WaveletNoise3D(Random& random, std::ptrdiff_t n = 32);
+
+    virtual double getValue(double x, double y, double z) override;
+
+  private:
+    std::ptrdiff_t m_n;
+    std::vector<double> m_data;
+  };
 
   /**
    * @ingroup core
