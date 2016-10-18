@@ -17,6 +17,7 @@ add_library(gf0 SHARED
   Noise.cc
   Noises.cc
   Orientation.cc
+  Polygon.cc
   Random.cc
   Range.cc
   Rect.cc
