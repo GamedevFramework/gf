@@ -38,7 +38,7 @@ inline namespace v1 {
     return m_points[index];
   }
 
-  Vector2f Polygon::getSupport(Vector2f direction) {
+  Vector2f Polygon::getSupport(Vector2f direction) const {
     return *std::max_element(m_points.begin(), m_points.end(), [direction](const Vector2f& lhs, const Vector2f& rhs){
       return gf::dot(direction, lhs) < gf::dot(direction, rhs);
     });

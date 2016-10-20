@@ -24,6 +24,7 @@
 #ifndef GF_POLYGON_H
 #define GF_POLYGON_H
 
+#include "Portability.h"
 #include "Vector.h"
 
 namespace gf {
@@ -31,7 +32,7 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  class Polygon {
+  class GF_API Polygon {
   public:
     Polygon() = default;
 
@@ -47,7 +48,7 @@ inline namespace v1 {
     std::size_t getPointCount() const;
     Vector2f getPoint(std::size_t index) const;
 
-    Vector2f getSupport(Vector2f direction);
+    Vector2f getSupport(Vector2f direction) const;
 
   private:
     std::vector<Vector2f> m_points;
