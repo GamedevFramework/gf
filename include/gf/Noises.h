@@ -183,8 +183,7 @@ inline namespace v1 {
      * @param persistence The factor applied to amplitude
      * @param dimension The contrast between the layers
      */
-    FractalNoise3D(Noise3D& noise, double scale, std::size_t octaves = 8, double lacunarity = 2.0, double persistence = 0.5, double
-    dimension = 1.0);
+    FractalNoise3D(Noise3D& noise, double scale, std::size_t octaves = 8, double lacunarity = 2.0, double persistence = 0.5, double dimension = 1.0);
 
     virtual double getValue(double x, double y, double z) override;
 
@@ -384,6 +383,38 @@ inline namespace v1 {
     Distance2<double> m_distance;
     std::vector<double> m_coeffs;
     std::vector<Vector2d> m_cells;
+  };
+
+
+  /**
+   * @ingroup core
+   * @brief Hetero Terrain 2D noise
+   *
+   */
+  class GF_API HeteroTerrain2D : public Noise2D {
+  public:
+    /**
+     * @brief Constructor
+     *
+     * @param noise The basic noise function
+     * @param scale The scale factor
+     * @param octaves The number of octaves
+     * @param lacunarity The factor applied to frequency
+     * @param persistence The factor applied to amplitude
+     * @param dimension The contrast between the layers
+     */
+    HeteroTerrain2D(Noise2D& noise, double scale, double offset = 0.0, std::size_t octaves = 8, double lacunarity = 2.0, double persistence = 0.5, double dimension = 1.0);
+
+    virtual double getValue(double x, double y) override;
+
+  private:
+    Noise2D& m_noise;
+    double m_scale;
+    double m_offset;
+    std::size_t m_octaves;
+    double m_lacunarity;
+    double m_persistence;
+    double m_dimension;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

@@ -217,7 +217,7 @@ inline namespace v1 {
 
 
   /*
-   * Fractal
+   * Fractal (fBm)
    */
 
   FractalNoise2D::FractalNoise2D(Noise2D& noise, double scale, std::size_t octaves, double lacunarity, double persistence, double dimension)
@@ -1435,6 +1435,48 @@ inline namespace v1 {
 
     return value;
   }
+
+
+  /*
+   * Hetero Terrain
+   */
+
+  HeteroTerrain2D::HeteroTerrain2D(Noise2D& noise, double scale, double offset, std::size_t octaves, double lacunarity, double persistence, double dimension)
+  : m_noise(noise)
+  , m_scale(scale)
+  , m_offset(offset)
+  , m_octaves(octaves)
+  , m_lacunarity(lacunarity)
+  , m_persistence(persistence)
+  , m_dimension(dimension)
+  {
+
+  }
+
+  double HeteroTerrain2D::getValue(double x, double y) {
+    double value = 0.0;
+    double frequency = 1.0;
+    double amplitude = 1.0;
+
+    x *= m_scale;
+    y *= m_scale;
+
+    value = m_offset + m_noise(x, y);
+    frequency *= m_lacunarity;
+    amplitude *= m_persistence;
+
+    for (std::size_t k = 0; k < m_octaves; ++k) {
+      auto increment = m_noise.getValue(x * frequency, y * frequency) + m_offset;
+      increment *= std::pow(amplitude, m_dimension);
+      increment *= value;
+      value += increment;
+      frequency *= m_lacunarity;
+      amplitude *= m_persistence;
+    }
+
+    return value;
+  }
+
 
 }
 }
