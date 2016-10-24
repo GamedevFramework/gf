@@ -1436,6 +1436,46 @@ inline namespace v1 {
     return value;
   }
 
+  /*
+   * Multifractal
+   */
+
+  Multifractal2D::Multifractal2D(Noise2D& noise, double scale, std::size_t octaves, double lacunarity, double persistence, double dimension)
+  : m_noise(noise)
+  , m_scale(scale)
+  , m_octaves(octaves)
+  , m_lacunarity(lacunarity)
+  , m_persistence(persistence)
+  , m_dimension(dimension)
+  {
+
+  }
+
+  double Multifractal2D::getValue(double x, double y) {
+    double value = 1.0;
+    double frequency = 1.0;
+    double amplitude = 1.0;
+
+    x *= m_scale;
+    y *= m_scale;
+
+    /*
+     * There seems to be an error in the original source code from
+     * Musgrave. Blender source code provides an alternative implementation
+     * that does not use the offset parameter. gf provides the Blender version.
+     *
+     * original: https://engineering.purdue.edu/~ebertd/texture/1stEdition/musgrave/musgrave.c
+     * blender: https://developer.blender.org/diffusion/B/browse/master/source/blender/blenlib/intern/noise.c
+     */
+
+    for (std::size_t k = 0; k < m_octaves; ++k) {
+      value *= m_noise.getValue(x * frequency, y * frequency) * std::pow(amplitude, m_dimension) + 1.0;
+      frequency *= m_lacunarity;
+      amplitude *= m_persistence;
+    }
+
+    return value;
+  }
 
   /*
    * Hetero Terrain

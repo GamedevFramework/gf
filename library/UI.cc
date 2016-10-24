@@ -277,10 +277,16 @@ inline namespace v1 {
   , m_layout(layout)
   , m_areaId(0)
   , m_widgetId(0)
+  , m_leftPressed(false)
+  , m_leftReleased(false)
   , m_active(0)
   , m_hot(0)
+  , m_nextHot(0)
   , m_wentActive(false)
   , m_insideCurrentScroll(false)
+  , m_scrollValue(nullptr)
+  , m_scrollId(0)
+  , m_insideScrollArea(false)
   {
 
   }

@@ -388,6 +388,37 @@ inline namespace v1 {
 
   /**
    * @ingroup core
+   * @brief Multi Fractal 2D noise
+   *
+   */
+  class GF_API Multifractal2D : public Noise2D {
+  public:
+    /**
+     * @brief Constructor
+     *
+     * @param noise The basic noise function
+     * @param scale The scale factor
+     * @param octaves The number of octaves
+     * @param lacunarity The factor applied to frequency
+     * @param persistence The factor applied to amplitude
+     * @param dimension The contrast between the layers
+     */
+    Multifractal2D(Noise2D& noise, double scale, std::size_t octaves = 8, double lacunarity = 2.0, double persistence = 0.5, double dimension = 1.0);
+
+    virtual double getValue(double x, double y) override;
+
+  private:
+    Noise2D& m_noise;
+    double m_scale;
+    std::size_t m_octaves;
+    double m_lacunarity;
+    double m_persistence;
+    double m_dimension;
+  };
+
+
+  /**
+   * @ingroup core
    * @brief Hetero Terrain 2D noise
    *
    */
@@ -398,6 +429,7 @@ inline namespace v1 {
      *
      * @param noise The basic noise function
      * @param scale The scale factor
+     * @param offset The offset
      * @param octaves The number of octaves
      * @param lacunarity The factor applied to frequency
      * @param persistence The factor applied to amplitude
@@ -416,6 +448,8 @@ inline namespace v1 {
     double m_persistence;
     double m_dimension;
   };
+
+
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
