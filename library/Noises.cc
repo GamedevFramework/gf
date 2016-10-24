@@ -241,6 +241,7 @@ inline namespace v1 {
 
     for (std::size_t k = 0; k < m_octaves; ++k) {
       value += m_noise.getValue(x * frequency, y * frequency) * std::pow(amplitude, m_dimension);
+
       frequency *= m_lacunarity;
       amplitude *= m_persistence;
     }
@@ -270,6 +271,7 @@ inline namespace v1 {
 
     for (std::size_t k = 0; k < m_octaves; ++k) {
       value += m_noise.getValue(x * frequency, y * frequency, z * frequency) * std::pow(amplitude, m_dimension);
+
       frequency *= m_lacunarity;
       amplitude *= m_persistence;
     }
@@ -1470,6 +1472,7 @@ inline namespace v1 {
 
     for (std::size_t k = 0; k < m_octaves; ++k) {
       value *= m_noise.getValue(x * frequency, y * frequency) * std::pow(amplitude, m_dimension) + 1.0;
+
       frequency *= m_lacunarity;
       amplitude *= m_persistence;
     }
@@ -1502,6 +1505,7 @@ inline namespace v1 {
     y *= m_scale;
 
     value = m_offset + m_noise(x, y);
+
     frequency *= m_lacunarity;
     amplitude *= m_persistence;
 
@@ -1510,6 +1514,7 @@ inline namespace v1 {
       increment *= std::pow(amplitude, m_dimension);
       increment *= value;
       value += increment;
+
       frequency *= m_lacunarity;
       amplitude *= m_persistence;
     }
@@ -1517,6 +1522,48 @@ inline namespace v1 {
     return value;
   }
 
+  /*
+   * Hybrid Multifractal
+   */
+
+  HybridMultifractal2D::HybridMultifractal2D(Noise2D& noise, double scale, double offset, std::size_t octaves, double lacunarity, double persistence, double dimension)
+  : m_noise(noise)
+  , m_scale(scale)
+  , m_offset(offset)
+  , m_octaves(octaves)
+  , m_lacunarity(lacunarity)
+  , m_persistence(persistence)
+  , m_dimension(dimension)
+  {
+
+  }
+
+  double HybridMultifractal2D::getValue(double x, double y) {
+    double value = 0.0;
+    double frequency = 1.0;
+    double amplitude = 1.0;
+
+    x *= m_scale;
+    y *= m_scale;
+
+    value = m_noise(x, y) + m_offset;
+    double weight = value;
+
+    for (std::size_t k = 0; k < m_octaves; ++k) {
+      if (weight > 1.0) {
+        weight = 1.0;
+      }
+
+      double signal = (m_noise.getValue(x * frequency, y * frequency) + m_offset) * std::pow(amplitude, m_dimension);
+      value += weight * signal;
+      weight *= signal;
+
+      frequency *= m_lacunarity;
+      amplitude *= m_persistence;
+    }
+
+    return value;
+  }
 
 }
 }

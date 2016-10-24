@@ -53,10 +53,11 @@ struct RenderingParams {
 };
 
 enum class Fractal : std::size_t {
-  None          = 0,
-  FBm           = 1,
-  Multifractal  = 2,
-  HeteroTerrain = 3,
+  None                = 0,
+  FBm                 = 1,
+  Multifractal        = 2,
+  HeteroTerrain       = 3,
+  HybridMultifractal  = 4,
 };
 
 struct FractalParams {
@@ -253,6 +254,11 @@ static void generate(gf::Texture& texture, gf::Image& image, const RenderingPara
       break;
     }
 
+    case Fractal::HybridMultifractal: {
+      gf::HybridMultifractal2D fractalNoise(noise, 1, fractalParams.offset, fractalParams.octaves, fractalParams.lacunarity, fractalParams.persistence, fractalParams.dimension);
+      generateArrayFromNoise(array, fractalNoise, scale);
+      break;
+    }
   }
 
   generateImageFromArray(image, renderingParams, array);
@@ -401,7 +407,7 @@ int main() {
 
   bool fractalExpanded = false;
 
-  std::vector<std::string> fractalChoices = { "None", "fBm", "Multifractal", "Hetero Terrain" }; // keep in line with Fractal
+  std::vector<std::string> fractalChoices = { "None", "fBm", "Multifractal", "Hetero Terrain", "Hybrid Multifractal" }; // keep in line with Fractal
   std::size_t fractalChoice = 0;
 
   float scale = 1.0;
@@ -510,6 +516,7 @@ int main() {
           break;
 
         case Fractal::HeteroTerrain:
+        case Fractal::HybridMultifractal:
           ui.slider("Offset", &fractalParams.offset, 0, 10, 0.1);
           ui.slider("Octaves", &fractalParams.octaves, 1, 15, 1);
           ui.slider("Lacunarity", &fractalParams.lacunarity, 1, 3, 0.1);
