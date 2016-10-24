@@ -481,6 +481,39 @@ inline namespace v1 {
     double m_dimension;
   };
 
+  /**
+   * @ingroup core
+   * @brief Ridged Multifractal 2D noise
+   *
+   */
+  class GF_API RidgedMultifractal2D : public Noise2D {
+  public:
+    /**
+     * @brief Constructor
+     *
+     * @param noise The basic noise function
+     * @param scale The scale factor
+     * @param offset The offset
+     * @param gain The gain
+     * @param octaves The number of octaves
+     * @param lacunarity The factor applied to frequency
+     * @param persistence The factor applied to amplitude
+     * @param dimension The contrast between the layers
+     */
+    RidgedMultifractal2D(Noise2D& noise, double scale, double offset = 1.0, double gain = 1.0, std::size_t octaves = 8, double lacunarity = 2.0, double persistence = 0.5, double dimension = 1.0);
+
+    virtual double getValue(double x, double y) override;
+
+  private:
+    Noise2D& m_noise;
+    double m_scale;
+    double m_offset;
+    double m_gain;
+    std::size_t m_octaves;
+    double m_lacunarity;
+    double m_persistence;
+    double m_dimension;
+  };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

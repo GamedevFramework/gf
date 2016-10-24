@@ -58,11 +58,13 @@ enum class Fractal : std::size_t {
   Multifractal        = 2,
   HeteroTerrain       = 3,
   HybridMultifractal  = 4,
+  RidgedMultifractal  = 5,
 };
 
 struct FractalParams {
   Fractal fractal;
   float offset;
+  float gain;
   float octaves;
   float lacunarity;
   float persistence;
@@ -259,6 +261,12 @@ static void generate(gf::Texture& texture, gf::Image& image, const RenderingPara
       generateArrayFromNoise(array, fractalNoise, scale);
       break;
     }
+
+    case Fractal::RidgedMultifractal: {
+      gf::RidgedMultifractal2D fractalNoise(noise, 1, fractalParams.offset, fractalParams.gain, fractalParams.octaves, fractalParams.lacunarity, fractalParams.persistence, fractalParams.dimension);
+      generateArrayFromNoise(array, fractalNoise, scale);
+      break;
+    }
   }
 
   generateImageFromArray(image, renderingParams, array);
@@ -407,7 +415,7 @@ int main() {
 
   bool fractalExpanded = false;
 
-  std::vector<std::string> fractalChoices = { "None", "fBm", "Multifractal", "Hetero Terrain", "Hybrid Multifractal" }; // keep in line with Fractal
+  std::vector<std::string> fractalChoices = { "None", "fBm", "Multifractal", "Hetero Terrain", "Hybrid Multifractal", "Ridged Multifractal" }; // keep in line with Fractal
   std::size_t fractalChoice = 0;
 
   float scale = 1.0;
@@ -415,6 +423,7 @@ int main() {
   FractalParams fractalParams;
   fractalParams.fractal = Fractal::None;
   fractalParams.offset = 1.0;
+  fractalParams.gain = 2.0;
   fractalParams.octaves = 8;
   fractalParams.lacunarity = 2.0;
   fractalParams.persistence = 0.5;
@@ -518,6 +527,15 @@ int main() {
         case Fractal::HeteroTerrain:
         case Fractal::HybridMultifractal:
           ui.slider("Offset", &fractalParams.offset, 0, 10, 0.1);
+          ui.slider("Octaves", &fractalParams.octaves, 1, 15, 1);
+          ui.slider("Lacunarity", &fractalParams.lacunarity, 1, 3, 0.1);
+          ui.slider("Persistence", &fractalParams.persistence, 0.1, 0.9, 0.1);
+          ui.slider("Dimension", &fractalParams.dimension, 0.1, 1.9, 0.1);
+          break;
+
+        case Fractal::RidgedMultifractal:
+          ui.slider("Offset", &fractalParams.offset, 0, 10, 0.1);
+          ui.slider("Gain", &fractalParams.gain, 1, 3, 0.1);
           ui.slider("Octaves", &fractalParams.octaves, 1, 15, 1);
           ui.slider("Lacunarity", &fractalParams.lacunarity, 1, 3, 0.1);
           ui.slider("Persistence", &fractalParams.persistence, 0.1, 0.9, 0.1);
