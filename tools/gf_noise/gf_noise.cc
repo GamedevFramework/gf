@@ -63,12 +63,34 @@ enum class Fractal : std::size_t {
 
 struct FractalParams {
   Fractal fractal;
-  float offset;
-  float gain;
+
+  struct {
+    float dimension;
+  } f; // fBm
+
+  struct {
+    float dimension;
+  } m; // Multifractal
+
+  struct {
+    float offset;
+    float dimension;
+  } ht; // Hetero Terrain
+
+  struct {
+    float offset;
+    float dimension;
+  } hm; // Hybrid Multifractal
+
+  struct {
+    float offset;
+    float gain;
+    float dimension;
+  } rm; // Ridged Multifractal
+
   float octaves;
   float lacunarity;
   float persistence;
-  float dimension;
 };
 
 static double valueWithWaterLevel(double value, double waterLevel) {
@@ -239,31 +261,31 @@ static void generate(gf::Texture& texture, gf::Image& image, const RenderingPara
       break;
 
     case Fractal::FBm: {
-      gf::FractalNoise2D fractalNoise(noise, 1, fractalParams.octaves, fractalParams.lacunarity, fractalParams.persistence, fractalParams.dimension);
+      gf::FractalNoise2D fractalNoise(noise, 1, fractalParams.octaves, fractalParams.lacunarity, fractalParams.persistence, fractalParams.f.dimension);
       generateArrayFromNoise(array, fractalNoise, scale);
       break;
     }
 
     case Fractal::Multifractal:  {
-      gf::Multifractal2D fractalNoise(noise, 1, fractalParams.octaves, fractalParams.lacunarity, fractalParams.persistence, fractalParams.dimension);
+      gf::Multifractal2D fractalNoise(noise, 1, fractalParams.octaves, fractalParams.lacunarity, fractalParams.persistence, fractalParams.m.dimension);
       generateArrayFromNoise(array, fractalNoise, scale);
       break;
     }
 
     case Fractal::HeteroTerrain: {
-      gf::HeteroTerrain2D fractalNoise(noise, 1, fractalParams.offset, fractalParams.octaves, fractalParams.lacunarity, fractalParams.persistence, fractalParams.dimension);
+      gf::HeteroTerrain2D fractalNoise(noise, 1, fractalParams.ht.offset, fractalParams.octaves, fractalParams.lacunarity, fractalParams.persistence, fractalParams.ht.dimension);
       generateArrayFromNoise(array, fractalNoise, scale);
       break;
     }
 
     case Fractal::HybridMultifractal: {
-      gf::HybridMultifractal2D fractalNoise(noise, 1, fractalParams.offset, fractalParams.octaves, fractalParams.lacunarity, fractalParams.persistence, fractalParams.dimension);
+      gf::HybridMultifractal2D fractalNoise(noise, 1, fractalParams.hm.offset, fractalParams.octaves, fractalParams.lacunarity, fractalParams.persistence, fractalParams.hm.dimension);
       generateArrayFromNoise(array, fractalNoise, scale);
       break;
     }
 
     case Fractal::RidgedMultifractal: {
-      gf::RidgedMultifractal2D fractalNoise(noise, 1, fractalParams.offset, fractalParams.gain, fractalParams.octaves, fractalParams.lacunarity, fractalParams.persistence, fractalParams.dimension);
+      gf::RidgedMultifractal2D fractalNoise(noise, 1, fractalParams.rm.offset, fractalParams.rm.gain, fractalParams.octaves, fractalParams.lacunarity, fractalParams.persistence, fractalParams.rm.dimension);
       generateArrayFromNoise(array, fractalNoise, scale);
       break;
     }
@@ -422,12 +444,24 @@ int main() {
 
   FractalParams fractalParams;
   fractalParams.fractal = Fractal::None;
-  fractalParams.offset = 1.0;
-  fractalParams.gain = 2.0;
+
+  fractalParams.f.dimension = 1.0;
+
+  fractalParams.m.dimension = 1.0;
+
+  fractalParams.ht.dimension = 1.0;
+  fractalParams.ht.offset = 1.0;
+
+  fractalParams.hm.dimension = 0.25;
+  fractalParams.hm.offset = 0.7;
+
+  fractalParams.rm.dimension = 1.0;
+  fractalParams.rm.offset = 1.0;
+  fractalParams.rm.gain = 2.0;
+
   fractalParams.octaves = 8;
   fractalParams.lacunarity = 2.0;
   fractalParams.persistence = 0.5;
-  fractalParams.dimension = 1.0;
 
   bool renderingExpanded = false;
 
@@ -512,35 +546,41 @@ int main() {
 
       fractalParams.fractal = static_cast<Fractal>(fractalChoice);
 
-      switch (fractalParams.fractal) {
-        case Fractal::None:
-          break;
+      if (fractalParams.fractal != Fractal::None) {
+        switch (fractalParams.fractal) {
+          case Fractal::None:
+            assert(false);
+            break;
 
-        case Fractal::FBm:
-        case Fractal::Multifractal:
-          ui.slider("Octaves", &fractalParams.octaves, 1, 15, 1);
-          ui.slider("Lacunarity", &fractalParams.lacunarity, 1, 3, 0.1);
-          ui.slider("Persistence", &fractalParams.persistence, 0.1, 0.9, 0.1);
-          ui.slider("Dimension", &fractalParams.dimension, 0.1, 1.9, 0.1);
-          break;
+          case Fractal::FBm:
+            ui.slider("Dimension", &fractalParams.f.dimension, 0.1, 1.9, 0.05);
+            break;
 
-        case Fractal::HeteroTerrain:
-        case Fractal::HybridMultifractal:
-          ui.slider("Offset", &fractalParams.offset, 0, 10, 0.1);
-          ui.slider("Octaves", &fractalParams.octaves, 1, 15, 1);
-          ui.slider("Lacunarity", &fractalParams.lacunarity, 1, 3, 0.1);
-          ui.slider("Persistence", &fractalParams.persistence, 0.1, 0.9, 0.1);
-          ui.slider("Dimension", &fractalParams.dimension, 0.1, 1.9, 0.1);
-          break;
+          case Fractal::Multifractal:
+            ui.slider("Dimension", &fractalParams.m.dimension, 0.1, 1.9, 0.05);
+            break;
 
-        case Fractal::RidgedMultifractal:
-          ui.slider("Offset", &fractalParams.offset, 0, 10, 0.1);
-          ui.slider("Gain", &fractalParams.gain, 1, 3, 0.1);
-          ui.slider("Octaves", &fractalParams.octaves, 1, 15, 1);
-          ui.slider("Lacunarity", &fractalParams.lacunarity, 1, 3, 0.1);
-          ui.slider("Persistence", &fractalParams.persistence, 0.1, 0.9, 0.1);
-          ui.slider("Dimension", &fractalParams.dimension, 0.1, 1.9, 0.1);
-          break;
+          case Fractal::HeteroTerrain:
+            ui.slider("Dimension", &fractalParams.ht.dimension, 0.1, 1.9, 0.05);
+            ui.slider("Offset", &fractalParams.ht.offset, 0, 10, 0.1);
+            break;
+
+          case Fractal::HybridMultifractal:
+            ui.slider("Dimension", &fractalParams.hm.dimension, 0.1, 1.9, 0.05);
+            ui.slider("Offset", &fractalParams.hm.offset, 0, 10, 0.1);
+            break;
+
+          case Fractal::RidgedMultifractal:
+            ui.slider("Dimension", &fractalParams.rm.dimension, 0.1, 1.9, 0.05);
+            ui.slider("Offset", &fractalParams.rm.offset, 0, 10, 0.1);
+            ui.slider("Gain", &fractalParams.rm.gain, 1, 3, 0.1);
+            break;
+        }
+
+        ui.separator();
+        ui.slider("Octaves", &fractalParams.octaves, 1, 15, 1);
+        ui.slider("Lacunarity", &fractalParams.lacunarity, 1, 3, 0.1);
+        ui.slider("Persistence", &fractalParams.persistence, 0.1, 0.9, 0.1);
       }
 
       ui.unindent();
