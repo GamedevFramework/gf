@@ -36,6 +36,10 @@
 
 #include "priv/Debug.h"
 
+#include "generated/default_alpha.frag.h"
+#include "generated/default.frag.h"
+#include "generated/default.vert.h"
+
 #include "config.h"
 
 namespace gf {
@@ -418,12 +422,8 @@ inline namespace v1 {
   }
 
   void RenderTarget::initializeShader() {
-    Path vertexShaderPath = Path(GF_DATADIR) / "shaders/default.vert";
-    Path fragmentShaderPath = Path(GF_DATADIR) / "shaders/default.frag";
-    m_defaultShader.loadFromFile(vertexShaderPath, fragmentShaderPath);
-
-    Path alphaFragmentShaderPath = Path(GF_DATADIR) / "shaders/default_alpha.frag";
-    m_defaultAlphaShader.loadFromFile(vertexShaderPath, alphaFragmentShaderPath);
+    m_defaultShader.loadFromMemory(default_vert, default_frag);
+    m_defaultAlphaShader.loadFromMemory(default_vert, default_alpha_frag);
   }
 
   void RenderTarget::initializeTexture() {
