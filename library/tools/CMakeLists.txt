@@ -1,1 +1,0 @@
-add_executable(gfdev_source_file gfdev_source_file.cc)
