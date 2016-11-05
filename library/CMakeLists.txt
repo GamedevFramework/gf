@@ -1,6 +1,22 @@
-# process shader files
+file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/generated")
 
 add_executable(gfdev_source_file tools/gfdev_source_file.cc)
+
+# process gamecontrollerdb
+
+set(GCDB_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/vendor/gamecontrollerdb/gamecontrollerdb.txt")
+set(GCDB_HEADER "${CMAKE_CURRENT_BINARY_DIR}/generated/gamecontrollerdb.txt.h")
+
+add_custom_command(
+  OUTPUT "${GCDB_HEADER}"
+  COMMAND gfdev_source_file "${GCDB_SOURCE}" "${GCDB_HEADER}" "gamecontrollerdb"
+  COMMENT "Compiling gamecontrollerdb to header"
+  DEPENDS gfdev_source_file "${GCDB_SOURCE}"
+)
+
+add_custom_target(gf0_gamecontrollerdb ALL DEPENDS ${GCDB_HEADER})
+
+# process shader files
 
 set(SHADER_SOURCES
   data/shaders/color_matrix.frag
@@ -11,8 +27,6 @@ set(SHADER_SOURCES
   data/shaders/fxaa.frag
 #   data/shaders/simple_fxaa.frag
 )
-
-file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/generated")
 
 set(SHADER_HEADERS "")
 
@@ -120,7 +134,10 @@ add_library(gf0 SHARED
   vendor/glad/src/glad.cc
 )
 
-add_dependencies(gf0 gf0_shader_headers)
+add_dependencies(gf0
+  gf0_shader_headers
+  gf0_gamecontrollerdb
+)
 
 if (GF_DEBUG)
   target_compile_definitions(gf0
