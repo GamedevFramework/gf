@@ -40,8 +40,6 @@
 #include "generated/default.frag.h"
 #include "generated/default.vert.h"
 
-#include "config.h"
-
 namespace gf {
 inline namespace v1 {
 
