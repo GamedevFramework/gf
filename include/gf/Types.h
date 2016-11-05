@@ -29,6 +29,7 @@ inline namespace v1 {
 #endif
 
   /**
+   * @ingroup core
    * @brief Semantic type to represent "none"
    *
    * @sa gf::None, gf::AllType
@@ -36,6 +37,7 @@ inline namespace v1 {
   struct GF_API NoneType { };
 
   /**
+   * @ingroup core
    * @brief Constant to represent "none"
    *
    * @sa gf::NoneType, gf::All
@@ -43,6 +45,7 @@ inline namespace v1 {
   constexpr NoneType None = { };
 
   /**
+   * @ingroup core
    * @brief Semantic type to represent "all"
    *
    * @sa gf::All, gf::NoneType
@@ -50,6 +53,7 @@ inline namespace v1 {
   struct GF_API AllType {  };
 
   /**
+   * @ingroup core
    * @brief Constant to represent "all"
    *
    * @sa gf::AllType, gf::None

@@ -31,6 +31,7 @@ inline namespace v1 {
 #endif
 
   /**
+   * @ingroup core
    * @brief Bitfield relying on an enumeration
    *
    * ~~~
