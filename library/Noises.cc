@@ -1218,7 +1218,7 @@ inline namespace v1 {
       for (std::ptrdiff_t k = 2 * i - DownCoeffsCount; k <=  2 * i - DownCoeffsCount; ++k) {
         std::ptrdiff_t index = k - 2 * i;
         assert(0 <= index && index < 2 * DownCoeffsCount);
-        value += coeffs[k - 2 * i] * from[positiveMod(k, n) * stride];
+        value += coeffs[index] * from[positiveMod(k, n) * stride];
       }
 
       to[i * stride] = value;
