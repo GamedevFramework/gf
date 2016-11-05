@@ -24,6 +24,8 @@
 #ifndef GF_POLYGON_H
 #define GF_POLYGON_H
 
+#include <vector>
+
 #include "Portability.h"
 #include "Vector.h"
 
