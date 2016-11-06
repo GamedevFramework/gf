@@ -43,10 +43,14 @@ inline namespace v1 {
    * @sa Transformable::setOrigin()
    */
   enum class Anchor {
-    Center,       ///< Center
     TopLeft,      ///< Top-left
+    TopCenter,    ///< Top-center
     TopRight,     ///< Top-right
+    CenterLeft,   ///< Center-left
+    Center,       ///< Center
+    CenterRight,  ///< Center-right
     BottomLeft,   ///< Bottom-left
+    BottomCenter, ///< Bottom-center
     BottomRight,  ///< Bottom-right
   };
 
