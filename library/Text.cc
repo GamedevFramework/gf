@@ -23,6 +23,9 @@
  */
 #include <gf/Text.h>
 
+#include <algorithm>
+#include <limits>
+
 #include <boost/algorithm/string/split.hpp>
 #include <boost/algorithm/string/classification.hpp>
 
@@ -212,7 +215,7 @@ inline namespace v1 {
 
     Vector2f position(0.0f, 0.0f);
 
-    Vector2f min(0.0f, 0.0f);
+    Vector2f min(std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
     Vector2f max(0.0f, 0.0f);
 
     for (auto& paragraph : paragraphs) {
@@ -265,7 +268,9 @@ inline namespace v1 {
   }
 
   float Text::getWordWidth(const std::u32string& word) {
-    assert (m_font != nullptr && m_characterSize > 0 && !word.empty());
+    assert(m_font != nullptr);
+    assert(m_characterSize > 0);
+    assert(!word.empty());
 
     float width = 0.0f;
     char32_t prevCodepoint = '\0';
@@ -323,12 +328,18 @@ inline namespace v1 {
   static std::vector<std::u32string> splitInParagraphs(const std::u32string& str) {
     std::vector<std::u32string> out;
     boost::algorithm::split(out, str, boost::is_any_of(U"\n"), boost::algorithm::token_compress_on);
+    out.erase(std::remove_if(out.begin(), out.end(), [](const std::u32string& s) {
+      return s.empty();
+    }), out.end());
     return out;
   }
 
   static std::vector<std::u32string> splitInWords(const std::u32string& str) {
     std::vector<std::u32string> out;
     boost::algorithm::split(out, str, boost::is_any_of(U" \t"), boost::algorithm::token_compress_on);
+    out.erase(std::remove_if(out.begin(), out.end(), [](const std::u32string& s) {
+      return s.empty();
+    }), out.end());
     return out;
   }
 
