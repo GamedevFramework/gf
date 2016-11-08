@@ -38,4 +38,5 @@ void main(void) {
   // http://stackoverflow.com/questions/16893536/using-row-major-in-opengl-shader
 
   gl_Position = vec4(normalizedPosition.xy, 0, 1);
+  gl_PointSize = 1.0;
 }
