@@ -78,8 +78,6 @@ namespace lux {
   }
 
 
-
-  static constexpr float ShootPeriod = 0.4f;
   static constexpr float ShootVelocity = -400.0f;
 
   Hero::Hero(HeroProperties& prop, gf::MessageManager& messages, gf::ResourceManager& resources)
