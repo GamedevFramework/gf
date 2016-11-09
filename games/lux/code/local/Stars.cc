@@ -25,19 +25,19 @@
 
 namespace lux {
 
-  static constexpr float getWorldTop() {
+  static float getWorldTop() {
     return WorldCenter.y - WorldSize.height / 2;
   }
 
-  static constexpr float getWorldBottom() {
+  static float getWorldBottom() {
     return WorldCenter.y + WorldSize.height / 2;
   }
 
-  static constexpr float getWorldLeft() {
+  static float getWorldLeft() {
     return WorldCenter.x - WorldSize.width / 2;
   }
 
-  static constexpr float getWorldRight() {
+  static float getWorldRight() {
     return WorldCenter.x + WorldSize.width / 2;
   }
 
