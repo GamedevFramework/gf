@@ -199,7 +199,6 @@ namespace lux {
       RegularShoot(std::unique_ptr<Shoot> decorated, int nbShoot, float shootInterval, float inactivePeriod)
       : ShootDecorator(std::move(decorated))
       , m_nbShoot(0)
-      , m_nbShootMax(nbShoot)
       , m_shootPeriod(nbShoot * shootInterval)
       , m_shootInterval(shootInterval)
       , m_inactivePeriod(inactivePeriod)
@@ -233,7 +232,6 @@ namespace lux {
 
     private:
       int m_nbShoot;
-      int m_nbShootMax;
       float m_shootPeriod;
       float m_shootInterval;
       float m_inactivePeriod;
