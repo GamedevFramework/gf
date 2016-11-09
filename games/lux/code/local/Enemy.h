@@ -54,7 +54,6 @@ namespace lux {
     gf::Random& m_random;
     gf::MessageManager& m_messages;
 
-    float m_elapsedTime;
     gf::Vector2f m_heroPos;
     gf::Texture *m_texture;
 
@@ -88,7 +87,6 @@ namespace lux {
     gf::ResourceManager& m_resources;
 
     std::vector<Enemy*> m_enemies;
-    float m_elapsedTime;
     gf::Vector2f m_heroPos;
   };
 

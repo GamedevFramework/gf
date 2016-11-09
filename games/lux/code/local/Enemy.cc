@@ -35,7 +35,6 @@ namespace lux {
   , m_velocity(velocity)
   , m_random(random)
   , m_messages(messages)
-  , m_elapsedTime(0.0f)
   , m_texture(nullptr)
   {
     switch (ship) {
@@ -121,7 +120,6 @@ namespace lux {
   : m_random(random)
   , m_messages(messages)
   , m_resources(resources)
-  , m_elapsedTime(0.0f)
   {
     m_messages.registerHandler<LocationMessage>(&EnemyManager::onLocation, this);
   }
