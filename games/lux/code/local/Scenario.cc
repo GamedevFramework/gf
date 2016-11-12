@@ -32,9 +32,9 @@
 
 namespace lux {
 
-  static const float ShipSpeed = WorldSize.height / 3;
-  static const float Top = WorldCenter.y - WorldSize.height / 2;
-  static const float HalfWidth = WorldSize.width / 2;
+  static float ShipSpeed = WorldSize.height / 3;
+  static float Top = WorldCenter.y - WorldSize.height / 2;
+  static float HalfWidth = WorldSize.width / 2;
 
   static Scenario::Wave wave0 {
     5.0f,
@@ -474,7 +474,7 @@ namespace lux {
 
     auto bounds = text.getLocalBounds();
     float x = m_tracker.getXCentered(0.0f);
-    float y = m_tracker.getYRatio(0.3, bounds.height);
+    float y = m_tracker.getYRatio(0.3f, bounds.height);
 
     text.setPosition({ x, y });
     target.draw(text);
