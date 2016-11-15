@@ -189,6 +189,20 @@ inline namespace v1 {
      */
     void setFullscreen(bool full = true);
 
+    /**
+     * @brief Toggle the fullscreen state
+     */
+    void toggleFullscreen();
+
+    /**
+     * @brief Check if the window is fullscreen or not
+     *
+     * @returns True if the window is fullscreen
+     */
+    bool isFullscreen() const {
+      return m_isFullscreen;
+    }
+
     /** @} */
 
     /**
@@ -386,7 +400,7 @@ inline namespace v1 {
     SDL_Window *m_window;
     void *m_context;
     bool m_shouldClose;
-
+    bool m_isFullscreen;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

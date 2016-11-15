@@ -79,6 +79,7 @@ inline namespace v1 {
   : m_window(nullptr)
   , m_context(nullptr)
   , m_shouldClose(false)
+  , m_isFullscreen(false)
   {
     auto flags = getFlagsFromHints(hints);
     m_window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, size.width, size.height, flags);
@@ -148,6 +149,12 @@ inline namespace v1 {
     } else {
       SDL_SetWindowFullscreen(m_window, 0);
     }
+
+    m_isFullscreen = full;
+  }
+
+  void Window::toggleFullscreen() {
+    setFullscreen(!m_isFullscreen);
   }
 
   void Window::minimize() {
