@@ -265,6 +265,11 @@ inline namespace v1 {
     }
 
     m_bounds = RectF(min, max - min);
+
+    if (m_align != Alignment::None) {
+      m_bounds.left = 0;
+      m_bounds.width = m_paragraphWidth;
+    }
   }
 
   float Text::getWordWidth(const std::u32string& word) {
