@@ -96,7 +96,7 @@ if(GF_BUILD_GAMES)
 endif()
 
 if(GF_BUILD_TOOLS)
-  add_subdirectory(tools/gf_noise)
+#   add_subdirectory(tools/gf_noise)
 
   install(
     DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/data/gf_tools"
