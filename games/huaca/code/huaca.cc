@@ -153,7 +153,6 @@ int main() {
   renderer.clear(gf::Color::Black);
 
   gf::Clock clock;
-  bool fullscreen = false;
 
   while (window.isOpen()) {
     // input
@@ -171,8 +170,7 @@ int main() {
     }
 
     if (fullscreenAction.isActive()) {
-      fullscreen = !fullscreen;
-      window.setFullscreen(fullscreen);
+      window.toggleFullscreen();
     }
 
     if (rightAction.isActive()) {
