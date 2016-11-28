@@ -47,6 +47,19 @@ inline namespace v1 {
 
   }
 
+  void RenderTarget::setScissorTest(bool scissor) {
+    if (scissor) {
+      glCheck(glEnable(GL_SCISSOR_TEST));
+    } else {
+      glCheck(glDisable(GL_SCISSOR_TEST));
+    }
+  }
+
+  void RenderTarget::setScissorBox(const RectI& box) {
+    Vector2i size = getSize();
+    glCheck(glScissor(box.left, size.height - (box.top + box.height), box.width, box.height));
+  }
+
   void RenderTarget::clear(const Color4f& color) {
     glCheck(glClearColor(color.r, color.g, color.b, color.a));
     clear();
