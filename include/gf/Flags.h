@@ -163,9 +163,20 @@ inline namespace v1 {
       m_data &= ~static_cast<Type>(flag);
     }
 
-  private:
     using Type = typename std::underlying_type<E>::type;
 
+    /**
+     * @brief Get the underlying value of the flags
+     *
+     * This function should not be used in normal cases.
+     *
+     * @return The value of the flags
+     */
+    Type getValue() const {
+      return m_data;
+    }
+
+  private:
     Flags(Type data)
     : m_data(data)
     {
