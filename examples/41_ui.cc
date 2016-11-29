@@ -42,22 +42,7 @@ int main() {
     return EXIT_FAILURE;
   }
 
-  gf::DefaultUIRenderer uiRenderer(font);
-  gf::UILayout layout;
-  gf::UI ui(uiRenderer, layout);
-
-  bool checked1 = false;
-  bool checked2 = false;
-  bool checked3 = true;
-  bool checked4 = false;
-  float scrollArea = 0;
-  float value1 = 50.0f;
-  float value2 = 30.0f;
-
-  std::vector<std::string> choices = { "First Choice", "Next Choice", "Last Choice" };
-  std::size_t choice = 0;
-
-  bool toggle;
+  gf::UI ui;
 
   renderer.clear(gf::Color::Gray());
 
@@ -77,71 +62,16 @@ int main() {
       ui.update(event);
     }
 
-    ui.clear();
+    if (ui.begin("Show", gf::RectF(50, 50, 220, 220), gf::UIWindow::Border | gf::UIWindow::Movable | gf::UIWindow::Scalable | gf::UIWindow::Closable | gf::UIWindow::Minimizable | gf::UIWindow::Title)) {
 
-    ui.beginScrollArea("Scroll area", { 10.0f, 10.0f, 200.0f, 400.0f }, &scrollArea);
-
-    ui.separatorLine();
-    ui.separator();
-
-    ui.button("Button");
-    ui.button("Disabled Button", false);
-    ui.item("Item");
-    ui.item("Disabled item", false);
-
-    toggle = ui.check("Checkbox", checked1);
-
-    if (toggle) {
-      checked1 = !checked1;
-    }
-
-    toggle = ui.check("Disabled checkbox", checked2, false);
-
-    if (toggle) {
-      checked2 = !checked2;
-    }
-
-    toggle = ui.collapse("Collapse", checked3);
-
-    if (checked3) {
-      ui.indent();
-      ui.label("Collapsible element");
-
-      for (int i = 0; i < 20; ++i) {
-        ui.label("More text...");
+      ui.layoutRowStatic(30, 80, 1);
+      if (ui.buttonLabel("button")) {
+        std::cout << "Hello!\n";
       }
 
-      ui.unindent();
     }
 
-    if (toggle) {
-      checked3 = !checked3;
-    }
-
-    toggle = ui.collapse("Disabled collapse", checked4, false);
-
-    if (toggle) {
-      checked4 = !checked4;
-    }
-
-    ui.label("Label");
-    ui.value("Value");
-
-    ui.slider("Slider", &value1, 0.0f, 100.0f, 1.0f);
-    ui.slider("Disabled slider", &value2, 0.0f, 100.0f, 1.0f, false);
-
-    ui.indent();
-    ui.label("Indented");
-    ui.unindent();
-    ui.label("Unindented");
-
-    toggle = ui.cycle(choices, choice);
-
-    if (toggle) {
-      choice = (choice + 1) % choices.size();
-    }
-
-    ui.endScrollArea();
+    ui.end();
 
     renderer.clear();
     renderer.draw(ui);
