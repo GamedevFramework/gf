@@ -33,6 +33,8 @@
 #include <gf/Font.h>
 #include <gf/RenderTarget.h>
 
+#include "priv/String.h"
+
 namespace gf {
 inline namespace v1 {
 
@@ -289,45 +291,6 @@ inline namespace v1 {
     }
 
     return width;
-  }
-
-
-  static std::u32string getUnicodeString(const std::string& str) {
-    static constexpr uint8_t utf8Table[4][2] = {
-      { 0x7F, 0x00 },
-      { 0x1F, 0xC0 },
-      { 0x0F, 0xE0 },
-      { 0x07, 0xF0 }
-    };
-
-    std::u32string out;
-
-    for (std::size_t k = 0; k < str.size(); ++k) {
-      uint8_t c = str[k];
-      char32_t codepoint = 0;
-
-      for (std::size_t i = 0; i < 4; ++i) {
-        if ((c & ~utf8Table[i][0]) == utf8Table[i][1]) {
-          codepoint = c & utf8Table[i][0];
-
-          for (std::size_t j = 0; j < i; ++j) {
-            ++k;
-
-            assert(k < str.size());
-            c = str[k];
-
-            assert((c & ~0x3F) == 0x80);
-            codepoint = (codepoint << 6) + (c & 0x3F);
-          }
-
-          break;
-        }
-      }
-
-      out.push_back(codepoint);
-    }
-
-    return out;
   }
 
   static std::vector<std::u32string> splitInParagraphs(const std::u32string& str) {
