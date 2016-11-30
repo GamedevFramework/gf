@@ -300,6 +300,10 @@ inline namespace v1 {
     return &cache.texture;
   }
 
+  void Font::generateTexture(unsigned characterSize) {
+    getGlyph(' ', characterSize, 0);
+  }
+
   static constexpr unsigned DefaultSize = 1024;
 
   Font::GlyphCache Font::createCache(unsigned characterSize) {
