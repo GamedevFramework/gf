@@ -42,7 +42,7 @@ int main() {
     return EXIT_FAILURE;
   }
 
-  gf::UI ui;
+  gf::UI ui(font);
 
   renderer.clear(gf::Color::Gray());
 

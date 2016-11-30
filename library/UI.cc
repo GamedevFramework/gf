@@ -31,6 +31,7 @@
 #include <iostream>
 
 #include <gf/RenderTarget.h>
+#include <gf/Transform.h>
 #include <gf/Vertex.h>
 
 #include "priv/String.h"
@@ -39,8 +40,6 @@
 #define NK_INCLUDE_FIXED_TYPES
 #define NK_INCLUDE_DEFAULT_ALLOCATOR
 #define NK_INCLUDE_VERTEX_BUFFER_OUTPUT
-#define NK_INCLUDE_FONT_BAKING
-#define NK_INCLUDE_DEFAULT_FONT
 
 #define NK_MEMSET std::memset
 #define NK_MEMCPY std::memcpy
@@ -112,42 +111,74 @@ static std::string niceNum(float num, float precision) {
 namespace gf {
 inline namespace v1 {
 
-  static constexpr float FontHeight = 14;
+  static float getTextWidth(nk_handle handle, float characterSize, const char *text, int len) {
+    auto font = static_cast<Font *>(handle.ptr);
+
+    std::string originalText(text, len);
+    std::u32string unicodeText = getUnicodeString(originalText);
+
+    float textWidth = 0;
+    char32_t prevCodepoint = '\0';
+
+    for (char32_t currCodepoint : unicodeText) {
+      textWidth += font->getKerning(prevCodepoint, currCodepoint, characterSize);
+      prevCodepoint = currCodepoint;
+
+      const Glyph& glyph = font->getGlyph(currCodepoint, characterSize);
+      textWidth += glyph.advance;
+    }
+
+    return textWidth;
+  }
+
+  static void getFontGlyph(nk_handle handle, float characterSize, struct nk_user_font_glyph *g, nk_rune currCodepoint, nk_rune nextCodepoint) {
+    auto font = static_cast<Font *>(handle.ptr);
+    assert(font);
+
+    float kerning = font->getKerning(currCodepoint, nextCodepoint, characterSize);
+    const Glyph& glyph = font->getGlyph(currCodepoint, characterSize);
+
+    g->width = glyph.bounds.width;
+    g->height = glyph.bounds.height;
+    g->xadvance = glyph.advance + kerning; // is it good?
+
+    g->uv[0].x = glyph.textureRect.left;
+    g->uv[0].y = glyph.textureRect.top;
+    g->uv[1].x = glyph.textureRect.left + glyph.textureRect.width;
+    g->uv[1].y = glyph.textureRect.top + glyph.textureRect.height;
+
+    g->offset.x = glyph.bounds.left;
+    g->offset.y = glyph.bounds.top + characterSize; // hacky but works
+  }
 
   struct UI::Impl {
-    nk_font_atlas atlas;
+    Font *font;
+    nk_user_font user;
     nk_context ctx;
     nk_buffer cmds;
-    AlphaTexture texture;
   };
 
-  UI::UI()
+  UI::UI(Font& font, unsigned characterSize)
   : m_impl(nullptr)
   , m_state(State::Start)
   {
     m_impl = new Impl;
 
-    auto atlas = &m_impl->atlas;
+    m_impl->font = &font;
+    font.generateTexture(characterSize);
+    auto texture = static_cast<const void *>(font.getTexture(characterSize));
+    assert(texture);
 
-    nk_font_atlas_init_default(atlas);
-    nk_font_atlas_begin(atlas);
+    auto user = &m_impl->user;
 
-    auto font = nk_font_atlas_add_default(atlas, FontHeight, nullptr);
-
-    int w, h;
-    const void *image = nk_font_atlas_bake(atlas, &w, &h, NK_FONT_ATLAS_ALPHA8);
-
-    auto texture = &m_impl->texture;
-
-    texture->create({ static_cast<unsigned>(w), static_cast<unsigned>(h) });
-    texture->update(static_cast<const uint8_t *>(image));
-
-    nk_font_atlas_end(atlas, nk_handle_ptr(texture), nullptr);
+    user->userdata.ptr = m_impl->font;
+    user->height = characterSize;
+    user->width = getTextWidth;
+    user->query = getFontGlyph;
+    user->texture.ptr = const_cast<void *>(texture);
 
     auto ctx = &m_impl->ctx;
-    nk_init_default(ctx, nullptr);
-
-    nk_style_set_font(ctx, &font->handle);
+    nk_init_default(ctx, user);
 
     nk_buffer_init_default(&m_impl->cmds);
   }
@@ -155,7 +186,6 @@ inline namespace v1 {
   UI::~UI() {
     nk_buffer_free(&m_impl->cmds);
     nk_free(&m_impl->ctx);
-    nk_font_atlas_clear(&m_impl->atlas);
     delete m_impl;
   }
 

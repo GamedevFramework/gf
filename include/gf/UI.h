@@ -50,7 +50,9 @@ inline namespace v1 {
 
   class UI : public Drawable {
   public:
-    UI();
+    static constexpr unsigned DefaultCharacterSize = 13;
+
+    UI(Font& font, unsigned characterSize = DefaultCharacterSize);
     ~UI();
 
     UI(const UI&) = delete;
