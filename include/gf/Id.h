@@ -75,13 +75,29 @@ inline namespace v1 {
     return hash(str.c_str(), str.size());
   }
 
+  namespace literals {
+
+    /**
+     * @brief User defined operator for creating compile time ids from strings
+     *
+     * To use it, you have to use the `gf::literals` namespace:
+     *
+     * ~~~{.cc}
+     * using namespace gf::literals;
+     *
+     * Id id = "FooBar"_id;
+     * ~~~
+     *
+     */
+    constexpr gf::Id operator"" _id(const char *str, std::size_t sz) {
+      return gf::hash(str, sz);
+    }
+
+  }
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif
-}
-
-constexpr gf::Id operator"" _id(const char *str, std::size_t sz) {
-  return gf::hash(str, sz);
 }
 
 #endif // GF_ID_H

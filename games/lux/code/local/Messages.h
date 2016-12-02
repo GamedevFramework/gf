@@ -23,6 +23,8 @@
 
 #include "Properties.h"
 
+using namespace gf::literals;
+
 namespace lux {
   class Ship;
 

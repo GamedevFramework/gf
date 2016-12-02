@@ -26,6 +26,8 @@
 
 #include "Paddle.h"
 
+using namespace gf::literals;
+
 struct BallLocationMessage : public gf::Message {
   static constexpr gf::Id type = "BallLocation"_id;
 
