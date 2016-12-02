@@ -30,6 +30,15 @@
 #include <gf/UI.h>
 #include <gf/Window.h>
 
+static void overview(gf::UI& ui) {
+
+}
+
+
+enum class Difficulty {
+  Easy,
+  Hard,
+};
 
 int main() {
   gf::Window window("41_ui", { 640, 480 }, ~gf::WindowHints::Resizable);
@@ -45,6 +54,9 @@ int main() {
   gf::UI ui(font);
 
   renderer.clear(gf::Color::Gray());
+
+  Difficulty op = Difficulty::Easy;
+  float value = 0.0f;
 
   while (window.isOpen()) {
     gf::Event event;
@@ -64,14 +76,43 @@ int main() {
 
     if (ui.begin("Show", gf::RectF(50, 50, 220, 220), gf::UIWindow::Border | gf::UIWindow::Movable | gf::UIWindow::Scalable | gf::UIWindow::Closable | gf::UIWindow::Minimizable | gf::UIWindow::Title)) {
 
+      /* fixed widget pixel width */
+
       ui.layoutRowStatic(30, 80, 1);
+
       if (ui.buttonLabel("button")) {
         std::cout << "Hello!\n";
       }
 
+      /* fixed widget window ratio width */
+
+      ui.layoutRowDynamic(30, 2);
+
+      if (ui.radioLabel("easy", op == Difficulty::Easy)) {
+        op = Difficulty::Easy;
+      }
+
+      if (ui.radioLabel("hard", op == Difficulty::Hard)) {
+        op = Difficulty::Hard;
+      }
+
+      /* custom widget pixel width */
+
+      ui.layoutRowBegin(gf::UILayoutFormat::Static, 30, 2);
+      ui.layoutRowPush(50);
+      ui.label("Volume:", gf::UITextAlignment::Left);
+      ui.layoutRowPush(110);
+      if (ui.sliderFloat(0.0f, value, 1.0f, 0.1f)) {
+        std::cout << "Value: " << value << '\n';
+      }
+      ui.layoutRowEnd();
+
+
     }
 
     ui.end();
+
+    overview(ui);
 
     renderer.clear();
     renderer.draw(ui);

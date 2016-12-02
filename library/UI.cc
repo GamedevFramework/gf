@@ -27,6 +27,7 @@
 
 #include <algorithm>
 #include <string>
+#include <type_traits>
 
 #include <iostream>
 
@@ -374,14 +375,145 @@ inline namespace v1 {
     nk_end(&m_impl->ctx);
   }
 
+  void UI::layoutRowDynamic(float height, int cols) {
+    setState(State::Setup);
+    nk_layout_row_dynamic(&m_impl->ctx, height, cols);
+  }
+
   void UI::layoutRowStatic(float height, int itemWidth, int cols) {
     setState(State::Setup);
     nk_layout_row_static(&m_impl->ctx, height, itemWidth, cols);
   }
 
+  void UI::layoutRowBegin(UILayoutFormat format, float rowHeight, int cols) {
+    setState(State::Setup);
+    nk_layout_row_begin(&m_impl->ctx, static_cast<nk_layout_format>(format), rowHeight, cols);
+  }
+
+  void UI::layoutRowPush(float value) {
+    setState(State::Setup);
+    nk_layout_row_push(&m_impl->ctx, value);
+  }
+
+  void UI::layoutRowEnd() {
+    setState(State::Setup);
+    nk_layout_row_end(&m_impl->ctx);
+  }
+
+  void UI::layoutRow(UILayoutFormat format, float height, int cols, const float *ratio) {
+    setState(State::Setup);
+    nk_layout_row(&m_impl->ctx, static_cast<nk_layout_format>(format), height, cols, ratio);
+  }
+
+  bool UI::groupBegin(const std::string& title, UIWindowFlags flags) {
+    setState(State::Setup);
+    return nk_group_begin(&m_impl->ctx, title.c_str(), flags.getValue());
+  }
+
+  void UI::groupEnd() {
+    setState(State::Setup);
+    nk_group_end(&m_impl->ctx);
+  }
+
+  bool UI::groupScrolledBegin(UIScroll& scroll, const std::string& title, UIWindowFlags flags) {
+    setState(State::Setup);
+    return nk_group_scrolled_begin(&m_impl->ctx, reinterpret_cast<nk_scroll*>(&scroll), title.c_str(), flags.getValue());
+  }
+
+  void UI::groupScrolledEnd() {
+    setState(State::Setup);
+    nk_group_scrolled_end(&m_impl->ctx);
+  }
+
+  void UI::label(const std::string& title, UITextAlignment align) {
+    setState(State::Setup);
+    nk_label(&m_impl->ctx, title.c_str(), static_cast<nk_flags>(align));
+  }
+
+  void UI::labelColored(const std::string& title, UITextAlignment align, const Color4f& color) {
+    setState(State::Setup);
+    nk_label_colored(&m_impl->ctx, title.c_str(), static_cast<nk_flags>(align), nk_rgba_f(color.r, color.g, color.b, color.a));
+  }
+
+  void UI::labelWrap(const std::string& title) {
+    setState(State::Setup);
+    nk_label_wrap(&m_impl->ctx, title.c_str());
+  }
+
+  void UI::labelColoredWrap(const std::string& title, const Color4f& color) {
+    setState(State::Setup);
+    nk_label_colored_wrap(&m_impl->ctx, title.c_str(), nk_rgba_f(color.r, color.g, color.b, color.a));
+  }
+
+  void UI::buttonSetBehavior(UIButtonBehavior behavior) {
+    setState(State::Setup);
+    nk_button_set_behavior(&m_impl->ctx, static_cast<enum nk_button_behavior>(behavior));
+  }
+
+  bool UI::buttonPushBehavior(UIButtonBehavior behavior) {
+    setState(State::Setup);
+    return nk_button_push_behavior(&m_impl->ctx, static_cast<enum nk_button_behavior>(behavior));
+  }
+
+  bool UI::buttonPopBehavior() {
+    setState(State::Setup);
+    return nk_button_pop_behavior(&m_impl->ctx);
+  }
+
   bool UI::buttonLabel(const std::string& title) {
     setState(State::Setup);
     return nk_button_label(&m_impl->ctx, title.c_str());
+  }
+
+  bool UI::buttonColor(const Color4f& color) {
+    setState(State::Setup);
+    return nk_button_color(&m_impl->ctx, nk_rgba_f(color.r, color.g, color.b, color.a));
+  }
+
+  bool UI::buttonSymbol(UISymbolType symbol) {
+    setState(State::Setup);
+    return nk_button_symbol(&m_impl->ctx, static_cast<nk_symbol_type>(symbol));
+  }
+
+  bool UI::buttonSymbolLabel(UISymbolType symbol, const std::string& title, UITextAlignment align) {
+    setState(State::Setup);
+    return nk_button_symbol_label(&m_impl->ctx, static_cast<nk_symbol_type>(symbol), title.c_str(), static_cast<nk_flags>(align));
+  }
+
+  bool UI::checkboxLabel(const std::string& title, bool active) {
+    setState(State::Setup);
+    return nk_check_label(&m_impl->ctx, title.c_str(), active);
+  }
+
+  bool UI::checkboxFlagsLabel(const std::string& title, unsigned& flags, unsigned value) {
+    setState(State::Setup);
+    return nk_checkbox_flags_label(&m_impl->ctx, title.c_str(), &flags, value);
+  }
+
+  bool UI::radioLabel(const std::string& title, bool active) {
+    setState(State::Setup);
+    return nk_option_label(&m_impl->ctx, title.c_str(), active);
+  }
+
+  bool UI::selectableLabel(const std::string& title, UITextAlignment align, bool value) {
+    setState(State::Setup);
+    return nk_select_label(&m_impl->ctx, title.c_str(), static_cast<nk_flags>(align), value);
+  }
+
+  bool UI::sliderFloat(float min, float& val, float max, float step) {
+    setState(State::Setup);
+    return nk_slider_float(&m_impl->ctx, min, &val, max, step);
+  }
+
+  bool UI::sliderInt(int min, int& val, int max, int step) {
+    setState(State::Setup);
+    return nk_slider_int(&m_impl->ctx, min, &val, max, step);
+  }
+
+  bool UI::progress(std::size_t& current, std::size_t max, bool modifyable) {
+    static_assert(std::is_same<std::size_t, nk_size>::value, "nk_size is not std::size_t");
+    setState(State::Setup);
+    return nk_progress(&m_impl->ctx, &current, max, modifyable);
   }
 
   void UI::draw(RenderTarget &target, RenderStates states) {

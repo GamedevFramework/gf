@@ -28,6 +28,7 @@
 #include "Flags.h"
 #include "Font.h"
 #include "Types.h"
+#include "Vector.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -47,6 +48,40 @@ inline namespace v1 {
   };
 
   using UIWindowFlags = Flags<UIWindow>;
+
+  enum class UILayoutFormat {
+    Dynamic = 0,
+    Static  = 1,
+  };
+
+  enum class UITextAlignment {
+    Left      = 0x10 | 0x01,
+    Centered  = 0x10 | 0x02,
+    Right     = 0x10 | 0x04,
+  };
+
+  using UIScroll = Vector<unsigned short, 2>;
+
+  enum class UIButtonBehavior {
+    Default   = 0,
+    Repeater  = 1,
+  };
+
+  enum class UISymbolType {
+    None,
+    X,
+    Underscore,
+    CircleSolid,
+    CircleOutline,
+    RectSolid,
+    RectOutline,
+    TriangleUp,
+    TriangleDown,
+    TriangleLeft,
+    TriangleRight,
+    Plus,
+    Minus,
+  };
 
   class UI : public Drawable {
   public:
@@ -70,12 +105,138 @@ inline namespace v1 {
      */
     void update(const Event& event);
 
+    /**
+     * @name Window
+     * @{
+     */
+
     bool begin(const std::string& title, const RectF& bounds, UIWindowFlags flags = None);
     void end();
 
+    /**
+     * @}
+     */
+
+    /**
+     * @name Layout
+     * @{
+     */
+
+    void layoutRowDynamic(float height, int cols);
     void layoutRowStatic(float height, int itemWidth, int cols);
 
+    void layoutRowBegin(UILayoutFormat format, float rowHeight, int cols);
+    void layoutRowPush(float value);
+    void layoutRowEnd();
+    void layoutRow(UILayoutFormat format, float height, int cols, const float *ratio);
+
+    /**
+     * @}
+     */
+
+    /**
+     * @name Layout: Group
+     * @{
+     */
+
+    bool groupBegin(const std::string& title, UIWindowFlags flags);
+    void groupEnd();
+
+    bool groupScrolledBegin(UIScroll& scroll, const std::string& title, UIWindowFlags flags);
+    void groupScrolledEnd();
+
+    /**
+     * @}
+     */
+
+    /**
+     * @name Widgets: Labels
+     * @{
+     */
+
+    void label(const std::string& title, UITextAlignment align);
+    void labelColored(const std::string& title, UITextAlignment align, const Color4f& color);
+    void labelWrap(const std::string& title);
+    void labelColoredWrap(const std::string& title, const Color4f& color);
+
+    /**
+     * @}
+     */
+
+    /**
+     * @name Widgets: Buttons
+     * @{
+     */
+
+    void buttonSetBehavior(UIButtonBehavior behavior);
+    bool buttonPushBehavior(UIButtonBehavior behavior);
+    bool buttonPopBehavior();
+
     bool buttonLabel(const std::string& title);
+    bool buttonColor(const Color4f& color);
+    bool buttonSymbol(UISymbolType symbol);
+    bool buttonSymbolLabel(UISymbolType symbol, const std::string& title, UITextAlignment align);
+
+    /**
+     * @}
+     */
+
+    /**
+     * @name Widgets: Checkbox
+     * @{
+     */
+
+    bool checkboxLabel(const std::string& title, bool active);
+    bool checkboxFlagsLabel(const std::string& title, unsigned& flags, unsigned value);
+
+    /**
+     * @}
+     */
+
+    /**
+     * @name Widgets: Radio
+     * @{
+     */
+
+    bool radioLabel(const std::string& title, bool active);
+
+    /**
+     * @}
+     */
+
+    /**
+     * @name Widgets: Selectable
+     * @{
+     */
+
+    bool selectableLabel(const std::string& title, UITextAlignment align, bool value);
+
+    /**
+     * @}
+     */
+
+    /**
+     * @name Widgets: Slider
+     * @{
+     */
+
+    bool sliderFloat(float min, float& val, float max, float step);
+    bool sliderInt(int min, int& val, int max, int step);
+
+    /**
+     * @}
+     */
+
+    /**
+     * @name Widgets: Progressbar
+     * @{
+     */
+
+    bool progress(std::size_t& current, std::size_t max, bool modifyable);
+
+    /**
+     * @}
+     */
 
     virtual void draw(RenderTarget &target, RenderStates states) override;
 
