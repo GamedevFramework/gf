@@ -42,12 +42,12 @@
 #define NK_INCLUDE_DEFAULT_ALLOCATOR
 #define NK_INCLUDE_VERTEX_BUFFER_OUTPUT
 
-#define NK_MEMSET std::memset
-#define NK_MEMCPY std::memcpy
-#define NK_SQRT std::sqrt
-#define NK_SIN std::sin
-#define NK_COS std::cos
-#define NK_STRTOD std::strtod
+// #define NK_MEMSET std::memset
+// #define NK_MEMCPY std::memcpy
+// #define NK_SQRT std::sqrt
+// #define NK_SIN std::sin
+// #define NK_COS std::cos
+// #define NK_STRTOD std::strtod
 
 #define NK_IMPLEMENTATION
 #include "vendor/nuklear/nuklear.h"
@@ -514,6 +514,29 @@ inline namespace v1 {
     static_assert(std::is_same<std::size_t, nk_size>::value, "nk_size is not std::size_t");
     setState(State::Setup);
     return nk_progress(&m_impl->ctx, &current, max, modifyable);
+  }
+
+  bool UI::colorPicker(Color4f& color) {
+    setState(State::Setup);
+    nk_color c = nk_rgba_f(color.r, color.g, color.b, color.a);
+    bool ret = nk_color_pick(&m_impl->ctx, &c, NK_RGBA);
+    nk_color_f(&color.r, &color.g, &color.b, &color.a, c);
+    return ret;
+  }
+
+  void UI::propertyInt(const std::string& name, int min, int& val, int max, int step, float incPerPixel) {
+    setState(State::Setup);
+    nk_property_int(&m_impl->ctx, name.c_str(), min, &val, max, step, incPerPixel);
+  }
+
+  void UI::propertyFloat(const std::string& name, float min, float& val, float max, float step, float incPerPixel) {
+    setState(State::Setup);
+    nk_property_float(&m_impl->ctx, name.c_str(), min, &val, max, step, incPerPixel);
+  }
+
+  void UI::propertyDouble(const std::string& name, double min, double& val, double max, double step, float incPerPixel) {
+    setState(State::Setup);
+    nk_property_double(&m_impl->ctx, name.c_str(), min, &val, max, step, incPerPixel);
   }
 
   void UI::draw(RenderTarget &target, RenderStates states) {

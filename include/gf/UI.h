@@ -238,6 +238,30 @@ inline namespace v1 {
      * @}
      */
 
+    /**
+     * @name Widgets: Color picker
+     * @{
+     */
+
+    bool colorPicker(Color4f& color);
+
+    /**
+     * @}
+     */
+
+    /**
+     * @name Widgets: Property
+     * @{
+     */
+
+    void propertyInt(const std::string& name, int min, int& val, int max, int step, float incPerPixel);
+    void propertyFloat(const std::string& name, float min, float& val, float max, float step, float incPerPixel);
+    void propertyDouble(const std::string& name, double min, double& val, double max, double step, float incPerPixel);
+
+    /**
+     * @}
+     */
+
     virtual void draw(RenderTarget &target, RenderStates states) override;
 
   private:
