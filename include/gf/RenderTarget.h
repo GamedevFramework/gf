@@ -97,11 +97,25 @@ inline namespace v1 {
      */
 
     /**
-     * @brief Enable or disable the scrissor test
+     * @brief Tell if the scissor test is enabled
+     *
+     * @return True if the scissor test is enabled
+     */
+    bool getScissorTest();
+
+    /**
+     * @brief Enable or disable the scissor test
      *
      * @param scissor True to enable, false to disable the test
      */
     void setScissorTest(bool scissor = true);
+
+    /**
+     * @brief Get the current scissor box
+     *
+     * @return The current scissor box
+     */
+    RectI getScissoBox();
 
     /**
      * @brief Define the scissor box

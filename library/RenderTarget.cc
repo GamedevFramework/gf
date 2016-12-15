@@ -47,12 +47,25 @@ inline namespace v1 {
 
   }
 
+  bool RenderTarget::getScissorTest() {
+    GLboolean test;
+    glCheck(glGetBooleanv(GL_SCISSOR_TEST, &test));
+    return test == GL_TRUE;
+  }
+
   void RenderTarget::setScissorTest(bool scissor) {
     if (scissor) {
       glCheck(glEnable(GL_SCISSOR_TEST));
     } else {
       glCheck(glDisable(GL_SCISSOR_TEST));
     }
+  }
+
+  RectI RenderTarget::getScissoBox() {
+    GLint box[4];
+    glCheck(glGetIntegerv(GL_SCISSOR_BOX, &box[0]));
+    Vector2i size = getSize();
+    return RectI(box[0], (size.height - box[1]) - box[3], box[2], box[3]);
   }
 
   void RenderTarget::setScissorBox(const RectI& box) {
