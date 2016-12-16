@@ -400,9 +400,9 @@ inline namespace v1 {
     nk_layout_row_end(&m_impl->ctx);
   }
 
-  void UI::layoutRow(UILayoutFormat format, float height, int cols, const float *ratio) {
+  void UI::layoutRow(UILayoutFormat format, float height, int cols,  const std::vector<float>& ratio) {
     setState(State::Setup);
-    nk_layout_row(&m_impl->ctx, static_cast<nk_layout_format>(format), height, cols, ratio);
+    nk_layout_row(&m_impl->ctx, static_cast<nk_layout_format>(format), height, cols, ratio.data());
   }
 
   bool UI::groupBegin(const std::string& title, UIWindowFlags flags) {
@@ -537,6 +537,21 @@ inline namespace v1 {
   void UI::propertyDouble(const std::string& name, double min, double& val, double max, double step, float incPerPixel) {
     setState(State::Setup);
     nk_property_double(&m_impl->ctx, name.c_str(), min, &val, max, step, incPerPixel);
+  }
+
+  bool UI::popupBegin(UIPopupType type, const std::string& title, UIWindowFlags flags, const RectF& bounds) {
+    setState(State::Setup);
+    return nk_popup_begin(&m_impl->ctx, static_cast<enum nk_popup_type>(type), title.c_str(), flags.getValue(), { bounds.left, bounds.top, bounds.width, bounds.height });
+  }
+
+  void UI::popupClose() {
+    setState(State::Setup);
+    nk_popup_close(&m_impl->ctx);
+  }
+
+  void UI::popupEnd() {
+    setState(State::Setup);
+    nk_popup_end(&m_impl->ctx);
   }
 
   void UI::draw(RenderTarget &target, RenderStates states) {

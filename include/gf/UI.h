@@ -83,6 +83,11 @@ inline namespace v1 {
     Minus,
   };
 
+  enum class UIPopupType {
+    Static,
+    Dynamic,
+  };
+
   class UI : public Drawable {
   public:
     static constexpr unsigned DefaultCharacterSize = 13;
@@ -128,7 +133,7 @@ inline namespace v1 {
     void layoutRowBegin(UILayoutFormat format, float rowHeight, int cols);
     void layoutRowPush(float value);
     void layoutRowEnd();
-    void layoutRow(UILayoutFormat format, float height, int cols, const float *ratio);
+    void layoutRow(UILayoutFormat format, float height, int cols, const std::vector<float>& ratio);
 
     /**
      * @}
@@ -257,6 +262,19 @@ inline namespace v1 {
     void propertyInt(const std::string& name, int min, int& val, int max, int step, float incPerPixel);
     void propertyFloat(const std::string& name, float min, float& val, float max, float step, float incPerPixel);
     void propertyDouble(const std::string& name, double min, double& val, double max, double step, float incPerPixel);
+
+    /**
+     * @}
+     */
+
+    /**
+     * @name Popups
+     * @{
+     */
+
+    bool popupBegin(UIPopupType type, const std::string& title, UIWindowFlags flags, const RectF& bounds);
+    void popupClose();
+    void popupEnd();
 
     /**
      * @}
