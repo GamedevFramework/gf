@@ -554,6 +554,23 @@ inline namespace v1 {
     nk_popup_end(&m_impl->ctx);
   }
 
+  int UI::combo(const std::vector<std::string>& items, int selected, int itemHeight, Vector2f size) {
+    std::vector<const char *> itemsCString;
+
+    for (auto& item : items) {
+      itemsCString.push_back(item.c_str());
+    }
+
+    return nk_combo(&m_impl->ctx, &itemsCString[0], itemsCString.size(), selected, itemHeight, { size.width, size.height });
+  }
+
+  int UI::comboSeparator(const std::string& itemsSeparatedBySeparator, char separator, int selected, int itemHeight, Vector2f size) {
+    auto count = std::count(itemsSeparatedBySeparator.begin(), itemsSeparatedBySeparator.end(), separator);
+
+    return nk_combo_separator(&m_impl->ctx, itemsSeparatedBySeparator.c_str(), separator, selected, count + 1, itemHeight, { size.width, size.height });
+  }
+
+
   void UI::draw(RenderTarget &target, RenderStates states) {
     setState(State::Draw);
 

@@ -30,10 +30,6 @@
 #include <gf/UI.h>
 #include <gf/Window.h>
 
-static void overview(gf::UI& ui) {
-
-}
-
 
 enum class Difficulty {
   Easy,
@@ -57,6 +53,12 @@ int main() {
 
   Difficulty op = Difficulty::Easy;
   float value = 0.0f;
+  bool selected = false;
+  float valueFloat = 0.0f;
+  int valueInt = 0;
+  gf::Color4f color = gf::Color::Orange;
+  int propertyInt = 0;
+  int selectedItem = 0;
 
   while (window.isOpen()) {
     gf::Event event;
@@ -112,7 +114,80 @@ int main() {
 
     ui.end();
 
-    overview(ui);
+
+    if (ui.begin("Overview", gf::RectF(300, 50, 220, 420), gf::UIWindow::Border | gf::UIWindow::Movable | gf::UIWindow::Scalable | gf::UIWindow::Closable | gf::UIWindow::Minimizable | gf::UIWindow::Title)) {
+
+      ui.layoutRowDynamic(30, 2);
+
+      ui.label("Label", gf::UITextAlignment::Left);
+      ui.labelColored("Label colored", gf::UITextAlignment::Right, color);
+
+      ui.layoutRowDynamic(30, 2);
+
+      ui.buttonLabel("Button");
+      ui.buttonColor(color);
+
+      ui.layoutRowBegin(gf::UILayoutFormat::Static, 30, 2);
+      ui.layoutRowPush(30);
+      ui.buttonSymbol(gf::UISymbolType::CircleOutline);
+      ui.layoutRowPush(160);
+      ui.buttonSymbolLabel(gf::UISymbolType::CircleSolid, "Button symbol", gf::UITextAlignment::Right);
+      ui.layoutRowEnd();
+
+      ui.layoutRowDynamic(30, 2);
+
+      if (ui.checkboxLabel("easy", op == Difficulty::Easy)) {
+        op = Difficulty::Easy;
+      }
+
+      if (ui.checkboxLabel("hard", op == Difficulty::Hard)) {
+        op = Difficulty::Hard;
+      }
+
+      ui.layoutRowDynamic(30, 2);
+
+      if (ui.radioLabel("easy", op == Difficulty::Easy)) {
+        op = Difficulty::Easy;
+      }
+
+      if (ui.radioLabel("hard", op == Difficulty::Hard)) {
+        op = Difficulty::Hard;
+      }
+
+      ui.layoutRowDynamic(30, 2);
+
+      if (ui.selectableLabel("selected", gf::UITextAlignment::Centered, selected)) {
+        selected = true;
+      }
+
+      if (ui.selectableLabel("!selected", gf::UITextAlignment::Centered, !selected)) {
+        selected = false;
+      }
+
+      ui.layoutRowDynamic(30, 2);
+
+      if (ui.sliderFloat(0.0f, valueFloat, 10.0f, 0.1f)) {
+        std::cout << "Float value: " << valueFloat << '\n';
+      }
+
+      if (ui.sliderInt(0, valueInt, 100, 5)) {
+        std::cout << "Int value: " << valueInt << '\n';
+      }
+
+      ui.layoutRowDynamic(30, 1);
+      ui.propertyInt("int", 0, propertyInt, 10, 1, 0.1f);
+
+      ui.layoutRowDynamic(25, 1);
+      selectedItem = ui.combo({ "One", "Two", "Three" }, selectedItem, 20, { 180, 100 });
+
+      ui.layoutRowBegin(gf::UILayoutFormat::Static, 60, 1);
+      ui.layoutRowPush(100);
+      ui.colorPicker(color);
+      ui.layoutRowEnd();
+
+    }
+
+    ui.end();
 
     renderer.clear();
     renderer.draw(ui);

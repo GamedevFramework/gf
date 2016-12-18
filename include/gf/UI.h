@@ -280,6 +280,18 @@ inline namespace v1 {
      * @}
      */
 
+    /**
+     * @name Combobox
+     * @{
+     */
+
+    int combo(const std::vector<std::string>& items, int selected, int itemHeight, Vector2f size);
+    int comboSeparator(const std::string& itemsSeparatedBySeparator, char separator, int selected, int itemHeight, Vector2f size);
+
+    /**
+     * @}
+     */
+
     virtual void draw(RenderTarget &target, RenderStates states) override;
 
   private:
