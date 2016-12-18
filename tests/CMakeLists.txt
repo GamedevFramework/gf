@@ -22,3 +22,11 @@ target_include_directories(gf_tests
 
 target_link_libraries(gf_tests gf0)
 
+
+add_executable(bug6
+  EXCLUDE_FROM_ALL
+  bugs/bug6.cc
+)
+
+target_link_libraries(bug6 gf0)
+
