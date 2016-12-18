@@ -64,6 +64,7 @@ inline namespace v1 {
    * These codes corresponds to [USB key codes](http://www.usb.org/developers/hidpage/Hut1_12v2.pdf).
    */
   enum class Scancode : int {
+    Unknown = 0,
     A = 4,
     B = 5,
     C = 6,
@@ -513,16 +514,36 @@ inline namespace v1 {
      *
      * @param scancode The scancode
      * @return A string representing the scancode
+     * @sa getScancodeFromName()
      */
     static const char *getScancodeName(Scancode scancode);
+
+    /**
+     * @brief Get the scancode associated to a name
+     *
+     * @param name The name of the scancode
+     * @return A scancode
+     * @sa getScancodeName()
+     */
+    static Scancode getScancodeFromName(const char *name);
 
     /**
      * @brief Get the representation of a keycode
      *
      * @param keycode The keycode
      * @return A string representing the keycode
+     * @sa getKeycodeFromName()
      */
     static const char *getKeycodeName(Keycode keycode);
+
+    /**
+     * @brief Get the keycode associated to a name
+     *
+     * @param name The name of the keycode
+     * @return A keycode
+     * @sa getKeycodeName()
+     */
+    static Keycode getKeycodeFromName(const char *name);
 
     /**
      * @brief Deleted constructor
