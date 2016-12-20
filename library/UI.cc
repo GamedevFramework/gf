@@ -199,6 +199,7 @@ inline namespace v1 {
 
   UI& UI::operator=(UI&& other) {
     std::swap(m_impl, other.m_impl);
+    std::swap(m_state, other.m_state);
     return *this;
   }
 
@@ -423,6 +424,19 @@ inline namespace v1 {
   void UI::groupScrolledEnd() {
     setState(State::Setup);
     nk_group_scrolled_end(&m_impl->ctx);
+  }
+
+  bool UI::treePush(UITreeType type, const std::string& title, UICollapseStates& state) {
+    setState(State::Setup);
+    enum nk_collapse_states s = static_cast<enum nk_collapse_states>(state);
+    auto ret = nk_tree_state_push(&m_impl->ctx, static_cast<enum nk_tree_type>(type), title.c_str(), &s);
+    state = static_cast<UICollapseStates>(s);
+    return ret;
+  }
+
+  void UI::treePop() {
+    setState(State::Setup);
+    nk_tree_state_pop(&m_impl->ctx);
   }
 
   void UI::label(const std::string& title, UITextAlignment align) {

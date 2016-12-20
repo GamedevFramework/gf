@@ -49,9 +49,19 @@ inline namespace v1 {
 
   using UIWindowFlags = Flags<UIWindow>;
 
+  enum class UICollapseStates : bool {
+    Minimized = false,
+    Maximized = true,
+  };
+
   enum class UILayoutFormat {
     Dynamic = 0,
     Static  = 1,
+  };
+
+  enum class UITreeType {
+    Node  = 0,
+    Tab   = 1,
   };
 
   enum class UITextAlignment {
@@ -149,6 +159,18 @@ inline namespace v1 {
 
     bool groupScrolledBegin(UIScroll& scroll, const std::string& title, UIWindowFlags flags);
     void groupScrolledEnd();
+
+    /**
+     * @}
+     */
+
+    /**
+     * @name Layout: Tree
+     * @{
+     */
+
+    bool treePush(UITreeType type, const std::string& title, UICollapseStates& state);
+    void treePop();
 
     /**
      * @}
