@@ -67,9 +67,9 @@ inline namespace v1 {
   };
 
   enum class UIAlignment {
-    Left      = 0x10 | 0x01,
-    Centered  = 0x10 | 0x02,
-    Right     = 0x10 | 0x04,
+    Left    = 0x10 | 0x01,
+    Center  = 0x10 | 0x02,
+    Right   = 0x10 | 0x04,
   };
 
   using UIScroll = Vector<unsigned short, 2>;
@@ -156,10 +156,10 @@ inline namespace v1 {
      * @{
      */
 
-    bool groupBegin(const std::string& title, UIWindowFlags flags);
+    bool groupBegin(const std::string& title, UIWindowFlags flags = None);
     void groupEnd();
 
-    bool groupScrolledBegin(UIScroll& scroll, const std::string& title, UIWindowFlags flags);
+    bool groupScrolledBegin(UIScroll& scroll, const std::string& title, UIWindowFlags flags = None);
     void groupScrolledEnd();
 
     /**
@@ -183,10 +183,10 @@ inline namespace v1 {
      * @{
      */
 
-    void label(StringRef title, UIAlignment align);
-    void labelColored(StringRef title, UIAlignment align, const Color4f& color);
+    void label(StringRef title, UIAlignment align = UIAlignment::Left);
+    void labelColored(const Color4f& color, StringRef title, UIAlignment align = UIAlignment::Left);
     void labelWrap(StringRef title);
-    void labelWrapColored(StringRef title, const Color4f& color);
+    void labelWrapColored(const Color4f& color, StringRef title);
 
     /**
      * @}
@@ -204,7 +204,7 @@ inline namespace v1 {
     bool buttonLabel(StringRef title);
     bool buttonColor(const Color4f& color);
     bool buttonSymbol(UISymbol symbol);
-    bool buttonSymbolLabel(UISymbol symbol, StringRef title, UIAlignment align);
+    bool buttonSymbolLabel(UISymbol symbol, StringRef title, UIAlignment align = UIAlignment::Left);
 
     /**
      * @}
@@ -319,8 +319,8 @@ inline namespace v1 {
     bool comboBeginSymbol(UISymbol symbol, Vector2f size);
     bool comboBeginSymbolLabel(UISymbol symbol, StringRef selected, Vector2f size);
 
-    bool comboItemLabel(StringRef title, UIAlignment align);
-    bool comboItemSymbolLabel(UISymbol symbol, StringRef title, UIAlignment align);
+    bool comboItemLabel(StringRef title, UIAlignment align = UIAlignment::Left);
+    bool comboItemSymbolLabel(UISymbol symbol, StringRef title, UIAlignment align = UIAlignment::Left);
 
     void comboClose();
     void comboEnd();
@@ -336,8 +336,8 @@ inline namespace v1 {
 
     bool contextualBegin(UIWindowFlags flags, Vector2f size, const RectF& triggerBounds);
 
-    bool contextualItemLabel(StringRef title, UIAlignment align);
-    bool contextualItemSymbolLabel(UISymbol symbol, StringRef title, UIAlignment align);
+    bool contextualItemLabel(StringRef title, UIAlignment align = UIAlignment::Left);
+    bool contextualItemSymbolLabel(UISymbol symbol, StringRef title, UIAlignment align = UIAlignment::Left);
 
     void contextualClose();
     void contextualEnd();
@@ -371,8 +371,8 @@ inline namespace v1 {
     bool menuBeginSymbol(const std::string& id, UISymbol symbol, Vector2f size);
     bool menuBeginSymbolLabel(UISymbol symbol, StringRef title, UIAlignment align, Vector2f size);
 
-    bool menuItemLabel(StringRef title, UIAlignment align);
-    bool menuItemSymbolLabel(UISymbol symbol, StringRef title, UIAlignment align);
+    bool menuItemLabel(StringRef title, UIAlignment align = UIAlignment::Left);
+    bool menuItemSymbolLabel(UISymbol symbol, StringRef title, UIAlignment align = UIAlignment::Left);
 
     void menuClose();
     void menuEnd();

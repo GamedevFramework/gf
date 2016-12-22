@@ -444,7 +444,7 @@ inline namespace v1 {
     nk_text(&m_impl->ctx, title.getData(), title.getSize(), static_cast<nk_flags>(align));
   }
 
-  void UI::labelColored(StringRef title, UIAlignment align, const Color4f& color) {
+  void UI::labelColored(const Color4f& color, StringRef title, UIAlignment align) {
     setState(State::Setup);
     nk_text_colored(&m_impl->ctx, title.getData(), title.getSize(), static_cast<nk_flags>(align), nk_rgba_f(color.r, color.g, color.b, color.a));
   }
@@ -454,7 +454,7 @@ inline namespace v1 {
     nk_text_wrap(&m_impl->ctx, title.getData(), title.getSize());
   }
 
-  void UI::labelWrapColored(StringRef title, const Color4f& color) {
+  void UI::labelWrapColored(const Color4f& color, StringRef title) {
     setState(State::Setup);
     nk_text_wrap_colored(&m_impl->ctx, title.getData(), title.getSize(), nk_rgba_f(color.r, color.g, color.b, color.a));
   }
