@@ -23,6 +23,7 @@
 
 #include <cstdint>
 
+#include "ArrayRef.h"
 #include "Drawable.h"
 #include "Event.h"
 #include "Flags.h"
@@ -143,7 +144,7 @@ inline namespace v1 {
     void layoutRowBegin(UILayoutFormat format, float rowHeight, int cols);
     void layoutRowPush(float value);
     void layoutRowEnd();
-    void layoutRow(UILayoutFormat format, float height, int cols, const std::vector<float>& ratio);
+    void layoutRow(UILayoutFormat format, float height, ArrayRef<float> ratio);
 
     /**
      * @}
@@ -213,7 +214,7 @@ inline namespace v1 {
      * @{
      */
 
-    bool checkboxLabel(const std::string& title, bool active);
+    bool checkboxLabel(const std::string& title, bool& active);
     bool checkboxFlagsLabel(const std::string& title, unsigned& flags, unsigned value);
 
     /**
@@ -225,7 +226,9 @@ inline namespace v1 {
      * @{
      */
 
-    bool radioLabel(const std::string& title, bool active);
+    bool optionLabel(const std::string& title, bool active);
+
+    bool radioLabel(const std::string& title, bool& active);
 
     /**
      * @}
@@ -236,7 +239,7 @@ inline namespace v1 {
      * @{
      */
 
-    bool selectableLabel(const std::string& title, UITextAlignment align, bool value);
+    bool selectableLabel(const std::string& title, UITextAlignment align, bool& value);
 
     /**
      * @}
@@ -307,12 +310,102 @@ inline namespace v1 {
      * @{
      */
 
-    int combo(const std::vector<std::string>& items, int selected, int itemHeight, Vector2f size);
-    int comboSeparator(const std::string& itemsSeparatedBySeparator, char separator, int selected, int itemHeight, Vector2f size);
+    void combobox(const std::vector<std::string>& items, int& selected, int itemHeight, Vector2f size);
+    void comboboxSeparator(const std::string& itemsSeparatedBySeparator, char separator, int& selected, int itemHeight, Vector2f size);
+
+    bool comboBeginLabel(const std::string& selected, Vector2f size);
+    bool comboBeginColor(const Color4f& color, Vector2f size);
+    bool comboBeginSymbol(UISymbolType symbol, Vector2f size);
+    bool comboBeginSymbolLabel(UISymbolType symbol, const std::string& selected, Vector2f size);
+
+    bool comboItemLabel(const std::string& title, UITextAlignment align);
+    bool comboItemSymbolLabel(UISymbolType symbol, const std::string& title, UITextAlignment align);
+
+    void comboClose();
+    void comboEnd();
 
     /**
      * @}
      */
+
+    /**
+     * @name Contextual
+     * @{
+     */
+
+    bool contextualBegin(UIWindowFlags flags, Vector2f size, const RectF& triggerBounds);
+
+    bool contextualItemLabel(const std::string& title, UITextAlignment align);
+    bool contextualItemSymbolLabel(UISymbolType symbol, const std::string& title, UITextAlignment align);
+
+    void contextualClose();
+    void contextualEnd();
+
+    /**
+     * @}
+     */
+
+    /**
+     * @name Tooltip
+     * @{
+     */
+
+    void tooltip(const std::string& text);
+    bool tooltipBegin(float width);
+    void tooltipEnd();
+
+    /**
+     * @}
+     */
+
+    /**
+     * @name Menu
+     * @{
+     */
+
+    void menubarBegin();
+    void menubarEnd();
+
+    bool menuBeginLabel(const std::string& title, UITextAlignment align, Vector2f size);
+    bool menuBeginSymbol(const std::string& id, UISymbolType symbol, Vector2f size);
+    bool menuBeginSymbolLabel(UISymbolType symbol, const std::string& title, UITextAlignment align, Vector2f size);
+
+    bool menuItemLabel(const std::string& title, UITextAlignment align);
+    bool menuItemSymbolLabel(UISymbolType symbol, const std::string& title, UITextAlignment align);
+
+    void menuClose();
+    void menuEnd();
+
+    /**
+     * @}
+     */
+
+
+
+
+    /**
+     * @name Utilities
+     * @{
+     */
+
+    RectF getWidgetBounds();
+    bool isWidgetHovered();
+
+    /**
+     * @}
+     */
+
+    /**
+     * @name Input
+     * @{
+     */
+
+    bool isMouseHoveringRect(const RectF& bounds);
+
+    /**
+     * @}
+     */
+
 
     virtual void draw(RenderTarget &target, RenderStates states) override;
 

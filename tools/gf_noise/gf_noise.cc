@@ -491,7 +491,7 @@ int main() {
     ui.begin("Noise parameters", gf::RectF(Size, 0, ExtraSize, Size), gf::UIWindow::Title | gf::UIWindow::Border);
 
     ui.layoutRowDynamic(20, 1);
-    noiseChoice = ui.combo(noiseChoices, noiseChoice, 20, { ExtraSize, Size });
+    ui.combobox(noiseChoices, noiseChoice, 20, { ExtraSize, Size });
 
     ui.layoutRowDynamic(20, 1);
     ui.propertyFloat("Scale", 0.1f, scale, 20.0f, 0.1f, 0.1f);
@@ -502,16 +502,16 @@ int main() {
       case NoiseFunction::Gradient:
         ui.layoutRowDynamic(20, 1);
         ui.label("Step function:", gf::UITextAlignment::Left);
-        stepChoice = ui.combo(stepChoices, stepChoice, 20, { ExtraSize, Size });
+        ui.combobox(stepChoices, stepChoice, 20, { ExtraSize, Size });
         break;
 
       case NoiseFunction::Worley:
         ui.layoutRowDynamic(20, 1);
         ui.propertyInt("Point count", 5, pointCount, 40, 1, 1.0f);
         ui.label("Distance function:", gf::UITextAlignment::Left);
-        distanceChoice = ui.combo(distanceChoices, distanceChoice, 20, { ExtraSize, Size });
+        ui.combobox(distanceChoices, distanceChoice, 20, { ExtraSize, Size });
         ui.label("Combination:", gf::UITextAlignment::Left);
-        combinationChoice = ui.combo(combinationChoices, combinationChoice, 20, { ExtraSize, Size });
+        ui.combobox(combinationChoices, combinationChoice, 20, { ExtraSize, Size });
 
       default:
         break;
@@ -519,7 +519,7 @@ int main() {
 
     if (ui.treePush(gf::UITreeType::Tab, "Fractal", fractalCollapsed)) {
       ui.layoutRowDynamic(20, 1);
-      fractalChoice = ui.combo(fractalChoices, fractalChoice, 20, { ExtraSize, Size });
+      ui.combobox(fractalChoices, fractalChoice, 20, { ExtraSize, Size });
 
       fractalParams.fractal = static_cast<Fractal>(fractalChoice);
 
@@ -579,7 +579,7 @@ int main() {
 
     if (ui.treePush(gf::UITreeType::Tab, "Rendering", renderingCollapsed)) {
       ui.layoutRowDynamic(20, 1);
-      renderingChoice = ui.combo(renderingChoices, renderingChoice, 20, { ExtraSize, Size });
+      ui.combobox(renderingChoices, renderingChoice, 20, { ExtraSize, Size });
 
       renderingParams.rendering = static_cast<Rendering>(renderingChoice);
 
@@ -592,7 +592,7 @@ int main() {
           ui.propertyFloat("Water level", 0.0f, renderingParams.waterLevel, 1.0f, 0.05f, 0.05f);
 
           ui.layoutRowDynamic(20, 1);
-          renderingParams.shaded = ui.checkboxLabel("Shaded", renderingParams.shaded);
+          ui.checkboxLabel("Shaded", renderingParams.shaded);
           break;
       }
 
