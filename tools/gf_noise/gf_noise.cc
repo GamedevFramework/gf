@@ -492,6 +492,10 @@ int main() {
 
     ui.layoutRowDynamic(20, 1);
     ui.combobox(noiseChoices, noiseChoice, 20, { ExtraSize, Size });
+
+    ui.separator(5);
+
+    ui.layoutRowDynamic(20, 1);
     ui.propertyFloat("Scale", 0.1f, scale, 20.0f, 0.1f, 0.1f);
 
     NoiseFunction noiseFunction = static_cast<NoiseFunction>(noiseChoice);
@@ -512,6 +516,8 @@ int main() {
       default:
         break;
     }
+
+    ui.separator(5);
 
     if (ui.treePush(gf::UITree::Tab, "Fractal", fractalCollapsed)) {
       ui.layoutRowDynamic(20, 1);
@@ -559,6 +565,7 @@ int main() {
       ui.treePop();
     }
 
+    ui.separator(5);
 
     if (ui.treePush(gf::UITree::Tab, "Rendering", renderingCollapsed)) {
       ui.layoutRowDynamic(20, 1);
@@ -578,6 +585,8 @@ int main() {
 
       ui.treePop();
     }
+
+    ui.separator(5);
 
     ui.layoutRowDynamic(20, 1);
     if (ui.buttonLabel("Generate")) {

@@ -406,6 +406,11 @@ inline namespace v1 {
     nk_layout_row(&m_impl->ctx, static_cast<nk_layout_format>(format), height, ratio.getSize(), ratio.getData());
   }
 
+  void UI::separator(float height) {
+    setState(State::Setup);
+    nk_layout_row_dynamic(&m_impl->ctx, height, 0);
+  }
+
   bool UI::groupBegin(const std::string& title, UIWindowFlags flags) {
     setState(State::Setup);
     return nk_group_begin(&m_impl->ctx, title.c_str(), flags.getValue());

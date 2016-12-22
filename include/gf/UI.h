@@ -152,6 +152,8 @@ inline namespace v1 {
     void layoutRowEnd();
     void layoutRow(UILayout format, float height, ArrayRef<float> ratio);
 
+    void separator(float height);
+
     /**
      * @}
      */
