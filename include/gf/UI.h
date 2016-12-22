@@ -28,6 +28,7 @@
 #include "Event.h"
 #include "Flags.h"
 #include "Font.h"
+#include "StringRef.h"
 #include "Types.h"
 #include "Vector.h"
 
@@ -182,10 +183,10 @@ inline namespace v1 {
      * @{
      */
 
-    void label(const std::string& title, UIAlignment align);
-    void labelColored(const std::string& title, UIAlignment align, const Color4f& color);
-    void labelWrap(const std::string& title);
-    void labelColoredWrap(const std::string& title, const Color4f& color);
+    void label(StringRef title, UIAlignment align);
+    void labelColored(StringRef title, UIAlignment align, const Color4f& color);
+    void labelWrap(StringRef title);
+    void labelWrapColored(StringRef title, const Color4f& color);
 
     /**
      * @}
@@ -200,10 +201,10 @@ inline namespace v1 {
     bool buttonPushBehavior(UIButtonBehavior behavior);
     bool buttonPopBehavior();
 
-    bool buttonLabel(const std::string& title);
+    bool buttonLabel(StringRef title);
     bool buttonColor(const Color4f& color);
     bool buttonSymbol(UISymbol symbol);
-    bool buttonSymbolLabel(UISymbol symbol, const std::string& title, UIAlignment align);
+    bool buttonSymbolLabel(UISymbol symbol, StringRef title, UIAlignment align);
 
     /**
      * @}
@@ -214,8 +215,8 @@ inline namespace v1 {
      * @{
      */
 
-    bool checkbox(const std::string& title, bool& active);
-    bool checkboxFlags(const std::string& title, unsigned& flags, unsigned value);
+    bool checkbox(StringRef title, bool& active);
+    bool checkboxFlags(StringRef title, unsigned& flags, unsigned value);
 
     /**
      * @}
@@ -226,9 +227,9 @@ inline namespace v1 {
      * @{
      */
 
-    bool option(const std::string& title, bool active);
+    bool option(StringRef title, bool active);
 
-    bool radio(const std::string& title, bool& active);
+    bool radio(StringRef title, bool& active);
 
     /**
      * @}
@@ -239,7 +240,7 @@ inline namespace v1 {
      * @{
      */
 
-    bool selectableLabel(const std::string& title, UIAlignment align, bool& value);
+    bool selectableLabel(StringRef title, UIAlignment align, bool& value);
 
     /**
      * @}
@@ -313,13 +314,13 @@ inline namespace v1 {
     void combobox(const std::vector<std::string>& items, int& selected, int itemHeight, Vector2f size);
     void comboboxSeparator(const std::string& itemsSeparatedBySeparator, char separator, int& selected, int itemHeight, Vector2f size);
 
-    bool comboBeginLabel(const std::string& selected, Vector2f size);
+    bool comboBeginLabel(StringRef selected, Vector2f size);
     bool comboBeginColor(const Color4f& color, Vector2f size);
     bool comboBeginSymbol(UISymbol symbol, Vector2f size);
-    bool comboBeginSymbolLabel(UISymbol symbol, const std::string& selected, Vector2f size);
+    bool comboBeginSymbolLabel(UISymbol symbol, StringRef selected, Vector2f size);
 
-    bool comboItemLabel(const std::string& title, UIAlignment align);
-    bool comboItemSymbolLabel(UISymbol symbol, const std::string& title, UIAlignment align);
+    bool comboItemLabel(StringRef title, UIAlignment align);
+    bool comboItemSymbolLabel(UISymbol symbol, StringRef title, UIAlignment align);
 
     void comboClose();
     void comboEnd();
@@ -335,8 +336,8 @@ inline namespace v1 {
 
     bool contextualBegin(UIWindowFlags flags, Vector2f size, const RectF& triggerBounds);
 
-    bool contextualItemLabel(const std::string& title, UIAlignment align);
-    bool contextualItemSymbolLabel(UISymbol symbol, const std::string& title, UIAlignment align);
+    bool contextualItemLabel(StringRef title, UIAlignment align);
+    bool contextualItemSymbolLabel(UISymbol symbol, StringRef title, UIAlignment align);
 
     void contextualClose();
     void contextualEnd();
@@ -366,12 +367,12 @@ inline namespace v1 {
     void menubarBegin();
     void menubarEnd();
 
-    bool menuBeginLabel(const std::string& title, UIAlignment align, Vector2f size);
+    bool menuBeginLabel(StringRef title, UIAlignment align, Vector2f size);
     bool menuBeginSymbol(const std::string& id, UISymbol symbol, Vector2f size);
-    bool menuBeginSymbolLabel(UISymbol symbol, const std::string& title, UIAlignment align, Vector2f size);
+    bool menuBeginSymbolLabel(UISymbol symbol, StringRef title, UIAlignment align, Vector2f size);
 
-    bool menuItemLabel(const std::string& title, UIAlignment align);
-    bool menuItemSymbolLabel(UISymbol symbol, const std::string& title, UIAlignment align);
+    bool menuItemLabel(StringRef title, UIAlignment align);
+    bool menuItemSymbolLabel(UISymbol symbol, StringRef title, UIAlignment align);
 
     void menuClose();
     void menuEnd();

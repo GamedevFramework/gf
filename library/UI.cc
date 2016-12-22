@@ -439,24 +439,24 @@ inline namespace v1 {
     nk_tree_state_pop(&m_impl->ctx);
   }
 
-  void UI::label(const std::string& title, UIAlignment align) {
+  void UI::label(StringRef title, UIAlignment align) {
     setState(State::Setup);
-    nk_label(&m_impl->ctx, title.c_str(), static_cast<nk_flags>(align));
+    nk_text(&m_impl->ctx, title.getData(), title.getSize(), static_cast<nk_flags>(align));
   }
 
-  void UI::labelColored(const std::string& title, UIAlignment align, const Color4f& color) {
+  void UI::labelColored(StringRef title, UIAlignment align, const Color4f& color) {
     setState(State::Setup);
-    nk_label_colored(&m_impl->ctx, title.c_str(), static_cast<nk_flags>(align), nk_rgba_f(color.r, color.g, color.b, color.a));
+    nk_text_colored(&m_impl->ctx, title.getData(), title.getSize(), static_cast<nk_flags>(align), nk_rgba_f(color.r, color.g, color.b, color.a));
   }
 
-  void UI::labelWrap(const std::string& title) {
+  void UI::labelWrap(StringRef title) {
     setState(State::Setup);
-    nk_label_wrap(&m_impl->ctx, title.c_str());
+    nk_text_wrap(&m_impl->ctx, title.getData(), title.getSize());
   }
 
-  void UI::labelColoredWrap(const std::string& title, const Color4f& color) {
+  void UI::labelWrapColored(StringRef title, const Color4f& color) {
     setState(State::Setup);
-    nk_label_colored_wrap(&m_impl->ctx, title.c_str(), nk_rgba_f(color.r, color.g, color.b, color.a));
+    nk_text_wrap_colored(&m_impl->ctx, title.getData(), title.getSize(), nk_rgba_f(color.r, color.g, color.b, color.a));
   }
 
   void UI::buttonSetBehavior(UIButtonBehavior behavior) {
@@ -474,9 +474,9 @@ inline namespace v1 {
     return nk_button_pop_behavior(&m_impl->ctx);
   }
 
-  bool UI::buttonLabel(const std::string& title) {
+  bool UI::buttonLabel(StringRef title) {
     setState(State::Setup);
-    return nk_button_label(&m_impl->ctx, title.c_str());
+    return nk_button_text(&m_impl->ctx, title.getData(), title.getSize());
   }
 
   bool UI::buttonColor(const Color4f& color) {
@@ -489,41 +489,41 @@ inline namespace v1 {
     return nk_button_symbol(&m_impl->ctx, static_cast<nk_symbol_type>(symbol));
   }
 
-  bool UI::buttonSymbolLabel(UISymbol symbol, const std::string& title, UIAlignment align) {
+  bool UI::buttonSymbolLabel(UISymbol symbol, StringRef title, UIAlignment align) {
     setState(State::Setup);
-    return nk_button_symbol_label(&m_impl->ctx, static_cast<nk_symbol_type>(symbol), title.c_str(), static_cast<nk_flags>(align));
+    return nk_button_symbol_text(&m_impl->ctx, static_cast<nk_symbol_type>(symbol), title.getData(), title.getSize(), static_cast<nk_flags>(align));
   }
 
-  bool UI::checkbox(const std::string& title, bool& active) {
+  bool UI::checkbox(StringRef title, bool& active) {
     setState(State::Setup);
     int localActive = active;
-    int ret = nk_checkbox_label(&m_impl->ctx, title.c_str(), &localActive);
+    int ret = nk_checkbox_text(&m_impl->ctx, title.getData(), title.getSize(), &localActive);
     active = localActive;
     return ret;
   }
 
-  bool UI::checkboxFlags(const std::string& title, unsigned& flags, unsigned value) {
+  bool UI::checkboxFlags(StringRef title, unsigned& flags, unsigned value) {
     setState(State::Setup);
-    return nk_checkbox_flags_label(&m_impl->ctx, title.c_str(), &flags, value);
+    return nk_checkbox_flags_text(&m_impl->ctx, title.getData(), title.getSize(), &flags, value);
   }
 
-  bool UI::option(const std::string& title, bool active) {
+  bool UI::option(StringRef title, bool active) {
     setState(State::Setup);
-    return nk_option_label(&m_impl->ctx, title.c_str(), active);
+    return nk_option_text(&m_impl->ctx, title.getData(), title.getSize(), active);
   }
 
-  bool UI::radio(const std::string& title, bool& active) {
+  bool UI::radio(StringRef title, bool& active) {
     setState(State::Setup);
     int localActive = active;
-    int ret = nk_radio_label(&m_impl->ctx, title.c_str(), &localActive);
+    int ret = nk_radio_text(&m_impl->ctx, title.getData(), title.getSize(), &localActive);
     active = localActive;
     return ret;
   }
 
-  bool UI::selectableLabel(const std::string& title, UIAlignment align, bool& value) {
+  bool UI::selectableLabel(StringRef title, UIAlignment align, bool& value) {
     setState(State::Setup);
     int localValue = value;
-    int ret = nk_selectable_label(&m_impl->ctx, title.c_str(), static_cast<nk_flags>(align), &localValue);
+    int ret = nk_selectable_text(&m_impl->ctx, title.getData(), title.getSize(), static_cast<nk_flags>(align), &localValue);
     value = localValue;
     return ret;
   }
@@ -602,9 +602,9 @@ inline namespace v1 {
     nk_combobox_separator(&m_impl->ctx, itemsSeparatedBySeparator.c_str(), separator, &selected, count + 1, itemHeight, { size.width, size.height });
   }
 
-  bool UI::comboBeginLabel(const std::string& selected, Vector2f size) {
+  bool UI::comboBeginLabel(StringRef selected, Vector2f size) {
     setState(State::Setup);
-    return nk_combo_begin_label(&m_impl->ctx, selected.c_str(), { size.width, size.height });
+    return nk_combo_begin_text(&m_impl->ctx, selected.getData(), selected.getSize(), { size.width, size.height });
   }
 
   bool UI::comboBeginColor(const Color4f& color, Vector2f size) {
@@ -618,19 +618,19 @@ inline namespace v1 {
     return nk_combo_begin_symbol(&m_impl->ctx, static_cast<nk_symbol_type>(symbol), { size.width, size.height });
   }
 
-  bool UI::comboBeginSymbolLabel(UISymbol symbol, const std::string& selected, Vector2f size) {
+  bool UI::comboBeginSymbolLabel(UISymbol symbol, StringRef selected, Vector2f size) {
     setState(State::Setup);
-    return nk_combo_begin_symbol_label(&m_impl->ctx, selected.c_str(), static_cast<nk_symbol_type>(symbol), { size.width, size.height });
+    return nk_combo_begin_symbol_text(&m_impl->ctx, selected.getData(), selected.getSize(), static_cast<nk_symbol_type>(symbol), { size.width, size.height });
   }
 
-  bool UI::comboItemLabel(const std::string& title, UIAlignment align) {
+  bool UI::comboItemLabel(StringRef title, UIAlignment align) {
     setState(State::Setup);
-    return nk_combo_item_label(&m_impl->ctx, title.c_str(), static_cast<nk_flags>(align));
+    return nk_combo_item_text(&m_impl->ctx, title.getData(), title.getSize(), static_cast<nk_flags>(align));
   }
 
-  bool UI::comboItemSymbolLabel(UISymbol symbol, const std::string& title, UIAlignment align) {
+  bool UI::comboItemSymbolLabel(UISymbol symbol, StringRef title, UIAlignment align) {
     setState(State::Setup);
-    return nk_combo_item_symbol_label(&m_impl->ctx, static_cast<nk_symbol_type>(symbol), title.c_str(), static_cast<nk_flags>(align));
+    return nk_combo_item_symbol_text(&m_impl->ctx, static_cast<nk_symbol_type>(symbol), title.getData(), title.getSize(), static_cast<nk_flags>(align));
   }
 
   void UI::comboClose() {
@@ -648,14 +648,14 @@ inline namespace v1 {
     return nk_contextual_begin(&m_impl->ctx, flags.getValue(), { size.width, size.height }, { triggerBounds.left, triggerBounds.top, triggerBounds.width, triggerBounds.height });
   }
 
-  bool UI::contextualItemLabel(const std::string& title, UIAlignment align) {
+  bool UI::contextualItemLabel(StringRef title, UIAlignment align) {
     setState(State::Setup);
-    return nk_contextual_item_label(&m_impl->ctx, title.c_str(), static_cast<nk_flags>(align));
+    return nk_contextual_item_text(&m_impl->ctx, title.getData(), title.getSize(), static_cast<nk_flags>(align));
   }
 
-  bool UI::contextualItemSymbolLabel(UISymbol symbol, const std::string& title, UIAlignment align) {
+  bool UI::contextualItemSymbolLabel(UISymbol symbol, StringRef title, UIAlignment align) {
     setState(State::Setup);
-    return nk_contextual_item_symbol_label(&m_impl->ctx, static_cast<nk_symbol_type>(symbol), title.c_str(), static_cast<nk_flags>(align));
+    return nk_contextual_item_symbol_text(&m_impl->ctx, static_cast<nk_symbol_type>(symbol), title.getData(), title.getSize(), static_cast<nk_flags>(align));
   }
 
   void UI::contextualClose() {
@@ -693,9 +693,9 @@ inline namespace v1 {
     nk_menubar_end(&m_impl->ctx);
   }
 
-  bool UI::menuBeginLabel(const std::string& title, UIAlignment align, Vector2f size) {
+  bool UI::menuBeginLabel(StringRef title, UIAlignment align, Vector2f size) {
     setState(State::Setup);
-    return nk_menu_begin_label(&m_impl->ctx, title.c_str(), static_cast<nk_flags>(align), { size.width, size.height });
+    return nk_menu_begin_text(&m_impl->ctx, title.getData(), title.getSize(), static_cast<nk_flags>(align), { size.width, size.height });
   }
 
   bool UI::menuBeginSymbol(const std::string& id, UISymbol symbol, Vector2f size) {
@@ -703,19 +703,19 @@ inline namespace v1 {
     return nk_menu_begin_symbol(&m_impl->ctx, id.c_str(), static_cast<nk_symbol_type>(symbol), { size.width, size.height });
   }
 
-  bool UI::menuBeginSymbolLabel(UISymbol symbol, const std::string& title, UIAlignment align, Vector2f size) {
+  bool UI::menuBeginSymbolLabel(UISymbol symbol, StringRef title, UIAlignment align, Vector2f size) {
     setState(State::Setup);
-    return nk_menu_begin_symbol_label(&m_impl->ctx, title.c_str(), static_cast<nk_flags>(align), static_cast<nk_symbol_type>(symbol), { size.width, size.height });
+    return nk_menu_begin_symbol_text(&m_impl->ctx, title.getData(), title.getSize(), static_cast<nk_flags>(align), static_cast<nk_symbol_type>(symbol), { size.width, size.height });
   }
 
-  bool UI::menuItemLabel(const std::string& title, UIAlignment align) {
+  bool UI::menuItemLabel(StringRef title, UIAlignment align) {
     setState(State::Setup);
-    return nk_menu_item_label(&m_impl->ctx, title.c_str(), static_cast<nk_flags>(align));
+    return nk_menu_item_text(&m_impl->ctx, title.getData(), title.getSize(), static_cast<nk_flags>(align));
   }
 
-  bool UI::menuItemSymbolLabel(UISymbol symbol, const std::string& title, UIAlignment align) {
+  bool UI::menuItemSymbolLabel(UISymbol symbol, StringRef title, UIAlignment align) {
     setState(State::Setup);
-    return nk_menu_item_symbol_label(&m_impl->ctx, static_cast<nk_symbol_type>(symbol), title.c_str(), static_cast<nk_flags>(align));
+    return nk_menu_item_symbol_text(&m_impl->ctx, static_cast<nk_symbol_type>(symbol), title.getData(), title.getSize(), static_cast<nk_flags>(align));
   }
 
   void UI::menuClose() {
