@@ -29,22 +29,47 @@ namespace gf {
 inline namespace v1 {
 #endif
 
+  /**
+   * @ingroup core
+   * @brief A constant reference to a string and its size
+   *
+   * This class stores a pointer to a string and its size. It can be built
+   * from various inputs: `std::string`, C string.
+   */
   class StringRef {
   public:
-    StringRef()
+    /**
+     * @brief Default constructor
+     *
+     * Data is `nullptr` and size is 0.
+     */
+    constexpr StringRef()
     : m_data(nullptr)
     , m_size(0)
     {
 
     }
 
-    StringRef(const char *str, std::size_t size)
+    /**
+     * @brief Constructor from a pointer and a size
+     *
+     * @param str A pointer to a string
+     * @param size The size of the string
+     */
+    constexpr StringRef(const char *str, std::size_t size)
     : m_data(str)
     , m_size(size)
     {
 
     }
 
+    /**
+     * @brief Constructor from a null-terminated string
+     *
+     * The size is computed with `std::strlen`.
+     *
+     * @param str A null-terminated string
+     */
     StringRef(const char *str)
     : m_data(str)
     , m_size(std::strlen(str))
@@ -52,6 +77,11 @@ inline namespace v1 {
 
     }
 
+    /**
+     * @brief Constructor from a `std::string`
+     *
+     * @param str A C++ string
+     */
     StringRef(const std::string& str)
     : m_data(str.data())
     , m_size(str.size())
@@ -59,11 +89,21 @@ inline namespace v1 {
 
     }
 
-    const char *getData() const {
+    /**
+     * @brief Get a pointer to the string
+     *
+     * @returns A pointer to the beginning of the string
+     */
+    constexpr const char *getData() const {
       return m_data;
     }
 
-    std::size_t getSize() const {
+    /**
+     * @brief Get the size of the string
+     *
+     * @returns The size of the string
+     */
+    constexpr std::size_t getSize() const {
       return m_size;
     }
 
