@@ -122,13 +122,13 @@ static void overview(gf::UI& ui) {
 
     if (ui.treePush(gf::UITree::Tab, "Window", windowCollapsed)) {
       ui.layoutRowDynamic(30, 2);
-      ui.checkboxLabel("Titlebar", title);
-      ui.checkboxLabel("Menu", showMenu);
-      ui.checkboxLabel("Border", border);
-      ui.checkboxLabel("Scalable", scalable);
-      ui.checkboxLabel("Movable", movable);
-      ui.checkboxLabel("No scrollbar", noScrollbar);
-      ui.checkboxLabel("Minimizable", minimizable);
+      ui.checkbox("Titlebar", title);
+      ui.checkbox("Menu", showMenu);
+      ui.checkbox("Border", border);
+      ui.checkbox("Scalable", scalable);
+      ui.checkbox("Movable", movable);
+      ui.checkbox("No scrollbar", noScrollbar);
+      ui.checkbox("Minimizable", minimizable);
       ui.treePop();
     }
 
@@ -208,12 +208,12 @@ static void overview(gf::UI& ui) {
         static const float ratio[] = { 120, 150 };
 
         ui.layoutRowStatic(30, 100, 1);
-        ui.checkboxLabel("Checkbox", checkbox);
+        ui.checkbox("Checkbox", checkbox);
 
         ui.layoutRowStatic(30, 80, 3);
-        option = ui.optionLabel("optionA", option == Option::A) ? Option::A : option;
-        option = ui.optionLabel("optionB", option == Option::B) ? Option::B : option;
-        option = ui.optionLabel("optionC", option == Option::C) ? Option::C : option;
+        option = ui.option("optionA", option == Option::A) ? Option::A : option;
+        option = ui.option("optionB", option == Option::B) ? Option::B : option;
+        option = ui.option("optionC", option == Option::C) ? Option::C : option;
 
         ui.layoutRow(gf::UILayout::Static, 30, ratio);
 
@@ -369,8 +369,8 @@ static void overview(gf::UI& ui) {
           comboColor2A = localColor.a;
 
           ui.layoutRowDynamic(25, 2);
-          colorMode = ui.optionLabel("RGB", colorMode == ColorMode::RGB) ? ColorMode::RGB : colorMode;
-          colorMode = ui.optionLabel("HSV", colorMode == ColorMode::HSV) ? ColorMode::HSV : colorMode;
+          colorMode = ui.option("RGB", colorMode == ColorMode::RGB) ? ColorMode::RGB : colorMode;
+          colorMode = ui.option("HSV", colorMode == ColorMode::HSV) ? ColorMode::HSV : colorMode;
 
           ui.layoutRowDynamic(25, 1);
           if (colorMode == ColorMode::RGB) {
@@ -406,10 +406,10 @@ static void overview(gf::UI& ui) {
 
         if (ui.comboBeginLabel(std::to_string(sum), { 200.0f, 200.0f })) {
           ui.layoutRowDynamic(30, 1);
-          ui.checkboxLabel(weapons[0], checkValues[0]);
-          ui.checkboxLabel(weapons[1], checkValues[1]);
-          ui.checkboxLabel(weapons[2], checkValues[2]);
-          ui.checkboxLabel(weapons[3], checkValues[3]);
+          ui.checkbox(weapons[0], checkValues[0]);
+          ui.checkbox(weapons[1], checkValues[1]);
+          ui.checkbox(weapons[2], checkValues[2]);
+          ui.checkbox(weapons[3], checkValues[3]);
           ui.comboEnd();
         }
 
@@ -460,7 +460,7 @@ static void overview(gf::UI& ui) {
         static int slider = 10;
 
         ui.layoutRowDynamic(25, 1);
-        ui.checkboxLabel("Menu", showMenu);
+        ui.checkbox("Menu", showMenu);
         ui.progress(prog, 100, true);
         ui.sliderInt(0, slider, 16, 1);
 
@@ -597,11 +597,11 @@ int main() {
 
       ui.layoutRowDynamic(30, 2);
 
-      if (ui.optionLabel("easy", op == Difficulty::Easy)) {
+      if (ui.option("easy", op == Difficulty::Easy)) {
         op = Difficulty::Easy;
       }
 
-      if (ui.optionLabel("hard", op == Difficulty::Hard)) {
+      if (ui.option("hard", op == Difficulty::Hard)) {
         op = Difficulty::Hard;
       }
 

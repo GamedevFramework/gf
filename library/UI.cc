@@ -494,7 +494,7 @@ inline namespace v1 {
     return nk_button_symbol_label(&m_impl->ctx, static_cast<nk_symbol_type>(symbol), title.c_str(), static_cast<nk_flags>(align));
   }
 
-  bool UI::checkboxLabel(const std::string& title, bool& active) {
+  bool UI::checkbox(const std::string& title, bool& active) {
     setState(State::Setup);
     int localActive = active;
     int ret = nk_checkbox_label(&m_impl->ctx, title.c_str(), &localActive);
@@ -502,17 +502,17 @@ inline namespace v1 {
     return ret;
   }
 
-  bool UI::checkboxFlagsLabel(const std::string& title, unsigned& flags, unsigned value) {
+  bool UI::checkboxFlags(const std::string& title, unsigned& flags, unsigned value) {
     setState(State::Setup);
     return nk_checkbox_flags_label(&m_impl->ctx, title.c_str(), &flags, value);
   }
 
-  bool UI::optionLabel(const std::string& title, bool active) {
+  bool UI::option(const std::string& title, bool active) {
     setState(State::Setup);
     return nk_option_label(&m_impl->ctx, title.c_str(), active);
   }
 
-  bool UI::radioLabel(const std::string& title, bool& active) {
+  bool UI::radio(const std::string& title, bool& active) {
     setState(State::Setup);
     int localActive = active;
     int ret = nk_radio_label(&m_impl->ctx, title.c_str(), &localActive);

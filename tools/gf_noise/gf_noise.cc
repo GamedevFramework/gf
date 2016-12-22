@@ -592,7 +592,7 @@ int main() {
           ui.propertyFloat("Water level", 0.0f, renderingParams.waterLevel, 1.0f, 0.05f, 0.05f);
 
           ui.layoutRowDynamic(20, 1);
-          ui.checkboxLabel("Shaded", renderingParams.shaded);
+          ui.checkbox("Shaded", renderingParams.shaded);
           break;
       }
 

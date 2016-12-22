@@ -214,8 +214,8 @@ inline namespace v1 {
      * @{
      */
 
-    bool checkboxLabel(const std::string& title, bool& active);
-    bool checkboxFlagsLabel(const std::string& title, unsigned& flags, unsigned value);
+    bool checkbox(const std::string& title, bool& active);
+    bool checkboxFlags(const std::string& title, unsigned& flags, unsigned value);
 
     /**
      * @}
@@ -226,9 +226,9 @@ inline namespace v1 {
      * @{
      */
 
-    bool optionLabel(const std::string& title, bool active);
+    bool option(const std::string& title, bool active);
 
-    bool radioLabel(const std::string& title, bool& active);
+    bool radio(const std::string& title, bool& active);
 
     /**
      * @}
