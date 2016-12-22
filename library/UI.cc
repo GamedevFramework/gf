@@ -583,6 +583,8 @@ inline namespace v1 {
   }
 
   void UI::combobox(const std::vector<std::string>& items, int& selected, int itemHeight, Vector2f size) {
+    setState(State::Setup);
+
     std::vector<const char *> itemsCString;
 
     for (auto& item : items) {
@@ -593,122 +595,152 @@ inline namespace v1 {
   }
 
   void UI::comboboxSeparator(const std::string& itemsSeparatedBySeparator, char separator, int& selected, int itemHeight, Vector2f size) {
+    setState(State::Setup);
+
     auto count = std::count(itemsSeparatedBySeparator.begin(), itemsSeparatedBySeparator.end(), separator);
 
     nk_combobox_separator(&m_impl->ctx, itemsSeparatedBySeparator.c_str(), separator, &selected, count + 1, itemHeight, { size.width, size.height });
   }
 
   bool UI::comboBeginLabel(const std::string& selected, Vector2f size) {
+    setState(State::Setup);
     return nk_combo_begin_label(&m_impl->ctx, selected.c_str(), { size.width, size.height });
   }
 
   bool UI::comboBeginColor(const Color4f& color, Vector2f size) {
+    setState(State::Setup);
     nk_color localColor = nk_rgba_f(color.r, color.g, color.b, color.a);
     return nk_combo_begin_color(&m_impl->ctx, localColor, { size.width, size.height });
   }
 
   bool UI::comboBeginSymbol(UISymbol symbol, Vector2f size) {
+    setState(State::Setup);
     return nk_combo_begin_symbol(&m_impl->ctx, static_cast<nk_symbol_type>(symbol), { size.width, size.height });
   }
 
   bool UI::comboBeginSymbolLabel(UISymbol symbol, const std::string& selected, Vector2f size) {
+    setState(State::Setup);
     return nk_combo_begin_symbol_label(&m_impl->ctx, selected.c_str(), static_cast<nk_symbol_type>(symbol), { size.width, size.height });
   }
 
   bool UI::comboItemLabel(const std::string& title, UIAlignment align) {
+    setState(State::Setup);
     return nk_combo_item_label(&m_impl->ctx, title.c_str(), static_cast<nk_flags>(align));
   }
 
   bool UI::comboItemSymbolLabel(UISymbol symbol, const std::string& title, UIAlignment align) {
+    setState(State::Setup);
     return nk_combo_item_symbol_label(&m_impl->ctx, static_cast<nk_symbol_type>(symbol), title.c_str(), static_cast<nk_flags>(align));
   }
 
   void UI::comboClose() {
+    setState(State::Setup);
     nk_combo_close(&m_impl->ctx);
   }
 
   void UI::comboEnd() {
+    setState(State::Setup);
     nk_combo_end(&m_impl->ctx);
   }
 
   bool UI::contextualBegin(UIWindowFlags flags, Vector2f size, const RectF& triggerBounds) {
+    setState(State::Setup);
     return nk_contextual_begin(&m_impl->ctx, flags.getValue(), { size.width, size.height }, { triggerBounds.left, triggerBounds.top, triggerBounds.width, triggerBounds.height });
   }
 
   bool UI::contextualItemLabel(const std::string& title, UIAlignment align) {
+    setState(State::Setup);
     return nk_contextual_item_label(&m_impl->ctx, title.c_str(), static_cast<nk_flags>(align));
   }
 
   bool UI::contextualItemSymbolLabel(UISymbol symbol, const std::string& title, UIAlignment align) {
+    setState(State::Setup);
     return nk_contextual_item_symbol_label(&m_impl->ctx, static_cast<nk_symbol_type>(symbol), title.c_str(), static_cast<nk_flags>(align));
   }
 
   void UI::contextualClose() {
+    setState(State::Setup);
     nk_contextual_close(&m_impl->ctx);
   }
 
   void UI::contextualEnd() {
+    setState(State::Setup);
     nk_contextual_end(&m_impl->ctx);
   }
 
   void UI::tooltip(const std::string& text) {
+    setState(State::Setup);
     nk_tooltip(&m_impl->ctx, text.c_str());
   }
 
   bool UI::tooltipBegin(float width) {
+    setState(State::Setup);
     return nk_tooltip_begin(&m_impl->ctx, width);
   }
 
   void UI::tooltipEnd() {
+    setState(State::Setup);
     nk_tooltip_end(&m_impl->ctx);
   }
 
   void UI::menubarBegin() {
+    setState(State::Setup);
     nk_menubar_begin(&m_impl->ctx);
   }
 
   void UI::menubarEnd() {
+    setState(State::Setup);
     nk_menubar_end(&m_impl->ctx);
   }
 
   bool UI::menuBeginLabel(const std::string& title, UIAlignment align, Vector2f size) {
+    setState(State::Setup);
     return nk_menu_begin_label(&m_impl->ctx, title.c_str(), static_cast<nk_flags>(align), { size.width, size.height });
   }
 
   bool UI::menuBeginSymbol(const std::string& id, UISymbol symbol, Vector2f size) {
+    setState(State::Setup);
     return nk_menu_begin_symbol(&m_impl->ctx, id.c_str(), static_cast<nk_symbol_type>(symbol), { size.width, size.height });
   }
 
   bool UI::menuBeginSymbolLabel(UISymbol symbol, const std::string& title, UIAlignment align, Vector2f size) {
+    setState(State::Setup);
     return nk_menu_begin_symbol_label(&m_impl->ctx, title.c_str(), static_cast<nk_flags>(align), static_cast<nk_symbol_type>(symbol), { size.width, size.height });
   }
 
   bool UI::menuItemLabel(const std::string& title, UIAlignment align) {
+    setState(State::Setup);
     return nk_menu_item_label(&m_impl->ctx, title.c_str(), static_cast<nk_flags>(align));
   }
 
   bool UI::menuItemSymbolLabel(UISymbol symbol, const std::string& title, UIAlignment align) {
+    setState(State::Setup);
     return nk_menu_item_symbol_label(&m_impl->ctx, static_cast<nk_symbol_type>(symbol), title.c_str(), static_cast<nk_flags>(align));
   }
 
   void UI::menuClose() {
+    setState(State::Setup);
     nk_menu_close(&m_impl->ctx);
   }
 
   void UI::menuEnd() {
+    setState(State::Setup);
     nk_menu_end(&m_impl->ctx);
   }
 
   RectF UI::getWidgetBounds() {
+    setState(State::Setup);
     auto bounds = nk_widget_bounds(&m_impl->ctx);
     return RectF(bounds.x, bounds.y, bounds.w, bounds.h);
   }
 
   bool UI::isWidgetHovered() {
+    setState(State::Setup);
     return nk_widget_is_hovered(&m_impl->ctx);
   }
 
   bool UI::isMouseHoveringRect(const RectF& bounds) {
+    setState(State::Setup);
     return nk_input_is_mouse_hovering_rect(&m_impl->ctx.input, { bounds.left, bounds.top, bounds.width, bounds.height });
   }
 
