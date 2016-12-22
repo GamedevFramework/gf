@@ -492,25 +492,21 @@ int main() {
 
     ui.layoutRowDynamic(20, 1);
     ui.combobox(noiseChoices, noiseChoice, 20, { ExtraSize, Size });
-
-    ui.layoutRowDynamic(20, 1);
     ui.propertyFloat("Scale", 0.1f, scale, 20.0f, 0.1f, 0.1f);
 
     NoiseFunction noiseFunction = static_cast<NoiseFunction>(noiseChoice);
 
     switch (noiseFunction) {
       case NoiseFunction::Gradient:
-        ui.layoutRowDynamic(20, 1);
-        ui.label("Step function:", gf::UIAlignment::Left);
+        ui.label("Step function:");
         ui.combobox(stepChoices, stepChoice, 20, { ExtraSize, Size });
         break;
 
       case NoiseFunction::Worley:
-        ui.layoutRowDynamic(20, 1);
         ui.propertyInt("Point count", 5, pointCount, 40, 1, 1.0f);
-        ui.label("Distance function:", gf::UIAlignment::Left);
+        ui.label("Distance function:");
         ui.combobox(distanceChoices, distanceChoice, 20, { ExtraSize, Size });
-        ui.label("Combination:", gf::UIAlignment::Left);
+        ui.label("Combination:");
         ui.combobox(combinationChoices, combinationChoice, 20, { ExtraSize, Size });
 
       default:
@@ -530,46 +526,33 @@ int main() {
             break;
 
           case Fractal::FBm:
-            ui.layoutRowDynamic(20, 1);
             ui.propertyFloat("Dimension", 0.1f, fractalParams.f.dimension, 1.9f, 0.05f, 0.05f);
             break;
 
           case Fractal::Multifractal:
-            ui.layoutRowDynamic(20, 1);
             ui.propertyFloat("Dimension", 0.1f, fractalParams.m.dimension, 1.9f, 0.05f, 0.05f);
             break;
 
           case Fractal::HeteroTerrain:
-            ui.layoutRowDynamic(20, 1);
             ui.propertyFloat("Dimension", 0.1f, fractalParams.ht.dimension, 1.9f, 0.05f, 0.05f);
-            ui.layoutRowDynamic(20, 1);
             ui.propertyFloat("Offset", 0.0f, fractalParams.ht.offset, 10.0f, 0.1f, 0.1f);
             break;
 
           case Fractal::HybridMultifractal:
-            ui.layoutRowDynamic(20, 1);
             ui.propertyFloat("Dimension", 0.1f, fractalParams.hm.dimension, 1.9f, 0.05f, 0.05f);
-            ui.layoutRowDynamic(20, 1);
             ui.propertyFloat("Offset", 0.0f, fractalParams.hm.offset, 10.0f, 0.1f, 0.1f);
             break;
 
           case Fractal::RidgedMultifractal:
-            ui.layoutRowDynamic(20, 1);
             ui.propertyFloat("Dimension", 0.1f, fractalParams.rm.dimension, 1.9f, 0.05f, 0.05f);
-            ui.layoutRowDynamic(20, 1);
             ui.propertyFloat("Offset", 0.0f, fractalParams.rm.offset, 10.0f, 0.1f, 0.1f);
-            ui.layoutRowDynamic(20, 1);
             ui.propertyFloat("Gain", 1.0f, fractalParams.rm.gain, 3.0f, 0.1f, 0.1f);
             break;
         }
 
-        ui.layoutRowDynamic(20, 1);
         ui.propertyInt("Octaves", 1, fractalParams.octaves, 15, 1, 1.0f);
-        ui.layoutRowDynamic(20, 1);
         ui.propertyFloat("Lacunarity", 1.0f, fractalParams.lacunarity, 3.0f, 0.1f, 0.1f);
-        ui.layoutRowDynamic(20, 1);
         ui.propertyFloat("Persistence", 0.1f, fractalParams.persistence, 0.9f, 0.1f, 0.1f);
-
 
       }
 
@@ -588,10 +571,7 @@ int main() {
           break;
 
         case Rendering::Colored:
-          ui.layoutRowDynamic(20, 1);
           ui.propertyFloat("Water level", 0.0f, renderingParams.waterLevel, 1.0f, 0.05f, 0.05f);
-
-          ui.layoutRowDynamic(20, 1);
           ui.checkbox("Shaded", renderingParams.shaded);
           break;
       }
