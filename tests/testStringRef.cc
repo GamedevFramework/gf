@@ -47,15 +47,6 @@ TEST(StringRefTest, PointerSizeCtor) {
   EXPECT_EQ(str, ref.getData());
 }
 
-TEST(StringRefTest, ArrayCtor) {
-  const char str[] = "a string";
-
-  gf::StringRef ref(str);
-
-  EXPECT_EQ(8u, ref.getSize());
-  EXPECT_EQ(&str[0], ref.getData());
-}
-
 TEST(StringRefTest, StringCtor) {
   std::string str("a string");
 

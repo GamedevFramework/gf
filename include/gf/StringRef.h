@@ -59,14 +59,6 @@ inline namespace v1 {
 
     }
 
-    template<std::size_t N>
-    StringRef(const char (&str)[N])
-    : m_data(str)
-    , m_size(N)
-    {
-
-    }
-
     const char *getData() const {
       return m_data;
     }
