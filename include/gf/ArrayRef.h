@@ -34,6 +34,8 @@ inline namespace v1 {
    *
    * This class stores a pointer to some data and its size. It can be built
    * from various inputs: `std::vector`, static array, pointer and size.
+   *
+   * @sa StringRef
    */
   template<typename T>
   class ArrayRef {
