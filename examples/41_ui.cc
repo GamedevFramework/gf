@@ -83,7 +83,25 @@ static void overview(gf::UI& ui) {
     if (showMenu) {
       ui.menubarBegin();
 
-      ui.layoutRowBegin(gf::UILayout::Static, 25, 1);
+      ui.layoutRowBegin(gf::UILayout::Static, 25, 3);
+
+      ui.layoutRowPush(45);
+      if (ui.menuBeginLabel("File", gf::UIAlignment::Left, { 120.0f, 200.0f })) {
+        ui.layoutRowDynamic(30, 1);
+        ui.menuItemLabel("Open");
+        ui.menuItemLabel("Close");
+        ui.menuEnd();
+      }
+
+      ui.layoutRowPush(45);
+      if (ui.menuBeginLabel("Edit", gf::UIAlignment::Left, { 120.0f, 200.0f })) {
+        ui.layoutRowDynamic(30, 1);
+        ui.menuItemLabel("Copy");
+        ui.menuItemLabel("Cut");
+        ui.menuItemLabel("Paste");
+        ui.menuEnd();
+      }
+
       ui.layoutRowPush(45);
       if (ui.menuBeginLabel("Help", gf::UIAlignment::Left, { 120.0f, 200.0f })) {
         ui.layoutRowDynamic(25, 1);
@@ -99,7 +117,7 @@ static void overview(gf::UI& ui) {
         ui.menuEnd();
       }
 
-
+      ui.layoutRowEnd();
       ui.menubarEnd();
     }
 
