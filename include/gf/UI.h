@@ -105,6 +105,14 @@ inline namespace v1 {
     Dynamic = 1,
   };
 
+  enum class UIPredefinedStyle {
+    Default,
+    White,
+    Red,
+    Blue,
+    Dark,
+  };
+
   class UI : public Drawable {
   public:
     static constexpr unsigned DefaultCharacterSize = 13;
@@ -414,6 +422,16 @@ inline namespace v1 {
      * @}
      */
 
+    /**
+     * @name Style
+     * @{
+     */
+
+    void setPredefinedStyle(UIPredefinedStyle style);
+
+    /**
+     * @}
+     */
 
     virtual void draw(RenderTarget &target, RenderStates states) override;
 

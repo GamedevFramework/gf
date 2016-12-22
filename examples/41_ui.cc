@@ -584,6 +584,7 @@ int main() {
 
   Difficulty op = Difficulty::Easy;
   float value = 0.0f;
+  int selectedStyle = 0;
 
   while (window.isOpen()) {
     gf::Event event;
@@ -635,6 +636,17 @@ int main() {
       ui.layoutRowEnd();
 
 
+    }
+
+    ui.end();
+
+    if (ui.begin("Style", gf::RectF(50, 300, 220, 100), gf::UIWindow::Border | gf::UIWindow::Movable | gf::UIWindow::Scalable | gf::UIWindow::Closable | gf::UIWindow::Minimizable | gf::UIWindow::Title)) {
+      ui.layoutRowDynamic(20, 1);
+      ui.label("Style:");
+      ui.comboboxSeparator("Default|White|Red|Blue|Dark", '|', selectedStyle, 20, { 220, 220 });
+
+      gf::UIPredefinedStyle style = static_cast<gf::UIPredefinedStyle>(selectedStyle);
+      ui.setPredefinedStyle(style);
     }
 
     ui.end();
