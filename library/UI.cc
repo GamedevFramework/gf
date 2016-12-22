@@ -538,10 +538,10 @@ inline namespace v1 {
     return nk_slider_int(&m_impl->ctx, min, &val, max, step);
   }
 
-  bool UI::progress(std::size_t& current, std::size_t max, bool modifyable) {
+  bool UI::progress(std::size_t& current, std::size_t max, UIProgress modifyable) {
     static_assert(std::is_same<std::size_t, nk_size>::value, "nk_size is not std::size_t");
     setState(State::Setup);
-    return nk_progress(&m_impl->ctx, &current, max, modifyable);
+    return nk_progress(&m_impl->ctx, &current, max, static_cast<bool>(modifyable));
   }
 
   bool UI::colorPicker(Color4f& color) {

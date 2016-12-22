@@ -242,7 +242,7 @@ static void overview(gf::UI& ui) {
         ui.sliderFloat(0, floatSlider, 5.0f, 0.5f);
 
         ui.label("Progressbar");
-        ui.progress(progValue, 100, true);
+        ui.progress(progValue, 100);
 
         ui.layoutRow(gf::UILayout::Static, 25, ratio);
 
@@ -411,10 +411,10 @@ static void overview(gf::UI& ui) {
 
         if (ui.comboBeginLabel(std::to_string(sum), { 200.0f, 200.0f })) {
           ui.layoutRowDynamic(30, 1);
-          ui.progress(progA, 100, true);
-          ui.progress(progB, 100, true);
-          ui.progress(progC, 100, true);
-          ui.progress(progD, 100, true);
+          ui.progress(progA, 100);
+          ui.progress(progB, 100);
+          ui.progress(progC, 100);
+          ui.progress(progD, 100);
           ui.comboEnd();
         }
 
@@ -479,7 +479,7 @@ static void overview(gf::UI& ui) {
 
         ui.layoutRowDynamic(25, 1);
         ui.checkbox("Menu", showMenu);
-        ui.progress(prog, 100, true);
+        ui.progress(prog, 100);
         ui.sliderInt(0, slider, 16, 1);
 
         if (ui.contextualItemLabel("About", gf::UIAlignment::Center)) {

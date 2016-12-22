@@ -79,6 +79,11 @@ inline namespace v1 {
     Repeater  = 1,
   };
 
+  enum class UIProgress : bool {
+    Fixed = false,
+    Modifyable = true,
+  };
+
   enum class UISymbol {
     None,
     X,
@@ -263,7 +268,7 @@ inline namespace v1 {
      * @{
      */
 
-    bool progress(std::size_t& current, std::size_t max, bool modifyable);
+    bool progress(std::size_t& current, std::size_t max, UIProgress modifyable = gf::UIProgress::Modifyable);
 
     /**
      * @}
