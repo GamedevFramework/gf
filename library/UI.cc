@@ -132,7 +132,7 @@ inline namespace v1 {
     return textWidth;
   }
 
-  static void getFontGlyph(nk_handle handle, float characterSize, struct nk_user_font_glyph *g, nk_rune currCodepoint, nk_rune nextCodepoint) {
+  static void getFontGlyph(nk_handle handle, float characterSize, nk_user_font_glyph *g, nk_rune currCodepoint, nk_rune nextCodepoint) {
     auto font = static_cast<Font *>(handle.ptr);
     assert(font);
 
@@ -428,8 +428,8 @@ inline namespace v1 {
 
   bool UI::treePush(UITree type, const std::string& title, UICollapse& state) {
     setState(State::Setup);
-    enum nk_collapse_states localState = static_cast<enum nk_collapse_states>(state);
-    auto ret = nk_tree_state_push(&m_impl->ctx, static_cast<enum nk_tree_type>(type), title.c_str(), &localState);
+    nk_collapse_states localState = static_cast<nk_collapse_states>(state);
+    auto ret = nk_tree_state_push(&m_impl->ctx, static_cast<nk_tree_type>(type), title.c_str(), &localState);
     state = static_cast<UICollapse>(localState);
     return ret;
   }
@@ -569,7 +569,7 @@ inline namespace v1 {
 
   bool UI::popupBegin(UIPopup type, const std::string& title, UIWindowFlags flags, const RectF& bounds) {
     setState(State::Setup);
-    return nk_popup_begin(&m_impl->ctx, static_cast<enum nk_popup_type>(type), title.c_str(), flags.getValue(), { bounds.left, bounds.top, bounds.width, bounds.height });
+    return nk_popup_begin(&m_impl->ctx, static_cast<nk_popup_type>(type), title.c_str(), flags.getValue(), { bounds.left, bounds.top, bounds.width, bounds.height });
   }
 
   void UI::popupClose() {
@@ -748,9 +748,9 @@ inline namespace v1 {
   void UI::draw(RenderTarget &target, RenderStates states) {
     setState(State::Draw);
 
-    struct nk_convert_config config;
+    nk_convert_config config;
 
-    static const struct nk_draw_vertex_layout_element vertexLayout[] = {
+    static const nk_draw_vertex_layout_element vertexLayout[] = {
         { NK_VERTEX_POSITION, NK_FORMAT_FLOAT, offsetof(Vertex, position) },
         { NK_VERTEX_COLOR, NK_FORMAT_R32G32B32A32_FLOAT, offsetof(Vertex, color) },
         { NK_VERTEX_TEXCOORD, NK_FORMAT_FLOAT, offsetof(Vertex, texCoords) },
@@ -774,8 +774,8 @@ inline namespace v1 {
     config.vertex_size = sizeof(Vertex);
     config.vertex_alignment = alignof(Vertex);
 
-    struct nk_buffer vertexBuffer;
-    struct nk_buffer elementBuffer;
+    nk_buffer vertexBuffer;
+    nk_buffer elementBuffer;
 
     nk_buffer_init_default(&vertexBuffer);
     nk_buffer_init_default(&elementBuffer);
