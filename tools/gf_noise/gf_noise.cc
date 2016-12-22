@@ -431,7 +431,7 @@ int main() {
   std::vector<std::string> combinationChoices = { "F1", "F2", "F2F1" };
   int combinationChoice = 2;
 
-  gf::UICollapseStates fractalCollapsed = gf::UICollapseStates::Minimized;
+  gf::UICollapse fractalCollapsed = gf::UICollapse::Minimized;
 
   std::vector<std::string> fractalChoices = { "None", "fBm", "Multifractal", "Hetero Terrain", "Hybrid Multifractal", "Ridged Multifractal" }; // keep in line with Fractal
   int fractalChoice = 0;
@@ -459,7 +459,7 @@ int main() {
   fractalParams.lacunarity = 2.0;
   fractalParams.persistence = 0.5;
 
-  gf::UICollapseStates renderingCollapsed = gf::UICollapseStates::Minimized;
+  gf::UICollapse renderingCollapsed = gf::UICollapse::Minimized;
 
   std::vector<std::string> renderingChoices = { "Grayscale", "Colored" };
   int renderingChoice = 0;
@@ -501,23 +501,23 @@ int main() {
     switch (noiseFunction) {
       case NoiseFunction::Gradient:
         ui.layoutRowDynamic(20, 1);
-        ui.label("Step function:", gf::UITextAlignment::Left);
+        ui.label("Step function:", gf::UIAlignment::Left);
         ui.combobox(stepChoices, stepChoice, 20, { ExtraSize, Size });
         break;
 
       case NoiseFunction::Worley:
         ui.layoutRowDynamic(20, 1);
         ui.propertyInt("Point count", 5, pointCount, 40, 1, 1.0f);
-        ui.label("Distance function:", gf::UITextAlignment::Left);
+        ui.label("Distance function:", gf::UIAlignment::Left);
         ui.combobox(distanceChoices, distanceChoice, 20, { ExtraSize, Size });
-        ui.label("Combination:", gf::UITextAlignment::Left);
+        ui.label("Combination:", gf::UIAlignment::Left);
         ui.combobox(combinationChoices, combinationChoice, 20, { ExtraSize, Size });
 
       default:
         break;
     }
 
-    if (ui.treePush(gf::UITreeType::Tab, "Fractal", fractalCollapsed)) {
+    if (ui.treePush(gf::UITree::Tab, "Fractal", fractalCollapsed)) {
       ui.layoutRowDynamic(20, 1);
       ui.combobox(fractalChoices, fractalChoice, 20, { ExtraSize, Size });
 
@@ -577,7 +577,7 @@ int main() {
     }
 
 
-    if (ui.treePush(gf::UITreeType::Tab, "Rendering", renderingCollapsed)) {
+    if (ui.treePush(gf::UITree::Tab, "Rendering", renderingCollapsed)) {
       ui.layoutRowDynamic(20, 1);
       ui.combobox(renderingChoices, renderingChoice, 20, { ExtraSize, Size });
 

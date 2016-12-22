@@ -83,16 +83,16 @@ static void overview(gf::UI& ui) {
     if (showMenu) {
       ui.menubarBegin();
 
-      ui.layoutRowBegin(gf::UILayoutFormat::Static, 25, 1);
+      ui.layoutRowBegin(gf::UILayout::Static, 25, 1);
       ui.layoutRowPush(45);
-      if (ui.menuBeginLabel("Help", gf::UITextAlignment::Left, { 120.0f, 200.0f })) {
+      if (ui.menuBeginLabel("Help", gf::UIAlignment::Left, { 120.0f, 200.0f })) {
         ui.layoutRowDynamic(25, 1);
 
-        if (ui.menuItemLabel("Hide", gf::UITextAlignment::Left)) {
+        if (ui.menuItemLabel("Hide", gf::UIAlignment::Left)) {
           showMenu = false;
         }
 
-        if (ui.menuItemLabel("About", gf::UITextAlignment::Left)) {
+        if (ui.menuItemLabel("About", gf::UIAlignment::Left)) {
           showAppAbout = true;
         }
 
@@ -106,21 +106,21 @@ static void overview(gf::UI& ui) {
     if (showAppAbout) {
       static gf::RectF bounds(20.0f, 100.0f, 300.0f, 190.0f);
 
-      if (ui.popupBegin(gf::UIPopupType::Static, "About", gf::UIWindow::Closable, bounds)) {
+      if (ui.popupBegin(gf::UIPopup::Static, "About", gf::UIWindow::Closable, bounds)) {
         ui.layoutRowDynamic(20, 1);
-        ui.label("Nuklear", gf::UITextAlignment::Left);
-        ui.label("By Micha Mettke", gf::UITextAlignment::Left);
-        ui.label("Nuklear is licensed under the public domain license.", gf::UITextAlignment::Left);
-        ui.label("Adaptation for gf by Julien Bernard", gf::UITextAlignment::Left);
+        ui.label("Nuklear", gf::UIAlignment::Left);
+        ui.label("By Micha Mettke", gf::UIAlignment::Left);
+        ui.label("Nuklear is licensed under the public domain license.", gf::UIAlignment::Left);
+        ui.label("Adaptation for gf by Julien Bernard", gf::UIAlignment::Left);
         ui.popupEnd();
       } else {
         showAppAbout = false;
       }
     }
 
-    static gf::UICollapseStates windowCollapsed = gf::UICollapseStates::Minimized;
+    static gf::UICollapse windowCollapsed = gf::UICollapse::Minimized;
 
-    if (ui.treePush(gf::UITreeType::Tab, "Window", windowCollapsed)) {
+    if (ui.treePush(gf::UITree::Tab, "Window", windowCollapsed)) {
       ui.layoutRowDynamic(30, 2);
       ui.checkboxLabel("Titlebar", title);
       ui.checkboxLabel("Menu", showMenu);
@@ -132,28 +132,28 @@ static void overview(gf::UI& ui) {
       ui.treePop();
     }
 
-    static gf::UICollapseStates widgetsCollapsed = gf::UICollapseStates::Minimized;
+    static gf::UICollapse widgetsCollapsed = gf::UICollapse::Minimized;
 
-    if (ui.treePush(gf::UITreeType::Tab, "Widgets", widgetsCollapsed)) {
+    if (ui.treePush(gf::UITree::Tab, "Widgets", widgetsCollapsed)) {
 
-      static gf::UICollapseStates textCollapsed = gf::UICollapseStates::Minimized;
+      static gf::UICollapse textCollapsed = gf::UICollapse::Minimized;
 
-      if (ui.treePush(gf::UITreeType::Node, "Text", textCollapsed)) {
+      if (ui.treePush(gf::UITree::Node, "Text", textCollapsed)) {
         ui.layoutRowDynamic(20, 1);
-        ui.label("Label aligned left", gf::UITextAlignment::Left);
-        ui.label("Label aligned centered", gf::UITextAlignment::Centered);
-        ui.label("Label aligned right", gf::UITextAlignment::Right);
-        ui.labelColored("Blue text", gf::UITextAlignment::Left, gf::Color::Blue);
-        ui.labelColored("Yellow text", gf::UITextAlignment::Left, gf::Color::Yellow);
+        ui.label("Label aligned left", gf::UIAlignment::Left);
+        ui.label("Label aligned centered", gf::UIAlignment::Centered);
+        ui.label("Label aligned right", gf::UIAlignment::Right);
+        ui.labelColored("Blue text", gf::UIAlignment::Left, gf::Color::Blue);
+        ui.labelColored("Yellow text", gf::UIAlignment::Left, gf::Color::Yellow);
 
         // TODO: multiline text
 
         ui.treePop();
       }
 
-      static gf::UICollapseStates buttonCollapsed = gf::UICollapseStates::Minimized;
+      static gf::UICollapse buttonCollapsed = gf::UICollapse::Minimized;
 
-      if (ui.treePush(gf::UITreeType::Node, "Button", buttonCollapsed)) {
+      if (ui.treePush(gf::UITree::Node, "Button", buttonCollapsed)) {
         ui.layoutRowStatic(30, 100, 3);
 
         if (ui.buttonLabel("Button")) {
@@ -170,25 +170,25 @@ static void overview(gf::UI& ui) {
         ui.buttonColor(gf::Color::Blue);
 
         ui.layoutRowStatic(25, 25, 8);
-        ui.buttonSymbol(gf::UISymbolType::CircleSolid);
-        ui.buttonSymbol(gf::UISymbolType::CircleOutline);
-        ui.buttonSymbol(gf::UISymbolType::RectSolid);
-        ui.buttonSymbol(gf::UISymbolType::RectOutline);
-        ui.buttonSymbol(gf::UISymbolType::TriangleUp);
-        ui.buttonSymbol(gf::UISymbolType::TriangleDown);
-        ui.buttonSymbol(gf::UISymbolType::TriangleLeft);
-        ui.buttonSymbol(gf::UISymbolType::TriangleRight);
+        ui.buttonSymbol(gf::UISymbol::CircleSolid);
+        ui.buttonSymbol(gf::UISymbol::CircleOutline);
+        ui.buttonSymbol(gf::UISymbol::RectSolid);
+        ui.buttonSymbol(gf::UISymbol::RectOutline);
+        ui.buttonSymbol(gf::UISymbol::TriangleUp);
+        ui.buttonSymbol(gf::UISymbol::TriangleDown);
+        ui.buttonSymbol(gf::UISymbol::TriangleLeft);
+        ui.buttonSymbol(gf::UISymbol::TriangleRight);
 
         ui.layoutRowStatic(30, 100, 2);
-        ui.buttonSymbolLabel(gf::UISymbolType::TriangleLeft, "prev", gf::UITextAlignment::Right);
-        ui.buttonSymbolLabel(gf::UISymbolType::TriangleRight, "next", gf::UITextAlignment::Left);
+        ui.buttonSymbolLabel(gf::UISymbol::TriangleLeft, "prev", gf::UIAlignment::Right);
+        ui.buttonSymbolLabel(gf::UISymbol::TriangleRight, "next", gf::UIAlignment::Left);
 
         ui.treePop();
       }
 
-      static gf::UICollapseStates basicCollapsed = gf::UICollapseStates::Minimized;
+      static gf::UICollapse basicCollapsed = gf::UICollapse::Minimized;
 
-      if (ui.treePush(gf::UITreeType::Node, "Basic", basicCollapsed)) {
+      if (ui.treePush(gf::UITree::Node, "Basic", basicCollapsed)) {
         static bool checkbox = false;
         static Option option = Option::A;
 
@@ -215,30 +215,30 @@ static void overview(gf::UI& ui) {
         option = ui.optionLabel("optionB", option == Option::B) ? Option::B : option;
         option = ui.optionLabel("optionC", option == Option::C) ? Option::C : option;
 
-        ui.layoutRow(gf::UILayoutFormat::Static, 30, ratio);
+        ui.layoutRow(gf::UILayout::Static, 30, ratio);
 
-        ui.label("Slider int", gf::UITextAlignment::Left);
+        ui.label("Slider int", gf::UIAlignment::Left);
         ui.sliderInt(0, intSlider, 10, 1);
 
-        ui.label("Slider float", gf::UITextAlignment::Left);
+        ui.label("Slider float", gf::UIAlignment::Left);
         ui.sliderFloat(0, floatSlider, 5.0f, 0.5f);
 
-        ui.label("Progressbar", gf::UITextAlignment::Left);
+        ui.label("Progressbar", gf::UIAlignment::Left);
         ui.progress(progValue, 100, true);
 
-        ui.layoutRow(gf::UILayoutFormat::Static, 25, ratio);
+        ui.layoutRow(gf::UILayout::Static, 25, ratio);
 
-        ui.label("Property float:", gf::UITextAlignment::Left);
+        ui.label("Property float:", gf::UIAlignment::Left);
         ui.propertyFloat("Float:", 0, propertyFloat, 64.0f, 0.1f, 0.2f);
 
-        ui.label("Property int:", gf::UITextAlignment::Left);
+        ui.label("Property int:", gf::UIAlignment::Left);
         ui.propertyInt("Int:", 0, propertyInt, 100, 1, 1);
 
-        ui.label("Property neg:", gf::UITextAlignment::Left);
+        ui.label("Property neg:", gf::UIAlignment::Left);
         ui.propertyInt("Neg:", -10, propertyNeg, 10, 1, 1);
 
         ui.layoutRowDynamic(25, 1);
-        ui.label("Range:", gf::UITextAlignment::Left);
+        ui.label("Range:", gf::UIAlignment::Left);
 
         ui.layoutRowDynamic(25, 3);
 
@@ -253,29 +253,29 @@ static void overview(gf::UI& ui) {
         ui.treePop();
       }
 
-      static gf::UICollapseStates selectableCollapsed = gf::UICollapseStates::Minimized;
+      static gf::UICollapse selectableCollapsed = gf::UICollapse::Minimized;
 
-      if (ui.treePush(gf::UITreeType::Node, "Selectable", selectableCollapsed)) {
+      if (ui.treePush(gf::UITree::Node, "Selectable", selectableCollapsed)) {
 
-        static gf::UICollapseStates listCollapsed = gf::UICollapseStates::Minimized;
+        static gf::UICollapse listCollapsed = gf::UICollapse::Minimized;
 
-        if (ui.treePush(gf::UITreeType::Node, "List", listCollapsed)) {
+        if (ui.treePush(gf::UITree::Node, "List", listCollapsed)) {
           static bool selected[4] = { false, false, true, false };
 
           ui.layoutRowStatic(18, 100, 1);
 
-          ui.selectableLabel("Selectable", gf::UITextAlignment::Left, selected[0]);
-          ui.selectableLabel("Selectable", gf::UITextAlignment::Left, selected[1]);
-          ui.label("Not Selectable", gf::UITextAlignment::Left);
-          ui.selectableLabel("Selectable", gf::UITextAlignment::Left, selected[2]);
-          ui.selectableLabel("Selectable", gf::UITextAlignment::Left, selected[3]);
+          ui.selectableLabel("Selectable", gf::UIAlignment::Left, selected[0]);
+          ui.selectableLabel("Selectable", gf::UIAlignment::Left, selected[1]);
+          ui.label("Not Selectable", gf::UIAlignment::Left);
+          ui.selectableLabel("Selectable", gf::UIAlignment::Left, selected[2]);
+          ui.selectableLabel("Selectable", gf::UIAlignment::Left, selected[3]);
 
           ui.treePop();
         }
 
-        static gf::UICollapseStates gridCollapsed = gf::UICollapseStates::Minimized;
+        static gf::UICollapse gridCollapsed = gf::UICollapse::Minimized;
 
-        if (ui.treePush(gf::UITreeType::Node, "Grid", gridCollapsed)) {
+        if (ui.treePush(gf::UITree::Node, "Grid", gridCollapsed)) {
           static bool selected[16] = {
             true, false, false, false,
             false, true, false, false,
@@ -286,7 +286,7 @@ static void overview(gf::UI& ui) {
           ui.layoutRowStatic(50, 50, 4);
 
           for (int i = 0; i < 16; ++i) {
-            if (ui.selectableLabel("+", gf::UITextAlignment::Centered, selected[i])) {
+            if (ui.selectableLabel("+", gf::UIAlignment::Centered, selected[i])) {
               int x = i % 4;
               int y = i / 4;
 
@@ -303,9 +303,9 @@ static void overview(gf::UI& ui) {
         ui.treePop();
       }
 
-      static gf::UICollapseStates comboCollapsed = gf::UICollapseStates::Minimized;
+      static gf::UICollapse comboCollapsed = gf::UICollapse::Minimized;
 
-      if (ui.treePush(gf::UITreeType::Node, "Combo", comboCollapsed)) {
+      if (ui.treePush(gf::UITree::Node, "Combo", comboCollapsed)) {
         static int currentWeapon = 0;
         static std::vector<std::string> weapons = { "First", "Pistol", "Shotgun", "Plasma", "BFG" };
 
@@ -339,14 +339,14 @@ static void overview(gf::UI& ui) {
         if (ui.comboBeginColor(comboColor1, { 200.0f, 200.0f })) {
           const float ratio[] = { 0.15f, 0.85f };
 
-          ui.layoutRow(gf::UILayoutFormat::Dynamic, 30, ratio);
-          ui.label("R:", gf::UITextAlignment::Left);
+          ui.layoutRow(gf::UILayout::Dynamic, 30, ratio);
+          ui.label("R:", gf::UIAlignment::Left);
           ui.sliderInt(0, comboColor1R, 255, 5);
-          ui.label("G:", gf::UITextAlignment::Left);
+          ui.label("G:", gf::UIAlignment::Left);
           ui.sliderInt(0, comboColor1G, 255, 5);
-          ui.label("B:", gf::UITextAlignment::Left);
+          ui.label("B:", gf::UIAlignment::Left);
           ui.sliderInt(0, comboColor1B, 255, 5);
-          ui.label("A:", gf::UITextAlignment::Left);
+          ui.label("A:", gf::UIAlignment::Left);
           ui.sliderInt(0, comboColor1A, 255, 5);
 
           comboColor1 = gf::Color::rgba(comboColor1R, comboColor1G, comboColor1B, comboColor1A);
@@ -442,9 +442,9 @@ static void overview(gf::UI& ui) {
 
     // TODO: Chart
 
-    static gf::UICollapseStates popupCollapsed = gf::UICollapseStates::Minimized;
+    static gf::UICollapse popupCollapsed = gf::UICollapse::Minimized;
 
-    if (ui.treePush(gf::UITreeType::Tab, "Popup", popupCollapsed)) {
+    if (ui.treePush(gf::UITree::Tab, "Popup", popupCollapsed)) {
       static gf::Color4f color = gf::Color::Red;
       static bool select[4];
       static bool popupActive;
@@ -453,7 +453,7 @@ static void overview(gf::UI& ui) {
 
       ui.layoutRowStatic(30, 150, 1);
       gf::RectF bounds = ui.getWidgetBounds();
-      ui.label("Right click me for menu", gf::UITextAlignment::Left);
+      ui.label("Right click me for menu", gf::UIAlignment::Left);
 
       if (ui.contextualBegin(gf::None, { 100.0f, 300.0f }, bounds)) {
         static std::size_t prog = 40;
@@ -464,23 +464,23 @@ static void overview(gf::UI& ui) {
         ui.progress(prog, 100, true);
         ui.sliderInt(0, slider, 16, 1);
 
-        if (ui.contextualItemLabel("About", gf::UITextAlignment::Centered)) {
+        if (ui.contextualItemLabel("About", gf::UIAlignment::Centered)) {
           showAppAbout = true;
         }
 
-        ui.selectableLabel(select[0] ? "Unselect" : "Select", gf::UITextAlignment::Left, select[0]);
-        ui.selectableLabel(select[1] ? "Unselect" : "Select", gf::UITextAlignment::Left, select[1]);
-        ui.selectableLabel(select[2] ? "Unselect" : "Select", gf::UITextAlignment::Left, select[2]);
-        ui.selectableLabel(select[3] ? "Unselect" : "Select", gf::UITextAlignment::Left, select[3]);
+        ui.selectableLabel(select[0] ? "Unselect" : "Select", gf::UIAlignment::Left, select[0]);
+        ui.selectableLabel(select[1] ? "Unselect" : "Select", gf::UIAlignment::Left, select[1]);
+        ui.selectableLabel(select[2] ? "Unselect" : "Select", gf::UIAlignment::Left, select[2]);
+        ui.selectableLabel(select[3] ? "Unselect" : "Select", gf::UIAlignment::Left, select[3]);
 
         ui.contextualEnd();
       }
 
       // color contextual
 
-      ui.layoutRowBegin(gf::UILayoutFormat::Static, 30, 2);
+      ui.layoutRowBegin(gf::UILayout::Static, 30, 2);
       ui.layoutRowPush(100);
-      ui.label("Right click here:", gf::UITextAlignment::Left);
+      ui.label("Right click here:", gf::UIAlignment::Left);
       ui.layoutRowPush(50);
       bounds = ui.getWidgetBounds();
       ui.buttonColor(color);
@@ -495,9 +495,9 @@ static void overview(gf::UI& ui) {
         ui.contextualEnd();
       }
 
-      ui.layoutRowBegin(gf::UILayoutFormat::Static, 30, 2);
+      ui.layoutRowBegin(gf::UILayout::Static, 30, 2);
       ui.layoutRowPush(100);
-      ui.label("Popup:", gf::UITextAlignment::Left);
+      ui.label("Popup:", gf::UIAlignment::Left);
       ui.layoutRowPush(50);
 
       if (ui.buttonLabel("Popup")) {
@@ -509,9 +509,9 @@ static void overview(gf::UI& ui) {
       if (popupActive) {
         static gf::RectF bounds(20.0f, 100.0f, 220.0f, 90.0f);
 
-        if (ui.popupBegin(gf::UIPopupType::Static, "Error", gf::None, bounds)) {
+        if (ui.popupBegin(gf::UIPopup::Static, "Error", gf::None, bounds)) {
           ui.layoutRowDynamic(25, 1);
-          ui.label("A terrible error has occurred", gf::UITextAlignment::Left);
+          ui.label("A terrible error has occurred", gf::UIAlignment::Left);
 
           ui.layoutRowDynamic(25, 2);
 
@@ -535,7 +535,7 @@ static void overview(gf::UI& ui) {
 
       ui.layoutRowStatic(30, 150, 1);
       bounds = ui.getWidgetBounds();
-      ui.label("Hover me for tooltip", gf::UITextAlignment::Left);
+      ui.label("Hover me for tooltip", gf::UIAlignment::Left);
 
       if (ui.isMouseHoveringRect(bounds)) {
         ui.tooltip("This is a tooltip");
@@ -607,9 +607,9 @@ int main() {
 
       /* custom widget pixel width */
 
-      ui.layoutRowBegin(gf::UILayoutFormat::Static, 30, 2);
+      ui.layoutRowBegin(gf::UILayout::Static, 30, 2);
       ui.layoutRowPush(50);
-      ui.label("Volume:", gf::UITextAlignment::Left);
+      ui.label("Volume:", gf::UIAlignment::Left);
       ui.layoutRowPush(110);
       if (ui.sliderFloat(0.0f, value, 1.0f, 0.1f)) {
         std::cout << "Value: " << value << '\n';

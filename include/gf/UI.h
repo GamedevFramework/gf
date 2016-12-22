@@ -50,22 +50,22 @@ inline namespace v1 {
 
   using UIWindowFlags = Flags<UIWindow>;
 
-  enum class UICollapseStates : bool {
+  enum class UICollapse : bool {
     Minimized = false,
     Maximized = true,
   };
 
-  enum class UILayoutFormat {
+  enum class UILayout {
     Dynamic = 0,
     Static  = 1,
   };
 
-  enum class UITreeType {
+  enum class UITree {
     Node  = 0,
     Tab   = 1,
   };
 
-  enum class UITextAlignment {
+  enum class UIAlignment {
     Left      = 0x10 | 0x01,
     Centered  = 0x10 | 0x02,
     Right     = 0x10 | 0x04,
@@ -78,7 +78,7 @@ inline namespace v1 {
     Repeater  = 1,
   };
 
-  enum class UISymbolType {
+  enum class UISymbol {
     None,
     X,
     Underscore,
@@ -94,9 +94,9 @@ inline namespace v1 {
     Minus,
   };
 
-  enum class UIPopupType {
-    Static,
-    Dynamic,
+  enum class UIPopup {
+    Static  = 0,
+    Dynamic = 1,
   };
 
   class UI : public Drawable {
@@ -141,10 +141,10 @@ inline namespace v1 {
     void layoutRowDynamic(float height, int cols);
     void layoutRowStatic(float height, int itemWidth, int cols);
 
-    void layoutRowBegin(UILayoutFormat format, float rowHeight, int cols);
+    void layoutRowBegin(UILayout format, float rowHeight, int cols);
     void layoutRowPush(float value);
     void layoutRowEnd();
-    void layoutRow(UILayoutFormat format, float height, ArrayRef<float> ratio);
+    void layoutRow(UILayout format, float height, ArrayRef<float> ratio);
 
     /**
      * @}
@@ -170,7 +170,7 @@ inline namespace v1 {
      * @{
      */
 
-    bool treePush(UITreeType type, const std::string& title, UICollapseStates& state);
+    bool treePush(UITree type, const std::string& title, UICollapse& state);
     void treePop();
 
     /**
@@ -182,8 +182,8 @@ inline namespace v1 {
      * @{
      */
 
-    void label(const std::string& title, UITextAlignment align);
-    void labelColored(const std::string& title, UITextAlignment align, const Color4f& color);
+    void label(const std::string& title, UIAlignment align);
+    void labelColored(const std::string& title, UIAlignment align, const Color4f& color);
     void labelWrap(const std::string& title);
     void labelColoredWrap(const std::string& title, const Color4f& color);
 
@@ -202,8 +202,8 @@ inline namespace v1 {
 
     bool buttonLabel(const std::string& title);
     bool buttonColor(const Color4f& color);
-    bool buttonSymbol(UISymbolType symbol);
-    bool buttonSymbolLabel(UISymbolType symbol, const std::string& title, UITextAlignment align);
+    bool buttonSymbol(UISymbol symbol);
+    bool buttonSymbolLabel(UISymbol symbol, const std::string& title, UIAlignment align);
 
     /**
      * @}
@@ -239,7 +239,7 @@ inline namespace v1 {
      * @{
      */
 
-    bool selectableLabel(const std::string& title, UITextAlignment align, bool& value);
+    bool selectableLabel(const std::string& title, UIAlignment align, bool& value);
 
     /**
      * @}
@@ -297,7 +297,7 @@ inline namespace v1 {
      * @{
      */
 
-    bool popupBegin(UIPopupType type, const std::string& title, UIWindowFlags flags, const RectF& bounds);
+    bool popupBegin(UIPopup type, const std::string& title, UIWindowFlags flags, const RectF& bounds);
     void popupClose();
     void popupEnd();
 
@@ -315,11 +315,11 @@ inline namespace v1 {
 
     bool comboBeginLabel(const std::string& selected, Vector2f size);
     bool comboBeginColor(const Color4f& color, Vector2f size);
-    bool comboBeginSymbol(UISymbolType symbol, Vector2f size);
-    bool comboBeginSymbolLabel(UISymbolType symbol, const std::string& selected, Vector2f size);
+    bool comboBeginSymbol(UISymbol symbol, Vector2f size);
+    bool comboBeginSymbolLabel(UISymbol symbol, const std::string& selected, Vector2f size);
 
-    bool comboItemLabel(const std::string& title, UITextAlignment align);
-    bool comboItemSymbolLabel(UISymbolType symbol, const std::string& title, UITextAlignment align);
+    bool comboItemLabel(const std::string& title, UIAlignment align);
+    bool comboItemSymbolLabel(UISymbol symbol, const std::string& title, UIAlignment align);
 
     void comboClose();
     void comboEnd();
@@ -335,8 +335,8 @@ inline namespace v1 {
 
     bool contextualBegin(UIWindowFlags flags, Vector2f size, const RectF& triggerBounds);
 
-    bool contextualItemLabel(const std::string& title, UITextAlignment align);
-    bool contextualItemSymbolLabel(UISymbolType symbol, const std::string& title, UITextAlignment align);
+    bool contextualItemLabel(const std::string& title, UIAlignment align);
+    bool contextualItemSymbolLabel(UISymbol symbol, const std::string& title, UIAlignment align);
 
     void contextualClose();
     void contextualEnd();
@@ -366,12 +366,12 @@ inline namespace v1 {
     void menubarBegin();
     void menubarEnd();
 
-    bool menuBeginLabel(const std::string& title, UITextAlignment align, Vector2f size);
-    bool menuBeginSymbol(const std::string& id, UISymbolType symbol, Vector2f size);
-    bool menuBeginSymbolLabel(UISymbolType symbol, const std::string& title, UITextAlignment align, Vector2f size);
+    bool menuBeginLabel(const std::string& title, UIAlignment align, Vector2f size);
+    bool menuBeginSymbol(const std::string& id, UISymbol symbol, Vector2f size);
+    bool menuBeginSymbolLabel(UISymbol symbol, const std::string& title, UIAlignment align, Vector2f size);
 
-    bool menuItemLabel(const std::string& title, UITextAlignment align);
-    bool menuItemSymbolLabel(UISymbolType symbol, const std::string& title, UITextAlignment align);
+    bool menuItemLabel(const std::string& title, UIAlignment align);
+    bool menuItemSymbolLabel(UISymbol symbol, const std::string& title, UIAlignment align);
 
     void menuClose();
     void menuEnd();
