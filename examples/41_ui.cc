@@ -562,6 +562,119 @@ static void overview(gf::UI& ui) {
       ui.treePop();
     }
 
+    static gf::UICollapse layoutCollapsed = gf::UICollapse::Minimized;
+
+    if (ui.treePush(gf::UITree::Tab, "Layout", layoutCollapsed)) {
+
+      static gf::UICollapse widgetCollapsed = gf::UICollapse::Minimized;
+
+      if (ui.treePush(gf::UITree::Node, "Widget", widgetCollapsed)) {
+        float ratioTwo[] = { 0.2f, 0.6f, 0.2f };
+        float widthTwo[] = { 100.0f, 200.0f, 50.0f };
+
+        ui.layoutRowDynamic(30, 1);
+        ui.label("Dynamic fixed column layout with generated position and size:");
+        ui.layoutRowDynamic(30, 3);
+        ui.buttonLabel("button");
+        ui.buttonLabel("button");
+        ui.buttonLabel("button");
+
+        ui.layoutRowDynamic(30, 1);
+        ui.label("Static fixed column layout with generated position and size:");
+        ui.layoutRowStatic(30, 100, 3);
+        ui.buttonLabel("button");
+        ui.buttonLabel("button");
+        ui.buttonLabel("button");
+
+        ui.layoutRowDynamic(30, 1);
+        ui.label("Dynamic array-based custom column layout with generated position and custom size:");
+        ui.layoutRow(gf::UILayout::Dynamic, 30, ratioTwo);
+        ui.buttonLabel("button");
+        ui.buttonLabel("button");
+        ui.buttonLabel("button");
+
+        ui.layoutRowDynamic(30, 1);
+        ui.label("Static array-based custom column layout with generated position and custom size:");
+        ui.layoutRow(gf::UILayout::Static, 30, widthTwo);
+        ui.buttonLabel("button");
+        ui.buttonLabel("button");
+        ui.buttonLabel("button");
+
+        ui.layoutRowDynamic(30, 1);
+        ui.label("Dynamic immediate mode custom column layout with generated position and custom size:");
+        ui.layoutRowBegin(gf::UILayout::Dynamic, 30, 3);
+        ui.layoutRowPush(0.2f);
+        ui.buttonLabel("button");
+        ui.layoutRowPush(0.6f);
+        ui.buttonLabel("button");
+        ui.layoutRowPush(0.2f);
+        ui.buttonLabel("button");
+        ui.layoutRowEnd();
+
+        ui.layoutRowDynamic(30, 1);
+        ui.label("Static immediate mode custom column layout with generated position and custom size:");
+        ui.layoutRowBegin(gf::UILayout::Static, 30, 3);
+        ui.layoutRowPush(100.0f);
+        ui.buttonLabel("button");
+        ui.layoutRowPush(200.0f);
+        ui.buttonLabel("button");
+        ui.layoutRowPush(50.0f);
+        ui.buttonLabel("button");
+        ui.layoutRowEnd();
+
+        ui.treePop();
+      }
+
+      static gf::UICollapse groupCollapsed = gf::UICollapse::Minimized;
+
+      if (ui.treePush(gf::UITree::Node, "Group", groupCollapsed)) {
+        static bool groupTitlebar = false;
+        static bool groupBorder = true;
+        static bool groupNoScrollbar = false;
+        static int groupWidth = 320;
+        static int groupHeight = 200;
+
+        gf::UIWindowFlags groupFlags = gf::None;
+
+        if (groupTitlebar) { groupFlags |= gf::UIWindow::Title; }
+        if (groupBorder) { groupFlags |= gf::UIWindow::Border; }
+        if (groupNoScrollbar) { groupFlags |= gf::UIWindow::NoScrollbar; }
+
+        ui.layoutRowDynamic(30, 3);
+        ui.checkbox("Titlebar", groupTitlebar);
+        ui.checkbox("Border", groupBorder);
+        ui.checkbox("No Scrollbar", groupNoScrollbar);
+
+        ui.layoutRowBegin(gf::UILayout::Static, 22, 3);
+        ui.layoutRowPush(50);
+        ui.label("Size:");
+        ui.layoutRowPush(130);
+        ui.propertyInt("Width:", 100, groupWidth, 500, 10, 1);
+        ui.layoutRowPush(130);
+        ui.propertyInt("Height:", 100, groupHeight, 500, 10, 1);
+        ui.layoutRowEnd();
+
+        ui.layoutRowStatic(groupHeight, groupWidth, 2);
+
+        if (ui.groupBegin("Group", groupFlags)) {
+          static bool selected[16];
+
+          ui.layoutRowStatic(18, 100, 1);
+
+          for (int i = 0; i < 16; ++i) {
+            ui.selectableLabel(selected[i] ? "Selected" : "Unselected", gf::UIAlignment::Center, selected[i]);
+          }
+
+          ui.groupEnd();
+        }
+
+        ui.treePop();
+      }
+
+
+
+      ui.treePop();
+    }
   }
 
   ui.end();
