@@ -386,14 +386,14 @@ inline namespace v1 {
     nk_layout_row_static(&m_impl->ctx, height, itemWidth, cols);
   }
 
-  void UI::layoutRowBegin(UILayout format, float rowHeight, int cols) {
+  void UI::layoutRowBegin(UILayout format, float height, int cols) {
     setState(State::Setup);
-    nk_layout_row_begin(&m_impl->ctx, static_cast<nk_layout_format>(format), rowHeight, cols);
+    nk_layout_row_begin(&m_impl->ctx, static_cast<nk_layout_format>(format), height, cols);
   }
 
-  void UI::layoutRowPush(float value) {
+  void UI::layoutRowPush(float width) {
     setState(State::Setup);
-    nk_layout_row_push(&m_impl->ctx, value);
+    nk_layout_row_push(&m_impl->ctx, width);
   }
 
   void UI::layoutRowEnd() {
@@ -742,11 +742,6 @@ inline namespace v1 {
   bool UI::isWidgetHovered() {
     setState(State::Setup);
     return nk_widget_is_hovered(&m_impl->ctx);
-  }
-
-  bool UI::isMouseHoveringRect(const RectF& bounds) {
-    setState(State::Setup);
-    return nk_input_is_mouse_hovering_rect(&m_impl->ctx.input, { bounds.left, bounds.top, bounds.width, bounds.height });
   }
 
   /*

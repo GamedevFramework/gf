@@ -552,12 +552,13 @@ static void overview(gf::UI& ui) {
       // tooltip
 
       ui.layoutRowStatic(30, 150, 1);
-      bounds = ui.getWidgetBounds();
-      ui.label("Hover me for tooltip");
 
-      if (ui.isMouseHoveringRect(bounds)) {
+      if (ui.isWidgetHovered()) {
         ui.tooltip("This is a tooltip");
       }
+
+      ui.label("Hover me for tooltip");
+
 
       ui.treePop();
     }
