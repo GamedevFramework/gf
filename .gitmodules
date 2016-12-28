@@ -10,3 +10,6 @@
 [submodule "tests/googletest"]
 	path = tests/googletest
 	url = https://github.com/google/googletest.git
+[submodule "library/vendor/nuklear"]
+	path = library/vendor/nuklear
+	url = https://github.com/vurtun/nuklear.git

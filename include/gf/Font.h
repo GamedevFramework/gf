@@ -275,6 +275,16 @@ inline namespace v1 {
      */
     const AlphaTexture *getTexture(unsigned characterSize);
 
+    /**
+     * @brief Generate the texture for a given character size
+     *
+     * After this call, the texture corresponding to the size is
+     * available through `getTexture`.
+     *
+     * @param characterSize Reference character size
+     */
+    void generateTexture(unsigned characterSize);
+
   private:
     struct Packing {
       unsigned top = 0;

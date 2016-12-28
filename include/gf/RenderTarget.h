@@ -97,6 +97,34 @@ inline namespace v1 {
      */
 
     /**
+     * @brief Tell if the scissor test is enabled
+     *
+     * @return True if the scissor test is enabled
+     */
+    bool getScissorTest();
+
+    /**
+     * @brief Enable or disable the scissor test
+     *
+     * @param scissor True to enable, false to disable the test
+     */
+    void setScissorTest(bool scissor = true);
+
+    /**
+     * @brief Get the current scissor box
+     *
+     * @return The current scissor box
+     */
+    RectI getScissoBox();
+
+    /**
+     * @brief Define the scissor box
+     *
+     * @param box The scissor box
+     */
+    void setScissorBox(const RectI& box);
+
+    /**
      * @brief Clear the entire target with a single color
      *
      * This function is usually called once every frame,

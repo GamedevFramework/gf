@@ -88,7 +88,7 @@ struct FractalParams {
     float dimension;
   } rm; // Ridged Multifractal
 
-  float octaves;
+  int octaves;
   float lacunarity;
   float persistence;
 };
@@ -413,32 +413,28 @@ int main() {
     return EXIT_FAILURE;
   }
 
-  gf::DefaultUIRenderer uiRenderer(font);
-  gf::UILayout layout;
-  gf::UI ui(uiRenderer, layout);
-
-  float scrollArea = 0.0f;
+  gf::UI ui(font);
 
   // noise states
 
   std::vector<std::string> noiseChoices = { "Gradient", "Better Gradient", "Simplex", "OpenSimplex", "Worley" }; // keep in line with NoiseFunction
-  std::size_t noiseChoice = 0;
+  int noiseChoice = 0;
 
   std::vector<std::string> stepChoices = { "Linear", "Cubic", "Quintic", "Cosine" }; // keep in line with StepFunction
-  std::size_t stepChoice = 2;
+  int stepChoice = 2;
+
+  int pointCount = 20;
 
   std::vector<std::string> distanceChoices = { "Euclidean", "Manhattan", "Chebyshev" }; // keep in line with DistanceFunction
-  std::size_t distanceChoice = 0;
-
-  float pointCount = 20;
+  int distanceChoice = 0;
 
   std::vector<std::string> combinationChoices = { "F1", "F2", "F2F1" };
-  std::size_t combinationChoice = 2;
+  int combinationChoice = 2;
 
-  bool fractalExpanded = false;
+  gf::UICollapse fractalCollapsed = gf::UICollapse::Minimized;
 
   std::vector<std::string> fractalChoices = { "None", "fBm", "Multifractal", "Hetero Terrain", "Hybrid Multifractal", "Ridged Multifractal" }; // keep in line with Fractal
-  std::size_t fractalChoice = 0;
+  int fractalChoice = 0;
 
   float scale = 1.0;
 
@@ -463,10 +459,10 @@ int main() {
   fractalParams.lacunarity = 2.0;
   fractalParams.persistence = 0.5;
 
-  bool renderingExpanded = false;
+  gf::UICollapse renderingCollapsed = gf::UICollapse::Minimized;
 
   std::vector<std::string> renderingChoices = { "Grayscale", "Colored" };
-  std::size_t renderingChoice = 0;
+  int renderingChoice = 0;
 
   RenderingParams renderingParams;
   renderingParams.rendering = Rendering::Grayscale;
@@ -491,58 +487,41 @@ int main() {
       ui.update(event);
     }
 
-    ui.clear();
 
-    ui.beginScrollArea("Noise parameters", gf::RectF(Size, 0, ExtraSize, Size), &scrollArea);
+    ui.begin("Noise parameters", gf::RectF(Size, 0, ExtraSize, Size), gf::UIWindow::Title | gf::UIWindow::Border);
 
-    ui.separatorLine();
+    ui.layoutRowDynamic(20, 1);
+    ui.combobox(noiseChoices, noiseChoice, 20, { ExtraSize, Size });
 
-    if (ui.cycle(noiseChoices, noiseChoice)) {
-      noiseChoice = (noiseChoice + 1) % noiseChoices.size();
-    }
+    ui.separator(5);
 
-    ui.separator();
-    ui.slider("Scale", &scale, 0.1, 20, 0.1);
+    ui.layoutRowDynamic(20, 1);
+    ui.propertyFloat("Scale", 0.1f, scale, 20.0f, 0.1f, 0.1f);
 
     NoiseFunction noiseFunction = static_cast<NoiseFunction>(noiseChoice);
 
     switch (noiseFunction) {
       case NoiseFunction::Gradient:
         ui.label("Step function:");
-        if (ui.cycle(stepChoices, stepChoice)) {
-          stepChoice = (stepChoice + 1) % stepChoices.size();
-        }
+        ui.combobox(stepChoices, stepChoice, 20, { ExtraSize, Size });
         break;
 
       case NoiseFunction::Worley:
-        ui.slider("Point count", &pointCount, 5, 40, 1);
-
+        ui.propertyInt("Point count", 5, pointCount, 40, 1, 1.0f);
         ui.label("Distance function:");
-        if (ui.cycle(distanceChoices, distanceChoice)) {
-          distanceChoice = (distanceChoice + 1) % distanceChoices.size();
-        }
-
+        ui.combobox(distanceChoices, distanceChoice, 20, { ExtraSize, Size });
         ui.label("Combination:");
-        if (ui.cycle(combinationChoices, combinationChoice)) {
-          combinationChoice = (combinationChoice + 1) % combinationChoices.size();
-        }
+        ui.combobox(combinationChoices, combinationChoice, 20, { ExtraSize, Size });
 
       default:
         break;
     }
 
-    ui.separatorLine();
+    ui.separator(5);
 
-    if (ui.collapse("Fractal", fractalExpanded)) {
-      fractalExpanded = !fractalExpanded;
-    }
-
-    if (fractalExpanded) {
-      ui.indent();
-
-      if (ui.cycle(fractalChoices, fractalChoice)) {
-        fractalChoice = (fractalChoice + 1) % fractalChoices.size();
-      }
+    if (ui.treePush(gf::UITree::Tab, "Fractal", fractalCollapsed)) {
+      ui.layoutRowDynamic(20, 1);
+      ui.combobox(fractalChoices, fractalChoice, 20, { ExtraSize, Size });
 
       fractalParams.fractal = static_cast<Fractal>(fractalChoice);
 
@@ -553,51 +532,44 @@ int main() {
             break;
 
           case Fractal::FBm:
-            ui.slider("Dimension", &fractalParams.f.dimension, 0.1, 1.9, 0.05);
+            ui.propertyFloat("Dimension", 0.1f, fractalParams.f.dimension, 1.9f, 0.05f, 0.05f);
             break;
 
           case Fractal::Multifractal:
-            ui.slider("Dimension", &fractalParams.m.dimension, 0.1, 1.9, 0.05);
+            ui.propertyFloat("Dimension", 0.1f, fractalParams.m.dimension, 1.9f, 0.05f, 0.05f);
             break;
 
           case Fractal::HeteroTerrain:
-            ui.slider("Dimension", &fractalParams.ht.dimension, 0.1, 1.9, 0.05);
-            ui.slider("Offset", &fractalParams.ht.offset, 0, 10, 0.1);
+            ui.propertyFloat("Dimension", 0.1f, fractalParams.ht.dimension, 1.9f, 0.05f, 0.05f);
+            ui.propertyFloat("Offset", 0.0f, fractalParams.ht.offset, 10.0f, 0.1f, 0.1f);
             break;
 
           case Fractal::HybridMultifractal:
-            ui.slider("Dimension", &fractalParams.hm.dimension, 0.1, 1.9, 0.05);
-            ui.slider("Offset", &fractalParams.hm.offset, 0, 10, 0.1);
+            ui.propertyFloat("Dimension", 0.1f, fractalParams.hm.dimension, 1.9f, 0.05f, 0.05f);
+            ui.propertyFloat("Offset", 0.0f, fractalParams.hm.offset, 10.0f, 0.1f, 0.1f);
             break;
 
           case Fractal::RidgedMultifractal:
-            ui.slider("Dimension", &fractalParams.rm.dimension, 0.1, 1.9, 0.05);
-            ui.slider("Offset", &fractalParams.rm.offset, 0, 10, 0.1);
-            ui.slider("Gain", &fractalParams.rm.gain, 1, 3, 0.1);
+            ui.propertyFloat("Dimension", 0.1f, fractalParams.rm.dimension, 1.9f, 0.05f, 0.05f);
+            ui.propertyFloat("Offset", 0.0f, fractalParams.rm.offset, 10.0f, 0.1f, 0.1f);
+            ui.propertyFloat("Gain", 1.0f, fractalParams.rm.gain, 3.0f, 0.1f, 0.1f);
             break;
         }
 
-        ui.separator();
-        ui.slider("Octaves", &fractalParams.octaves, 1, 15, 1);
-        ui.slider("Lacunarity", &fractalParams.lacunarity, 1, 3, 0.1);
-        ui.slider("Persistence", &fractalParams.persistence, 0.1, 0.9, 0.1);
+        ui.propertyInt("Octaves", 1, fractalParams.octaves, 15, 1, 1.0f);
+        ui.propertyFloat("Lacunarity", 1.0f, fractalParams.lacunarity, 3.0f, 0.1f, 0.1f);
+        ui.propertyFloat("Persistence", 0.1f, fractalParams.persistence, 0.9f, 0.1f, 0.1f);
+
       }
 
-      ui.unindent();
+      ui.treePop();
     }
 
-    ui.separatorLine();
+    ui.separator(5);
 
-    if (ui.collapse("Rendering", renderingExpanded)) {
-      renderingExpanded = !renderingExpanded;
-    }
-
-    if (renderingExpanded) {
-      ui.indent();
-
-      if (ui.cycle(renderingChoices, renderingChoice)) {
-        renderingChoice = (renderingChoice + 1) % renderingChoices.size();
-      }
+    if (ui.treePush(gf::UITree::Tab, "Rendering", renderingCollapsed)) {
+      ui.layoutRowDynamic(20, 1);
+      ui.combobox(renderingChoices, renderingChoice, 20, { ExtraSize, Size });
 
       renderingParams.rendering = static_cast<Rendering>(renderingChoice);
 
@@ -606,20 +578,18 @@ int main() {
           break;
 
         case Rendering::Colored:
-          ui.slider("Water level", &renderingParams.waterLevel, 0, 1, 0.05);
-
-          if (ui.check("Shaded", renderingParams.shaded)) {
-            renderingParams.shaded = !renderingParams.shaded;
-          }
+          ui.propertyFloat("Water level", 0.0f, renderingParams.waterLevel, 1.0f, 0.05f, 0.05f);
+          ui.checkbox("Shaded", renderingParams.shaded);
           break;
       }
 
-      ui.unindent();
+      ui.treePop();
     }
 
-    ui.separatorLine();
+    ui.separator(5);
 
-    if (ui.button("Generate")) {
+    ui.layoutRowDynamic(20, 1);
+    if (ui.buttonLabel("Generate")) {
       switch (noiseFunction) {
         case NoiseFunction::Gradient: {
           StepFunction stepFunction = static_cast<StepFunction>(stepChoice);
@@ -662,17 +632,15 @@ int main() {
       }
     }
 
-    ui.separator();
-
-    if (ui.button("Save to 'noise.png'")) {
+    if (ui.buttonLabel("Save to 'noise.png'")) {
       image.saveToFile("noise.png");
     }
 
-    if (ui.button("Save to 'noise.pnm'")) {
+    if (ui.buttonLabel("Save to 'noise.pnm'")) {
       exportToPortableGraymap(array, "noise.pnm");
     }
 
-    ui.endScrollArea();
+    ui.end();
 
     renderer.clear();
     renderer.draw(sprite);
