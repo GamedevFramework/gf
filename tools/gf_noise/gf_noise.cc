@@ -352,6 +352,7 @@ enum class DistanceFunction : std::size_t {
   Euclidean = 0,
   Manhattan = 1,
   Chebyshev = 2,
+  Natural   = 3,
 };
 
 static gf::Distance2<double> getDistanceFunction(DistanceFunction func) {
@@ -362,6 +363,8 @@ static gf::Distance2<double> getDistanceFunction(DistanceFunction func) {
       return gf::manhattanDistance;
     case DistanceFunction::Chebyshev:
       return gf::chebyshevDistance;
+    case DistanceFunction::Natural:
+      return gf::naturalDistance;
   }
 
   assert(false);
@@ -430,7 +433,7 @@ int main() {
 
   int pointCount = 20;
 
-  std::vector<std::string> distanceChoices = { "Euclidean", "Manhattan", "Chebyshev" }; // keep in line with DistanceFunction
+  std::vector<std::string> distanceChoices = { "Euclidean", "Manhattan", "Chebyshev", "Natural" }; // keep in line with DistanceFunction
   int distanceChoice = 0;
 
   std::vector<std::string> combinationChoices = { "F1", "F2", "F2F1" };

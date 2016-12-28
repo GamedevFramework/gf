@@ -1786,6 +1786,28 @@ inline namespace v1 {
   }
 
   /**
+   * @relates Vector
+   * @brief Natural length of a vector
+   *
+   * The natural length @f$ l @f$ of a vector @f$ (u_1, \ldots, u_N) @f$ is:
+   *
+   * @f[ l = \sum_{i = 1}^{N} |u_i| + \sum_{i = 1}^{N} u_i^2 @f]
+   *
+   * It's the sum of the Manhattan length and the square length.
+   *
+   * @param vec A vector.
+   * @returns The natural length of the vector
+   *
+   * @sa naturalDistance()
+   */
+  template<typename T, std::size_t N>
+  inline
+  T naturalLength(const Vector<T, N>& vec) {
+    return manhattanLength(vec) + squareLength(vec);
+  }
+
+
+  /**
    * @ingroup core
    * @brief A distance function
    *
@@ -1897,6 +1919,25 @@ inline namespace v1 {
   inline
   T chebyshevDistance(const Vector<T, N>& lhs, const Vector<T, N>& rhs) {
     return chebyshevLength(lhs - rhs);
+  }
+
+  /**
+   * @relates Vector
+   * @brief Natural distance between two vectors
+   *
+   * The natural distance between two vectors is the natural length of the
+   * difference of the two vectors.
+   *
+   * @param lhs A first vector
+   * @param rhs A second vector
+   * @returns The natural distance between the two vectors
+   *
+   * @sa naturalLength()
+   */
+  template<typename T, std::size_t N>
+  inline
+  T naturalDistance(const Vector<T, N>& lhs, const Vector<T, N>& rhs) {
+    return naturalLength(lhs - rhs);
   }
 
   /**
