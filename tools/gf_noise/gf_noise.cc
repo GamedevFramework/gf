@@ -317,11 +317,12 @@ static void exportToPortableGraymap(const gf::Array2D<double>& array, const char
 
 
 enum class NoiseFunction : std::size_t {
-  Gradient        = 0,
-  BetterGradient  = 1,
-  Simplex         = 2,
-  OpenSimplex     = 3,
-  Worley          = 4,
+  Noise           = 0,
+  Gradient        = 1,
+  BetterGradient  = 2,
+  Simplex         = 3,
+  OpenSimplex     = 4,
+  Worley          = 5,
 };
 
 enum class StepFunction : std::size_t {
@@ -421,8 +422,8 @@ int main() {
 
   // noise states
 
-  std::vector<std::string> noiseChoices = { "Gradient", "Better Gradient", "Simplex", "OpenSimplex", "Worley" }; // keep in line with NoiseFunction
-  int noiseChoice = 0;
+  std::vector<std::string> noiseChoices = { "Value", "Gradient", "Better Gradient", "Simplex", "OpenSimplex", "Worley" }; // keep in line with NoiseFunction
+  int noiseChoice = 1;
 
   std::vector<std::string> stepChoices = { "Linear", "Cubic", "Quintic", "Cosine" }; // keep in line with StepFunction
   int stepChoice = 2;
@@ -506,6 +507,12 @@ int main() {
     NoiseFunction noiseFunction = static_cast<NoiseFunction>(noiseChoice);
 
     switch (noiseFunction) {
+      case NoiseFunction::Noise:
+        ui.label("Step function:");
+        bounds = ui.getWidgetBounds();
+        ui.combobox(stepChoices, stepChoice, 20, { bounds.width, ComboHeightMax });
+        break;
+
       case NoiseFunction::Gradient:
         ui.label("Step function:");
         bounds = ui.getWidgetBounds();
@@ -601,6 +608,15 @@ int main() {
     ui.layoutRowDynamic(20, 1);
     if (ui.buttonLabel("Generate")) {
       switch (noiseFunction) {
+        case NoiseFunction::Noise: {
+          StepFunction stepFunction = static_cast<StepFunction>(stepChoice);
+          gf::Step<double> step = getStepFunction(stepFunction);
+
+          gf::ValueNoise2D noise(random, step);
+          generate(texture, image, renderingParams, array, noise, fractalParams, scale);
+          break;
+        }
+
         case NoiseFunction::Gradient: {
           StepFunction stepFunction = static_cast<StepFunction>(stepChoice);
           gf::Step<double> step = getStepFunction(stepFunction);

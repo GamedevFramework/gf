@@ -40,6 +40,35 @@ inline namespace v1 {
 
   class Random;
 
+  /**
+   * @ingroup core
+   * @brief Value 2D noise
+   *
+   * [Value noise](https://en.wikipedia.org/wiki/Value_noise) is a
+   * lattice-based noise based on values.
+   */
+  class GF_API ValueNoise2D : public Noise2D {
+  public:
+    /**
+     * @brief Constructor
+     *
+     * @param random A random engine
+     * @param step A step
+     *
+     * @sa gf::Step
+     */
+    ValueNoise2D(Random& random, Step<double> step);
+
+    virtual double getValue(double x, double y) override;
+
+  private:
+    Step<double> m_step;
+    std::array<uint8_t, 256> m_perm;
+    std::array<double, 256> m_values;
+
+    double at(uint8_t i, uint8_t j) const;
+  };
+
 
   /**
    * @ingroup core

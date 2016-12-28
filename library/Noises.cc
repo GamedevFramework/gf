@@ -37,6 +37,52 @@ inline namespace v1 {
     std::shuffle(perm.begin(), perm.end(), random.getEngine());
   }
 
+  /*
+   * Value
+   */
+  ValueNoise2D::ValueNoise2D(Random& random, Step<double> step)
+  : m_step(step)
+  {
+    // initialize permutation
+
+    generatePermutation(random, m_perm);
+
+    // generate values
+
+    std::uniform_real_distribution<double> distValue(0.0, 1.0);
+
+    for (auto& value : m_values) {
+      value = distValue(random.getEngine());
+    }
+
+  }
+
+  double ValueNoise2D::getValue(double x, double y) {
+    uint8_t qx = static_cast<uint8_t>(std::fmod(x, 256));
+    double rx = std::fmod(x, 1);
+    assert(rx >= 0.0 && rx <= 1.0);
+
+    uint8_t qy = static_cast<uint8_t>(std::fmod(y, 256));
+    double ry = std::fmod(y, 1);
+    assert(ry >= 0.0 && ry <= 1.0);
+
+    double nw = at(qx    , qy    );
+    double ne = at(qx + 1, qy    );
+    double sw = at(qx    , qy + 1);
+    double se = at(qx + 1, qy + 1);
+
+    double n = gf::lerp(nw, ne, m_step(rx));
+    double s = gf::lerp(sw, se, m_step(rx));
+
+    return gf::lerp(n, s, m_step(ry));
+  }
+
+  double ValueNoise2D::at(uint8_t i, uint8_t j) const {
+    uint8_t index = i;
+    index = m_perm.at(index) + j;
+    return m_values.at(m_perm.at(index));
+  }
+
 
   /*
    * Gradient
@@ -51,7 +97,7 @@ inline namespace v1 {
 
     // distributions
 
-    std::uniform_real_distribution<double> distAngle(0.0f, 2.0f * Pi);
+    std::uniform_real_distribution<double> distAngle(0.0, 2.0 * Pi);
 
     // generate 2D gradients
 
@@ -101,8 +147,8 @@ inline namespace v1 {
 
     // distributions
 
-    std::uniform_real_distribution<double> distAngle(0.0f, 2.0f * Pi);
-    std::uniform_real_distribution<double> distHalfAngle(0.0f, Pi);
+    std::uniform_real_distribution<double> distAngle(0.0, 2.0 * Pi);
+    std::uniform_real_distribution<double> distHalfAngle(0.0, Pi);
 
     // generate 3D gradients
 
@@ -173,7 +219,7 @@ inline namespace v1 {
 
     // distributions
 
-    std::uniform_real_distribution<double> distAngle(0.0f, 2.0f * Pi);
+    std::uniform_real_distribution<double> distAngle(0.0, 2.0 * Pi);
 
     // generate 2D gradients
 
