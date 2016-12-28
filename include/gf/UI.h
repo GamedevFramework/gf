@@ -28,6 +28,7 @@
 #include "Event.h"
 #include "Flags.h"
 #include "Font.h"
+#include "Portability.h"
 #include "StringRef.h"
 #include "Types.h"
 #include "Vector.h"
@@ -315,7 +316,7 @@ inline namespace v1 {
    * simplified version without begin/end for common cases.
    *
    */
-  class UI : public Drawable {
+  class GF_API UI : public Drawable {
   public:
     /**
      * @brief The default size for the font
