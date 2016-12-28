@@ -394,6 +394,10 @@ int main() {
   constexpr unsigned Size = 1024;
   constexpr unsigned ExtraSize = 250;
 
+  constexpr float ComboHeightMax = 200.0f;
+
+  gf::RectF bounds;
+
   gf::Array2D<double> array({ Size, Size });
   gf::Image image;
   image.create({ Size, Size });
@@ -491,7 +495,8 @@ int main() {
     ui.begin("Noise parameters", gf::RectF(Size, 0, ExtraSize, Size), gf::UIWindow::Title | gf::UIWindow::Border);
 
     ui.layoutRowDynamic(20, 1);
-    ui.combobox(noiseChoices, noiseChoice, 20, { ExtraSize, Size });
+    bounds = ui.getWidgetBounds();
+    ui.combobox(noiseChoices, noiseChoice, 20, { bounds.width, ComboHeightMax });
 
     ui.separator(5);
 
@@ -503,15 +508,18 @@ int main() {
     switch (noiseFunction) {
       case NoiseFunction::Gradient:
         ui.label("Step function:");
-        ui.combobox(stepChoices, stepChoice, 20, { ExtraSize, Size });
+        bounds = ui.getWidgetBounds();
+        ui.combobox(stepChoices, stepChoice, 20, { bounds.width, ComboHeightMax });
         break;
 
       case NoiseFunction::Worley:
         ui.propertyInt("Point count", 5, pointCount, 40, 1, 1.0f);
         ui.label("Distance function:");
-        ui.combobox(distanceChoices, distanceChoice, 20, { ExtraSize, Size });
+        bounds = ui.getWidgetBounds();
+        ui.combobox(distanceChoices, distanceChoice, 20, { bounds.width, ComboHeightMax });
         ui.label("Combination:");
-        ui.combobox(combinationChoices, combinationChoice, 20, { ExtraSize, Size });
+        bounds = ui.getWidgetBounds();
+        ui.combobox(combinationChoices, combinationChoice, 20, { bounds.width, ComboHeightMax });
 
       default:
         break;
@@ -521,7 +529,8 @@ int main() {
 
     if (ui.treePush(gf::UITree::Tab, "Fractal", fractalCollapsed)) {
       ui.layoutRowDynamic(20, 1);
-      ui.combobox(fractalChoices, fractalChoice, 20, { ExtraSize, Size });
+      bounds = ui.getWidgetBounds();
+      ui.combobox(fractalChoices, fractalChoice, 20, { bounds.width, ComboHeightMax });
 
       fractalParams.fractal = static_cast<Fractal>(fractalChoice);
 
@@ -569,7 +578,8 @@ int main() {
 
     if (ui.treePush(gf::UITree::Tab, "Rendering", renderingCollapsed)) {
       ui.layoutRowDynamic(20, 1);
-      ui.combobox(renderingChoices, renderingChoice, 20, { ExtraSize, Size });
+      bounds = ui.getWidgetBounds();
+      ui.combobox(renderingChoices, renderingChoice, 20, { bounds.width, ComboHeightMax });
 
       renderingParams.rendering = static_cast<Rendering>(renderingChoice);
 
