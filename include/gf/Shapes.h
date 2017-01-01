@@ -28,6 +28,7 @@
 #include <vector>
 
 #include "Circ.h"
+#include "Polygon.h"
 #include "Portability.h"
 #include "Rect.h"
 #include "Shape.h"
@@ -233,6 +234,13 @@ inline namespace v1 {
      * @param pointCount Number of points of the polygon
      */
     ConvexShape(std::size_t pointCount);
+
+    /**
+     * @brief Constructor with a polygon
+     *
+     * @param polygon The polygon
+     */
+    ConvexShape(const Polygon& polygon);
 
     /**
      * @brief Set the number of points of the polygon
