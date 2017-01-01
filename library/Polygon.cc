@@ -21,7 +21,9 @@
 #include <gf/Polygon.h>
 
 #include <cassert>
+
 #include <algorithm>
+#include <numeric>
 
 #include <gf/VectorOps.h>
 
@@ -37,10 +39,17 @@ inline namespace v1 {
   }
 
   Vector2f Polygon::getPoint(std::size_t index) const {
+    assert(index < m_points.size());
     return m_points[index];
   }
 
+  Vector2f Polygon::getCenter() const {
+    assert(!m_points.empty());
+    return std::accumulate(m_points.begin(), m_points.end(), Vector2f(0.0f, 0.0f)) / m_points.size();
+  }
+
   Vector2f Polygon::getSupport(Vector2f direction) const {
+    assert(!m_points.empty());
     return *std::max_element(m_points.begin(), m_points.end(), [direction](const Vector2f& lhs, const Vector2f& rhs){
       return gf::dot(direction, lhs) < gf::dot(direction, rhs);
     });

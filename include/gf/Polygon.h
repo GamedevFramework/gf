@@ -47,6 +47,8 @@ inline namespace v1 {
     std::size_t getPointCount() const;
     Vector2f getPoint(std::size_t index) const;
 
+    Vector2f getCenter() const;
+
     Vector2f getSupport(Vector2f direction) const;
 
   private:
