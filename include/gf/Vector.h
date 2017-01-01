@@ -1496,6 +1496,14 @@ inline namespace v1 {
   /**
    * @relates Vector
    * @brief Scalar product
+   *
+   * The [scalar product](https://en.wikipedia.org/wiki/Dot_product) or dot
+   * product of two vectors @f$ \mathbf{a} = (a_1, \ldots, a_N) @f$ and
+   * @f$ \mathbf{b} = (b_1, \ldots, b_N) @f$ is:
+   *
+   * @f[ \mathbf{a} \cdot \mathbf{b} = \sum_{i=1}^{N} a_i b_i
+   * = a_1 b_1 + \ldots + a_N b_N @f]
+   *
    */
   template<typename T, std::size_t N>
   inline
@@ -1673,9 +1681,10 @@ inline namespace v1 {
    * @relates Vector
    * @brief Manhattan length of a vector
    *
-   * The Manhattan length @f$ l @f$ of a vector @f$ (u_1, \ldots, u_N) @f$ is:
+   * The Manhattan length @f$ \|\mathbf{u}\|_1 @f$ of a vector
+   * @f$ \mathbf{u} = (u_1, \ldots, u_N) @f$ is:
    *
-   * @f[ l = \sum_{i = 1}^{N} |u_i| @f]
+   * @f[ \|\mathbf{u}\|_1 = \sum_{i = 1}^{N} |u_i| @f]
    *
    * The Manhattan length is also called the 1-norm.
    *
@@ -1700,9 +1709,10 @@ inline namespace v1 {
    * @relates Vector
    * @brief Square Euclidean length of a vector
    *
-   * The square Euclidean length @f$ l @f$ of a vector @f$ (u_1, \ldots, u_N) @f$ is:
+   * The square Euclidean length @f$ \|\mathbf{u}\|_2^2 @f$ of a vector
+   * @f$ \mathbf{u} = (u_1, \ldots, u_N) @f$ is:
    *
-   * @f[ l = \sum_{i = 1}^{N} u_i^2 @f]
+   * @f[ \|\mathbf{u}\|_2^2 = \sum_{i = 1}^{N} u_i^2 @f]
    *
    * @param vec A vector.
    * @returns The square Euclidean length of the vector
@@ -1725,9 +1735,10 @@ inline namespace v1 {
    * @relates Vector
    * @brief Euclidean length of a vector
    *
-   * The Euclidean length @f$ l @f$ of a vector @f$ (u_1, \ldots, u_N) @f$ is:
+   * The Euclidean length @f$ \|\mathbf{u}\|_2 @f$ of a vector
+   * @f$ \mathbf{u} = (u_1, \ldots, u_N) @f$ is:
    *
-   * @f[ l = \sqrt{\sum_{i = 1}^{N} u_i^2} @f]
+   * @f[ \|\mathbf{u}\|_2 = \sqrt{\sum_{i = 1}^{N} u_i^2} @f]
    *
    * The Euclidean length is also called the 2-norm.
    *
@@ -1762,9 +1773,10 @@ inline namespace v1 {
    * @relates Vector
    * @brief Chebyshev length of a vector
    *
-   * The Chebyshev length @f$ l @f$ of a vector @f$ (u_1, \ldots, u_N) @f$ is:
+   * The Chebyshev length @f$ \|\mathbf{u}\|_{\infty} @f$ of a vector
+   * @f$ \mathbf{u} = (u_1, \ldots, u_N) @f$ is:
    *
-   * @f[ l = \max_{i = 1}^{N} |u_i| @f]
+   * @f[ \|u\|_{\infty} = \max_{i = 1}^{N} |u_i| @f]
    *
    * The Chebyshev length is also called the infinity norm or maximum norm.
    *
@@ -1789,9 +1801,11 @@ inline namespace v1 {
    * @relates Vector
    * @brief Natural length of a vector
    *
-   * The natural length @f$ l @f$ of a vector @f$ (u_1, \ldots, u_N) @f$ is:
+   * The natural length @f$ L @f$ of a vector:
+   * @f$ \mathbf{u} = (u_1, \ldots, u_N) @f$ is:
    *
-   * @f[ l = \sum_{i = 1}^{N} |u_i| + \sum_{i = 1}^{N} u_i^2 @f]
+   * @f[ L = \|\mathbf{u}\|_1 + \|\mathbf{u}\|_2^2
+   * = \sum_{i = 1}^{N} |u_i| + \sum_{i = 1}^{N} u_i^2 @f]
    *
    * It's the sum of the Manhattan length and the square length.
    *
@@ -1944,8 +1958,12 @@ inline namespace v1 {
    * @relates Vector
    * @brief Normalize a vector
    *
-   * The normalized vector of @f$ v @f$ is a vector in the same direction but
-   * with a (euclidean) length of 1. A normalized vector is also called a
+   * The normalized vector of @f$ \mathbf{u} @f$ is a vector in the same
+   * direction but with a (euclidean) length of 1:
+   *
+   * @f[ \frac{\mathbf{u}}{\|\mathbf{u}\|_2} @f]
+   *
+   * A normalized vector is also called a
    * [unit vector](https://en.wikipedia.org/wiki/Unit_vector).
    *
    * @param vec A vector
@@ -1980,8 +1998,47 @@ inline namespace v1 {
    */
   template<typename T>
   constexpr
-  Vector<T, 2> perp(const Vector<T, 2>& vec) {
+  Vector<T, 2> perp(Vector<T, 2> vec) {
     return { -vec.y, vec.x };
+  }
+
+  /**
+   * @relates Vector
+   * @brief Regular vector triple product
+   *
+   * The regular [vector triple product](https://en.wikipedia.org/wiki/Triple_product#Vector_triple_product)
+   * of vectors @f$ \mathbf{a} @f$, @f$ \mathbf{b} @f$ and @f$ \mathbf{c} @f$
+   * is:
+   *
+   * @f[ \mathbf{a} \times (\mathbf{b} \times \mathbf{c})
+   * = (\mathbf{a} \cdot \mathbf{c}) \mathbf{b} - (\mathbf{a} \cdot \mathbf{b}) \mathbf{c} @f]
+   *
+   * @sa inverseVectorTripleProduct()
+   */
+  template<typename T>
+  inline
+  Vector<T, 2> vectorTripleProduct(Vector<T, 2> a, Vector<T, 2> b, Vector<T, 2> c) {
+    return dot(a, c) * b - dot(a, b) * c;
+  }
+
+  /**
+   * @relates Vector
+   * @brief Inverse vector triple product
+   *
+   * The inverse [vector triple product](https://en.wikipedia.org/wiki/Triple_product#Vector_triple_product)
+   * of vectors @f$ \mathbf{a} @f$, @f$ \mathbf{b} @f$ and @f$ \mathbf{c} @f$
+   * is:
+   *
+   * @f[ (\mathbf{a} \times \mathbf{b}) \times \mathbf{c}
+   *  = -\mathbf{c} \times (\mathbf{a} \times \mathbf{b})
+   *  = (\mathbf{c} \cdot \mathbf{b}) \mathbf{a} - (\mathbf{c} \cdot \mathbf{a}) \mathbf{b} @f]
+   *
+   * @sa vectorTripleProduct()
+   */
+  template<typename T>
+  inline
+  Vector<T, 2> inverseVectorTripleProduct(Vector<T, 2> a, Vector<T, 2> b, Vector<T, 2> c) {
+    return dot(c, b) * a - dot(c, a) * b;
   }
 
   /**
