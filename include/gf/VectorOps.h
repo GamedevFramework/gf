@@ -847,6 +847,10 @@ inline namespace v1 {
    * @relates Vector
    * @brief Perpendicular vector
    *
+   * The perpendicular vector @f$ \mathbf{u}^{\perp} @f$ of vector @f$ \mathbf{u} = (x, y) @f$ is:
+   *
+   * @f[ \mathbf{u}^{\perp} = (-y, x) @f]
+   *
    * @param vec A vector
    * @returns A perpendicular vector
    */
@@ -897,7 +901,31 @@ inline namespace v1 {
 
   /**
    * @relates Vector
-   * @brief Cross product
+   * @brief Cross product for 2D vectors
+   *
+   * The cross product of 2D vectors is not really a cross product, it is the
+   * magnitude of the vector resulting from a 3D cross product of 2D vectors
+   * with @f$ z = 0 @f$. The cross product @f$ \mathbf{a} \times \mathbf{b} @f$
+   * of the vectors @f$ \mathbf{a} @f$ and @f$ \mathbf{b} @f$ is:
+   *
+   * @f[ \mathbf{a} \times \mathbf{b} = \mathbf{a}^{\perp} \cdot \mathbf{b} @f]
+   *
+   * The 2D cross product is also known as the perp dot product.
+   *
+   * @param lhs A first vector
+   * @param rhs A second vector
+   * @return The cross product of the two vectors
+   */
+  template<typename T>
+  constexpr
+  T cross(Vector<T, 2> lhs, Vector<T, 2> rhs) {
+    return -lhs.y * rhs.x + lhs.x * rhs.y;
+  }
+
+
+  /**
+   * @relates Vector
+   * @brief Cross product for 3D vectors
    *
    * @param lhs A first vector
    * @param rhs A second vector
