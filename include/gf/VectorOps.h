@@ -889,14 +889,14 @@ inline namespace v1 {
    *
    * @f[ (\mathbf{a} \times \mathbf{b}) \times \mathbf{c}
    *  = -\mathbf{c} \times (\mathbf{a} \times \mathbf{b})
-   *  = (\mathbf{c} \cdot \mathbf{b}) \mathbf{a} - (\mathbf{c} \cdot \mathbf{a}) \mathbf{b} @f]
+   *  = -(\mathbf{c} \cdot \mathbf{b}) \mathbf{a} + (\mathbf{c} \cdot \mathbf{a}) \mathbf{b} @f]
    *
    * @sa vectorTripleProduct()
    */
   template<typename T>
   inline
   Vector<T, 2> inverseVectorTripleProduct(Vector<T, 2> a, Vector<T, 2> b, Vector<T, 2> c) {
-    return dot(c, b) * a - dot(c, a) * b;
+    return - dot(c, b) * a + dot(c, a) * b;
   }
 
   /**
