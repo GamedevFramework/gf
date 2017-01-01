@@ -19,6 +19,7 @@
 
 #include <gf/Sprite.h>
 #include <gf/RenderTarget.h>
+#include <gf/VectorOps.h>
 
 #include "Hero.h"
 #include "Messages.h"

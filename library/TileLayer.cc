@@ -25,6 +25,7 @@
 
 #include <gf/RenderTarget.h>
 #include <gf/Transform.h>
+#include <gf/VectorOps.h>
 
 namespace gf {
 inline namespace v1 {

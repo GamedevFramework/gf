@@ -23,6 +23,8 @@
  */
 #include <gf/Transformable.h>
 
+#include <gf/VectorOps.h>
+
 namespace gf {
 inline namespace v1 {
 

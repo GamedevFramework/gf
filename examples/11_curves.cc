@@ -26,6 +26,7 @@
 #include <gf/Clock.h>
 #include <gf/Curves.h>
 #include <gf/Event.h>
+#include <gf/Math.h>
 #include <gf/RenderWindow.h>
 #include <gf/Window.h>
 

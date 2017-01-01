@@ -19,6 +19,7 @@
 
 #include <gf/Math.h>
 #include <gf/RenderTarget.h>
+#include <gf/VectorOps.h>
 
 #include "Messages.h"
 

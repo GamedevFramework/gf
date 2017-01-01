@@ -32,6 +32,7 @@
 #include <gf/Color.h>
 #include <gf/Font.h>
 #include <gf/RenderTarget.h>
+#include <gf/VectorOps.h>
 
 #include "priv/String.h"
 

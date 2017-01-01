@@ -22,6 +22,8 @@
 
 #include <cassert>
 
+#include <gf/VectorOps.h>
+
 namespace gf {
 inline namespace v1 {
 

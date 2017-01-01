@@ -24,6 +24,7 @@
 #include <gf/View.h>
 
 #include <gf/Transform.h>
+#include <gf/VectorOps.h>
 
 #include "priv/Utils.h"
 

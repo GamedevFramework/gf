@@ -28,6 +28,7 @@
 
 #include <gf/Math.h>
 #include <gf/Random.h>
+#include <gf/VectorOps.h>
 
 namespace gf {
 inline namespace v1 {

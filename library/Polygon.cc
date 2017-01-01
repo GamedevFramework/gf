@@ -23,6 +23,8 @@
 #include <cassert>
 #include <algorithm>
 
+#include <gf/VectorOps.h>
+
 namespace gf {
 inline namespace v1 {
 

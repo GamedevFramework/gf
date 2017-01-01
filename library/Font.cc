@@ -33,6 +33,7 @@
 
 #include <gf/InputStream.h>
 #include <gf/Log.h>
+#include <gf/VectorOps.h>
 
 #include "priv/Debug.h"
 

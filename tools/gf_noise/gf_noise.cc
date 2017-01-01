@@ -36,6 +36,7 @@
 #include <gf/RenderWindow.h>
 #include <gf/Sprite.h>
 #include <gf/UI.h>
+#include <gf/VectorOps.h>
 #include <gf/Window.h>
 
 #include "config.h"

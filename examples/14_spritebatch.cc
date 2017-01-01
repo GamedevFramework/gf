@@ -31,6 +31,7 @@
 #include <gf/RenderWindow.h>
 #include <gf/Sprite.h>
 #include <gf/SpriteBatch.h>
+#include <gf/VectorOps.h>
 #include <gf/Window.h>
 
 int main() {

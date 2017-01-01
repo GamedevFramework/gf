@@ -22,6 +22,7 @@
 #include <iostream>
 
 #include <gf/Event.h>
+#include <gf/Math.h>
 #include <gf/RenderWindow.h>
 #include <gf/Texture.h>
 #include <gf/TileLayer.h>
