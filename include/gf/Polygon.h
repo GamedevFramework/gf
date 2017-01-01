@@ -23,6 +23,7 @@
 
 #include <vector>
 
+#include "Matrix.h"
 #include "Portability.h"
 #include "Vector.h"
 
@@ -92,6 +93,13 @@ inline namespace v1 {
      * @returns The farthest point of the polygon in the given direction
      */
     Vector2f getSupport(Vector2f direction) const;
+
+    /**
+     * @brief Apply a transformation to the polygon
+     *
+     * @param mat The transformation matrix
+     */
+    void applyTransform(const Matrix3f& mat);
 
   private:
     std::vector<Vector2f> m_points;

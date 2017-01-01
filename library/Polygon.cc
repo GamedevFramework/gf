@@ -25,6 +25,7 @@
 #include <algorithm>
 #include <numeric>
 
+#include <gf/Transform.h>
 #include <gf/VectorOps.h>
 
 namespace gf {
@@ -53,6 +54,12 @@ inline namespace v1 {
     return *std::max_element(m_points.begin(), m_points.end(), [direction](const Vector2f& lhs, const Vector2f& rhs){
       return gf::dot(direction, lhs) < gf::dot(direction, rhs);
     });
+  }
+
+  void Polygon::applyTransform(const Matrix3f& mat) {
+    for (auto& point : m_points) {
+      point = gf::transform(mat, point);
+    }
   }
 
 }
