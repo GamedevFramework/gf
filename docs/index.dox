@@ -54,7 +54,7 @@ Gamedev Framework (gf) is licensed under the terms and conditions of the [zlib/l
 2. Tutorials on gf
   - @ref gamedev_101
   - @ref start_game
-3. User documentation
+3. User documentation (WIP)
   1. Core classes
     - @ref singletons
     - @ref noise

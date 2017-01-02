@@ -41,6 +41,7 @@ inline namespace v1 {
   class Font;
 
   /**
+   * @ingroup graphics
    * @brief Graphical text that can be drawn to a render target
    *
    * gf::Text is a drawable class that allows to easily display
