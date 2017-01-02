@@ -51,7 +51,7 @@ int main() {
   gf::ScreenView hudView;
   views.addView(hudView);
 
-  views.onScreenResize(ScreenSize);
+  views.setInitialScreenSize(ScreenSize);
 
   // actions
 

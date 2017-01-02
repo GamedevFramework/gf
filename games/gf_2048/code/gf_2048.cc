@@ -64,7 +64,7 @@ int main() {
   gf::FitView mainView(Board::getView());
   views.addView(mainView);
 
-  views.onScreenResize(ScreenSize);
+  views.setInitialScreenSize(ScreenSize);
 
   // add actions
 

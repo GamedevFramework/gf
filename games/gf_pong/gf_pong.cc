@@ -61,7 +61,7 @@ int main() {
   mainView.setSize({ Ground::Width, Ground::Height });
   views.addView(mainView);
 
-  views.onScreenResize(ScreenSize);
+  views.setInitialScreenSize(ScreenSize);
 
   // add actions
 

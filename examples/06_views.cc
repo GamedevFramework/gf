@@ -29,8 +29,9 @@
 #include <gf/Window.h>
 
 int main() {
-  gf::Vector2z screenSize = { 640, 480 };
-  gf::Window window("06_views", screenSize);
+  static constexpr gf::Vector2u ScreenSize(640, 480);
+
+  gf::Window window("06_views", ScreenSize);
   gf::RenderWindow renderer(window);
 
   gf::RectF world(-1, -1, 2, 2);
@@ -56,7 +57,7 @@ int main() {
   gf::ScreenView screenView;
   views.addView(screenView);
 
-  views.onScreenResize(screenSize);
+  views.setInitialScreenSize(ScreenSize);
 
   gf::AdaptativeView *currentView = &stretchView;
 

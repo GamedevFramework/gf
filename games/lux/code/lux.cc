@@ -44,7 +44,7 @@ int main() {
   gf::RenderWindow renderer(window);
 
   gf::WindowGeometryTracker tracker;
-  tracker.onScreenResize(ScreenSize);
+  tracker.setInitialScreenSize(ScreenSize);
 
   // resources
 
@@ -65,7 +65,7 @@ int main() {
   gf::ScreenView hudView;
   views.addView(hudView);
 
-  views.onScreenResize(ScreenSize);
+  views.setInitialScreenSize(ScreenSize);
 
   // actions
 

@@ -52,7 +52,7 @@ int main() {
   gf::RenderWindow renderer(window);
 
   gf::WindowGeometryTracker tracker;
-  tracker.onScreenResize(screenSize);
+  tracker.setInitialScreenSize(screenSize);
 
   // setup resource directories
 
@@ -69,7 +69,7 @@ int main() {
   gf::ScreenView hudView;
   views.addView(hudView);
 
-  views.onScreenResize(screenSize);
+  views.setInitialScreenSize(screenSize);
 
   // add actions
 
