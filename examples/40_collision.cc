@@ -18,8 +18,7 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#include <cstdio>
-#include <cmath>
+#include <iostream>
 
 #include <gf/Clock.h>
 #include <gf/Collision.h>
