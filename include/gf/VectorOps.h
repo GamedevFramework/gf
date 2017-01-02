@@ -845,6 +845,19 @@ inline namespace v1 {
 
   /**
    * @relates Vector
+   * @brief Angle of a vector relative to the x-axis
+   *
+   * @param vec The vector
+   * @returns The angle of the vector
+   */
+  template<typename T>
+  inline
+  float angle(Vector<T, 2> vec) {
+    return std::atan2(vec.y, vec.x);
+  }
+
+  /**
+   * @relates Vector
    * @brief Perpendicular vector
    *
    * The perpendicular vector @f$ \mathbf{u}^{\perp} @f$ of vector @f$ \mathbf{u} = (x, y) @f$ is:
@@ -889,14 +902,14 @@ inline namespace v1 {
    *
    * @f[ (\mathbf{a} \times \mathbf{b}) \times \mathbf{c}
    *  = -\mathbf{c} \times (\mathbf{a} \times \mathbf{b})
-   *  = (\mathbf{c} \cdot \mathbf{b}) \mathbf{a} - (\mathbf{c} \cdot \mathbf{a}) \mathbf{b} @f]
+   *  = -(\mathbf{c} \cdot \mathbf{b}) \mathbf{a} + (\mathbf{c} \cdot \mathbf{a}) \mathbf{b} @f]
    *
    * @sa vectorTripleProduct()
    */
   template<typename T>
   inline
   Vector<T, 2> inverseVectorTripleProduct(Vector<T, 2> a, Vector<T, 2> b, Vector<T, 2> c) {
-    return dot(c, b) * a - dot(c, a) * b;
+    return - dot(c, b) * a + dot(c, a) * b;
   }
 
   /**

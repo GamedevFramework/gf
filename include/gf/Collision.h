@@ -22,6 +22,7 @@
 #define GF_COLLISION_H
 
 #include "Circ.h"
+#include "Polygon.h"
 #include "Portability.h"
 #include "Rect.h"
 #include "Vector.h"
@@ -86,6 +87,16 @@ inline namespace v1 {
    */
   GF_API bool collides(const RectF& lhs, const RectF& rhs, Manifold& m);
 
+  /**
+   * @relates Manifold
+   * @brief Check if two polygons collides
+   *
+   * @param lhs First polygon
+   * @param rhs Second polygon
+   * @param m Data to fill if there is a collision
+   * @return True if there is a collision
+   */
+  GF_API bool collides(const Polygon& lhs, const Polygon& rhs, Manifold& m);
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
