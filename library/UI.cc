@@ -52,63 +52,6 @@
 #define NK_IMPLEMENTATION
 #include "vendor/nuklear/nuklear.h"
 
-
-#if 0
-static std::string niceNum(float num, float precision) {
-  float accpow = std::floor(std::log10(precision));
-
-  int digits = 0;
-
-  if (num < 0) {
-    digits = static_cast<int>(std::fabs(num / std::pow(10, accpow) - 0.5f));
-  } else {
-    digits = static_cast<int>(std::fabs(num / std::pow(10, accpow) + 0.5f));
-  }
-
-  std::string result;
-
-  if (digits > 0) {
-    int curpow = static_cast<int>(accpow);
-
-    for (int i = 0; i < curpow; ++i) {
-      result += '0';
-    }
-
-    while (digits > 0) {
-      char adigit = (digits % 10) + '0';
-
-      if (curpow == 0 && result.length() > 0) {
-        result += '.';
-        result += adigit;
-      } else {
-        result += adigit;
-      }
-
-      digits /= 10;
-      curpow += 1;
-    }
-
-    for (int i = curpow; i < 0; ++i) {
-      result += '0';
-    }
-
-    if (curpow <= 0) {
-      result += ".0";
-    }
-
-    if (num < 0) {
-      result += '-';
-    }
-
-    std::reverse(result.begin(), result.end());
-  } else {
-    result = "0";
-  }
-
-  return result;
-}
-#endif
-
 namespace gf {
 inline namespace v1 {
 
@@ -152,7 +95,7 @@ inline namespace v1 {
     g->offset.y = glyph.bounds.top + characterSize; // hacky but works
   }
 
-  struct UI::Impl {
+  struct UI::UIImpl {
     Font *font;
     nk_user_font user;
     nk_context ctx;
@@ -160,11 +103,9 @@ inline namespace v1 {
   };
 
   UI::UI(Font& font, unsigned characterSize)
-  : m_impl(nullptr)
+  : m_impl(new UIImpl)
   , m_state(State::Start)
   {
-    m_impl = new Impl;
-
     m_impl->font = &font;
     font.generateTexture(characterSize);
     auto texture = static_cast<const void *>(font.getTexture(characterSize));
@@ -187,21 +128,11 @@ inline namespace v1 {
   UI::~UI() {
     nk_buffer_free(&m_impl->cmds);
     nk_free(&m_impl->ctx);
-    delete m_impl;
   }
 
-  UI::UI(UI&& other)
-  : m_impl(other.m_impl)
-  , m_state(other.m_state)
-  {
-    other.m_impl = nullptr;
-  }
+  UI::UI(UI&&) = default;
 
-  UI& UI::operator=(UI&& other) {
-    std::swap(m_impl, other.m_impl);
-    std::swap(m_state, other.m_state);
-    return *this;
-  }
+  UI& UI::operator=(UI&&) = default;
 
   void UI::update(const Event& event) {
     setState(State::Input);

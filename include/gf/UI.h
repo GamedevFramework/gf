@@ -22,6 +22,7 @@
 #define GF_UI_H
 
 #include <cstdint>
+#include <memory>
 
 #include "ArrayRef.h"
 #include "Drawable.h"
@@ -1275,9 +1276,9 @@ inline namespace v1 {
     void setState(State state);
 
   private:
-    struct Impl;
+    struct UIImpl;
 
-    Impl *m_impl;
+    std::unique_ptr<UIImpl> m_impl;
     State m_state;
   };
 
