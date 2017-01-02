@@ -845,6 +845,19 @@ inline namespace v1 {
 
   /**
    * @relates Vector
+   * @brief Angle of a vector relative to the x-axis
+   *
+   * @param vec The vector
+   * @returns The angle of the vector
+   */
+  template<typename T>
+  inline
+  float angle(Vector<T, 2> vec) {
+    return std::atan2(vec.y, vec.x);
+  }
+
+  /**
+   * @relates Vector
    * @brief Perpendicular vector
    *
    * The perpendicular vector @f$ \mathbf{u}^{\perp} @f$ of vector @f$ \mathbf{u} = (x, y) @f$ is:
