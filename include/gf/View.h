@@ -384,6 +384,14 @@ inline namespace v1 {
      * @param screenSize The new size of the screen
      */
     virtual void onScreenResize(Vector2u screenSize) = 0;
+
+    /**
+     * @brief Set the initial screen size
+     *
+     * @param screenSize The initial size of the screen
+     */
+    void setInitialScreenSize(Vector2u screenSize);
+
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

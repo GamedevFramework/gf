@@ -103,5 +103,13 @@ inline namespace v1 {
     // nothing by default
   }
 
+  /*
+   * AdaptativeView
+   */
+
+  void AdaptativeView::setInitialScreenSize(Vector2u screenSize) {
+    onScreenResize(screenSize);
+  }
+
 }
 }

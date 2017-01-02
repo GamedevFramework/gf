@@ -44,5 +44,9 @@ inline namespace v1 {
     }
   }
 
+  void ViewContainer::setInitialScreenSize(Vector2u screenSize) {
+    onScreenResize(screenSize);
+  }
+
 }
 }

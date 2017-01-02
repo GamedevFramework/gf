@@ -73,6 +73,10 @@ inline namespace v1 {
     m_screenSize = screenSize;
   }
 
+  void WindowGeometryTracker::setInitialScreenSize(Vector2u screenSize) {
+    onScreenResize(screenSize);
+  }
+
 }
 }
 

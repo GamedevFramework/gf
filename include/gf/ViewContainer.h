@@ -113,6 +113,13 @@ inline namespace v1 {
      */
     void onScreenResize(Vector2u screenSize);
 
+    /**
+     * @brief Set the initial screen size
+     *
+     * @param screenSize The initial size of the screen
+     */
+    void setInitialScreenSize(Vector2u screenSize);
+
   private:
     std::vector<AdaptativeView*> m_views;
   };
