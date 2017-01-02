@@ -108,7 +108,7 @@ int main() {
 
   // main loop
 
-  renderer.clear(gf::Color::rgba(0xFAF8EFFF));
+  renderer.clear(gf::Color::fromRgba32(0xFAF8EFFF));
 
   gf::Clock clock;
   bool fullscreen = false;

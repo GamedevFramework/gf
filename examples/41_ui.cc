@@ -331,13 +331,13 @@ static void overview(gf::UI& ui) {
         static int comboColor1G = 50;
         static int comboColor1B = 50;
         static int comboColor1A = 255;
-        static gf::Color4f comboColor1 = gf::Color::rgba(comboColor1R, comboColor1G, comboColor1B, comboColor1A);
+        static gf::Color4f comboColor1 = gf::Color::fromRgba32(comboColor1R, comboColor1G, comboColor1B, comboColor1A);
 
         static int comboColor2R = 130;
         static int comboColor2G = 180;
         static int comboColor2B = 50;
         static int comboColor2A = 255;
-        static gf::Color4f comboColor2 = gf::Color::rgba(comboColor2R, comboColor2G, comboColor2B, comboColor2A);
+        static gf::Color4f comboColor2 = gf::Color::fromRgba32(comboColor2R, comboColor2G, comboColor2B, comboColor2A);
 
         static std::size_t progA = 20;
         static std::size_t progB = 40;
@@ -367,7 +367,7 @@ static void overview(gf::UI& ui) {
           ui.label("A:");
           ui.sliderInt(0, comboColor1A, 255, 5);
 
-          comboColor1 = gf::Color::rgba(comboColor1R, comboColor1G, comboColor1B, comboColor1A);
+          comboColor1 = gf::Color::fromRgba32(comboColor1R, comboColor1G, comboColor1B, comboColor1A);
 
           ui.comboEnd();
         }
@@ -380,7 +380,7 @@ static void overview(gf::UI& ui) {
           ui.layoutRowDynamic(120, 1);
           ui.colorPicker(comboColor2);
 
-          gf::Color4u localColor = gf::Color::convert(comboColor2);
+          gf::Color4u localColor = gf::Color::toRgba32(comboColor2);
           comboColor2R = localColor.r;
           comboColor2G = localColor.g;
           comboColor2B = localColor.b;
@@ -397,7 +397,7 @@ static void overview(gf::UI& ui) {
             ui.propertyInt("#B", 0, comboColor2B, 255, 1, 1);
             ui.propertyInt("#A", 0, comboColor2A, 255, 1, 1);
 
-            comboColor2 = gf::Color::rgba(comboColor2R, comboColor2G, comboColor2B, comboColor2A);
+            comboColor2 = gf::Color::fromRgba32(comboColor2R, comboColor2G, comboColor2B, comboColor2A);
           } else {
             // TODO: RGB/HSV color conversion
           }

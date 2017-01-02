@@ -174,7 +174,7 @@ inline namespace v1 {
      * @param a The alpha channel
      * @returns The corresponding color
      */
-    static Color4f rgba(uint8_t r, uint8_t g, uint8_t b, uint8_t a = 255);
+    static Color4f fromRgba32(uint8_t r, uint8_t g, uint8_t b, uint8_t a = 255);
 
     /**
      * @brief Get a color from 32-bit value
@@ -182,7 +182,7 @@ inline namespace v1 {
      * @param color The 32-bit color
      * @returns The corresponding color
      */
-    static Color4f rgba(uint32_t color);
+    static Color4f fromRgba32(uint32_t color);
 
     /**
      * @brief Get a color from a 32-bit color
@@ -190,7 +190,7 @@ inline namespace v1 {
      * @param color A 32-bit color
      * @return The corresponding color
      */
-    static Color4f rgba(Color4u color);
+    static Color4f fromRgba32(Color4u color);
 
     /**
      * @brief Convert a color to a 32-bit color
@@ -198,7 +198,7 @@ inline namespace v1 {
      * @param color A color
      * @return The corresponding 32-bit color
      */
-    static Color4u convert(Color4f color);
+    static Color4u toRgba32(Color4f color);
 
   };
 

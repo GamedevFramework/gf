@@ -227,21 +227,21 @@ static void generateImageFromArray(gf::Image& image, const RenderingParams& rend
     case Rendering::Colored: {
       // see: http://www.blitzbasic.com/codearcs/codearcs.php?code=2415
       gf::ColorRamp ramp;
-      ramp.addColorStop(0.000f, gf::Color::rgba(  2,  43,  68)); // very dark blue: deep water
-      ramp.addColorStop(0.250f, gf::Color::rgba(  9,  62,  92)); // dark blue: water
-      ramp.addColorStop(0.490f, gf::Color::rgba( 17,  82, 112)); // blue: shallow water
-      ramp.addColorStop(0.500f, gf::Color::rgba( 69, 108, 118)); // light blue: shore
-      ramp.addColorStop(0.501f, gf::Color::rgba( 42, 102,  41)); // green: grass
-      ramp.addColorStop(0.750f, gf::Color::rgba(115, 128,  77)); // light green: veld
-      ramp.addColorStop(0.850f, gf::Color::rgba(153, 143,  92)); // brown: tundra
-      ramp.addColorStop(0.950f, gf::Color::rgba(179, 179, 179)); // grey: rocks
-      ramp.addColorStop(1.000f, gf::Color::rgba(255, 255, 255)); // white: snow
+      ramp.addColorStop(0.000f, gf::Color::fromRgba32(  2,  43,  68)); // very dark blue: deep water
+      ramp.addColorStop(0.250f, gf::Color::fromRgba32(  9,  62,  92)); // dark blue: water
+      ramp.addColorStop(0.490f, gf::Color::fromRgba32( 17,  82, 112)); // blue: shallow water
+      ramp.addColorStop(0.500f, gf::Color::fromRgba32( 69, 108, 118)); // light blue: shore
+      ramp.addColorStop(0.501f, gf::Color::fromRgba32( 42, 102,  41)); // green: grass
+      ramp.addColorStop(0.750f, gf::Color::fromRgba32(115, 128,  77)); // light green: veld
+      ramp.addColorStop(0.850f, gf::Color::fromRgba32(153, 143,  92)); // brown: tundra
+      ramp.addColorStop(0.950f, gf::Color::fromRgba32(179, 179, 179)); // grey: rocks
+      ramp.addColorStop(1.000f, gf::Color::fromRgba32(255, 255, 255)); // white: snow
 
       for (auto row : array.getRowRange()) {
         for (auto col : array.getColRange()) {
           double val = valueWithWaterLevel(array({ row, col }), renderingParams.waterLevel);
           gf::Color4f color = ramp.computeColor(val);
-          image.setPixel({ col, row }, gf::Color::convert(color));
+          image.setPixel({ col, row }, gf::Color::toRgba32(color));
         }
       }
 

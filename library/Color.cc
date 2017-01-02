@@ -52,7 +52,14 @@ inline namespace v1 {
 
   static constexpr float Epsilon = 0.00001f;
 
-  static Color4f convertRgbToHsv(Color4f color) {
+  struct Hsv {
+    float h;
+    float s;
+    float v;
+    float a;
+  };
+
+  static Hsv convertRgbToHsv(Color4f color) {
     float min, max;
     std::tie(min, max) = std::minmax({ color.r, color.g, color.b });
 
@@ -76,10 +83,10 @@ inline namespace v1 {
     return { hue, sat, val, color.a };
   }
 
-  static Color4f convertHsvToRgb(Color4f color) {
-    float hue = color[0] / 60.0f;
-    float sat = color[1];
-    float val = color[2];
+  static Color4f convertHsvToRgb(Hsv hsv) {
+    float hue = hsv.h / 60.0f;
+    float sat = hsv.s;
+    float val = hsv.v;
 
     int i = static_cast<int>(hue) % 6;
     assert(0 <= i && i < 6);
@@ -90,61 +97,61 @@ inline namespace v1 {
     float y = val * (1 - (f * sat));
     float z = val * (1 - ((1 - f) * sat));
 
-    Color4f res;
-    res.a = color.a;
+    Color4f color;
+    color.a = hsv.a;
 
     switch (i) {
       case 0:
-        res.r = val;
-        res.g = z;
-        res.b = x;
+        color.r = val;
+        color.g = z;
+        color.b = x;
         break;
       case 1:
-        res.r = y;
-        res.g = val;
-        res.b = x;
+        color.r = y;
+        color.g = val;
+        color.b = x;
         break;
       case 2:
-        res.r = x;
-        res.g = val;
-        res.b = z;
+        color.r = x;
+        color.g = val;
+        color.b = z;
         break;
       case 3:
-        res.r = x;
-        res.g = y;
-        res.b = val;
+        color.r = x;
+        color.g = y;
+        color.b = val;
         break;
       case 4:
-        res.r = z;
-        res.g = x;
-        res.b = val;
+        color.r = z;
+        color.g = x;
+        color.b = val;
         break;
       case 5:
-        res.r = val;
-        res.g = x;
-        res.b = y;
+        color.r = val;
+        color.g = x;
+        color.b = y;
         break;
       default:
         assert(false);
         break;
     }
 
-    return res;
+    return color;
   }
 
   Color4f Color::lighter(Color4f color, float percent) {
     assert(0.0f <= percent && percent <= 1.0);
-    Color4f hsv = convertRgbToHsv(color);
-    hsv[2] += hsv[2] * percent;
+    Hsv hsv = convertRgbToHsv(color);
+    hsv.v += hsv.v * percent;
 
-    if (hsv[2] > 1.0f) {
-      hsv[1] -= (hsv[2] - 1.0f);
+    if (hsv.v > 1.0f) {
+      hsv.s -= (hsv.v - 1.0f);
 
-      if (hsv[1] < 0) {
-        hsv[1] = 0.0f;
+      if (hsv.s < 0) {
+        hsv.s = 0.0f;
       }
 
-      hsv[2] = 1.0f;
+      hsv.v = 1.0f;
     }
 
     return convertHsvToRgb(hsv);
@@ -152,24 +159,24 @@ inline namespace v1 {
 
   Color4f Color::darker(Color4f color, float percent) {
     assert(0.0f <= percent && percent <= 1.0);
-    Color4f hsv = convertRgbToHsv(color);
-    hsv[2] -= hsv[2] * percent;
+    Hsv hsv = convertRgbToHsv(color);
+    hsv.v -= hsv.v * percent;
     return convertHsvToRgb(hsv);
   }
 
-  Color4f Color::rgba(uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
+  Color4f Color::fromRgba32(uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
     return { r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f };
   }
 
-  Color4f Color::rgba(uint32_t c) {
-    return rgba(c >> 24, c >> 16, c >> 8, c);
+  Color4f Color::fromRgba32(uint32_t c) {
+    return fromRgba32(c >> 24, c >> 16, c >> 8, c);
   }
 
-  Color4f Color::rgba(Color4u color) {
-    return rgba(color.r, color.g, color.b, color.a);
+  Color4f Color::fromRgba32(Color4u color) {
+    return fromRgba32(color.r, color.g, color.b, color.a);
   }
 
-  Color4u Color::convert(Color4f color) {
+  Color4u Color::toRgba32(Color4f color) {
     return {
       static_cast<uint8_t>(color.r * 255),
       static_cast<uint8_t>(color.g * 255),

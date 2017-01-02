@@ -77,14 +77,14 @@ namespace lux {
   static std::tuple<gf::Color4f, gf::Color4f> colorFromShipClass(ShipClass ship) {
     switch (ship) {
       case ShipClass::Antlia:
-        return std::make_tuple(gf::Color::rgba(0x8C, 0xED, 0xDC), gf::Color::rgba(0x5D, 0x7F, 0x83));
+        return std::make_tuple(gf::Color::fromRgba32(0x8C, 0xED, 0xDC), gf::Color::fromRgba32(0x5D, 0x7F, 0x83));
       case ShipClass::Bootes:
-        return std::make_tuple(gf::Color::rgba(0x7C, 0xBE, 0x41), gf::Color::rgba(0xB6, 0x0B, 0x0B));
+        return std::make_tuple(gf::Color::fromRgba32(0x7C, 0xBE, 0x41), gf::Color::fromRgba32(0xB6, 0x0B, 0x0B));
       case ShipClass::Cygnus:
       case ShipClass::Draco:
-        return std::make_tuple(gf::Color::rgba(0xFF, 0x0C, 0xFF), gf::Color::rgba(0xB6, 0x0B, 0x0B));
+        return std::make_tuple(gf::Color::fromRgba32(0xFF, 0x0C, 0xFF), gf::Color::fromRgba32(0xB6, 0x0B, 0x0B));
       case ShipClass::Eridanus:
-        return std::make_tuple(gf::Color::rgba(0xFF, 0xFF, 0x12), gf::Color::rgba(0xB6, 0x0B, 0x0B));
+        return std::make_tuple(gf::Color::fromRgba32(0xFF, 0xFF, 0x12), gf::Color::fromRgba32(0xB6, 0x0B, 0x0B));
     }
 
     return std::make_tuple(gf::Color::White, gf::Color::White);
