@@ -24,7 +24,6 @@
 
 #include <queue>
 
-
 namespace gf {
 inline namespace v1 {
 
@@ -291,7 +290,6 @@ inline namespace v1 {
 
   }
 
-
   static Vector2f getSupport(const Polygon& lhs, const Polygon& rhs, Vector2f direction) {
     return lhs.getSupport(direction) - rhs.getSupport(-direction);
   }
@@ -322,7 +320,7 @@ inline namespace v1 {
         direction = abPerp;
       }
     } else {
-      Vector2f b = simplex[1];
+      Vector2f b = simplex[0];
       Vector2f ab = b - a;
 
       direction = inverseVectorTripleProduct(ab, ao, ab);
