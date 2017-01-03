@@ -134,7 +134,7 @@ inline namespace v1 {
 
   UI& UI::operator=(UI&&) = default;
 
-  void UI::update(const Event& event) {
+  void UI::processEvent(const Event& event) {
     setState(State::Input);
 
     switch (event.type) {

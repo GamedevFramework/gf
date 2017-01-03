@@ -30,7 +30,7 @@ inline namespace v1 {
     m_views.push_back(&view);
   }
 
-  void ViewContainer::update(const Event& event) {
+  void ViewContainer::processEvent(const Event& event) {
     if (event.type != EventType::Resized) {
       return;
     }

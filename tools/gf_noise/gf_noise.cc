@@ -493,7 +493,7 @@ int main() {
           break;
       }
 
-      ui.update(event);
+      ui.processEvent(event);
     }
 
 

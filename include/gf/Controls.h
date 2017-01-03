@@ -45,7 +45,7 @@ inline namespace v1 {
      */
     KeycodeKeyControl(Keycode code);
 
-    virtual void update(const Event& event) override;
+    virtual void processEvent(const Event& event) override;
 
   private:
     Keycode m_code;
@@ -64,7 +64,7 @@ inline namespace v1 {
      */
     ScancodeKeyControl(Scancode code);
 
-    virtual void update(const Event& event) override;
+    virtual void processEvent(const Event& event) override;
 
   private:
     Scancode m_code;
@@ -83,7 +83,7 @@ inline namespace v1 {
      */
     MouseButtonControl(MouseButton button);
 
-    virtual void update(const Event& event) override;
+    virtual void processEvent(const Event& event) override;
 
   private:
     MouseButton m_button;
@@ -104,7 +104,7 @@ inline namespace v1 {
      */
     GamepadButtonControl(GamepadId id, GamepadButton button);
 
-    virtual void update(const Event& event) override;
+    virtual void processEvent(const Event& event) override;
 
   private:
     GamepadId m_id;
@@ -127,7 +127,7 @@ inline namespace v1 {
      */
     GamepadAxisControl(GamepadId id, GamepadAxis axis, GamepadAxisDirection dir);
 
-    virtual void update(const Event& event) override;
+    virtual void processEvent(const Event& event) override;
 
   private:
     GamepadId m_id;
@@ -147,7 +147,7 @@ inline namespace v1 {
      */
     CloseControl();
 
-    virtual void update(const Event& event) override;
+    virtual void processEvent(const Event& event) override;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

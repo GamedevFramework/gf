@@ -713,7 +713,7 @@ int main() {
           break;
       }
 
-      ui.update(event);
+      ui.processEvent(event);
     }
 
     if (ui.begin("Show", gf::RectF(50, 50, 220, 220), gf::UIWindow::Border | gf::UIWindow::Movable | gf::UIWindow::Scalable | gf::UIWindow::Closable | gf::UIWindow::Minimizable | gf::UIWindow::Title)) {

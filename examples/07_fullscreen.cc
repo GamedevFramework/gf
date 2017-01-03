@@ -103,7 +103,7 @@ int main() {
           break;
       }
 
-      views.update(event);
+      views.processEvent(event);
     }
 
     renderer.setView(extendView);

@@ -128,8 +128,8 @@ int main() {
     gf::Event event;
 
     while (window.pollEvent(event)) {
-      actions.update(event);
-      views.update(event);
+      actions.processEvent(event);
+      views.processEvent(event);
     }
 
     if (closeWindowAction.isActive()) {

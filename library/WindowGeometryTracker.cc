@@ -61,7 +61,7 @@ inline namespace v1 {
     return gf::select(gf::greaterThan(pos, { 0.0f, 0.0f }), pos, m_screenSize + pos);
   }
 
-  void WindowGeometryTracker::update(const Event& event) {
+  void WindowGeometryTracker::processEvent(const Event& event) {
     if (event.type != EventType::Resized) {
       return;
     }

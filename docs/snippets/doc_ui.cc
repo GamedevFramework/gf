@@ -59,7 +59,7 @@ int main() {
           break;
       }
 
-      ui.update(event); // update the imgui with input events
+      ui.processEvent(event); // update the imgui with input events
     }
     /// [events]
 

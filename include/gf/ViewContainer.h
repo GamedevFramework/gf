@@ -102,7 +102,7 @@ inline namespace v1 {
      *
      * @param event An event
      */
-    void update(const Event& event);
+    void processEvent(const Event& event);
 
     /**
      * @brief Update the views with the new screen size
