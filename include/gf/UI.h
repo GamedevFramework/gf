@@ -43,7 +43,7 @@ inline namespace v1 {
    * @ingroup graphics
    * @brief Properties for windows and window-like elements
    *
-   * @sa UIWindowFlags
+   * @sa gf::UIWindowFlags
    */
   enum class UIWindow : uint32_t {
     Border          = 0x0001, ///< The window has a border
@@ -61,7 +61,7 @@ inline namespace v1 {
    * @ingroup graphics
    * @brief Flags composed of window properties
    *
-   * @sa UIWindow
+   * @sa gf::UIWindow
    */
   using UIWindowFlags = Flags<UIWindow>;
 
@@ -96,7 +96,7 @@ inline namespace v1 {
    * @ingroup graphics
    * @brief The alignment of the text
    *
-   * @sa Alignment
+   * @sa gf::Alignment
    */
   enum class UIAlignment {
     Left    = 0x10 | 0x01,  ///< Left alignment
@@ -381,7 +381,7 @@ inline namespace v1 {
      * @param flags The properties of the window
      * @returns True is the content of the window is visible
      *
-     * @sa end(), UIWindow
+     * @sa end(), gf::UIWindow
      */
     bool begin(const std::string& title, const RectF& bounds, UIWindowFlags flags = None);
 
@@ -1255,7 +1255,7 @@ inline namespace v1 {
      *
      * @param style The predefined style
      *
-     * @sa UIPredefinedStyle
+     * @sa gf::UIPredefinedStyle
      */
     void setPredefinedStyle(UIPredefinedStyle style);
 
