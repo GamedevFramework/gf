@@ -96,6 +96,7 @@ inline namespace v1 {
   }
 
   struct UI::UIImpl {
+    State state;
     Font *font;
     nk_user_font user;
     nk_context ctx;
@@ -104,8 +105,9 @@ inline namespace v1 {
 
   UI::UI(Font& font, unsigned characterSize)
   : m_impl(new UIImpl)
-  , m_state(State::Start)
   {
+    m_impl->state = State::Start;
+
     m_impl->font = &font;
     font.generateTexture(characterSize);
     auto texture = static_cast<const void *>(font.getTexture(characterSize));
@@ -877,11 +879,11 @@ inline namespace v1 {
   }
 
   void UI::setState(State state) {
-    if (m_state == state) {
+    if (m_impl->state == state) {
       return;
     }
 
-    switch (m_state) {
+    switch (m_impl->state) {
       case State::Start:
         switch (state) {
           case State::Input:
@@ -936,7 +938,7 @@ inline namespace v1 {
 
     }
 
-    m_state = state;
+    m_impl->state = state;
   }
 
 }

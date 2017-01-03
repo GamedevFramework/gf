@@ -1279,7 +1279,6 @@ inline namespace v1 {
     struct UIImpl;
 
     std::unique_ptr<UIImpl> m_impl;
-    State m_state;
   };
 
 
