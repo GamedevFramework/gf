@@ -69,6 +69,30 @@ inline namespace v1 {
   /**
    * @ingroup window
    * @brief An OS window
+   *
+   * The gf::Window class provides a simple interface for manipulating
+   * the window: move, resize, show/hide, control mouse cursor, etc.
+   * It also provides event handling through its pollEvent() and waitEvent()
+   * functions.
+   *
+   * ~~~{.cc}
+   * gf::Window window("My window", { 640, 480 }, gf::WindowHints::Resizable | gf::WindowHints::Visible);
+   *
+   * while (window.isOpen()) {
+   *   // process events
+   *
+   *   gf::Event event;
+   *
+   *   while (window.pollEvent(event)) {
+   *     if (event.type == gf::EventType::Closed) {
+   *       window.close();
+   *     }
+   *   }
+   *
+   * }
+   *
+   * @sa gf::RenderWindow
+   * ~~~
    */
   class GF_API Window {
   public:
