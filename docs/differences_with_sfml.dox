@@ -110,6 +110,8 @@ that looks like a star. gf::TileLayer is a class to render tile maps, gf::Curve
 is a family of curves (gf::Line, gf::QuadraticBezierCurve, gf::CubicBezierCurve,
 gf::CompoundCurve).
 
+gf::UI is a full-feature immediate mode GUI library.
+
 gf::TextureAtlas provides a texture atlas. It is capable of loading a XML
 file containing the atlas.
 
