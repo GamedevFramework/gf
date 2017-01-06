@@ -31,6 +31,12 @@
 namespace gf {
 inline namespace v1 {
 
+  Polygon::Polygon(ArrayRef<Vector2f> points)
+  : m_points(points.begin(), points.end())
+  {
+
+  }
+
   void Polygon::addPoint(Vector2f point) {
     m_points.push_back(point);
   }
