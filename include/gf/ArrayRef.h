@@ -122,6 +122,28 @@ inline namespace v1 {
       return m_size;
     }
 
+    /**
+     * @brief Get an iterator to the first element
+     *
+     * @returns A pointer to the first element
+     *
+     * @sa end()
+     */
+    constexpr const T *begin() const {
+      return m_data;
+    }
+
+    /**
+     * @brief Get an iterator past the last element
+     *
+     * @returns A pointer past the last element
+     *
+     * @sa begin()
+     */
+    constexpr const T *end() const {
+      return m_data + m_size;
+    }
+
   private:
     const T *m_data;
     std::size_t m_size;
