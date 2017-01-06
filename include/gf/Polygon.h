@@ -23,6 +23,7 @@
 
 #include <vector>
 
+#include "ArrayRef.h"
 #include "Matrix.h"
 #include "Portability.h"
 #include "Vector.h"
@@ -42,6 +43,13 @@ inline namespace v1 {
      * @brief Default constructor
      */
     Polygon() = default;
+
+    /**
+     * @brief Constructor from an array
+     *
+     * @param points The array of points
+     */
+    Polygon(ArrayRef<Vector2f> points);
 
     /**
      * @brief Constructor from points
