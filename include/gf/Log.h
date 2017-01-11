@@ -169,6 +169,15 @@ inline namespace v1 {
       std::abort();
     }
 
+    /**
+     * @brief Print a message without any level or category
+     *
+     * This function can be used for printing messages during the development.
+     *
+     * @param fmt The [format string](http://en.cppreference.com/w/cpp/io/c/fprintf)
+     */
+    static void print(const char *fmt, ...);
+
   private:
     static void log(Level level, Category category, const char *fmt, va_list ap);
 
