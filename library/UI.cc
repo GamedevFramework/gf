@@ -355,6 +355,7 @@ inline namespace v1 {
   }
 
   bool UI::groupScrolledBegin(UIScroll& scroll, const std::string& title, UIWindowFlags flags) {
+    static_assert(sizeof(nk_scroll) == sizeof(UIScroll), "scroll types are not the same");
     setState(State::Setup);
     return nk_group_scrolled_begin(&m_impl->ctx, reinterpret_cast<nk_scroll*>(&scroll), title.c_str(), flags.getValue()) != 0;
   }
