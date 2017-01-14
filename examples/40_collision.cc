@@ -56,8 +56,8 @@ int main() {
   polygon2.addPoint({ 10.0f, 2.0f });
   polygon2.addPoint({  7.0f, 3.0f });
 
-  gf::Manifold m;
-  bool isColliding = gf::collides(polygon1, polygon2, m);
+  gf::Penetration p;
+  bool isColliding = gf::collides(polygon1, polygon2, p);
 
   bool isMoving = false;
   gf::Vector2f velocity(0.0f, 0.0f);
@@ -140,7 +140,7 @@ int main() {
     if (isMoving) {
       gf::Matrix3f mat = gf::translation(dt * velocity);
       polygon2.applyTransform(mat);
-      isColliding = gf::collides(polygon1, polygon2, m);
+      isColliding = gf::collides(polygon1, polygon2, p);
     }
 
     renderer.clear();
@@ -162,7 +162,7 @@ int main() {
     if (isColliding) {
       const gf::Vector2f center(2.0f, 2.0f);
 
-      gf::Vector2f endPoint = center + m.penetration * m.normal;
+      gf::Vector2f endPoint = center + p.depth * p.normal;
 
       gf::Line line(center, endPoint);
       line.setColor(gf::Color::Red);
@@ -175,7 +175,7 @@ int main() {
 
       gf::CircleShape triangle(0.3f, 3);
       triangle.setPosition(endPoint);
-      triangle.setRotation(gf::angle(m.normal) + gf::Pi2);
+      triangle.setRotation(gf::angle(p.normal) + gf::Pi2);
       triangle.setColor(gf::Color::Red);
       triangle.setAnchor(gf::Anchor::Center);
       renderer.draw(triangle);

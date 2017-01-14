@@ -29,7 +29,7 @@ inline namespace v1 {
 
   static constexpr float Skin = 0.15f;
 
-  bool collides(const CircF& lhs, const CircF& rhs, Manifold& m) {
+  bool collides(const CircF& lhs, const CircF& rhs, Penetration& p) {
     Vector2f n = rhs.getCenter() - lhs.getCenter();
     float r = lhs.radius + rhs.radius;
     float d2 = gf::squareLength(n);
@@ -41,17 +41,17 @@ inline namespace v1 {
     float d = std::sqrt(d2);
 
     if (d > 0) {
-      m.penetration = r - d;
-      m.normal = n / d;
+      p.depth = r - d;
+      p.normal = n / d;
     } else {
-      m.penetration = r / 2;
-      m.normal = { 1.0f, 0.0f };
+      p.depth = r / 2;
+      p.normal = { 1.0f, 0.0f };
     }
 
-    return m.penetration > Skin;
+    return p.depth > Skin;
   }
 
-  bool collides(const RectF& lhs, const CircF& rhs, Manifold& m) {
+  bool collides(const RectF& lhs, const CircF& rhs, Penetration& p) {
     Vector2f n = rhs.getCenter() - lhs.getCenter();
 
     Vector2f closest = n;
@@ -91,23 +91,23 @@ inline namespace v1 {
     float d = std::sqrt(d2);
 
     if (inside) {
-      m.normal = -normal / d;
-      m.penetration = r + d;
+      p.normal = -normal / d;
+      p.depth = r + d;
     } else {
-      m.normal = normal / d;
-      m.penetration = r - d;
+      p.normal = normal / d;
+      p.depth = r - d;
     }
 
-    return m.penetration > Skin;
+    return p.depth > Skin;
   }
 
-  bool collides(const CircF& lhs, const RectF& rhs, Manifold& m) {
-    bool collide = collides(rhs, lhs, m);
-    m.normal = -m.normal;
+  bool collides(const CircF& lhs, const RectF& rhs, Penetration& p) {
+    bool collide = collides(rhs, lhs, p);
+    p.normal = -p.normal;
     return collide;
   }
 
-  bool collides(const RectF& lhs, const RectF& rhs, Manifold& m) {
+  bool collides(const RectF& lhs, const RectF& rhs, Penetration& p) {
     Vector2f n = rhs.getCenter() - lhs.getCenter();
     Vector2f overlap = lhs.size / 2 + rhs.size / 2 - gf::abs(n);
 
@@ -121,23 +121,23 @@ inline namespace v1 {
 
     if (overlap.x < overlap.y) {
       if (n.x < 0) {
-        m.normal = { -1.0f, 0.0f };
+        p.normal = { -1.0f, 0.0f };
       } else {
-        m.normal = {  1.0f, 0.0f };
+        p.normal = {  1.0f, 0.0f };
       }
 
-      m.penetration = overlap.x;
+      p.depth = overlap.x;
     } else {
       if (n.y < 0) {
-        m.normal = { 0.0f, -1.0f };
+        p.normal = { 0.0f, -1.0f };
       } else {
-        m.normal = { 0.0f,  1.0f };
+        p.normal = { 0.0f,  1.0f };
       }
 
-      m.penetration = overlap.y;
+      p.depth = overlap.y;
     }
 
-    return m.penetration > Skin;
+    return p.depth > Skin;
   }
 
   /*
@@ -336,7 +336,7 @@ inline namespace v1 {
 
   static constexpr unsigned MaxIterations = 100;
 
-  bool collides(const Polygon& lhs, const Polygon& rhs, Manifold& m) {
+  bool collides(const Polygon& lhs, const Polygon& rhs, Penetration& p) {
     /*
      * Gilbert-Johnson-Keerthi (GJK) algorithm
      * adapted from http://www.dyn4j.org/2010/04/gjk-gilbert-johnson-keerthi/
@@ -381,16 +381,16 @@ inline namespace v1 {
       float distance = gf::dot(point, edge.normal);
 
       if (distance - edge.distance < Skin) {
-        m.normal = edge.normal;
-        m.penetration = distance;
+        p.normal = edge.normal;
+        p.depth = distance;
         return true;
       }
 
       expandingSimplex.expand(point);
     }
 
-    m.normal = edge.normal;
-    m.penetration = gf::dot(point, edge.normal);
+    p.normal = edge.normal;
+    p.depth = gf::dot(point, edge.normal);
     return true;
   }
 
