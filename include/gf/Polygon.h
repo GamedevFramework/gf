@@ -103,6 +103,24 @@ inline namespace v1 {
     Vector2f getSupport(Vector2f direction) const;
 
     /**
+     * @brief Get an iterator to the first point
+     *
+     * @returns A pointer to the first point
+     *
+     * @sa end()
+     */
+    const Vector2f *begin() const;
+
+    /**
+     * @brief Get an iterator past the last point
+     *
+     * @returns A pointer past the last point
+     *
+     * @sa begin()
+     */
+    const Vector2f *end() const;
+
+    /**
      * @brief Apply a transformation to the polygon
      *
      * @param mat The transformation matrix

@@ -62,6 +62,14 @@ inline namespace v1 {
     });
   }
 
+  const Vector2f *Polygon::begin() const {
+    return &m_points[0];
+  }
+
+  const Vector2f *Polygon::end() const {
+    return &m_points[0] + m_points.size();
+  }
+
   void Polygon::applyTransform(const Matrix3f& mat) {
     for (auto& point : m_points) {
       point = gf::transform(mat, point);
