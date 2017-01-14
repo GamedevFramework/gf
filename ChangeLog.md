@@ -8,15 +8,15 @@
   - Add Polygon
   - Put _id in its own namespace gf::literals
   - Add ArrayRef and StringRef
-  - Add ValueNoise2D
+  - Add value noise
   - Add vector triple product and 2D cross product
 - Window module
   - WindowFlags are Flags and replace WindowHints
   - Modifiers are Flags
   - Add Window::toggleFullscreen()
   - Add Keyboard::getKeycodeFromName() and Keyboard::getScancodeFromName()
-  - Add a new UI class based on Nuklear
 - Graphics module
+  - Add a new UI class based on Nuklear
   - Fix a bug in text rendering for Center alignment
   - Add scissor handling functions in RenderTarget
   - Rename color conversion functions
