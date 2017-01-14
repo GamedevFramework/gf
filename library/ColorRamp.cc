@@ -23,6 +23,7 @@
 #include <utility>
 
 #include <gf/Color.h>
+#include <gf/VectorOps.h>
 
 namespace gf {
 inline namespace v1 {
@@ -79,7 +80,7 @@ inline namespace v1 {
       }
     }
 
-    return lerp(c1, c2, (offset - t1) / (t2 - t1));
+    return gf::lerp(c1, c2, (offset - t1) / (t2 - t1));
   }
 
 }

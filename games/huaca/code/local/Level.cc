@@ -246,10 +246,10 @@ namespace huaca {
     auto heroPosition = static_cast<HeroPositionMessage*>(msg);
 
     for (const gf::RectF& wall : m_walls) {
-      gf::Manifold m;
+      gf::Penetration p;
 
-      if (gf::collides(wall, heroPosition->bounds, m)) {
-        gf::Vector2f delta = m.penetration * m.normal;
+      if (gf::collides(wall, heroPosition->bounds, p)) {
+        gf::Vector2f delta = p.depth * p.normal;
         heroPosition->position += delta;
         heroPosition->bounds.position += delta;
       }
@@ -275,13 +275,13 @@ namespace huaca {
         continue;
       }
 
-      gf::Manifold m;
+      gf::Penetration p;
 
-      if (gf::collides(door.bounds, heroPosition->bounds, m)) {
+      if (gf::collides(door.bounds, heroPosition->bounds, p)) {
         if (door.keyFound) {
           door.isOpen = true;
         } else {
-          gf::Vector2f delta = m.penetration * m.normal;
+          gf::Vector2f delta = p.depth * p.normal;
           heroPosition->position += delta;
           heroPosition->bounds.position += delta;
         }

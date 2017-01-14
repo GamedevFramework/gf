@@ -22,6 +22,7 @@
 #include <iostream>
 
 #include <gf/Event.h>
+#include <gf/Math.h>
 #include <gf/RenderWindow.h>
 #include <gf/Texture.h>
 #include <gf/TileLayer.h>
@@ -63,9 +64,9 @@ static int map[MapHeight][MapWidth] = {
 static constexpr unsigned TileSize = 128;
 
 int main() {
-  gf::Vector2u screenSize(640, 480);
+  static constexpr gf::Vector2u ScreenSize(640, 480);
 
-  gf::Window window("18_tilelayer", screenSize);
+  gf::Window window("18_tilelayer", ScreenSize);
   gf::RenderWindow renderer(window);
 
   gf::ViewContainer views;
@@ -75,7 +76,7 @@ int main() {
   view.setSize({ 480.0f, 480.0f });
   views.addView(view);
 
-  views.onScreenResize(screenSize);
+  views.setInitialScreenSize(ScreenSize);
 
   gf::Texture texture;
 
@@ -158,7 +159,7 @@ int main() {
           break;
       }
 
-      views.update(event);
+      views.processEvent(event);
     }
 
     renderer.setView(view);

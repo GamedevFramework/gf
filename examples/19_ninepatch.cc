@@ -29,11 +29,7 @@
 #include <gf/Window.h>
 
 int main() {
-
-  gf::WindowHints hints;
-  hints.resizable = false;
-
-  gf::Window window("19_ninepatch", { 640, 480 }, hints);
+  gf::Window window("19_ninepatch", { 640, 480 }, ~gf::WindowHints::Resizable);
   gf::RenderWindow renderer(window);
 
   gf::Texture texture;

@@ -23,12 +23,18 @@
  */
 #include <gf/Text.h>
 
+#include <algorithm>
+#include <limits>
+
 #include <boost/algorithm/string/split.hpp>
 #include <boost/algorithm/string/classification.hpp>
 
 #include <gf/Color.h>
 #include <gf/Font.h>
 #include <gf/RenderTarget.h>
+#include <gf/VectorOps.h>
+
+#include "priv/String.h"
 
 namespace gf {
 inline namespace v1 {
@@ -212,7 +218,7 @@ inline namespace v1 {
 
     Vector2f position(0.0f, 0.0f);
 
-    Vector2f min(0.0f, 0.0f);
+    Vector2f min(std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
     Vector2f max(0.0f, 0.0f);
 
     for (auto& paragraph : paragraphs) {
@@ -262,10 +268,17 @@ inline namespace v1 {
     }
 
     m_bounds = RectF(min, max - min);
+
+    if (m_align != Alignment::None) {
+      m_bounds.left = 0;
+      m_bounds.width = m_paragraphWidth;
+    }
   }
 
   float Text::getWordWidth(const std::u32string& word) {
-    assert (m_font != nullptr && m_characterSize > 0 && !word.empty());
+    assert(m_font != nullptr);
+    assert(m_characterSize > 0);
+    assert(!word.empty());
 
     float width = 0.0f;
     char32_t prevCodepoint = '\0';
@@ -281,54 +294,21 @@ inline namespace v1 {
     return width;
   }
 
-
-  static std::u32string getUnicodeString(const std::string& str) {
-    static constexpr uint8_t utf8Table[4][2] = {
-      { 0x7F, 0x00 },
-      { 0x1F, 0xC0 },
-      { 0x0F, 0xE0 },
-      { 0x07, 0xF0 }
-    };
-
-    std::u32string out;
-
-    for (std::size_t k = 0; k < str.size(); ++k) {
-      uint8_t c = str[k];
-      char32_t codepoint = 0;
-
-      for (std::size_t i = 0; i < 4; ++i) {
-        if ((c & ~utf8Table[i][0]) == utf8Table[i][1]) {
-          codepoint = c & utf8Table[i][0];
-
-          for (std::size_t j = 0; j < i; ++j) {
-            ++k;
-
-            assert(k < str.size());
-            c = str[k];
-
-            assert((c & ~0x3F) == 0x80);
-            codepoint = (codepoint << 6) + (c & 0x3F);
-          }
-
-          break;
-        }
-      }
-
-      out.push_back(codepoint);
-    }
-
-    return out;
-  }
-
   static std::vector<std::u32string> splitInParagraphs(const std::u32string& str) {
     std::vector<std::u32string> out;
     boost::algorithm::split(out, str, boost::is_any_of(U"\n"), boost::algorithm::token_compress_on);
+    out.erase(std::remove_if(out.begin(), out.end(), [](const std::u32string& s) {
+      return s.empty();
+    }), out.end());
     return out;
   }
 
   static std::vector<std::u32string> splitInWords(const std::u32string& str) {
     std::vector<std::u32string> out;
     boost::algorithm::split(out, str, boost::is_any_of(U" \t"), boost::algorithm::token_compress_on);
+    out.erase(std::remove_if(out.begin(), out.end(), [](const std::u32string& s) {
+      return s.empty();
+    }), out.end());
     return out;
   }
 

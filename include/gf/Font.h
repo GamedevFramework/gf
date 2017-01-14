@@ -187,7 +187,7 @@ inline namespace v1 {
      * The supported font formats are: TrueType, Type 1, CFF,
      * OpenType, SFNT, X11 PCF, Windows FNT, BDF, PFR and Type 42.
      *
-     * @warning SFML cannot preload all the font data in this
+     * @warning gf cannot preload all the font data in this
      * function, so the stream has to remain accessible until
      * the gf::Font object loads a new font or is destroyed.
      *
@@ -205,7 +205,7 @@ inline namespace v1 {
      * The supported font formats are: TrueType, Type 1, CFF,
      * OpenType, SFNT, X11 PCF, Windows FNT, BDF, PFR and Type 42.
      *
-     * @warning SFML cannot preload all the font data in this
+     * @warning gf cannot preload all the font data in this
      * function, so the stream has to remain accessible until
      * the gf::Font object loads a new font or is destroyed.
      *
@@ -274,6 +274,16 @@ inline namespace v1 {
      * @return Texture containing the glyphs of the requested size
      */
     const AlphaTexture *getTexture(unsigned characterSize);
+
+    /**
+     * @brief Generate the texture for a given character size
+     *
+     * After this call, the texture corresponding to the size is
+     * available through `getTexture`.
+     *
+     * @param characterSize Reference character size
+     */
+    void generateTexture(unsigned characterSize);
 
   private:
     struct Packing {

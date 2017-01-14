@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0)
 
 project(GF
-  VERSION 0.2.0
+  VERSION 0.3.0
   LANGUAGES CXX C
 )
 
@@ -67,11 +67,6 @@ install(
 )
 
 install(
-  DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/data/gf"
-  DESTINATION ${CMAKE_INSTALL_DATADIR}
-)
-
-install(
   DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/examples"
   DESTINATION "${CMAKE_INSTALL_DOCDIR}"
   FILES_MATCHING
@@ -97,6 +92,7 @@ if(GF_BUILD_GAMES)
   add_subdirectory(games/gf_pong)
   add_subdirectory(games/gf_2048)
   add_subdirectory(games/huaca)
+  add_subdirectory(games/lux)
 endif()
 
 if(GF_BUILD_TOOLS)

@@ -40,6 +40,35 @@ inline namespace v1 {
 
   class Random;
 
+  /**
+   * @ingroup core
+   * @brief Value 2D noise
+   *
+   * [Value noise](https://en.wikipedia.org/wiki/Value_noise) is a
+   * lattice-based noise based on values.
+   */
+  class GF_API ValueNoise2D : public Noise2D {
+  public:
+    /**
+     * @brief Constructor
+     *
+     * @param random A random engine
+     * @param step A step
+     *
+     * @sa gf::Step
+     */
+    ValueNoise2D(Random& random, Step<double> step);
+
+    virtual double getValue(double x, double y) override;
+
+  private:
+    Step<double> m_step;
+    std::array<uint8_t, 256> m_perm;
+    std::array<double, 256> m_values;
+
+    double at(uint8_t i, uint8_t j) const;
+  };
+
 
   /**
    * @ingroup core
@@ -101,6 +130,35 @@ inline namespace v1 {
 
   /**
    * @ingroup core
+   * @brief Better gradient 2D noise
+   *
+   * An implementation of the better gradient noise of Kensler et al.,
+   * especially the new hash function and filter kernel. This noise is
+   * slower than gradient noise but gives better results.
+   *
+   * @sa [Better Gradient Noise. A. Kensler, A. Knoll, P. Shirley. 2008](https://www.cs.utah.edu/~aek/research/noise.pdf)
+   */
+  class GF_API BetterGradientNoise2D : public Noise2D {
+  public:
+    /**
+     * @brief Constructor
+     *
+     * @param random A random engine
+     */
+    BetterGradientNoise2D(Random& random);
+
+    virtual double getValue(double x, double y) override;
+
+  private:
+    std::array<uint8_t, 256> m_permX;
+    std::array<uint8_t, 256> m_permY;
+    std::array<Vector2d, 256> m_gradients2D;
+
+    const Vector2d& at(uint8_t i, uint8_t j) const;
+  };
+
+  /**
+   * @ingroup core
    * @brief Fractal 2D noise
    *
    * Fractal noise is based of fractional Brownian motion (fBm). It consists
@@ -154,8 +212,7 @@ inline namespace v1 {
      * @param persistence The factor applied to amplitude
      * @param dimension The contrast between the layers
      */
-    FractalNoise3D(Noise3D& noise, double scale, std::size_t octaves = 8, double lacunarity = 2.0, double persistence = 0.5, double
-    dimension = 1.0);
+    FractalNoise3D(Noise3D& noise, double scale, std::size_t octaves = 8, double lacunarity = 2.0, double persistence = 0.5, double dimension = 1.0);
 
     virtual double getValue(double x, double y, double z) override;
 
@@ -306,6 +363,27 @@ inline namespace v1 {
     const Vector3d& at(uint8_t i, uint8_t j, uint8_t k) const;
   };
 
+  /**
+   * @ingroup core
+   * @brief Wavelet 3D noise
+   *
+   */
+  class GF_API WaveletNoise3D : public Noise3D {
+  public:
+    /**
+     * @brief Constructor
+     *
+     * @param random A random engine
+     * @param n Wavelet tile size
+     */
+    WaveletNoise3D(Random& random, std::ptrdiff_t n = 32);
+
+    virtual double getValue(double x, double y, double z) override;
+
+  private:
+    std::ptrdiff_t m_n;
+    std::vector<double> m_data;
+  };
 
   /**
    * @ingroup core
@@ -334,6 +412,136 @@ inline namespace v1 {
     Distance2<double> m_distance;
     std::vector<double> m_coeffs;
     std::vector<Vector2d> m_cells;
+  };
+
+
+  /**
+   * @ingroup core
+   * @brief Multi Fractal 2D noise
+   *
+   */
+  class GF_API Multifractal2D : public Noise2D {
+  public:
+    /**
+     * @brief Constructor
+     *
+     * @param noise The basic noise function
+     * @param scale The scale factor
+     * @param octaves The number of octaves
+     * @param lacunarity The factor applied to frequency
+     * @param persistence The factor applied to amplitude
+     * @param dimension The contrast between the layers
+     */
+    Multifractal2D(Noise2D& noise, double scale, std::size_t octaves = 8, double lacunarity = 2.0, double persistence = 0.5, double dimension = 1.0);
+
+    virtual double getValue(double x, double y) override;
+
+  private:
+    Noise2D& m_noise;
+    double m_scale;
+    std::size_t m_octaves;
+    double m_lacunarity;
+    double m_persistence;
+    double m_dimension;
+  };
+
+
+  /**
+   * @ingroup core
+   * @brief Hetero Terrain 2D noise
+   *
+   */
+  class GF_API HeteroTerrain2D : public Noise2D {
+  public:
+    /**
+     * @brief Constructor
+     *
+     * @param noise The basic noise function
+     * @param scale The scale factor
+     * @param offset The offset
+     * @param octaves The number of octaves
+     * @param lacunarity The factor applied to frequency
+     * @param persistence The factor applied to amplitude
+     * @param dimension The contrast between the layers
+     */
+    HeteroTerrain2D(Noise2D& noise, double scale, double offset = 0.0, std::size_t octaves = 8, double lacunarity = 2.0, double persistence = 0.5, double dimension = 1.0);
+
+    virtual double getValue(double x, double y) override;
+
+  private:
+    Noise2D& m_noise;
+    double m_scale;
+    double m_offset;
+    std::size_t m_octaves;
+    double m_lacunarity;
+    double m_persistence;
+    double m_dimension;
+  };
+
+  /**
+   * @ingroup core
+   * @brief Hybrid Multifractal 2D noise
+   *
+   */
+  class GF_API HybridMultifractal2D : public Noise2D {
+  public:
+    /**
+     * @brief Constructor
+     *
+     * @param noise The basic noise function
+     * @param scale The scale factor
+     * @param offset The offset
+     * @param octaves The number of octaves
+     * @param lacunarity The factor applied to frequency
+     * @param persistence The factor applied to amplitude
+     * @param dimension The contrast between the layers
+     */
+    HybridMultifractal2D(Noise2D& noise, double scale, double offset = 0.0, std::size_t octaves = 8, double lacunarity = 2.0, double persistence = 0.5, double dimension = 1.0);
+
+    virtual double getValue(double x, double y) override;
+
+  private:
+    Noise2D& m_noise;
+    double m_scale;
+    double m_offset;
+    std::size_t m_octaves;
+    double m_lacunarity;
+    double m_persistence;
+    double m_dimension;
+  };
+
+  /**
+   * @ingroup core
+   * @brief Ridged Multifractal 2D noise
+   *
+   */
+  class GF_API RidgedMultifractal2D : public Noise2D {
+  public:
+    /**
+     * @brief Constructor
+     *
+     * @param noise The basic noise function
+     * @param scale The scale factor
+     * @param offset The offset
+     * @param gain The gain
+     * @param octaves The number of octaves
+     * @param lacunarity The factor applied to frequency
+     * @param persistence The factor applied to amplitude
+     * @param dimension The contrast between the layers
+     */
+    RidgedMultifractal2D(Noise2D& noise, double scale, double offset = 1.0, double gain = 1.0, std::size_t octaves = 8, double lacunarity = 2.0, double persistence = 0.5, double dimension = 1.0);
+
+    virtual double getValue(double x, double y) override;
+
+  private:
+    Noise2D& m_noise;
+    double m_scale;
+    double m_offset;
+    double m_gain;
+    std::size_t m_octaves;
+    double m_lacunarity;
+    double m_persistence;
+    double m_dimension;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

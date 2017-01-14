@@ -29,8 +29,16 @@ inline namespace v1 {
     return SDL_GetScancodeName(static_cast<SDL_Scancode>(scancode));
   }
 
+  Scancode Keyboard::getScancodeFromName(const char *name) {
+    return static_cast<Scancode>(SDL_GetScancodeFromName(name));
+  }
+
   const char *Keyboard::getKeycodeName(Keycode keycode) {
     return SDL_GetKeyName(static_cast<SDL_Keycode>(keycode));
+  }
+
+  Keycode Keyboard::getKeycodeFromName(const char *name) {
+    return static_cast<Keycode>(SDL_GetKeyFromName(name));
   }
 
 }

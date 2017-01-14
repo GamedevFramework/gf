@@ -24,6 +24,7 @@
 #include <gf/Sprite.h>
 #include <gf/Transform.h>
 #include <gf/Texture.h>
+#include <gf/VectorOps.h>
 
 namespace gf {
 inline namespace v1 {

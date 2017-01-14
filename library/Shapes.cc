@@ -123,6 +123,17 @@ inline namespace v1 {
     setPointCount(pointCount);
   }
 
+  ConvexShape::ConvexShape(const Polygon& polygon) {
+    std::size_t pointCount = polygon.getPointCount();
+    m_points.resize(pointCount);
+
+    for (std::size_t i = 0; i < pointCount; ++i) {
+      m_points[i] = polygon.getPoint(i);
+    }
+
+    updateGeometry();
+  }
+
   void ConvexShape::setPointCount(std::size_t pointCount) {
     m_points.resize(pointCount);
     updateGeometry();

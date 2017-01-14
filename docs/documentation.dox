@@ -9,7 +9,7 @@
 2. Tutorials on gf
   - @ref gamedev_101
   - @ref start_game
-3. User documentation
+3. User documentation (WIP)
   1. Core classes
     - @ref singletons
     - @ref noise
@@ -20,6 +20,7 @@
 4. Developper's corner
   - @ref devel
   - @ref opengl
+  - @ref references
   - @ref road_to_v1
 
 */

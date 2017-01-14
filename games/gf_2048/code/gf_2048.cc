@@ -54,9 +54,7 @@ int main() {
 
   // initialize window
 
-  gf::WindowHints hints;
-  hints.resizable = false;
-  gf::Window window("gf 2048!", ScreenSize, hints);
+  gf::Window window("gf 2048!", ScreenSize, ~gf::WindowHints::Resizable);
   gf::RenderWindow renderer(window);
 
   // add cameras
@@ -66,7 +64,7 @@ int main() {
   gf::FitView mainView(Board::getView());
   views.addView(mainView);
 
-  views.onScreenResize(ScreenSize);
+  views.setInitialScreenSize(ScreenSize);
 
   // add actions
 
@@ -110,7 +108,7 @@ int main() {
 
   // main loop
 
-  renderer.clear(gf::Color::rgba(0xFAF8EFFF));
+  renderer.clear(gf::Color::fromRgba32(0xFAF8EFFF));
 
   gf::Clock clock;
   bool fullscreen = false;
@@ -120,8 +118,8 @@ int main() {
     gf::Event event;
 
     while (window.pollEvent(event)) {
-      actions.update(event);
-      views.update(event);
+      actions.processEvent(event);
+      views.processEvent(event);
     }
 
     if (closeWindowAction.isActive()) {

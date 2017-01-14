@@ -91,9 +91,9 @@ inline namespace v1 {
      *
      * @param event The event to update the control.
      *
-     * @sa Action::update()
+     * @sa Action::processEvent()
      */
-    virtual void update(const Event& event) = 0;
+    virtual void processEvent(const Event& event) = 0;
 
   private:
     bool m_active;

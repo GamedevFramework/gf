@@ -36,13 +36,41 @@
 
 #include "priv/Debug.h"
 
-#include "config.h"
+#include "generated/default_alpha.frag.h"
+#include "generated/default.frag.h"
+#include "generated/default.vert.h"
 
 namespace gf {
 inline namespace v1 {
 
   RenderTarget::~RenderTarget() {
 
+  }
+
+  bool RenderTarget::getScissorTest() {
+    GLboolean test;
+    glCheck(glGetBooleanv(GL_SCISSOR_TEST, &test));
+    return test == GL_TRUE;
+  }
+
+  void RenderTarget::setScissorTest(bool scissor) {
+    if (scissor) {
+      glCheck(glEnable(GL_SCISSOR_TEST));
+    } else {
+      glCheck(glDisable(GL_SCISSOR_TEST));
+    }
+  }
+
+  RectI RenderTarget::getScissoBox() {
+    GLint box[4];
+    glCheck(glGetIntegerv(GL_SCISSOR_BOX, &box[0]));
+    Vector2i size = getSize();
+    return RectI(box[0], (size.height - box[1]) - box[3], box[2], box[3]);
+  }
+
+  void RenderTarget::setScissorBox(const RectI& box) {
+    Vector2i size = getSize();
+    glCheck(glScissor(box.left, size.height - (box.top + box.height), box.width, box.height));
   }
 
   void RenderTarget::clear(const Color4f& color) {
@@ -418,12 +446,8 @@ inline namespace v1 {
   }
 
   void RenderTarget::initializeShader() {
-    Path vertexShaderPath = Path(GF_DATADIR) / "shaders/default.vert";
-    Path fragmentShaderPath = Path(GF_DATADIR) / "shaders/default.frag";
-    m_defaultShader.loadFromFile(vertexShaderPath, fragmentShaderPath);
-
-    Path alphaFragmentShaderPath = Path(GF_DATADIR) / "shaders/default_alpha.frag";
-    m_defaultAlphaShader.loadFromFile(vertexShaderPath, alphaFragmentShaderPath);
+    m_defaultShader.loadFromMemory(default_vert, default_frag);
+    m_defaultAlphaShader.loadFromMemory(default_vert, default_alpha_frag);
   }
 
   void RenderTarget::initializeTexture() {

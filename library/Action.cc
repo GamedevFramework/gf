@@ -81,9 +81,9 @@ inline namespace v1 {
     m_controls.push_back(std::move(ptr));
   }
 
-  void Action::update(const Event& event) {
+  void Action::processEvent(const Event& event) {
     for (auto& control : m_controls) {
-      control->update(event);
+      control->processEvent(event);
     }
   }
 
@@ -113,9 +113,9 @@ inline namespace v1 {
     m_actions.push_back(&action);
   }
 
-  void ActionContainer::update(const Event& event) {
+  void ActionContainer::processEvent(const Event& event) {
     for (auto action : m_actions) {
-      action->update(event);
+      action->processEvent(event);
     }
   }
 

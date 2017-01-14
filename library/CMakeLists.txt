@@ -1,3 +1,52 @@
+file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/generated")
+
+add_executable(gfdev_source_file tools/gfdev_source_file.cc)
+
+# process gamecontrollerdb
+
+set(GCDB_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/vendor/gamecontrollerdb/gamecontrollerdb.txt")
+set(GCDB_HEADER "${CMAKE_CURRENT_BINARY_DIR}/generated/gamecontrollerdb.txt.h")
+
+add_custom_command(
+  OUTPUT "${GCDB_HEADER}"
+  COMMAND gfdev_source_file "${GCDB_SOURCE}" "${GCDB_HEADER}" "gamecontrollerdb"
+  COMMENT "Compiling gamecontrollerdb to header"
+  DEPENDS gfdev_source_file "${GCDB_SOURCE}"
+)
+
+add_custom_target(gf0_gamecontrollerdb ALL DEPENDS ${GCDB_HEADER})
+
+# process shader files
+
+set(SHADER_SOURCES
+  data/shaders/color_matrix.frag
+  data/shaders/default_alpha.frag
+  data/shaders/default.frag
+  data/shaders/default.vert
+  data/shaders/edge.frag
+  data/shaders/fxaa.frag
+#   data/shaders/simple_fxaa.frag
+)
+
+set(SHADER_HEADERS "")
+
+foreach(SHADER_RELATIVE_SOURCE ${SHADER_SOURCES})
+  set(SHADER_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/${SHADER_RELATIVE_SOURCE}")
+  get_filename_component(SHADER_NAME ${SHADER_RELATIVE_SOURCE} NAME)
+  string(REPLACE "." "_" SHADER_VARIABLE ${SHADER_NAME})
+  set(SHADER_HEADER "${CMAKE_CURRENT_BINARY_DIR}/generated/${SHADER_NAME}.h")
+  add_custom_command(
+    OUTPUT "${SHADER_HEADER}"
+    COMMAND gfdev_source_file "${SHADER_SOURCE}" "${SHADER_HEADER}" "${SHADER_VARIABLE}"
+    COMMENT "Compiling ${SHADER_NAME} to header"
+    DEPENDS gfdev_source_file "${SHADER_SOURCE}"
+  )
+  list(APPEND SHADER_HEADERS ${SHADER_HEADER})
+endforeach()
+
+add_custom_target(gf0_shader_headers ALL DEPENDS ${SHADER_HEADERS})
+
+# build library
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h @ONLY)
 
@@ -17,6 +66,7 @@ add_library(gf0 SHARED
   Noise.cc
   Noises.cc
   Orientation.cc
+  Polygon.cc
   Random.cc
   Range.cc
   Rect.cc
@@ -84,6 +134,11 @@ add_library(gf0 SHARED
   vendor/glad/src/glad.cc
 )
 
+add_dependencies(gf0
+  gf0_shader_headers
+  gf0_gamecontrollerdb
+)
+
 if (GF_DEBUG)
   target_compile_definitions(gf0
     PRIVATE GF_DEBUG
@@ -144,11 +199,6 @@ if(WIN32)
     RUNTIME DESTINATION games
   )
 endif()
-
-install(
-  FILES "${CMAKE_CURRENT_SOURCE_DIR}/vendor/gamecontrollerdb/gamecontrollerdb.txt"
-  DESTINATION "${CMAKE_INSTALL_DATADIR}/gf"
-)
 
 install(
   EXPORT gfConfig

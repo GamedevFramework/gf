@@ -57,7 +57,7 @@ namespace huaca {
     float x = m_tracker.getXFromRight(TimerWidth + Padding);
     float y = m_tracker.getYFromBottom(TimerHeight + Padding);
 
-    gf::Color4f color = gf::Color::rgba(0x89865DFF);
+    gf::Color4f color = gf::Color::fromRgba32(0x89865DFF);
     color.a = 0.5f;
 
     gf::RoundedRectangleShape shape({ TimerWidth, TimerHeight });

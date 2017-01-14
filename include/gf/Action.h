@@ -180,9 +180,9 @@ inline namespace v1 {
      *
      * @param event the event to update the action.
      *
-     * @sa Control::update()
+     * @sa Control::processEvent()
      */
-    void update(const Event& event);
+    void processEvent(const Event& event);
 
     /**
      * @brief Check if the action is active.
@@ -235,9 +235,9 @@ inline namespace v1 {
      *
      * @param event the event to update the actions.
      *
-     * @sa Action;:update()
+     * @sa Action;:processEvent()
      */
-    void update(const Event& event);
+    void processEvent(const Event& event);
 
     /**
      * @brief Reset all the actions.

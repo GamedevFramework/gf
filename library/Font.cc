@@ -33,6 +33,7 @@
 
 #include <gf/InputStream.h>
 #include <gf/Log.h>
+#include <gf/VectorOps.h>
 
 #include "priv/Debug.h"
 
@@ -298,6 +299,10 @@ inline namespace v1 {
 
     GlyphCache& cache = it->second;
     return &cache.texture;
+  }
+
+  void Font::generateTexture(unsigned characterSize) {
+    getGlyph(' ', characterSize, 0);
   }
 
   static constexpr unsigned DefaultSize = 1024;

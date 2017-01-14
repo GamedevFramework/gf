@@ -2,11 +2,13 @@
 add_executable(gf_tests
   main.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/googletest/googletest/src/gtest-all.cc
+  testArrayRef.cc
   testCirc.cc
   testFlags.cc
   testRange.cc
   testRect.cc
   testSingleton.cc
+  testStringRef.cc
   testVector.cc
   testVector1.cc
   testVector2.cc
@@ -21,4 +23,12 @@ target_include_directories(gf_tests
 )
 
 target_link_libraries(gf_tests gf0)
+
+
+add_executable(bug6
+  EXCLUDE_FROM_ALL
+  bugs/bug6.cc
+)
+
+target_link_libraries(bug6 gf0)
 

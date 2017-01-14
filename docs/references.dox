@@ -1,0 +1,13 @@
+/**
+@page references References
+
+- Collisions
+  - [SAT (Separating Axis Theorem)](http://www.dyn4j.org/2010/01/sat/), dyn4j.org
+  - [GJK (Gilbert–Johnson–Keerthi)](http://www.dyn4j.org/2010/04/gjk-gilbert-johnson-keerthi/), dyn4j.org
+  - [GJK – Distance & Closest Points](http://www.dyn4j.org/2010/04/gjk-distance-closest-points/), dyn4j.org
+  - [EPA (Expanding Polytope Algorithm)](http://www.dyn4j.org/2010/05/epa-expanding-polytope-algorithm/), dyn4j.org
+  - [Contact Points Using Clipping](http://www.dyn4j.org/2011/11/contact-points-using-clipping/), dyn4j.org
+- Physics
+  - [How to Create a Custom Physics Engine](https://gamedevelopment.tutsplus.com/series/how-to-create-a-custom-physics-engine--gamedev-12715), Randy Gaul, tutsplus.com
+
+*/

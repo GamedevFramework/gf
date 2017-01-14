@@ -28,6 +28,7 @@
 
 #include <gf/Math.h>
 #include <gf/Random.h>
+#include <gf/VectorOps.h>
 
 namespace gf {
 inline namespace v1 {
@@ -35,6 +36,52 @@ inline namespace v1 {
   static void generatePermutation(Random& random, std::array<uint8_t, 256>& perm) {
     std::iota(perm.begin(), perm.end(), 0);
     std::shuffle(perm.begin(), perm.end(), random.getEngine());
+  }
+
+  /*
+   * Value
+   */
+  ValueNoise2D::ValueNoise2D(Random& random, Step<double> step)
+  : m_step(step)
+  {
+    // initialize permutation
+
+    generatePermutation(random, m_perm);
+
+    // generate values
+
+    std::uniform_real_distribution<double> distValue(0.0, 1.0);
+
+    for (auto& value : m_values) {
+      value = distValue(random.getEngine());
+    }
+
+  }
+
+  double ValueNoise2D::getValue(double x, double y) {
+    uint8_t qx = static_cast<uint8_t>(std::fmod(x, 256));
+    double rx = std::fmod(x, 1);
+    assert(rx >= 0.0 && rx <= 1.0);
+
+    uint8_t qy = static_cast<uint8_t>(std::fmod(y, 256));
+    double ry = std::fmod(y, 1);
+    assert(ry >= 0.0 && ry <= 1.0);
+
+    double nw = at(qx    , qy    );
+    double ne = at(qx + 1, qy    );
+    double sw = at(qx    , qy + 1);
+    double se = at(qx + 1, qy + 1);
+
+    double n = gf::lerp(nw, ne, m_step(rx));
+    double s = gf::lerp(sw, se, m_step(rx));
+
+    return gf::lerp(n, s, m_step(ry));
+  }
+
+  double ValueNoise2D::at(uint8_t i, uint8_t j) const {
+    uint8_t index = i;
+    index = m_perm.at(index) + j;
+    return m_values.at(m_perm.at(index));
   }
 
 
@@ -51,7 +98,7 @@ inline namespace v1 {
 
     // distributions
 
-    std::uniform_real_distribution<double> distAngle(0.0f, 2.0f * Pi);
+    std::uniform_real_distribution<double> distAngle(0.0, 2.0 * Pi);
 
     // generate 2D gradients
 
@@ -101,8 +148,8 @@ inline namespace v1 {
 
     // distributions
 
-    std::uniform_real_distribution<double> distAngle(0.0f, 2.0f * Pi);
-    std::uniform_real_distribution<double> distHalfAngle(0.0f, Pi);
+    std::uniform_real_distribution<double> distAngle(0.0, 2.0 * Pi);
+    std::uniform_real_distribution<double> distHalfAngle(0.0, Pi);
 
     // generate 3D gradients
 
@@ -161,7 +208,63 @@ inline namespace v1 {
 
 
   /*
-   * Fractal
+   * BetterGradient
+   */
+
+  BetterGradientNoise2D::BetterGradientNoise2D(Random& random)
+  {
+    // initialize permutation
+
+    generatePermutation(random, m_permX);
+    generatePermutation(random, m_permY);
+
+    // distributions
+
+    std::uniform_real_distribution<double> distAngle(0.0, 2.0 * Pi);
+
+    // generate 2D gradients
+
+    for (auto& vec : m_gradients2D) {
+      double angle = distAngle(random.getEngine());
+      vec = gf::unit(angle);
+    }
+  }
+
+  double BetterGradientNoise2D::getValue(double x, double y) {
+    uint8_t qx = static_cast<uint8_t>(std::fmod(x, 256));
+    double rx = std::fmod(x, 1);
+    assert(rx >= 0.0 && rx <= 1.0);
+
+    uint8_t qy = static_cast<uint8_t>(std::fmod(y, 256));
+    double ry = std::fmod(y, 1);
+    assert(ry >= 0.0 && ry <= 1.0);
+
+    double value = 0.0f;
+
+    for (int j = -1; j <= 2; ++j) {
+      for (int i = -1; i <= 2; ++i) {
+        Vector2d r(rx - i, ry - j);
+        double d = gf::squareLength(r);
+
+        if (d < 4) {
+          double t = 1 - d / 4;
+          value += dot(at(qx + i, qy + j), r) * t * t * t * t * (4 * t - 3);
+        }
+      }
+    }
+
+    return value;
+  }
+
+  const Vector2d& BetterGradientNoise2D::at(uint8_t i, uint8_t j) const {
+    uint8_t index = m_permX.at(i) ^ m_permY.at(j);
+    return m_gradients2D.at(index);
+  }
+
+
+
+  /*
+   * Fractal (fBm)
    */
 
   FractalNoise2D::FractalNoise2D(Noise2D& noise, double scale, std::size_t octaves, double lacunarity, double persistence, double dimension)
@@ -185,6 +288,7 @@ inline namespace v1 {
 
     for (std::size_t k = 0; k < m_octaves; ++k) {
       value += m_noise.getValue(x * frequency, y * frequency) * std::pow(amplitude, m_dimension);
+
       frequency *= m_lacunarity;
       amplitude *= m_persistence;
     }
@@ -214,6 +318,7 @@ inline namespace v1 {
 
     for (std::size_t k = 0; k < m_octaves; ++k) {
       value += m_noise.getValue(x * frequency, y * frequency, z * frequency) * std::pow(amplitude, m_dimension);
+
       frequency *= m_lacunarity;
       amplitude *= m_persistence;
     }
@@ -1134,6 +1239,176 @@ inline namespace v1 {
   }
 
 
+  /*
+   * Wavelet
+   */
+
+  static std::ptrdiff_t positiveMod(std::ptrdiff_t x, std::ptrdiff_t n) {
+    std::ptrdiff_t r = x % n;
+    return r < 0 ? r + n : r;
+  }
+
+  static void waveletDownsample(const double *from, double *to, std::ptrdiff_t n, std::ptrdiff_t stride) {
+    static constexpr std::ptrdiff_t DownCoeffsCount = 16;
+    static constexpr double DownCoeffs[2 * DownCoeffsCount] = {
+      0.000334f, -0.001528f,  0.000410f,  0.003545f, -0.000938f, -0.008233f,  0.002172f,  0.019120f,
+     -0.005040f, -0.044412f,  0.011655f,  0.103311f, -0.025936f, -0.243780f,  0.033979f,  0.655340f,
+      0.655340f,  0.033979f, -0.243780f, -0.025936f,  0.103311f,  0.011655f, -0.044412f, -0.005040f,
+      0.019120f,  0.002172f, -0.008233f, -0.000938f,  0.003546f,  0.000410f, -0.001528f,  0.000334f,
+    };
+
+    const double *coeffs = &DownCoeffs[DownCoeffsCount];
+
+    for (std::ptrdiff_t i = 0; i < n/2; ++i) {
+      double value = 0;
+
+      for (std::ptrdiff_t k = 2 * i - DownCoeffsCount; k <=  2 * i - DownCoeffsCount; ++k) {
+        std::ptrdiff_t index = k - 2 * i;
+        assert(0 <= index && index < 2 * DownCoeffsCount);
+        value += coeffs[index] * from[positiveMod(k, n) * stride];
+      }
+
+      to[i * stride] = value;
+    }
+  }
+
+  static void waveletUpsample(const double *from, double *to, std::ptrdiff_t n, std::ptrdiff_t stride) {
+    static constexpr std::ptrdiff_t UpCoeffsCount = 2;
+    static constexpr double UpCoeff[2 * UpCoeffsCount] = {
+      0.25, 0.75, 0.75, 0.25
+    };
+
+    const double *coeffs = &UpCoeff[UpCoeffsCount];
+
+    for (std::ptrdiff_t i = 0; i < n; ++i) {
+      double value = 0;
+
+      for (std::ptrdiff_t k = i/2; k <= i/2 + 1; ++k) {
+        std::ptrdiff_t index = i - 2 * k;
+        assert(0 <= index && index < 2 * UpCoeffsCount);
+        value += coeffs[index] * from[positiveMod(k, n/2) * stride];
+      }
+
+      to[i * stride] = value;
+    }
+  }
+
+  WaveletNoise3D::WaveletNoise3D(Random& random, std::ptrdiff_t n)
+  : m_n(n + n % 2)
+  {
+    std::size_t sz = m_n * m_n * m_n;
+    m_data.resize(sz);
+
+    std::vector<double> tmp1(sz);
+    std::vector<double> tmp2(sz);
+
+    // step 1: fill the tile with numbers in the range -1 to 1
+
+    for (auto& value : m_data) {
+      value = random.computeUniformFloat(-1.0, 1.0);
+    }
+
+    // step 2 and 3: downsample and upsample the tile
+
+    for (std::ptrdiff_t iy = 0; iy < m_n; ++iy) {
+      for (std::ptrdiff_t iz = 0; iz < m_n; ++iz) {
+        // each x row
+        std::ptrdiff_t i = iy * m_n + iz * m_n * m_n;
+        waveletDownsample(&m_data[i], &tmp1[i], m_n, 1);
+        waveletUpsample(&tmp1[i], &tmp2[i], m_n, 1);
+      }
+    }
+
+    for (std::ptrdiff_t ix = 0; ix < m_n; ++ix) {
+      for (std::ptrdiff_t iz = 0; iz < m_n; ++iz) {
+        // each y row
+        std::ptrdiff_t i = ix + iz * m_n * m_n;
+        waveletDownsample(&tmp2[i], &tmp1[i], m_n, m_n);
+        waveletUpsample(&tmp1[i], &tmp2[i], m_n, m_n);
+      }
+    }
+
+    for (std::ptrdiff_t ix = 0; ix < m_n; ++ix) {
+      for (std::ptrdiff_t iy = 0; iy < m_n; ++iy) {
+        // each z row
+        std::ptrdiff_t i = ix + iy * m_n;
+        waveletDownsample(&tmp2[i], &tmp1[i], m_n, m_n * m_n);
+        waveletUpsample(&tmp1[i], &tmp2[i], m_n, m_n * m_n);
+      }
+    }
+
+    // step 4: substract out the coarse-scale contribution
+
+    for (std::ptrdiff_t i = 0; i < m_n * m_n * m_n; ++i) {
+      m_data[i] -= tmp2[i];
+    }
+
+    // avoid event/odd variance difference by adding off-offset version of noise to itself
+
+    std::ptrdiff_t offset = m_n / 2;
+
+    if (offset % 2 == 0) {
+      ++offset;
+    }
+
+    std::ptrdiff_t k = 0;
+
+    for (std::ptrdiff_t ix = 0; ix < m_n; ++ix) {
+      for (std::ptrdiff_t iy = 0; iy < m_n; ++iy) {
+        for (std::ptrdiff_t iz = 0; iz < m_n; ++iz) {
+          std::ptrdiff_t index = positiveMod(ix + offset, m_n)
+                               + positiveMod(iy + offset, m_n) * m_n
+                               + positiveMod(iz + offset, m_n) * m_n * m_n;
+          assert(0 <= index && index < m_n * m_n * m_n);
+          tmp1[k++] = m_data[index];
+        }
+      }
+    }
+
+    for (std::ptrdiff_t i = 0; i < m_n * m_n * m_n; ++i) {
+      m_data[i] += tmp1[i];
+    }
+  }
+
+  double WaveletNoise3D::getValue(double x, double y, double z) {
+    double p[3] = { x, y, z };
+
+    std::ptrdiff_t f[3];
+    std::ptrdiff_t c[3];
+    std::ptrdiff_t mid[3];
+
+    double w[3][3];
+    double value = 0;
+
+    // evaluate quadratic B-spline basis functions
+
+    for (std::ptrdiff_t i = 0; i < 3; ++i) {
+      mid[i] = std::ceil(p[i] - 0.5);
+      double t = mid[i] - (p[i] - 0.5);
+      w[i][0] = t * t / 2;
+      w[i][2] = (1 - t) * (1 - t) / 2;
+      w[i][1] = w[i][0] - w[i][2];
+    }
+
+    // evaluate noise by weighting noise coefficients by basis function values
+
+    for (f[2] = -1; f[2] <= 1; ++f[2]) {
+      for (f[1] = -1; f[1] <= 1; ++f[1]) {
+        for (f[0] = -1; f[0] <= 1; ++f[0]) {
+          double weight = 1;
+
+          for (std::ptrdiff_t i = 0; i < 3; ++i) {
+            c[i] = positiveMod(mid[i] + f[i], m_n);
+            weight *= w[i][f[i] + 1];
+          }
+
+          value += weight * m_data[c[0] + c[1] * m_n + c[2] * m_n * m_n];
+        }
+      }
+    }
+
+    return value;
+  }
 
   /*
    * Worley
@@ -1205,6 +1480,192 @@ inline namespace v1 {
 
     for (decltype(size) i = 0; i < size; ++i) {
       value += m_coeffs[i] * m_distance(here, m_cells[i]);
+    }
+
+    return value;
+  }
+
+  /*
+   * Multifractal
+   */
+
+  Multifractal2D::Multifractal2D(Noise2D& noise, double scale, std::size_t octaves, double lacunarity, double persistence, double dimension)
+  : m_noise(noise)
+  , m_scale(scale)
+  , m_octaves(octaves)
+  , m_lacunarity(lacunarity)
+  , m_persistence(persistence)
+  , m_dimension(dimension)
+  {
+
+  }
+
+  double Multifractal2D::getValue(double x, double y) {
+    double value = 1.0;
+    double frequency = 1.0;
+    double amplitude = 1.0;
+
+    x *= m_scale;
+    y *= m_scale;
+
+    /*
+     * There seems to be an error in the original source code from
+     * Musgrave. Blender source code provides an alternative implementation
+     * that does not use the offset parameter. gf provides the Blender version.
+     *
+     * original: https://engineering.purdue.edu/~ebertd/texture/1stEdition/musgrave/musgrave.c
+     * blender: https://developer.blender.org/diffusion/B/browse/master/source/blender/blenlib/intern/noise.c
+     */
+
+    for (std::size_t k = 0; k < m_octaves; ++k) {
+      value *= m_noise.getValue(x * frequency, y * frequency) * std::pow(amplitude, m_dimension) + 1.0;
+
+      frequency *= m_lacunarity;
+      amplitude *= m_persistence;
+    }
+
+    return value;
+  }
+
+  /*
+   * Hetero Terrain
+   */
+
+  HeteroTerrain2D::HeteroTerrain2D(Noise2D& noise, double scale, double offset, std::size_t octaves, double lacunarity, double persistence, double dimension)
+  : m_noise(noise)
+  , m_scale(scale)
+  , m_offset(offset)
+  , m_octaves(octaves)
+  , m_lacunarity(lacunarity)
+  , m_persistence(persistence)
+  , m_dimension(dimension)
+  {
+
+  }
+
+  double HeteroTerrain2D::getValue(double x, double y) {
+    double value = 0.0;
+    double frequency = 1.0;
+    double amplitude = 1.0;
+
+    x *= m_scale;
+    y *= m_scale;
+
+    value = m_offset + m_noise(x, y);
+
+    frequency *= m_lacunarity;
+    amplitude *= m_persistence;
+
+    for (std::size_t k = 1; k < m_octaves; ++k) {
+      auto increment = m_noise.getValue(x * frequency, y * frequency) + m_offset;
+      increment *= std::pow(amplitude, m_dimension);
+      increment *= value;
+      value += increment;
+
+      frequency *= m_lacunarity;
+      amplitude *= m_persistence;
+    }
+
+    return value;
+  }
+
+  /*
+   * Hybrid Multifractal
+   */
+
+  HybridMultifractal2D::HybridMultifractal2D(Noise2D& noise, double scale, double offset, std::size_t octaves, double lacunarity, double persistence, double dimension)
+  : m_noise(noise)
+  , m_scale(scale)
+  , m_offset(offset)
+  , m_octaves(octaves)
+  , m_lacunarity(lacunarity)
+  , m_persistence(persistence)
+  , m_dimension(dimension)
+  {
+
+  }
+
+  double HybridMultifractal2D::getValue(double x, double y) {
+    double value = 0.0;
+    double frequency = 1.0;
+    double amplitude = 1.0;
+
+    x *= m_scale;
+    y *= m_scale;
+
+    value = m_noise(x, y) + m_offset;
+    double weight = value;
+
+    frequency *= m_lacunarity;
+    amplitude *= m_persistence;
+
+    for (std::size_t k = 1; k < m_octaves; ++k) {
+      if (weight > 1.0) {
+        weight = 1.0;
+      }
+
+      double signal = (m_noise.getValue(x * frequency, y * frequency) + m_offset) * std::pow(amplitude, m_dimension);
+      value += weight * signal;
+      weight *= signal;
+
+      frequency *= m_lacunarity;
+      amplitude *= m_persistence;
+    }
+
+    return value;
+  }
+
+
+  /*
+   * Ridged Multifractal
+   */
+
+  RidgedMultifractal2D::RidgedMultifractal2D(Noise2D& noise, double scale, double offset, double gain, std::size_t octaves, double lacunarity, double persistence, double dimension)
+  : m_noise(noise)
+  , m_scale(scale)
+  , m_offset(offset)
+  , m_gain(gain)
+  , m_octaves(octaves)
+  , m_lacunarity(lacunarity)
+  , m_persistence(persistence)
+  , m_dimension(dimension)
+  {
+
+  }
+
+  double RidgedMultifractal2D::getValue(double x, double y) {
+    double value;
+    double frequency = 1.0;
+    double amplitude = 1.0;
+
+    x *= m_scale;
+    y *= m_scale;
+
+    double signal = m_noise(x, y);
+    signal = std::abs(signal);
+    signal = m_offset - signal;
+    signal *= signal;
+
+    value = signal;
+    double weight = 1.0;
+
+    frequency *= m_lacunarity;
+    amplitude *= m_persistence;
+
+    for (std::size_t k = 1; k < m_octaves; ++k) {
+      weight = signal * m_gain;
+      weight = gf::clamp(weight, 0.0, 1.0);
+
+      signal = m_noise.getValue(x * frequency, y * frequency);
+      signal = std::abs(signal);
+      signal = m_offset - signal;
+      signal *= signal;
+
+      signal *= weight;
+      value += signal * std::pow(amplitude, m_dimension);
+
+      frequency *= m_lacunarity;
+      amplitude *= m_persistence;
     }
 
     return value;

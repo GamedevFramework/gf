@@ -20,22 +20,24 @@
  */
 #include <gf/Effects.h>
 
+#include "generated/default.frag.h"
+#include "generated/default.vert.h"
+#include "generated/color_matrix.frag.h"
+#include "generated/edge.frag.h"
+#include "generated/fxaa.frag.h"
+
 #include "config.h"
 
 namespace gf {
 inline namespace v1 {
 
   DefaultEffect::DefaultEffect() {
-    Path vertexShaderPath = Path(GF_DATADIR) / "shaders/default.vert";
-    Path fragmentShaderPath = Path(GF_DATADIR) / "shaders/default.frag";
-    loadFromFile(vertexShaderPath, fragmentShaderPath);
+    loadFromMemory(default_vert, default_frag);
   }
 
 
   AntiAliasingEffect::AntiAliasingEffect() {
-    Path vertexShaderPath = Path(GF_DATADIR) / "shaders/default.vert";
-    Path fragmentShaderPath = Path(GF_DATADIR) / "shaders/fxaa.frag";
-    loadFromFile(vertexShaderPath, fragmentShaderPath);
+    loadFromMemory(default_vert, fxaa_frag);
     setUniform("u_framebufferSize", Vector2f{ 1.0f, 1.0f });
   }
 
@@ -45,9 +47,7 @@ inline namespace v1 {
 
 
   ColorMatrixEffect::ColorMatrixEffect() {
-    Path vertexShaderPath = Path(GF_DATADIR) / "shaders/default.vert";
-    Path fragmentShaderPath = Path(GF_DATADIR) / "shaders/color_matrix.frag";
-    loadFromFile(vertexShaderPath, fragmentShaderPath);
+    loadFromMemory(default_vert, color_matrix_frag);
   }
 
   void ColorMatrixEffect::setColorMatrix(const Matrix4f& mat) {
@@ -226,9 +226,7 @@ inline namespace v1 {
   }
 
   EdgeEffect::EdgeEffect() {
-    Path vertexShaderPath = Path(GF_DATADIR) / "shaders/default.vert";
-    Path fragmentShaderPath = Path(GF_DATADIR) / "shaders/edge.frag";
-    loadFromFile(vertexShaderPath, fragmentShaderPath);
+    loadFromMemory(default_vert, edge_frag);
     setUniform("u_framebufferSize", Vector2f{ 1.0f, 1.0f });
   }
 

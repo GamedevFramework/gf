@@ -51,7 +51,7 @@ int main() {
   gf::ScreenView hudView;
   views.addView(hudView);
 
-  views.onScreenResize(ScreenSize);
+  views.setInitialScreenSize(ScreenSize);
 
   // actions
 
@@ -103,7 +103,6 @@ int main() {
   renderer.clear(gf::Color::White);
 
   gf::Clock clock;
-  bool fullscreen = false;
 
   while (window.isOpen()) {
     // 1. input
@@ -111,8 +110,8 @@ int main() {
     gf::Event event;
 
     while (window.pollEvent(event)) {
-      actions.update(event);
-      views.update(event);
+      actions.processEvent(event);
+      views.processEvent(event);
     }
 
     if (closeWindowAction.isActive()) {
@@ -120,8 +119,7 @@ int main() {
     }
 
     if (fullscreenAction.isActive()) {
-      fullscreen = !fullscreen;
-      window.setFullscreen(fullscreen);
+      window.toggleFullscreen();
     }
 
     if (rightAction.isActive()) {

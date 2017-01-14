@@ -39,20 +39,20 @@
 namespace gf {
 inline namespace v1 {
 
-  static Uint32 getFlagsFromHints(const WindowHints& hints) {
+  static Uint32 getFlagsFromHints(WindowFlags hints) {
     Uint32 flags = SDL_WINDOW_OPENGL;
 
-    if (hints.resizable) {
+    if (hints.test(WindowHints::Resizable)) {
       flags |= SDL_WINDOW_RESIZABLE;
     }
 
-    if (hints.visible) {
+    if (hints.test(WindowHints::Visible)) {
       flags |= SDL_WINDOW_SHOWN;
     } else {
       flags |= SDL_WINDOW_HIDDEN;
     }
 
-    if (!hints.decorated) {
+    if (!hints.test(WindowHints::Decorated)) {
       flags |= SDL_WINDOW_BORDERLESS;
     }
 
@@ -75,10 +75,11 @@ inline namespace v1 {
     return context;
   }
 
-  Window::Window(const std::string& title, Vector2u size, WindowHints hints)
+  Window::Window(const std::string& title, Vector2u size, WindowFlags hints)
   : m_window(nullptr)
   , m_context(nullptr)
   , m_shouldClose(false)
+  , m_isFullscreen(false)
   {
     auto flags = getFlagsFromHints(hints);
     m_window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, size.width, size.height, flags);
@@ -148,6 +149,12 @@ inline namespace v1 {
     } else {
       SDL_SetWindowFullscreen(m_window, 0);
     }
+
+    m_isFullscreen = full;
+  }
+
+  void Window::toggleFullscreen() {
+    setFullscreen(!m_isFullscreen);
   }
 
   void Window::minimize() {
@@ -281,6 +288,28 @@ inline namespace v1 {
     return GamepadAxis::Invalid;
   }
 
+  static Modifiers getModifiersFromMod(Uint16 mod) {
+    Modifiers modifiers(None);
+
+    if ((mod & KMOD_SHIFT) != 0) {
+      modifiers |= Mod::Shift;
+    }
+
+    if ((mod & KMOD_CTRL) != 0) {
+      modifiers |= Mod::Control;
+    }
+
+    if ((mod & KMOD_ALT) != 0) {
+      modifiers |= Mod::Alt;
+    }
+
+    if ((mod & KMOD_GUI) != 0) {
+      modifiers |= Mod::Super;
+    }
+
+    return modifiers;
+  }
+
 
   static bool translateEvent(Uint32 windowId, const SDL_Event *in, Event& out) {
     switch (in->type) {
@@ -336,10 +365,7 @@ inline namespace v1 {
 
         out.key.keycode = static_cast<Keycode>(in->key.keysym.sym);
         out.key.scancode = static_cast<Scancode>(in->key.keysym.scancode);
-        out.key.modifiers.shift = ((in->key.keysym.mod & KMOD_SHIFT) != 0);
-        out.key.modifiers.control = ((in->key.keysym.mod & KMOD_CTRL) != 0);
-        out.key.modifiers.alt = ((in->key.keysym.mod & KMOD_ALT) != 0);
-        out.key.modifiers.super = ((in->key.keysym.mod & KMOD_GUI) != 0);
+        out.key.modifiers = getModifiersFromMod(in->key.keysym.mod);
         break;
 
       case SDL_KEYUP:
@@ -347,10 +373,7 @@ inline namespace v1 {
         out.type = EventType::KeyReleased;
         out.key.keycode = static_cast<Keycode>(in->key.keysym.sym);
         out.key.scancode = static_cast<Scancode>(in->key.keysym.scancode);
-        out.key.modifiers.shift = ((in->key.keysym.mod & KMOD_SHIFT) != 0);
-        out.key.modifiers.control = ((in->key.keysym.mod & KMOD_CTRL) != 0);
-        out.key.modifiers.alt = ((in->key.keysym.mod & KMOD_ALT) != 0);
-        out.key.modifiers.super = ((in->key.keysym.mod & KMOD_GUI) != 0);
+        out.key.modifiers = getModifiersFromMod(in->key.keysym.mod);
         break;
 
       case SDL_MOUSEWHEEL:

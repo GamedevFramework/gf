@@ -102,7 +102,7 @@ inline namespace v1 {
      *
      * @param event An event
      */
-    void update(const Event& event);
+    void processEvent(const Event& event);
 
     /**
      * @brief Update the views with the new screen size
@@ -112,6 +112,13 @@ inline namespace v1 {
      * @sa gf::AdaptativeView::onScreenResize()
      */
     void onScreenResize(Vector2u screenSize);
+
+    /**
+     * @brief Set the initial screen size
+     *
+     * @param screenSize The initial size of the screen
+     */
+    void setInitialScreenSize(Vector2u screenSize);
 
   private:
     std::vector<AdaptativeView*> m_views;

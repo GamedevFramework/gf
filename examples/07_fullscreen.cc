@@ -29,8 +29,9 @@
 #include <gf/Window.h>
 
 int main() {
-  gf::Vector2z screenSize = { 640, 480 };
-  gf::Window window("07_fullscreen", screenSize);
+  static constexpr gf::Vector2u ScreenSize(640, 480);
+
+  gf::Window window("07_fullscreen", ScreenSize);
   gf::RenderWindow renderer(window);
 
   gf::RectF world(-1, -1, 2, 2);
@@ -45,7 +46,7 @@ int main() {
   extendView.reset(world);
   views.addView(extendView);
 
-  views.onScreenResize(screenSize);
+  views.setInitialScreenSize(ScreenSize);
 
   /*
    * some things to draw
@@ -59,15 +60,11 @@ int main() {
   triangle[2].position = { -0.5f, -0.5f };
   triangle[2].color = gf::Color::Yellow;
 
-  gf::RectangleShape background(world.size);
-  background.setPosition(world.position);
+  gf::RectangleShape background(world);
   background.setColor(gf::Color::White);
 
-  gf::RectangleShape extendedBackground(extendedWorld.size);
-  extendedBackground.setPosition(extendedWorld.position);
+  gf::RectangleShape extendedBackground(extendedWorld);
   extendedBackground.setColor(gf::Color::Gray());
-
-  bool fullscreen = false;
 
   std::cout << "Gamedev Framework (gf) example #07: Fullscreen\n";
   std::cout << "The scene is composed of:\n";
@@ -94,8 +91,7 @@ int main() {
         case gf::EventType::KeyPressed:
           switch (event.key.keycode) {
             case gf::Keycode::F:
-              fullscreen = !fullscreen;
-              window.setFullscreen(fullscreen);
+              window.toggleFullscreen();
               break;
 
             default:
@@ -107,7 +103,7 @@ int main() {
           break;
       }
 
-      views.update(event);
+      views.processEvent(event);
     }
 
     renderer.setView(extendView);

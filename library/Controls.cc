@@ -33,7 +33,7 @@ inline namespace v1 {
 
   }
 
-  void KeycodeKeyControl::update(const Event& event) {
+  void KeycodeKeyControl::processEvent(const Event& event) {
     if (event.type == EventType::KeyPressed) {
       if (event.key.keycode == m_code) {
         setActive();
@@ -55,7 +55,7 @@ inline namespace v1 {
 
   }
 
-  void ScancodeKeyControl::update(const Event& event) {
+  void ScancodeKeyControl::processEvent(const Event& event) {
     if (event.type == EventType::KeyPressed) {
       if (event.key.scancode == m_code) {
         setActive();
@@ -77,7 +77,7 @@ inline namespace v1 {
 
   }
 
-  void MouseButtonControl::update(const Event& event) {
+  void MouseButtonControl::processEvent(const Event& event) {
     if (event.type == EventType::MouseButtonPressed) {
       if (event.mouseButton.button == m_button) {
         setActive();
@@ -100,7 +100,7 @@ inline namespace v1 {
 
   }
 
-  void GamepadButtonControl::update(const Event& event) {
+  void GamepadButtonControl::processEvent(const Event& event) {
     if (event.type == EventType::GamepadButtonPressed) {
       if (event.gamepadButton.id == m_id && event.gamepadButton.button == m_button) {
         setActive();
@@ -126,7 +126,7 @@ inline namespace v1 {
 
   static constexpr int16_t GamepadAxisThreshold = 8000;
 
-  void GamepadAxisControl::update(const Event& event) {
+  void GamepadAxisControl::processEvent(const Event& event) {
     if (event.type == EventType::GamepadAxisMoved) {
       if (event.gamepadAxis.id == m_id && event.gamepadAxis.axis == m_axis) {
         switch (m_dir) {
@@ -149,7 +149,7 @@ inline namespace v1 {
 
   }
 
-  void CloseControl::update(const Event& event) {
+  void CloseControl::processEvent(const Event& event) {
     if (event.type == EventType::Closed) {
       setActive();
     }

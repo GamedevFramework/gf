@@ -57,15 +57,26 @@ enum class Baz {
 };
 
 
-TEST(FlagsTest, EmptyCtor) {
-  gf::Flags<Foo> foo;
+TEST(FlagsTest, NoneCtor) {
+  gf::Flags<Foo> foo(gf::None);
   ASSERT_FALSE(foo);
 
-  gf::Flags<Bar> bar;
+  gf::Flags<Bar> bar(gf::None);
   ASSERT_FALSE(bar);
 
-  gf::Flags<Baz> baz;
+  gf::Flags<Baz> baz(gf::None);
   ASSERT_FALSE(baz);
+}
+
+TEST(FlagsTest, AllCtor) {
+  gf::Flags<Foo> foo(gf::All);
+  ASSERT_TRUE(foo);
+
+  gf::Flags<Bar> bar(gf::All);
+  ASSERT_TRUE(bar);
+
+  gf::Flags<Baz> baz(gf::All);
+  ASSERT_TRUE(baz);
 }
 
 TEST(FlagsTest, EnumCtor) {

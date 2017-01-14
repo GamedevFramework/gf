@@ -22,6 +22,8 @@
 #include <gf/Rect.h>
 #include <gf/Vector.h>
 
+using namespace gf::literals;
+
 namespace huaca {
 
   struct HeroPositionMessage : public gf::Message {

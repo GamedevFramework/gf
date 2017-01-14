@@ -22,6 +22,7 @@
 #define GF_COLLISION_H
 
 #include "Circ.h"
+#include "Polygon.h"
 #include "Portability.h"
 #include "Rect.h"
 #include "Vector.h"
@@ -37,55 +38,65 @@ inline namespace v1 {
    *
    * @sa [How to Create a Custom Physics Engine](http://gamedevelopment.tutsplus.com/series/how-to-create-a-custom-physics-engine--gamedev-12715)
    */
-  struct Manifold {
+  struct Penetration {
     Vector2f normal; ///< Collision normal
-    float penetration; ///< Penetration depth
+    float depth; ///< Penetration depth
   };
 
   /**
-   * @relates Manifold
+   * @relates Penetration
    * @brief Check if two circles collides
    *
    * @param lhs First circle
    * @param rhs Second circle
-   * @param m Data to fill if there is a collision
+   * @param p Data to fill if there is a collision
    * @return True if there is a collision
    */
-  GF_API bool collides(const CircF& lhs, const CircF& rhs, Manifold& m);
+  GF_API bool collides(const CircF& lhs, const CircF& rhs, Penetration& p);
 
   /**
-   * @relates Manifold
+   * @relates Penetration
    * @brief Check if a rectangle collides with a circle
    *
    * @param lhs The rectangle
    * @param rhs The circle
-   * @param m Data to fill if there is a collision
+   * @param p Data to fill if there is a collision
    * @return True if there is a collision
    */
-  GF_API bool collides(const RectF& lhs, const CircF& rhs, Manifold& m);
+  GF_API bool collides(const RectF& lhs, const CircF& rhs, Penetration& p);
 
   /**
-   * @relates Manifold
+   * @relates Penetration
    * @brief Check if a circle collides with a rectangle
    *
    * @param lhs The circle
    * @param rhs The rectangle
-   * @param m Data to fill if there is a collision
+   * @param p Data to fill if there is a collision
    * @return True if there is a collision
    */
-  GF_API bool collides(const CircF& lhs, const RectF& rhs, Manifold& m);
+  GF_API bool collides(const CircF& lhs, const RectF& rhs, Penetration& p);
 
   /**
-   * @relates Manifold
+   * @relates Penetration
    * @brief Check if two rectangles collides
    *
    * @param lhs First rectangle
    * @param rhs Second rectangle
-   * @param m Data to fill if there is a collision
+   * @param p Data to fill if there is a collision
    * @return True if there is a collision
    */
-  GF_API bool collides(const RectF& lhs, const RectF& rhs, Manifold& m);
+  GF_API bool collides(const RectF& lhs, const RectF& rhs, Penetration& p);
 
+  /**
+   * @relates Penetration
+   * @brief Check if two polygons collides
+   *
+   * @param lhs First polygon
+   * @param rhs Second polygon
+   * @param p Data to fill if there is a collision
+   * @return True if there is a collision
+   */
+  GF_API bool collides(const Polygon& lhs, const Polygon& rhs, Penetration& p);
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

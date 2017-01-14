@@ -24,6 +24,7 @@
 #include <gf/View.h>
 
 #include <gf/Transform.h>
+#include <gf/VectorOps.h>
 
 #include "priv/Utils.h"
 
@@ -100,6 +101,14 @@ inline namespace v1 {
     GF_UNUSED(worldSize);
 
     // nothing by default
+  }
+
+  /*
+   * AdaptativeView
+   */
+
+  void AdaptativeView::setInitialScreenSize(Vector2u screenSize) {
+    onScreenResize(screenSize);
   }
 
 }

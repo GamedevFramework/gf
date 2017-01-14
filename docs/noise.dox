@@ -14,13 +14,23 @@ Gamedev Framework (gf) provides several kind of 2D noise.
 
 Basic noises are basic functions to produce noise.
 
+@subsection noise_value_noise Value noise
+
+Value noise is a lattice noise based on values organised in a grid.
+
+@image html value_noise.png
+
+@sa gf::ValueNoise2D
+@sa [Value noise - Wikipedia](https://en.wikipedia.org/wiki/Value_noise)
+
+
 @subsection noise_gradient_noise Gradient noise
 
 Gradient noise is a lattice noise based on gradients organised in a grid.
 
 @image html gradient_noise.png
 
-@sa gf::GradientNoise
+@sa gf::GradientNoise2D
 @sa [Gradient noise - Wikipedia](https://en.wikipedia.org/wiki/Gradient_noise)
 
 
@@ -30,7 +40,7 @@ Gradient noise is a lattice noise based on gradients organised in a grid.
 
 Simplex noise is a lattice noise based on gradients organised in a simplex (triangles in 2D).
 
-@sa gf::SimplexNoise
+@sa gf::SimplexNoise2D
 @sa [Simplex noise - Wikipedia](https://en.wikipedia.org/wiki/Simplex_noise)
 
 
@@ -40,7 +50,7 @@ OpenSimplex noise is a lattice noise very similar to simplex noise.
 
 @image html opensimplex_noise.png
 
-@sa gf::OpenSimplexNoise
+@sa gf::OpenSimplexNoise2D
 @sa [OpenSimplex noise - Wikipedia](https://en.wikipedia.org/wiki/OpenSimplex_noise)
 
 
@@ -52,7 +62,7 @@ Perlin noise is the combination of a fractal noise and a gradient noise.
 
 @image html perlin_noise.png
 
-@sa gf::PerlinNoise
+@sa gf::PerlinNoise2D
 @sa [Perlin noise - Wikipedia](https://en.wikipedia.org/wiki/Perlin_noise)
 
 */

@@ -19,6 +19,7 @@
 
 #include <gf/AnimatedSprite.h>
 #include <gf/RenderTarget.h>
+#include <gf/VectorOps.h>
 
 #include "Level.h"
 #include "Messages.h"

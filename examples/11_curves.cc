@@ -26,15 +26,12 @@
 #include <gf/Clock.h>
 #include <gf/Curves.h>
 #include <gf/Event.h>
+#include <gf/Math.h>
 #include <gf/RenderWindow.h>
 #include <gf/Window.h>
 
 int main() {
-
-  gf::WindowHints hints;
-  hints.resizable = false;
-
-  gf::Window window("11_curves", { 640, 480 }, hints);
+  gf::Window window("11_curves", { 640, 480 }, ~gf::WindowHints::Resizable);
   gf::RenderWindow renderer(window);
 
   /*

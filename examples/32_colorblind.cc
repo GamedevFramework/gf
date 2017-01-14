@@ -34,10 +34,7 @@
 #include <gf/Window.h>
 
 int main() {
-  gf::WindowHints hints;
-  hints.resizable = false;
-
-  gf::Window window("32_colorblind", { 1280,  768 }, hints);
+  gf::Window window("32_colorblind", { 1280,  768 }, ~gf::WindowHints::Resizable);
   gf::RenderWindow renderer(window);
 
   gf::RenderTexture textureRenderer;

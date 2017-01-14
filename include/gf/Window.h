@@ -26,6 +26,7 @@
 
 #include <string>
 
+#include "Flags.h"
 #include "Library.h"
 #include "Portability.h"
 #include "Vector.h"
@@ -43,15 +44,55 @@ inline namespace v1 {
    * @ingroup window
    * @brief Hints for window creation
    */
-  struct GF_API WindowHints {
-    bool resizable = true;  ///< Is the window resizable?
-    bool visible = true;    ///< Is the window visible?
-    bool decorated = true;  ///< Is the window decorated?
+  enum class WindowHints : uint32_t {
+    Resizable = 0x0001, ///< Is the window resizable?
+    Visible   = 0x0002, ///< Is the window visible?
+    Decorated = 0x0004, ///< Is the window decorated?
   };
 
   /**
    * @ingroup window
+   * @brief Flags for window creation
+   */
+  using WindowFlags = Flags<WindowHints>;
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+}
+
+template<>
+struct EnableBitmaskOperators<WindowHints> {
+  static constexpr bool value = true;
+};
+
+inline namespace v1 {
+#endif
+
+  /**
+   * @ingroup window
    * @brief An OS window
+   *
+   * The gf::Window class provides a simple interface for manipulating
+   * the window: move, resize, show/hide, control mouse cursor, etc.
+   * It also provides event handling through its pollEvent() and waitEvent()
+   * functions.
+   *
+   * ~~~{.cc}
+   * gf::Window window("My window", { 640, 480 }, gf::WindowHints::Resizable | gf::WindowHints::Visible);
+   *
+   * while (window.isOpen()) {
+   *   // process events
+   *
+   *   gf::Event event;
+   *
+   *   while (window.pollEvent(event)) {
+   *     if (event.type == gf::EventType::Closed) {
+   *       window.close();
+   *     }
+   *   }
+   *
+   * }
+   *
+   * @sa gf::RenderWindow
+   * ~~~
    */
   class GF_API Window {
   public:
@@ -68,7 +109,7 @@ inline namespace v1 {
      * @param hints Some hints for the creation of the window
      * @sa gf::WindowHints
      */
-    Window(const std::string& title, Vector2u size, WindowHints hints = WindowHints());
+    Window(const std::string& title, Vector2u size, WindowFlags hints = WindowFlags(All));
 
     /**
      * @brief Destructor
@@ -171,6 +212,20 @@ inline namespace v1 {
      * @param full True if the window must be in fullscreen
      */
     void setFullscreen(bool full = true);
+
+    /**
+     * @brief Toggle the fullscreen state
+     */
+    void toggleFullscreen();
+
+    /**
+     * @brief Check if the window is fullscreen or not
+     *
+     * @returns True if the window is fullscreen
+     */
+    bool isFullscreen() const {
+      return m_isFullscreen;
+    }
 
     /** @} */
 
@@ -369,12 +424,13 @@ inline namespace v1 {
     SDL_Window *m_window;
     void *m_context;
     bool m_shouldClose;
-
+    bool m_isFullscreen;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif
+
 }
 
 #endif // GL_WINDOW_H

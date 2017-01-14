@@ -145,31 +145,31 @@ void Board::addRandomTile() {
 static gf::Color4f getTileColor(int value) {
   switch (value) {
     case 0:
-      return gf::Color::rgba(0xCDC1B4FF);
+      return gf::Color::fromRgba32(0xCDC1B4FF);
     case 2:
-      return gf::Color::rgba(0xEEE4DAFF);
+      return gf::Color::fromRgba32(0xEEE4DAFF);
     case 4:
-      return gf::Color::rgba(0xEDE0C8FF);
+      return gf::Color::fromRgba32(0xEDE0C8FF);
     case 8:
-      return gf::Color::rgba(0xF2B179FF);
+      return gf::Color::fromRgba32(0xF2B179FF);
     case 16:
-      return gf::Color::rgba(0xF59563FF);
+      return gf::Color::fromRgba32(0xF59563FF);
     case 32:
-      return gf::Color::rgba(0xF67C5FFF);
+      return gf::Color::fromRgba32(0xF67C5FFF);
     case 64:
-      return gf::Color::rgba(0xF65E3BFF);
+      return gf::Color::fromRgba32(0xF65E3BFF);
     case 128:
-      return gf::Color::rgba(0xEDCF72FF);
+      return gf::Color::fromRgba32(0xEDCF72FF);
     case 256:
-      return gf::Color::rgba(0xEDCC61FF);
+      return gf::Color::fromRgba32(0xEDCC61FF);
     case 512:
-      return gf::Color::rgba(0xEDC850FF);
+      return gf::Color::fromRgba32(0xEDC850FF);
     case 1024:
-      return gf::Color::rgba(0xEDC53FFF);
+      return gf::Color::fromRgba32(0xEDC53FFF);
     case 2048:
-      return gf::Color::rgba(0xEDC22EFF);
+      return gf::Color::fromRgba32(0xEDC22EFF);
     default:
-      return gf::Color::rgba(0x3C3A32FF);
+      return gf::Color::fromRgba32(0x3C3A32FF);
   }
 
   return gf::Color::Black;
@@ -181,7 +181,7 @@ static gf::Color4f getTextColor(int value) {
       return gf::Color::Transparent;
     case 2:
     case 4:
-      return gf::Color::rgba(0x776E65FF);
+      return gf::Color::fromRgba32(0x776E65FF);
     case 8:
     case 16:
     case 32:
@@ -190,7 +190,7 @@ static gf::Color4f getTextColor(int value) {
     case 256:
     case 512:
     default:
-      return gf::Color::rgba(0xF9F6F2FF);
+      return gf::Color::fromRgba32(0xF9F6F2FF);
   }
 
   return gf::Color::Black;
@@ -227,7 +227,7 @@ static constexpr float ContainerSize = Grid::Size * TileSize + (Grid::Size + 1) 
 
 void Board::render(gf::RenderTarget& target) {
   gf::RoundedRectangleShape background({ ContainerSize, ContainerSize }, TileCorner);
-  background.setColor(gf::Color::rgba(0xBBADA0FF));
+  background.setColor(gf::Color::fromRgba32(0xBBADA0FF));
   target.draw(background);
 
   for (unsigned y = 0; y < Grid::Size; ++y) {

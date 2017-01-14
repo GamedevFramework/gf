@@ -26,6 +26,7 @@
 
 #include "Portability.h"
 #include "Vector.h"
+#include "VectorOps.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

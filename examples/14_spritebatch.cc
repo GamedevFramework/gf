@@ -31,14 +31,11 @@
 #include <gf/RenderWindow.h>
 #include <gf/Sprite.h>
 #include <gf/SpriteBatch.h>
+#include <gf/VectorOps.h>
 #include <gf/Window.h>
 
 int main() {
-
-  gf::WindowHints hints;
-  hints.resizable = false;
-
-  gf::Window window("14_spritebatch", { 640, 480 }, hints);
+  gf::Window window("14_spritebatch", { 640, 480 }, ~gf::WindowHints::Resizable);
   gf::RenderWindow renderer(window);
 
   gf::Texture texture;

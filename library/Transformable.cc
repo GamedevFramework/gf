@@ -23,6 +23,8 @@
  */
 #include <gf/Transformable.h>
 
+#include <gf/VectorOps.h>
+
 namespace gf {
 inline namespace v1 {
 
@@ -82,17 +84,29 @@ inline namespace v1 {
 
   void Transformable::setOriginFromAnchorAndBounds(Anchor anchor, const RectF& bounds) {
     switch (anchor) {
-      case Anchor::Center:
-        setOrigin(bounds.getCenter());
-        break;
       case Anchor::TopLeft:
         setOrigin(bounds.position);
+        break;
+      case Anchor::TopCenter:
+        setOrigin(bounds.position + Vector2f(bounds.width / 2, 0.0f));
         break;
       case Anchor::TopRight:
         setOrigin(bounds.position + Vector2f(bounds.width, 0.0f));
         break;
+      case Anchor::CenterLeft:
+        setOrigin(bounds.position + Vector2f(0.0f, bounds.height / 2));
+        break;
+      case Anchor::Center:
+        setOrigin(bounds.getCenter());
+        break;
+      case Anchor::CenterRight:
+        setOrigin(bounds.position + Vector2f(bounds.width, bounds.height / 2));
+        break;
       case Anchor::BottomLeft:
         setOrigin(bounds.position + Vector2f(0.0f, bounds.height));
+        break;
+      case Anchor::BottomCenter:
+        setOrigin(bounds.position + Vector2f(bounds.width / 2, bounds.height));
         break;
       case Anchor::BottomRight:
         setOrigin(bounds.position + bounds.size);

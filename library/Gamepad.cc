@@ -25,7 +25,7 @@
 #include <gf/Filesystem.h>
 #include <gf/Log.h>
 
-#include "config.h"
+#include "generated/gamecontrollerdb.txt.h"
 
 namespace gf {
 inline namespace v1 {
@@ -165,9 +165,7 @@ inline namespace v1 {
   }
 
   void Gamepad::initialize() {
-    Path controllerDB = Path(GF_DATADIR) / "gamecontrollerdb.txt";
-
-    int added = SDL_GameControllerAddMappingsFromFile(controllerDB.string().c_str());
+    int added = SDL_GameControllerAddMappingsFromRW(SDL_RWFromConstMem(gamecontrollerdb, sizeof gamecontrollerdb - 1), 1);
 
     if (added == -1) {
       Log::error(Log::Graphics, "Unable to load game controller mappings: '%s'\n", SDL_GetError());

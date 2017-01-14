@@ -18,24 +18,50 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#version 100
+#include <gf/ArrayRef.h>
 
-attribute vec2 a_position;
-attribute vec4 a_color;
-attribute vec2 a_texCoords;
+#include "gtest/gtest.h"
 
-varying vec4 v_color;
-varying vec2 v_texCoords;
+TEST(ArrayRefTest, DefaultCtor) {
+  gf::ArrayRef<int> ref;
 
-uniform mat3 u_transform;
+  EXPECT_EQ(0u, ref.getSize());
+  EXPECT_EQ(nullptr, ref.getData());
+}
 
-void main(void) {
-  v_texCoords = a_texCoords;
-  v_color = a_color;
 
-  vec3 worldPosition = vec3(a_position, 1);
-  vec3 normalizedPosition = worldPosition * u_transform;
-  // http://stackoverflow.com/questions/16893536/using-row-major-in-opengl-shader
+TEST(ArrayRefTest, PointerSizeCtor) {
+  const int data[] = { 1, 2, 3, 4, 5, 6, 7, 8 };
 
-  gl_Position = vec4(normalizedPosition.xy, 0, 1);
+  gf::ArrayRef<int> ref(data, 8);
+
+  EXPECT_EQ(8u, ref.getSize());
+  EXPECT_EQ(data, ref.getData());
+}
+
+TEST(ArrayRefTest, ArrayCtor) {
+  const int data[] = { 1, 2, 3, 4, 5, 6, 7, 8 };
+
+  gf::ArrayRef<int> ref(data);
+
+  EXPECT_EQ(8u, ref.getSize());
+  EXPECT_EQ(&data[0], ref.getData());
+}
+
+TEST(ArrayRefTest, VectorCtor) {
+  std::vector<int> data = { 1, 2, 3, 4, 5, 6, 7, 8 };
+
+  gf::ArrayRef<int> ref(data);
+
+  EXPECT_EQ(8u, ref.getSize());
+  EXPECT_EQ(&data[0], ref.getData());
+}
+
+TEST(ArrayRefTest, InitializerListCtor) {
+  auto data = { 1, 2, 3, 4, 5, 6, 7, 8 };
+
+  gf::ArrayRef<int> ref(data);
+
+  EXPECT_EQ(8u, ref.getSize());
+  EXPECT_EQ(data.begin(), ref.getData());
 }

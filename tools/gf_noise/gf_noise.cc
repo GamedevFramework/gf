@@ -36,6 +36,7 @@
 #include <gf/RenderWindow.h>
 #include <gf/Sprite.h>
 #include <gf/UI.h>
+#include <gf/VectorOps.h>
 #include <gf/Window.h>
 
 #include "config.h"
@@ -53,16 +54,44 @@ struct RenderingParams {
 };
 
 enum class Fractal : std::size_t {
-  None  = 0,
-  FBm   = 1,
+  None                = 0,
+  FBm                 = 1,
+  Multifractal        = 2,
+  HeteroTerrain       = 3,
+  HybridMultifractal  = 4,
+  RidgedMultifractal  = 5,
 };
 
 struct FractalParams {
   Fractal fractal;
-  float octaves;
+
+  struct {
+    float dimension;
+  } f; // fBm
+
+  struct {
+    float dimension;
+  } m; // Multifractal
+
+  struct {
+    float offset;
+    float dimension;
+  } ht; // Hetero Terrain
+
+  struct {
+    float offset;
+    float dimension;
+  } hm; // Hybrid Multifractal
+
+  struct {
+    float offset;
+    float gain;
+    float dimension;
+  } rm; // Ridged Multifractal
+
+  int octaves;
   float lacunarity;
   float persistence;
-  float dimension;
 };
 
 static double valueWithWaterLevel(double value, double waterLevel) {
@@ -198,21 +227,21 @@ static void generateImageFromArray(gf::Image& image, const RenderingParams& rend
     case Rendering::Colored: {
       // see: http://www.blitzbasic.com/codearcs/codearcs.php?code=2415
       gf::ColorRamp ramp;
-      ramp.addColorStop(0.000f, gf::Color::rgba(  2,  43,  68)); // very dark blue: deep water
-      ramp.addColorStop(0.250f, gf::Color::rgba(  9,  62,  92)); // dark blue: water
-      ramp.addColorStop(0.490f, gf::Color::rgba( 17,  82, 112)); // blue: shallow water
-      ramp.addColorStop(0.500f, gf::Color::rgba( 69, 108, 118)); // light blue: shore
-      ramp.addColorStop(0.501f, gf::Color::rgba( 42, 102,  41)); // green: grass
-      ramp.addColorStop(0.750f, gf::Color::rgba(115, 128,  77)); // light green: veld
-      ramp.addColorStop(0.850f, gf::Color::rgba(153, 143,  92)); // brown: tundra
-      ramp.addColorStop(0.950f, gf::Color::rgba(179, 179, 179)); // grey: rocks
-      ramp.addColorStop(1.000f, gf::Color::rgba(255, 255, 255)); // white: snow
+      ramp.addColorStop(0.000f, gf::Color::fromRgba32(  2,  43,  68)); // very dark blue: deep water
+      ramp.addColorStop(0.250f, gf::Color::fromRgba32(  9,  62,  92)); // dark blue: water
+      ramp.addColorStop(0.490f, gf::Color::fromRgba32( 17,  82, 112)); // blue: shallow water
+      ramp.addColorStop(0.500f, gf::Color::fromRgba32( 69, 108, 118)); // light blue: shore
+      ramp.addColorStop(0.501f, gf::Color::fromRgba32( 42, 102,  41)); // green: grass
+      ramp.addColorStop(0.750f, gf::Color::fromRgba32(115, 128,  77)); // light green: veld
+      ramp.addColorStop(0.850f, gf::Color::fromRgba32(153, 143,  92)); // brown: tundra
+      ramp.addColorStop(0.950f, gf::Color::fromRgba32(179, 179, 179)); // grey: rocks
+      ramp.addColorStop(1.000f, gf::Color::fromRgba32(255, 255, 255)); // white: snow
 
       for (auto row : array.getRowRange()) {
         for (auto col : array.getColRange()) {
           double val = valueWithWaterLevel(array({ row, col }), renderingParams.waterLevel);
           gf::Color4f color = ramp.computeColor(val);
-          image.setPixel({ col, row }, gf::Color::convert(color));
+          image.setPixel({ col, row }, gf::Color::toRgba32(color));
         }
       }
 
@@ -233,11 +262,34 @@ static void generate(gf::Texture& texture, gf::Image& image, const RenderingPara
       break;
 
     case Fractal::FBm: {
-      gf::FractalNoise2D fractalNoise(noise, 1, fractalParams.octaves, fractalParams.lacunarity, fractalParams.persistence, fractalParams.dimension);
+      gf::FractalNoise2D fractalNoise(noise, 1, fractalParams.octaves, fractalParams.lacunarity, fractalParams.persistence, fractalParams.f.dimension);
       generateArrayFromNoise(array, fractalNoise, scale);
       break;
     }
 
+    case Fractal::Multifractal:  {
+      gf::Multifractal2D fractalNoise(noise, 1, fractalParams.octaves, fractalParams.lacunarity, fractalParams.persistence, fractalParams.m.dimension);
+      generateArrayFromNoise(array, fractalNoise, scale);
+      break;
+    }
+
+    case Fractal::HeteroTerrain: {
+      gf::HeteroTerrain2D fractalNoise(noise, 1, fractalParams.ht.offset, fractalParams.octaves, fractalParams.lacunarity, fractalParams.persistence, fractalParams.ht.dimension);
+      generateArrayFromNoise(array, fractalNoise, scale);
+      break;
+    }
+
+    case Fractal::HybridMultifractal: {
+      gf::HybridMultifractal2D fractalNoise(noise, 1, fractalParams.hm.offset, fractalParams.octaves, fractalParams.lacunarity, fractalParams.persistence, fractalParams.hm.dimension);
+      generateArrayFromNoise(array, fractalNoise, scale);
+      break;
+    }
+
+    case Fractal::RidgedMultifractal: {
+      gf::RidgedMultifractal2D fractalNoise(noise, 1, fractalParams.rm.offset, fractalParams.rm.gain, fractalParams.octaves, fractalParams.lacunarity, fractalParams.persistence, fractalParams.rm.dimension);
+      generateArrayFromNoise(array, fractalNoise, scale);
+      break;
+    }
   }
 
   generateImageFromArray(image, renderingParams, array);
@@ -266,10 +318,12 @@ static void exportToPortableGraymap(const gf::Array2D<double>& array, const char
 
 
 enum class NoiseFunction : std::size_t {
-  Gradient      = 0,
-  Simplex       = 1,
-  OpenSimplex   = 2,
-  Worley        = 3,
+  Noise           = 0,
+  Gradient        = 1,
+  BetterGradient  = 2,
+  Simplex         = 3,
+  OpenSimplex     = 4,
+  Worley          = 5,
 };
 
 enum class StepFunction : std::size_t {
@@ -299,6 +353,7 @@ enum class DistanceFunction : std::size_t {
   Euclidean = 0,
   Manhattan = 1,
   Chebyshev = 2,
+  Natural   = 3,
 };
 
 static gf::Distance2<double> getDistanceFunction(DistanceFunction func) {
@@ -309,6 +364,8 @@ static gf::Distance2<double> getDistanceFunction(DistanceFunction func) {
       return gf::manhattanDistance;
     case DistanceFunction::Chebyshev:
       return gf::chebyshevDistance;
+    case DistanceFunction::Natural:
+      return gf::naturalDistance;
   }
 
   assert(false);
@@ -342,14 +399,15 @@ int main() {
   constexpr unsigned Size = 1024;
   constexpr unsigned ExtraSize = 250;
 
+  constexpr float ComboHeightMax = 200.0f;
+
+  gf::RectF bounds;
+
   gf::Array2D<double> array({ Size, Size });
   gf::Image image;
   image.create({ Size, Size });
 
-  gf::WindowHints hints;
-  hints.resizable = false;
-
-  gf::Window window("gf noise", { Size + ExtraSize, Size }, hints);
+  gf::Window window("gf noise", { Size + ExtraSize, Size }, ~gf::WindowHints::Resizable);
   gf::RenderWindow renderer(window);
 
   gf::Texture texture;
@@ -364,46 +422,56 @@ int main() {
     return EXIT_FAILURE;
   }
 
-  gf::DefaultUIRenderer uiRenderer(font);
-  gf::UILayout layout;
-  gf::UI ui(uiRenderer, layout);
-
-  float scrollArea = 0.0f;
+  gf::UI ui(font);
 
   // noise states
 
-  std::vector<std::string> noiseChoices = { "Gradient", "Simplex", "OpenSimplex", "Worley" }; // keep in line with NoiseFunction
-  std::size_t noiseChoice = 0;
+  std::vector<std::string> noiseChoices = { "Value", "Gradient", "Better Gradient", "Simplex", "OpenSimplex", "Worley" }; // keep in line with NoiseFunction
+  int noiseChoice = 1;
 
   std::vector<std::string> stepChoices = { "Linear", "Cubic", "Quintic", "Cosine" }; // keep in line with StepFunction
-  std::size_t stepChoice = 2;
+  int stepChoice = 2;
 
-  std::vector<std::string> distanceChoices = { "Euclidean", "Manhattan", "Chebyshev" }; // keep in line with DistanceFunction
-  std::size_t distanceChoice = 0;
+  int pointCount = 20;
 
-  float pointCount = 20;
+  std::vector<std::string> distanceChoices = { "Euclidean", "Manhattan", "Chebyshev", "Natural" }; // keep in line with DistanceFunction
+  int distanceChoice = 0;
 
   std::vector<std::string> combinationChoices = { "F1", "F2", "F2F1" };
-  std::size_t combinationChoice = 2;
+  int combinationChoice = 2;
 
-  bool fractalExpanded = false;
+  gf::UICollapse fractalCollapsed = gf::UICollapse::Minimized;
 
-  std::vector<std::string> fractalChoices = { "None", "fBm" };
-  std::size_t fractalChoice = 0;
+  std::vector<std::string> fractalChoices = { "None", "fBm", "Multifractal", "Hetero Terrain", "Hybrid Multifractal", "Ridged Multifractal" }; // keep in line with Fractal
+  int fractalChoice = 0;
 
   float scale = 1.0;
 
   FractalParams fractalParams;
   fractalParams.fractal = Fractal::None;
+
+  fractalParams.f.dimension = 1.0;
+
+  fractalParams.m.dimension = 1.0;
+
+  fractalParams.ht.dimension = 1.0;
+  fractalParams.ht.offset = 1.0;
+
+  fractalParams.hm.dimension = 0.25;
+  fractalParams.hm.offset = 0.7;
+
+  fractalParams.rm.dimension = 1.0;
+  fractalParams.rm.offset = 1.0;
+  fractalParams.rm.gain = 2.0;
+
   fractalParams.octaves = 8;
   fractalParams.lacunarity = 2.0;
   fractalParams.persistence = 0.5;
-  fractalParams.dimension = 1.0;
 
-  bool renderingExpanded = false;
+  gf::UICollapse renderingCollapsed = gf::UICollapse::Minimized;
 
   std::vector<std::string> renderingChoices = { "Grayscale", "Colored" };
-  std::size_t renderingChoice = 0;
+  int renderingChoice = 0;
 
   RenderingParams renderingParams;
   renderingParams.rendering = Rendering::Grayscale;
@@ -425,91 +493,104 @@ int main() {
           break;
       }
 
-      ui.update(event);
+      ui.processEvent(event);
     }
 
-    ui.clear();
 
-    ui.beginScrollArea("Noise parameters", gf::RectF(Size, 0, ExtraSize, Size), &scrollArea);
+    ui.begin("Noise parameters", gf::RectF(Size, 0, ExtraSize, Size), gf::UIWindow::Title | gf::UIWindow::Border);
 
-    ui.separatorLine();
+    ui.layoutRowDynamic(20, 1);
+    bounds = ui.getWidgetBounds();
+    ui.combobox(noiseChoices, noiseChoice, 20, { bounds.width, ComboHeightMax });
 
-    if (ui.cycle(noiseChoices, noiseChoice)) {
-      noiseChoice = (noiseChoice + 1) % noiseChoices.size();
-    }
+    ui.separator(5);
 
-    ui.separator();
-    ui.slider("Scale", &scale, 0.1, 20, 0.1);
+    ui.layoutRowDynamic(20, 1);
+    ui.propertyFloat("Scale", 0.1f, scale, 20.0f, 0.1f, 0.1f);
 
     NoiseFunction noiseFunction = static_cast<NoiseFunction>(noiseChoice);
 
     switch (noiseFunction) {
+      case NoiseFunction::Noise:
+        ui.label("Step function:");
+        bounds = ui.getWidgetBounds();
+        ui.combobox(stepChoices, stepChoice, 20, { bounds.width, ComboHeightMax });
+        break;
+
       case NoiseFunction::Gradient:
         ui.label("Step function:");
-        if (ui.cycle(stepChoices, stepChoice)) {
-          stepChoice = (stepChoice + 1) % stepChoices.size();
-        }
+        bounds = ui.getWidgetBounds();
+        ui.combobox(stepChoices, stepChoice, 20, { bounds.width, ComboHeightMax });
         break;
 
       case NoiseFunction::Worley:
-        ui.slider("Point count", &pointCount, 5, 40, 1);
-
+        ui.propertyInt("Point count", 5, pointCount, 40, 1, 1.0f);
         ui.label("Distance function:");
-        if (ui.cycle(distanceChoices, distanceChoice)) {
-          distanceChoice = (distanceChoice + 1) % distanceChoices.size();
-        }
-
+        bounds = ui.getWidgetBounds();
+        ui.combobox(distanceChoices, distanceChoice, 20, { bounds.width, ComboHeightMax });
         ui.label("Combination:");
-        if (ui.cycle(combinationChoices, combinationChoice)) {
-          combinationChoice = (combinationChoice + 1) % combinationChoices.size();
-        }
+        bounds = ui.getWidgetBounds();
+        ui.combobox(combinationChoices, combinationChoice, 20, { bounds.width, ComboHeightMax });
 
       default:
         break;
     }
 
-    ui.separatorLine();
+    ui.separator(5);
 
-    if (ui.collapse("Fractal", fractalExpanded)) {
-      fractalExpanded = !fractalExpanded;
-    }
-
-    if (fractalExpanded) {
-      ui.indent();
-
-      if (ui.cycle(fractalChoices, fractalChoice)) {
-        fractalChoice = (fractalChoice + 1) % fractalChoices.size();
-      }
+    if (ui.treePush(gf::UITree::Tab, "Fractal", fractalCollapsed)) {
+      ui.layoutRowDynamic(20, 1);
+      bounds = ui.getWidgetBounds();
+      ui.combobox(fractalChoices, fractalChoice, 20, { bounds.width, ComboHeightMax });
 
       fractalParams.fractal = static_cast<Fractal>(fractalChoice);
 
-      switch (fractalParams.fractal) {
-        case Fractal::None:
-          break;
+      if (fractalParams.fractal != Fractal::None) {
+        switch (fractalParams.fractal) {
+          case Fractal::None:
+            assert(false);
+            break;
 
-        case Fractal::FBm:
-          ui.slider("Octaves", &fractalParams.octaves, 1, 15, 1);
-          ui.slider("Lacunarity", &fractalParams.lacunarity, 1, 3, 0.1);
-          ui.slider("Persistence", &fractalParams.persistence, 0.1, 0.9, 0.1);
-          ui.slider("Dimension", &fractalParams.dimension, 0.1, 1.9, 0.1);
-          break;
+          case Fractal::FBm:
+            ui.propertyFloat("Dimension", 0.1f, fractalParams.f.dimension, 1.9f, 0.05f, 0.05f);
+            break;
+
+          case Fractal::Multifractal:
+            ui.propertyFloat("Dimension", 0.1f, fractalParams.m.dimension, 1.9f, 0.05f, 0.05f);
+            break;
+
+          case Fractal::HeteroTerrain:
+            ui.propertyFloat("Dimension", 0.1f, fractalParams.ht.dimension, 1.9f, 0.05f, 0.05f);
+            ui.propertyFloat("Offset", 0.0f, fractalParams.ht.offset, 10.0f, 0.1f, 0.1f);
+            break;
+
+          case Fractal::HybridMultifractal:
+            ui.propertyFloat("Dimension", 0.1f, fractalParams.hm.dimension, 1.9f, 0.05f, 0.05f);
+            ui.propertyFloat("Offset", 0.0f, fractalParams.hm.offset, 10.0f, 0.1f, 0.1f);
+            break;
+
+          case Fractal::RidgedMultifractal:
+            ui.propertyFloat("Dimension", 0.1f, fractalParams.rm.dimension, 1.9f, 0.05f, 0.05f);
+            ui.propertyFloat("Offset", 0.0f, fractalParams.rm.offset, 10.0f, 0.1f, 0.1f);
+            ui.propertyFloat("Gain", 1.0f, fractalParams.rm.gain, 3.0f, 0.1f, 0.1f);
+            break;
+        }
+
+        ui.propertyInt("Octaves", 1, fractalParams.octaves, 15, 1, 1.0f);
+        ui.propertyFloat("Lacunarity", 1.0f, fractalParams.lacunarity, 3.0f, 0.1f, 0.1f);
+        ui.propertyFloat("Persistence", 0.1f, fractalParams.persistence, 0.9f, 0.1f, 0.1f);
+
       }
 
-      ui.unindent();
+      ui.treePop();
     }
 
-    ui.separatorLine();
+    ui.separator(5);
 
-    if (ui.collapse("Rendering", renderingExpanded)) {
-      renderingExpanded = !renderingExpanded;
-    }
-
-    if (renderingExpanded) {
-      ui.indent();
-
-      if (ui.cycle(renderingChoices, renderingChoice)) {
-        renderingChoice = (renderingChoice + 1) % renderingChoices.size();
-      }
+    if (ui.treePush(gf::UITree::Tab, "Rendering", renderingCollapsed)) {
+      ui.layoutRowDynamic(20, 1);
+      bounds = ui.getWidgetBounds();
+      ui.combobox(renderingChoices, renderingChoice, 20, { bounds.width, ComboHeightMax });
 
       renderingParams.rendering = static_cast<Rendering>(renderingChoice);
 
@@ -518,26 +599,39 @@ int main() {
           break;
 
         case Rendering::Colored:
-          ui.slider("Water level", &renderingParams.waterLevel, 0, 1, 0.05);
-
-          if (ui.check("Shaded", renderingParams.shaded)) {
-            renderingParams.shaded = !renderingParams.shaded;
-          }
+          ui.propertyFloat("Water level", 0.0f, renderingParams.waterLevel, 1.0f, 0.05f, 0.05f);
+          ui.checkbox("Shaded", renderingParams.shaded);
           break;
       }
 
-      ui.unindent();
+      ui.treePop();
     }
 
-    ui.separatorLine();
+    ui.separator(5);
 
-    if (ui.button("Generate")) {
+    ui.layoutRowDynamic(20, 1);
+    if (ui.buttonLabel("Generate")) {
       switch (noiseFunction) {
+        case NoiseFunction::Noise: {
+          StepFunction stepFunction = static_cast<StepFunction>(stepChoice);
+          gf::Step<double> step = getStepFunction(stepFunction);
+
+          gf::ValueNoise2D noise(random, step);
+          generate(texture, image, renderingParams, array, noise, fractalParams, scale);
+          break;
+        }
+
         case NoiseFunction::Gradient: {
           StepFunction stepFunction = static_cast<StepFunction>(stepChoice);
           gf::Step<double> step = getStepFunction(stepFunction);
 
           gf::GradientNoise2D noise(random, step);
+          generate(texture, image, renderingParams, array, noise, fractalParams, scale);
+          break;
+        }
+
+        case NoiseFunction::BetterGradient: {
+          gf::BetterGradientNoise2D noise(random);
           generate(texture, image, renderingParams, array, noise, fractalParams, scale);
           break;
         }
@@ -568,17 +662,15 @@ int main() {
       }
     }
 
-    ui.separator();
-
-    if (ui.button("Save to 'noise.png'")) {
+    if (ui.buttonLabel("Save to 'noise.png'")) {
       image.saveToFile("noise.png");
     }
 
-    if (ui.button("Save to 'noise.pnm'")) {
+    if (ui.buttonLabel("Save to 'noise.pnm'")) {
       exportToPortableGraymap(array, "noise.pnm");
     }
 
-    ui.endScrollArea();
+    ui.end();
 
     renderer.clear();
     renderer.draw(sprite);

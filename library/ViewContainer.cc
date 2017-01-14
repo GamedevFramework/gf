@@ -30,7 +30,7 @@ inline namespace v1 {
     m_views.push_back(&view);
   }
 
-  void ViewContainer::update(const Event& event) {
+  void ViewContainer::processEvent(const Event& event) {
     if (event.type != EventType::Resized) {
       return;
     }
@@ -42,6 +42,10 @@ inline namespace v1 {
     for (auto view : m_views) {
       view->onScreenResize(screenSize);
     }
+  }
+
+  void ViewContainer::setInitialScreenSize(Vector2u screenSize) {
+    onScreenResize(screenSize);
   }
 
 }

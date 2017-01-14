@@ -17,14 +17,13 @@
  * 2. Altered source versions must be plainly marked as such, and must not be
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
- *
- * Part of this file comes from SFML, with the same license:
- * Copyright (C) 2007-2015 Laurent Gomila (laurent@sfml-dev.org)
  */
 #ifndef GF_FLAGS_H
 #define GF_FLAGS_H
 
 #include <type_traits>
+
+#include "Types.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -32,6 +31,7 @@ inline namespace v1 {
 #endif
 
   /**
+   * @ingroup core
    * @brief Bitfield relying on an enumeration
    *
    * ~~~
@@ -55,6 +55,14 @@ inline namespace v1 {
    * bool b = seahawk.test(AnimalProperties::HasClaws); // false
    * ~~~
    *
+   * If you do not initialize flags, then the state is undefined. You can use
+   * semantic constants gf::All and gf::None to set all the flags or none.
+   *
+   * ~~~{.cc}
+   * gf::Flags<AnimalProperties> unicorn(gf::All);
+   *
+   * gf::Flags<AnimalProperties> rat(gf::None);
+   * ~~~
    */
   template<typename E>
   class Flags {
@@ -62,8 +70,16 @@ inline namespace v1 {
     /**
      * @brief Default constructor
      */
-    constexpr Flags()
-    : m_data{0}
+    Flags() = default;
+
+    constexpr Flags(NoneType)
+    : m_data(0)
+    {
+
+    }
+
+    constexpr Flags(AllType)
+    : m_data(~0)
     {
 
     }
@@ -94,7 +110,7 @@ inline namespace v1 {
      * @param flags Another bitfield
      * @return The bitfield with a binary OR of the flags and the other's flags
      */
-    Flags<E>& operator|=(const Flags<E>& flags) {
+    Flags<E>& operator|=(Flags<E> flags) {
       m_data |= flags.m_data;
       return *this;
     }
@@ -105,7 +121,7 @@ inline namespace v1 {
      * @param flags Another bitfield
      * @return The bitfield with a binary AND of the flags and the other's flags
      */
-    Flags<E>& operator&=(const Flags<E>& flags) {
+    Flags<E>& operator&=(Flags<E> flags) {
       m_data &= flags.m_data;
       return *this;
     }
@@ -147,9 +163,20 @@ inline namespace v1 {
       m_data &= ~static_cast<Type>(flag);
     }
 
-  private:
     using Type = typename std::underlying_type<E>::type;
 
+    /**
+     * @brief Get the underlying value of the flags
+     *
+     * This function should not be used in normal cases.
+     *
+     * @return The value of the flags
+     */
+    Type getValue() const {
+      return m_data;
+    }
+
+  private:
     Flags(Type data)
     : m_data(data)
     {
@@ -193,6 +220,22 @@ inline namespace v1 {
 
   /**
    * @relates Flags
+   * @brief Binary OR between a flag and a bitfield
+   *
+   * @param lhs The flag
+   * @param rhs The bitfield
+   * @return The bitfield with a binary OR of the flag and the bitfield
+   */
+  template<typename E>
+  inline
+  Flags<E> operator|(E lhs, Flags<E> rhs) {
+    Flags<E> flags(lhs);
+    flags |= rhs;
+    return flags;
+  }
+
+  /**
+   * @relates Flags
    * @brief Binary AND between two bitfields
    *
    * @param lhs The first bitfield
@@ -223,6 +266,22 @@ inline namespace v1 {
     return flags;
   }
 
+  /**
+   * @relates Flags
+   * @brief Binary AND between a flag and a bitfield
+   *
+   * @param lhs The flag
+   * @param rhs The bitfield
+   * @return The bitfield with a binary AND of the flag and the bitfield
+   */
+  template<typename E>
+  inline
+  Flags<E> operator&(E lhs, Flags<E> rhs) {
+    Flags<E> flags(lhs);
+    flags &= rhs;
+    return flags;
+  }
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif
@@ -241,7 +300,7 @@ struct EnableBitmaskOperators {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 template<typename E>
 typename std::enable_if<gf::EnableBitmaskOperators<E>::value, gf::Flags<E>>::type
-operator|(E lhs, E rhs){
+operator|(E lhs, E rhs) {
   gf::Flags<E> flags(lhs);
   flags |= rhs;
   return flags;
@@ -249,10 +308,17 @@ operator|(E lhs, E rhs){
 
 template<typename E>
 typename std::enable_if<gf::EnableBitmaskOperators<E>::value, gf::Flags<E>>::type
-operator&(E lhs, E rhs){
+operator&(E lhs, E rhs) {
   gf::Flags<E> flags(lhs);
   flags &= rhs;
   return flags;
+}
+
+template<typename E>
+typename std::enable_if<gf::EnableBitmaskOperators<E>::value, gf::Flags<E>>::type
+operator~(E val) {
+  gf::Flags<E> flags(val);
+  return ~flags;
 }
 #endif
 

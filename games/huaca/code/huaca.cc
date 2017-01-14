@@ -52,7 +52,7 @@ int main() {
   gf::RenderWindow renderer(window);
 
   gf::WindowGeometryTracker tracker;
-  tracker.onScreenResize(screenSize);
+  tracker.setInitialScreenSize(screenSize);
 
   // setup resource directories
 
@@ -69,7 +69,7 @@ int main() {
   gf::ScreenView hudView;
   views.addView(hudView);
 
-  views.onScreenResize(screenSize);
+  views.setInitialScreenSize(screenSize);
 
   // add actions
 
@@ -153,7 +153,6 @@ int main() {
   renderer.clear(gf::Color::Black);
 
   gf::Clock clock;
-  bool fullscreen = false;
 
   while (window.isOpen()) {
     // input
@@ -161,9 +160,9 @@ int main() {
     gf::Event event;
 
     while (window.pollEvent(event)) {
-      actions.update(event);
-      views.update(event);
-      tracker.update(event);
+      actions.processEvent(event);
+      views.processEvent(event);
+      tracker.processEvent(event);
     }
 
     if (closeWindowAction.isActive()) {
@@ -171,8 +170,7 @@ int main() {
     }
 
     if (fullscreenAction.isActive()) {
-      fullscreen = !fullscreen;
-      window.setFullscreen(fullscreen);
+      window.toggleFullscreen();
     }
 
     if (rightAction.isActive()) {

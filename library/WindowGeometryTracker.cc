@@ -17,13 +17,11 @@
  * 2. Altered source versions must be plainly marked as such, and must not be
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
- *
- * Part of this file comes from SFML, with the same license:
- * Copyright (C) 2007-2015 Laurent Gomila (laurent@sfml-dev.org)
  */
 #include <gf/WindowGeometryTracker.h>
 
 #include <gf/Event.h>
+#include <gf/VectorOps.h>
 
 namespace gf {
 inline namespace v1 {
@@ -63,7 +61,7 @@ inline namespace v1 {
     return gf::select(gf::greaterThan(pos, { 0.0f, 0.0f }), pos, m_screenSize + pos);
   }
 
-  void WindowGeometryTracker::update(const Event& event) {
+  void WindowGeometryTracker::processEvent(const Event& event) {
     if (event.type != EventType::Resized) {
       return;
     }
@@ -73,6 +71,10 @@ inline namespace v1 {
 
   void WindowGeometryTracker::onScreenResize(Vector2u screenSize) {
     m_screenSize = screenSize;
+  }
+
+  void WindowGeometryTracker::setInitialScreenSize(Vector2u screenSize) {
+    onScreenResize(screenSize);
   }
 
 }

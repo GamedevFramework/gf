@@ -17,9 +17,6 @@
  * 2. Altered source versions must be plainly marked as such, and must not be
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
- *
- * Part of this file comes from SFML, with the same license:
- * Copyright (C) 2007-2015 Laurent Gomila (laurent@sfml-dev.org)
  */
 #ifndef GF_WINDOW_GEOMETRY_TRACKER_H
 #define GF_WINDOW_GEOMETRY_TRACKER_H
@@ -150,7 +147,7 @@ inline namespace v1 {
      *
      * @param event An event
      */
-    void update(const Event& event);
+    void processEvent(const Event& event);
 
     /**
      * @brief Update the geometry with the new screen size
@@ -158,6 +155,13 @@ inline namespace v1 {
      * @param screenSize The new size of the screen
      */
     void onScreenResize(Vector2u screenSize);
+
+    /**
+     * @brief Set the initial screen size
+     *
+     * @param screenSize The initial size of the screen
+     */
+    void setInitialScreenSize(Vector2u screenSize);
 
   private:
     Vector2u m_screenSize;
