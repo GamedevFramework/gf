@@ -125,6 +125,7 @@ add_library(gf0 SHARED
   MessageManager.cc
   Model.cc
   ModelContainer.cc
+  Models.cc
   ResourceManager.cc
   # ui
   UI.cc
