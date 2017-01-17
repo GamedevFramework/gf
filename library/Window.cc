@@ -239,8 +239,11 @@ inline namespace v1 {
         return MouseButton::XButton2;
     }
 
-    assert(false);
-    return MouseButton::Right;
+    /*
+     * Another button may happen in the case of a touchpad (value 6 or 7),
+     * which happens when pressing with two fingers.
+     */
+    return MouseButton::Other;
   }
 
   static GamepadButton getGamepadButtonFromButton(Uint8 button) {

@@ -39,6 +39,7 @@ inline namespace v1 {
     Right,    ///< The right mouse button
     XButton1, ///< The first extra mouse button
     XButton2, ///< The second extra mouse button
+    Other,    ///< Another unknown button (may happen with touchpads)
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
