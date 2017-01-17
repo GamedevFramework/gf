@@ -234,6 +234,26 @@ inline namespace v1 {
     return val * val;
   }
 
+  /**
+   * @ingroup core
+   * @brief Sign function
+   *
+   * The sign function of @f$ x @f$ is:
+   *
+   * - @f$ -1 @f$ if @f$ x < 0 @f$
+   * - @f$ 0 @f$ if @f$ x = 0 @f$
+   * - @f$ 1 @f$ if @f$ x > 0 @f$
+   *
+   * @param val A value
+   * @returns The sign of the value
+   * @sa [Sign function](https://en.wikipedia.org/wiki/Sign_function)
+   */
+  template<typename T>
+  constexpr
+  int sign(T val) {
+    return (val > T(0)) - (val < T(0));
+  }
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif
