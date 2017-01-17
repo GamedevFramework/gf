@@ -70,6 +70,60 @@ inline namespace v1 {
     return &m_points[0] + m_points.size();
   }
 
+  static constexpr float Epsilon = std::numeric_limits<float>::epsilon();
+
+  bool Polygon::isConvex() const {
+    if (m_points.size() <= 3) {
+      return true;
+    }
+
+    int currentSign = 0;
+
+    for (std::size_t i = 0; i < m_points.size() - 2; ++i) {
+      float x = gf::cross(m_points[i + 1] - m_points[i], m_points[i + 2] - m_points[i + 1]);
+
+      if (x > Epsilon) {
+        int sign = gf::sign(x);
+
+        if (currentSign != 0 && sign != currentSign) {
+          return false;
+        }
+
+        currentSign = sign;
+      }
+    }
+
+    return true;
+  }
+
+  Winding Polygon::getWinding() const {
+    for (std::size_t i = 0; i < m_points.size() - 1; ++i) {
+      float x = gf::cross(m_points[i], m_points[i + 1]);
+
+      if (x > 0) {
+        return Winding::Clockwise;
+      }
+
+      if (x < 0) {
+        return Winding::Counterclockwise;
+      }
+    }
+
+    return gf::cross(m_points.back(), m_points.front()) > 0 ? Winding::Clockwise : Winding::Counterclockwise;
+  }
+
+  // https://en.wikipedia.org/wiki/Shoelace_formula
+  float Polygon::getArea() const {
+    float area = 0.0f;
+
+    for (std::size_t i = 0; i < m_points.size() - 1; ++i) {
+      area += gf::cross(m_points[i], m_points[i + 1]);
+    }
+
+    area += gf::cross(m_points.back(), m_points.front());
+    return std::abs(area / 2);
+  }
+
   void Polygon::applyTransform(const Matrix3f& mat) {
     for (auto& point : m_points) {
       point = gf::transform(mat, point);

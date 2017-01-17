@@ -34,6 +34,16 @@ inline namespace v1 {
 #endif
 
   /**
+   * @ingroup core
+   * @brief The direction of the rotation
+   */
+  enum class Winding {
+    Clockwise,        //< Same direction as a clock's hands
+    Counterclockwise, //< Opposite direction of a clock's hands
+  };
+
+  /**
+   * @ingroup core
    * @brief A convex polygon
    *
    */
@@ -119,6 +129,36 @@ inline namespace v1 {
      * @sa begin()
      */
     const Vector2f *end() const;
+
+    /**
+     * @brief Check if the polygon is convex
+     *
+     * This function should return true, otherwise you may have problems in
+     * other functions which assume that the polygon is convex.
+     *
+     * @returns True if the polygon is convex
+     */
+    bool isConvex() const;
+
+    /**
+     * @brief Compute the winding of a convex polygon
+     *
+     * Complexity: @f$ O(n) @f$
+     *
+     * @returns The winding of the convex polygon
+     * @sa gf::Winding, isConvex()
+     */
+    Winding getWinding() const;
+
+
+    /**
+     * @brief Compute the area of the polygon
+     *
+     * Complexity: @f$ O(n) @f$
+     *
+     * @returns The area of the polygon
+     */
+    float getArea() const;
 
     /**
      * @brief Apply a transformation to the polygon
