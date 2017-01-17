@@ -3,6 +3,7 @@
 ## gf 0.3.0 (14 Jan 2016)
 
 - Core module
+  - Split Vector.h in Vector.h (for types) and VectorOps.h (for operations)
   - Add Musgrave's fractal for noises
   - Add Better gradient noise
   - Add Polygon
@@ -26,6 +27,7 @@
   - Add lux
 - Misc
   - Generate headers from shaders and gamecontrollerdb.txt
+  - Change update(const Event&) in processEvent(const Event&) in many classes
 
 ## gf 0.2.0 (14 Oct 2016)
 
