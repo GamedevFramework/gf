@@ -199,24 +199,32 @@ inline namespace v1 {
   /**
    * @ingroup core
    * @brief A `float` circle
+   *
+   * @sa gf::Circ
    */
   using CircF = Circ<float>;
 
   /**
    * @ingroup core
    * @brief A `int` circle
+   *
+   * @sa gf::Circ
    */
   using CircI = Circ<int>;
 
   /**
    * @ingroup core
    * @brief A `unsigned` circle
+   *
+   * @sa gf::Circ
    */
   using CircU = Circ<unsigned>;
 
   /**
    * @ingroup core
    * @brief A `std::size_t` circle
+   *
+   * @sa gf::Circ
    */
   using CircZ = Circ<std::size_t>;
 
