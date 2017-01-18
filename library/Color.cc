@@ -50,8 +50,6 @@ inline namespace v1 {
   constexpr Color4f Color::Violet;
   constexpr Color4f Color::Azure;
 
-  static constexpr float Epsilon = 0.00001f;
-
   struct Hsv {
     float h;
     float s;

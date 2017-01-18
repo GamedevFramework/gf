@@ -22,6 +22,7 @@
 #define GF_MATH_H
 
 #include <cmath>
+#include <limits>
 
 #include "Portability.h"
 
@@ -62,6 +63,11 @@ inline namespace v1 {
 
   /**
    * @ingroup core
+   * @brief Machine epsilon
+   */
+  constexpr float Epsilon = std::numeric_limits<float>::epsilon();
+
+  /*
    * @brief Convert degrees to radians
    *
    * @param degrees An angle in degrees

@@ -70,8 +70,6 @@ inline namespace v1 {
     return &m_points[0] + m_points.size();
   }
 
-  static constexpr float Epsilon = std::numeric_limits<float>::epsilon();
-
   bool Polygon::isConvex() const {
     if (m_points.size() <= 3) {
       return true;
