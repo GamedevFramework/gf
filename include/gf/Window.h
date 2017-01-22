@@ -43,6 +43,7 @@ inline namespace v1 {
   /**
    * @ingroup window
    * @brief Hints for window creation
+   * @sa gf::WindowFlags
    */
   enum class WindowHints : uint32_t {
     Resizable = 0x0001, ///< Is the window resizable?
@@ -53,6 +54,7 @@ inline namespace v1 {
   /**
    * @ingroup window
    * @brief Flags for window creation
+   * @sa gf::Flags, gf::WindowHints
    */
   using WindowFlags = Flags<WindowHints>;
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -253,13 +255,33 @@ inline namespace v1 {
 
     /**
      * @brief Show a window
+     * @sa hide()
      */
     void show();
 
     /**
      * @brief Hide a window
+     * @sa show()
      */
     void hide();
+
+    /**
+     * @brief Show or hide the window
+     *
+     * The window is shown by default.
+     *
+     * @param visible True to show the window, false to hide it
+     * @sa show(), hide(), isVisible()
+     */
+    void setVisible(bool visible = true);
+
+    /**
+     * @brief Show or hide the decoration of the window
+     *
+     * @param decorated True to show decoration
+     * @sa isDecorated()
+     */
+    void setDecorated(bool decorated = true);
 
     /**
      * @brief Check if the window is focused

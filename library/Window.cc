@@ -182,6 +182,19 @@ inline namespace v1 {
     SDL_HideWindow(m_window);
   }
 
+  void Window::setVisible(bool visible) {
+    if (visible) {
+      show();
+    } else {
+      hide();
+    }
+  }
+
+  void Window::setDecorated(bool decorated) {
+    assert(m_window);
+    SDL_SetWindowBordered(m_window, decorated ? SDL_TRUE : SDL_FALSE);
+  }
+
   bool Window::isFocused() const {
     assert(m_window);
     auto flags = SDL_GetWindowFlags(m_window);
