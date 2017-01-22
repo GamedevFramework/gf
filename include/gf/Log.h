@@ -173,10 +173,11 @@ inline namespace v1 {
      * @brief Print a message without any level or category
      *
      * This function can be used for printing messages during the development.
+     * It is disable if GF_DEBUG is not set i.e. it prints nothing.
      *
      * @param fmt The [format string](http://en.cppreference.com/w/cpp/io/c/fprintf)
      */
-    static void print(const char *fmt, ...);
+    static void printDebug(const char *fmt, ...);
 
   private:
     static void log(Level level, Category category, const char *fmt, va_list ap);

@@ -101,11 +101,13 @@ inline namespace v1 {
     return "?";
   }
 
-  void Log::print(const char *fmt, ...) {
+  void Log::printDebug(const char *fmt, ...) {
+#ifdef GF_DEBUG
     va_list ap;
     va_start(ap, fmt);
     std::vfprintf(stderr, fmt, ap);
     va_end(ap);
+#endif
   }
 
   void Log::log(Level level, Category category, const char *fmt, va_list ap) {
