@@ -60,6 +60,29 @@ inline namespace v1 {
    */
   constexpr float InvSqrt2 = 1 / Sqrt2;
 
+  /**
+   * @ingroup core
+   * @brief Convert degrees to radians
+   *
+   * @param degrees An angle in degrees
+   * @returns The angle in radians
+   * @sa radiansToDegrees()
+   */
+  constexpr float degreesToRadians(float degrees) {
+    return degrees * Pi / 180.0f;
+  }
+
+  /**
+   * @ingroup core
+   * @brief Convert radians to degrees
+   *
+   * @param radians An angle in radians
+   * @returns The angle in degrees
+   * @sa degreesToRadians()
+   */
+  constexpr float radiansToDegrees(float radians) {
+    return radians * 180.0f / Pi;
+  }
 
   /**
    * @ingroup core
