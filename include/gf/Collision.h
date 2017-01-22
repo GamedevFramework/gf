@@ -89,6 +89,28 @@ inline namespace v1 {
 
   /**
    * @relates Penetration
+   * @brief Check if a circle collides with a polygon
+   *
+   * @param lhs The circle
+   * @param rhs The polygon
+   * @param p Data to fill if there is a collision
+   * @return True if there is a collision
+   */
+  GF_API bool collides(const CircF& lhs, const Polygon& rhs, Penetration& p);
+
+  /**
+   * @relates Penetration
+   * @brief Check if a polygon collides with a circle
+   *
+   * @param lhs The polygon
+   * @param rhs The circle
+   * @param p Data to fill if there is a collision
+   * @return True if there is a collision
+   */
+  GF_API bool collides(const Polygon& lhs, const CircF& rhs, Penetration& p);
+
+  /**
+   * @relates Penetration
    * @brief Check if two polygons collides
    *
    * @param lhs First polygon
