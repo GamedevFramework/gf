@@ -67,7 +67,34 @@ inline namespace v1 {
    */
   constexpr float Epsilon = std::numeric_limits<float>::epsilon();
 
-  /*
+  /**
+   * @ingroup core
+   * @brief Compare two floats
+   *
+   * @param a The first float
+   * @param b The second float
+   * @param epsilon A small value that controls the equality comparison
+   *
+   * @sa [Comparison - The Floating-Point Guide](http://floating-point-gui.de/errors/comparison/)
+   */
+  template<typename T>
+  inline
+  bool almostEquals(T a, T b, T epsilon = std::numeric_limits<T>::epsilon()) {
+    if (a == b) {
+      return true;
+    }
+
+    T diff = std::abs(a - b);
+
+    if (a == 0 || b == 0 || diff < std::numeric_limits<T>::denorm_min()) {
+      return diff < (epsilon * std::numeric_limits<T>::denorm_min());
+    }
+
+    return diff / std::min(std::abs(a) + std::abs(b), std::numeric_limits<T>::max()) < epsilon;
+  }
+
+  /**
+   * @ingroup core
    * @brief Convert degrees to radians
    *
    * @param degrees An angle in degrees
