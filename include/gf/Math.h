@@ -90,7 +90,10 @@ inline namespace v1 {
       return diff < (epsilon * std::numeric_limits<T>::denorm_min());
     }
 
-    return diff / std::min(std::abs(a) + std::abs(b), std::numeric_limits<T>::max()) < epsilon;
+    T sum = std::abs(a) + std::abs(b);
+    sum = (sum < std::numeric_limits<T>::max()) ? sum : std::numeric_limits<T>::max();
+
+    return (diff / sum) < epsilon;
   }
 
   /**
