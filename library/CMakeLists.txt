@@ -95,6 +95,7 @@ add_library(gf0 SHARED
   Effects.cc
   Font.cc
   NinePatch.cc
+  Particles.cc
   PostProcessing.cc
   RenderPipeline.cc
   RenderTarget.cc
