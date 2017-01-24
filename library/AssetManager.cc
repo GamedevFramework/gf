@@ -29,6 +29,7 @@ inline namespace v1 {
 
   void AssetManager::addSearchDir(Path path) {
     if (!fs::is_directory(path)) {
+      Log::warning(Log::Resources, "Directory not found: %s\n", path.string().c_str())
       return;
     }
 
@@ -52,7 +53,7 @@ inline namespace v1 {
       }
     }
 
-    Log::error(Log::Resources, "Could not find the following file: %s\n", relativePath.string().c_str());
+    Log::error(Log::Resources, "File not found: %s\n", relativePath.string().c_str());
     return Path();
   }
 
