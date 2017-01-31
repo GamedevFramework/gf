@@ -63,6 +63,12 @@ inline namespace v1 {
 
   /**
    * @ingroup core
+   * @brief The @f$ \sqrt{3} @f$ constant
+   */
+  constexpr float Sqrt3 = 1.7320508075688772935f;
+
+  /**
+   * @ingroup core
    * @brief Machine epsilon
    */
   constexpr float Epsilon = std::numeric_limits<float>::epsilon();
