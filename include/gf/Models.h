@@ -29,9 +29,22 @@ namespace gf {
 inline namespace v1 {
 #endif
 
+  /**
+   * @brief Fixed timestep model
+   *
+   * This model takes another model that needs a fixed timestep and provides
+   * it event if the original timestep is not fixed. This may be useful for
+   * physics model, for example.
+   */
   class GF_API FixedTimestepModel : public Model {
   public:
-    FixedTimestepModel(Model& model, float timestep);
+    /**
+     * @brief Constructor
+     *
+     * @param model The original model
+     * @param timestep The fixed timestep
+     */
+    FixedTimestepModel(Model& model, float timestep = 1 / 60.0f);
 
     virtual void update(float dt) override;
 
