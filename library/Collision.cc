@@ -24,6 +24,8 @@
 
 #include <queue>
 
+#include <gf/Log.h>
+
 namespace gf {
 inline namespace v1 {
 
@@ -181,7 +183,7 @@ inline namespace v1 {
       Edge edge;
       edge.p1 = rhs.getPoint(i);
       edge.p2 = rhs.getPoint((i + 1) % sz);
-      edge.normal = getNormal(edge.p1, edge.p2, winding);
+      edge.normal = getNormal(edge.p2, edge.p1, winding); // TODO: check why we must do getNormal(p2, p1) and not getNormal(p1, p2)
       edge.distance = gf::dot(edge.normal, center - edge.p1);
       edges.push_back(edge);
     }
@@ -190,13 +192,16 @@ inline namespace v1 {
       return lhs.distance < rhs.distance;
     });
 
+    if (best.distance > lhs.getRadius()) {
+//       Log::printDebug("Too far: %f\n", best.distance);
+      return false;
+    }
+
     if (best.distance < Epsilon) {
       p.normal = -best.normal;
       p.depth = lhs.getRadius();
       return true;
     }
-
-    p.depth = lhs.getRadius() - best.distance;
 
     if (gf::dot(center - best.p1, best.p2 - best.p1) <= 0) {
       if (gf::squareDistance(center, best.p1) > gf::square(lhs.getRadius())) {
@@ -204,6 +209,7 @@ inline namespace v1 {
       }
 
       p.normal = gf::normalize(best.p1 - center);
+      p.depth = lhs.getRadius() - gf::euclideanDistance(center, best.p1);
       return true;
     }
 
@@ -213,14 +219,12 @@ inline namespace v1 {
       }
 
       p.normal = gf::normalize(best.p2 - center);
+      p.depth = lhs.getRadius() - gf::euclideanDistance(center, best.p2);
       return true;
     }
 
-    if (best.distance > lhs.getRadius()) {
-      return false;
-    }
-
     p.normal = -best.normal;
+    p.depth = lhs.getRadius() - best.distance;
     return true;
   }
 
