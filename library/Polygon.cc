@@ -28,6 +28,8 @@
 #include <gf/Transform.h>
 #include <gf/VectorOps.h>
 
+#include <gf/Log.h>
+
 namespace gf {
 inline namespace v1 {
 
@@ -94,32 +96,24 @@ inline namespace v1 {
     return true;
   }
 
-  Winding Polygon::getWinding() const {
-    for (std::size_t i = 0; i < m_points.size() - 1; ++i) {
-      float x = gf::cross(m_points[i], m_points[i + 1]);
-
-      if (x > 0) {
-        return Winding::Clockwise;
-      }
-
-      if (x < 0) {
-        return Winding::Counterclockwise;
-      }
-    }
-
-    return gf::cross(m_points.back(), m_points.front()) > 0 ? Winding::Clockwise : Winding::Counterclockwise;
-  }
-
   // https://en.wikipedia.org/wiki/Shoelace_formula
-  float Polygon::getArea() const {
+  static float getSignedArea(const std::vector<Vector2f>& points) {
     float area = 0.0f;
 
-    for (std::size_t i = 0; i < m_points.size() - 1; ++i) {
-      area += gf::cross(m_points[i], m_points[i + 1]);
+    for (std::size_t i = 0; i < points.size() - 1; ++i) {
+      area += gf::cross(points[i], points[i + 1]);
     }
 
-    area += gf::cross(m_points.back(), m_points.front());
-    return std::abs(area / 2);
+    area += gf::cross(points.back(), points.front());
+    return area;
+  }
+
+  Winding Polygon::getWinding() const {
+    return getSignedArea(m_points) > 0 ? Winding::Clockwise : Winding::Counterclockwise;
+  }
+
+  float Polygon::getArea() const {
+    return std::abs(getSignedArea(m_points) / 2);
   }
 
   void Polygon::applyTransform(const Matrix3f& mat) {

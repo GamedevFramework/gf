@@ -180,10 +180,11 @@ inline namespace v1 {
     std::vector<Edge> edges;
 
     for (std::size_t i = 0; i < sz; ++i) {
+      std::size_t j = (i + 1) % sz;
       Edge edge;
       edge.p1 = rhs.getPoint(i);
-      edge.p2 = rhs.getPoint((i + 1) % sz);
-      edge.normal = getNormal(edge.p2, edge.p1, winding); // TODO: check why we must do getNormal(p2, p1) and not getNormal(p1, p2)
+      edge.p2 = rhs.getPoint(j);
+      edge.normal = getNormal(edge.p1, edge.p2, winding);
       edge.distance = gf::dot(edge.normal, center - edge.p1);
       edges.push_back(edge);
     }
@@ -193,7 +194,6 @@ inline namespace v1 {
     });
 
     if (best.distance > lhs.getRadius()) {
-//       Log::printDebug("Too far: %f\n", best.distance);
       return false;
     }
 
@@ -337,7 +337,9 @@ inline namespace v1 {
 
           if (x > 0) {
             return Winding::Clockwise;
-          } else if (x < 0) {
+          }
+
+          if (x < 0) {
             return Winding::Counterclockwise;
           }
         }

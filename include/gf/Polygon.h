@@ -147,6 +147,7 @@ inline namespace v1 {
      *
      * @returns The winding of the convex polygon
      * @sa gf::Winding, isConvex()
+     * @sa [Curve orientation - Wikipedia](https://en.wikipedia.org/wiki/Curve_orientation)
      */
     Winding getWinding() const;
 
