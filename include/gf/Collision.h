@@ -50,6 +50,19 @@ inline namespace v1 {
    * @brief Check if two circles collides
    *
    * @param lhs First circle
+   * @param lhsTrans Transformation of the first circle
+   * @param rhs Second circle
+   * @param rhsTrans Transformation of the second circle
+   * @param p Data to fill if there is a collision
+   * @return True if there is a collision
+   */
+  GF_API bool collides(const CircF& lhs, const Isometry& lhsTrans, const CircF& rhs, const Isometry& rhsTrans, Penetration& p);
+
+  /**
+   * @relates Penetration
+   * @brief Check if two circles collides
+   *
+   * @param lhs First circle
    * @param rhs Second circle
    * @param p Data to fill if there is a collision
    * @return True if there is a collision

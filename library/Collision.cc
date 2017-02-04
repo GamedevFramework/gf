@@ -32,8 +32,10 @@ inline namespace v1 {
 
   static constexpr float Skin = 0.15f;
 
-  bool collides(const CircF& lhs, const CircF& rhs, Penetration& p) {
-    Vector2f normal = rhs.getCenter() - lhs.getCenter();
+  bool collides(const CircF& lhs, const Isometry& lhsTrans, const CircF& rhs, const Isometry& rhsTrans, Penetration& p) {
+    Vector2f lhsCenter = gf::transform(lhsTrans, lhs.getCenter());
+    Vector2f rhsCenter = gf::transform(rhsTrans, rhs.getCenter());
+    Vector2f normal = rhsCenter - lhsCenter;
     float radiusSum = lhs.radius + rhs.radius;
     float squareDistance = gf::squareLength(normal);
 
@@ -52,6 +54,10 @@ inline namespace v1 {
     }
 
     return p.depth > Skin;
+  }
+
+  bool collides(const CircF& lhs, const CircF& rhs, Penetration& p) {
+    return collides(lhs, Isometry(), rhs, Isometry(), p);
   }
 
   bool collides(const RectF& lhs, const CircF& rhs, Penetration& p) {
