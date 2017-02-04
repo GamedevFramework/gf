@@ -82,5 +82,6 @@ int main() {
 
     renderer.display();
   }
+  /// [view_container]
 
 }
