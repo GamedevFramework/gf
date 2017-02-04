@@ -57,7 +57,7 @@ int main() {
   views.addView(screenView);
 
   // initialize the views with the initial screen size
-  views.onScreenResize(ScreenSize);
+  views.setInitialScreenSize(ScreenSize);
 
   // ...
 
