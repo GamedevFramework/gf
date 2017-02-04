@@ -204,7 +204,7 @@ inline namespace v1 {
    * at the beginning of your application and then you use this instance
    * throughout your application.
    *
-   * @snippet snippets/doc_ui.cc context
+   * @snippet snippets/doc_class_ui.cc context
    *
    * By default, the character size is 13.
    *
@@ -217,7 +217,7 @@ inline namespace v1 {
    * example, if you press on a button, the mouse event will be transmitted
    * and the library will know that you pressed a button and act accordingly.
    *
-   * @snippet snippets/doc_ui.cc events
+   * @snippet snippets/doc_class_ui.cc events
    *
    *
    * # Creating a window
@@ -230,7 +230,7 @@ inline namespace v1 {
    * properties (see gf::UIWindow) that modify the interaction with the window.
    * They are defined at the window creation.
    *
-   * @snippet snippets/doc_ui.cc window
+   * @snippet snippets/doc_class_ui.cc window
    *
    * For each begin(), you have to call end() to finish the window.
    * You can create as many windows as you want as long as they have different
@@ -277,7 +277,7 @@ inline namespace v1 {
    * In both cases, you need a variable of type gf::UICollapse to handle the
    * current state of the tree: minimized or maximized.
    *
-   * @snippet snippets/doc_ui.cc tree
+   * @snippet snippets/doc_class_ui.cc tree
    *
    * ## Groups
    *
@@ -285,7 +285,7 @@ inline namespace v1 {
    * border and a scrollbar. However, a group needs to be put in a row.
    * See groupBegin() and groupEnd().
    *
-   * @snippet snippets/doc_ui.cc group
+   * @snippet snippets/doc_class_ui.cc group
    *
    *
    * # Adding widgets and more
@@ -374,7 +374,7 @@ inline namespace v1 {
     /**
      * @brief Create a window
      *
-     * @snippet snippets/doc_ui.cc window
+     * @snippet snippets/doc_class_ui.cc window
      *
      * @param title The title of the window
      * @param bounds The area of the window
@@ -388,7 +388,7 @@ inline namespace v1 {
     /**
      * @brief Finish a window
      *
-     * @snippet snippets/doc_ui.cc window
+     * @snippet snippets/doc_class_ui.cc window
      *
      * @sa begin()
      */
@@ -484,7 +484,7 @@ inline namespace v1 {
      * The only allowed flags are UIWindow::Title, UIWindow::Border,
      * UIWindow::NoScrollbar.
      *
-     * @snippet snippets/doc_ui.cc group
+     * @snippet snippets/doc_class_ui.cc group
      *
      * @param title The title of the group
      * @param flags The properties of the group
@@ -497,7 +497,7 @@ inline namespace v1 {
     /**
      * @brief Finish a group
      *
-     * @snippet snippets/doc_ui.cc group
+     * @snippet snippets/doc_class_ui.cc group
      *
      * @sa groupBegin()
      */
@@ -537,7 +537,7 @@ inline namespace v1 {
     /**
      * @brief Start a tree layout
      *
-     * @snippet snippets/doc_ui.cc tree
+     * @snippet snippets/doc_class_ui.cc tree
      *
      * @param type The type of tree: tab or node
      * @param title The title of the tree
@@ -551,7 +551,7 @@ inline namespace v1 {
     /**
      * @brief Finish a tree layout
      *
-     * @snippet snippets/doc_ui.cc tree
+     * @snippet snippets/doc_class_ui.cc tree
      *
      * @sa treePush()
      */
