@@ -37,7 +37,7 @@ int main() {
   static constexpr gf::Vector2u ScreenSize(640, 480);
   static const gf::RectF World({ 0.0f, 0.0f }, { 15.0f, 15.0f });
 
-  gf::Window window("40_collision", ScreenSize, ~gf::WindowHints::Resizable);
+  gf::Window window("41_collision", ScreenSize, ~gf::WindowHints::Resizable);
   gf::RenderWindow renderer(window);
 
   gf::ExtendView view(World);

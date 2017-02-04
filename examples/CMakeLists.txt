@@ -33,7 +33,7 @@ add_gf_example(30_postprocessing)
 add_gf_example(31_pipeline)
 add_gf_example(32_colorblind)
 
-add_gf_example(40_collision)
-add_gf_example(41_ui)
+add_gf_example(40_ui)
+add_gf_example(41_collisions)
 
 add_gf_example(98_logo)

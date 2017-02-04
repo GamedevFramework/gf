@@ -682,7 +682,7 @@ static void overview(gf::UI& ui) {
 }
 
 int main() {
-  gf::Window window("41_ui", { 1024, 768 }, ~gf::WindowHints::Resizable);
+  gf::Window window("40_ui", { 1024, 768 }, ~gf::WindowHints::Resizable);
   gf::RenderWindow renderer(window);
 
   gf::Font font;
