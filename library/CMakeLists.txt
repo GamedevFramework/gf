@@ -126,6 +126,9 @@ add_library(gf0 SHARED
   Model.cc
   ModelContainer.cc
   Models.cc
+  PhysicsBody.cc
+  PhysicsGeometry.cc
+  PhysicsModel.cc
   ResourceManager.cc
   # ui
   UI.cc
