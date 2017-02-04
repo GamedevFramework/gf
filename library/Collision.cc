@@ -24,6 +24,7 @@
 
 #include <queue>
 
+#include <gf/Isometry.h>
 #include <gf/Log.h>
 
 namespace gf {
@@ -172,10 +173,10 @@ inline namespace v1 {
     return ret;
   }
 
-  bool collides(const CircF& lhs, const Polygon& rhs, Penetration& p) {
+  bool collides(const CircF& lhs, const Isometry& lhsTrans, const Polygon& rhs, const Isometry& rhsTrans, Penetration& p) {
     std::size_t sz = rhs.getPointCount();
     Winding winding = rhs.getWinding();
-    Vector2f center = lhs.getCenter();
+    Vector2f center = gf::inverseTransform(rhsTrans, gf::transform(lhsTrans, lhs.getCenter()));
 
     std::vector<Edge> edges;
 
@@ -198,7 +199,7 @@ inline namespace v1 {
     }
 
     if (best.distance < Epsilon) {
-      p.normal = -best.normal;
+      p.normal = gf::transform(rhsTrans.rotation, -best.normal);
       p.depth = lhs.getRadius();
       return true;
     }
@@ -208,7 +209,7 @@ inline namespace v1 {
         return false;
       }
 
-      p.normal = gf::normalize(best.p1 - center);
+      p.normal = gf::transform(rhsTrans.rotation, gf::normalize(best.p1 - center));
       p.depth = lhs.getRadius() - gf::euclideanDistance(center, best.p1);
       return true;
     }
@@ -218,20 +219,28 @@ inline namespace v1 {
         return false;
       }
 
-      p.normal = gf::normalize(best.p2 - center);
+      p.normal = gf::transform(rhsTrans.rotation, gf::normalize(best.p2 - center));
       p.depth = lhs.getRadius() - gf::euclideanDistance(center, best.p2);
       return true;
     }
 
-    p.normal = -best.normal;
+    p.normal = gf::transform(rhsTrans.rotation, -best.normal);
     p.depth = lhs.getRadius() - best.distance;
     return true;
   }
 
-  bool collides(const Polygon& lhs, const CircF& rhs, Penetration& p) {
-    bool ret = collides(rhs, lhs, p);
+  bool collides(const CircF& lhs, const Polygon& rhs, Penetration& p) {
+    return collides(lhs, Isometry(), rhs, Isometry(), p);
+  }
+
+  bool collides(const Polygon& lhs, const Isometry& lhsTrans, const CircF& rhs, const Isometry& rhsTrans, Penetration& p) {
+    bool ret = collides(rhs, rhsTrans, lhs, lhsTrans, p);
     p.normal = -p.normal;
     return ret;
+  }
+
+  bool collides(const Polygon& lhs, const CircF& rhs, Penetration& p) {
+    return collides(lhs, Isometry(), rhs, Isometry(), p);
   }
 
   /*
@@ -355,8 +364,8 @@ inline namespace v1 {
 
   }
 
-  static Vector2f getSupport(const Polygon& lhs, const Polygon& rhs, Vector2f direction) {
-    return lhs.getSupport(direction) - rhs.getSupport(-direction);
+  static Vector2f getSupport(const Polygon& lhs, const Isometry& lhsTrans, const Polygon& rhs, const Isometry& rhsTrans, Vector2f direction) {
+    return lhs.getSupport(direction, lhsTrans) - rhs.getSupport(-direction, rhsTrans);
   }
 
   static bool checkSimplex(Simplex& simplex, Vector2f& direction) {
@@ -401,16 +410,16 @@ inline namespace v1 {
 
   static constexpr unsigned MaxIterations = 100;
 
-  bool collides(const Polygon& lhs, const Polygon& rhs, Penetration& p) {
+  bool collides(const Polygon& lhs, const Isometry& lhsTrans, const Polygon& rhs, const Isometry& rhsTrans, Penetration& p) {
     /*
      * Gilbert-Johnson-Keerthi (GJK) algorithm
      * adapted from http://www.dyn4j.org/2010/04/gjk-gilbert-johnson-keerthi/
      */
 
-    Vector2f direction = rhs.getCenter() - lhs.getCenter();
+    Vector2f direction = gf::transform(rhsTrans, rhs.getCenter()) - gf::transform(lhsTrans, lhs.getCenter());
 
     Simplex simplex;
-    simplex.add(getSupport(lhs, rhs, direction));
+    simplex.add(getSupport(lhs, lhsTrans, rhs, rhsTrans, direction));
 
     if (gf::dot(simplex.getLast(), direction) <= 0.0f) {
       return false;
@@ -419,7 +428,7 @@ inline namespace v1 {
     direction = -direction;
 
     for (;;) {
-      simplex.add(getSupport(lhs, rhs, direction));
+      simplex.add(getSupport(lhs, lhsTrans, rhs, rhsTrans, direction));
 
       if (gf::dot(simplex.getLast(), direction) <= 0.0f) {
         return false;
@@ -442,7 +451,7 @@ inline namespace v1 {
 
     for (unsigned i = 0; i < MaxIterations; ++i) {
       edge = expandingSimplex.getClosestEdge();
-      point = getSupport(lhs, rhs, edge.normal);
+      point = getSupport(lhs, lhsTrans, rhs, rhsTrans, edge.normal);
       float distance = gf::dot(point, edge.normal);
 
       if (distance - edge.distance < Skin) {
@@ -459,5 +468,8 @@ inline namespace v1 {
     return true;
   }
 
+  bool collides(const Polygon& lhs, const Polygon& rhs, Penetration& p) {
+    return collides(lhs, Isometry(), rhs, Isometry(), p);
+  }
 }
 }
