@@ -39,7 +39,7 @@ inline namespace v1 {
    */
   template<typename T, std::size_t N>
   inline
-  bool operator==(const Vector<T, N>& lhs, const Vector<T, N>& rhs) {
+  bool operator==(Vector<T, N> lhs, Vector<T, N> rhs) {
     for (std::size_t i = 0; i < N; ++i) {
       if (lhs.data[i] != rhs.data[i]) {
         return false;
@@ -55,7 +55,7 @@ inline namespace v1 {
    */
   template<typename T, std::size_t N>
   inline
-  bool operator!=(const Vector<T, N>& lhs, const Vector<T, N>& rhs) {
+  bool operator!=(Vector<T, N> lhs, Vector<T, N> rhs) {
     return !(lhs == rhs);
   }
 
@@ -65,7 +65,7 @@ inline namespace v1 {
    */
   template<typename T, std::size_t N>
   inline
-  Vector<T, N> operator-(const Vector<T, N>& val) {
+  Vector<T, N> operator-(Vector<T, N> val) {
     Vector<T, N> out;
 
     for (std::size_t i = 0; i < N; ++i) {
@@ -81,7 +81,7 @@ inline namespace v1 {
    */
   template<typename T, typename U, std::size_t N>
   inline
-  Vector<typename std::common_type<T,U>::type, N> operator+(const Vector<T, N>& lhs, const Vector<U, N>& rhs) {
+  Vector<typename std::common_type<T,U>::type, N> operator+(Vector<T, N> lhs, Vector<U, N> rhs) {
     Vector<typename std::common_type<T,U>::type, N> out;
 
     for (std::size_t i = 0; i < N; ++i) {
@@ -97,7 +97,7 @@ inline namespace v1 {
    */
   template<typename T, typename U, std::size_t N>
   inline
-  Vector<T, N>& operator+=(Vector<T, N>& lhs, const Vector<U, N>& rhs) {
+  Vector<T, N>& operator+=(Vector<T, N>& lhs, Vector<U, N> rhs) {
     for (std::size_t i = 0; i < N; ++i) {
       lhs.data[i] += rhs.data[i];
     }
@@ -111,7 +111,7 @@ inline namespace v1 {
    */
   template<typename T, typename U, std::size_t N, typename E = typename std::enable_if<std::is_arithmetic<U>::value, U>::type>
   inline
-  Vector<typename std::common_type<T,U>::type, N> operator+(const Vector<T, N>& lhs, U rhs) {
+  Vector<typename std::common_type<T,U>::type, N> operator+(Vector<T, N> lhs, U rhs) {
     Vector<typename std::common_type<T,U>::type, N> out;
 
     for (std::size_t i = 0; i < N; ++i) {
@@ -127,7 +127,7 @@ inline namespace v1 {
    */
   template<typename T, typename U, std::size_t N, typename E = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
   inline
-  Vector<typename std::common_type<T,U>::type, N> operator+(T lhs, const Vector<U, N>& rhs) {
+  Vector<typename std::common_type<T,U>::type, N> operator+(T lhs, Vector<U, N> rhs) {
     Vector<typename std::common_type<T,U>::type, N> out;
 
     for (std::size_t i = 0; i < N; ++i) {
@@ -144,7 +144,7 @@ inline namespace v1 {
    */
   template<typename T, typename U, std::size_t N>
   inline
-  Vector<typename std::common_type<T,U>::type, N> operator-(const Vector<T, N>& lhs, const Vector<U, N>& rhs) {
+  Vector<typename std::common_type<T,U>::type, N> operator-(Vector<T, N> lhs, Vector<U, N> rhs) {
     Vector<typename std::common_type<T,U>::type, N> out;
 
     for (std::size_t i = 0; i < N; ++i) {
@@ -160,7 +160,7 @@ inline namespace v1 {
    */
   template<typename T, typename U, std::size_t N>
   inline
-  Vector<T, N>& operator-=(Vector<T, N>& lhs, const Vector<U, N>& rhs) {
+  Vector<T, N>& operator-=(Vector<T, N>& lhs, Vector<U, N> rhs) {
     for (std::size_t i = 0; i < N; ++i) {
       lhs.data[i] -= rhs.data[i];
     }
@@ -175,7 +175,7 @@ inline namespace v1 {
    */
   template<typename T, typename U, std::size_t N, typename E = typename std::enable_if<std::is_arithmetic<U>::value, U>::type>
   inline
-  Vector<typename std::common_type<T,U>::type, N> operator-(const Vector<T, N>& lhs, U rhs) {
+  Vector<typename std::common_type<T,U>::type, N> operator-(Vector<T, N> lhs, U rhs) {
     Vector<typename std::common_type<T,U>::type, N> out;
 
     for (std::size_t i = 0; i < N; ++i) {
@@ -191,7 +191,7 @@ inline namespace v1 {
    */
   template<typename T, typename U, std::size_t N, typename E = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
   inline
-  Vector<typename std::common_type<T,U>::type, N> operator-(T lhs, const Vector<U, N>& rhs) {
+  Vector<typename std::common_type<T,U>::type, N> operator-(T lhs, Vector<U, N> rhs) {
     Vector<typename std::common_type<T,U>::type, N> out;
 
     for (std::size_t i = 0; i < N; ++i) {
@@ -208,7 +208,7 @@ inline namespace v1 {
    */
   template<typename T, typename U, std::size_t N>
   inline
-  Vector<typename std::common_type<T,U>::type, N> operator*(const Vector<T, N>& lhs, const Vector<U, N>& rhs) {
+  Vector<typename std::common_type<T,U>::type, N> operator*(Vector<T, N> lhs, Vector<U, N> rhs) {
     Vector<typename std::common_type<T,U>::type, N> out;
 
     for (std::size_t i = 0; i < N; ++i) {
@@ -224,7 +224,7 @@ inline namespace v1 {
    */
   template<typename T, typename U, std::size_t N>
   inline
-  Vector<T, N>& operator*=(Vector<T, N>& lhs, const Vector<U, N>& rhs) {
+  Vector<T, N>& operator*=(Vector<T, N>& lhs, Vector<U, N> rhs) {
     for (std::size_t i = 0; i < N; ++i) {
       lhs.data[i] *= rhs.data[i];
     }
@@ -238,7 +238,7 @@ inline namespace v1 {
    */
   template<typename T, typename U, std::size_t N, typename E = typename std::enable_if<std::is_arithmetic<U>::value, U>::type>
   inline
-  Vector<typename std::common_type<T,U>::type, N> operator*(const Vector<T, N>& lhs, U rhs) {
+  Vector<typename std::common_type<T,U>::type, N> operator*(Vector<T, N> lhs, U rhs) {
     Vector<typename std::common_type<T,U>::type, N> out;
 
     for (std::size_t i = 0; i < N; ++i) {
@@ -268,7 +268,7 @@ inline namespace v1 {
    */
   template<typename T, typename U, std::size_t N, typename E = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
   inline
-  Vector<typename std::common_type<T,U>::type, N> operator*(T lhs, const Vector<U, N>& rhs) {
+  Vector<typename std::common_type<T,U>::type, N> operator*(T lhs, Vector<U, N> rhs) {
     Vector<typename std::common_type<T,U>::type, N> out;
 
     for (std::size_t i = 0; i < N; ++i) {
@@ -284,7 +284,7 @@ inline namespace v1 {
    */
   template<typename T, typename U, std::size_t N>
   inline
-  Vector<typename std::common_type<T,U>::type, N> operator/(const Vector<T, N>& lhs, const Vector<U, N>& rhs) {
+  Vector<typename std::common_type<T,U>::type, N> operator/(Vector<T, N> lhs, Vector<U, N> rhs) {
     Vector<typename std::common_type<T,U>::type, N> out;
 
     for (std::size_t i = 0; i < N; ++i) {
@@ -300,7 +300,7 @@ inline namespace v1 {
    */
   template<typename T, typename U, std::size_t N>
   inline
-  Vector<T, N>& operator/=(Vector<T, N>& lhs, const Vector<U, N>& rhs) {
+  Vector<T, N>& operator/=(Vector<T, N>& lhs, Vector<U, N> rhs) {
     for (std::size_t i = 0; i < N; ++i) {
       lhs.data[i] /= rhs.data[i];
     }
@@ -314,7 +314,7 @@ inline namespace v1 {
    */
   template<typename T, typename U, std::size_t N, typename E = typename std::enable_if<std::is_arithmetic<U>::value, U>::type>
   inline
-  Vector<typename std::common_type<T,U>::type, N> operator/(const Vector<T, N>& lhs, U rhs) {
+  Vector<typename std::common_type<T,U>::type, N> operator/(Vector<T, N> lhs, U rhs) {
     Vector<typename std::common_type<T,U>::type, N> out;
 
     for (std::size_t i = 0; i < N; ++i) {
@@ -344,7 +344,7 @@ inline namespace v1 {
    */
   template<typename T, typename U, std::size_t N, typename E = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
   inline
-  Vector<typename std::common_type<T,U>::type, N> operator/(T lhs, const Vector<U, N>& rhs) {
+  Vector<typename std::common_type<T,U>::type, N> operator/(T lhs, Vector<U, N> rhs) {
     Vector<typename std::common_type<T,U>::type, N> out;
 
     for (std::size_t i = 0; i < N; ++i) {
@@ -360,7 +360,7 @@ inline namespace v1 {
    */
   template<std::size_t N>
   inline
-  Vector<bool, N> operator||(const Vector<bool, N>& lhs, const Vector<bool, N>& rhs) {
+  Vector<bool, N> operator||(Vector<bool, N> lhs, Vector<bool, N> rhs) {
     Vector<bool, N> out;
 
     for (std::size_t i = 0; i < N; ++i) {
@@ -376,7 +376,7 @@ inline namespace v1 {
    */
   template<std::size_t N>
   inline
-  Vector<bool, N> operator&&(const Vector<bool, N>& lhs, const Vector<bool, N>& rhs) {
+  Vector<bool, N> operator&&(Vector<bool, N> lhs, Vector<bool, N> rhs) {
     Vector<bool, N> out;
 
     for (std::size_t i = 0; i < N; ++i) {
@@ -400,7 +400,7 @@ inline namespace v1 {
    */
   template<typename T, std::size_t N>
   inline
-  T dot(const Vector<T, N>& lhs, const Vector<T, N>& rhs) {
+  T dot(Vector<T, N> lhs, Vector<T, N> rhs) {
     T out{0};
 
     for (std::size_t i = 0; i < N; ++i) {
@@ -416,7 +416,7 @@ inline namespace v1 {
    */
   template<typename T, std::size_t N>
   inline
-  Vector<T, N> min(const Vector<T, N>& lhs, const Vector<T, N>& rhs) {
+  Vector<T, N> min(Vector<T, N> lhs, Vector<T, N> rhs) {
     Vector<T, N> out;
 
     for (std::size_t i = 0; i < N; ++i) {
@@ -432,7 +432,7 @@ inline namespace v1 {
    */
   template<typename T, std::size_t N>
   inline
-  Vector<T, N> max(const Vector<T, N>& lhs, const Vector<T, N>& rhs) {
+  Vector<T, N> max(Vector<T, N> lhs, Vector<T, N> rhs) {
     Vector<T, N> out;
 
     for (std::size_t i = 0; i < N; ++i) {
@@ -448,7 +448,7 @@ inline namespace v1 {
    */
   template<typename T, std::size_t N>
   inline
-  Vector<T, N> abs(const Vector<T, N>& val) {
+  Vector<T, N> abs(Vector<T, N> val) {
     Vector<T, N> out;
 
     for (std::size_t i = 0; i < N; ++i) {
@@ -465,7 +465,7 @@ inline namespace v1 {
    */
   template<typename T, std::size_t N>
   inline
-  Vector<bool, N> equals(const Vector<T, N>& lhs, const Vector<T, N>& rhs) {
+  Vector<bool, N> equals(Vector<T, N> lhs, Vector<T, N> rhs) {
     Vector<bool, N> out;
 
     for (std::size_t i = 0; i < N; ++i) {
@@ -481,7 +481,7 @@ inline namespace v1 {
    */
   template<typename T, std::size_t N>
   inline
-  Vector<bool, N> lessThan(const Vector<T, N>& lhs, const Vector<T, N>& rhs) {
+  Vector<bool, N> lessThan(Vector<T, N> lhs, Vector<T, N> rhs) {
     Vector<bool, N> out;
 
     for (std::size_t i = 0; i < N; ++i) {
@@ -497,7 +497,7 @@ inline namespace v1 {
    */
   template<typename T, std::size_t N>
   inline
-  Vector<bool, N> greaterThan(const Vector<T, N>& lhs, const Vector<T, N>& rhs) {
+  Vector<bool, N> greaterThan(Vector<T, N> lhs, Vector<T, N> rhs) {
     Vector<bool, N> out;
 
     for (std::size_t i = 0; i < N; ++i) {
@@ -513,7 +513,7 @@ inline namespace v1 {
    */
   template<typename T, std::size_t N>
   inline
-  Vector<T, N> select(const Vector<bool, N>& cond, const Vector<T, N>& lhs, const Vector<T, N>& rhs) {
+  Vector<T, N> select(Vector<bool, N> cond, Vector<T, N> lhs, Vector<T, N> rhs) {
     Vector<T, N> out;
 
     for (std::size_t i = 0; i < N; ++i) {
@@ -532,7 +532,7 @@ inline namespace v1 {
    */
   template<typename T, std::size_t N>
   inline
-  Vector<T, N> clamp(const Vector<T, N>& val, const Vector<T, N>& lo, const Vector<T, N>& hi) {
+  Vector<T, N> clamp(Vector<T, N> val, Vector<T, N> lo, Vector<T, N> hi) {
     Vector<T, N> out;
 
     for (std::size_t i = 0; i < N; ++i) {
@@ -550,7 +550,7 @@ inline namespace v1 {
    */
   template<typename T, std::size_t N>
   inline
-  Vector<T, N> clamp(const Vector<T, N>& val, T lo, T hi) {
+  Vector<T, N> clamp(Vector<T, N> val, T lo, T hi) {
     Vector<T, N> out;
 
     for (std::size_t i = 0; i < N; ++i) {
@@ -566,7 +566,7 @@ inline namespace v1 {
    */
   template<typename T, typename U, std::size_t N>
   inline
-  Vector<typename std::common_type<T,U>::type, N> lerp(const Vector<T, N>& lhs, const Vector<T, N>& rhs, U t) {
+  Vector<typename std::common_type<T,U>::type, N> lerp(Vector<T, N> lhs, Vector<T, N> rhs, U t) {
     return (1 - t) * lhs + t * rhs;
   }
 
@@ -588,7 +588,7 @@ inline namespace v1 {
    */
   template<typename T, std::size_t N>
   inline
-  T manhattanLength(const Vector<T, N>& vec) {
+  T manhattanLength(Vector<T, N> vec) {
     T out{0};
 
     for (std::size_t i = 0; i < N; ++i) {
@@ -614,7 +614,7 @@ inline namespace v1 {
    */
   template<typename T, std::size_t N>
   inline
-  T squareLength(const Vector<T, N>& vec) {
+  T squareLength(Vector<T, N> vec) {
     T out{0};
 
     for (std::size_t i = 0; i < N; ++i) {
@@ -642,7 +642,7 @@ inline namespace v1 {
    */
   template<typename T, std::size_t N>
   inline
-  T euclideanLength(const Vector<T, N>& vec) {
+  T euclideanLength(Vector<T, N> vec) {
     return std::sqrt(squareLength(vec));
   }
 
@@ -651,13 +651,13 @@ inline namespace v1 {
 
   template<>
   inline
-  float euclideanLength<float, 2>(const Vector<float, 2>& vec) {
+  float euclideanLength<float, 2>(Vector<float, 2> vec) {
     return std::hypot(vec.x, vec.y);
   }
 
   template<>
   inline
-  double euclideanLength<double, 2>(const Vector<double, 2>& vec) {
+  double euclideanLength<double, 2>(Vector<double, 2> vec) {
     return std::hypot(vec.x, vec.y);
   }
 #endif
@@ -680,7 +680,7 @@ inline namespace v1 {
    */
   template<typename T, std::size_t N>
   inline
-  T chebyshevLength(const Vector<T, N>& vec) {
+  T chebyshevLength(Vector<T, N> vec) {
     T out = std::abs(vec.data[0]);
 
     for (std::size_t i = 1; i < N; ++i) {
@@ -709,7 +709,7 @@ inline namespace v1 {
    */
   template<typename T, std::size_t N>
   inline
-  T naturalLength(const Vector<T, N>& vec) {
+  T naturalLength(Vector<T, N> vec) {
     return manhattanLength(vec) + squareLength(vec);
   }
 
@@ -728,7 +728,7 @@ inline namespace v1 {
    */
   template<typename T, std::size_t N>
   inline
-  T manhattanDistance(const Vector<T, N>& lhs, const Vector<T, N>& rhs) {
+  T manhattanDistance(Vector<T, N> lhs, Vector<T, N> rhs) {
     return manhattanLength(lhs - rhs);
   }
 
@@ -747,7 +747,7 @@ inline namespace v1 {
    */
   template<typename T, std::size_t N>
   inline
-  T squareDistance(const Vector<T, N>& lhs, const Vector<T, N>& rhs) {
+  T squareDistance(Vector<T, N> lhs, Vector<T, N> rhs) {
     return squareLength(lhs - rhs);
   }
 
@@ -766,7 +766,7 @@ inline namespace v1 {
    */
   template<typename T, std::size_t N>
   inline
-  T euclideanDistance(const Vector<T, N>& lhs, const Vector<T, N>& rhs) {
+  T euclideanDistance(Vector<T, N> lhs, Vector<T, N> rhs) {
     return euclideanLength(lhs - rhs);
   }
 
@@ -785,7 +785,7 @@ inline namespace v1 {
    */
   template<typename T, std::size_t N>
   inline
-  T chebyshevDistance(const Vector<T, N>& lhs, const Vector<T, N>& rhs) {
+  T chebyshevDistance(Vector<T, N> lhs, Vector<T, N> rhs) {
     return chebyshevLength(lhs - rhs);
   }
 
@@ -804,7 +804,7 @@ inline namespace v1 {
    */
   template<typename T, std::size_t N>
   inline
-  T naturalDistance(const Vector<T, N>& lhs, const Vector<T, N>& rhs) {
+  T naturalDistance(Vector<T, N> lhs, Vector<T, N> rhs) {
     return naturalLength(lhs - rhs);
   }
 
@@ -825,7 +825,7 @@ inline namespace v1 {
    */
   template<typename T, std::size_t N>
   inline
-  Vector<T, N> normalize(const Vector<T, N>& vec) {
+  Vector<T, N> normalize(Vector<T, N> vec) {
     T length = euclideanLength(vec);
     return vec / length;
   }
@@ -946,7 +946,7 @@ inline namespace v1 {
    */
   template<typename T>
   constexpr
-  Vector<T, 3> cross(const Vector<T, 3>& lhs, const Vector<T, 3>& rhs) {
+  Vector<T, 3> cross(Vector<T, 3> lhs, Vector<T, 3> rhs) {
     return {
       lhs.y * rhs.z - lhs.z * rhs.y,
       lhs.z * rhs.x - lhs.x * rhs.z,

@@ -1157,7 +1157,7 @@ inline namespace v1 {
    * @sa gf::Distance2, gf::Distance3
    */
   template<typename T, std::size_t N>
-  using Distance = T (*)(const Vector<T, N>&, const Vector<T, N>&);
+  using Distance = T (*)(Vector<T, N>, Vector<T, N>);
 
   /**
    * @ingroup core
