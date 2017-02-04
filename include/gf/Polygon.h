@@ -33,6 +33,8 @@ namespace gf {
 inline namespace v1 {
 #endif
 
+  class Isometry;
+
   /**
    * @ingroup core
    * @brief The direction of the rotation
@@ -103,6 +105,15 @@ inline namespace v1 {
      * @returns The center of the polygon
      */
     Vector2f getCenter() const;
+
+    /**
+     * @brief Get the farthest point in a direction
+     *
+     * @param direction The direction to search (in world coordinates)
+     * @param isometry The transformation of the polygon
+     * @returns The farthest point of the polygon in the given direction
+     */
+    Vector2f getSupport(Vector2f direction, const Isometry& isometry) const;
 
     /**
      * @brief Get the farthest point in a direction

@@ -25,6 +25,7 @@
 #include <algorithm>
 #include <numeric>
 
+#include <gf/Isometry.h>
 #include <gf/Transform.h>
 #include <gf/VectorOps.h>
 
@@ -57,11 +58,20 @@ inline namespace v1 {
     return std::accumulate(m_points.begin(), m_points.end(), Vector2f(0.0f, 0.0f)) / m_points.size();
   }
 
-  Vector2f Polygon::getSupport(Vector2f direction) const {
+  Vector2f Polygon::getSupport(Vector2f direction, const Isometry& isometry) const {
     assert(!m_points.empty());
-    return *std::max_element(m_points.begin(), m_points.end(), [direction](const Vector2f& lhs, const Vector2f& rhs){
+    // get direction in the local coordinates
+    direction = gf::inverseTransform(isometry.rotation, direction);
+    // compute support
+    gf::Vector2f point = *std::max_element(m_points.begin(), m_points.end(), [direction](const Vector2f& lhs, const Vector2f& rhs){
       return gf::dot(direction, lhs) < gf::dot(direction, rhs);
     });
+    // return support in the world coordinates
+    return gf::transform(isometry, point);
+  }
+
+  Vector2f Polygon::getSupport(Vector2f direction) const {
+    return getSupport(direction, Isometry());
   }
 
   const Vector2f *Polygon::begin() const {
