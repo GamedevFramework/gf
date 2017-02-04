@@ -46,7 +46,7 @@ inline namespace v1 {
    * @sa gf::ResourceManager
    */
   template<typename T>
-  class GF_API ResourceCache {
+  class ResourceCache {
   public:
     /**
      * @brief A resource loader
