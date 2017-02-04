@@ -23,11 +23,11 @@
 
 #include <cstdint>
 #include <functional>
-#include <initializer_list>
 #include <map>
 #include <type_traits>
 #include <vector>
 
+#include "ArrayRef.h"
 #include "Message.h"
 #include "Portability.h"
 
@@ -215,7 +215,7 @@ inline namespace v1 {
      *
      * @param ids The list of handler ids
      */
-    void removeHandlers(std::initializer_list<MessageHandlerId> ids) {
+    void removeHandlers(ArrayRef<MessageHandlerId> ids) {
       for (auto id : ids) {
         removeHandler(id);
       }
