@@ -3,6 +3,7 @@ macro(add_gf_snippet NAME)
   target_link_libraries("${NAME}" gf0)
 endmacro()
 
+add_gf_snippet(doc_class_view_container)
 add_gf_snippet(doc_full_template)
 add_gf_snippet(doc_index)
 add_gf_snippet(doc_it_moves)
