@@ -21,6 +21,7 @@
 #ifndef GF_ARRAY_REF_H
 #define GF_ARRAY_REF_H
 
+#include <array>
 #include <vector>
 
 namespace gf {
@@ -71,6 +72,19 @@ inline namespace v1 {
      * @param values The vector of elements
      */
     ArrayRef(const std::vector<T>& values)
+    : m_data(values.data())
+    , m_size(values.size())
+    {
+
+    }
+
+    /**
+     * @brief Constructor from a `std::array`
+     *
+     * @param values The array of elements
+     */
+    template<std::size_t N>
+    ArrayRef(const std::array<T,N>& values)
     : m_data(values.data())
     , m_size(values.size())
     {
