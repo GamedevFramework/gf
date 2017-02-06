@@ -422,7 +422,8 @@ inline namespace v1 {
      * adapted from http://www.dyn4j.org/2010/04/gjk-gilbert-johnson-keerthi/
      */
 
-    Vector2f direction = gf::transform(rhsTrans, rhs.getCenter()) - gf::transform(lhsTrans, lhs.getCenter());
+    // Vector2f direction = gf::transform(rhsTrans, rhs.getCenter()) - gf::transform(lhsTrans, lhs.getCenter());
+    Vector2f direction(1,0);
 
     Simplex simplex;
     simplex.add(getSupport(lhs, lhsTrans, rhs, rhsTrans, direction));

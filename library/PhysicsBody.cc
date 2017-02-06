@@ -32,131 +32,6 @@
 namespace gf {
 inline namespace v1 {
 
-#if 0
-  /*
-   * Geometry
-   */
-
-  class PhysicsBody::Geometry {
-  public:
-    enum class Type {
-      Circle,
-      Polygon,
-    };
-
-    Geometry(Type type)
-    : m_type(type)
-    {
-
-    }
-
-    virtual ~Geometry() {
-      // nothing to do
-    }
-
-    Type getType() const {
-      return m_type;
-    }
-
-    virtual float getArea() const = 0;
-    virtual void render(RenderTarget& target, Vector2f position, float angle) = 0;
-
-  private:
-    Type m_type;
-  };
-
-  namespace {
-    class CircleGeometry : public PhysicsBody::Geometry {
-    public:
-      CircleGeometry(const CircF& geometry)
-      : PhysicsBody::Geometry(PhysicsBody::PhysicsGeometry::Type::Circle)
-      , m_radius(geometry.radius)
-      {
-
-      }
-
-      float getRadius() const {
-        return m_radius;
-      }
-
-      CircF getShape(const Matrix3f& transform) {
-        Vector2f center(transform.xz, transform.yz);
-        return CircF(center, m_radius);
-      }
-
-      virtual float getArea() const override {
-        return Pi * gf::square(m_radius);
-      }
-
-      virtual void render(RenderTarget& target, Vector2f position, float angle) override {
-        (void) angle;
-
-        CircleShape shape(CircF(position, m_radius));
-        shape.setColor(Color::Transparent);
-        shape.setOutlineColor(Color::Red);
-        shape.setOutlineThickness(1.0f);
-        target.draw(shape);
-      }
-
-    private:
-      float m_radius;
-    };
-
-    class PolygonGeometry : public PhysicsBody::Geometry {
-    public:
-      PolygonGeometry(const RectF& geometry)
-      : PhysicsBody::Geometry(PhysicsBody::PhysicsGeometry::Type::Polygon)
-      , m_points({ geometry.getTopLeft(), geometry.getBottomLeft(), geometry.getBottomRight(), geometry.getTopRight() })
-      {
-        translate(geometry.getCenter());
-      }
-
-      PolygonGeometry(const Polygon& geometry)
-      : PhysicsBody::Geometry(PhysicsBody::PhysicsGeometry::Type::Polygon)
-      , m_points(geometry.begin(), geometry.end())
-      {
-        translate(geometry.getCenter());
-      }
-
-      virtual float getArea() const override {
-        Polygon polygon(m_points.begin(), m_points.end());
-        return polygon.getArea();
-      }
-
-      virtual void render(RenderTarget& target, Vector2f position, float angle) override {
-        ConvexShape shape(Polygon(m_points.begin(), m_points.end()));
-        shape.setPosition(position);
-        shape.setRotation(angle);
-        shape.setColor(Color::Transparent);
-        shape.setOutlineColor(Color::Red);
-        shape.setOutlineThickness(1.0f);
-        target.draw(shape);
-      }
-
-      Polygon getShape(const Matrix3f& transform) {
-        Polygon shape(m_points.begin(), m_points.end());
-        shape.applyTransform(transform);
-        return shape;
-      }
-
-    private:
-      void translate(gf::Vector2f center) {
-        for (auto& p : m_points) {
-          p -= center;
-        }
-      }
-
-    private:
-      std::vector<Vector2f> m_points;
-    };
-
-  }
-#endif
-
-  /*
-   * PhysicsBody
-   */
-
   static constexpr float DefaultRestitution = 0.0f;
   static constexpr float DefaultStaticFriction = 0.0f;
   static constexpr float DefaultDynamicFriction = 0.0f;
@@ -166,6 +41,7 @@ inline namespace v1 {
   , m_position(0.0f, 0.0f)
   , m_linearVelocity(0.0f, 0.0f)
   , m_acceleration(0.0f, 0.0f)
+  , m_angle(0.0f)
   , m_inverseMass(1.0f)
   , m_restitution(DefaultRestitution)
   , m_staticFriction(DefaultStaticFriction)
@@ -190,7 +66,7 @@ inline namespace v1 {
     m_acceleration = Vector2f(0.0f, 0.0f);
   }
 
-  void PhysicsBody::render(RenderTarget& target) {
+  void PhysicsBody::render(RenderTarget& target) const {
     m_geometry.renderAt(target, getPosition(), getAngle());
   }
 
@@ -210,17 +86,8 @@ inline namespace v1 {
     m_acceleration += force * m_inverseMass;
   }
 
-  float PhysicsBody::getAngle() const {
-    return gf::angle(m_linearVelocity);
-  }
-
-  void PhysicsBody::setAngle(float angle) {
-    m_linearVelocity = gf::unit(angle) * gf::euclideanLength(m_linearVelocity);
-  }
-
-  void PhysicsBody::turn(float arc) {
-    Matrix3f mat = gf::rotation(arc);
-    m_linearVelocity = gf::transform(mat, m_linearVelocity);
+  void PhysicsBody::setVelocityFromAngle() {
+    m_linearVelocity = gf::unit(m_angle) * gf::euclideanLength(m_linearVelocity);
   }
 
   void PhysicsBody::setDensity(float density) {
@@ -243,6 +110,16 @@ inline namespace v1 {
   }
 
   bool PhysicsBody::collidesWith(const PhysicsBody& other, Penetration& p) const {
+    CircF circle = m_geometry.getBoundingCircle();
+    circle.center = gf::transform(m_transform, circle.center);
+
+    CircF otherCircle = other.m_geometry.getBoundingCircle();
+    otherCircle.center = gf::transform(other.m_transform, otherCircle.center);
+
+    if (!circle.intersects(otherCircle)) {
+      return false;
+    }
+
     switch (m_geometry.getType()) {
       case PhysicsGeometry::Type::Circle: {
         const CircF& circle = static_cast<const CircleGeometry&>(m_geometry).get();

@@ -82,6 +82,15 @@ inline namespace v1 {
     virtual float getArea() const = 0;
 
     /**
+     * @brief Get a bouding circle
+     *
+     * The circle may not be the [minimum bouding circle](https://en.wikipedia.org/wiki/Smallest-circle_problem).
+     *
+     * @returns A bounding circle
+     */
+    virtual CircF getBoundingCircle() const = 0;
+
+    /**
      * @brief Render the geometry
      *
      * @param target The render target
@@ -123,6 +132,7 @@ inline namespace v1 {
     const CircF& get() const;
 
     virtual float getArea() const override;
+    virtual CircF getBoundingCircle() const override;
     virtual void renderAt(RenderTarget& target, Vector2f position, float angle) const override;
 
   private:
@@ -167,10 +177,15 @@ inline namespace v1 {
     const Polygon& get() const;
 
     virtual float getArea() const override;
+    virtual CircF getBoundingCircle() const override;
     virtual void renderAt(RenderTarget& target, Vector2f position, float angle) const override;
 
   private:
+    void computeBoundingCircle();
+
+  private:
     Polygon m_polygon;
+    CircF m_boundingCircle;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

@@ -71,7 +71,7 @@ inline namespace v1 {
      *
      * @param target The render target
      */
-    void render(RenderTarget& target);
+    void render(RenderTarget& target) const;
 
     /**
      * @name Position, angle, velocity and acceleration
@@ -111,6 +111,15 @@ inline namespace v1 {
     }
 
     /**
+     * @brief Set the linear velocity of the body
+     *
+     * @param velocity The new velocity
+     */
+    void setLinearVelocity(Vector2f velocity) {
+      m_linearVelocity = velocity;
+    }
+
+    /**
      * @brief Apply a linear impulse
      *
      * The impulse changes the velocity.
@@ -140,29 +149,34 @@ inline namespace v1 {
     /**
      * @brief Get the angle of the body
      *
-     * The angle is computed from the velocity
-     *
      * @returns The angle of the body
      */
-    float getAngle() const;
+    float getAngle() const {
+      return m_angle;
+    }
 
     /**
      * @brief Set the angle of the body
      *
-     * This changes the direction of the velocity
-     *
      * @param angle The new angle
      */
-    void setAngle(float angle);
+    void setAngle(float angle) {
+      m_angle = angle;
+    }
 
     /**
      * @brief Change the angle of the body
      *
-     * This changes the direction of the velocity
-     *
      * @param arc The arc to add to the current angle
      */
-    void turn(float arc);
+    void turn(float arc) {
+      m_angle += arc;
+    }
+
+    /**
+     * @brief Set the velocity direction from the angle of the body
+     */
+    void setVelocityFromAngle();
 
     /**
      * @brief Update the internal transform
@@ -297,6 +311,8 @@ inline namespace v1 {
     Vector2f m_position;
     Vector2f m_linearVelocity;
     Vector2f m_acceleration;
+
+    float m_angle;
 
     float m_inverseMass;
 

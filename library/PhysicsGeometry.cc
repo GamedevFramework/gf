@@ -55,6 +55,10 @@ inline namespace v1 {
     return gf::Pi * gf::square(m_circle.radius);
   }
 
+  CircF CircleGeometry::getBoundingCircle() const {
+    return m_circle;
+  }
+
   void CircleGeometry::renderAt(RenderTarget& target, Vector2f position, float angle) const {
     GF_UNUSED(angle);
 
@@ -70,8 +74,9 @@ inline namespace v1 {
   PolygonGeometry::PolygonGeometry(Polygon polygon)
   : PhysicsGeometry(PhysicsGeometry::Type::Polygon)
   , m_polygon(std::move(polygon))
+  , m_boundingCircle({ 0.0f, 0.0f }, 0.0f)
   {
-
+    computeBoundingCircle();
   }
 
   PolygonGeometry::PolygonGeometry(Vector2f size)
@@ -82,15 +87,17 @@ inline namespace v1 {
       {  size.width / 2,  size.height / 2 },
       { -size.width / 2,  size.height / 2 },
   })
+  , m_boundingCircle({ 0.0f, 0.0f }, 0.0f)
   {
-
+    computeBoundingCircle();
   }
 
   PolygonGeometry::PolygonGeometry(RectF rectangle)
   : PhysicsGeometry(PhysicsGeometry::Type::Polygon)
   , m_polygon({ rectangle.getTopLeft(), rectangle.getBottomLeft(), rectangle.getBottomRight(), rectangle.getTopRight() })
+  , m_boundingCircle({ 0.0f, 0.0f }, 0.0f)
   {
-
+    computeBoundingCircle();
   }
 
 
@@ -102,6 +109,10 @@ inline namespace v1 {
     return m_polygon.getArea();
   }
 
+  CircF PolygonGeometry::getBoundingCircle() const {
+    return m_boundingCircle;
+  }
+
   void PolygonGeometry::renderAt(RenderTarget& target, Vector2f position, float angle) const {
     ConvexShape shape(m_polygon);
     shape.setPosition(position);
@@ -110,6 +121,23 @@ inline namespace v1 {
     shape.setOutlineColor(Color::Red);
     shape.setOutlineThickness(1.0f);
     target.draw(shape);
+  }
+
+  void PolygonGeometry::computeBoundingCircle() {
+    if (m_polygon.getPointCount() == 0) {
+      return;
+    }
+
+    Vector2f min = m_polygon.getPoint(0);
+    Vector2f max = m_polygon.getPoint(0);
+
+    for (auto point : m_polygon) {
+      min = gf::min(min, point);
+      max = gf::max(max, point);
+    }
+
+    m_boundingCircle.center = (min + max) / 2;
+    m_boundingCircle.radius = gf::euclideanDistance(min, max) / 2;
   }
 
 }
