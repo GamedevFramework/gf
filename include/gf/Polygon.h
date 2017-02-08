@@ -33,7 +33,19 @@ namespace gf {
 inline namespace v1 {
 #endif
 
+  class Isometry;
+
   /**
+   * @ingroup core
+   * @brief The direction of the rotation
+   */
+  enum class Winding {
+    Clockwise,        //< Same direction as a clock's hands
+    Counterclockwise, //< Opposite direction of a clock's hands
+  };
+
+  /**
+   * @ingroup core
    * @brief A convex polygon
    *
    */
@@ -97,6 +109,15 @@ inline namespace v1 {
     /**
      * @brief Get the farthest point in a direction
      *
+     * @param direction The direction to search (in world coordinates)
+     * @param isometry The transformation of the polygon
+     * @returns The farthest point of the polygon in the given direction
+     */
+    Vector2f getSupport(Vector2f direction, const Isometry& isometry) const;
+
+    /**
+     * @brief Get the farthest point in a direction
+     *
      * @param direction The direction to search
      * @returns The farthest point of the polygon in the given direction
      */
@@ -119,6 +140,37 @@ inline namespace v1 {
      * @sa begin()
      */
     const Vector2f *end() const;
+
+    /**
+     * @brief Check if the polygon is convex
+     *
+     * This function should return true, otherwise you may have problems in
+     * other functions which assume that the polygon is convex.
+     *
+     * @returns True if the polygon is convex
+     */
+    bool isConvex() const;
+
+    /**
+     * @brief Compute the winding of a convex polygon
+     *
+     * Complexity: @f$ O(n) @f$
+     *
+     * @returns The winding of the convex polygon
+     * @sa gf::Winding, isConvex()
+     * @sa [Curve orientation - Wikipedia](https://en.wikipedia.org/wiki/Curve_orientation)
+     */
+    Winding getWinding() const;
+
+
+    /**
+     * @brief Compute the area of the polygon
+     *
+     * Complexity: @f$ O(n) @f$
+     *
+     * @returns The area of the polygon
+     */
+    float getArea() const;
 
     /**
      * @brief Apply a transformation to the polygon

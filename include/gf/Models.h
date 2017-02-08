@@ -17,12 +17,12 @@
  * 2. Altered source versions must be plainly marked as such, and must not be
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
- *
- * Part of this file comes from SFML, with the same license:
- * Copyright (C) 2007-2015 Laurent Gomila (laurent@sfml-dev.org)
  */
-#ifndef GF_MOUSE_H
-#define GF_MOUSE_H
+#ifndef GF_MODELS_H
+#define GF_MODELS_H
+
+#include "Model.h"
+#include "Portability.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -30,16 +30,28 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup window
-   * @brief Mouse buttons
+   * @brief Fixed timestep model
+   *
+   * This model takes another model that needs a fixed timestep and provides
+   * it event if the original timestep is not fixed. This may be useful for
+   * physics model, for example.
    */
-  enum class MouseButton {
-    Left,     ///< The left mouse button
-    Middle,   ///< The middle (wheel) mouse button
-    Right,    ///< The right mouse button
-    XButton1, ///< The first extra mouse button
-    XButton2, ///< The second extra mouse button
-    Other,    ///< Another unknown button (may happen with touchpads)
+  class GF_API FixedTimestepModel : public Model {
+  public:
+    /**
+     * @brief Constructor
+     *
+     * @param model The original model
+     * @param timestep The fixed timestep
+     */
+    FixedTimestepModel(Model& model, float timestep = 1 / 60.0f);
+
+    virtual void update(float dt) override;
+
+  private:
+    Model& m_model;
+    float m_timestep;
+    float m_elapsed;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -47,4 +59,5 @@ inline namespace v1 {
 #endif
 }
 
-#endif // GF_MOUSE_H
+
+#endif // GF_MODELS_H

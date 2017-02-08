@@ -24,9 +24,10 @@
 #include <gf/MessageManager.h>
 #include <gf/Vector.h>
 
-using namespace gf::literals;
 
 /// [message]
+using namespace gf::literals; // necessary to use _id
+
 struct HeroPosition : public gf::Message {
   static const gf::Id type = "HeroPosition"_id; // compile-time definition
   gf::Vector2f position;

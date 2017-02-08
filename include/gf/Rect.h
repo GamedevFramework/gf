@@ -315,24 +315,32 @@ inline namespace v1 {
   /**
    * @ingroup core
    * @brief A `float` rectangle
+   *
+   * @sa gf::Rect
    */
   using RectF = Rect<float>;
 
   /**
    * @ingroup core
    * @brief A `int` rectangle
+   *
+   * @sa gf::Rect
    */
   using RectI = Rect<int>;
 
   /**
    * @ingroup core
    * @brief A `unsigned` rectangle
+   *
+   * @sa gf::Rect
    */
   using RectU = Rect<unsigned>;
 
   /**
    * @ingroup core
    * @brief A `std::size_t` rectangle
+   *
+   * @sa gf::Rect
    */
   using RectZ = Rect<std::size_t>;
 

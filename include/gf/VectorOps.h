@@ -923,7 +923,7 @@ inline namespace v1 {
    *
    * @f[ \mathbf{a} \times \mathbf{b} = \mathbf{a}^{\perp} \cdot \mathbf{b} @f]
    *
-   * The 2D cross product is also known as the perp dot product.
+   * The 2D cross product is also known as the perp dot product or wedge product.
    *
    * @param lhs A first vector
    * @param rhs A second vector
@@ -932,7 +932,7 @@ inline namespace v1 {
   template<typename T>
   constexpr
   T cross(Vector<T, 2> lhs, Vector<T, 2> rhs) {
-    return -lhs.y * rhs.x + lhs.x * rhs.y;
+    return lhs.x * rhs.y - lhs.y * rhs.x;
   }
 
 

@@ -17,34 +17,34 @@
  * 2. Altered source versions must be plainly marked as such, and must not be
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
- *
- * Part of this file comes from SFML, with the same license:
- * Copyright (C) 2007-2015 Laurent Gomila (laurent@sfml-dev.org)
  */
-#ifndef GF_MOUSE_H
-#define GF_MOUSE_H
+#include <gf/Models.h>
 
 namespace gf {
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
-#endif
 
-  /**
-   * @ingroup window
-   * @brief Mouse buttons
-   */
-  enum class MouseButton {
-    Left,     ///< The left mouse button
-    Middle,   ///< The middle (wheel) mouse button
-    Right,    ///< The right mouse button
-    XButton1, ///< The first extra mouse button
-    XButton2, ///< The second extra mouse button
-    Other,    ///< Another unknown button (may happen with touchpads)
-  };
+  FixedTimestepModel::FixedTimestepModel(Model& model, float timestep)
+  : m_model(model)
+  , m_timestep(timestep)
+  , m_elapsed(0.0f)
+  {
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+  }
+
+  static constexpr float MaxElapsed = 0.5f;
+
+  void FixedTimestepModel::update(float dt) {
+    m_elapsed += dt;
+
+    if (m_elapsed > MaxElapsed) {
+      m_elapsed = MaxElapsed;
+    }
+
+    while (m_elapsed > m_timestep) {
+      m_model.update(m_timestep);
+      m_elapsed -= m_timestep;
+    }
+  }
+
 }
-#endif
 }
-
-#endif // GF_MOUSE_H

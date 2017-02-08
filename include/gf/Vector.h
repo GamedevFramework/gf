@@ -984,132 +984,176 @@ inline namespace v1 {
   /**
    * @ingroup core
    * @brief A float vector with 2 components
+   *
+   * @sa gf::Vector, gf::Vector<T, 2>
    */
   using Vector2f = Vector<float, 2>;
 
   /**
    * @ingroup core
    * @brief A float vector with 3 components
+   *
+   * @sa gf::Vector, gf::Vector<T, 3>
    */
   using Vector3f = Vector<float, 3>;
 
   /**
    * @ingroup core
    * @brief A float vector with 4 components
+   *
+   * @sa gf::Vector, gf::Vector<T, 4>
    */
   using Vector4f = Vector<float, 4>;
 
   /**
    * @ingroup core
    * @brief A double vector with 2 components
+   *
+   * @sa gf::Vector, gf::Vector<T, 2>
    */
   using Vector2d = Vector<double, 2>;
 
   /**
    * @ingroup core
    * @brief A double vector with 3 components
+   *
+   * @sa gf::Vector, gf::Vector<T, 3>
    */
   using Vector3d = Vector<double, 3>;
 
   /**
    * @ingroup core
    * @brief A double vector with 4 components
+   *
+   * @sa gf::Vector, gf::Vector<T, 4>
    */
   using Vector4d = Vector<double, 4>;
 
   /**
    * @ingroup core
    * @brief A int vector with 2 components
+   *
+   * @sa gf::Vector, gf::Vector<T, 2>
    */
   using Vector2i = Vector<int, 2>;
 
   /**
    * @ingroup core
    * @brief A int vector with 3 components
+   *
+   * @sa gf::Vector, gf::Vector<T, 3>
    */
   using Vector3i = Vector<int, 3>;
 
   /**
    * @ingroup core
    * @brief A int vector with 4 components
+   *
+   * @sa gf::Vector, gf::Vector<T, 4>
    */
   using Vector4i = Vector<int, 4>;
 
   /**
    * @ingroup core
    * @brief A unsigned vector with 2 components
+   *
+   * @sa gf::Vector, gf::Vector<T, 2>
    */
   using Vector2u = Vector<unsigned, 2>;
 
   /**
    * @ingroup core
    * @brief A unsigned vector with 3 components
+   *
+   * @sa gf::Vector, gf::Vector<T, 3>
    */
   using Vector3u = Vector<unsigned, 3>;
 
   /**
    * @ingroup core
    * @brief A unsigned vector with 4 components
+   *
+   * @sa gf::Vector, gf::Vector<T, 4>
    */
   using Vector4u = Vector<unsigned, 4>;
 
   /**
    * @ingroup core
    * @brief A std::size_t vector with 2 components
+   *
+   * @sa gf::Vector, gf::Vector<T, 2>
    */
   using Vector2z = Vector<std::size_t, 2>;
 
   /**
    * @ingroup core
    * @brief A std::size_t vector with 3 components
+   *
+   * @sa gf::Vector, gf::Vector<T, 3>
    */
   using Vector3z = Vector<std::size_t, 3>;
 
   /**
    * @ingroup core
    * @brief A std::size_t vector with 4 components
+   *
+   * @sa gf::Vector, gf::Vector<T, 4>
    */
   using Vector4z = Vector<std::size_t, 4>;
 
   /**
    * @ingroup core
    * @brief A bool vector with 2 components
+   *
+   * @sa gf::Vector, gf::Vector<T, 2>
    */
   using Vector2b = Vector<bool, 2>;
 
   /**
    * @ingroup core
    * @brief A bool vector with 3 components
+   *
+   * @sa gf::Vector, gf::Vector<T, 3>
    */
   using Vector3b = Vector<bool, 3>;
 
   /**
    * @ingroup core
    * @brief A bool vector with 4 components
+   *
+   * @sa gf::Vector, gf::Vector<T, 4>
    */
   using Vector4b = Vector<bool, 4>;
 
   /**
    * @ingroup core
    * @brief A float color vector with 3 components
+   *
+   * @sa gf::Vector, gf::Vector<T, 3>
    */
   using Color3f = Vector<float, 3>;
 
   /**
    * @ingroup core
    * @brief A float color vector with 4 components
+   *
+   * @sa gf::Vector, gf::Vector<T, 4>
    */
   using Color4f = Vector<float, 4>;
 
   /**
    * @ingroup core
    * @brief A uint8_t color vector with 3 components
+   *
+   * @sa gf::Vector, gf::Vector<T, 3>
    */
   using Color3u = Vector<uint8_t, 3>;
 
   /**
    * @ingroup core
    * @brief A uint8_t color vector with 4 components
+   *
+   * @sa gf::Vector, gf::Vector<T, 4>
    */
   using Color4u = Vector<uint8_t, 4>;
 

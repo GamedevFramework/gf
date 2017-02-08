@@ -22,6 +22,7 @@
 #define GF_MATH_H
 
 #include <cmath>
+#include <limits>
 
 #include "Portability.h"
 
@@ -59,6 +60,47 @@ inline namespace v1 {
    * @brief The @f$ \frac{1}{\sqrt{2}} @f$ constant
    */
   constexpr float InvSqrt2 = 1 / Sqrt2;
+
+  /**
+   * @ingroup core
+   * @brief The @f$ \sqrt{3} @f$ constant
+   */
+  constexpr float Sqrt3 = 1.7320508075688772935f;
+
+  /**
+   * @ingroup core
+   * @brief Machine epsilon
+   */
+  constexpr float Epsilon = std::numeric_limits<float>::epsilon();
+
+  /**
+   * @ingroup core
+   * @brief Compare two floats
+   *
+   * @param a The first float
+   * @param b The second float
+   * @param epsilon A small value that controls the equality comparison
+   *
+   * @sa [Comparison - The Floating-Point Guide](http://floating-point-gui.de/errors/comparison/)
+   */
+  template<typename T>
+  inline
+  bool almostEquals(T a, T b, T epsilon = std::numeric_limits<T>::epsilon()) {
+    if (a == b) {
+      return true;
+    }
+
+    T diff = std::abs(a - b);
+
+    if (a == 0 || b == 0 || diff < std::numeric_limits<T>::denorm_min()) {
+      return diff < (epsilon * std::numeric_limits<T>::denorm_min());
+    }
+
+    T sum = std::abs(a) + std::abs(b);
+    sum = (sum < std::numeric_limits<T>::max()) ? sum : std::numeric_limits<T>::max();
+
+    return (diff / sum) < epsilon;
+  }
 
   /**
    * @ingroup core
@@ -232,6 +274,26 @@ inline namespace v1 {
   constexpr
   T square(T val) {
     return val * val;
+  }
+
+  /**
+   * @ingroup core
+   * @brief Sign function
+   *
+   * The sign function of @f$ x @f$ is:
+   *
+   * - @f$ -1 @f$ if @f$ x < 0 @f$
+   * - @f$ 0 @f$ if @f$ x = 0 @f$
+   * - @f$ 1 @f$ if @f$ x > 0 @f$
+   *
+   * @param val A value
+   * @returns The sign of the value
+   * @sa [Sign function](https://en.wikipedia.org/wiki/Sign_function)
+   */
+  template<typename T>
+  constexpr
+  int sign(T val) {
+    return (val > T(0)) - (val < T(0));
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

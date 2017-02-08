@@ -313,7 +313,7 @@ inline namespace v1 {
    * @ingroup core
    * @brief A float square matrix of size 2
    *
-   * @sa Matrix<T, 2, 2>
+   * @sa gf::Matrix, gf::Matrix<T, 2, 2>
    */
   using Matrix2f = Matrix<float, 2, 2>;
 
@@ -321,7 +321,7 @@ inline namespace v1 {
    * @ingroup core
    * @brief A float square matrix of size 3
    *
-   * @sa Matrix<T, 3, 3>
+   * @sa gf::Matrix, gf::Matrix<T, 3, 3>
    */
   using Matrix3f = Matrix<float, 3, 3>;
 
@@ -329,7 +329,7 @@ inline namespace v1 {
    * @ingroup core
    * @brief A float square matrix of size 4
    *
-   * @sa Matrix<T, 4, 4>
+   * @sa gf::Matrix, gf::Matrix<T, 4, 4>
    */
   using Matrix4f = Matrix<float, 4, 4>;
 
