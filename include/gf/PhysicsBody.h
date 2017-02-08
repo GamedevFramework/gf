@@ -30,7 +30,7 @@ inline namespace v1 {
    *
    * @sa gf::PhysicsGeometry, gf::PhysicsModel
    */
-  class PhysicsBody {
+  class GF_API PhysicsBody {
   public:
     /**
      * @brief Type of body

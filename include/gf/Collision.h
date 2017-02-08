@@ -32,7 +32,7 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  class Isometry;
+  struct Isometry;
 
   /**
    * @ingroup game
@@ -40,7 +40,7 @@ inline namespace v1 {
    *
    * @sa [How to Create a Custom Physics Engine](http://gamedevelopment.tutsplus.com/series/how-to-create-a-custom-physics-engine--gamedev-12715)
    */
-  struct Penetration {
+  struct GF_API Penetration {
     Vector2f normal; ///< Collision normal
     float depth; ///< Penetration depth
   };

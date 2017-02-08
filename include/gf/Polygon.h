@@ -33,7 +33,7 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  class Isometry;
+  struct Isometry;
 
   /**
    * @ingroup core

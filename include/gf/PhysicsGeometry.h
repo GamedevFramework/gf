@@ -41,7 +41,7 @@ inline namespace v1 {
    *
    * @sa gf::PhysicsBody
    */
-  class PhysicsGeometry {
+  class GF_API PhysicsGeometry {
   public:
     /**
      * @brief The type of geometry
@@ -106,7 +106,7 @@ inline namespace v1 {
   /**
    * @brief A circle physics geometry
    */
-  class CircleGeometry : public PhysicsGeometry {
+  class GF_API CircleGeometry : public PhysicsGeometry {
   public:
     /**
      * @brief Constructor
@@ -144,7 +144,7 @@ inline namespace v1 {
    *
    * This geometry includes rectangles.
    */
-  class PolygonGeometry : public PhysicsGeometry {
+  class GF_API PolygonGeometry : public PhysicsGeometry {
   public:
     /**
      * @brief Constructor
