@@ -38,14 +38,14 @@ inline namespace v1 {
   , m_size(0)
   {
     if (!boost::filesystem::is_regular_file(path)) {
-      Log::error(Log::Resources, "Could not find the following file for streaming: %s\n", path.string().c_str());
+      Log::error("Could not find the following file for streaming: %s\n", path.string().c_str());
       return;
     }
 
     m_file = std::fopen(path.string().c_str(), "rb");
 
     if (m_file == nullptr) {
-      Log::error(Log::Resources, "Could not find the following file for streaming: %s\n", path.string().c_str());
+      Log::error("Could not find the following file for streaming: %s\n", path.string().c_str());
     }
 
     m_size = boost::filesystem::file_size(path);

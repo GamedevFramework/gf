@@ -41,7 +41,7 @@ inline namespace v1 {
     std::ifstream file(filename.string());
 
     if (!file) {
-      Log::error(Log::Graphics, "File for shader does not exist: '%s'\n", filename.string().c_str());
+      Log::error("File for shader does not exist: '%s'\n", filename.string().c_str());
       return "";
     }
 
@@ -52,7 +52,7 @@ inline namespace v1 {
       content.append(1, '\n');
     }
 
-    Log::debug(Log::Graphics, "Shader loaded from file: '%s'\n", filename.string().c_str());
+    Log::debug("Shader loaded from file: '%s'\n", filename.string().c_str());
 
     return content;
   }
@@ -113,7 +113,7 @@ inline namespace v1 {
       std::unique_ptr<char[]> infoLog(new char[infoLogLength]);
       glCheck(glGetShaderInfoLog(id, infoLogLength, nullptr, infoLog.get()));
 
-      Log::error(Log::Graphics, "Error while compiling %s shader:\n%s\n", typeString, infoLog.get());
+      Log::error("Error while compiling %s shader:\n%s\n", typeString, infoLog.get());
       return 0;
     }
 
@@ -214,7 +214,7 @@ inline namespace v1 {
       std::unique_ptr<char[]> infoLog(new char[infoLogLength]);
       glCheck(glGetProgramInfoLog(m_program, infoLogLength, nullptr, infoLog.get()));
 
-      Log::error(Log::Graphics, "Error while linking program:\n%s\n", infoLog.get());
+      Log::error("Error while linking program:\n%s\n", infoLog.get());
       return false;
     }
 
@@ -309,7 +309,7 @@ inline namespace v1 {
     glCheck(loc = glGetUniformLocation(static_cast<GLuint>(m_program), name.c_str()));
 
     if (loc == -1) {
-      Log::warning(Log::Graphics, "Uniform not found: '%s'\n", name.c_str());
+      Log::warning("Uniform not found: '%s'\n", name.c_str());
     }
 
     return loc;
@@ -320,7 +320,7 @@ inline namespace v1 {
     glCheck(loc = glGetAttribLocation(static_cast<GLuint>(m_program), name.c_str()));
 
     if (loc == -1) {
-      Log::warning(Log::Graphics, "Attribute not found: '%s'\n", name.c_str());
+      Log::warning("Attribute not found: '%s'\n", name.c_str());
     }
 
     return loc;

@@ -62,7 +62,7 @@ namespace gf {
           break;
       }
 
-      Log::error(Log::Graphics, "Error in OpenGL call:\n\tLocation: %s:%u\n\tExpression: %s\n\tError: %s\n\tDescription: %s\n",
+      Log::error("Error in OpenGL call:\n\tLocation: %s:%u\n\tExpression: %s\n\tError: %s\n\tDescription: %s\n",
         file, line, expr, name, desc
       );
     }

@@ -69,7 +69,7 @@ inline namespace v1 {
     assert(err == 0);
 
     if (!gladLoadGLES2Loader(SDL_GL_GetProcAddress)) {
-      Log::error(Log::Graphics, "Failed to load GLES2.\n");
+      Log::error("Failed to load GLES2.\n");
     }
 
     return context;

@@ -43,7 +43,7 @@ inline namespace v1 {
   {
     if (loaded.fetch_add(1) == 0) { // we are the first
       if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) != 0) {
-        Log::error(Log::Graphics, "Unable to initialize SDL: '%s'\n", SDL_GetError());
+        Log::error("Unable to initialize SDL: '%s'\n", SDL_GetError());
         return;
       }
 

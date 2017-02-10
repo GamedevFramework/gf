@@ -40,21 +40,19 @@ inline namespace v1 {
    * the system. These functions print messages to the standard error. It uses
    * `printf`-like format strings.
    *
-   * A message is associated to a severity level and a category. The severity
-   * level indicates the severity of the message and range from a simple debug
-   * message to a fatal message. The category of the message indicates the
-   * origin of the message in the library.
+   * A message is associated to a severity level. The severity level indicates
+   * the severity of the message and range from a simple debug message to a
+   * fatal message.
    *
-   * You can set the minimum severity for which messages are displayed either
-   * globally or for each category. By default, the minimum severity level is
-   * gf::Log::Warning (or gf::Log::Debug if debug mode is activated at build
-   * time).
+   * You can set the minimum severity for which messages are displayed. By
+   * default, the minimum severity level is gf::Log::Warning (or
+   * gf::Log::Debug if debug mode is activated at build time).
    *
    * Example:
    *
    * ~~~{.cc}
    * int entity = ...;
-   * gf::Log::warning(gf::Log::General, "Something weird happened to entity %i!\n", entity);
+   * gf::Log::warning("Something weird happened to entity %i!\n", entity);
    * ~~~
    *
    */
@@ -77,17 +75,6 @@ inline namespace v1 {
     };
 
     /**
-     * @brief The category of the log
-     */
-    enum Category : int {
-      General,    ///< The general category
-      Graphics,   ///< The graphics category
-      Network,    ///< The network category
-      Physics,    ///< The physics category
-      Resources,  ///< The resources category
-    };
-
-    /**
      * @brief Set a global severity level
      *
      * @param level The severity level
@@ -95,95 +82,72 @@ inline namespace v1 {
     static void setLevel(Level level);
 
     /**
-     * @brief Set a severity level for a category
-     *
-     * @param category The category
-     * @param level The severity level
-     */
-    static void setLevel(Category category, Level level);
-
-    /**
      * @brief Print a debug message
      *
-     * @param category The category
      * @param fmt The [format string](http://en.cppreference.com/w/cpp/io/c/fprintf)
      */
-    static void debug(Category category, const char *fmt, ...) {
+    static void debug(const char *fmt, ...) {
       va_list ap;
       va_start(ap, fmt);
-      log(Level::Debug, category, fmt, ap);
+      log(Level::Debug, fmt, ap);
       va_end(ap);
     }
 
     /**
      * @brief Print an info message
      *
-     * @param category The category
      * @param fmt The [format string](http://en.cppreference.com/w/cpp/io/c/fprintf)
      */
-    static void info(Category category, const char *fmt, ...) {
+    static void info(const char *fmt, ...) {
       va_list ap;
       va_start(ap, fmt);
-      log(Level::Info, category, fmt, ap);
+      log(Level::Info, fmt, ap);
       va_end(ap);
     }
 
     /**
      * @brief Print a warning message
      *
-     * @param category The category
      * @param fmt The [format string](http://en.cppreference.com/w/cpp/io/c/fprintf)
      */
-    static void warning(Category category, const char *fmt, ...) {
+    static void warning(const char *fmt, ...) {
       va_list ap;
       va_start(ap, fmt);
-      log(Level::Warn, category, fmt, ap);
+      log(Level::Warn, fmt, ap);
       va_end(ap);
     }
 
     /**
      * @brief Print an error message
      *
-     * @param category The category
      * @param fmt The [format string](http://en.cppreference.com/w/cpp/io/c/fprintf)
      */
-    static void error(Category category, const char *fmt, ...) {
+    static void error(const char *fmt, ...) {
       va_list ap;
       va_start(ap, fmt);
-      log(Level::Error, category, fmt, ap);
+      log(Level::Error, fmt, ap);
       va_end(ap);
     }
 
     /**
      * @brief Print a fatal message and quit
      *
-     * @param category The category
      * @param fmt The [format string](http://en.cppreference.com/w/cpp/io/c/fprintf)
      */
-    static void fatal(Category category, const char *fmt, ...) {
+    static void fatal(const char *fmt, ...) {
       va_list ap;
       va_start(ap, fmt);
-      log(Level::Fatal, category, fmt, ap);
+      log(Level::Fatal, fmt, ap);
       va_end(ap);
 
       std::abort();
     }
 
-    /**
-     * @brief Print a message without any level or category
-     *
-     * This function can be used for printing messages during the development.
-     * It is disable if GF_DEBUG is not set i.e. it prints nothing.
-     *
-     * @param fmt The [format string](http://en.cppreference.com/w/cpp/io/c/fprintf)
-     */
-    static void printDebug(const char *fmt, ...);
+  private:
+    static Level s_level;
 
   private:
-    static void log(Level level, Category category, const char *fmt, va_list ap);
-
-  private:
-    static std::map<Category, Level> s_levels;
+    static void log(Level level, const char *fmt, va_list ap);
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

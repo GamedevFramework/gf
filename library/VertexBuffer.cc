@@ -74,7 +74,7 @@ inline namespace v1 {
     }
 
     if (m_vbo != 0 || m_ebo != 0) {
-      Log::warning(Log::Graphics, "Vertex buffer can not be loaded twice.\n");
+      Log::warning("Vertex buffer can not be loaded twice.\n");
       return;
     }
 
@@ -91,7 +91,7 @@ inline namespace v1 {
     glCheck(glBindBuffer(GL_ARRAY_BUFFER, 0));
 
     if(vboSize != static_cast<std::size_t>(vboUploadedSize)) {
-      Log::error(Log::Graphics, "Vertex array buffer size in not correct.\n");
+      Log::error("Vertex array buffer size in not correct.\n");
       glCheck(glDeleteBuffers(1, &m_vbo));
       m_vbo = 0;
       return;
@@ -107,7 +107,7 @@ inline namespace v1 {
     }
 
     if (m_vbo != 0 || m_ebo != 0) {
-      Log::warning(Log::Graphics, "Vertex buffer can not be loaded twice.\n");
+      Log::warning("Vertex buffer can not be loaded twice.\n");
       return;
     }
 
@@ -125,7 +125,7 @@ inline namespace v1 {
     glCheck(glBindBuffer(GL_ARRAY_BUFFER, 0));
 
     if(vboSize != static_cast<std::size_t>(vboUploadedSize)) {
-      Log::error(Log::Graphics, "Vertex array buffer size in not correct.\n");
+      Log::error("Vertex array buffer size in not correct.\n");
       glCheck(glDeleteBuffers(1, &m_vbo));
       m_vbo = 0;
       return;
@@ -144,7 +144,7 @@ inline namespace v1 {
     glCheck(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
 
     if(eboSize != static_cast<std::size_t>(eboUploadedSize)) {
-      Log::error(Log::Graphics, "Vertex element array buffer size in not correct.\n");
+      Log::error("Vertex element array buffer size in not correct.\n");
       glCheck(glDeleteBuffers(1, &m_vbo));
       m_vbo = 0;
       glCheck(glDeleteBuffers(1, &m_ebo));

@@ -30,31 +30,17 @@
 namespace gf {
 inline namespace v1 {
 
-  // default values
-  std::map<Log::Category, Log::Level> Log::s_levels = {
+  // default value
+  Log::Level Log::s_level =
 #if GF_DEBUG
-    { Log::General, Log::Debug },
-    { Log::Graphics, Log::Debug },
-    { Log::Network, Log::Debug },
-    { Log::Physics, Log::Debug },
-    { Log::Resources, Log::Debug },
+    Log::Debug
 #else
-    { Log::General, Log::Warn },
-    { Log::Graphics, Log::Warn },
-    { Log::Network, Log::Warn },
-    { Log::Physics, Log::Warn },
-    { Log::Resources, Log::Warn },
+    Log::Warn
 #endif
-  };
+  ;
 
   void Log::setLevel(Level level) {
-    for (auto& item : s_levels) {
-      item.second = level;
-    }
-  }
-
-  void Log::setLevel(Category category, Level level) {
-    s_levels[category] = level;
+    s_level = level;
   }
 
   static const char *getStringFromLevel(Log::Level level) {
@@ -79,44 +65,13 @@ inline namespace v1 {
     return "?";
   }
 
-  static const char *getStringFromCategory(Log::Category category) {
-    switch (category) {
-      case Log::General:
-        return "General";
-
-      case Log::Graphics:
-        return "Graphics";
-
-      case Log::Network:
-        return "Network";
-
-      case Log::Physics:
-        return "Physics";
-
-      case Log::Resources:
-        return "Resources";
-    }
-
-    assert(false);
-    return "?";
-  }
-
-  void Log::printDebug(const char *fmt, ...) {
-#ifdef GF_DEBUG
-    va_list ap;
-    va_start(ap, fmt);
-    std::vfprintf(stderr, fmt, ap);
-    va_end(ap);
-#endif
-  }
-
-  void Log::log(Level level, Category category, const char *fmt, va_list ap) {
-    if (level < s_levels[category]) {
+  void Log::log(Level level, const char *fmt, va_list ap) {
+    if (level < s_level) {
       return;
     }
 
     unsigned long t = std::time(nullptr);
-    std::fprintf(stderr, "[%lu][%s][%s] ", t, getStringFromLevel(level), getStringFromCategory(category));
+    std::fprintf(stderr, "[%lu][%s] ", t, getStringFromLevel(level));
 
     std::vfprintf(stderr, fmt, ap);
   }
