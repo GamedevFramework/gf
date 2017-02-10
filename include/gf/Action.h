@@ -207,8 +207,8 @@ inline namespace v1 {
 
   private:
     enum class Type {
-      INSTANTANEOUS,
-      CONTINUOUS,
+      Instantaneous,
+      Continuous,
     };
 
     std::string m_name;

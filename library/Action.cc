@@ -30,25 +30,25 @@ inline namespace v1 {
 
   Action::Action(std::string name)
   : m_name(std::move(name))
-  , m_type(Type::INSTANTANEOUS)
+  , m_type(Type::Instantaneous)
   {
     
   }
 
   void Action::setContinuous() {
-    m_type = Type::CONTINUOUS;
+    m_type = Type::Continuous;
   }
 
   bool Action::isContinuous() const {
-    return m_type == Type::CONTINUOUS;
+    return m_type == Type::Continuous;
   }
 
   void Action::setInstantaneous() {
-    m_type = Type::INSTANTANEOUS;
+    m_type = Type::Instantaneous;
   }
 
   bool Action::isInstantaneous() const {
-    return m_type == Type::INSTANTANEOUS;
+    return m_type == Type::Instantaneous;
   }
 
   void Action::addKeycodeKeyControl(Keycode code) {
