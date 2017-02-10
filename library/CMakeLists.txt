@@ -82,7 +82,6 @@ add_library(gf0 SHARED
   Gamepad.cc
   Monitor.cc
   Window.cc
-  WindowGeometryTracker.cc
   # graphics
   AnimatedSprite.cc
   Animation.cc

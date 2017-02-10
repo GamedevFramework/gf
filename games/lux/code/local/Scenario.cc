@@ -21,11 +21,11 @@
 #include <cstdio>
 
 #include <gf/Color.h>
+#include <gf/Coordinates.h>
 #include <gf/Text.h>
 #include <gf/RenderTarget.h>
-
-#include <gf/Transform.h>
 #include <gf/Shapes.h>
+#include <gf/Transform.h>
 
 #include "Messages.h"
 #include "World.h"
@@ -302,10 +302,9 @@ namespace lux {
   };
 
 
-  Scenario::Scenario(EnemyManager& enemies, gf::WindowGeometryTracker& tracker, gf::MessageManager& messages, gf::ResourceManager& resources)
+  Scenario::Scenario(EnemyManager& enemies, gf::MessageManager& messages, gf::ResourceManager& resources)
   : gf::Entity(2)
   , m_enemies(enemies)
-  , m_tracker(tracker)
   , m_messages(messages)
   , m_elapsedTime(0)
   , m_currentPlayer(1)
@@ -451,6 +450,8 @@ namespace lux {
       return;
     }
 
+    gf::Coordinates coordinates(target);
+
     std::string report;
 
     if (m_win) {
@@ -473,10 +474,10 @@ namespace lux {
     text.setAnchor(gf::Anchor::Center);
 
     auto bounds = text.getLocalBounds();
-    float x = m_tracker.getXCentered(0.0f);
-    float y = m_tracker.getYRatio(0.3f, bounds.height);
+    gf::Vector2f position = coordinates.getRelativePoint({ 0.5f, 0.3f });
+    position.y -= bounds.height / 2;
 
-    text.setPosition({ x, y });
+    text.setPosition(position);
     target.draw(text);
 
     // Display the high score
@@ -490,9 +491,9 @@ namespace lux {
     text.setAlignment(gf::Alignment::None);
     text.setAnchor(gf::Anchor::TopCenter);
 
-    y += bounds.height + Margin;
+    position.y += bounds.height + Margin;
 
-    text.setPosition({ x, y });
+    text.setPosition(position);
     target.draw(text);
   }
 

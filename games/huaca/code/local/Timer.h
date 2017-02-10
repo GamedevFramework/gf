@@ -20,13 +20,12 @@
 
 #include <gf/Entity.h>
 #include <gf/Message.h>
-#include <gf/WindowGeometryTracker.h>
 
 namespace huaca {
 
   class Timer : public gf::Entity {
   public:
-    Timer(const gf::WindowGeometryTracker& tracker);
+    Timer();
 
     virtual void update(float dt) override;
     virtual void render(gf::RenderTarget& target) override;
@@ -35,8 +34,6 @@ namespace huaca {
     gf::MessageStatus onNewLevel(gf::Id id, gf::Message *msg);
 
   private:
-    const gf::WindowGeometryTracker& m_tracker;
-
     float m_totalTime;
     float m_remainingTime;
 

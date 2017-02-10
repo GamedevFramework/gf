@@ -20,7 +20,6 @@
 
 #include <gf/MessageManager.h>
 #include <gf/ResourceManager.h>
-#include <gf/WindowGeometryTracker.h>
 
 #include "Enemy.h"
 
@@ -28,7 +27,7 @@ namespace lux {
 
   class Scenario : public gf::Entity {
   public:
-    Scenario(EnemyManager& enemies, gf::WindowGeometryTracker& tracker, gf::MessageManager& messages, gf::ResourceManager& resources);
+    Scenario(EnemyManager& enemies, gf::MessageManager& messages, gf::ResourceManager& resources);
 
     virtual void update(float dt) override;
     virtual void render(gf::RenderTarget& target) override;
@@ -56,7 +55,6 @@ namespace lux {
 
   private:
     EnemyManager& m_enemies;
-    gf::WindowGeometryTracker& m_tracker;
     gf::MessageManager& m_messages;
 
     std::vector<Wave> m_waves;

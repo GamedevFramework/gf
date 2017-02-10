@@ -20,7 +20,6 @@
 
 #include <gf/Entity.h>
 #include <gf/Message.h>
-#include <gf/WindowGeometryTracker.h>
 
 #include "Level.h"
 
@@ -28,7 +27,7 @@ namespace huaca {
 
   class Display : public gf::Entity {
   public:
-    Display(const gf::WindowGeometryTracker& tracker);
+    Display();
 
     void clear();
 
@@ -44,8 +43,6 @@ namespace huaca {
     gf::MessageStatus onNewLevel(gf::Id id, gf::Message *msg);
 
   private:
-    const gf::WindowGeometryTracker& m_tracker;
-
     struct ItemDisplay {
       gf::Texture *texture;
       bool active;

@@ -24,7 +24,6 @@
 #include <gf/ViewContainer.h>
 #include <gf/Views.h>
 #include <gf/Window.h>
-#include <gf/WindowGeometryTracker.h>
 
 #include "local/Display.h"
 #include "local/Hero.h"
@@ -50,9 +49,6 @@ int main() {
   gf::Vector2u screenSize = { 1024, 576 };
   gf::Window window("Huaca", screenSize);
   gf::RenderWindow renderer(window);
-
-  gf::WindowGeometryTracker tracker;
-  tracker.setInitialScreenSize(screenSize);
 
   // setup resource directories
 
@@ -132,10 +128,10 @@ int main() {
 
   gf::EntityContainer hudEntities;
 
-  huaca::Display display(tracker);
+  huaca::Display display;
   hudEntities.addEntity(display);
 
-  huaca::Timer timer(tracker);
+  huaca::Timer timer;
   hudEntities.addEntity(timer);
 
 
@@ -162,7 +158,6 @@ int main() {
     while (window.pollEvent(event)) {
       actions.processEvent(event);
       views.processEvent(event);
-      tracker.processEvent(event);
     }
 
     if (closeWindowAction.isActive()) {
