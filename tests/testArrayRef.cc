@@ -48,8 +48,17 @@ TEST(ArrayRefTest, ArrayCtor) {
   EXPECT_EQ(&data[0], ref.getData());
 }
 
-TEST(ArrayRefTest, VectorCtor) {
+TEST(ArrayRefTest, StdVectorCtor) {
   std::vector<int> data = { 1, 2, 3, 4, 5, 6, 7, 8 };
+
+  gf::ArrayRef<int> ref(data);
+
+  EXPECT_EQ(8u, ref.getSize());
+  EXPECT_EQ(&data[0], ref.getData());
+}
+
+TEST(ArrayRefTest, StdArrayCtor) {
+  std::array<int, 8> data = { 1, 2, 3, 4, 5, 6, 7, 8 };
 
   gf::ArrayRef<int> ref(data);
 
