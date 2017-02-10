@@ -105,7 +105,7 @@ inline namespace v1 {
     m_transform.setAngle(getAngle());
   }
 
-  const Isometry& PhysicsBody::getTransform() const {
+  const Transform& PhysicsBody::getTransform() const {
     return m_transform;
   }
 

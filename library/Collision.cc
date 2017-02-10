@@ -24,15 +24,15 @@
 
 #include <queue>
 
-#include <gf/Isometry.h>
 #include <gf/Log.h>
+#include <gf/Transform.h>
 
 namespace gf {
 inline namespace v1 {
 
   static constexpr float Skin = 0.15f;
 
-  bool collides(const CircF& lhs, const Isometry& lhsTrans, const CircF& rhs, const Isometry& rhsTrans, Penetration& p) {
+  bool collides(const CircF& lhs, const Transform& lhsTrans, const CircF& rhs, const Transform& rhsTrans, Penetration& p) {
     Vector2f lhsCenter = gf::transform(lhsTrans, lhs.getCenter());
     Vector2f rhsCenter = gf::transform(rhsTrans, rhs.getCenter());
     Vector2f normal = rhsCenter - lhsCenter;
@@ -57,7 +57,7 @@ inline namespace v1 {
   }
 
   bool collides(const CircF& lhs, const CircF& rhs, Penetration& p) {
-    return collides(lhs, Isometry(), rhs, Isometry(), p);
+    return collides(lhs, Transform(), rhs, Transform(), p);
   }
 
   bool collides(const RectF& lhs, const CircF& rhs, Penetration& p) {
@@ -179,7 +179,7 @@ inline namespace v1 {
     return ret;
   }
 
-  bool collides(const CircF& lhs, const Isometry& lhsTrans, const Polygon& rhs, const Isometry& rhsTrans, Penetration& p) {
+  bool collides(const CircF& lhs, const Transform& lhsTrans, const Polygon& rhs, const Transform& rhsTrans, Penetration& p) {
     std::size_t sz = rhs.getPointCount();
     Winding winding = rhs.getWinding();
     Vector2f center = gf::inverseTransform(rhsTrans, gf::transform(lhsTrans, lhs.getCenter()));
@@ -236,17 +236,17 @@ inline namespace v1 {
   }
 
   bool collides(const CircF& lhs, const Polygon& rhs, Penetration& p) {
-    return collides(lhs, Isometry(), rhs, Isometry(), p);
+    return collides(lhs, Transform(), rhs, Transform(), p);
   }
 
-  bool collides(const Polygon& lhs, const Isometry& lhsTrans, const CircF& rhs, const Isometry& rhsTrans, Penetration& p) {
+  bool collides(const Polygon& lhs, const Transform& lhsTrans, const CircF& rhs, const Transform& rhsTrans, Penetration& p) {
     bool ret = collides(rhs, rhsTrans, lhs, lhsTrans, p);
     p.normal = -p.normal;
     return ret;
   }
 
   bool collides(const Polygon& lhs, const CircF& rhs, Penetration& p) {
-    return collides(lhs, Isometry(), rhs, Isometry(), p);
+    return collides(lhs, Transform(), rhs, Transform(), p);
   }
 
   /*
@@ -370,7 +370,7 @@ inline namespace v1 {
 
   }
 
-  static Vector2f getSupport(const Polygon& lhs, const Isometry& lhsTrans, const Polygon& rhs, const Isometry& rhsTrans, Vector2f direction) {
+  static Vector2f getSupport(const Polygon& lhs, const Transform& lhsTrans, const Polygon& rhs, const Transform& rhsTrans, Vector2f direction) {
     return lhs.getSupport(direction, lhsTrans) - rhs.getSupport(-direction, rhsTrans);
   }
 
@@ -416,7 +416,7 @@ inline namespace v1 {
 
   static constexpr unsigned MaxIterations = 100;
 
-  bool collides(const Polygon& lhs, const Isometry& lhsTrans, const Polygon& rhs, const Isometry& rhsTrans, Penetration& p) {
+  bool collides(const Polygon& lhs, const Transform& lhsTrans, const Polygon& rhs, const Transform& rhsTrans, Penetration& p) {
     /*
      * Gilbert-Johnson-Keerthi (GJK) algorithm
      * adapted from http://www.dyn4j.org/2010/04/gjk-gilbert-johnson-keerthi/
@@ -476,7 +476,7 @@ inline namespace v1 {
   }
 
   bool collides(const Polygon& lhs, const Polygon& rhs, Penetration& p) {
-    return collides(lhs, Isometry(), rhs, Isometry(), p);
+    return collides(lhs, Transform(), rhs, Transform(), p);
   }
 }
 }

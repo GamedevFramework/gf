@@ -33,6 +33,281 @@ namespace gf {
 inline namespace v1 {
 #endif
 
+  /**
+   * @brief A rotation
+   */
+  struct GF_API Rotation {
+    float cos;
+    float sin;
+
+    /**
+     * @brief Default constructor
+     *
+     * The default rotation is a rotation of angle @f$ 0 @f$.
+     */
+    Rotation()
+    : cos(1.0f), sin(0.0f)
+    {
+
+    }
+
+    /**
+     * @brief Constructor with an angle
+     *
+     * @param angle The rotation angle
+     */
+    Rotation(float angle)
+    : cos(std::cos(angle)), sin(std::sin(angle))
+    {
+
+    }
+
+    /**
+     * @brief Set the rotation angle
+     *
+     * @param angle The new rotation angle
+     */
+    void setAngle(float angle) {
+      cos = std::cos(angle);
+      sin = std::sin(angle);
+    }
+
+    /**
+     * @brief Get the rotation angle
+     *
+     * @returns The current rotation angle
+     */
+    float getAngle() const {
+      return std::atan2(sin, cos);
+    }
+  };
+
+  /**
+   * @relates Rotation
+   * @brief Apply a rotation to a 2D point.
+   *
+   * @param rotation The rotation
+   * @param point The point to transform
+   * @return The transformed point
+   */
+  constexpr
+  Vector2f transform(const Rotation& rotation, Vector2f point) {
+    return {
+      rotation.cos * point.x - rotation.sin * point.y,
+      rotation.sin * point.x + rotation.cos * point.y
+    };
+  }
+
+  /**
+   * @relates Rotation
+   * @brief Apply an inverse rotation to a 2D point.
+   *
+   * @param rotation The rotation
+   * @param point The point to transform
+   * @return The transformed point
+   */
+  constexpr
+  Vector2f inverseTransform(const Rotation& rotation, Vector2f point) {
+    return {
+       rotation.cos * point.x + rotation.sin * point.y,
+      -rotation.sin * point.x + rotation.cos * point.y
+    };
+  }
+
+  /**
+   * @brief A translation
+   */
+  struct GF_API Translation {
+    Vector2f offset;
+
+    /**
+     * @brief Default constructor
+     *
+     * The default translation has a null offset
+     */
+    Translation()
+    : offset(0.0f, 0.0f)
+    {
+
+    }
+
+    /**
+     * @brief Constructor with an offset
+     *
+     * @param translationOffset The translation offset
+     */
+    Translation(Vector2f translationOffset)
+    : offset(translationOffset)
+    {
+
+    }
+
+    /**
+     * @brief Set the translation offset
+     *
+     * @param newOffset The new offset
+     */
+    void setOffset(Vector2f newOffset) noexcept {
+      offset = newOffset;
+    }
+
+    /**
+     * @brief Get the translation offset
+     *
+     * @return The current translation offset
+     */
+    Vector2f getOffset() const noexcept {
+      return offset;
+    }
+  };
+
+  /**
+   * @relates Translation
+   * @brief Apply a translation to a 2D point.
+   *
+   * @param translation The translation
+   * @param point The point to transform
+   * @return The transformed point
+   */
+  constexpr
+  Vector2f transform(const Translation& translation, Vector2f point) {
+    return { point.x + translation.offset.x, point.y + translation.offset.y };
+  }
+
+  /**
+   * @relates Translation
+   * @brief Apply an inverse translation to a 2D point.
+   *
+   * @param translation The translation
+   * @param point The point to transform
+   * @return The transformed point
+   */
+  constexpr
+  Vector2f inverseTransform(const Translation& translation, Vector2f point) {
+    return { point.x - translation.offset.x, point.y - translation.offset.y };
+  }
+
+  /**
+   * @brief A simple transformation (rotation then translation)
+   *
+   * This class is meant for simple transformation as can be seen in physics.
+   * It is the composition of a rotation and a translation.
+   *
+   * For more complex affine transformation, you can use gf::Matrix3f.
+   *
+   * @sa gf::Matrix3f, gf::Rotation, gf::Translation
+   */
+  struct GF_API Transform {
+    Rotation rotation; ///< Rotation of the transformation
+    Translation translation; ///< Translation of the transformation
+
+    Transform()
+    {
+
+    }
+
+    /**
+     * @brief Constructor with a rotation and a translation
+     *
+     * @param angle The rotation angle
+     * @param offset The translation offset
+     */
+    Transform(float angle, Vector2f offset)
+    : rotation(angle), translation(offset)
+    {
+
+    }
+
+    /**
+     * @brief Constructor with a rotation
+     *
+     * There is no translation.
+     *
+     * @param angle The rotation angle
+     */
+    Transform(float angle)
+    : rotation(angle)
+    {
+
+    }
+
+    /**
+     * @brief Constructor with a translation
+     *
+     * There is no rotation.
+     *
+     * @param offset The translation offset
+     */
+    Transform(Vector2f offset)
+    : translation(offset)
+    {
+
+    }
+
+    /**
+     * @brief Set the rotation angle
+     *
+     * @param angle The rotation angle
+     */
+    void setAngle(float angle) {
+      rotation.setAngle(angle);
+    }
+
+    /**
+     * @brief Get the rotation angle
+     *
+     * @returns The rotation angle
+     */
+    float getAngle() const {
+      return rotation.getAngle();
+    }
+
+    /**
+     * @brief Set the translation offset
+     *
+     * @param offset The translation offset
+     */
+    void setOffset(Vector2f offset) noexcept {
+      translation.setOffset(offset);
+    }
+
+    /**
+     * @brief Get the translation offset
+     *
+     * @returns The translation offset
+     */
+    Vector2f getOffset() const noexcept {
+      return translation.getOffset();
+    }
+
+  };
+
+  /**
+   * @relates Transform
+   * @brief Apply a transformation to a 2D point.
+   *
+   * @param trans The transformation
+   * @param point The point to transform
+   * @return The transformed point
+   */
+  constexpr
+  Vector2f transform(const Transform& trans, Vector2f point) {
+    return transform(trans.translation, transform(trans.rotation, point));
+  }
+
+  /**
+   * @relates Transform
+   * @brief Apply an inverse transformation to a 2D point.
+   *
+   * @param trans The transformation
+   * @param point The point to transform
+   * @return The transformed point
+   */
+  constexpr
+  Vector2f inverseTransform(const Transform& trans, Vector2f point) {
+    return inverseTransform(trans.rotation, inverseTransform(trans.translation, point));
+  }
+
   // https://en.wikipedia.org/wiki/Homogeneous_coordinates
 
   /**

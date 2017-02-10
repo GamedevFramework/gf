@@ -4,10 +4,10 @@
 #include <memory>
 
 #include "Circ.h"
-#include "Isometry.h"
 #include "PhysicsGeometry.h"
 #include "Polygon.h"
 #include "Rect.h"
+#include "Transform.h"
 #include "Vector.h"
 
 namespace gf {
@@ -193,7 +193,7 @@ inline namespace v1 {
      * @returns The current transform
      * @sa updateTransform()
      */
-    const Isometry& getTransform() const;
+    const Transform& getTransform() const;
 
 
     /** @} */
@@ -321,7 +321,7 @@ inline namespace v1 {
     float m_dynamicFriction;
     float m_linearDamping;
 
-    Isometry m_transform;
+    Transform m_transform;
 
     const PhysicsGeometry& m_geometry;
   };

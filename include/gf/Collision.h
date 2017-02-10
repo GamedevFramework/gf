@@ -32,7 +32,7 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  struct Isometry;
+  struct Transform;
 
   /**
    * @ingroup game
@@ -56,7 +56,7 @@ inline namespace v1 {
    * @param p Data to fill if there is a collision
    * @return True if there is a collision
    */
-  GF_API bool collides(const CircF& lhs, const Isometry& lhsTrans, const CircF& rhs, const Isometry& rhsTrans, Penetration& p);
+  GF_API bool collides(const CircF& lhs, const Transform& lhsTrans, const CircF& rhs, const Transform& rhsTrans, Penetration& p);
 
   /**
    * @relates Penetration
@@ -113,7 +113,7 @@ inline namespace v1 {
    * @param p Data to fill if there is a collision
    * @return True if there is a collision
    */
-  GF_API bool collides(const CircF& lhs, const Isometry& lhsTrans, const Polygon& rhs, const Isometry& rhsTrans, Penetration& p);
+  GF_API bool collides(const CircF& lhs, const Transform& lhsTrans, const Polygon& rhs, const Transform& rhsTrans, Penetration& p);
 
   /**
    * @relates Penetration
@@ -137,7 +137,7 @@ inline namespace v1 {
    * @param p Data to fill if there is a collision
    * @return True if there is a collision
    */
-  GF_API bool collides(const Polygon& lhs, const Isometry& lhsTrans, const CircF& rhs, const Isometry& rhsTrans, Penetration& p);
+  GF_API bool collides(const Polygon& lhs, const Transform& lhsTrans, const CircF& rhs, const Transform& rhsTrans, Penetration& p);
 
   /**
    * @relates Penetration
@@ -161,7 +161,7 @@ inline namespace v1 {
    * @param p Data to fill if there is a collision
    * @return True if there is a collision
    */
-  GF_API bool collides(const Polygon& lhs, const Isometry& lhsTrans, const Polygon& rhs, const Isometry& rhsTrans, Penetration& p);
+  GF_API bool collides(const Polygon& lhs, const Transform& lhsTrans, const Polygon& rhs, const Transform& rhsTrans, Penetration& p);
 
   /**
    * @relates Penetration

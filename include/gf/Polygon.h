@@ -33,7 +33,7 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  struct Isometry;
+  struct Transform;
 
   /**
    * @ingroup core
@@ -110,10 +110,10 @@ inline namespace v1 {
      * @brief Get the farthest point in a direction
      *
      * @param direction The direction to search (in world coordinates)
-     * @param isometry The transformation of the polygon
+     * @param transform The transformation of the polygon
      * @returns The farthest point of the polygon in the given direction
      */
-    Vector2f getSupport(Vector2f direction, const Isometry& isometry) const;
+    Vector2f getSupport(Vector2f direction, const Transform& transform) const;
 
     /**
      * @brief Get the farthest point in a direction
