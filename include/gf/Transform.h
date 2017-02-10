@@ -43,11 +43,9 @@ inline namespace v1 {
    * @param point The point to transform
    * @return The transformed point
    */
-  inline
+  constexpr
   Vector2f transform(const Matrix3f& mat, Vector2f point) {
-    Vector3f homogeneousPoint{point, 1.0f};
-    Vector3f result = mat * homogeneousPoint;
-    return result.xy;
+    return { mat.xx * point.x + mat.xy * point.y + mat.xz, mat.yx * point.x + mat.yy * point.y + mat.yz };
   }
 
   /**
