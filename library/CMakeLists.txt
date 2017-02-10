@@ -77,6 +77,7 @@ add_library(gf0 SHARED
   # window
   Action.cc
   Control.cc
+  Coordinates.cc
   Keyboard.cc
   Gamepad.cc
   Monitor.cc
