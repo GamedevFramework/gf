@@ -36,7 +36,7 @@ inline namespace v1 {
    * This class stores a pointer to a string and its size. It can be built
    * from various inputs: `std::string`, C string.
    *
-   * @sa ArrayRef
+   * @sa gf::ArrayRef, gf::BufferRef
    */
   class StringRef {
   public:

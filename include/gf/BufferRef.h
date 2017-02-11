@@ -18,8 +18,8 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#ifndef GF_ARRAY_REF_H
-#define GF_ARRAY_REF_H
+#ifndef GF_BUFFER_REF_H
+#define GF_BUFFER_REF_H
 
 #include <array>
 #include <vector>
@@ -31,22 +31,23 @@ inline namespace v1 {
 
   /**
    * @ingroup core
-   * @brief A constant reference to an array and its size
+   * @brief A reference to a modifiable buffer and its size
    *
-   * This class stores a pointer to some data and its size. It can be built
-   * from various inputs: `std::vector`, static array, pointer and size.
+   * This class stores a pointer to a buffer and its size. It can be built
+   * from various inputs: `std::vector`, `std::array`, static array, pointer
+   * and size.
    *
-   * @sa gf::BufferRef, gf::StringRef
+   * @sa gf::ArrayRef, gf::StringRef
    */
   template<typename T>
-  class ArrayRef {
+  class BufferRef {
   public:
     /**
      * @brief Default constructor
      *
      * Data is nullptr and size is 0.
      */
-    constexpr ArrayRef()
+    constexpr BufferRef()
     : m_data(nullptr)
     , m_size(0)
     {
@@ -56,10 +57,10 @@ inline namespace v1 {
     /**
      * @brief Constructor from a pointer and a size
      *
-     * @param data A pointer to the elements in the array
-     * @param size The number of elements in the array
+     * @param data A pointer to a buffer
+     * @param size The number of elements in the buffer
      */
-    constexpr ArrayRef(const T *data, std::size_t size)
+    constexpr BufferRef(T *data, std::size_t size)
     : m_data(data)
     , m_size(size)
     {
@@ -71,7 +72,7 @@ inline namespace v1 {
      *
      * @param values The vector of elements
      */
-    ArrayRef(const std::vector<T>& values)
+    BufferRef(std::vector<T>& values)
     : m_data(values.data())
     , m_size(values.size())
     {
@@ -84,7 +85,7 @@ inline namespace v1 {
      * @param values The array of elements
      */
     template<std::size_t N>
-    ArrayRef(const std::array<T,N>& values)
+    BufferRef(std::array<T,N>& values)
     : m_data(values.data())
     , m_size(values.size())
     {
@@ -99,21 +100,9 @@ inline namespace v1 {
      * @param data The static array
      */
     template<std::size_t N>
-    constexpr ArrayRef(const T (&data)[N])
+    constexpr BufferRef(T (&data)[N])
     : m_data(data)
     , m_size(N)
-    {
-
-    }
-
-    /**
-     * @brief Constructor from an initializer list
-     *
-     * @param values The list of elements
-     */
-    ArrayRef(std::initializer_list<T> values)
-    : m_data(values.size() == 0 ? nullptr : values.begin())
-    , m_size(values.size())
     {
 
     }
@@ -123,7 +112,7 @@ inline namespace v1 {
      *
      * @returns A pointer to the first element in the array
      */
-    constexpr const T *getData() const {
+    constexpr T *getData() {
       return m_data;
     }
 
@@ -143,7 +132,7 @@ inline namespace v1 {
      *
      * @sa end()
      */
-    constexpr const T *begin() const {
+    constexpr T *begin() {
       return m_data;
     }
 
@@ -154,12 +143,12 @@ inline namespace v1 {
      *
      * @sa begin()
      */
-    constexpr const T *end() const {
+    constexpr T *end() {
       return m_data + m_size;
     }
 
   private:
-    const T *m_data;
+    T *m_data;
     std::size_t m_size;
   };
 
@@ -169,4 +158,4 @@ inline namespace v1 {
 #endif
 }
 
-#endif // GF_ARRAY_REF_H
+#endif // GF_BUFFER_REF_H
