@@ -24,6 +24,7 @@
 #include <gf/Window.h>
 
 #include <cassert>
+#include <cstring>
 
 #include <SDL.h>
 
@@ -469,6 +470,11 @@ inline namespace v1 {
         out.gamepadAxis.id = static_cast<GamepadId>(in->caxis.which);
         out.gamepadAxis.axis = getGamepadAxisFromAxis(in->caxis.axis);
         out.gamepadAxis.value = in->caxis.value;
+        break;
+
+      case SDL_TEXTINPUT:
+        out.type = EventType::TextEntered;
+        std::strncpy(out.text.rune.data, in->text.text, Rune::Size);
         break;
 
       default:

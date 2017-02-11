@@ -28,6 +28,7 @@
 #include "Keyboard.h"
 #include "Mouse.h"
 #include "Portability.h"
+#include "Rune.h"
 #include "Vector.h"
 
 namespace gf {
@@ -63,6 +64,8 @@ inline namespace v1 {
     GamepadAxisMoved,       ///< A gamepad axis was moved (data in event.gamepadAxis)
     GamepadConnected,       ///< A gamepad was connected (data in event.gamepadConnection)
     GamepadDisconnected,    ///< A gamepad was disconnected (data in event.gamepadDisconnection)
+
+    TextEntered,  ///< A text was entered (data in event.text)
   };
 
 
@@ -126,7 +129,7 @@ inline namespace v1 {
      * @brief Text event parameters (EventType::TextEntered)
      */
     struct TextEvent {
-      char32_t codepoint; ///< UTF-32 Unicode value of the character
+      Rune rune; ///< The rune
     };
 
     /**

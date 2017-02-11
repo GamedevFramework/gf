@@ -162,6 +162,10 @@ int main() {
           std::cout << "GamepadAxisMoved:\n" << event.gamepadAxis << '\n';
           break;
 
+        case gf::EventType::TextEntered:
+          std::cout << "TextEntered: '" << event.text.rune.data << "'\n";
+          break;
+
         default:
           break;
       }
