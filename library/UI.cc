@@ -31,11 +31,14 @@
 
 #include <iostream>
 
+#include <SDL.h>
+
 #include <gf/RenderTarget.h>
 #include <gf/Transform.h>
 #include <gf/Vertex.h>
 
 #include "priv/String.h"
+#include "priv/Utils.h"
 
 // #define NK_PRIVATE
 #define NK_INCLUDE_FIXED_TYPES
@@ -95,6 +98,28 @@ inline namespace v1 {
     g->offset.y = glyph.bounds.top + characterSize; // hacky but works
   }
 
+  static void clipboardPaste(nk_handle usr, struct nk_text_edit *edit) {
+    GF_UNUSED(usr);
+
+    char *text = SDL_GetClipboardText();
+
+    if (text) {
+      nk_textedit_paste(edit, text, nk_strlen(text));
+      SDL_free(text);
+    }
+  }
+
+  static void clipboardCopy(nk_handle usr, const char *text, int len) {
+    GF_UNUSED(usr);
+
+    if (len == 0) {
+      return;
+    }
+
+    std::string str(text, len);
+    SDL_SetClipboardText(str.c_str());
+  }
+
   struct UI::UIImpl {
     State state;
     Font *font;
@@ -123,6 +148,9 @@ inline namespace v1 {
 
     auto ctx = &m_impl->ctx;
     nk_init_default(ctx, user);
+    ctx->clip.copy = clipboardCopy;
+    ctx->clip.paste = clipboardPaste;
+    ctx->clip.userdata = nk_handle_ptr(nullptr);
 
     nk_buffer_init_default(&m_impl->cmds);
   }
