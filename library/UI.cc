@@ -168,6 +168,8 @@ inline namespace v1 {
           default:
             break;
         }
+
+        break;
       }
 
       case EventType::KeyPressed:
@@ -290,12 +292,20 @@ inline namespace v1 {
             // nothing to do
             break;
         }
+
+        break;
+      }
+
+      case EventType::TextEntered: {
+        nk_glyph glyph;
+        std::memcpy(glyph, event.text.rune.data, NK_UTF_SIZE);
+        nk_input_glyph(&m_impl->ctx, glyph);
+        break;
       }
 
       default:
         break;
     }
-
 
   }
 
@@ -504,6 +514,41 @@ inline namespace v1 {
   void UI::propertyDouble(const std::string& name, double min, double& val, double max, double step, float incPerPixel) {
     setState(State::Setup);
     nk_property_double(&m_impl->ctx, name.c_str(), min, &val, max, step, incPerPixel);
+  }
+
+  static nk_plugin_filter getPluginFilter(UIEditFilter filter) {
+    switch (filter) {
+      case UIEditFilter::Default:
+        return nk_filter_default;
+      case UIEditFilter::Ascii:
+        return nk_filter_ascii;
+      case UIEditFilter::Float:
+        return nk_filter_float;
+      case UIEditFilter::Decimal:
+        return nk_filter_decimal;
+      case UIEditFilter::Hex:
+        return nk_filter_hex;
+      case UIEditFilter::Oct:
+        return nk_filter_oct;
+      case UIEditFilter::Binary:
+        return nk_filter_binary;
+    }
+
+    assert(false);
+    return nk_filter_default;
+  }
+
+  const UIEditFlags UIEditType::Simple = UIEdit::AlwaysInsertMode;
+  const UIEditFlags UIEditType::Field = UIEditType::Simple | UIEdit::Selectable | UIEdit::Clipboard;
+  const UIEditFlags UIEditType::Box = UIEditFlags(UIEdit::AlwaysInsertMode) | UIEdit::Selectable | UIEdit::Multiline | UIEdit::AllowTab | UIEdit::Clipboard;
+  const UIEditFlags UIEditType::Editor = UIEditFlags(UIEdit::Selectable) | UIEdit::Multiline | UIEdit::AllowTab | UIEdit::Clipboard;
+
+  UIEditEventFlags UI::edit(UIEditFlags flags, BufferRef<char> buffer, std::size_t& length, UIEditFilter filter) {
+    setState(State::Setup);
+    int len = length;
+    nk_flags ret = nk_edit_string(&m_impl->ctx, flags.getValue(), buffer.getData(), &len, buffer.getSize(), getPluginFilter(filter));
+    length = len;
+    return static_cast<UIEditEvent>(ret);
   }
 
   bool UI::popupBegin(UIPopup type, const std::string& title, UIWindowFlags flags, const RectF& bounds) {

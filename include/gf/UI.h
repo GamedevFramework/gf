@@ -25,6 +25,7 @@
 #include <memory>
 
 #include "ArrayRef.h"
+#include "BufferRef.h"
 #include "Drawable.h"
 #include "Event.h"
 #include "Flags.h"
@@ -146,6 +147,52 @@ inline namespace v1 {
     TriangleRight,  ///< Triangle right
     Plus,           ///< Plus
     Minus,          ///< Minus
+  };
+
+  enum class UIEdit : uint32_t {
+    Default             = 0x0000,
+    ReadOnly            = 0x0001,
+    AutoSelect          = 0x0002,
+    SigEnter            = 0x0004,
+    AllowTab            = 0x0008,
+    NoCursor            = 0x0010,
+    Selectable          = 0x0020,
+    Clipboard           = 0x0040,
+    CtrlEnterNewline    = 0x0080,
+    NoHorizontalScroll  = 0x0100,
+    AlwaysInsertMode    = 0x0200,
+    // no 0x0400
+    Multiline           = 0x0800,
+    GotoEndOnActivate   = 0x1000,
+  };
+
+  using UIEditFlags = Flags<UIEdit>;
+
+  struct GF_API UIEditType {
+    static const UIEditFlags Simple;
+    static const UIEditFlags Field;
+    static const UIEditFlags Box;
+    static const UIEditFlags Editor;
+  };
+
+  enum class UIEditEvent : uint32_t {
+    Active      = 0x0001, ///< Edit widget is currently being modified
+    Inactive    = 0x0002, ///< Edit widget is not active and is not being modified
+    Activated   = 0x0004, ///< Edit widget went from state inactive to state active
+    Deactivated = 0x0008, ///< Edit widget went from state active to state inactive
+    Commited    = 0x0010, ///< Edit widget has received an enter and lost focus
+  };
+
+  using UIEditEventFlags = Flags<UIEditEvent>;
+
+  enum class UIEditFilter {
+    Default,
+    Ascii,
+    Float,
+    Decimal,
+    Hex,
+    Oct,
+    Binary,
   };
 
   /**
@@ -893,6 +940,17 @@ inline namespace v1 {
      */
 
     /**
+     * @name Widgets: TextEdit
+     * @{
+     */
+
+    UIEditEventFlags edit(UIEditFlags flags, BufferRef<char> buffer, std::size_t& length, UIEditFilter filter = UIEditFilter::Default);
+
+    /**
+     * @}
+     */
+
+    /**
      * @name Popups
      * @{
      */
@@ -1289,6 +1347,16 @@ inline namespace v1 {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 template<>
 struct EnableBitmaskOperators<UIWindow> {
+  static constexpr bool value = true;
+};
+
+template<>
+struct EnableBitmaskOperators<UIEdit> {
+  static constexpr bool value = true;
+};
+
+template<>
+struct EnableBitmaskOperators<UIEditEvent> {
   static constexpr bool value = true;
 };
 #endif

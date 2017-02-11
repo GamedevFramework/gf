@@ -112,7 +112,7 @@ inline namespace v1 {
      *
      * @returns A pointer to the first element in the array
      */
-    constexpr T *getData() {
+    T *getData() {
       return m_data;
     }
 
@@ -132,7 +132,7 @@ inline namespace v1 {
      *
      * @sa end()
      */
-    constexpr T *begin() {
+    T *begin() {
       return m_data;
     }
 
@@ -143,7 +143,7 @@ inline namespace v1 {
      *
      * @sa begin()
      */
-    constexpr T *end() {
+    T *end() {
       return m_data + m_size;
     }
 
