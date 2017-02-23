@@ -18,34 +18,31 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#include <gf/Library.h>
+#ifndef GF_PATHS_H
+#define GF_PATHS_H
 
-#include <iostream>
+#include "Filesystem.h"
+#include "StringRef.h"
 
-#include <gf/Paths.h>
-#include <gf/SystemInfo.h>
+namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+inline namespace v1 {
+#endif
 
-int main() {
-  std::cout << "Gamedev Framework (gf) example #00: Version Info, System Info and Path Info\n";
+  struct Paths {
+    Paths() = delete;
 
-  std::cout << '\n';
+    static Path getPrefPath(StringRef org, StringRef app);
 
-  gf::Library::printVersionInfo();
+    static Path getBasePath();
 
-  std::cout << '\n';
+    static Path getCurrentPath();
 
-  gf::Library lib;
+  };
 
-  std::cout << "Plaform: " << gf::SystemInfo::getPlatformName() << '\n';
-  std::cout << "CPU count: " << gf::SystemInfo::getCpuCount() << '\n';
-  std::cout << "RAM size: " << gf::SystemInfo::getSystemRamSize() << " MiB\n";
-  std::cout << "Cache line size: " << gf::SystemInfo::getCpuCacheLineSize() << " kiB\n";
-
-  std::cout << '\n';
-
-  std::cout << "Current path: " << gf::Paths::getCurrentPath() << '\n';
-  std::cout << "Base path: " << gf::Paths::getBasePath() << '\n';
-  std::cout << "Pref path: " << gf::Paths::getPrefPath("ACME", "Foo") << '\n';
-
-  return 0;
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
+}
+
+#endif // GF_PATHS_H

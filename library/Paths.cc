@@ -18,34 +18,40 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#include <gf/Library.h>
-
-#include <iostream>
-
 #include <gf/Paths.h>
-#include <gf/SystemInfo.h>
 
-int main() {
-  std::cout << "Gamedev Framework (gf) example #00: Version Info, System Info and Path Info\n";
+#include <SDL.h>
 
-  std::cout << '\n';
+namespace gf {
+inline namespace v1 {
 
-  gf::Library::printVersionInfo();
+  Path Paths::getPrefPath(StringRef org, StringRef app) {
+    char *prefPath = SDL_GetPrefPath(org.getData(), app.getData());
 
-  std::cout << '\n';
+    if (prefPath == nullptr) {
+      return Path();
+    }
 
-  gf::Library lib;
+    Path path(prefPath);
+    SDL_free(prefPath);
+    return path;
+  }
 
-  std::cout << "Plaform: " << gf::SystemInfo::getPlatformName() << '\n';
-  std::cout << "CPU count: " << gf::SystemInfo::getCpuCount() << '\n';
-  std::cout << "RAM size: " << gf::SystemInfo::getSystemRamSize() << " MiB\n";
-  std::cout << "Cache line size: " << gf::SystemInfo::getCpuCacheLineSize() << " kiB\n";
+  Path Paths::getBasePath() {
+    char *basePath = SDL_GetBasePath();
 
-  std::cout << '\n';
+    if (basePath == nullptr) {
+      return Path();
+    }
 
-  std::cout << "Current path: " << gf::Paths::getCurrentPath() << '\n';
-  std::cout << "Base path: " << gf::Paths::getBasePath() << '\n';
-  std::cout << "Pref path: " << gf::Paths::getPrefPath("ACME", "Foo") << '\n';
+    Path path(basePath);
+    SDL_free(basePath);
+    return path;
+  }
 
-  return 0;
+  Path Paths::getCurrentPath() {
+    return boost::filesystem::current_path();
+  }
+
+}
 }
