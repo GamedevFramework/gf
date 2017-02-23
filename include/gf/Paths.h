@@ -21,7 +21,7 @@
 #ifndef GF_PATHS_H
 #define GF_PATHS_H
 
-#include "Filesystem.h"
+#include "Path.h"
 #include "StringRef.h"
 
 namespace gf {

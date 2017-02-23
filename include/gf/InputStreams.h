@@ -27,8 +27,8 @@
 #include <cstddef>
 #include <cstdio>
 
-#include "Filesystem.h"
 #include "InputStream.h"
+#include "Path.h"
 #include "Portability.h"
 
 namespace gf {

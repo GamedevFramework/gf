@@ -18,8 +18,8 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#ifndef GF_FILESYSTEM_H
-#define GF_FILESYSTEM_H
+#ifndef GF_PATH_H
+#define GF_PATH_H
 
 #include <boost/filesystem.hpp>
 #include <boost/functional/hash.hpp>
@@ -45,4 +45,4 @@ inline namespace v1 {
 #endif
 }
 
-#endif // GF_FILESYSTEM_H
+#endif // GF_PATH_H

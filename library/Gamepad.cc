@@ -22,7 +22,6 @@
 
 #include <SDL.h>
 
-#include <gf/Filesystem.h>
 #include <gf/Log.h>
 
 #include "generated/gamecontrollerdb.txt.h"
