@@ -1544,14 +1544,13 @@ inline namespace v1 {
   }
 
   double HeteroTerrain2D::getValue(double x, double y) {
-    double value = 0.0;
     double frequency = 1.0;
     double amplitude = 1.0;
 
     x *= m_scale;
     y *= m_scale;
 
-    value = m_offset + m_noise(x, y);
+    double value = m_offset + m_noise(x, y);
 
     frequency *= m_lacunarity;
     amplitude *= m_persistence;
@@ -1586,14 +1585,13 @@ inline namespace v1 {
   }
 
   double HybridMultifractal2D::getValue(double x, double y) {
-    double value = 0.0;
     double frequency = 1.0;
     double amplitude = 1.0;
 
     x *= m_scale;
     y *= m_scale;
 
-    value = m_noise(x, y) + m_offset;
+    double value = m_noise(x, y) + m_offset;
     double weight = value;
 
     frequency *= m_lacunarity;
@@ -1647,13 +1645,12 @@ inline namespace v1 {
     signal *= signal;
 
     value = signal;
-    double weight = 1.0;
 
     frequency *= m_lacunarity;
     amplitude *= m_persistence;
 
     for (std::size_t k = 1; k < m_octaves; ++k) {
-      weight = signal * m_gain;
+      double weight = signal * m_gain;
       weight = gf::clamp(weight, 0.0, 1.0);
 
       signal = m_noise.getValue(x * frequency, y * frequency);

@@ -192,7 +192,9 @@ inline namespace v1 {
     void setFramebufferSize(Vector2f size);
   };
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }
 
 #endif // GF_EFFECTS_H
