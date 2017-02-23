@@ -347,6 +347,17 @@ inline namespace v1 {
     nk_end(&m_impl->ctx);
   }
 
+  void UI::windowSetBounds(const RectF& bounds) {
+    setState(State::Setup);
+    nk_window_set_bounds(&m_impl->ctx, { bounds.left, bounds.top, bounds.width, bounds.height });
+  }
+
+  RectF UI::windowGetBounds() {
+    setState(State::Setup);
+    auto bounds = nk_window_get_bounds(&m_impl->ctx);
+    return { bounds.x, bounds.y, bounds.w, bounds.y };
+  }
+
   void UI::layoutRowDynamic(float height, int cols) {
     setState(State::Setup);
     nk_layout_row_dynamic(&m_impl->ctx, height, cols);

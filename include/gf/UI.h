@@ -441,6 +441,9 @@ inline namespace v1 {
      */
     void end();
 
+    void windowSetBounds(const RectF& bounds);
+    RectF windowGetBounds();
+
     /**
      * @}
      */
