@@ -30,6 +30,7 @@
 #include "Event.h"
 #include "Flags.h"
 #include "Font.h"
+#include "Path.h"
 #include "Portability.h"
 #include "StringRef.h"
 #include "Types.h"
@@ -193,6 +194,15 @@ inline namespace v1 {
     Hex,
     Oct,
     Binary,
+  };
+
+  /**
+   * @ingroup graphics
+   * @brief Data for file selector
+   */
+  struct UIBrowser {
+    Path currentPath;
+    Path selectedPath;
   };
 
   /**
@@ -948,6 +958,25 @@ inline namespace v1 {
      */
 
     UIEditEventFlags edit(UIEditFlags flags, BufferRef<char> buffer, std::size_t& length, UIEditFilter filter = UIEditFilter::Default);
+
+    /**
+     * @}
+     */
+
+    /**
+     * @name Dialogs
+     * @{
+     */
+
+    /**
+     * @brief File selector
+     *
+     * @param browser State of the file selector
+     * @param title The title of the file selector
+     * @param bounds The area of the file selector
+     * @returns True if the file selector is open
+     */
+    bool fileSelector(UIBrowser& browser, const std::string& title, const RectF& bounds);
 
     /**
      * @}

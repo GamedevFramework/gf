@@ -506,6 +506,7 @@ static void overview(gf::UI& ui) {
       static gf::Color4f color = gf::Color::Red;
       static bool select[4];
       static bool popupActive;
+      static bool fileSelectorActive;
 
       // menu contextual
 
@@ -588,6 +589,32 @@ static void overview(gf::UI& ui) {
           popupActive = false;
         }
       }
+
+      ui.layoutRowBegin(gf::UILayout::Static, 30, 2);
+      ui.layoutRowPush(100);
+      ui.label("File selector:");
+      ui.layoutRowPush(50);
+
+      if (ui.buttonLabel("Open")) {
+        fileSelectorActive = true;
+      }
+
+      ui.layoutRowEnd();
+
+      static gf::UIBrowser browser;
+
+      if (fileSelectorActive) {
+        static gf::RectF bounds(20.0f, 100.0f, 500.0f, 500.0f);
+
+        if (!ui.fileSelector(browser, "Choose a file", bounds)) {
+          fileSelectorActive = false;
+        }
+
+      }
+
+      ui.layoutRowDynamic(30, 2);
+      ui.label("Selected file:");
+      ui.label(browser.selectedPath.filename().string());
 
       // tooltip
 

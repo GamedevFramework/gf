@@ -33,6 +33,7 @@
 
 #include <SDL.h>
 
+#include <gf/Paths.h>
 #include <gf/RenderTarget.h>
 #include <gf/Transform.h>
 #include <gf/Vertex.h>
@@ -588,6 +589,84 @@ inline namespace v1 {
     nk_flags ret = nk_edit_string(&m_impl->ctx, flags.getValue(), buffer.getData(), &len, buffer.getSize(), getPluginFilter(filter));
     length = len;
     return static_cast<UIEditEvent>(ret);
+  }
+
+  namespace {
+
+    struct DirectoryRange {
+      DirectoryRange(const Path& directory)
+      : path(directory)
+      {
+
+      }
+
+      boost::filesystem::directory_iterator begin() const {
+        return boost::filesystem::directory_iterator(path);
+      }
+
+      boost::filesystem::directory_iterator end() const {
+        return boost::filesystem::directory_iterator();
+      }
+
+      const Path& path;
+    };
+
+  }
+
+  bool UI::fileSelector(UIBrowser& browser, const std::string& title, const RectF& bounds) {
+    if (browser.currentPath.empty()) {
+      browser.currentPath = Paths::getCurrentPath();
+    }
+
+    assert(boost::filesystem::is_directory(browser.currentPath));
+
+    if (!popupBegin(UIPopup::Dynamic, title, UIWindowFlags(UIWindow::Border) | UIWindow::Title | UIWindow::Closable, bounds)) {
+      return false;
+    }
+
+    layoutRowDynamic(25, 1);
+    bool dummy = false;
+
+    if (selectableLabel("../", UIAlignment::Left, dummy)) {
+      browser.currentPath = browser.currentPath.parent_path();
+    }
+
+    std::vector<Path> paths;
+
+    for (boost::filesystem::directory_entry& x : DirectoryRange(browser.currentPath)) {
+      paths.push_back(x.path());
+    }
+
+    std::sort(paths.begin(), paths.end());
+
+    for (const Path& x : paths) {
+      bool selected = x == browser.selectedPath;
+
+      std::string name = x.filename().string();
+
+      if (boost::filesystem::is_directory(x)) {
+        name += '/';
+      }
+
+      if (selectableLabel(name, UIAlignment::Left, selected)) {
+        if (boost::filesystem::is_directory(x)) {
+          browser.currentPath = x;
+        } else {
+          browser.selectedPath = x;
+        }
+      }
+    }
+
+    layoutRowDynamic(25, 1);
+
+    if (buttonLabel("OK")) {
+      popupClose();
+      popupEnd();
+      return false;
+    }
+
+    popupEnd();
+    return true;
   }
 
   bool UI::popupBegin(UIPopup type, const std::string& title, UIWindowFlags flags, const RectF& bounds) {
