@@ -91,7 +91,7 @@ inline namespace v1 {
     for (std::size_t i = 0; i < m_points.size() - 2; ++i) {
       float x = gf::cross(m_points[i + 1] - m_points[i], m_points[i + 2] - m_points[i + 1]);
 
-      if (x > Epsilon) {
+      if (std::abs(x) > Epsilon) {
         int sign = gf::sign(x);
 
         if (currentSign != 0 && sign != currentSign) {
