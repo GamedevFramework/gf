@@ -11,9 +11,12 @@
   - @ref start_game
 3. User documentation (WIP)
   1. Core classes
+    - @ref math
+    - @ref vectors_matrices_transforms
     - @ref singletons
     - @ref noise
   2. Graphics classes
+    - @ref events_controls_actions
     - @ref shader
   3. Game classes
     - @ref messages
