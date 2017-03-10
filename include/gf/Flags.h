@@ -72,12 +72,18 @@ inline namespace v1 {
      */
     Flags() = default;
 
+    /**
+     * @brief Constructor with no flag set
+     */
     constexpr Flags(NoneType)
     : m_data(0)
     {
 
     }
 
+    /**
+     * @brief Constructor with all flags set
+     */
     constexpr Flags(AllType)
     : m_data(~0)
     {
@@ -105,6 +111,16 @@ inline namespace v1 {
     }
 
     /**
+     * @brief Binary OR between two bitfields
+     *
+     * @param flags Another bitfield
+     * @return The bitfield with a binary OR of the two bitfields
+     */
+    constexpr Flags operator|(Flags flags) {
+      return Flags(m_data | flags.m_data);
+    }
+
+    /**
      * @brief Binary OR and assignment
      *
      * @param flags Another bitfield
@@ -113,6 +129,16 @@ inline namespace v1 {
     Flags<E>& operator|=(Flags<E> flags) {
       m_data |= flags.m_data;
       return *this;
+    }
+
+    /**
+     * @brief Binary AND between two bitfields
+     *
+     * @param flags Another bitfield
+     * @return The bitfield with a binary AND of the two bitfields
+     */
+    constexpr Flags operator&(Flags flags) {
+      return Flags(m_data & flags.m_data);
     }
 
     /**
@@ -131,7 +157,7 @@ inline namespace v1 {
      *
      * @returns True if any flag is set
      */
-    operator bool() const {
+    constexpr operator bool() const {
       return m_data != 0;
     }
 
@@ -141,7 +167,7 @@ inline namespace v1 {
      * @param flag The flag to test
      * @return True if the flag is set
      */
-    bool test(E flag) const {
+    constexpr bool test(E flag) const {
       return (m_data & static_cast<Type>(flag)) != 0;
     }
 
@@ -177,7 +203,7 @@ inline namespace v1 {
     }
 
   private:
-    Flags(Type data)
+    constexpr Flags(Type data)
     : m_data(data)
     {
 
@@ -188,22 +214,6 @@ inline namespace v1 {
 
   /**
    * @relates Flags
-   * @brief Binary OR between two bitfields
-   *
-   * @param lhs The first bitfield
-   * @param rhs The second bitfield
-   * @return The bitfield with a binary OR of the two bitfields
-   */
-  template<typename E>
-  inline
-  Flags<E> operator|(Flags<E> lhs, Flags<E> rhs) {
-    Flags<E> flags(lhs);
-    flags |= rhs;
-    return flags;
-  }
-
-  /**
-   * @relates Flags
    * @brief Binary OR between a bitfield and a flag
    *
    * @param lhs The bitfield
@@ -211,11 +221,9 @@ inline namespace v1 {
    * @return The bitfield with a binary OR of the bitfield and the flag
    */
   template<typename E>
-  inline
+  constexpr
   Flags<E> operator|(Flags<E> lhs, E rhs) {
-    Flags<E> flags(lhs);
-    flags |= rhs;
-    return flags;
+    return lhs | Flags<E>(rhs);
   }
 
   /**
@@ -227,27 +235,9 @@ inline namespace v1 {
    * @return The bitfield with a binary OR of the flag and the bitfield
    */
   template<typename E>
-  inline
+  constexpr
   Flags<E> operator|(E lhs, Flags<E> rhs) {
-    Flags<E> flags(lhs);
-    flags |= rhs;
-    return flags;
-  }
-
-  /**
-   * @relates Flags
-   * @brief Binary AND between two bitfields
-   *
-   * @param lhs The first bitfield
-   * @param rhs The second bitfield
-   * @return The bitfield with a binary AND of the two bitfields
-   */
-  template<typename E>
-  inline
-  Flags<E> operator&(Flags<E> lhs, Flags<E> rhs) {
-    Flags<E> flags(lhs);
-    flags &= rhs;
-    return flags;
+    return Flags<E>(lhs) | rhs;
   }
 
   /**
@@ -259,11 +249,9 @@ inline namespace v1 {
    * @return The bitfield with a binary AND of the bitfield and the flag
    */
   template<typename E>
-  inline
+  constexpr
   Flags<E> operator&(Flags<E> lhs, E rhs) {
-    Flags<E> flags(lhs);
-    flags &= rhs;
-    return flags;
+    return lhs & Flags<E>(rhs);
   }
 
   /**
@@ -275,11 +263,9 @@ inline namespace v1 {
    * @return The bitfield with a binary AND of the flag and the bitfield
    */
   template<typename E>
-  inline
+  constexpr
   Flags<E> operator&(E lhs, Flags<E> rhs) {
-    Flags<E> flags(lhs);
-    flags &= rhs;
-    return flags;
+    return Flags<E>(lhs) & rhs;
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -296,29 +282,26 @@ struct EnableBitmaskOperators {
 
 }
 
-
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 template<typename E>
+constexpr
 typename std::enable_if<gf::EnableBitmaskOperators<E>::value, gf::Flags<E>>::type
 operator|(E lhs, E rhs) {
-  gf::Flags<E> flags(lhs);
-  flags |= rhs;
-  return flags;
+  return gf::Flags<E>(lhs) | gf::Flags<E>(rhs);
 }
 
 template<typename E>
+constexpr
 typename std::enable_if<gf::EnableBitmaskOperators<E>::value, gf::Flags<E>>::type
 operator&(E lhs, E rhs) {
-  gf::Flags<E> flags(lhs);
-  flags &= rhs;
-  return flags;
+  return gf::Flags<E>(lhs) & gf::Flags<E>(rhs);
 }
 
 template<typename E>
+constexpr
 typename std::enable_if<gf::EnableBitmaskOperators<E>::value, gf::Flags<E>>::type
 operator~(E val) {
-  gf::Flags<E> flags(val);
-  return ~flags;
+  return ~gf::Flags<E>(val);
 }
 #endif
 

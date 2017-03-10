@@ -578,10 +578,39 @@ inline namespace v1 {
     return nk_filter_default;
   }
 
-  const UIEditFlags UIEditType::Simple = UIEdit::AlwaysInsertMode;
-  const UIEditFlags UIEditType::Field = UIEditType::Simple | UIEdit::Selectable | UIEdit::Clipboard;
-  const UIEditFlags UIEditType::Box = UIEditFlags(UIEdit::AlwaysInsertMode) | UIEdit::Selectable | UIEdit::Multiline | UIEdit::AllowTab | UIEdit::Clipboard;
-  const UIEditFlags UIEditType::Editor = UIEditFlags(UIEdit::Selectable) | UIEdit::Multiline | UIEdit::AllowTab | UIEdit::Clipboard;
+  template<typename E>
+  static constexpr Flags<E> combineFlags(E flag) {
+    return Flags<E>(flag);
+  }
+
+  template<typename E, typename ... F>
+  static constexpr Flags<E> combineFlags(E flag, F ... others) {
+    return Flags<E>(flag) | combineFlags(others ...);
+  }
+
+  const UIEditFlags UIEditType::Simple =
+      UIEdit::AlwaysInsertMode;
+
+  const UIEditFlags UIEditType::Field = combineFlags(
+      UIEdit::AlwaysInsertMode,
+      UIEdit::Selectable,
+      UIEdit::Clipboard
+  );
+
+  const UIEditFlags UIEditType::Box = combineFlags(
+      UIEdit::AlwaysInsertMode,
+      UIEdit::Selectable,
+      UIEdit::Multiline,
+      UIEdit::AllowTab,
+      UIEdit::Clipboard
+  );
+
+  const UIEditFlags UIEditType::Editor = combineFlags(
+      UIEdit::Selectable,
+      UIEdit::Multiline,
+      UIEdit::AllowTab,
+      UIEdit::Clipboard
+  );
 
   UIEditEventFlags UI::edit(UIEditFlags flags, BufferRef<char> buffer, std::size_t& length, UIEditFilter filter) {
     setState(State::Setup);
