@@ -16,6 +16,7 @@ option(GF_BUILD_TESTS "Build tests" ON)
 option(GF_BUILD_DOCUMENTATION "Build documentation (needs Doxygen)" ON)
 option(GF_BUILD_GAMES "Build games" OFF)
 option(GF_BUILD_TOOLS "Build tools" OFF)
+option(GF_SINGLE_COMPILTATION_UNIT "Build the library in a single file (unity build)" OFF)
 
 include(GNUInstallDirs)
 set(GF_DATADIR ${CMAKE_INSTALL_FULL_DATADIR})
