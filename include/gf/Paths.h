@@ -22,6 +22,7 @@
 #define GF_PATHS_H
 
 #include "Path.h"
+#include "Portability.h"
 #include "StringRef.h"
 
 namespace gf {
@@ -29,7 +30,7 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  struct Paths {
+  struct GF_API Paths {
     Paths() = delete;
 
     static Path getPrefPath(StringRef org, StringRef app);
