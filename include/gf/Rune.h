@@ -31,7 +31,7 @@ inline namespace v1 {
   /**
    * @brief A character encoded in UTF-8
    */
-  struct Rune {
+  struct GF_API Rune {
     /**
      * @brief The maximum size of the data
      */
