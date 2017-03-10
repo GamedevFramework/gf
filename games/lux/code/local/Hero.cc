@@ -35,7 +35,6 @@ namespace lux {
   static constexpr float HealthHeight = 5.0f;
   static constexpr float HealthRadius = 2.0f;
   static constexpr float HealthThickness = 1.0f;
-  static constexpr float HealthPadding = 40.0f;
 
   static constexpr float ScorePadding = 40.0f;
 

@@ -92,8 +92,7 @@ namespace lux {
 
 
   static constexpr std::size_t ParticlesCount = 800;
-  static constexpr float LifetimeMax = 1.5f;
-  static constexpr float LifetimeMin = 0.1f;
+  static constexpr float ParticleSystemLifetime = 1.5f;
 
   gf::MessageStatus Particles::onDead(gf::Id id, gf::Message *msg) {
     (void) id;
@@ -132,7 +131,7 @@ namespace lux {
     }
 
     sys.elapsed = 0.0f;
-    sys.lifetime = LifetimeMax;
+    sys.lifetime = ParticleSystemLifetime;
 
     m_particleSystems.push_back(sys);
 
