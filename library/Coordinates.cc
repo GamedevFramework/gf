@@ -26,8 +26,9 @@
 #include <gf/VectorOps.h>
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
-
+#endif
 
   Coordinates::Coordinates(Vector2u size)
   : m_size(size)
@@ -101,5 +102,7 @@ inline namespace v1 {
     return { getXDistance(m_size.width, distance.x, anchor), getYDistance(m_size.height, distance.y, anchor) };
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

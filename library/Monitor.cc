@@ -25,7 +25,9 @@
 #include <SDL.h>
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   Monitor Monitor::getPrimaryMonitor() {
     Library lib;
@@ -101,5 +103,7 @@ inline namespace v1 {
     };
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

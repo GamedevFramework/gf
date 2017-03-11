@@ -25,7 +25,9 @@
 #include <gf/Entity.h>
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   void EntityContainer::update(float dt) {
     // erase-remove idiom
@@ -64,5 +66,7 @@ inline namespace v1 {
     return nullptr;
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

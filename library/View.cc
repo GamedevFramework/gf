@@ -29,7 +29,9 @@
 #include "priv/Utils.h"
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   View::View()
   : m_center{0.0f, 0.0f}
@@ -111,5 +113,7 @@ inline namespace v1 {
     onScreenResize(screenSize);
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

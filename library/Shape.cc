@@ -31,7 +31,9 @@
 #include <gf/VectorOps.h>
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   Shape::Shape()
   : m_texture(nullptr)
@@ -198,5 +200,7 @@ inline namespace v1 {
     return buffer;
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

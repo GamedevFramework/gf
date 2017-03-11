@@ -30,7 +30,9 @@
 #include "priv/Debug.h"
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   RenderWindow::RenderWindow(Window& window)
   : m_window(window)
@@ -54,5 +56,7 @@ inline namespace v1 {
     return captureFramebuffer(0);
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

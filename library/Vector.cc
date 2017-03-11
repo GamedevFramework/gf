@@ -21,7 +21,9 @@
 #include <gf/Vector.h>
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
 // MSVC does not like extern template
 #ifndef _MSC_VER
@@ -49,5 +51,7 @@ inline namespace v1 {
   template struct Vector<uint8_t, 4>;
 #endif
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

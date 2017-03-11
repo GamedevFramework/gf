@@ -28,7 +28,9 @@
 #include <gf/VectorOps.h>
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   constexpr int TileLayer::NoTile;
 
@@ -200,5 +202,7 @@ inline namespace v1 {
 
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

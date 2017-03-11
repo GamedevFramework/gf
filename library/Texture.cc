@@ -32,7 +32,9 @@
 #include "priv/Debug.h"
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   BareTexture::BareTexture(Format format)
   : m_format(format)
@@ -297,5 +299,7 @@ inline namespace v1 {
     return BareTexture::create(size, nullptr);
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

@@ -25,7 +25,9 @@
 #include <gf/Texture.h>
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   PostProcessing::PostProcessing()
   : m_texture(nullptr)
@@ -81,5 +83,7 @@ inline namespace v1 {
     m_vertices[3].texCoords = { m_textureRect.left + m_textureRect.width, m_textureRect.top };
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

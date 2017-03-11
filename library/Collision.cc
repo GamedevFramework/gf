@@ -28,7 +28,9 @@
 #include <gf/Transform.h>
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   static constexpr float Skin = 0.15f;
 
@@ -478,5 +480,8 @@ inline namespace v1 {
   bool collides(const Polygon& lhs, const Polygon& rhs, Penetration& p) {
     return collides(lhs, Transform(), rhs, Transform(), p);
   }
+
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

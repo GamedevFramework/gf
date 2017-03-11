@@ -37,7 +37,9 @@
 #include "priv/String.h"
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   Text::Text()
   : m_string()
@@ -418,5 +420,7 @@ inline namespace v1 {
     return out;
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

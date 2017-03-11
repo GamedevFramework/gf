@@ -28,7 +28,9 @@
 #include <gf/Math.h>
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   RectangleShape::RectangleShape(Vector2f size)
   : m_size(size)
@@ -291,5 +293,7 @@ inline namespace v1 {
     return center + radial;
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

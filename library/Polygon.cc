@@ -31,7 +31,9 @@
 #include <gf/Log.h>
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   Polygon::Polygon(ArrayRef<Vector2f> points)
   : m_points(points.begin(), points.end())
@@ -131,5 +133,7 @@ inline namespace v1 {
     }
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

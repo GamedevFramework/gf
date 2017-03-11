@@ -28,7 +28,9 @@
 #include <gf/VectorOps.h>
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   RectF transform(const Matrix3f& mat, const RectF& rect) {
     Vector2f pointTopLeft = transform(mat, rect.getTopLeft());
@@ -65,5 +67,7 @@ inline namespace v1 {
     mat *= scaling(factor, center);
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

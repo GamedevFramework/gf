@@ -25,7 +25,9 @@
 #include <gf/VectorOps.h>
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   static Vector2f quadraticInterp(Vector2f p0, Vector2f p1, Vector2f p2, float t) {
     assert(0 <= t && t <= 1);
@@ -178,5 +180,7 @@ inline namespace v1 {
     return m_points[index];
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

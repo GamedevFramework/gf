@@ -29,7 +29,9 @@
 #include "config.h"
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   DefaultEffect::DefaultEffect() {
     loadFromMemory(default_vert, default_frag);
@@ -234,5 +236,7 @@ inline namespace v1 {
     setUniform("u_framebufferSize", size);
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

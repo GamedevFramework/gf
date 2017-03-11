@@ -25,7 +25,9 @@
 #include <gf/VectorOps.h>
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   Curve::Curve()
   : m_type(Type::Outlined)
@@ -240,5 +242,7 @@ inline namespace v1 {
     }
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

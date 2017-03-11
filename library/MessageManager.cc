@@ -24,7 +24,9 @@
 #include <algorithm>
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   MessageManager::MessageManager()
   : m_currentId(0)
@@ -73,5 +75,7 @@ inline namespace v1 {
     std::swap(it->second, kept);
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

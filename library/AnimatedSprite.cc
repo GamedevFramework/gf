@@ -23,7 +23,9 @@
 #include <gf/Animation.h>
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   AnimatedSprite::AnimatedSprite()
   : m_animation(nullptr)
@@ -48,5 +50,7 @@ inline namespace v1 {
     }
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

@@ -28,7 +28,9 @@
 #include "config.h"
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   // default value
   Log::Level Log::s_level =
@@ -76,5 +78,7 @@ inline namespace v1 {
     std::vfprintf(stderr, fmt, ap);
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

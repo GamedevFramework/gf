@@ -30,7 +30,9 @@
 #include "priv/Debug.h"
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   VertexBuffer::VertexBuffer()
   : m_vbo(0)
@@ -171,5 +173,7 @@ inline namespace v1 {
     }
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

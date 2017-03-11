@@ -31,7 +31,9 @@
 #include "priv/Utils.h"
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   RenderPipeline::RenderPipeline(Window& window)
   : m_window(window)
@@ -146,5 +148,7 @@ inline namespace v1 {
     GF_UNUSED(size);
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

@@ -26,7 +26,9 @@
 #include <type_traits>
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   Time::Time()
   : m_duration(0)
@@ -64,5 +66,7 @@ inline namespace v1 {
     return Time(std::chrono::duration_cast<std::chrono::steady_clock::duration>(time));
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

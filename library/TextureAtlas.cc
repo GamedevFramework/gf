@@ -29,7 +29,9 @@
 #include "vendor/tinyxml2/tinyxml2.h"
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   bool TextureAtlas::loadFromFile(const Path& filename) {
     tinyxml2::XMLDocument doc;
@@ -113,5 +115,7 @@ inline namespace v1 {
     return m_texture->computeTextureCoords(rect);
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

@@ -28,7 +28,9 @@
 #include <gf/Log.h>
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   PhysicsModel::PhysicsModel(Vector2f gravity)
   : m_gravity(gravity)
@@ -180,5 +182,7 @@ inline namespace v1 {
     }
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

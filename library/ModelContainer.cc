@@ -26,7 +26,9 @@
 
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   void ModelContainer::update(float dt) {
     for (auto model : m_models) {
@@ -50,5 +52,7 @@ inline namespace v1 {
     return nullptr;
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

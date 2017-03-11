@@ -57,7 +57,9 @@
 #include "vendor/nuklear/nuklear.h"
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   static float getTextWidth(nk_handle handle, float characterSize, const char *text, int len) {
     auto font = static_cast<Font *>(handle.ptr);
@@ -1134,5 +1136,7 @@ inline namespace v1 {
     m_impl->state = state;
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

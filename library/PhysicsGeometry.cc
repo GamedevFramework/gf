@@ -27,7 +27,9 @@
 #include "priv/Utils.h"
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   PhysicsGeometry::~PhysicsGeometry() {
 
@@ -140,5 +142,7 @@ inline namespace v1 {
     m_boundingCircle.radius = gf::euclideanDistance(min, max) / 2;
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

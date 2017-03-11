@@ -41,7 +41,9 @@
 #include "generated/default.vert.h"
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   RenderTarget::~RenderTarget() {
 
@@ -460,5 +462,7 @@ inline namespace v1 {
     m_defaultTexture.setRepeated(true);
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

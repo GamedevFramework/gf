@@ -29,7 +29,9 @@
 #include <gf/Log.h>
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   // FileInputStream
 
@@ -131,5 +133,7 @@ inline namespace v1 {
     return m_size;
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

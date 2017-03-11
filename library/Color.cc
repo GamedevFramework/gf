@@ -28,7 +28,9 @@
 #include <gf/Math.h>
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   constexpr Color4f Color::Black;
   constexpr Color4f Color::White;
@@ -183,5 +185,7 @@ inline namespace v1 {
     };
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

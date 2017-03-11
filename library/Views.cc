@@ -25,7 +25,9 @@
 #include "priv/Utils.h"
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   void StretchView::onScreenResize(Vector2u screenSize) {
     GF_UNUSED(screenSize);
@@ -120,5 +122,7 @@ inline namespace v1 {
     reset(screen);
   };
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

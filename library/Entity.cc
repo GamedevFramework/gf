@@ -23,7 +23,9 @@
 #include "priv/Utils.h"
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   Entity::~Entity() {
   }
@@ -38,5 +40,7 @@ inline namespace v1 {
     // default: do nothing
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

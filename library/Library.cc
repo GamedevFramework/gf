@@ -35,7 +35,9 @@
 #include "config.h"
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   static std::atomic_int loaded{0};
 
@@ -141,5 +143,7 @@ inline namespace v1 {
         fcv.major, fcv.minor, fcv.patch, flv.major, flv.minor, flv.patch);
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

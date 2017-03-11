@@ -27,7 +27,9 @@
 #include <gf/VectorOps.h>
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   SpriteBatch::SpriteBatch(RenderTarget& target)
   : m_target(target)
@@ -126,5 +128,7 @@ inline namespace v1 {
     m_count = 0;
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

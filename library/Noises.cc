@@ -31,7 +31,9 @@
 #include <gf/VectorOps.h>
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   static void generatePermutation(Random& random, std::array<uint8_t, 256>& perm) {
     std::iota(perm.begin(), perm.end(), 0);
@@ -1668,5 +1670,7 @@ inline namespace v1 {
     return value;
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

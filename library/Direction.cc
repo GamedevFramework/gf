@@ -25,7 +25,9 @@
 #include <gf/Math.h>
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   Vector2f unit(Direction direction) {
     switch (direction) {
@@ -106,5 +108,7 @@ inline namespace v1 {
     return orthogonalCCW(direction);
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

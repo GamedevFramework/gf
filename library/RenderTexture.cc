@@ -30,7 +30,9 @@
 #include "priv/Debug.h"
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   RenderTexture::RenderTexture()
   : m_name(0)
@@ -90,5 +92,7 @@ inline namespace v1 {
     return captureFramebuffer(m_name);
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

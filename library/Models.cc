@@ -21,7 +21,9 @@
 #include <gf/Models.h>
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   FixedTimestepModel::FixedTimestepModel(Model& model, float timestep)
   : m_model(model)
@@ -46,5 +48,7 @@ inline namespace v1 {
     }
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

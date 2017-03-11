@@ -24,7 +24,9 @@
 #include <gf/VectorOps.h>
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   static constexpr unsigned CirclePointCount = 15;
 
@@ -70,5 +72,7 @@ inline namespace v1 {
     target.draw(m_pointVertices, states);
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

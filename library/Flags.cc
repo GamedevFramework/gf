@@ -21,8 +21,11 @@
 #include <gf/Flags.h>
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
-
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

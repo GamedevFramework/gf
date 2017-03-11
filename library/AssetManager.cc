@@ -25,7 +25,9 @@
 namespace fs = boost::filesystem;
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   void AssetManager::addSearchDir(Path path) {
     if (!fs::is_directory(path)) {
@@ -57,5 +59,7 @@ inline namespace v1 {
     return Path();
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

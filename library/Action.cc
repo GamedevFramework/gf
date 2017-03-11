@@ -25,7 +25,10 @@
 #include <gf/Controls.h>
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
+
   struct Event;
 
   Action::Action(std::string name)
@@ -125,5 +128,7 @@ inline namespace v1 {
     }
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

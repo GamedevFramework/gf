@@ -23,7 +23,9 @@
 #include <SDL.h>
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   Path Paths::getPrefPath(StringRef org, StringRef app) {
     char *prefPath = SDL_GetPrefPath(org.getData(), app.getData());
@@ -53,5 +55,7 @@ inline namespace v1 {
     return boost::filesystem::current_path();
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

@@ -23,7 +23,9 @@
 #include <SDL.h>
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   std::string SystemInfo::getPlatformName() {
     return std::string(SDL_GetPlatform());
@@ -41,5 +43,7 @@ inline namespace v1 {
     return SDL_GetSystemRAM();
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

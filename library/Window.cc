@@ -38,7 +38,9 @@
 #include <gf/Vector.h>
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   static Uint32 getFlagsFromHints(WindowFlags hints) {
     Uint32 flags = SDL_WINDOW_OPENGL;
@@ -535,5 +537,7 @@ inline namespace v1 {
     SDL_SetWindowGrab(m_window, grabbed ? SDL_TRUE : SDL_FALSE);
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

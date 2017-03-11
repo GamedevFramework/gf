@@ -24,7 +24,9 @@
 #include <gf/Texture.h>
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   NinePatch::NinePatch()
   : m_texture(nullptr)
@@ -231,5 +233,7 @@ inline namespace v1 {
     m_vertices[15].texCoords = { x3, y3 };
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

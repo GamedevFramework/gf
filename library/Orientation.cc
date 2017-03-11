@@ -25,7 +25,9 @@
 #include <gf/Math.h>
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   Vector2f unit(Orientation orientation) {
     switch (orientation) {
@@ -132,5 +134,7 @@ inline namespace v1 {
     return static_cast<Orientation>((val + 7) % 8);
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

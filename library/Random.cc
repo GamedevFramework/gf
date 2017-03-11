@@ -25,7 +25,9 @@
 #include <iterator>
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   // see http://codereview.stackexchange.com/questions/109260/seed-stdmt19937-from-stdrandom-device
   // and http://www.pcg-random.org/posts/cpp-seeding-surprises.html
@@ -43,5 +45,7 @@ inline namespace v1 {
 
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

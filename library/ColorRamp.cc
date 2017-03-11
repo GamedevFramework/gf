@@ -26,7 +26,9 @@
 #include <gf/VectorOps.h>
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   ColorRamp::ColorRamp()
   : m_min(0.0f)
@@ -83,5 +85,7 @@ inline namespace v1 {
     return gf::lerp(c1, c2, (offset - t1) / (t2 - t1));
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

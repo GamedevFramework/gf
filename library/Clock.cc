@@ -24,7 +24,9 @@
 #include <gf/Clock.h>
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   Clock::Clock()
   : m_start(std::chrono::steady_clock::now()) {
@@ -43,5 +45,7 @@ inline namespace v1 {
     return Time(duration);
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

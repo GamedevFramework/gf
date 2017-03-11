@@ -28,7 +28,9 @@
 #include <gf/VectorOps.h>
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   Sprite::Sprite()
   : m_texture(nullptr)
@@ -133,5 +135,7 @@ inline namespace v1 {
     m_vertices[3].texCoords = m_textureRect.getBottomRight();
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

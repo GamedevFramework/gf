@@ -35,7 +35,9 @@
 #include "priv/Debug.h"
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   static std::string loadFile(const Path& filename) {
     std::ifstream file(filename.string());
@@ -344,5 +346,7 @@ inline namespace v1 {
     }
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

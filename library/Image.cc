@@ -38,7 +38,9 @@
 #include "vendor/stb/stb_image_write.h"
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   static void lower(std::string& str) {
     for (char& c : str) {
@@ -293,5 +295,7 @@ inline namespace v1 {
     }
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

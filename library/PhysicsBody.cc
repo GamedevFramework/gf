@@ -30,7 +30,9 @@
 #include <gf/Log.h>
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   static constexpr float DefaultRestitution = 0.0f;
   static constexpr float DefaultStaticFriction = 0.0f;
@@ -161,5 +163,7 @@ inline namespace v1 {
     return false;
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

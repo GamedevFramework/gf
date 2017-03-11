@@ -27,7 +27,9 @@
 #include "generated/gamecontrollerdb.txt.h"
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   static SDL_GameControllerButton getButtonFromGamepadButton(GamepadButton button) {
     switch (button) {
@@ -179,5 +181,7 @@ inline namespace v1 {
     }
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }
