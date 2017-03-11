@@ -116,7 +116,7 @@ inline namespace v1 {
      * @param flags Another bitfield
      * @return The bitfield with a binary OR of the two bitfields
      */
-    constexpr Flags operator|(Flags flags) {
+    constexpr Flags operator|(Flags flags) const {
       return Flags(m_data | flags.m_data);
     }
 
@@ -137,7 +137,7 @@ inline namespace v1 {
      * @param flags Another bitfield
      * @return The bitfield with a binary AND of the two bitfields
      */
-    constexpr Flags operator&(Flags flags) {
+    constexpr Flags operator&(Flags flags) const {
       return Flags(m_data & flags.m_data);
     }
 
