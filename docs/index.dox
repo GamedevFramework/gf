@@ -1,5 +1,11 @@
 /**
 
+@namespace gf
+@brief The namespace for gf classes
+
+@namespace gf::literals
+@brief The namespace for literals
+
 @defgroup core Core classes and functions
 @brief All the core generic classes and functions.
 

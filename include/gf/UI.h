@@ -150,6 +150,10 @@ inline namespace v1 {
     Minus,          ///< Minus
   };
 
+  /**
+   * @ingroup graphics
+   * @brief Properties for edit widgets
+   */
   enum class UIEdit : uint32_t {
     Default             = 0x0000,
     ReadOnly            = 0x0001,
@@ -167,8 +171,18 @@ inline namespace v1 {
     GotoEndOnActivate   = 0x1000,
   };
 
+  /**
+   * @ingroup graphics
+   * @brief Flags composed of edit properties
+   *
+   * @sa gf::UIEdit
+   */
   using UIEditFlags = Flags<UIEdit>;
 
+  /**
+   * @ingroup graphics
+   * @brief Predefined flags for edit
+   */
   struct GF_API UIEditType {
     static const UIEditFlags Simple;
     static const UIEditFlags Field;
@@ -176,6 +190,10 @@ inline namespace v1 {
     static const UIEditFlags Editor;
   };
 
+  /**
+   * @ingroup graphics
+   * @brief Properties for edit events
+   */
   enum class UIEditEvent : uint32_t {
     Active      = 0x0001, ///< Edit widget is currently being modified
     Inactive    = 0x0002, ///< Edit widget is not active and is not being modified
@@ -184,8 +202,18 @@ inline namespace v1 {
     Commited    = 0x0010, ///< Edit widget has received an enter and lost focus
   };
 
+  /**
+   * @ingroup graphics
+   * @brief Flags composed of edit events properties
+   *
+   * @sa gf::UIEditEvent
+   */
   using UIEditEventFlags = Flags<UIEditEvent>;
 
+  /**
+   * @ingroup graphics
+   * @brief Filters for edit
+   */
   enum class UIEditFilter {
     Default,
     Ascii,
