@@ -112,7 +112,7 @@ inline namespace v1 {
      *
      * @returns A pointer to the first element in the array
      */
-    T *getData() {
+    T *getData() noexcept {
       return m_data;
     }
 
@@ -121,7 +121,7 @@ inline namespace v1 {
      *
      * @returns The number of elements in the array
      */
-    constexpr std::size_t getSize() const {
+    constexpr std::size_t getSize() const noexcept {
       return m_size;
     }
 
@@ -132,7 +132,7 @@ inline namespace v1 {
      *
      * @sa end()
      */
-    T *begin() {
+    T *begin() noexcept {
       return m_data;
     }
 
@@ -143,7 +143,7 @@ inline namespace v1 {
      *
      * @sa begin()
      */
-    T *end() {
+    T *end() noexcept {
       return m_data + m_size;
     }
 
