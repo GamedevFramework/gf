@@ -96,7 +96,7 @@ inline namespace v1 {
      *
      * @returns A pointer to the beginning of the string
      */
-    constexpr const char *getData() const {
+    constexpr const char *getData() const noexcept {
       return m_data;
     }
 
@@ -105,8 +105,41 @@ inline namespace v1 {
      *
      * @returns The size of the string
      */
-    constexpr std::size_t getSize() const {
+    constexpr std::size_t getSize() const noexcept {
       return m_size;
+    }
+
+    /**
+     * @brief Check if the string is empty
+     *
+     * An empty string is a string with size 0. So the null string is empty.
+     *
+     * @returns True if the string is empty
+     */
+    constexpr bool isEmpty() const noexcept {
+      return m_size == 0;
+    }
+
+    /**
+     * @brief Get an iterator to the beginning of the string
+     *
+     * @returns A pointer to the first character
+     *
+     * @sa end()
+     */
+    constexpr const char *begin() const noexcept {
+      return m_data;
+    }
+
+    /**
+     * @brief Get an iterator past the end of the string
+     *
+     * @returns A pointer past the last character
+     *
+     * @sa begin()
+     */
+    constexpr const char *end() const noexcept {
+      return m_data + m_size;
     }
 
   private:

@@ -55,3 +55,16 @@ TEST(StringRefTest, StringCtor) {
   EXPECT_EQ(8u, ref.getSize());
   EXPECT_EQ(&str[0], ref.getData());
 }
+
+TEST(StringRefTest, IsEmpty) {
+  std::string str1;
+  gf::StringRef ref1(str1);
+  EXPECT_TRUE(ref1.isEmpty());
+
+  const char *str2 = "";
+  gf::StringRef ref2(str2);
+  EXPECT_TRUE(ref2.isEmpty());
+
+  gf::StringRef ref3;
+  EXPECT_TRUE(ref3.isEmpty());
+}

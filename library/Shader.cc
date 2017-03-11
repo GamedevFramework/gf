@@ -145,24 +145,24 @@ inline namespace v1 {
     return loadFromMemory(vertexShader, fragmentShader);
   }
 
-  bool Shader::loadFromMemory(const std::string& shader, Type type) {
-    if (shader.empty()) {
+  bool Shader::loadFromMemory(StringRef shader, Type type) {
+    if (shader.isEmpty()) {
       return false;
     }
 
     switch (type) {
       case Vertex:
-        return compile(shader.data(), nullptr);
+        return compile(shader.getData(), nullptr);
       case Fragment:
-        return compile(nullptr, shader.data());
+        return compile(nullptr, shader.getData());
     }
 
     return false;
   }
 
-  bool Shader::loadFromMemory(const std::string& vertexShader, const std::string& fragmentShader) {
-    const char *vertexShaderCode = vertexShader.empty() ? nullptr : vertexShader.data();
-    const char *fragmentShaderCode = fragmentShader.empty() ? nullptr : fragmentShader.data();
+  bool Shader::loadFromMemory(StringRef vertexShader, StringRef fragmentShader) {
+    const char *vertexShaderCode = vertexShader.isEmpty() ? nullptr : vertexShader.getData();
+    const char *fragmentShaderCode = fragmentShader.isEmpty() ? nullptr : fragmentShader.getData();
 
     if (vertexShaderCode == nullptr && fragmentShaderCode == nullptr) {
       return false;
@@ -247,49 +247,49 @@ inline namespace v1 {
     GLuint m_curr;
   };
 
-  void Shader::setUniform(const std::string& name, float val) {
+  void Shader::setUniform(StringRef name, float val) {
     Guard guard(*this);
     int loc = getUniformLocation(name);
     glCheck(glUniform1f(loc, val));
   }
 
-  void Shader::setUniform(const std::string& name, int val) {
+  void Shader::setUniform(StringRef name, int val) {
     Guard guard(*this);
     int loc = getUniformLocation(name);
     glCheck(glUniform1i(loc, val));
   }
 
-  void Shader::setUniform(const std::string& name, const Vector2f& vec) {
+  void Shader::setUniform(StringRef name, const Vector2f& vec) {
     Guard guard(*this);
     int loc = getUniformLocation(name);
     glCheck(glUniform2f(loc, vec.x, vec.y));
   }
 
-  void Shader::setUniform(const std::string& name, const Vector3f& vec) {
+  void Shader::setUniform(StringRef name, const Vector3f& vec) {
     Guard guard(*this);
     int loc = getUniformLocation(name);
     glCheck(glUniform3f(loc, vec.x, vec.y, vec.z));
   }
 
-  void Shader::setUniform(const std::string& name, const Vector4f& vec) {
+  void Shader::setUniform(StringRef name, const Vector4f& vec) {
     Guard guard(*this);
     int loc = getUniformLocation(name);
     glCheck(glUniform4f(loc, vec.x, vec.y, vec.z, vec.w));
   }
 
-  void Shader::setUniform(const std::string& name, const Matrix3f& mat) {
+  void Shader::setUniform(StringRef name, const Matrix3f& mat) {
     Guard guard(*this);
     int loc = getUniformLocation(name);
     glCheck(glUniformMatrix3fv(loc, 1, GL_FALSE, mat.data));
   }
 
-  void Shader::setUniform(const std::string& name, const Matrix4f& mat) {
+  void Shader::setUniform(StringRef name, const Matrix4f& mat) {
     Guard guard(*this);
     int loc = getUniformLocation(name);
     glCheck(glUniformMatrix4fv(loc, 1, GL_FALSE, mat.data));
   }
 
-  void Shader::setUniform(const std::string& name, const BareTexture& tex) {
+  void Shader::setUniform(StringRef name, const BareTexture& tex) {
     int loc = getUniformLocation(name);
 
     if (loc == -1) {
@@ -306,23 +306,23 @@ inline namespace v1 {
 
   }
 
-  int Shader::getUniformLocation(const std::string& name) {
+  int Shader::getUniformLocation(StringRef name) {
     GLint loc;
-    glCheck(loc = glGetUniformLocation(static_cast<GLuint>(m_program), name.c_str()));
+    glCheck(loc = glGetUniformLocation(static_cast<GLuint>(m_program), name.getData()));
 
     if (loc == -1) {
-      Log::warning("Uniform not found: '%s'\n", name.c_str());
+      Log::warning("Uniform not found: '%s'\n", name.getData());
     }
 
     return loc;
   }
 
-  int Shader::getAttributeLocation(const std::string& name) {
+  int Shader::getAttributeLocation(StringRef name) {
     GLint loc;
-    glCheck(loc = glGetAttribLocation(static_cast<GLuint>(m_program), name.c_str()));
+    glCheck(loc = glGetAttribLocation(static_cast<GLuint>(m_program), name.getData()));
 
     if (loc == -1) {
-      Log::warning("Attribute not found: '%s'\n", name.c_str());
+      Log::warning("Attribute not found: '%s'\n", name.getData());
     }
 
     return loc;
