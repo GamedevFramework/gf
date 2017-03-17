@@ -30,13 +30,41 @@ namespace gf {
 inline namespace v1 {
 #endif
 
+  /**
+   * @ingroup core
+   * @brief Special paths
+   */
   struct GF_API Paths {
+    /**
+     * @brief Deleted constructor
+     */
     Paths() = delete;
 
+    /**
+     * @brief Get the preferences path
+     *
+     * The preferences path is where an application can save data. It depends
+     * on the user and the application.
+     *
+     * @param org The name of your organization
+     * @param app The name of your application
+     * @returns The preferences path
+     */
     static Path getPrefPath(StringRef org, StringRef app);
 
+    /**
+     * @brief Get the base path
+     *
+     * The base path is the path where the application is run.
+     * @return The base path
+     */
     static Path getBasePath();
 
+    /**
+     * @brief Get the current path
+     *
+     * @returns The current path
+     */
     static Path getCurrentPath();
 
   };
