@@ -41,6 +41,8 @@ namespace gf {
 inline namespace v1 {
 #endif
 
+  class Texture;
+
   /**
    * @ingroup graphics
    * @brief Properties for windows and window-like elements
@@ -227,10 +229,12 @@ inline namespace v1 {
   /**
    * @ingroup graphics
    * @brief Data for file selector
+   *
+   * @sa gf::UI::fileSelector()
    */
   struct UIBrowser {
-    Path currentPath;
-    Path selectedPath;
+    Path currentPath;   ///< The current path for searching
+    Path selectedPath;  ///< The selected path
   };
 
   /**
@@ -693,6 +697,14 @@ inline namespace v1 {
      * @sa labelWrap()
      */
     void labelWrapColored(const Color4f& color, StringRef title);
+
+    /**
+     * @brief An image
+     *
+     * @param texture A texture
+     * @param textureRect A sub-rectangle of the texture to show
+     */
+    void image(const Texture& texture, const RectF& textureRect);
 
     /**
      * @}
