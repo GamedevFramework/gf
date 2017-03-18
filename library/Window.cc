@@ -35,6 +35,7 @@
 #include <gf/Keyboard.h>
 #include <gf/Log.h>
 #include <gf/Mouse.h>
+#include <gf/Sleep.h>
 #include <gf/Vector.h>
 
 namespace gf {
@@ -68,8 +69,17 @@ inline namespace v1 {
     }
 
     void *context = SDL_GL_CreateContext(window);
+
+    if (context == nullptr) {
+      Log::error("Failed to create a context: %s\n", SDL_GetError());
+      return nullptr;
+    }
+
     int err = SDL_GL_MakeCurrent(window, context);
-    assert(err == 0);
+
+    if (err != 0) {
+      Log::error("Failed to make the context current: %s\n", SDL_GetError());
+    }
 
     if (!gladLoadGLES2Loader(SDL_GL_GetProcAddress)) {
       Log::error("Failed to load GLES2.\n");
@@ -147,6 +157,8 @@ inline namespace v1 {
   }
 
   void Window::setFullscreen(bool full) {
+    assert(m_window);
+
     if (full) {
       SDL_SetWindowFullscreen(m_window, SDL_WINDOW_FULLSCREEN_DESKTOP);
     } else {
@@ -527,6 +539,15 @@ inline namespace v1 {
   void Window::display() {
     assert(m_window);
     SDL_GL_SwapWindow(m_window);
+
+    // handle framerate limit
+
+    if (m_duration == Time::Zero) {
+      return;
+    }
+
+    sleep(m_duration - m_clock.getElapsedTime());
+    m_clock.restart();
   }
 
   void Window::setMouseCursorVisible(bool visible) {
@@ -535,6 +556,14 @@ inline namespace v1 {
 
   void Window::setMouseCursorGrabbed(bool grabbed) {
     SDL_SetWindowGrab(m_window, grabbed ? SDL_TRUE : SDL_FALSE);
+  }
+
+  void Window::setFramerateLimit(unsigned int limit) {
+    if (limit == 0) {
+      m_duration = Time::Zero;
+    } else {
+      m_duration = seconds(1.0f / limit);
+    }
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

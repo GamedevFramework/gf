@@ -26,9 +26,11 @@
 
 #include <string>
 
+#include "Clock.h"
 #include "Flags.h"
 #include "Library.h"
 #include "Portability.h"
+#include "Time.h"
 #include "Vector.h"
 
 struct SDL_Window;
@@ -382,7 +384,7 @@ inline namespace v1 {
      */
 
     /**
-     * \brief Enable or disable vertical synchronization
+     * @brief Enable or disable vertical synchronization
      *
      * Activating vertical synchronization will limit the number
      * of frames displayed to the refresh rate of the monitor.
@@ -391,7 +393,7 @@ inline namespace v1 {
      *
      * Vertical synchronization is disabled by default.
      *
-     * \param enabled True to enable v-sync, false to deactivate it
+     * @param enabled True to enable v-sync, false to deactivate it
      */
     void setVerticalSyncEnabled(bool enabled);
 
@@ -439,6 +441,18 @@ inline namespace v1 {
 
     /** @} */
 
+    /**
+     * @brief Limit the framerate to a maximum fixed frequency
+     *
+     * If a limit is set, the window will use a small delay after
+     * each call to display() to ensure that the current frame
+     * lasted long enough to match the framerate limit.
+     *
+     * @param limit Framerate limit, in frames per seconds (use 0 to disable limit)
+     */
+    void setFramerateLimit(unsigned int limit);
+
+
   private:
     Library m_lib; // to automatically initialize SDL
 
@@ -447,6 +461,10 @@ inline namespace v1 {
     void *m_context;
     bool m_shouldClose;
     bool m_isFullscreen;
+
+    // framerate limit handling
+    Clock m_clock;
+    Time m_duration;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
