@@ -76,6 +76,7 @@ else()
     Random.cc
     Range.cc
     Rect.cc
+    Sleep.cc
     SystemInfo.cc
     Time.cc
     Transform.cc

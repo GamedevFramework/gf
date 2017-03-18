@@ -83,6 +83,7 @@
 #include "Shader.cc"
 #include "Shape.cc"
 #include "Shapes.cc"
+#include "Sleep.cc"
 #include "SpriteBatch.cc"
 #include "Sprite.cc"
 #include "SystemInfo.cc"
