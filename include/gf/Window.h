@@ -79,24 +79,9 @@ inline namespace v1 {
    * It also provides event handling through its pollEvent() and waitEvent()
    * functions.
    *
-   * ~~~{.cc}
-   * gf::Window window("My window", { 640, 480 }, gf::WindowHints::Resizable | gf::WindowHints::Visible);
-   *
-   * while (window.isOpen()) {
-   *   // process events
-   *
-   *   gf::Event event;
-   *
-   *   while (window.pollEvent(event)) {
-   *     if (event.type == gf::EventType::Closed) {
-   *       window.close();
-   *     }
-   *   }
-   *
-   * }
+   * @snippet snippets/doc_class_window.cc window
    *
    * @sa gf::RenderWindow
-   * ~~~
    */
   class GF_API Window {
   public:
