@@ -77,14 +77,22 @@ inline namespace v1 {
      *
      * Sets the time value to zero.
      */
-    Time();
+    constexpr Time()
+    : m_duration(std::chrono::steady_clock::duration::zero())
+    {
+
+    }
 
     /**
      * @brief Constructor with a duration
      *
      * @param duration A duration expressed with a `std::chrono` type
      */
-    explicit Time(std::chrono::steady_clock::duration duration);
+    explicit Time(std::chrono::steady_clock::duration duration)
+    : m_duration(duration)
+    {
+
+    }
 
     /**
      * @brief Return the time value as a number of seconds
@@ -121,6 +129,8 @@ inline namespace v1 {
     std::chrono::steady_clock::duration asDuration() const {
       return m_duration;
     }
+
+    static const Time Zero;
 
   private:
     std::chrono::steady_clock::duration m_duration;
@@ -171,7 +181,7 @@ inline namespace v1 {
    * @return True if the first time and the second time are the same
    */
   inline
-  bool operator==(const Time& rhs, const Time& lhs) {
+  bool operator==(Time rhs, Time lhs) {
     return rhs.asDuration() == lhs.asDuration();
   }
 
@@ -184,7 +194,7 @@ inline namespace v1 {
    * @return True if the first time and the second time are different
    */
   inline
-  bool operator!=(const Time& rhs, const Time& lhs) {
+  bool operator!=(Time rhs, Time lhs) {
     return rhs.asDuration() != lhs.asDuration();
   }
 
@@ -197,7 +207,7 @@ inline namespace v1 {
    * @return True if the first time is lesser than the second time
    */
   inline
-  bool operator<(const Time& rhs, const Time& lhs) {
+  bool operator<(Time rhs, Time lhs) {
     return rhs.asDuration() < lhs.asDuration();
   }
 
@@ -210,7 +220,7 @@ inline namespace v1 {
    * @return True if the first time is greater than the second time
    */
   inline
-  bool operator>(const Time& rhs, const Time& lhs) {
+  bool operator>(Time rhs, Time lhs) {
     return rhs.asDuration() > lhs.asDuration();
   }
 
@@ -223,7 +233,7 @@ inline namespace v1 {
    * @return True if the first time is lesser or equal than the second time
    */
   inline
-  bool operator<=(const Time& rhs, const Time& lhs) {
+  bool operator<=(Time rhs, Time lhs) {
     return rhs.asDuration() <= lhs.asDuration();
   }
 
@@ -236,8 +246,34 @@ inline namespace v1 {
    * @return True if the first time is greater or equal than the second time
    */
   inline
-  bool operator>=(const Time& rhs, const Time& lhs) {
+  bool operator>=(Time rhs, Time lhs) {
     return rhs.asDuration() >= lhs.asDuration();
+  }
+
+  /**
+   * @relates Time
+   * @brief Addition of two times
+   *
+   * @param rhs First time
+   * @param lhs Second time
+   * @return The sum of two times
+   */
+  inline
+  Time operator+(Time rhs, Time lhs) {
+    return Time(rhs.asDuration() + lhs.asDuration());
+  }
+
+  /**
+   * @relates Time
+   * @brief Substraction of two times
+   *
+   * @param rhs First time
+   * @param lhs Second time
+   * @return The difference of two times
+   */
+  inline
+  Time operator-(Time rhs, Time lhs) {
+    return Time(rhs.asDuration() - lhs.asDuration());
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

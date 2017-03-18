@@ -30,11 +30,6 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  Time::Time()
-  : m_duration(0)
-  {
-  }
-
   float Time::asSeconds() const {
     return std::chrono::duration_cast<std::chrono::duration<float>>(m_duration).count();
   }
@@ -47,9 +42,7 @@ inline namespace v1 {
     return std::chrono::duration_cast<std::chrono::duration<int64_t, std::micro>>(m_duration).count();
   }
 
-  Time::Time(std::chrono::steady_clock::duration duration)
-    : m_duration(duration) {
-  }
+  const Time Time::Zero = Time();
 
   Time seconds(float amount) {
     std::chrono::duration<float> time(amount);
