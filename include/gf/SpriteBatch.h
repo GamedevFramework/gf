@@ -35,6 +35,7 @@ inline namespace v1 {
 
   class RenderTarget;
   class Sprite;
+  class Texture;
 
   /**
    * @ingroup graphics
@@ -82,6 +83,31 @@ inline namespace v1 {
      * @param states The render states
      */
     void draw(Sprite& sprite, const RenderStates& states = RenderStates());
+
+    /**
+     * @brief Add a raw texture to the batch
+     *
+     * You must call `begin()` before calling this function, and `end()` once
+     * you have finished to draw the sprites.
+     *
+     * @param texture The texture to draw
+     * @param position The position of the texture
+     * @param states The render states
+     */
+    void draw(const Texture& texture, Vector2f position, const RenderStates& states = RenderStates());
+
+    /**
+     * @brief Add a portion of a raw texture to the batch
+     *
+     * You must call `begin()` before calling this function, and `end()` once
+     * you have finished to draw the sprites.
+     *
+     * @param texture The texture to draw
+     * @param textureRect The sub-rectangle of the texture to draw
+     * @param position The position of the texture
+     * @param states The render states
+     */
+    void draw(const Texture& texture, const RectF& textureRect, Vector2f position, const RenderStates& states = RenderStates());
 
     /**
      * @brief End the batch

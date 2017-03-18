@@ -35,7 +35,7 @@ inline namespace v1 {
   : m_target(target)
   , m_count(0)
   {
-
+    m_currentRenderStates.transform = identityTransform();
   }
 
   void SpriteBatch::begin() {
@@ -43,7 +43,7 @@ inline namespace v1 {
   }
 
   static bool areStatesSimilar(const RenderStates& lhs, const RenderStates& rhs) {
-    return lhs.mode == rhs.mode && lhs.transform == rhs.transform && lhs.shader == rhs.shader;
+    return lhs.mode == rhs.mode && lhs.shader == rhs.shader;
   }
 
   void SpriteBatch::draw(Sprite& sprite, const RenderStates& states) {
@@ -54,7 +54,6 @@ inline namespace v1 {
 
     if (m_count == 0) {
       m_currentRenderStates.mode = states.mode;
-      m_currentRenderStates.transform = states.transform;
       m_currentRenderStates.texture = texture;
       m_currentRenderStates.shader = states.shader;
     } else {
@@ -62,7 +61,6 @@ inline namespace v1 {
         renderBatch();
 
         m_currentRenderStates.mode = states.mode;
-        m_currentRenderStates.transform = states.transform;
         m_currentRenderStates.texture = texture;
         m_currentRenderStates.shader = states.shader;
       }
@@ -111,6 +109,19 @@ inline namespace v1 {
     m_vertices[index + 5] = vertices[3];
 
     m_count++;
+  }
+
+
+  void SpriteBatch::draw(const Texture& texture, Vector2f position, const RenderStates& states) {
+    gf::Sprite sprite(texture);
+    sprite.setPosition(position);
+    draw(sprite, states);
+  }
+
+  void SpriteBatch::draw(const Texture& texture, const RectF& textureRect, Vector2f position, const RenderStates& states) {
+    gf::Sprite sprite(texture, textureRect);
+    sprite.setPosition(position);
+    draw(sprite, states);
   }
 
   void SpriteBatch::end() {

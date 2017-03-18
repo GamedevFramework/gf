@@ -82,7 +82,7 @@ inline namespace v1 {
    * renderer.draw(sprite);
    * ~~~
    *
-   * @sa gf::Texture, gf::Transformable
+   * @sa gf::Texture, gf::Transformable, gf::SpriteBatch
    */
   class GF_API Sprite : public Transformable {
   public:
