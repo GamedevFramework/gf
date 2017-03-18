@@ -536,6 +536,18 @@ inline namespace v1 {
     SDL_GL_SetSwapInterval(enabled ? 1 : 0);
   }
 
+  bool Window::isVerticalSyncEnabled() const {
+    return SDL_GL_GetSwapInterval() != 0;
+  }
+
+  void Window::setFramerateLimit(unsigned int limit) {
+    if (limit == 0) {
+      m_duration = Time::Zero;
+    } else {
+      m_duration = seconds(1.0f / limit);
+    }
+  }
+
   void Window::display() {
     assert(m_window);
     SDL_GL_SwapWindow(m_window);
@@ -556,14 +568,6 @@ inline namespace v1 {
 
   void Window::setMouseCursorGrabbed(bool grabbed) {
     SDL_SetWindowGrab(m_window, grabbed ? SDL_TRUE : SDL_FALSE);
-  }
-
-  void Window::setFramerateLimit(unsigned int limit) {
-    if (limit == 0) {
-      m_duration = Time::Zero;
-    } else {
-      m_duration = seconds(1.0f / limit);
-    }
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

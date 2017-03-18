@@ -391,11 +391,29 @@ inline namespace v1 {
      * This can avoid some visual artifacts, and limit the framerate
      * to a good value (but not constant across different computers).
      *
-     * Vertical synchronization is disabled by default.
-     *
      * @param enabled True to enable v-sync, false to deactivate it
+     * @sa isVerticalSyncEnabled()
      */
     void setVerticalSyncEnabled(bool enabled);
+
+    /**
+     * @brief Check if the vertical synchronization is enabled
+     *
+     * @returns True if the v-sync is enabled
+     * @sa setVerticalSyncEnabled()
+     */
+    bool isVerticalSyncEnabled() const;
+
+    /**
+     * @brief Limit the framerate to a maximum fixed frequency
+     *
+     * If a limit is set, the window will use a small delay after
+     * each call to display() to ensure that the current frame
+     * lasted long enough to match the framerate limit.
+     *
+     * @param limit Framerate limit, in frames per seconds (use 0 to disable limit)
+     */
+    void setFramerateLimit(unsigned int limit);
 
     /**
      * @brief Display on screen what has been rendered to the window so far
@@ -440,17 +458,6 @@ inline namespace v1 {
     void setMouseCursorGrabbed(bool grabbed);
 
     /** @} */
-
-    /**
-     * @brief Limit the framerate to a maximum fixed frequency
-     *
-     * If a limit is set, the window will use a small delay after
-     * each call to display() to ensure that the current frame
-     * lasted long enough to match the framerate limit.
-     *
-     * @param limit Framerate limit, in frames per seconds (use 0 to disable limit)
-     */
-    void setFramerateLimit(unsigned int limit);
 
 
   private:
