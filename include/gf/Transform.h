@@ -35,10 +35,12 @@ inline namespace v1 {
 
   /**
    * @brief A rotation
+   *
+   * @sa gf::Translation, gf::Transform
    */
   struct GF_API Rotation {
-    float cos;
-    float sin;
+    float cos; ///< The cosine of the rotation angle
+    float sin; ///< The sine of the rotation angle
 
     /**
      * @brief Default constructor
@@ -116,9 +118,11 @@ inline namespace v1 {
 
   /**
    * @brief A translation
+   *
+   * @sa gf::Rotation, gf::Transform
    */
   struct GF_API Translation {
-    Vector2f offset;
+    Vector2f offset; ///< The offset of the translation
 
     /**
      * @brief Default constructor
@@ -198,9 +202,14 @@ inline namespace v1 {
    * @sa gf::Matrix3f, gf::Rotation, gf::Translation
    */
   struct GF_API Transform {
-    Rotation rotation; ///< Rotation of the transformation
-    Translation translation; ///< Translation of the transformation
+    Rotation rotation; ///< The rotation of the transformation
+    Translation translation; ///< The translation of the transformation
 
+    /**
+     * @brief Default constructor
+     *
+     * The default transform is the identity.
+     */
     Transform()
     {
 
