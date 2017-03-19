@@ -123,6 +123,20 @@ inline namespace v1 {
 
   /**
    * @relates Vector
+   * @brief Right scalar addition and assignment
+   */
+  template<typename T, typename U, std::size_t N>
+  inline
+  Vector<T, N>& operator+=(Vector<T, N>& lhs, U rhs) {
+    for (std::size_t i = 0; i < N; ++i) {
+      lhs.data[i] += rhs;
+    }
+
+    return lhs;
+  }
+
+  /**
+   * @relates Vector
    * @brief Left scalar addition
    */
   template<typename T, typename U, std::size_t N, typename E = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
@@ -183,6 +197,20 @@ inline namespace v1 {
     }
 
     return out;
+  }
+
+  /**
+   * @relates Vector
+   * @brief Right scalar substraction and assignment
+   */
+  template<typename T, typename U, std::size_t N>
+  inline
+  Vector<T, N>& operator-=(Vector<T, N>& lhs, U rhs) {
+    for (std::size_t i = 0; i < N; ++i) {
+      lhs.data[i] -= rhs;
+    }
+
+    return lhs;
   }
 
   /**
