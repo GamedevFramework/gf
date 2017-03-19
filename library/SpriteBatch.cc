@@ -35,7 +35,7 @@ inline namespace v1 {
   : m_target(target)
   , m_count(0)
   {
-    m_currentRenderStates.transform = identityTransform();
+
   }
 
   void SpriteBatch::begin() {
@@ -43,7 +43,7 @@ inline namespace v1 {
   }
 
   static bool areStatesSimilar(const RenderStates& lhs, const RenderStates& rhs) {
-    return lhs.mode == rhs.mode && lhs.shader == rhs.shader;
+    return lhs.mode == rhs.mode && lhs.transform == rhs.transform && lhs.shader == rhs.shader;
   }
 
   void SpriteBatch::draw(Sprite& sprite, const RenderStates& states) {
@@ -54,6 +54,7 @@ inline namespace v1 {
 
     if (m_count == 0) {
       m_currentRenderStates.mode = states.mode;
+      m_currentRenderStates.transform = states.transform;
       m_currentRenderStates.texture = texture;
       m_currentRenderStates.shader = states.shader;
     } else {
@@ -61,6 +62,7 @@ inline namespace v1 {
         renderBatch();
 
         m_currentRenderStates.mode = states.mode;
+        m_currentRenderStates.transform = states.transform;
         m_currentRenderStates.texture = texture;
         m_currentRenderStates.shader = states.shader;
       }
