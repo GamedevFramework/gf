@@ -55,6 +55,7 @@ Gamedev Framework (gf) is licensed under the terms and conditions of the [zlib/l
 1. Introduction to gf
   - @ref features
   - @ref build_and_install
+  - @ref use
   - @ref differences_with_sfml
   - @ref recommanded_libraries
 2. Tutorials on gf

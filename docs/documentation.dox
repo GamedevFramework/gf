@@ -4,6 +4,7 @@
 1. Introduction to gf
   - @ref features
   - @ref build_and_install
+  - @ref use
   - @ref differences_with_sfml
   - @ref recommanded_libraries
 2. Tutorials on gf
