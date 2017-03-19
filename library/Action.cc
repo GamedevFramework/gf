@@ -21,6 +21,7 @@
 #include <gf/Action.h>
 
 #include <algorithm>
+#include <stdexcept>
 
 #include <gf/Controls.h>
 
@@ -114,6 +115,38 @@ inline namespace v1 {
 
   void ActionContainer::addAction(Action& action) {
     m_actions.push_back(&action);
+  }
+
+  bool ActionContainer::hasAction(const std::string& name) const {
+    auto it = std::find_if(m_actions.begin(), m_actions.end(), [&name](const Action *action) {
+      return action->getName() == name;
+    });
+
+    return it != m_actions.end();
+  }
+
+  Action& ActionContainer::getAction(const std::string& name) {
+    auto it = std::find_if(m_actions.begin(), m_actions.end(), [&name](const Action *action) {
+      return action->getName() == name;
+    });
+
+    if (it == m_actions.end()) {
+      throw std::runtime_error("Action not found");
+    }
+
+    return **it;
+  }
+
+  const Action& ActionContainer::getAction(const std::string& name) const {
+    auto it = std::find_if(m_actions.begin(), m_actions.end(), [&name](const Action *action) {
+      return action->getName() == name;
+    });
+
+    if (it == m_actions.end()) {
+      throw std::runtime_error("Action not found");
+    }
+
+    return **it;
   }
 
   void ActionContainer::processEvent(const Event& event) {
