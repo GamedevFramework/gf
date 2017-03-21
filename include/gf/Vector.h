@@ -191,9 +191,8 @@ inline namespace v1 {
      *
      * @return A pointer to the first element.
      */
-    inline
-    T *begin(void) {
-      return &(data[0]);
+    T *begin() {
+      return &data[0];
     }
 
     /**
@@ -201,9 +200,8 @@ inline namespace v1 {
      *
      * @return An invalid pointer that is the adress after the last element.
      */
-    inline
-    T *end(void) {
-      return &(data[N]);
+    T *end() {
+      return &data[N];
     }
 
     /**
@@ -211,9 +209,8 @@ inline namespace v1 {
      *
      * @return A pointer on the first const element.
      */
-    inline
-    T const *begin(void) const {
-      return &(data[0]);
+    const T *begin() const {
+      return &data[0];
     }
 
     /**
@@ -222,18 +219,16 @@ inline namespace v1 {
      * @return An invalid pointer that is the adress after the last const
      * element.
      */
-    inline
-    T const *end(void) const {
-      return &(data[N]);
+    const T *end() const {
+      return &data[N];
     }
     /**
      * @brief Iterator.on the first element (const version).
      *
      * @return A pointer on the first const element.
      */
-    inline
-    T const *cbegin(void) const {
-      return &(data[0]);
+    const T *cbegin() const {
+      return &data[0];
     }
 
     /**
@@ -242,9 +237,8 @@ inline namespace v1 {
      * @return An invalid pointer that is the adress after the last const
      * element.
      */
-    inline
-    T const *cend(void) const {
-      return &(data[N]);
+    const T *cend() const {
+      return &data[N];
     }
 
     /**
@@ -417,9 +411,8 @@ inline namespace v1 {
      *
      * @return A pointer to the first element.
      */
-    inline
-    T *begin(void) {
-      return &(data[0]);
+    T *begin() {
+      return &data[0];
     }
 
     /**
@@ -427,9 +420,8 @@ inline namespace v1 {
      *
      * @return An invalid pointer that is the adress after the last element.
      */
-    inline
-    T *end(void) {
-      return &(data[2]);
+    T *end() {
+      return &data[2];
     }
 
     /**
@@ -437,9 +429,8 @@ inline namespace v1 {
      *
      * @return A pointer on the first const element.
      */
-    inline
-    T const *begin(void) const {
-      return &(data[0]);
+    const T *begin() const {
+      return &data[0];
     }
 
     /**
@@ -448,18 +439,16 @@ inline namespace v1 {
      * @return An invalid pointer that is the adress after the last const
      * element.
      */
-    inline
-    T const *end(void) const {
-      return &(data[2]);
+    const T *end() const {
+      return &data[2];
     }
     /**
      * @brief Iterator.on the first element (const version).
      *
      * @return A pointer on the first const element.
      */
-    inline
-    T const *cbegin(void) const {
-      return &(data[0]);
+    const T *cbegin() const {
+      return &data[0];
     }
 
     /**
@@ -468,9 +457,8 @@ inline namespace v1 {
      * @return An invalid pointer that is the adress after the last const
      * element.
      */
-    inline
-    T const *cend(void) const {
-      return &(data[2]);
+    const T *cend() const {
+      return &data[2];
     }
 
     /**
@@ -669,9 +657,8 @@ inline namespace v1 {
      *
      * @return A pointer to the first element.
      */
-    inline
-    T *begin(void) {
-      return &(data[0]);
+    T *begin() {
+      return &data[0];
     }
 
     /**
@@ -679,9 +666,8 @@ inline namespace v1 {
      *
      * @return An invalid pointer that is the adress after the last element.
      */
-    inline
-    T *end(void) {
-      return &(data[3]);
+    T *end() {
+      return &data[3];
     }
 
     /**
@@ -689,9 +675,8 @@ inline namespace v1 {
      *
      * @return A pointer on the first const element.
      */
-    inline
-    T const *begin(void) const {
-      return &(data[0]);
+    const T *begin() const {
+      return &data[0];
     }
 
     /**
@@ -700,18 +685,17 @@ inline namespace v1 {
      * @return An invalid pointer that is the adress after the last const
      * element.
      */
-    inline
-    T const *end(void) const {
-      return &(data[3]);
+    const T *end() const {
+      return &data[3];
     }
+
     /**
      * @brief Iterator.on the first element (const version).
      *
      * @return A pointer on the first const element.
      */
-    inline
-    T const *cbegin(void) const {
-      return &(data[0]);
+    const T *cbegin() const {
+      return &data[0];
     }
 
     /**
@@ -720,9 +704,8 @@ inline namespace v1 {
      * @return An invalid pointer that is the adress after the last const
      * element.
      */
-    inline
-    T const *cend(void) const {
-      return &(data[3]);
+    const T *cend() const {
+      return &data[3];
     }
 
     /**
@@ -902,9 +885,8 @@ inline namespace v1 {
      *
      * @return A pointer to the first element.
      */
-    inline
-    T *begin(void) {
-      return &(data[0]);
+    T *begin() {
+      return &data[0];
     }
 
     /**
@@ -912,9 +894,8 @@ inline namespace v1 {
      *
      * @return An invalid pointer that is the adress after the last element.
      */
-    inline
-    T *end(void) {
-      return &(data[4]);
+    T *end() {
+      return &data[4];
     }
 
     /**
@@ -922,9 +903,8 @@ inline namespace v1 {
      *
      * @return A pointer on the first const element.
      */
-    inline
-    T const *begin(void) const {
-      return &(data[0]);
+    const T *begin() const {
+      return &data[0];
     }
 
     /**
@@ -933,18 +913,17 @@ inline namespace v1 {
      * @return An invalid pointer that is the adress after the last const
      * element.
      */
-    inline
-    T const *end(void) const {
-      return &(data[4]);
+    const T *end() const {
+      return &data[4];
     }
+
     /**
      * @brief Iterator.on the first element (const version).
      *
      * @return A pointer on the first const element.
      */
-    inline
-    T const *cbegin(void) const {
-      return &(data[0]);
+    const T *cbegin() const {
+      return &data[0];
     }
 
     /**
@@ -953,9 +932,8 @@ inline namespace v1 {
      * @return An invalid pointer that is the adress after the last const
      * element.
      */
-    inline
-    T const *cend(void) const {
-      return &(data[4]);
+    const T *cend() const {
+      return &data[4];
     }
 
     /**
