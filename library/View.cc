@@ -83,6 +83,12 @@ inline namespace v1 {
     onWorldResize(m_size);
   }
 
+  void View::zoom(float factor, Vector2f fixed) {
+    m_center += (fixed - m_center) * (1 - factor);
+    m_size *= factor;
+    onWorldResize(m_size);
+  }
+
   Matrix3f View::getTransform() const {
     /* compute the view matrix
      * it's a combination of:

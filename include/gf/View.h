@@ -268,6 +268,26 @@ inline namespace v1 {
     void zoom(float factor);
 
     /**
+     * @brief Resize the view rectangle relatively to its current size and a fixed point
+     *
+     * Resizing the view simulates a zoom, as the zone displayed on
+     * screen grows or shrinks. `factor` is a multiplier:
+     *
+     * - @f$ = 1 @f$ keeps the size unchanged
+     * - @f$ > 1 @f$ makes the view bigger (objects appear smaller)
+     * - @f$ < 1 @f$ makes the view smaller (objects appear bigger)
+     *
+     * Additionally, a fixed point is used as the center of the zoom. It is the
+     * only point that stays at the same place in the view.
+     *
+     * @param factor Zoom factor to apply
+     * @param fixed The center of the zoom
+     *
+     * @sa setSize(), move(), rotate()
+     */
+    void zoom(float factor, Vector2f fixed);
+
+    /**
      * @brief Get the projection transform of the view
      *
      * This function is meant for internal use only.

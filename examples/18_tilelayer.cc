@@ -26,6 +26,7 @@
 #include <gf/RenderWindow.h>
 #include <gf/Texture.h>
 #include <gf/TileLayer.h>
+#include <gf/VectorOps.h>
 #include <gf/Views.h>
 #include <gf/ViewContainer.h>
 #include <gf/Window.h>
@@ -62,6 +63,9 @@ static int map[MapHeight][MapWidth] = {
 };
 
 static constexpr unsigned TileSize = 128;
+
+static constexpr float ZoomInFactor = 0.8f;
+static constexpr float ZoomOutFactor = 1.25f;
 
 int main() {
   static constexpr gf::Vector2u ScreenSize(640, 480);
@@ -101,9 +105,12 @@ int main() {
   std::cout << "Gamedev Framework (gf) example #18: Tile Layer\n";
   std::cout << "This example shows a tile layer.\n";
   std::cout << "How to use:\n";
-  std::cout << "\tUp/Down/Left/Right: move the view\n";
-  std::cout << "\tPageUp/PageDown: Zoom in/out\n";
-  std::cout << "\t1/2: Rotate\n";
+  std::cout << "\tUp/Down: Zoom in/out\n";
+  std::cout << "\tLeft/Right: Rotate\n";
+  std::cout << "\tMouse: Scroll to zoom, press to move\n";
+
+  gf::Vector2i mousePosition;
+  bool isMoving = false;
 
   renderer.clear(gf::Color::darker(gf::Color::Spring));
 
@@ -116,38 +123,48 @@ int main() {
           window.close();
           break;
 
+        case gf::EventType::MouseMoved:
+          if (isMoving) {
+            gf::Vector2f oldPosition = renderer.mapPixelToCoords(mousePosition, view);
+            gf::Vector2f newPosition = renderer.mapPixelToCoords(event.mouseCursor.coords, view);
+            view.move(oldPosition - newPosition);
+          }
+
+          mousePosition = event.mouseCursor.coords;
+          break;
+
+        case gf::EventType::MouseButtonPressed:
+          isMoving = true;
+          break;
+
+        case gf::EventType::MouseButtonReleased:
+          isMoving = false;
+          break;
+
+        case gf::EventType::MouseWheelScrolled:
+          if (event.mouseWheel.offset.y > 0) {
+            view.zoom(ZoomInFactor, renderer.mapPixelToCoords(mousePosition, view));
+          } else {
+            view.zoom(ZoomOutFactor, renderer.mapPixelToCoords(mousePosition, view));
+          }
+          break;
+
         case gf::EventType::KeyPressed:
           switch (event.key.scancode) {
-            case gf::Scancode::PageUp:
-              view.zoom(0.8f);
-              break;
-
-            case gf::Scancode::PageDown:
-              view.zoom(1.25f);
-              break;
-
             case gf::Scancode::Left:
-              view.move({ -0.5f * TileSize, 0 });
-              break;
-
-            case gf::Scancode::Right:
-              view.move({ 0.5f * TileSize, 0 });
-              break;
-
-            case gf::Scancode::Up:
-              view.move({ 0, -0.5f * TileSize });
-              break;
-
-            case gf::Scancode::Down:
-              view.move({ 0, 0.5f * TileSize });
-              break;
-
-            case gf::Scancode::Num1:
               view.rotate(gf::Pi / 8);
               break;
 
-            case gf::Scancode::Num2:
+            case gf::Scancode::Right:
               view.rotate(-gf::Pi / 8);
+              break;
+
+            case gf::Scancode::Up:
+              view.zoom(ZoomInFactor);
+              break;
+
+            case gf::Scancode::Down:
+              view.zoom(ZoomOutFactor);
               break;
 
             default:
