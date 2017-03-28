@@ -25,6 +25,7 @@
 #include "Portability.h"
 #include "Transformable.h"
 #include "VertexArray.h"
+#include "VertexBuffer.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -230,9 +231,20 @@ inline namespace v1 {
 
     /** @} */
 
+    /**
+     * @brief Create a buffer with the current geometry
+     *
+     * The geometry is uploaded in the graphics memory so that it's faster
+     * to draw.
+     *
+     * @return A buffer with the current geometry
+     */
+    VertexBuffer commitGeometry() const;
+
     virtual void draw(RenderTarget& target, RenderStates states) override;
 
   private:
+    void fillVertexArray(VertexArray& vertices, RectU rect) const;
     void updateGeometry();
 
   private:

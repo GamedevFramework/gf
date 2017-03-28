@@ -90,6 +90,16 @@ inline namespace v1 {
     }
   }
 
+  VertexBuffer TileLayer::commitGeometry() const {
+    VertexArray vertices(PrimitiveType::Triangles);
+    RectU rect({ 0u, 0u }, m_layerSize);
+    fillVertexArray(vertices, rect);
+
+    VertexBuffer buffer;
+    buffer.load(vertices.getVertexData(), vertices.getVertexCount(), vertices.getPrimitiveType());
+    return buffer;
+  }
+
   void TileLayer::draw(RenderTarget& target, RenderStates states) {
     if (m_texture == nullptr) {
       return;
@@ -134,23 +144,18 @@ inline namespace v1 {
     target.draw(m_vertices, states);
   }
 
-  void TileLayer::updateGeometry() {
-    m_vertices.clear();
 
-    if (m_texture == nullptr || m_tileSize.width == 0 || m_tileSize.height == 0) {
-      return;
-    }
-
-    m_vertices.reserve(m_rect.height * m_rect.width * 6);
+  void TileLayer::fillVertexArray(VertexArray& array, RectU rect) const {
+    array.reserve(rect.height * rect.width * 6);
 
     Vector2u tilesetSize = (m_texture->getSize() - 2 * m_margin + m_spacing) / (m_tileSize + m_spacing);
     Vector2u blockSize = getBlockSize();
 
     Vector2u local;
 
-    for (local.y = 0; local.y < m_rect.height; ++local.y) {
-      for (local.x = 0; local.x < m_rect.width; ++local.x) {
-        Vector2u cell(m_rect.position + local);
+    for (local.y = 0; local.y < rect.height; ++local.y) {
+      for (local.x = 0; local.x < rect.width; ++local.x) {
+        Vector2u cell(rect.position + local);
         int tile = m_tiles(cell);
 
         if (tile == NoTile) {
@@ -187,19 +192,28 @@ inline namespace v1 {
 
         // first triangle
 
-        m_vertices.append(vertices[0]);
-        m_vertices.append(vertices[1]);
-        m_vertices.append(vertices[2]);
+        array.append(vertices[0]);
+        array.append(vertices[1]);
+        array.append(vertices[2]);
 
         // second triangle
 
-        m_vertices.append(vertices[2]);
-        m_vertices.append(vertices[1]);
-        m_vertices.append(vertices[3]);
+        array.append(vertices[2]);
+        array.append(vertices[1]);
+        array.append(vertices[3]);
       }
     }
 
+  }
 
+  void TileLayer::updateGeometry() {
+    m_vertices.clear();
+
+    if (m_texture == nullptr || m_tileSize.width == 0 || m_tileSize.height == 0) {
+      return;
+    }
+
+    fillVertexArray(m_vertices, m_rect);
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
