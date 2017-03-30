@@ -71,6 +71,7 @@
 #include "PhysicsGeometry.cc"
 #include "PhysicsModel.cc"
 #include "Polygon.cc"
+#include "Polyline.cc"
 #include "PostProcessing.cc"
 #include "Random.cc"
 #include "Range.cc"

@@ -103,6 +103,7 @@ else()
     PhysicsGeometry.cc
     PhysicsModel.cc
     Polygon.cc
+    Polyline.cc
     PostProcessing.cc
     Random.cc
     Range.cc
