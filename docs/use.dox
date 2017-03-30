@@ -16,7 +16,7 @@ find_package(gf REQUIRED)
 
 add_executable(foogame
   foogame.cc
-  # and the rest your sources
+  # and the rest of your sources
 )
 
 target_link_libraries(foogame

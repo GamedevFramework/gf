@@ -2,9 +2,11 @@
 
 @page math Math functions and constants
 
+@tableofcontents
+
 gf provides common functions and constants that are not in the [standard library](http://en.cppreference.com/w/cpp/numeric/math).
 
-~~~
+~~~{.cc}
 #include <gf/Math.h>
 ~~~
 
@@ -48,7 +50,7 @@ Here are the step functions that are provided by gf:
 
 The type gf::Step is a function pointer to a step function.
 
-@subsection maths_other_functions
+@subsection maths_other_functions Other functions
 
 gf has some other useful functions.
 
