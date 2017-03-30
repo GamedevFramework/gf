@@ -347,7 +347,7 @@ inline namespace v1 {
      * @param func A callback function
      */
     template<typename Func>
-    void visit8Neighbours(const Vector2u& pos, Func func) {
+    void visit8Neighbours(Vector2u pos, Func func) {
       for (int i = -1; i <= 1; ++i) {
         if (pos.row == 0 && i == -1) {
           continue;
@@ -367,7 +367,7 @@ inline namespace v1 {
           }
 
           if (i != 0 || j != 0) {
-            Vector2u neighbour{ pos.col + i, pos.row + j };
+            Vector2u neighbour{ pos.col + j, pos.row + i };
             func(neighbour, get(neighbour));
           }
         }
@@ -416,7 +416,7 @@ inline namespace v1 {
           }
 
           if (i != 0 || j != 0) {
-            Vector2u neighbour{ pos.col + i, pos.row + j };
+            Vector2u neighbour{ pos.col + j, pos.row + i };
             func(neighbour, get(neighbour));
           }
         }
