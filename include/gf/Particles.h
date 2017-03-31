@@ -32,14 +32,14 @@ inline namespace v1 {
 
   /**
    * @ingroup graphics
-   * @brief A class to display a high number of small shapes
+   * @brief A class to display a high number of points
    */
-  class GF_API Particles : public Transformable {
+  class GF_API PointParticles : public Transformable {
   public:
     /**
      * @brief Default constructor
      */
-    Particles();
+    PointParticles();
 
     /**
      * @brief Add a point to the particles
@@ -49,20 +49,38 @@ inline namespace v1 {
      */
     void addPoint(Vector2f position, Color4f color);
 
+    virtual void draw(RenderTarget& target, RenderStates states) override;
+
+  private:
+    VertexArray m_vertices;
+  };
+
+
+  /**
+   * @ingroup graphics
+   * @brief A class to display a high number of small simple shapes
+   */
+  class GF_API ShapeParticles : public Transformable {
+  public:
+    /**
+     * @brief Default constructor
+     */
+    ShapeParticles();
+
     /**
      * @brief Add a circle shape to the particles
      *
      * @param position The position of the center of the circle
      * @param radius The radius of the circle
      * @param color The color of the circle
+     * @param pointCount The number of points composing the circle
      */
-    void addCircle(Vector2f position, float radius, Color4f color);
+    void addCircle(Vector2f position, float radius, Color4f color, std::size_t pointCount = 15);
 
     virtual void draw(RenderTarget& target, RenderStates states) override;
 
   private:
-    VertexArray m_pointVertices;
-    VertexArray m_shapeVertices;
+    VertexArray m_vertices;
   };
 
 

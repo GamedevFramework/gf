@@ -28,48 +28,55 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  static constexpr unsigned CirclePointCount = 15;
-
-  Particles::Particles()
-  : m_pointVertices(PrimitiveType::Points)
-  , m_shapeVertices(PrimitiveType::Triangles)
+  PointParticles::PointParticles()
+  : m_vertices(PrimitiveType::Points)
   {
 
   }
 
-  void Particles::addPoint(Vector2f position, Color4f color) {
+  void PointParticles::addPoint(Vector2f position, Color4f color) {
     Vertex vertex;
     vertex.position = position;
     vertex.color = color;
-    m_pointVertices.append(vertex);
+    m_vertices.append(vertex);
   }
 
-  void Particles::addCircle(Vector2f position, float radius, Color4f color) {
+  void PointParticles::draw(RenderTarget& target, RenderStates states) {
+    states.transform *= getTransform();
+    target.draw(m_vertices, states);
+  }
+
+  ShapeParticles::ShapeParticles()
+  : m_vertices(PrimitiveType::Triangles)
+  {
+
+  }
+
+  void ShapeParticles::addCircle(Vector2f position, float radius, Color4f color, std::size_t pointCount) {
     Vector2f prev = { position.x + radius, position.y };
 
     Vertex vertices[3];
     vertices[0].position = position;
     vertices[0].color = vertices[1].color = vertices[2].color = color;
 
-    for (unsigned i = 1; i <= CirclePointCount; ++i) {
-      float angle = i * 2.0f * gf::Pi / CirclePointCount;
+    for (std::size_t i = 1; i <= pointCount; ++i) {
+      float angle = i * 2.0f * gf::Pi / pointCount;
       Vector2f curr = position + radius * gf::unit(angle);
 
       vertices[1].position = prev;
       vertices[2].position = curr;
 
-      m_shapeVertices.append(vertices[0]);
-      m_shapeVertices.append(vertices[1]);
-      m_shapeVertices.append(vertices[2]);
+      m_vertices.append(vertices[0]);
+      m_vertices.append(vertices[1]);
+      m_vertices.append(vertices[2]);
 
       prev = curr;
     }
   }
 
-  void Particles::draw(RenderTarget& target, RenderStates states) {
+  void ShapeParticles::draw(RenderTarget& target, RenderStates states) {
     states.transform *= getTransform();
-    target.draw(m_shapeVertices, states);
-    target.draw(m_pointVertices, states);
+    target.draw(m_vertices, states);
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
