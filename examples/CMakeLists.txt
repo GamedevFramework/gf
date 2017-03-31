@@ -29,6 +29,7 @@ add_gf_example(17_buffer)
 add_gf_example(18_tilelayer)
 add_gf_example(19_ninepatch)
 add_gf_example(20_framerate)
+add_gf_example(21_particles)
 
 add_gf_example(30_postprocessing)
 add_gf_example(31_pipeline)
