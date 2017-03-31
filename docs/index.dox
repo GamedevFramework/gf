@@ -37,6 +37,7 @@
 - Entities and models: gf::Entity, gf::EntityContainer, gf::Model, gf::ModelContainer
 - Application messages: gf::MessageManager, gf::Message
 - Resources: gf::AssetManager, gf::ResourceCache, gf::ResourceManager, gf::TextureAtlas
+- Physics: gf::PhysicsBody, gf::PhysicsGeometry, gf::PhysicsModel
 
 @mainpage
 

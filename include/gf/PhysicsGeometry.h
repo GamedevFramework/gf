@@ -35,6 +35,7 @@ inline namespace v1 {
   class RenderTarget;
 
   /**
+   * @ingroup game
    * @brief The geometry of a physics body
    *
    * The geometry is defined in model coordinates.

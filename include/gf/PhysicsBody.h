@@ -19,6 +19,7 @@ inline namespace v1 {
   struct Penetration;
 
   /**
+   * @ingroup game
    * @brief A physics body
    *
    * A body has several properties:
