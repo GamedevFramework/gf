@@ -21,6 +21,7 @@
 #include <gf/Particles.h>
 
 #include <gf/RenderTarget.h>
+#include <gf/Texture.h>
 #include <gf/VectorOps.h>
 
 namespace gf {
@@ -76,6 +77,65 @@ inline namespace v1 {
 
   void ShapeParticles::draw(RenderTarget& target, RenderStates states) {
     states.transform *= getTransform();
+    target.draw(m_vertices, states);
+  }
+
+  SpriteParticles::SpriteParticles()
+  : m_texture(nullptr)
+  , m_vertices(PrimitiveType::Triangles)
+  {
+
+  }
+
+  SpriteParticles::SpriteParticles(const Texture& texture)
+  : m_texture(&texture)
+  , m_vertices(PrimitiveType::Triangles)
+  {
+
+  }
+
+  void SpriteParticles::setTexture(const Texture& texture) {
+    m_texture = &texture;
+  }
+
+  void SpriteParticles::addSprite(Vector2f position, const RectF& textureRect, Color4f color) {
+    if (m_texture == nullptr) {
+      return;
+    }
+
+    Vector2f size = textureRect.size * m_texture->getSize();
+    RectF box(position - size / 2, size);
+
+    Vertex vertices[4];
+
+    vertices[0].position = box.getTopLeft();
+    vertices[1].position = box.getTopRight();
+    vertices[2].position = box.getBottomLeft();
+    vertices[3].position = box.getBottomRight();
+
+    vertices[0].color = vertices[1].color = vertices[2].color = vertices[3].color = color;
+
+    vertices[0].texCoords = textureRect.getTopLeft();
+    vertices[1].texCoords = textureRect.getTopRight();
+    vertices[2].texCoords = textureRect.getBottomLeft();
+    vertices[3].texCoords = textureRect.getBottomRight();
+
+    m_vertices.append(vertices[0]);
+    m_vertices.append(vertices[1]);
+    m_vertices.append(vertices[2]);
+
+    m_vertices.append(vertices[2]);
+    m_vertices.append(vertices[1]);
+    m_vertices.append(vertices[3]);
+  }
+
+  void SpriteParticles::draw(RenderTarget& target, RenderStates states) {
+    if (m_texture == nullptr) {
+      return;
+    }
+
+    states.transform *= getTransform();
+    states.texture = m_texture;
     target.draw(m_vertices, states);
   }
 

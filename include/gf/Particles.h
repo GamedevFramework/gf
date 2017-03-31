@@ -29,6 +29,7 @@ namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
 #endif
+  class Texture;
 
   /**
    * @ingroup graphics
@@ -83,6 +84,48 @@ inline namespace v1 {
     VertexArray m_vertices;
   };
 
+  /**
+   * @ingroup graphics
+   * @brief A class to display a high number of sprites
+   *
+   * @sa gf::SpriteBatch
+   */
+  class GF_API SpriteParticles : public Transformable {
+  public:
+    /**
+     * @brief Default constructor
+     */
+    SpriteParticles();
+
+    /**
+     * @brief Constructor with a texture
+     *
+     * @param texture The source texture
+     */
+    SpriteParticles(const Texture& texture);
+
+    /**
+     * @brief Change the source texture
+     *
+     * @param texture The new texture
+     */
+    void setTexture(const Texture& texture);
+
+    /**
+     * @brief Add a sprite to the particles
+     *
+     * @param position The position of the center of the sprite
+     * @param textureRect The sub-rectangle of the texture to assign to the sprite
+     * @param color The color of the sprite
+     */
+    void addSprite(Vector2f position, const RectF& textureRect, Color4f color = Color::White);
+
+    virtual void draw(RenderTarget& target, RenderStates states) override;
+
+  private:
+    const Texture *m_texture;
+    VertexArray m_vertices;
+  };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
