@@ -594,8 +594,15 @@ inline namespace v1 {
    */
   template<typename T, typename U, std::size_t N>
   inline
-  Vector<typename std::common_type<T,U>::type, N> lerp(Vector<T, N> lhs, Vector<T, N> rhs, U t) {
-    return (1 - t) * lhs + t * rhs;
+  Vector<T, N> lerp(Vector<T, N> lhs, Vector<T, N> rhs, U t) {
+    Vector<T, N> out;
+
+    for (std::size_t i = 0; i < N; ++i) {
+      out.data[i] = lerp(lhs.data[i], rhs.data[i], t);
+    }
+
+    return out;
+    // return (1 - t) * lhs + t * rhs;
   }
 
   /**
