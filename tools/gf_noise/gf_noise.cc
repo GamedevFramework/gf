@@ -478,6 +478,8 @@ int main() {
   renderingParams.shaded = false;
   renderingParams.waterLevel = 0.5;
 
+  std::string feedback;
+
   renderer.clear(gf::Color::White);
 
   while (window.isOpen()) {
@@ -611,6 +613,8 @@ int main() {
 
     ui.layoutRowDynamic(20, 1);
     if (ui.buttonLabel("Generate")) {
+      gf::Clock clock;
+
       switch (noiseFunction) {
         case NoiseFunction::Noise: {
           StepFunction stepFunction = static_cast<StepFunction>(stepChoice);
@@ -660,6 +664,9 @@ int main() {
           break;
         }
       }
+
+      gf::Time duration = clock.getElapsedTime();
+      feedback = "Generation time: " + std::to_string(duration.asMilliseconds()) + " ms";
     }
 
     if (ui.buttonLabel("Save to 'noise.png'")) {
@@ -668,6 +675,10 @@ int main() {
 
     if (ui.buttonLabel("Save to 'noise.pnm'")) {
       exportToPortableGraymap(array, "noise.pnm");
+    }
+
+    if (!feedback.empty()) {
+      ui.label(feedback);
     }
 
     ui.end();
