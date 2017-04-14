@@ -8,6 +8,10 @@ Gamedev Framework (gf) is licensed under the terms and conditions of the [zlib/l
 
 See the [online documentation for Gamedev Framework (gf)](http://gamedevframework.github.io/).
 
+## Contact
+
+If you want to talk directly with the developpers, you can join the [#gf-devel IRC channel on Freenode](irc://chat.freenode.net/gf-devel).
+
 ## Contribution
 
 Gamedev Framework (gf) is very open to contributions. See [the contribution guidelines](CONTRIBUTING.md).
