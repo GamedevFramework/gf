@@ -115,7 +115,7 @@ inline namespace v1 {
      *
      * @return The current scissor box
      */
-    RectI getScissoBox();
+    RectI getScissorBox();
 
     /**
      * @brief Define the scissor box
@@ -243,12 +243,9 @@ inline namespace v1 {
      * so it is not necessary to keep the original one alive
      * after calling this function.
      *
-     * To restore the original view of the target, you can pass
-     * the result of getDefaultView() to this function.
-     *
      * @param view New view to use
      *
-     * @sa getView(), getDefaultView()
+     * @sa getView()
      */
     void setView(const View& view) {
       m_view = view;
@@ -259,7 +256,7 @@ inline namespace v1 {
      *
      * @return The view object that is currently used
      *
-     * @sa setView(), getDefaultView()
+     * @sa setView()
      */
     const View& getView() const {
       return m_view;

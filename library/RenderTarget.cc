@@ -63,7 +63,7 @@ inline namespace v1 {
     }
   }
 
-  RectI RenderTarget::getScissoBox() {
+  RectI RenderTarget::getScissorBox() {
     GLint box[4];
     glCheck(glGetIntegerv(GL_SCISSOR_BOX, &box[0]));
     Vector2i size = getSize();
