@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016 Julien Bernard
+ * Copyright (C) 2016-2017 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -24,6 +24,7 @@
 #include <gf/Window.h>
 
 #include <cassert>
+#include <cstring>
 
 #include <SDL.h>
 
@@ -34,10 +35,13 @@
 #include <gf/Keyboard.h>
 #include <gf/Log.h>
 #include <gf/Mouse.h>
+#include <gf/Sleep.h>
 #include <gf/Vector.h>
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   static Uint32 getFlagsFromHints(WindowFlags hints) {
     Uint32 flags = SDL_WINDOW_OPENGL;
@@ -65,11 +69,20 @@ inline namespace v1 {
     }
 
     void *context = SDL_GL_CreateContext(window);
+
+    if (context == nullptr) {
+      Log::error("Failed to create a context: %s\n", SDL_GetError());
+      return nullptr;
+    }
+
     int err = SDL_GL_MakeCurrent(window, context);
-    assert(err == 0);
+
+    if (err != 0) {
+      Log::error("Failed to make the context current: %s\n", SDL_GetError());
+    }
 
     if (!gladLoadGLES2Loader(SDL_GL_GetProcAddress)) {
-      Log::error(Log::Graphics, "Failed to load GLES2.\n");
+      Log::error("Failed to load GLES2.\n");
     }
 
     return context;
@@ -144,6 +157,8 @@ inline namespace v1 {
   }
 
   void Window::setFullscreen(bool full) {
+    assert(m_window);
+
     if (full) {
       SDL_SetWindowFullscreen(m_window, SDL_WINDOW_FULLSCREEN_DESKTOP);
     } else {
@@ -180,6 +195,19 @@ inline namespace v1 {
   void Window::hide() {
     assert(m_window);
     SDL_HideWindow(m_window);
+  }
+
+  void Window::setVisible(bool visible) {
+    if (visible) {
+      show();
+    } else {
+      hide();
+    }
+  }
+
+  void Window::setDecorated(bool decorated) {
+    assert(m_window);
+    SDL_SetWindowBordered(m_window, decorated ? SDL_TRUE : SDL_FALSE);
   }
 
   bool Window::isFocused() const {
@@ -226,8 +254,11 @@ inline namespace v1 {
         return MouseButton::XButton2;
     }
 
-    assert(false);
-    return MouseButton::Right;
+    /*
+     * Another button may happen in the case of a touchpad (value 6 or 7),
+     * which happens when pressing with two fingers.
+     */
+    return MouseButton::Other;
   }
 
   static GamepadButton getGamepadButtonFromButton(Uint8 button) {
@@ -455,6 +486,11 @@ inline namespace v1 {
         out.gamepadAxis.value = in->caxis.value;
         break;
 
+      case SDL_TEXTINPUT:
+        out.type = EventType::TextEntered;
+        std::strncpy(out.text.rune.data, in->text.text, Rune::Size);
+        break;
+
       default:
         return false;
     }
@@ -500,9 +536,30 @@ inline namespace v1 {
     SDL_GL_SetSwapInterval(enabled ? 1 : 0);
   }
 
+  bool Window::isVerticalSyncEnabled() const {
+    return SDL_GL_GetSwapInterval() != 0;
+  }
+
+  void Window::setFramerateLimit(unsigned int limit) {
+    if (limit == 0) {
+      m_duration = Time::Zero;
+    } else {
+      m_duration = seconds(1.0f / limit);
+    }
+  }
+
   void Window::display() {
     assert(m_window);
     SDL_GL_SwapWindow(m_window);
+
+    // handle framerate limit
+
+    if (m_duration == Time::Zero) {
+      return;
+    }
+
+    sleep(m_duration - m_clock.getElapsedTime());
+    m_clock.restart();
   }
 
   void Window::setMouseCursorVisible(bool visible) {
@@ -513,5 +570,7 @@ inline namespace v1 {
     SDL_SetWindowGrab(m_window, grabbed ? SDL_TRUE : SDL_FALSE);
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

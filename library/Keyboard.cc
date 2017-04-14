@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016 Julien Bernard
+ * Copyright (C) 2016-2017 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -23,7 +23,9 @@
 #include <SDL.h>
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   const char *Keyboard::getScancodeName(Scancode scancode) {
     return SDL_GetScancodeName(static_cast<SDL_Scancode>(scancode));
@@ -41,5 +43,7 @@ inline namespace v1 {
     return static_cast<Keycode>(SDL_GetKeyFromName(name));
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

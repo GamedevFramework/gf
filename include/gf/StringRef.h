@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016 Julien Bernard
+ * Copyright (C) 2016-2017 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -36,7 +36,7 @@ inline namespace v1 {
    * This class stores a pointer to a string and its size. It can be built
    * from various inputs: `std::string`, C string.
    *
-   * @sa ArrayRef
+   * @sa gf::ArrayRef, gf::BufferRef
    */
   class StringRef {
   public:
@@ -96,7 +96,7 @@ inline namespace v1 {
      *
      * @returns A pointer to the beginning of the string
      */
-    constexpr const char *getData() const {
+    constexpr const char *getData() const noexcept {
       return m_data;
     }
 
@@ -105,8 +105,41 @@ inline namespace v1 {
      *
      * @returns The size of the string
      */
-    constexpr std::size_t getSize() const {
+    constexpr std::size_t getSize() const noexcept {
       return m_size;
+    }
+
+    /**
+     * @brief Check if the string is empty
+     *
+     * An empty string is a string with size 0. So the null string is empty.
+     *
+     * @returns True if the string is empty
+     */
+    constexpr bool isEmpty() const noexcept {
+      return m_size == 0;
+    }
+
+    /**
+     * @brief Get an iterator to the beginning of the string
+     *
+     * @returns A pointer to the first character
+     *
+     * @sa end()
+     */
+    constexpr const char *begin() const noexcept {
+      return m_data;
+    }
+
+    /**
+     * @brief Get an iterator past the end of the string
+     *
+     * @returns A pointer past the last character
+     *
+     * @sa begin()
+     */
+    constexpr const char *end() const noexcept {
+      return m_data + m_size;
     }
 
   private:

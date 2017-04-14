@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016 Julien Bernard
+ * Copyright (C) 2016-2017 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -32,16 +32,31 @@ namespace gf {
 inline namespace v1 {
 #endif
 
+  struct Transform;
+
   /**
    * @ingroup game
    * @brief Data about the collision between two objects
    *
    * @sa [How to Create a Custom Physics Engine](http://gamedevelopment.tutsplus.com/series/how-to-create-a-custom-physics-engine--gamedev-12715)
    */
-  struct Penetration {
+  struct GF_API Penetration {
     Vector2f normal; ///< Collision normal
     float depth; ///< Penetration depth
   };
+
+  /**
+   * @relates Penetration
+   * @brief Check if two circles collides
+   *
+   * @param lhs First circle
+   * @param lhsTrans Transformation of the first circle
+   * @param rhs Second circle
+   * @param rhsTrans Transformation of the second circle
+   * @param p Data to fill if there is a collision
+   * @return True if there is a collision
+   */
+  GF_API bool collides(const CircF& lhs, const Transform& lhsTrans, const CircF& rhs, const Transform& rhsTrans, Penetration& p);
 
   /**
    * @relates Penetration
@@ -86,6 +101,67 @@ inline namespace v1 {
    * @return True if there is a collision
    */
   GF_API bool collides(const RectF& lhs, const RectF& rhs, Penetration& p);
+
+  /**
+   * @relates Penetration
+   * @brief Check if a circle collides with a polygon
+   *
+   * @param lhs The circle
+   * @param lhsTrans Transformation of the circle
+   * @param rhs The polygon
+   * @param rhsTrans Transformation of the polygon
+   * @param p Data to fill if there is a collision
+   * @return True if there is a collision
+   */
+  GF_API bool collides(const CircF& lhs, const Transform& lhsTrans, const Polygon& rhs, const Transform& rhsTrans, Penetration& p);
+
+  /**
+   * @relates Penetration
+   * @brief Check if a circle collides with a polygon
+   *
+   * @param lhs The circle
+   * @param rhs The polygon
+   * @param p Data to fill if there is a collision
+   * @return True if there is a collision
+   */
+  GF_API bool collides(const CircF& lhs, const Polygon& rhs, Penetration& p);
+
+  /**
+   * @relates Penetration
+   * @brief Check if a polygon collides with a circle
+   *
+   * @param lhs The polygon
+   * @param lhsTrans Transformation of the polygon
+   * @param rhs The circle
+   * @param rhsTrans Transformation of the circle
+   * @param p Data to fill if there is a collision
+   * @return True if there is a collision
+   */
+  GF_API bool collides(const Polygon& lhs, const Transform& lhsTrans, const CircF& rhs, const Transform& rhsTrans, Penetration& p);
+
+  /**
+   * @relates Penetration
+   * @brief Check if a polygon collides with a circle
+   *
+   * @param lhs The polygon
+   * @param rhs The circle
+   * @param p Data to fill if there is a collision
+   * @return True if there is a collision
+   */
+  GF_API bool collides(const Polygon& lhs, const CircF& rhs, Penetration& p);
+
+  /**
+   * @relates Penetration
+   * @brief Check if two polygons collides
+   *
+   * @param lhs First polygon
+   * @param lhsTrans Transformation of the first polygon
+   * @param rhs Second polygon
+   * @param rhsTrans Transformation of the second polygon
+   * @param p Data to fill if there is a collision
+   * @return True if there is a collision
+   */
+  GF_API bool collides(const Polygon& lhs, const Transform& lhsTrans, const Polygon& rhs, const Transform& rhsTrans, Penetration& p);
 
   /**
    * @relates Penetration

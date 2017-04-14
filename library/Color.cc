@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016 Julien Bernard
+ * Copyright (C) 2016-2017 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -28,7 +28,9 @@
 #include <gf/Math.h>
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   constexpr Color4f Color::Black;
   constexpr Color4f Color::White;
@@ -49,8 +51,6 @@ inline namespace v1 {
   constexpr Color4f Color::Spring;
   constexpr Color4f Color::Violet;
   constexpr Color4f Color::Azure;
-
-  static constexpr float Epsilon = 0.00001f;
 
   struct Hsv {
     float h;
@@ -185,5 +185,7 @@ inline namespace v1 {
     };
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

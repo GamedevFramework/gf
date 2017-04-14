@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016 Julien Bernard
+ * Copyright (C) 2016-2017 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -18,8 +18,8 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#ifndef GF_DIRECTION_H
-#define GF_DIRECTION_H
+#ifndef GF_ORIENTATION_H
+#define GF_ORIENTATION_H
 
 #include "Portability.h"
 #include "Vector.h"
@@ -136,4 +136,4 @@ inline namespace v1 {
 }
 
 
-#endif // GF_DIRECTION_H
+#endif // GF_ORIENTATION_H

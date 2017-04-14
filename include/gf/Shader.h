@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016 Julien Bernard
+ * Copyright (C) 2016-2017 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -27,9 +27,10 @@
 #include <string>
 #include <map>
 
-#include "Filesystem.h"
 #include "Matrix.h"
+#include "Path.h"
 #include "Portability.h"
+#include "StringRef.h"
 #include "Texture.h"
 #include "Vector.h"
 
@@ -214,7 +215,7 @@ inline namespace v1 {
      *
      * @sa loadFromFile(), loadFromStream()
      */
-    bool loadFromMemory(const std::string& shader, Type type);
+    bool loadFromMemory(StringRef shader, Type type);
 
     /**
     * @brief Load both the vertex and fragment shaders from source codes
@@ -236,7 +237,7 @@ inline namespace v1 {
     *
     * @sa loadFromFile(), loadFromStream()
     */
-    bool loadFromMemory(const std::string& vertexShader, const std::string& fragmentShader);
+    bool loadFromMemory(StringRef vertexShader, StringRef fragmentShader);
 
 
     /**
@@ -293,7 +294,7 @@ inline namespace v1 {
      * @param name Name of the uniform variable in GLSL
      * @param val Value of the `float` scalar
      */
-    void setUniform(const std::string& name, float val);
+    void setUniform(StringRef name, float val);
 
     /**
      * @brief Specify value for a `int` uniform
@@ -301,7 +302,7 @@ inline namespace v1 {
      * @param name Name of the uniform variable in GLSL
      * @param val Value of the `int` scalar
      */
-    void setUniform(const std::string& name, int val);
+    void setUniform(StringRef name, int val);
 
     /**
      * @brief Specify value for a `vec2` uniform
@@ -309,7 +310,7 @@ inline namespace v1 {
      * @param name Name of the uniform variable in GLSL
      * @param vec Value of the `vec2` vector
      */
-    void setUniform(const std::string& name, const Vector2f& vec);
+    void setUniform(StringRef name, const Vector2f& vec);
 
     /**
      * @brief Specify value for a `vec3` uniform
@@ -317,7 +318,7 @@ inline namespace v1 {
      * @param name Name of the uniform variable in GLSL
      * @param vec Value of the `vec3` vector
      */
-    void setUniform(const std::string& name, const Vector3f& vec);
+    void setUniform(StringRef name, const Vector3f& vec);
 
     /**
      * @brief Specify value for a `vec4` uniform
@@ -325,7 +326,7 @@ inline namespace v1 {
      * @param name Name of the uniform variable in GLSL
      * @param vec Value of the `vec4` vector
      */
-    void setUniform(const std::string& name, const Vector4f& vec);
+    void setUniform(StringRef name, const Vector4f& vec);
 
     /**
      * @brief Specify value for a `mat3` uniform
@@ -333,7 +334,7 @@ inline namespace v1 {
      * @param name Name of the uniform variable in GLSL
      * @param mat Value of the `mat3` matrix
      */
-    void setUniform(const std::string& name, const Matrix3f& mat);
+    void setUniform(StringRef name, const Matrix3f& mat);
 
     /**
      * @brief Specify value for a `mat4` uniform
@@ -341,7 +342,7 @@ inline namespace v1 {
      * @param name Name of the uniform variable in GLSL
      * @param mat Value of the `mat4` matrix
      */
-    void setUniform(const std::string& name, const Matrix4f& mat);
+    void setUniform(StringRef name, const Matrix4f& mat);
 
     /**
      * @brief Specify a texture for a `sampler2D` uniform
@@ -369,7 +370,7 @@ inline namespace v1 {
      * @param name Name of the uniform variable in GLSL
      * @param tex Value of the `sampler2D` texture
      */
-    void setUniform(const std::string& name, const BareTexture& tex);
+    void setUniform(StringRef name, const BareTexture& tex);
 
     /** @} */
 
@@ -386,8 +387,8 @@ inline namespace v1 {
   private:
     friend class RenderTarget;
     bool compile(const char *vertexShaderCode, const char *fragmentShaderCode);
-    int getUniformLocation(const std::string& name);
-    int getAttributeLocation(const std::string& name);
+    int getUniformLocation(StringRef name);
+    int getAttributeLocation(StringRef name);
 
     struct Guard;
 

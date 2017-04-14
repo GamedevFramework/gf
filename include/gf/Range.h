@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016 Julien Bernard
+ * Copyright (C) 2016-2017 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -165,24 +165,32 @@ inline namespace v1 {
   /**
    * @ingroup core
    * @brief A float range
+   *
+   * @sa gf::Range
    */
   using RangeF = Range<float>;
 
   /**
    * @ingroup core
    * @brief A int range
+   *
+   * @sa gf::Range
    */
   using RangeI = Range<int>;
 
   /**
    * @ingroup core
    * @brief A unsigned range
+   *
+   * @sa gf::Range
    */
   using RangeU = Range<unsigned>;
 
   /**
    * @ingroup core
    * @brief A `std::size_t` range
+   *
+   * @sa gf::Range
    */
   using RangeZ = Range<std::size_t>;
 

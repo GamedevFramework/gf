@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016 Julien Bernard
+ * Copyright (C) 2016-2017 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -27,7 +27,9 @@
 #include <gf/VectorOps.h>
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   SpriteBatch::SpriteBatch(RenderTarget& target)
   : m_target(target)
@@ -111,6 +113,19 @@ inline namespace v1 {
     m_count++;
   }
 
+
+  void SpriteBatch::draw(const Texture& texture, Vector2f position, const RenderStates& states) {
+    gf::Sprite sprite(texture);
+    sprite.setPosition(position);
+    draw(sprite, states);
+  }
+
+  void SpriteBatch::draw(const Texture& texture, const RectF& textureRect, Vector2f position, const RenderStates& states) {
+    gf::Sprite sprite(texture, textureRect);
+    sprite.setPosition(position);
+    draw(sprite, states);
+  }
+
   void SpriteBatch::end() {
     renderBatch();
   }
@@ -126,5 +141,7 @@ inline namespace v1 {
     m_count = 0;
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

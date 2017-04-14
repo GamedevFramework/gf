@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016 Julien Bernard
+ * Copyright (C) 2016-2017 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -37,13 +37,15 @@ int main() {
   static constexpr gf::Vector2u ScreenSize(640, 480);
   static const gf::RectF World({ 0.0f, 0.0f }, { 15.0f, 15.0f });
 
-  gf::Window window("40_collision", ScreenSize, ~gf::WindowHints::Resizable);
+  gf::Window window("41_collision", ScreenSize, ~gf::WindowHints::Resizable);
   gf::RenderWindow renderer(window);
 
   gf::ExtendView view(World);
   view.setInitialScreenSize(ScreenSize);
 
   renderer.setView(view);
+
+  gf::CircF circle({ 14.0f, 0.0f }, 2.0f);
 
   gf::Polygon polygon1;
   polygon1.addPoint({ 4.0f, 11.0f });
@@ -56,8 +58,10 @@ int main() {
   polygon2.addPoint({ 10.0f, 2.0f });
   polygon2.addPoint({  7.0f, 3.0f });
 
+
+
   gf::Penetration p;
-  bool isColliding = gf::collides(polygon1, polygon2, p);
+  bool isColliding = gf::collides(polygon1, polygon2, p) || gf::collides(circle, polygon2, p);
 
   bool isMoving = false;
   gf::Vector2f velocity(0.0f, 0.0f);
@@ -140,12 +144,18 @@ int main() {
     if (isMoving) {
       gf::Matrix3f mat = gf::translation(dt * velocity);
       polygon2.applyTransform(mat);
-      isColliding = gf::collides(polygon1, polygon2, p);
+      isColliding = gf::collides(polygon1, polygon2, p) || gf::collides(circle, polygon2, p);
     }
 
     renderer.clear();
 
     {
+      gf::CircleShape shape0(circle);
+      shape0.setColor(gf::Color::Transparent);
+      shape0.setOutlineColor(gf::Color::Yellow);
+      shape0.setOutlineThickness(0.05f);
+      renderer.draw(shape0);
+
       gf::ConvexShape shape1(polygon1);
       shape1.setColor(gf::Color::Transparent);
       shape1.setOutlineColor(gf::Color::Magenta);

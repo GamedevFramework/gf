@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016 Julien Bernard
+ * Copyright (C) 2016-2017 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -35,7 +35,9 @@
 #include "config.h"
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   static std::atomic_int loaded{0};
 
@@ -43,7 +45,7 @@ inline namespace v1 {
   {
     if (loaded.fetch_add(1) == 0) { // we are the first
       if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) != 0) {
-        Log::error(Log::Graphics, "Unable to initialize SDL: '%s'\n", SDL_GetError());
+        Log::error("Unable to initialize SDL: '%s'\n", SDL_GetError());
         return;
       }
 
@@ -141,5 +143,7 @@ inline namespace v1 {
         fcv.major, fcv.minor, fcv.patch, flv.major, flv.minor, flv.patch);
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

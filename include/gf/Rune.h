@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016 Julien Bernard
+ * Copyright (C) 2016-2017 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -18,11 +18,12 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#ifndef GF_FILESYSTEM_H
-#define GF_FILESYSTEM_H
+#ifndef GF_RUNE_H
+#define GF_RUNE_H
 
-#include <boost/filesystem.hpp>
-#include <boost/functional/hash.hpp>
+#include <cstddef>
+
+#include "Portability.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -30,19 +31,21 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup core
-   * @brief A path in the filesystem
-   *
-   * gf::Path is a simple typedef for `boost::filesystem::path`.
-   * [Boost.Filesystem](http://www.boost.org/doc/libs/release/libs/filesystem/)
-   * will eventually be part of the C++17 standard. So, in the future, gf::Path
-   * will be a typedef for `std::path`.
+   * @brief A character encoded in UTF-8
    */
-  using Path = boost::filesystem::path;
+  struct GF_API Rune {
+    /**
+     * @brief The maximum size of the data
+     */
+    static constexpr std::size_t Size = 32;
+
+    char data[Size]; ///< The UTF-8 representation of the character
+  };
+
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif
 }
 
-#endif // GF_FILESYSTEM_H
+#endif // GF_RUNE_H

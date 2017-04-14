@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016 Julien Bernard
+ * Copyright (C) 2016-2017 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -24,6 +24,7 @@
 #ifndef GF_TRANSFORMABLE_H
 #define GF_TRANSFORMABLE_H
 
+#include "Anchor.h"
 #include "Drawable.h"
 #include "Matrix.h"
 #include "Portability.h"
@@ -34,25 +35,6 @@ namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
 #endif
-
-  /**
-   * @ingroup graphics
-   * @brief The origin anchor of the transformable object
-   *
-   *
-   * @sa Transformable::setOrigin()
-   */
-  enum class Anchor {
-    TopLeft,      ///< Top-left
-    TopCenter,    ///< Top-center
-    TopRight,     ///< Top-right
-    CenterLeft,   ///< Center-left
-    Center,       ///< Center
-    CenterRight,  ///< Center-right
-    BottomLeft,   ///< Bottom-left
-    BottomCenter, ///< Bottom-center
-    BottomRight,  ///< Bottom-right
-  };
 
   /**
    * @ingroup graphics

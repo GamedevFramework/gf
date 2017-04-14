@@ -1,6 +1,6 @@
 /*
  * Huaca, find the ritual to escape the temple
- * Copyright (C) 2016  Hatunruna team
+ * Copyright (C) 2016-2017  Hatunruna team
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@
  */
 #include "Display.h"
 
+#include <gf/Coordinates.h>
 #include <gf/Shapes.h>
 #include <gf/Sprite.h>
 #include <gf/RenderTarget.h>
@@ -32,8 +33,7 @@ namespace huaca {
     return &texture;
   }
 
-  Display::Display(const gf::WindowGeometryTracker& tracker)
-  : m_tracker(tracker)
+  Display::Display()
   {
     // init
 
@@ -96,22 +96,22 @@ namespace huaca {
 
 
   void Display::render(gf::RenderTarget& target) {
-    float x = Padding;
-    float y = Padding;
+    gf::Coordinates coordinates(target);
+
+    gf::Vector2f position(Padding, Padding);
 
     for (const auto& key : m_keys) {
       gf::Sprite sprite;
       sprite.setTexture(*key.texture);
-      sprite.setPosition({ x, y });
+      sprite.setPosition(position);
       sprite.setScale(KeySize / KeyTextureSize);
       sprite.setColor({ 1.0f, 1.0f, 1.0f, (key.active ? 1.0f : Transparency) });
       target.draw(sprite);
 
-      x += KeySize + KeySpace;
+      position.x += KeySize + KeySpace;
     }
 
-    x = Padding;
-    y = m_tracker.getYFromBottom(RuneSize + RuneSpace + RuneSize + Padding);
+    position = coordinates.getAbsolutePoint({ Padding, RuneSize + RuneSpace + RuneSize + Padding }, gf::Anchor::BottomLeft);
 
     for (unsigned i = 0; i < 2; ++i) {
       for (unsigned j = 0; j < 2; ++j) {
@@ -119,25 +119,24 @@ namespace huaca {
 
         gf::Sprite sprite;
         sprite.setTexture(*rune.texture);
-        sprite.setPosition({ x + RuneSize * i, y + RuneSize * j });
+        sprite.setPosition(position + RuneSize * gf::Vector2f(i, j));
         sprite.setScale(RuneSize / RuneTextureSize);
         sprite.setColor({ 1.0f, 1.0f, 1.0f, (rune.active ? 1.0f : Transparency) });
         target.draw(sprite);
       }
     }
 
-    x = m_tracker.getXFromRight(PortalSize + PortalSpace + PortalSize + Padding);
-    y = Padding;
+    position = coordinates.getAbsolutePoint({ PortalSize + PortalSpace + PortalSize + Padding, Padding }, gf::Anchor::TopRight);
 
     for (const auto& portal : m_portals) {
       gf::Sprite sprite;
       sprite.setTexture(*portal.texture);
-      sprite.setPosition({ x, y });
+      sprite.setPosition(position);
       sprite.setScale({ PortalSize / PortalTextureSize });
       sprite.setColor({ 1.0f, 1.0f, 1.0f, (portal.active ? 1.0f : Transparency) });
       target.draw(sprite);
 
-      x += PortalSize + PortalSpace;
+      position.x += PortalSize + PortalSpace;
     }
 
   }

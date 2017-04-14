@@ -1,6 +1,6 @@
 /*
  * Huaca, find the ritual to escape the temple
- * Copyright (C) 2016  Hatunruna team
+ * Copyright (C) 2016-2017  Hatunruna team
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@
  */
 #include "Timer.h"
 
+#include <gf/Coordinates.h>
 #include <gf/Shapes.h>
 #include <gf/RenderTarget.h>
 
@@ -28,9 +29,8 @@ namespace huaca {
   static constexpr float LevelTime = 120.0f; // 2 min for each level
 
 
-  Timer::Timer(const gf::WindowGeometryTracker& tracker)
-  : m_tracker(tracker)
-  , m_totalTime(LevelTime)
+  Timer::Timer()
+  : m_totalTime(LevelTime)
   , m_remainingTime(LevelTime)
   {
     gMessageManager().registerHandler<NewLevelMessage>(&Timer::onNewLevel, this);
@@ -54,24 +54,30 @@ namespace huaca {
   static constexpr float TimerCorner = 5.0f;
 
   void Timer::render(gf::RenderTarget& target) {
-    float x = m_tracker.getXFromRight(TimerWidth + Padding);
-    float y = m_tracker.getYFromBottom(TimerHeight + Padding);
+    gf::Coordinates coordinates(target);
+
+    gf::Vector2f position = coordinates.getAbsolutePoint({ TimerWidth + Padding, TimerHeight + Padding }, gf::Anchor::BottomRight);
+
+//     float x = m_tracker.getXFromRight(TimerWidth + Padding);
+//     float y = m_tracker.getYFromBottom(TimerHeight + Padding);
 
     gf::Color4f color = gf::Color::fromRgba32(0x89865DFF);
     color.a = 0.5f;
 
     gf::RoundedRectangleShape shape({ TimerWidth, TimerHeight });
     shape.setRadius(TimerCorner);
-    shape.setPosition({ x, y });
+    shape.setPosition(position);
     shape.setColor(color);
     target.draw(shape);
 
     float remaining = m_remainingTime / m_totalTime * TimerHeight;
     color.a = 1.0f;
 
+    position.y += TimerHeight - remaining;
+
     shape.setSize({ TimerWidth, remaining });
     shape.setRadius(std::min(remaining / 2, TimerCorner));
-    shape.setPosition({ x, y + TimerHeight - remaining });
+    shape.setPosition(position);
     shape.setColor(color);
     target.draw(shape);
   }

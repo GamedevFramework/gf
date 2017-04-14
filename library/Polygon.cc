@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016 Julien Bernard
+ * Copyright (C) 2016-2017 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -28,8 +28,12 @@
 #include <gf/Transform.h>
 #include <gf/VectorOps.h>
 
+#include <gf/Log.h>
+
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   Polygon::Polygon(ArrayRef<Vector2f> points)
   : m_points(points.begin(), points.end())
@@ -55,11 +59,20 @@ inline namespace v1 {
     return std::accumulate(m_points.begin(), m_points.end(), Vector2f(0.0f, 0.0f)) / m_points.size();
   }
 
-  Vector2f Polygon::getSupport(Vector2f direction) const {
+  Vector2f Polygon::getSupport(Vector2f direction, const Transform& transform) const {
     assert(!m_points.empty());
-    return *std::max_element(m_points.begin(), m_points.end(), [direction](const Vector2f& lhs, const Vector2f& rhs){
+    // get direction in the local coordinates
+    direction = gf::inverseTransform(transform.rotation, direction);
+    // compute support
+    gf::Vector2f point = *std::max_element(m_points.begin(), m_points.end(), [direction](const Vector2f& lhs, const Vector2f& rhs){
       return gf::dot(direction, lhs) < gf::dot(direction, rhs);
     });
+    // return support in the world coordinates
+    return gf::transform(transform, point);
+  }
+
+  Vector2f Polygon::getSupport(Vector2f direction) const {
+    return getSupport(direction, Transform());
   }
 
   const Vector2f *Polygon::begin() const {
@@ -70,11 +83,57 @@ inline namespace v1 {
     return &m_points[0] + m_points.size();
   }
 
+  bool Polygon::isConvex() const {
+    if (m_points.size() <= 3) {
+      return true;
+    }
+
+    int currentSign = 0;
+
+    for (std::size_t i = 0; i < m_points.size() - 2; ++i) {
+      float x = gf::cross(m_points[i + 1] - m_points[i], m_points[i + 2] - m_points[i + 1]);
+
+      if (std::abs(x) > Epsilon) {
+        int sign = gf::sign(x);
+
+        if (currentSign != 0 && sign != currentSign) {
+          return false;
+        }
+
+        currentSign = sign;
+      }
+    }
+
+    return true;
+  }
+
+  // https://en.wikipedia.org/wiki/Shoelace_formula
+  static float getSignedArea(const std::vector<Vector2f>& points) {
+    float area = 0.0f;
+
+    for (std::size_t i = 0; i < points.size() - 1; ++i) {
+      area += gf::cross(points[i], points[i + 1]);
+    }
+
+    area += gf::cross(points.back(), points.front());
+    return area;
+  }
+
+  Winding Polygon::getWinding() const {
+    return getSignedArea(m_points) > 0 ? Winding::Clockwise : Winding::Counterclockwise;
+  }
+
+  float Polygon::getArea() const {
+    return std::abs(getSignedArea(m_points) / 2);
+  }
+
   void Polygon::applyTransform(const Matrix3f& mat) {
     for (auto& point : m_points) {
       point = gf::transform(mat, point);
     }
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

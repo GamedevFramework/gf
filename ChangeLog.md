@@ -1,8 +1,45 @@
 # ChangeLog for gf
 
-## gf 0.3.0 (14 Jan 2016)
+## gf 0.4.0 (14 Apr 2017)
 
 - Core module
+  - Add degrees/radians conversions
+  - Add gf::sign()
+  - Add gf::Sqrt3 constant
+  - Add Rotation, Translation and Transform
+  - Remove categories from Log
+  - Add BufferRef
+  - Add Paths with useful functions
+  - Fix a bug in Polygon::isConvex()
+  - Add gf::sleep()
+  - Add Polyline
+- Window module
+  - Add Window::setVisible and Window::setDecorated
+  - Add TextEntered event support
+  - Add Window::setFramerateLimit()
+  - Add ActionContainer::{hasAction(),getAction()}
+  - Add View::zoom with a fixed point
+- Graphics module
+  - Remove WindowGeometryTracker and add Coordinates
+  - Add copy/paste support in UI
+  - Add UI::edit()
+  - Add UI::fileSelector()
+  - Add UI::image()
+  - Add SpriteBatch::draw with a texture
+  - Add TileLayer::commitGeometry()
+  - Add particles (PointParticles, ShapeParticles, SpriteParticles)
+- Game module
+  - Add polygon/circle collision
+  - Add minimal physics engine (PhysicsBody, PhysicsGeometry, PhysicsModel)
+- Tools and games
+  - Add Bank Robbery For Dummies
+- Misc
+  - Add support for unity build
+
+## gf 0.3.0 (14 Jan 2017)
+
+- Core module
+  - Split Vector.h in Vector.h (for types) and VectorOps.h (for operations)
   - Add Musgrave's fractal for noises
   - Add Better gradient noise
   - Add Polygon
@@ -26,6 +63,7 @@
   - Add lux
 - Misc
   - Generate headers from shaders and gamecontrollerdb.txt
+  - Change update(const Event&) in processEvent(const Event&) in many classes
 
 ## gf 0.2.0 (14 Oct 2016)
 

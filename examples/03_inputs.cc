@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016 Julien Bernard
+ * Copyright (C) 2016-2017 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -160,6 +160,10 @@ int main() {
 
         case gf::EventType::GamepadAxisMoved:
           std::cout << "GamepadAxisMoved:\n" << event.gamepadAxis << '\n';
+          break;
+
+        case gf::EventType::TextEntered:
+          std::cout << "TextEntered: '" << event.text.rune.data << "'\n";
           break;
 
         default:

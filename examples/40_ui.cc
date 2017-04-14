@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016 Julien Bernard
+ * Copyright (C) 2016-2017 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -453,7 +453,47 @@ static void overview(gf::UI& ui) {
         ui.treePop();
       }
 
-      // TODO: Input
+      static gf::UICollapse inputCollapsed = gf::UICollapse::Minimized;
+
+      if (ui.treePush(gf::UITree::Node, "Input", inputCollapsed)) {
+        static char text[9][64];
+        static std::size_t textLength[9];
+        static char box[512];
+        static std::size_t boxLength;
+
+        ui.layoutRow(gf::UILayout::Static, 25, { 120.0f, 150.0f });
+
+        ui.label("Default:");
+        ui.edit(gf::UIEditType::Simple, text[0], textLength[0], gf::UIEditFilter::Default);
+        ui.label("Int:");
+        ui.edit(gf::UIEditType::Simple, text[1], textLength[1], gf::UIEditFilter::Decimal);
+        ui.label("Float:");
+        ui.edit(gf::UIEditType::Simple, text[2], textLength[2], gf::UIEditFilter::Float);
+        ui.label("Hex:");
+        ui.edit(gf::UIEditType::Simple, text[3], textLength[3], gf::UIEditFilter::Hex);
+        ui.label("Octal:");
+        ui.edit(gf::UIEditType::Simple, text[4], textLength[4], gf::UIEditFilter::Oct);
+        ui.label("Binary:");
+        ui.edit(gf::UIEditType::Simple, text[5], textLength[5], gf::UIEditFilter::Binary);
+
+        ui.label("Field:");
+        ui.edit(gf::UIEditType::Field, text[6], textLength[6]);
+
+        ui.label("Box:");
+        ui.layoutRowStatic(180.0f, 278, 1);
+        ui.edit(gf::UIEditType::Box, box, boxLength);
+        ui.layoutRow(gf::UILayout::Static, 25, { 120.0f, 150.0f });
+        gf::UIEditEventFlags flags = ui.edit(gf::UIEditType::Field | gf::UIEdit::SigEnter, text[7], textLength[7], gf::UIEditFilter::Ascii);
+
+        if (ui.buttonLabel("Submit") || flags.test(gf::UIEditEvent::Commited)) {
+          std::size_t length = std::min(textLength[7], 512 - boxLength);
+          std::strncat(box, text[7], length);
+          boxLength += length;
+          textLength[7] = 0;
+        }
+
+        ui.treePop();
+      }
 
       ui.treePop();
     }
@@ -466,6 +506,7 @@ static void overview(gf::UI& ui) {
       static gf::Color4f color = gf::Color::Red;
       static bool select[4];
       static bool popupActive;
+      static bool fileSelectorActive;
 
       // menu contextual
 
@@ -548,6 +589,32 @@ static void overview(gf::UI& ui) {
           popupActive = false;
         }
       }
+
+      ui.layoutRowBegin(gf::UILayout::Static, 30, 2);
+      ui.layoutRowPush(100);
+      ui.label("File selector:");
+      ui.layoutRowPush(50);
+
+      if (ui.buttonLabel("Open")) {
+        fileSelectorActive = true;
+      }
+
+      ui.layoutRowEnd();
+
+      static gf::UIBrowser browser;
+
+      if (fileSelectorActive) {
+        static gf::RectF bounds(20.0f, 100.0f, 500.0f, 500.0f);
+
+        if (!ui.fileSelector(browser, "Choose a file", bounds)) {
+          fileSelectorActive = false;
+        }
+
+      }
+
+      ui.layoutRowDynamic(30, 2);
+      ui.label("Selected file:");
+      ui.label(browser.selectedPath.filename().string());
 
       // tooltip
 
@@ -682,7 +749,7 @@ static void overview(gf::UI& ui) {
 }
 
 int main() {
-  gf::Window window("41_ui", { 1024, 768 }, ~gf::WindowHints::Resizable);
+  gf::Window window("40_ui", { 1024, 768 }, ~gf::WindowHints::Resizable);
   gf::RenderWindow renderer(window);
 
   gf::Font font;

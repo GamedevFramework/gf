@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016 Julien Bernard
+ * Copyright (C) 2016-2017 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -25,21 +25,24 @@
 namespace fs = boost::filesystem;
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   void AssetManager::addSearchDir(Path path) {
     if (!fs::is_directory(path)) {
+      Log::info("Directory not found: %s\n", path.string().c_str());
       return;
     }
 
-    Log::info(Log::Resources, "Added a new search directory: %s\n", path.string().c_str());
+    Log::info("Added a new search directory: %s\n", path.string().c_str());
     m_searchdirs.emplace_back(std::move(path));
   }
 
   Path AssetManager::getAbsolutePath(const Path& relativePath) const {
     if (relativePath.is_absolute()) {
       assert(fs::is_regular_file(relativePath));
-      Log::info(Log::Resources, "Found a resource file: %s\n", relativePath.string().c_str());
+      Log::info("Found a resource file: %s\n", relativePath.string().c_str());
       return relativePath;
     }
 
@@ -47,14 +50,16 @@ inline namespace v1 {
       Path absolutePath = base / relativePath;
 
       if (fs::is_regular_file(absolutePath)) {
-        Log::info(Log::Resources, "Found a resource file: %s\n", absolutePath.string().c_str());
+        Log::info("Found a resource file: %s\n", absolutePath.string().c_str());
         return absolutePath;
       }
     }
 
-    Log::error(Log::Resources, "Could not find the following file: %s\n", relativePath.string().c_str());
+    Log::error("File not found: %s\n", relativePath.string().c_str());
     return Path();
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

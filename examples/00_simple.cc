@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016 Julien Bernard
+ * Copyright (C) 2016-2017 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -22,12 +22,17 @@
 
 #include <iostream>
 
+#include <gf/Paths.h>
 #include <gf/SystemInfo.h>
 
 int main() {
-  std::cout << "Gamedev Framework (gf) example #00: Version Info and System Info\n";
+  std::cout << "Gamedev Framework (gf) example #00: Version Info, System Info and Path Info\n";
+
+  std::cout << '\n';
 
   gf::Library::printVersionInfo();
+
+  std::cout << '\n';
 
   gf::Library lib;
 
@@ -35,6 +40,12 @@ int main() {
   std::cout << "CPU count: " << gf::SystemInfo::getCpuCount() << '\n';
   std::cout << "RAM size: " << gf::SystemInfo::getSystemRamSize() << " MiB\n";
   std::cout << "Cache line size: " << gf::SystemInfo::getCpuCacheLineSize() << " kiB\n";
+
+  std::cout << '\n';
+
+  std::cout << "Current path: " << gf::Paths::getCurrentPath() << '\n';
+  std::cout << "Base path: " << gf::Paths::getBasePath() << '\n';
+  std::cout << "Pref path: " << gf::Paths::getPrefPath("ACME", "Foo") << '\n';
 
   return 0;
 }

@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016 Julien Bernard
+ * Copyright (C) 2016-2017 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -191,9 +191,8 @@ inline namespace v1 {
      *
      * @return A pointer to the first element.
      */
-    inline
-    T *begin(void) {
-      return &(data[0]);
+    T *begin() {
+      return &data[0];
     }
 
     /**
@@ -201,9 +200,8 @@ inline namespace v1 {
      *
      * @return An invalid pointer that is the adress after the last element.
      */
-    inline
-    T *end(void) {
-      return &(data[N]);
+    T *end() {
+      return &data[N];
     }
 
     /**
@@ -211,9 +209,8 @@ inline namespace v1 {
      *
      * @return A pointer on the first const element.
      */
-    inline
-    T const *begin(void) const {
-      return &(data[0]);
+    const T *begin() const {
+      return &data[0];
     }
 
     /**
@@ -222,18 +219,16 @@ inline namespace v1 {
      * @return An invalid pointer that is the adress after the last const
      * element.
      */
-    inline
-    T const *end(void) const {
-      return &(data[N]);
+    const T *end() const {
+      return &data[N];
     }
     /**
      * @brief Iterator.on the first element (const version).
      *
      * @return A pointer on the first const element.
      */
-    inline
-    T const *cbegin(void) const {
-      return &(data[0]);
+    const T *cbegin() const {
+      return &data[0];
     }
 
     /**
@@ -242,9 +237,8 @@ inline namespace v1 {
      * @return An invalid pointer that is the adress after the last const
      * element.
      */
-    inline
-    T const *cend(void) const {
-      return &(data[N]);
+    const T *cend() const {
+      return &data[N];
     }
 
     /**
@@ -417,9 +411,8 @@ inline namespace v1 {
      *
      * @return A pointer to the first element.
      */
-    inline
-    T *begin(void) {
-      return &(data[0]);
+    T *begin() {
+      return &data[0];
     }
 
     /**
@@ -427,9 +420,8 @@ inline namespace v1 {
      *
      * @return An invalid pointer that is the adress after the last element.
      */
-    inline
-    T *end(void) {
-      return &(data[2]);
+    T *end() {
+      return &data[2];
     }
 
     /**
@@ -437,9 +429,8 @@ inline namespace v1 {
      *
      * @return A pointer on the first const element.
      */
-    inline
-    T const *begin(void) const {
-      return &(data[0]);
+    const T *begin() const {
+      return &data[0];
     }
 
     /**
@@ -448,18 +439,16 @@ inline namespace v1 {
      * @return An invalid pointer that is the adress after the last const
      * element.
      */
-    inline
-    T const *end(void) const {
-      return &(data[2]);
+    const T *end() const {
+      return &data[2];
     }
     /**
      * @brief Iterator.on the first element (const version).
      *
      * @return A pointer on the first const element.
      */
-    inline
-    T const *cbegin(void) const {
-      return &(data[0]);
+    const T *cbegin() const {
+      return &data[0];
     }
 
     /**
@@ -468,9 +457,8 @@ inline namespace v1 {
      * @return An invalid pointer that is the adress after the last const
      * element.
      */
-    inline
-    T const *cend(void) const {
-      return &(data[2]);
+    const T *cend() const {
+      return &data[2];
     }
 
     /**
@@ -669,9 +657,8 @@ inline namespace v1 {
      *
      * @return A pointer to the first element.
      */
-    inline
-    T *begin(void) {
-      return &(data[0]);
+    T *begin() {
+      return &data[0];
     }
 
     /**
@@ -679,9 +666,8 @@ inline namespace v1 {
      *
      * @return An invalid pointer that is the adress after the last element.
      */
-    inline
-    T *end(void) {
-      return &(data[3]);
+    T *end() {
+      return &data[3];
     }
 
     /**
@@ -689,9 +675,8 @@ inline namespace v1 {
      *
      * @return A pointer on the first const element.
      */
-    inline
-    T const *begin(void) const {
-      return &(data[0]);
+    const T *begin() const {
+      return &data[0];
     }
 
     /**
@@ -700,18 +685,17 @@ inline namespace v1 {
      * @return An invalid pointer that is the adress after the last const
      * element.
      */
-    inline
-    T const *end(void) const {
-      return &(data[3]);
+    const T *end() const {
+      return &data[3];
     }
+
     /**
      * @brief Iterator.on the first element (const version).
      *
      * @return A pointer on the first const element.
      */
-    inline
-    T const *cbegin(void) const {
-      return &(data[0]);
+    const T *cbegin() const {
+      return &data[0];
     }
 
     /**
@@ -720,9 +704,8 @@ inline namespace v1 {
      * @return An invalid pointer that is the adress after the last const
      * element.
      */
-    inline
-    T const *cend(void) const {
-      return &(data[3]);
+    const T *cend() const {
+      return &data[3];
     }
 
     /**
@@ -902,9 +885,8 @@ inline namespace v1 {
      *
      * @return A pointer to the first element.
      */
-    inline
-    T *begin(void) {
-      return &(data[0]);
+    T *begin() {
+      return &data[0];
     }
 
     /**
@@ -912,9 +894,8 @@ inline namespace v1 {
      *
      * @return An invalid pointer that is the adress after the last element.
      */
-    inline
-    T *end(void) {
-      return &(data[4]);
+    T *end() {
+      return &data[4];
     }
 
     /**
@@ -922,9 +903,8 @@ inline namespace v1 {
      *
      * @return A pointer on the first const element.
      */
-    inline
-    T const *begin(void) const {
-      return &(data[0]);
+    const T *begin() const {
+      return &data[0];
     }
 
     /**
@@ -933,18 +913,17 @@ inline namespace v1 {
      * @return An invalid pointer that is the adress after the last const
      * element.
      */
-    inline
-    T const *end(void) const {
-      return &(data[4]);
+    const T *end() const {
+      return &data[4];
     }
+
     /**
      * @brief Iterator.on the first element (const version).
      *
      * @return A pointer on the first const element.
      */
-    inline
-    T const *cbegin(void) const {
-      return &(data[0]);
+    const T *cbegin() const {
+      return &data[0];
     }
 
     /**
@@ -953,9 +932,8 @@ inline namespace v1 {
      * @return An invalid pointer that is the adress after the last const
      * element.
      */
-    inline
-    T const *cend(void) const {
-      return &(data[4]);
+    const T *cend() const {
+      return &data[4];
     }
 
     /**
@@ -984,132 +962,176 @@ inline namespace v1 {
   /**
    * @ingroup core
    * @brief A float vector with 2 components
+   *
+   * @sa gf::Vector, gf::Vector<T, 2>
    */
   using Vector2f = Vector<float, 2>;
 
   /**
    * @ingroup core
    * @brief A float vector with 3 components
+   *
+   * @sa gf::Vector, gf::Vector<T, 3>
    */
   using Vector3f = Vector<float, 3>;
 
   /**
    * @ingroup core
    * @brief A float vector with 4 components
+   *
+   * @sa gf::Vector, gf::Vector<T, 4>
    */
   using Vector4f = Vector<float, 4>;
 
   /**
    * @ingroup core
    * @brief A double vector with 2 components
+   *
+   * @sa gf::Vector, gf::Vector<T, 2>
    */
   using Vector2d = Vector<double, 2>;
 
   /**
    * @ingroup core
    * @brief A double vector with 3 components
+   *
+   * @sa gf::Vector, gf::Vector<T, 3>
    */
   using Vector3d = Vector<double, 3>;
 
   /**
    * @ingroup core
    * @brief A double vector with 4 components
+   *
+   * @sa gf::Vector, gf::Vector<T, 4>
    */
   using Vector4d = Vector<double, 4>;
 
   /**
    * @ingroup core
    * @brief A int vector with 2 components
+   *
+   * @sa gf::Vector, gf::Vector<T, 2>
    */
   using Vector2i = Vector<int, 2>;
 
   /**
    * @ingroup core
    * @brief A int vector with 3 components
+   *
+   * @sa gf::Vector, gf::Vector<T, 3>
    */
   using Vector3i = Vector<int, 3>;
 
   /**
    * @ingroup core
    * @brief A int vector with 4 components
+   *
+   * @sa gf::Vector, gf::Vector<T, 4>
    */
   using Vector4i = Vector<int, 4>;
 
   /**
    * @ingroup core
    * @brief A unsigned vector with 2 components
+   *
+   * @sa gf::Vector, gf::Vector<T, 2>
    */
   using Vector2u = Vector<unsigned, 2>;
 
   /**
    * @ingroup core
    * @brief A unsigned vector with 3 components
+   *
+   * @sa gf::Vector, gf::Vector<T, 3>
    */
   using Vector3u = Vector<unsigned, 3>;
 
   /**
    * @ingroup core
    * @brief A unsigned vector with 4 components
+   *
+   * @sa gf::Vector, gf::Vector<T, 4>
    */
   using Vector4u = Vector<unsigned, 4>;
 
   /**
    * @ingroup core
    * @brief A std::size_t vector with 2 components
+   *
+   * @sa gf::Vector, gf::Vector<T, 2>
    */
   using Vector2z = Vector<std::size_t, 2>;
 
   /**
    * @ingroup core
    * @brief A std::size_t vector with 3 components
+   *
+   * @sa gf::Vector, gf::Vector<T, 3>
    */
   using Vector3z = Vector<std::size_t, 3>;
 
   /**
    * @ingroup core
    * @brief A std::size_t vector with 4 components
+   *
+   * @sa gf::Vector, gf::Vector<T, 4>
    */
   using Vector4z = Vector<std::size_t, 4>;
 
   /**
    * @ingroup core
    * @brief A bool vector with 2 components
+   *
+   * @sa gf::Vector, gf::Vector<T, 2>
    */
   using Vector2b = Vector<bool, 2>;
 
   /**
    * @ingroup core
    * @brief A bool vector with 3 components
+   *
+   * @sa gf::Vector, gf::Vector<T, 3>
    */
   using Vector3b = Vector<bool, 3>;
 
   /**
    * @ingroup core
    * @brief A bool vector with 4 components
+   *
+   * @sa gf::Vector, gf::Vector<T, 4>
    */
   using Vector4b = Vector<bool, 4>;
 
   /**
    * @ingroup core
    * @brief A float color vector with 3 components
+   *
+   * @sa gf::Vector, gf::Vector<T, 3>
    */
   using Color3f = Vector<float, 3>;
 
   /**
    * @ingroup core
    * @brief A float color vector with 4 components
+   *
+   * @sa gf::Vector, gf::Vector<T, 4>
    */
   using Color4f = Vector<float, 4>;
 
   /**
    * @ingroup core
    * @brief A uint8_t color vector with 3 components
+   *
+   * @sa gf::Vector, gf::Vector<T, 3>
    */
   using Color3u = Vector<uint8_t, 3>;
 
   /**
    * @ingroup core
    * @brief A uint8_t color vector with 4 components
+   *
+   * @sa gf::Vector, gf::Vector<T, 4>
    */
   using Color4u = Vector<uint8_t, 4>;
 
@@ -1157,7 +1179,7 @@ inline namespace v1 {
    * @sa gf::Distance2, gf::Distance3
    */
   template<typename T, std::size_t N>
-  using Distance = T (*)(const Vector<T, N>&, const Vector<T, N>&);
+  using Distance = T (*)(Vector<T, N>, Vector<T, N>);
 
   /**
    * @ingroup core

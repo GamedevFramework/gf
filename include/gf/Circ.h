@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016 Julien Bernard
+ * Copyright (C) 2016-2017 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -199,24 +199,32 @@ inline namespace v1 {
   /**
    * @ingroup core
    * @brief A `float` circle
+   *
+   * @sa gf::Circ
    */
   using CircF = Circ<float>;
 
   /**
    * @ingroup core
    * @brief A `int` circle
+   *
+   * @sa gf::Circ
    */
   using CircI = Circ<int>;
 
   /**
    * @ingroup core
    * @brief A `unsigned` circle
+   *
+   * @sa gf::Circ
    */
   using CircU = Circ<unsigned>;
 
   /**
    * @ingroup core
    * @brief A `std::size_t` circle
+   *
+   * @sa gf::Circ
    */
   using CircZ = Circ<std::size_t>;
 

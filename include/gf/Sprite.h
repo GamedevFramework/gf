@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016 Julien Bernard
+ * Copyright (C) 2016-2017 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -82,7 +82,7 @@ inline namespace v1 {
    * renderer.draw(sprite);
    * ~~~
    *
-   * @sa gf::Texture, gf::Transformable
+   * @sa gf::Texture, gf::Transformable, gf::SpriteBatch
    */
   class GF_API Sprite : public Transformable {
   public:

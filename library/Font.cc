@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016 Julien Bernard
+ * Copyright (C) 2016-2017 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -38,7 +38,9 @@
 #include "priv/Debug.h"
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   static constexpr float Scale = (1 << 6);
 
@@ -93,7 +95,7 @@ inline namespace v1 {
     FT_Library library;
 
     if (auto err = FT_Init_FreeType(&library)) {
-      Log::error(Log::Graphics, "Could not init Freetype library: %s\n", FT_ErrorMessage(err));
+      Log::error("Could not init Freetype library: %s\n", FT_ErrorMessage(err));
       return;
     }
 
@@ -102,7 +104,7 @@ inline namespace v1 {
     FT_Stroker stroker;
 
     if (auto err = FT_Stroker_New(library, &stroker)) {
-      Log::error(Log::Graphics, "Could not create the stroker: %s\n", FT_ErrorMessage(err));
+      Log::error("Could not create the stroker: %s\n", FT_ErrorMessage(err));
       return;
     }
 
@@ -113,7 +115,7 @@ inline namespace v1 {
   Font::~Font() {
     if (m_face != nullptr) {
       if (auto err = FT_Done_Face(static_cast<FT_Face>(m_face))) {
-        Log::error(Log::Graphics, "Could not destroy the font face: %s\n", FT_ErrorMessage(err));
+        Log::error("Could not destroy the font face: %s\n", FT_ErrorMessage(err));
       }
     }
 
@@ -124,7 +126,7 @@ inline namespace v1 {
 
     if (m_library != nullptr) {
       if (auto err = FT_Done_FreeType(static_cast<FT_Library>(m_library))) {
-        Log::error(Log::Graphics, "Could not destroy Freetype library: %s\n", FT_ErrorMessage(err));
+        Log::error("Could not destroy Freetype library: %s\n", FT_ErrorMessage(err));
       }
     }
   }
@@ -159,7 +161,7 @@ inline namespace v1 {
     FT_Face face = nullptr;
 
     if (auto err = FT_New_Face(library, filename.string().c_str(), 0, &face)) {
-      Log::error(Log::Graphics, "Could not create the font face '%s': %s\n", filename.string().c_str(), FT_ErrorMessage(err));
+      Log::error("Could not create the font face '%s': %s\n", filename.string().c_str(), FT_ErrorMessage(err));
       return false;
     }
 
@@ -195,7 +197,7 @@ inline namespace v1 {
     FT_Face face = nullptr;
 
     if (auto err = FT_Open_Face(library, &args, 0, &face)) {
-      Log::error(Log::Graphics, "Could not create the font face from stream: %s\n", FT_ErrorMessage(err));
+      Log::error("Could not create the font face from stream: %s\n", FT_ErrorMessage(err));
       return false;
     }
 
@@ -216,7 +218,7 @@ inline namespace v1 {
     FT_Face face = nullptr;
 
     if (auto err = FT_New_Memory_Face(library, static_cast<const FT_Byte *>(data), length, 0, &face)) {
-      Log::error(Log::Graphics, "Could not create the font face: %s\n", FT_ErrorMessage(err));
+      Log::error("Could not create the font face: %s\n", FT_ErrorMessage(err));
       return false;
     }
 
@@ -271,7 +273,7 @@ inline namespace v1 {
 
     FT_Vector kerning;
     if (auto err = FT_Get_Kerning(face, indexLeft, indexRight, FT_KERNING_UNFITTED, &kerning)) {
-      Log::warning(Log::Graphics, "Could not get kerning: %s\n", FT_ErrorMessage(err));
+      Log::warning("Could not get kerning: %s\n", FT_ErrorMessage(err));
     }
 
     return convert(kerning.x);
@@ -343,7 +345,7 @@ inline namespace v1 {
     }
 
     if (auto err = FT_Load_Char(face, codepoint, flags)) {
-      Log::error(Log::Graphics, "Could not load the glyph: %s\n", FT_ErrorMessage(err));
+      Log::error("Could not load the glyph: %s\n", FT_ErrorMessage(err));
       return out;
     }
 
@@ -352,7 +354,7 @@ inline namespace v1 {
     FT_Glyph glyph;
 
     if (auto err = FT_Get_Glyph(slot, &glyph)) {
-      Log::error(Log::Graphics, "Could not extract the glyph: %s\n", FT_ErrorMessage(err));
+      Log::error("Could not extract the glyph: %s\n", FT_ErrorMessage(err));
       return out;
     }
 
@@ -366,7 +368,7 @@ inline namespace v1 {
     }
 
     if (auto err = FT_Glyph_To_Bitmap(&glyph, FT_RENDER_MODE_NORMAL, nullptr, 1)) {
-      Log::error(Log::Graphics, "Could create a bitmap from the glyph: %s\n", FT_ErrorMessage(err));
+      Log::error("Could create a bitmap from the glyph: %s\n", FT_ErrorMessage(err));
       FT_Done_Glyph(glyph);
       return out;
     }
@@ -401,7 +403,7 @@ inline namespace v1 {
     if (cache.packing.top + glyphSize.height > textureSize.height) {
       // TODO: Houston, we have a problem!
 
-      Log::error(Log::Graphics, "Could not add a new glyph to the cache\n");
+      Log::error("Could not add a new glyph to the cache\n");
       FT_Done_Glyph(glyph);
       return out;
     }
@@ -464,7 +466,7 @@ inline namespace v1 {
     FT_Face face = static_cast<FT_Face>(m_face);
 
     if (auto err = FT_Set_Pixel_Sizes(face, 0, characterSize)) {
-      Log::error(Log::Graphics, "Could not change the font size: %s\n", FT_ErrorMessage(err));
+      Log::error("Could not change the font size: %s\n", FT_ErrorMessage(err));
       return false;
     }
 
@@ -472,5 +474,7 @@ inline namespace v1 {
     return true;
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

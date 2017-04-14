@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016 Julien Bernard
+ * Copyright (C) 2016-2017 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -21,6 +21,7 @@
 #ifndef GF_ARRAY_REF_H
 #define GF_ARRAY_REF_H
 
+#include <array>
 #include <vector>
 
 namespace gf {
@@ -35,7 +36,7 @@ inline namespace v1 {
    * This class stores a pointer to some data and its size. It can be built
    * from various inputs: `std::vector`, static array, pointer and size.
    *
-   * @sa StringRef
+   * @sa gf::BufferRef, gf::StringRef
    */
   template<typename T>
   class ArrayRef {
@@ -78,6 +79,19 @@ inline namespace v1 {
     }
 
     /**
+     * @brief Constructor from a `std::array`
+     *
+     * @param values The array of elements
+     */
+    template<std::size_t N>
+    ArrayRef(const std::array<T,N>& values)
+    : m_data(values.data())
+    , m_size(values.size())
+    {
+
+    }
+
+    /**
      * @brief Constructor from a static array
      *
      * The size is computed at compile-time.
@@ -109,7 +123,7 @@ inline namespace v1 {
      *
      * @returns A pointer to the first element in the array
      */
-    constexpr const T *getData() const {
+    constexpr const T *getData() const noexcept {
       return m_data;
     }
 
@@ -118,7 +132,7 @@ inline namespace v1 {
      *
      * @returns The number of elements in the array
      */
-    constexpr std::size_t getSize() const {
+    constexpr std::size_t getSize() const noexcept {
       return m_size;
     }
 
@@ -129,7 +143,7 @@ inline namespace v1 {
      *
      * @sa end()
      */
-    constexpr const T *begin() const {
+    constexpr const T *begin() const noexcept {
       return m_data;
     }
 
@@ -140,7 +154,7 @@ inline namespace v1 {
      *
      * @sa begin()
      */
-    constexpr const T *end() const {
+    constexpr const T *end() const noexcept {
       return m_data + m_size;
     }
 

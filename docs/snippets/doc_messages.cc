@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016 Julien Bernard
+ * Copyright (C) 2016-2017 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -24,9 +24,10 @@
 #include <gf/MessageManager.h>
 #include <gf/Vector.h>
 
-using namespace gf::literals;
 
 /// [message]
+using namespace gf::literals; // necessary to use _id
+
 struct HeroPosition : public gf::Message {
   static const gf::Id type = "HeroPosition"_id; // compile-time definition
   gf::Vector2f position;

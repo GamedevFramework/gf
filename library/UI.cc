@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016 Julien Bernard
+ * Copyright (C) 2016-2017 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -31,11 +31,17 @@
 
 #include <iostream>
 
+#include <SDL.h>
+
+#include <gf/Paths.h>
 #include <gf/RenderTarget.h>
 #include <gf/Transform.h>
+#include <gf/Texture.h>
+#include <gf/VectorOps.h>
 #include <gf/Vertex.h>
 
 #include "priv/String.h"
+#include "priv/Utils.h"
 
 // #define NK_PRIVATE
 #define NK_INCLUDE_FIXED_TYPES
@@ -53,7 +59,9 @@
 #include "vendor/nuklear/nuklear.h"
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   static float getTextWidth(nk_handle handle, float characterSize, const char *text, int len) {
     auto font = static_cast<Font *>(handle.ptr);
@@ -95,6 +103,28 @@ inline namespace v1 {
     g->offset.y = glyph.bounds.top + characterSize; // hacky but works
   }
 
+  static void clipboardPaste(nk_handle usr, struct nk_text_edit *edit) {
+    GF_UNUSED(usr);
+
+    char *text = SDL_GetClipboardText();
+
+    if (text) {
+      nk_textedit_paste(edit, text, nk_strlen(text));
+      SDL_free(text);
+    }
+  }
+
+  static void clipboardCopy(nk_handle usr, const char *text, int len) {
+    GF_UNUSED(usr);
+
+    if (len == 0) {
+      return;
+    }
+
+    std::string str(text, len);
+    SDL_SetClipboardText(str.c_str());
+  }
+
   struct UI::UIImpl {
     State state;
     Font *font;
@@ -123,6 +153,9 @@ inline namespace v1 {
 
     auto ctx = &m_impl->ctx;
     nk_init_default(ctx, user);
+    ctx->clip.copy = clipboardCopy;
+    ctx->clip.paste = clipboardPaste;
+    ctx->clip.userdata = nk_handle_ptr(nullptr);
 
     nk_buffer_init_default(&m_impl->cmds);
   }
@@ -168,6 +201,8 @@ inline namespace v1 {
           default:
             break;
         }
+
+        break;
       }
 
       case EventType::KeyPressed:
@@ -290,12 +325,20 @@ inline namespace v1 {
             // nothing to do
             break;
         }
+
+        break;
+      }
+
+      case EventType::TextEntered: {
+        nk_glyph glyph;
+        std::memcpy(glyph, event.text.rune.data, NK_UTF_SIZE);
+        nk_input_glyph(&m_impl->ctx, glyph);
+        break;
       }
 
       default:
         break;
     }
-
 
   }
 
@@ -307,6 +350,17 @@ inline namespace v1 {
   void UI::end() {
     setState(State::Setup);
     nk_end(&m_impl->ctx);
+  }
+
+  void UI::windowSetBounds(const RectF& bounds) {
+    setState(State::Setup);
+    nk_window_set_bounds(&m_impl->ctx, { bounds.left, bounds.top, bounds.width, bounds.height });
+  }
+
+  RectF UI::windowGetBounds() {
+    setState(State::Setup);
+    auto bounds = nk_window_get_bounds(&m_impl->ctx);
+    return { bounds.x, bounds.y, bounds.w, bounds.y };
   }
 
   void UI::layoutRowDynamic(float height, int cols) {
@@ -396,6 +450,25 @@ inline namespace v1 {
   void UI::labelWrapColored(const Color4f& color, StringRef title) {
     setState(State::Setup);
     nk_text_wrap_colored(&m_impl->ctx, title.getData(), title.getSize(), nk_rgba_f(color.r, color.g, color.b, color.a));
+  }
+
+  void UI::image(const Texture& texture, const RectF& textureRect) {
+    setState(State::Setup);
+    auto size = texture.getSize();
+
+    struct nk_image image;
+    image.handle.ptr = const_cast<Texture *>(&texture);
+    image.w = size.width;
+    image.h = size.height;
+
+    Vector2u topLeft = size * textureRect.getTopLeft();
+    Vector2u bottomRight = size * textureRect.getBottomRight();
+    image.region[0] = topLeft.x;
+    image.region[1] = topLeft.y;
+    image.region[2] = bottomRight.x;
+    image.region[3] = bottomRight.y;
+
+    nk_image(&m_impl->ctx, image);
   }
 
   void UI::buttonSetBehavior(UIButtonBehavior behavior) {
@@ -504,6 +577,148 @@ inline namespace v1 {
   void UI::propertyDouble(const std::string& name, double min, double& val, double max, double step, float incPerPixel) {
     setState(State::Setup);
     nk_property_double(&m_impl->ctx, name.c_str(), min, &val, max, step, incPerPixel);
+  }
+
+  static nk_plugin_filter getPluginFilter(UIEditFilter filter) {
+    switch (filter) {
+      case UIEditFilter::Default:
+        return nk_filter_default;
+      case UIEditFilter::Ascii:
+        return nk_filter_ascii;
+      case UIEditFilter::Float:
+        return nk_filter_float;
+      case UIEditFilter::Decimal:
+        return nk_filter_decimal;
+      case UIEditFilter::Hex:
+        return nk_filter_hex;
+      case UIEditFilter::Oct:
+        return nk_filter_oct;
+      case UIEditFilter::Binary:
+        return nk_filter_binary;
+    }
+
+    assert(false);
+    return nk_filter_default;
+  }
+
+  template<typename E>
+  static constexpr Flags<E> combineFlags(E flag) {
+    return Flags<E>(flag);
+  }
+
+  template<typename E, typename ... F>
+  static constexpr Flags<E> combineFlags(E flag, F ... others) {
+    return Flags<E>(flag) | combineFlags(others ...);
+  }
+
+  const UIEditFlags UIEditType::Simple =
+      UIEdit::AlwaysInsertMode;
+
+  const UIEditFlags UIEditType::Field = combineFlags(
+      UIEdit::AlwaysInsertMode,
+      UIEdit::Selectable,
+      UIEdit::Clipboard
+  );
+
+  const UIEditFlags UIEditType::Box = combineFlags(
+      UIEdit::AlwaysInsertMode,
+      UIEdit::Selectable,
+      UIEdit::Multiline,
+      UIEdit::AllowTab,
+      UIEdit::Clipboard
+  );
+
+  const UIEditFlags UIEditType::Editor = combineFlags(
+      UIEdit::Selectable,
+      UIEdit::Multiline,
+      UIEdit::AllowTab,
+      UIEdit::Clipboard
+  );
+
+  UIEditEventFlags UI::edit(UIEditFlags flags, BufferRef<char> buffer, std::size_t& length, UIEditFilter filter) {
+    setState(State::Setup);
+    int len = length;
+    nk_flags ret = nk_edit_string(&m_impl->ctx, flags.getValue(), buffer.getData(), &len, buffer.getSize(), getPluginFilter(filter));
+    length = len;
+    return static_cast<UIEditEvent>(ret);
+  }
+
+  namespace {
+
+    struct DirectoryRange {
+      DirectoryRange(const Path& directory)
+      : path(directory)
+      {
+
+      }
+
+      boost::filesystem::directory_iterator begin() const {
+        return boost::filesystem::directory_iterator(path);
+      }
+
+      boost::filesystem::directory_iterator end() const {
+        return boost::filesystem::directory_iterator();
+      }
+
+      const Path& path;
+    };
+
+  }
+
+  bool UI::fileSelector(UIBrowser& browser, const std::string& title, const RectF& bounds) {
+    if (browser.currentPath.empty()) {
+      browser.currentPath = Paths::getCurrentPath();
+    }
+
+    assert(boost::filesystem::is_directory(browser.currentPath));
+
+    if (!popupBegin(UIPopup::Dynamic, title, UIWindowFlags(UIWindow::Border) | UIWindow::Title | UIWindow::Closable, bounds)) {
+      return false;
+    }
+
+    layoutRowDynamic(25, 1);
+    bool dummy = false;
+
+    if (selectableLabel("../", UIAlignment::Left, dummy)) {
+      browser.currentPath = browser.currentPath.parent_path();
+    }
+
+    std::vector<Path> paths;
+
+    for (boost::filesystem::directory_entry& x : DirectoryRange(browser.currentPath)) {
+      paths.push_back(x.path());
+    }
+
+    std::sort(paths.begin(), paths.end());
+
+    for (const Path& x : paths) {
+      bool selected = x == browser.selectedPath;
+
+      std::string name = x.filename().string();
+
+      if (boost::filesystem::is_directory(x)) {
+        name += '/';
+      }
+
+      if (selectableLabel(name, UIAlignment::Left, selected)) {
+        if (boost::filesystem::is_directory(x)) {
+          browser.currentPath = x;
+        } else {
+          browser.selectedPath = x;
+        }
+      }
+    }
+
+    layoutRowDynamic(25, 1);
+
+    if (buttonLabel("OK")) {
+      popupClose();
+      popupEnd();
+      return false;
+    }
+
+    popupEnd();
+    return true;
   }
 
   bool UI::popupBegin(UIPopup type, const std::string& title, UIWindowFlags flags, const RectF& bounds) {
@@ -823,6 +1038,9 @@ inline namespace v1 {
   void UI::draw(RenderTarget &target, RenderStates states) {
     setState(State::Draw);
 
+    auto ctx = &m_impl->ctx;
+    auto cmds = &m_impl->cmds;
+
     nk_convert_config config;
 
     static const nk_draw_vertex_layout_element vertexLayout[] = {
@@ -854,23 +1072,23 @@ inline namespace v1 {
 
     nk_buffer_init_default(&vertexBuffer);
     nk_buffer_init_default(&elementBuffer);
-    nk_convert(&m_impl->ctx, &m_impl->cmds, &vertexBuffer, &elementBuffer, &config);
+    nk_convert(ctx, cmds, &vertexBuffer, &elementBuffer, &config);
 
     auto vertices = static_cast<const Vertex *>(nk_buffer_memory_const(&vertexBuffer));
     auto indices = static_cast<const uint16_t *>(nk_buffer_memory_const(&elementBuffer));
 
     target.setScissorTest(true);
 
-    for (auto cmd = nk__draw_begin(&m_impl->ctx, &m_impl->cmds); cmd != nullptr; cmd = nk__draw_next(cmd, &m_impl->cmds, &m_impl->ctx)) {
-      if (!cmd->elem_count) {
+    for (auto command = nk__draw_begin(ctx, cmds); command != nullptr; command = nk__draw_next(command, cmds, ctx)) {
+      if (!command->elem_count) {
         continue;
       }
 
-      states.texture = static_cast<const BareTexture*>(cmd->texture.ptr);
-      target.setScissorBox(RectI(cmd->clip_rect.x, cmd->clip_rect.y, cmd->clip_rect.w, cmd->clip_rect.h));
-      target.draw(vertices, indices, cmd->elem_count, PrimitiveType::Triangles, states);
+      states.texture = static_cast<const BareTexture*>(command->texture.ptr);
+      target.setScissorBox(RectI(command->clip_rect.x, command->clip_rect.y, command->clip_rect.w, command->clip_rect.h));
+      target.draw(vertices, indices, command->elem_count, PrimitiveType::Triangles, states);
 
-      indices += cmd->elem_count;
+      indices += command->elem_count;
     }
 
     target.setScissorTest(false);
@@ -942,5 +1160,7 @@ inline namespace v1 {
     m_impl->state = state;
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

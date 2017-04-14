@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016 Julien Bernard
+ * Copyright (C) 2016-2017 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -29,7 +29,9 @@
 #include "vendor/tinyxml2/tinyxml2.h"
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   bool TextureAtlas::loadFromFile(const Path& filename) {
     tinyxml2::XMLDocument doc;
@@ -37,7 +39,7 @@ inline namespace v1 {
 
     if (doc.Error()) {
       assert(err != tinyxml2::XML_SUCCESS);
-      Log::error(Log::Resources, "Could not load atlas texture: '%s'\n", filename.string().c_str());
+      Log::error("Could not load atlas texture: '%s'\n", filename.string().c_str());
       return false;
     }
 
@@ -113,5 +115,7 @@ inline namespace v1 {
     return m_texture->computeTextureCoords(rect);
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

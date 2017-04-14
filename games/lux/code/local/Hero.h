@@ -1,6 +1,6 @@
 /*
  * Lux, a classical shoot 'em up
- * Copyright (C) 2016  Lux team
+ * Copyright (C) 2016-2017  Lux team
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,7 +22,6 @@
 #include <gf/Font.h>
 #include <gf/ResourceManager.h>
 #include <gf/Texture.h>
-#include <gf/WindowGeometryTracker.h>
 
 #include "Ship.h"
 #include "Shoot.h"
@@ -31,7 +30,7 @@ namespace lux {
 
   class HeroProperties : public gf::Entity {
   public:
-    HeroProperties(gf::WindowGeometryTracker& tracker, gf::ResourceManager& resources);
+    HeroProperties(gf::ResourceManager& resources);
 
     void setHealthPercent(float healthPercent) {
       m_healthPercent = healthPercent;
@@ -52,7 +51,6 @@ namespace lux {
     virtual void render(gf::RenderTarget& target) override;
 
   private:
-    gf::WindowGeometryTracker& m_tracker;
     unsigned long m_score;
     float m_healthPercent;
     gf::Font& m_font;

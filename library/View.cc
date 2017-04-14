@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016 Julien Bernard
+ * Copyright (C) 2016-2017 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -29,7 +29,9 @@
 #include "priv/Utils.h"
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   View::View()
   : m_center{0.0f, 0.0f}
@@ -81,6 +83,12 @@ inline namespace v1 {
     onWorldResize(m_size);
   }
 
+  void View::zoom(float factor, Vector2f fixed) {
+    m_center += (fixed - m_center) * (1 - factor);
+    m_size *= factor;
+    onWorldResize(m_size);
+  }
+
   Matrix3f View::getTransform() const {
     /* compute the view matrix
      * it's a combination of:
@@ -111,5 +119,7 @@ inline namespace v1 {
     onScreenResize(screenSize);
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

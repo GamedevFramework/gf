@@ -50,89 +50,98 @@ add_custom_target(gf0_shader_headers ALL DEPENDS ${SHADER_HEADERS})
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h @ONLY)
 
-add_library(gf0 SHARED
-  # core
-  Circ.cc
-  Clock.cc
-  Direction.cc
-  Flags.cc
-  Image.cc
-  InputStream.cc
-  InputStreams.cc
-  Library.cc
-  Log.cc
-  Math.cc
-  Matrix.cc
-  Noise.cc
-  Noises.cc
-  Orientation.cc
-  Polygon.cc
-  Random.cc
-  Range.cc
-  Rect.cc
-  SystemInfo.cc
-  Time.cc
-  Transform.cc
-  Vector.cc
-  # window
-  Action.cc
-  Control.cc
-  Keyboard.cc
-  Gamepad.cc
-  Monitor.cc
-  Window.cc
-  WindowGeometryTracker.cc
-  # graphics
-  AnimatedSprite.cc
-  Animation.cc
-  Blend.cc
-  BufferedGeometry.cc
-  Color.cc
-  ColorRamp.cc
-  Curve.cc
-  Curves.cc
-  Drawable.cc
-  Effects.cc
-  Font.cc
-  NinePatch.cc
-  PostProcessing.cc
-  RenderPipeline.cc
-  RenderTarget.cc
-  RenderTexture.cc
-  RenderWindow.cc
-  Shader.cc
-  Shape.cc
-  Shapes.cc
-  Sprite.cc
-  SpriteBatch.cc
-  Text.cc
-  Texture.cc
-  TextureAtlas.cc
-  TileLayer.cc
-  Transformable.cc
-  VertexArray.cc
-  VertexBuffer.cc
-  View.cc
-  Views.cc
-  ViewContainer.cc
-  # game
-  AssetManager.cc
-  Collision.cc
-  Controls.cc
-  Entity.cc
-  EntityContainer.cc
-  MessageManager.cc
-  Model.cc
-  ModelContainer.cc
-  ResourceManager.cc
-  # ui
-  UI.cc
-  # priv
-  priv/Debug.cc
-  # vendor
-  vendor/tinyxml2/tinyxml2.cpp
-  vendor/glad/src/glad.cc
-)
+if (GF_SINGLE_COMPILTATION_UNIT)
+  add_library(gf0 SHARED
+    XUnityBuild.cc
+  )
+else()
+  add_library(gf0 SHARED
+    Action.cc
+    AnimatedSprite.cc
+    Animation.cc
+    AssetManager.cc
+    Blend.cc
+    BufferedGeometry.cc
+    Circ.cc
+    Clock.cc
+    Collision.cc
+    Color.cc
+    ColorRamp.cc
+    Control.cc
+    Controls.cc
+    Coordinates.cc
+    Curve.cc
+    Curves.cc
+    Direction.cc
+    Drawable.cc
+    Effects.cc
+    Entity.cc
+    EntityContainer.cc
+    Flags.cc
+    Font.cc
+    Gamepad.cc
+    Image.cc
+    InputStream.cc
+    InputStreams.cc
+    Keyboard.cc
+    Library.cc
+    Log.cc
+    Math.cc
+    Matrix.cc
+    MessageManager.cc
+    Model.cc
+    ModelContainer.cc
+    Models.cc
+    Monitor.cc
+    NinePatch.cc
+    Noise.cc
+    Noises.cc
+    Orientation.cc
+    Particles.cc
+    Paths.cc
+    PhysicsBody.cc
+    PhysicsGeometry.cc
+    PhysicsModel.cc
+    Polygon.cc
+    Polyline.cc
+    PostProcessing.cc
+    Random.cc
+    Range.cc
+    Rect.cc
+    RenderPipeline.cc
+    RenderTarget.cc
+    RenderTexture.cc
+    RenderWindow.cc
+    ResourceManager.cc
+    Shader.cc
+    Shape.cc
+    Shapes.cc
+    Sleep.cc
+    SpriteBatch.cc
+    Sprite.cc
+    SystemInfo.cc
+    Text.cc
+    TextureAtlas.cc
+    Texture.cc
+    TileLayer.cc
+    Time.cc
+    Transformable.cc
+    Transform.cc
+    UI.cc
+    Vector.cc
+    VertexArray.cc
+    VertexBuffer.cc
+    View.cc
+    ViewContainer.cc
+    Views.cc
+    Window.cc
+    # priv
+    priv/Debug.cc
+    # vendor
+    vendor/tinyxml2/tinyxml2.cpp
+    vendor/glad/src/glad.cc
+  )
+endif()
 
 add_dependencies(gf0
   gf0_shader_headers

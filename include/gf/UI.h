@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016 Julien Bernard
+ * Copyright (C) 2016-2017 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -25,10 +25,12 @@
 #include <memory>
 
 #include "ArrayRef.h"
+#include "BufferRef.h"
 #include "Drawable.h"
 #include "Event.h"
 #include "Flags.h"
 #include "Font.h"
+#include "Path.h"
 #include "Portability.h"
 #include "StringRef.h"
 #include "Types.h"
@@ -38,6 +40,8 @@ namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
 #endif
+
+  class Texture;
 
   /**
    * @ingroup graphics
@@ -150,6 +154,91 @@ inline namespace v1 {
 
   /**
    * @ingroup graphics
+   * @brief Properties for edit widgets
+   */
+  enum class UIEdit : uint32_t {
+    Default             = 0x0000,
+    ReadOnly            = 0x0001,
+    AutoSelect          = 0x0002,
+    SigEnter            = 0x0004,
+    AllowTab            = 0x0008,
+    NoCursor            = 0x0010,
+    Selectable          = 0x0020,
+    Clipboard           = 0x0040,
+    CtrlEnterNewline    = 0x0080,
+    NoHorizontalScroll  = 0x0100,
+    AlwaysInsertMode    = 0x0200,
+    // no 0x0400
+    Multiline           = 0x0800,
+    GotoEndOnActivate   = 0x1000,
+  };
+
+  /**
+   * @ingroup graphics
+   * @brief Flags composed of edit properties
+   *
+   * @sa gf::UIEdit
+   */
+  using UIEditFlags = Flags<UIEdit>;
+
+  /**
+   * @ingroup graphics
+   * @brief Predefined flags for edit
+   */
+  struct GF_API UIEditType {
+    static const UIEditFlags Simple;
+    static const UIEditFlags Field;
+    static const UIEditFlags Box;
+    static const UIEditFlags Editor;
+  };
+
+  /**
+   * @ingroup graphics
+   * @brief Properties for edit events
+   */
+  enum class UIEditEvent : uint32_t {
+    Active      = 0x0001, ///< Edit widget is currently being modified
+    Inactive    = 0x0002, ///< Edit widget is not active and is not being modified
+    Activated   = 0x0004, ///< Edit widget went from state inactive to state active
+    Deactivated = 0x0008, ///< Edit widget went from state active to state inactive
+    Commited    = 0x0010, ///< Edit widget has received an enter and lost focus
+  };
+
+  /**
+   * @ingroup graphics
+   * @brief Flags composed of edit events properties
+   *
+   * @sa gf::UIEditEvent
+   */
+  using UIEditEventFlags = Flags<UIEditEvent>;
+
+  /**
+   * @ingroup graphics
+   * @brief Filters for edit
+   */
+  enum class UIEditFilter {
+    Default,
+    Ascii,
+    Float,
+    Decimal,
+    Hex,
+    Oct,
+    Binary,
+  };
+
+  /**
+   * @ingroup graphics
+   * @brief Data for file selector
+   *
+   * @sa gf::UI::fileSelector()
+   */
+  struct UIBrowser {
+    Path currentPath;   ///< The current path for searching
+    Path selectedPath;  ///< The selected path
+  };
+
+  /**
+   * @ingroup graphics
    * @brief Type of popup
    */
   enum class UIPopup {
@@ -204,7 +293,7 @@ inline namespace v1 {
    * at the beginning of your application and then you use this instance
    * throughout your application.
    *
-   * @snippet snippets/doc_ui.cc context
+   * @snippet snippets/doc_class_ui.cc context
    *
    * By default, the character size is 13.
    *
@@ -217,7 +306,7 @@ inline namespace v1 {
    * example, if you press on a button, the mouse event will be transmitted
    * and the library will know that you pressed a button and act accordingly.
    *
-   * @snippet snippets/doc_ui.cc events
+   * @snippet snippets/doc_class_ui.cc events
    *
    *
    * # Creating a window
@@ -230,7 +319,7 @@ inline namespace v1 {
    * properties (see gf::UIWindow) that modify the interaction with the window.
    * They are defined at the window creation.
    *
-   * @snippet snippets/doc_ui.cc window
+   * @snippet snippets/doc_class_ui.cc window
    *
    * For each begin(), you have to call end() to finish the window.
    * You can create as many windows as you want as long as they have different
@@ -277,7 +366,7 @@ inline namespace v1 {
    * In both cases, you need a variable of type gf::UICollapse to handle the
    * current state of the tree: minimized or maximized.
    *
-   * @snippet snippets/doc_ui.cc tree
+   * @snippet snippets/doc_class_ui.cc tree
    *
    * ## Groups
    *
@@ -285,7 +374,7 @@ inline namespace v1 {
    * border and a scrollbar. However, a group needs to be put in a row.
    * See groupBegin() and groupEnd().
    *
-   * @snippet snippets/doc_ui.cc group
+   * @snippet snippets/doc_class_ui.cc group
    *
    *
    * # Adding widgets and more
@@ -374,7 +463,7 @@ inline namespace v1 {
     /**
      * @brief Create a window
      *
-     * @snippet snippets/doc_ui.cc window
+     * @snippet snippets/doc_class_ui.cc window
      *
      * @param title The title of the window
      * @param bounds The area of the window
@@ -388,11 +477,14 @@ inline namespace v1 {
     /**
      * @brief Finish a window
      *
-     * @snippet snippets/doc_ui.cc window
+     * @snippet snippets/doc_class_ui.cc window
      *
      * @sa begin()
      */
     void end();
+
+    void windowSetBounds(const RectF& bounds);
+    RectF windowGetBounds();
 
     /**
      * @}
@@ -484,7 +576,7 @@ inline namespace v1 {
      * The only allowed flags are UIWindow::Title, UIWindow::Border,
      * UIWindow::NoScrollbar.
      *
-     * @snippet snippets/doc_ui.cc group
+     * @snippet snippets/doc_class_ui.cc group
      *
      * @param title The title of the group
      * @param flags The properties of the group
@@ -497,7 +589,7 @@ inline namespace v1 {
     /**
      * @brief Finish a group
      *
-     * @snippet snippets/doc_ui.cc group
+     * @snippet snippets/doc_class_ui.cc group
      *
      * @sa groupBegin()
      */
@@ -537,7 +629,7 @@ inline namespace v1 {
     /**
      * @brief Start a tree layout
      *
-     * @snippet snippets/doc_ui.cc tree
+     * @snippet snippets/doc_class_ui.cc tree
      *
      * @param type The type of tree: tab or node
      * @param title The title of the tree
@@ -551,7 +643,7 @@ inline namespace v1 {
     /**
      * @brief Finish a tree layout
      *
-     * @snippet snippets/doc_ui.cc tree
+     * @snippet snippets/doc_class_ui.cc tree
      *
      * @sa treePush()
      */
@@ -605,6 +697,14 @@ inline namespace v1 {
      * @sa labelWrap()
      */
     void labelWrapColored(const Color4f& color, StringRef title);
+
+    /**
+     * @brief An image
+     *
+     * @param texture A texture
+     * @param textureRect A sub-rectangle of the texture to show
+     */
+    void image(const Texture& texture, const RectF& textureRect);
 
     /**
      * @}
@@ -887,6 +987,36 @@ inline namespace v1 {
      * @sa propertyInt(), propertyFloat()
      */
     void propertyDouble(const std::string& name, double min, double& val, double max, double step, float incPerPixel);
+
+    /**
+     * @}
+     */
+
+    /**
+     * @name Widgets: TextEdit
+     * @{
+     */
+
+    UIEditEventFlags edit(UIEditFlags flags, BufferRef<char> buffer, std::size_t& length, UIEditFilter filter = UIEditFilter::Default);
+
+    /**
+     * @}
+     */
+
+    /**
+     * @name Dialogs
+     * @{
+     */
+
+    /**
+     * @brief File selector
+     *
+     * @param browser State of the file selector
+     * @param title The title of the file selector
+     * @param bounds The area of the file selector
+     * @returns True if the file selector is open
+     */
+    bool fileSelector(UIBrowser& browser, const std::string& title, const RectF& bounds);
 
     /**
      * @}
@@ -1289,6 +1419,16 @@ inline namespace v1 {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 template<>
 struct EnableBitmaskOperators<UIWindow> {
+  static constexpr bool value = true;
+};
+
+template<>
+struct EnableBitmaskOperators<UIEdit> {
+  static constexpr bool value = true;
+};
+
+template<>
+struct EnableBitmaskOperators<UIEditEvent> {
   static constexpr bool value = true;
 };
 #endif

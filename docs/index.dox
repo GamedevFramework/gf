@@ -1,5 +1,11 @@
 /**
 
+@namespace gf
+@brief The namespace for gf classes
+
+@namespace gf::literals
+@brief The namespace for literals
+
 @defgroup core Core classes and functions
 @brief All the core generic classes and functions.
 
@@ -31,6 +37,7 @@
 - Entities and models: gf::Entity, gf::EntityContainer, gf::Model, gf::ModelContainer
 - Application messages: gf::MessageManager, gf::Message
 - Resources: gf::AssetManager, gf::ResourceCache, gf::ResourceManager, gf::TextureAtlas
+- Physics: gf::PhysicsBody, gf::PhysicsGeometry, gf::PhysicsModel
 
 @mainpage
 
@@ -49,6 +56,7 @@ Gamedev Framework (gf) is licensed under the terms and conditions of the [zlib/l
 1. Introduction to gf
   - @ref features
   - @ref build_and_install
+  - @ref use
   - @ref differences_with_sfml
   - @ref recommanded_libraries
 2. Tutorials on gf
@@ -56,9 +64,12 @@ Gamedev Framework (gf) is licensed under the terms and conditions of the [zlib/l
   - @ref start_game
 3. User documentation (WIP)
   1. Core classes
+    - @ref math
+    - @ref vectors_matrices_transforms
     - @ref singletons
     - @ref noise
   2. Graphics classes
+    - @ref events_controls_actions
     - @ref shader
   3. Game classes
     - @ref messages

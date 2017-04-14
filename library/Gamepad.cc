@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016 Julien Bernard
+ * Copyright (C) 2016-2017 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -22,13 +22,14 @@
 
 #include <SDL.h>
 
-#include <gf/Filesystem.h>
 #include <gf/Log.h>
 
 #include "generated/gamecontrollerdb.txt.h"
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   static SDL_GameControllerButton getButtonFromGamepadButton(GamepadButton button) {
     switch (button) {
@@ -116,14 +117,14 @@ inline namespace v1 {
     SDL_GameController *controller = SDL_GameControllerOpen(index);
 
     if (!controller) {
-      Log::error(Log::Graphics, "Could not open gamepad %i: %s\n", index, SDL_GetError());
+      Log::error("Could not open gamepad %i: %s\n", index, SDL_GetError());
       return static_cast<GamepadId>(-1);
     }
 
     SDL_Joystick *joystick = SDL_GameControllerGetJoystick(controller);
     SDL_JoystickID instanceId = SDL_JoystickInstanceID(joystick);
 
-    Log::debug(Log::Graphics, "New gamepad (device: %i / instance: %i)\n", index, instanceId);
+    Log::debug("New gamepad (device: %i / instance: %i)\n", index, instanceId);
 
     g_controllers.insert(std::make_pair(static_cast<GamepadId>(instanceId), controller));
     return static_cast<GamepadId>(instanceId);
@@ -168,9 +169,9 @@ inline namespace v1 {
     int added = SDL_GameControllerAddMappingsFromRW(SDL_RWFromConstMem(gamecontrollerdb, sizeof gamecontrollerdb - 1), 1);
 
     if (added == -1) {
-      Log::error(Log::Graphics, "Unable to load game controller mappings: '%s'\n", SDL_GetError());
+      Log::error("Unable to load game controller mappings: '%s'\n", SDL_GetError());
     } else {
-      Log::debug(Log::Graphics, "Game controller mappings loaded: %i added\n", added);
+      Log::debug("Game controller mappings loaded: %i added\n", added);
     }
 
     for (int index = 0; index < SDL_NumJoysticks(); ++index) {
@@ -180,5 +181,7 @@ inline namespace v1 {
     }
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

@@ -1,6 +1,6 @@
 /*
  * Lux, a classical shoot 'em up
- * Copyright (C) 2016  Lux team
+ * Copyright (C) 2016-2017  Lux team
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@
 #include <cassert>
 
 #include <gf/Color.h>
+#include <gf/Coordinates.h>
 #include <gf/RenderTarget.h>
 #include <gf/Shapes.h>
 #include <gf/Sprite.h>
@@ -34,13 +35,11 @@ namespace lux {
   static constexpr float HealthHeight = 5.0f;
   static constexpr float HealthRadius = 2.0f;
   static constexpr float HealthThickness = 1.0f;
-  static constexpr float HealthPadding = 40.0f;
 
   static constexpr float ScorePadding = 40.0f;
 
-  HeroProperties::HeroProperties(gf::WindowGeometryTracker& tracker, gf::ResourceManager& resources)
+  HeroProperties::HeroProperties(gf::ResourceManager& resources)
   : gf::Entity(2)
-  , m_tracker(tracker)
   , m_score(0)
   , m_healthPercent(1.0f)
   , m_font(resources.getFont("jupiter.ttf"))
@@ -49,12 +48,14 @@ namespace lux {
   }
 
   void HeroProperties::render(gf::RenderTarget& target) {
-    gf::Vector2f position;
-    position.x = m_tracker.getXCentered(HealthWidth);
-    position.y = m_tracker.getYFromBottom(HealthPadding + HealthHeight);
+    gf::Coordinates coordinates(target);
+
+    gf::Vector2f position = coordinates.getRelativePoint({ 0.5f, 0.95f });
+    position.x -= HealthWidth / 2;
 
     gf::RoundedRectangleShape healthBg({ HealthWidth, HealthHeight }, HealthRadius);
     healthBg.setPosition(position);
+    healthBg.setAnchor(gf::Anchor::CenterLeft);
     healthBg.setColor(gf::Color::Transparent);
     healthBg.setOutlineColor(gf::Color::White);
     healthBg.setOutlineThickness(HealthThickness);
@@ -62,6 +63,7 @@ namespace lux {
 
     gf::RoundedRectangleShape healthFg({ m_healthPercent * HealthWidth, HealthHeight }, HealthRadius);
     healthFg.setPosition(position);
+    healthFg.setAnchor(gf::Anchor::CenterLeft);
     healthFg.setColor(gf::Color::Red);
     target.draw(healthFg);
 
@@ -73,7 +75,7 @@ namespace lux {
     score.setFont(m_font);
     score.setString("Score: " + std::to_string(m_score));
     score.setPosition(position);
-    score.setAnchor(gf::Anchor::TopLeft);
+    score.setAnchor(gf::Anchor::CenterLeft);
     target.draw(score);
   }
 

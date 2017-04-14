@@ -1,0 +1,82 @@
+/**
+
+@page math Math functions and constants
+
+@tableofcontents
+
+gf provides common functions and constants that are not in the [standard library](http://en.cppreference.com/w/cpp/numeric/math).
+
+~~~{.cc}
+#include <gf/Math.h>
+~~~
+
+@section math_functions Math functions
+
+@subsection math_common_functions Common functions
+
+The gf::square() function computes the square of an expression. Squaring is a common operation and is better done doing a simple multiplication (instead of calling `std::pow`). When you have a simple variable, it is easy. But when you have an expression, it's a bit complicated and error-prone. Hence this simple but useful function.
+
+@f[ \text{square}(x) = x^2 @f]
+
+The gf::lerp() function computes a [linear interpolation](https://en.wikipedia.org/wiki/Linear_interpolation) between two numbers. If you want a smoother interpolation, you can replace the last parameter with a call to a step function with this parameter (see @ref math_steps).
+
+@f[ \text{lerp}(x_1, x_2, t) = (1 - t) * x_1 + t * x_2 @f]
+
+The gf::clamp() function computes the [nearest value in a range](https://en.wikipedia.org/wiki/Clamping_%28graphics%29). It can be used when a computation gives a value that may sits oustside a given range @f$ [l, h] @f$. In this case, a clamp puts the value inside the range.
+
+@f[ \text{clamp}(x, l, h) = \begin{cases} l & \text{if $x < l$} \\ h & \text{if $x > h$} \\ x & \text{otherwise} \end{cases} @f]
+
+The gf::sign() function computes the [sign](https://en.wikipedia.org/wiki/Sign_function) of a number (float or integer) and returns an integer reflecting that sign.
+
+@f[ \text{sign}(x) = \begin{cases} -1 & \text{if $x < 0$} \\ 0 & \text{if $x = 0$} \\ 1 & \text{if $x > 0$} \end{cases} @f]
+
+@subsection math_steps Step functions
+
+A step @f$ f @f$ is a (mathematical) function which has the following properties:
+
+- @f$ f(0) = 0 @f$
+- @f$ f(1) = 1 @f$
+
+It can be used to smooth a linear interpolation. Step functions may have additional properties (especially regarding derivatives).
+
+Here are the step functions that are provided by gf:
+
+| Function          | Implementation                                | Plot                        |
+|-------------------|-----------------------------------------------|-----------------------------|
+| gf::linearStep()  | @f$ f(t) = t @f$                              | @image html linearstep.png  |
+| gf::cubicStep()   | @f$ f(t) = -2 * t^3 + 3 * t^2 @f$             | @image html cubicstep.png   |
+| gf::quinticStep() | @f$ f(t) = 6 * t^5 - 15 * t^4 + 10 * t^3 @f$  | @image html quinticstep.png |
+| gf::cosineStep()  | @f$ f(t) = (1 - \cos(\pi * t)) * 0.5 @f$      | @image html cosinestep.png  |
+
+The type gf::Step is a function pointer to a step function.
+
+@subsection maths_other_functions Other functions
+
+gf has some other useful functions.
+
+gf::almostEquals() compares two floats taking into account the rounding errors. This function takes care of [many cases](http://floating-point-gui.de/errors/comparison/).
+
+gf::degreesToRadians() and gf::radiansToDegrees() helps in converting angles from degrees to radians and from radians to degrees. These functions are defined as `constepxr` so you can use them for the initialisation of any variable without any runtime cost.
+
+
+@section math_constants Math constants
+
+@subsection math_common_constants Common mathematical constants
+
+gf provides several common mathematical constants. All these constants are defined as `constexpr` so that they can be used in other `constexpr` expressions. The following table shows all the constants, their value and the approximation used in gf. The constants without an approximation are defined with another constant directly.
+
+| Constant     | Value                      | Approximation                  |
+|--------------|----------------------------|--------------------------------|
+| gf::Pi       | @f$ \pi @f$                | @f$ 3.14159265358979323846 @f$ |
+| gf::Pi2      | @f$ \frac{\pi}{2} @f$      |                                |
+| gf::Pi4      | @f$ \frac{\pi}{4} @f$      |                                |
+| gf::Sqrt2    | @f$ \sqrt{2} @f$           | @f$ 1.41421356237309504880 @f$ |
+| gf::InvSqrt2 | @f$ \frac{1}{\sqrt{2}} @f$ |                                |
+| gf::Sqrt3    | @f$ \sqrt{3} @f$           | @f$ 1.7320508075688772935 @f$  |
+
+@subsection math_epsilon Machine epsilon
+
+A special constant is defined for floating point computation: the [machine epsilon](https://en.wikipedia.org/wiki/Machine_epsilon), noted @f$ \varepsilon @f$. In gf, it can be accessed with gf::Epsilon. It is defined thanks to [std::numeric_limits](http://en.cppreference.com/w/cpp/types/numeric_limits/epsilon) but is more easily accessible.
+
+
+*/

@@ -1,6 +1,6 @@
 /*
  * Lux, a classical shoot 'em up
- * Copyright (C) 2016  Lux team
+ * Copyright (C) 2016-2017  Lux team
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,9 +42,6 @@ int main() {
 
   gf::Window window("Lux - Year of Light", ScreenSize);
   gf::RenderWindow renderer(window);
-
-  gf::WindowGeometryTracker tracker;
-  tracker.setInitialScreenSize(ScreenSize);
 
   // resources
 
@@ -96,7 +93,7 @@ int main() {
   lux::Stars stars3(random,  20, 1.0f, lux::Stars::AllWhiteStars);
   mainEntities.addEntity(stars3);
 
-  lux::HeroProperties heroProperties(tracker, resources);
+  lux::HeroProperties heroProperties(resources);
   hudEntities.addEntity(heroProperties);
 
   lux::Hero hero(heroProperties, messages, resources);
@@ -105,7 +102,7 @@ int main() {
   lux::EnemyManager enemies(random, messages, resources);
   mainEntities.addEntity(enemies);
 
-  lux::Scenario scenario(enemies, tracker, messages, resources);
+  lux::Scenario scenario(enemies, messages, resources);
   hudEntities.addEntity(scenario);
 
   lux::Bullets bullets(messages, resources);
@@ -132,7 +129,6 @@ int main() {
     while (window.pollEvent(event)) {
       actions.processEvent(event);
       views.processEvent(event);
-      tracker.processEvent(event);
 
       if (event.type == gf::EventType::MouseMoved) {
         hero.setPosition(renderer.mapPixelToCoords(event.mouseCursor.coords, mainView));

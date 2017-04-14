@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016 Julien Bernard
+ * Copyright (C) 2016-2017 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -24,47 +24,58 @@
 
 #include <queue>
 
+#include <gf/Log.h>
+#include <gf/Transform.h>
+
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   static constexpr float Skin = 0.15f;
 
-  bool collides(const CircF& lhs, const CircF& rhs, Penetration& p) {
-    Vector2f n = rhs.getCenter() - lhs.getCenter();
-    float r = lhs.radius + rhs.radius;
-    float d2 = gf::squareLength(n);
+  bool collides(const CircF& lhs, const Transform& lhsTrans, const CircF& rhs, const Transform& rhsTrans, Penetration& p) {
+    Vector2f lhsCenter = gf::transform(lhsTrans, lhs.getCenter());
+    Vector2f rhsCenter = gf::transform(rhsTrans, rhs.getCenter());
+    Vector2f normal = rhsCenter - lhsCenter;
+    float radiusSum = lhs.radius + rhs.radius;
+    float squareDistance = gf::squareLength(normal);
 
-    if (d2 > gf::square(r)) {
+    if (squareDistance > gf::square(radiusSum)) {
       return false;
     }
 
-    float d = std::sqrt(d2);
+    float distance = std::sqrt(squareDistance);
 
-    if (d > 0) {
-      p.depth = r - d;
-      p.normal = n / d;
+    if (distance > 0) {
+      p.depth = radiusSum - distance;
+      p.normal = normal / distance;
     } else {
-      p.depth = r / 2;
+      p.depth = radiusSum / 2;
       p.normal = { 1.0f, 0.0f };
     }
 
     return p.depth > Skin;
   }
 
-  bool collides(const RectF& lhs, const CircF& rhs, Penetration& p) {
-    Vector2f n = rhs.getCenter() - lhs.getCenter();
+  bool collides(const CircF& lhs, const CircF& rhs, Penetration& p) {
+    return collides(lhs, Transform(), rhs, Transform(), p);
+  }
 
-    Vector2f closest = n;
+  bool collides(const RectF& lhs, const CircF& rhs, Penetration& p) {
+    Vector2f normal = rhs.getCenter() - lhs.getCenter();
+
+    Vector2f closest = normal;
     Vector2f extent = lhs.size / 2;
 
     closest = gf::clamp(closest, -extent, extent);
 
     bool inside = false;
 
-    if (n == closest) {
+    if (normal == closest) {
       inside = true;
 
-      if (std::abs(n.x) > std::abs(n.y)) {
+      if (std::abs(normal.x) > std::abs(normal.y)) {
         if (closest.x > 0) {
           closest.x = extent.x;
         } else {
@@ -79,37 +90,37 @@ inline namespace v1 {
       }
     }
 
-    Vector2f normal = n - closest;
+    normal = normal - closest;
 
-    float d2 = gf::squareLength(normal);
-    float r = rhs.radius;
+    float squareDistance = gf::squareLength(normal);
+    float radius = rhs.radius;
 
-    if (d2 > gf::square(r) && !inside) {
+    if (squareDistance > gf::square(radius) && !inside) {
       return false;
     }
 
-    float d = std::sqrt(d2);
+    float distance = std::sqrt(squareDistance);
 
     if (inside) {
-      p.normal = -normal / d;
-      p.depth = r + d;
+      p.normal = -normal / distance;
+      p.depth = radius + distance;
     } else {
-      p.normal = normal / d;
-      p.depth = r - d;
+      p.normal = normal / distance;
+      p.depth = radius - distance;
     }
 
     return p.depth > Skin;
   }
 
   bool collides(const CircF& lhs, const RectF& rhs, Penetration& p) {
-    bool collide = collides(rhs, lhs, p);
+    bool ret = collides(rhs, lhs, p);
     p.normal = -p.normal;
-    return collide;
+    return ret;
   }
 
   bool collides(const RectF& lhs, const RectF& rhs, Penetration& p) {
-    Vector2f n = rhs.getCenter() - lhs.getCenter();
-    Vector2f overlap = lhs.size / 2 + rhs.size / 2 - gf::abs(n);
+    Vector2f normal = rhs.getCenter() - lhs.getCenter();
+    Vector2f overlap = lhs.size / 2 + rhs.size / 2 - gf::abs(normal);
 
     if (overlap.x <= 0) {
       return false;
@@ -120,7 +131,7 @@ inline namespace v1 {
     }
 
     if (overlap.x < overlap.y) {
-      if (n.x < 0) {
+      if (normal.x < 0) {
         p.normal = { -1.0f, 0.0f };
       } else {
         p.normal = {  1.0f, 0.0f };
@@ -128,7 +139,7 @@ inline namespace v1 {
 
       p.depth = overlap.x;
     } else {
-      if (n.y < 0) {
+      if (normal.y < 0) {
         p.normal = { 0.0f, -1.0f };
       } else {
         p.normal = { 0.0f,  1.0f };
@@ -140,12 +151,110 @@ inline namespace v1 {
     return p.depth > Skin;
   }
 
+  namespace {
+
+    struct Edge {
+      Vector2f p1;
+      Vector2f p2;
+      Vector2f normal;
+      float distance;
+    };
+
+    struct EdgeCompare { // for priority_queue
+      bool operator()(const Edge& lhs, const Edge& rhs) {
+        return lhs.distance > rhs.distance;
+      }
+    };
+
+  }
+
+  static Vector2f getNormal(Vector2f p1, Vector2f p2, Winding winding) {
+    Vector2f ret = p2 - p1;
+
+    if (winding == Winding::Clockwise) {
+      ret = -gf::perp(ret);
+    } else {
+      ret = gf::perp(ret);
+    }
+
+    ret = gf::normalize(ret);
+    return ret;
+  }
+
+  bool collides(const CircF& lhs, const Transform& lhsTrans, const Polygon& rhs, const Transform& rhsTrans, Penetration& p) {
+    std::size_t sz = rhs.getPointCount();
+    Winding winding = rhs.getWinding();
+    Vector2f center = gf::inverseTransform(rhsTrans, gf::transform(lhsTrans, lhs.getCenter()));
+
+    std::vector<Edge> edges;
+
+    for (std::size_t i = 0; i < sz; ++i) {
+      std::size_t j = (i + 1) % sz;
+      Edge edge;
+      edge.p1 = rhs.getPoint(i);
+      edge.p2 = rhs.getPoint(j);
+      edge.normal = getNormal(edge.p1, edge.p2, winding);
+      edge.distance = gf::dot(edge.normal, center - edge.p1);
+      edges.push_back(edge);
+    }
+
+    Edge best = *std::max_element(edges.begin(), edges.end(), [](const Edge& lhs, const Edge& rhs) {
+      return lhs.distance < rhs.distance;
+    });
+
+    if (best.distance > lhs.getRadius()) {
+      return false;
+    }
+
+    if (best.distance < Epsilon) {
+      p.normal = gf::transform(rhsTrans.rotation, -best.normal);
+      p.depth = lhs.getRadius();
+      return true;
+    }
+
+    if (gf::dot(center - best.p1, best.p2 - best.p1) <= 0) {
+      if (gf::squareDistance(center, best.p1) > gf::square(lhs.getRadius())) {
+        return false;
+      }
+
+      p.normal = gf::transform(rhsTrans.rotation, gf::normalize(best.p1 - center));
+      p.depth = lhs.getRadius() - gf::euclideanDistance(center, best.p1);
+      return true;
+    }
+
+    if (gf::dot(center - best.p2, best.p1 - best.p2) <= 0) {
+      if (gf::squareDistance(center, best.p2) > gf::square(lhs.getRadius())) {
+        return false;
+      }
+
+      p.normal = gf::transform(rhsTrans.rotation, gf::normalize(best.p2 - center));
+      p.depth = lhs.getRadius() - gf::euclideanDistance(center, best.p2);
+      return true;
+    }
+
+    p.normal = gf::transform(rhsTrans.rotation, -best.normal);
+    p.depth = lhs.getRadius() - best.distance;
+    return true;
+  }
+
+  bool collides(const CircF& lhs, const Polygon& rhs, Penetration& p) {
+    return collides(lhs, Transform(), rhs, Transform(), p);
+  }
+
+  bool collides(const Polygon& lhs, const Transform& lhsTrans, const CircF& rhs, const Transform& rhsTrans, Penetration& p) {
+    bool ret = collides(rhs, rhsTrans, lhs, lhsTrans, p);
+    p.normal = -p.normal;
+    return ret;
+  }
+
+  bool collides(const Polygon& lhs, const CircF& rhs, Penetration& p) {
+    return collides(lhs, Transform(), rhs, Transform(), p);
+  }
+
   /*
    * Polygon-polygon collision
    * Implementation of the GJK and EPA algorithms
    */
-
-  static constexpr float Epsilon = std::numeric_limits<float>::epsilon();
 
   // types (in an anonymous namespace)
 
@@ -197,43 +306,14 @@ inline namespace v1 {
       unsigned m_size;
       Vector2f m_v[3];
     };
-
-    struct Edge {
-      Vector2f p1;
-      Vector2f p2;
-      Vector2f normal;
-      float distance;
-    };
-
-    struct EdgeCompare { // for priority_queue
-      bool operator()(const Edge& lhs, const Edge& rhs) {
-        return lhs.distance > rhs.distance;
-      }
-    };
-
-    enum class Winding {
-      Clockwise,
-      Counterclockwise,
-    };
-
   }
 
   static Edge getEdge(Vector2f p1, Vector2f p2, Winding winding) {
     Edge ret;
-    ret.normal = p2 - p1;
-
-    if (winding == Winding::Clockwise) {
-      ret.normal = -gf::perp(ret.normal);
-    } else {
-      ret.normal = gf::perp(ret.normal);
-    }
-
-    ret.normal = gf::normalize(ret.normal);
-
-    ret.distance = std::abs(gf::dot(p1, ret.normal));
     ret.p1 = p1;
     ret.p2 = p2;
-
+    ret.normal = getNormal(p1, p2, winding);
+    ret.distance = std::abs(gf::dot(p1, ret.normal));
     return ret;
   }
 
@@ -274,7 +354,9 @@ inline namespace v1 {
 
           if (x > 0) {
             return Winding::Clockwise;
-          } else if (x < 0) {
+          }
+
+          if (x < 0) {
             return Winding::Counterclockwise;
           }
         }
@@ -290,8 +372,8 @@ inline namespace v1 {
 
   }
 
-  static Vector2f getSupport(const Polygon& lhs, const Polygon& rhs, Vector2f direction) {
-    return lhs.getSupport(direction) - rhs.getSupport(-direction);
+  static Vector2f getSupport(const Polygon& lhs, const Transform& lhsTrans, const Polygon& rhs, const Transform& rhsTrans, Vector2f direction) {
+    return lhs.getSupport(direction, lhsTrans) - rhs.getSupport(-direction, rhsTrans);
   }
 
   static bool checkSimplex(Simplex& simplex, Vector2f& direction) {
@@ -336,16 +418,17 @@ inline namespace v1 {
 
   static constexpr unsigned MaxIterations = 100;
 
-  bool collides(const Polygon& lhs, const Polygon& rhs, Penetration& p) {
+  bool collides(const Polygon& lhs, const Transform& lhsTrans, const Polygon& rhs, const Transform& rhsTrans, Penetration& p) {
     /*
      * Gilbert-Johnson-Keerthi (GJK) algorithm
      * adapted from http://www.dyn4j.org/2010/04/gjk-gilbert-johnson-keerthi/
      */
 
-    Vector2f direction = rhs.getCenter() - lhs.getCenter();
+    // Vector2f direction = gf::transform(rhsTrans, rhs.getCenter()) - gf::transform(lhsTrans, lhs.getCenter());
+    Vector2f direction(1,0);
 
     Simplex simplex;
-    simplex.add(getSupport(lhs, rhs, direction));
+    simplex.add(getSupport(lhs, lhsTrans, rhs, rhsTrans, direction));
 
     if (gf::dot(simplex.getLast(), direction) <= 0.0f) {
       return false;
@@ -354,7 +437,7 @@ inline namespace v1 {
     direction = -direction;
 
     for (;;) {
-      simplex.add(getSupport(lhs, rhs, direction));
+      simplex.add(getSupport(lhs, lhsTrans, rhs, rhsTrans, direction));
 
       if (gf::dot(simplex.getLast(), direction) <= 0.0f) {
         return false;
@@ -377,7 +460,7 @@ inline namespace v1 {
 
     for (unsigned i = 0; i < MaxIterations; ++i) {
       edge = expandingSimplex.getClosestEdge();
-      point = getSupport(lhs, rhs, edge.normal);
+      point = getSupport(lhs, lhsTrans, rhs, rhsTrans, edge.normal);
       float distance = gf::dot(point, edge.normal);
 
       if (distance - edge.distance < Skin) {
@@ -394,6 +477,11 @@ inline namespace v1 {
     return true;
   }
 
+  bool collides(const Polygon& lhs, const Polygon& rhs, Penetration& p) {
+    return collides(lhs, Transform(), rhs, Transform(), p);
+  }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

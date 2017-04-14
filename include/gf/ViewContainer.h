@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016 Julien Bernard
+ * Copyright (C) 2016-2017 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -44,45 +44,7 @@ inline namespace v1 {
    *
    * Here is a full example with two adaptive views:
    *
-   * ~~~{.cc}
-   * // ...
-   *
-   * gf::ViewContainer views;
-   *
-   * gf::ExtendView extendView;
-   * extendView.setSize({ 1000.0f, 1000.0f });
-   * views.addView(extendView);
-   *
-   * gf::ScreenView screenView;
-   * views.addView(screenView);
-   *
-   * // initialize the views with the initial screen size
-   * views.onScreenResize(screenSize);
-   *
-   * // ...
-   *
-   * while (window.isOpen()) {
-   *   gf::Event event;
-   *
-   *   while (window.pollEvent(event)) {
-   *     // ...
-   *
-   *     views.update(event);
-   *   }
-   *
-   *   // ...
-   *
-   *   renderer.clear();
-   *
-   *   renderer.setView(extendView);
-   *   renderer.draw(...);
-   *
-   *   renderer.setView(screenView);
-   *   renderer.draw(...);
-   *
-   *   renderer.display();
-   * }
-   * ~~~
+   * @snippet snippets/doc_class_view_container.cc view_container
    *
    * @sa gf::AdaptativeView
    */

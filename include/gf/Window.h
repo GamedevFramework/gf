@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016 Julien Bernard
+ * Copyright (C) 2016-2017 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -26,9 +26,11 @@
 
 #include <string>
 
+#include "Clock.h"
 #include "Flags.h"
 #include "Library.h"
 #include "Portability.h"
+#include "Time.h"
 #include "Vector.h"
 
 struct SDL_Window;
@@ -43,6 +45,7 @@ inline namespace v1 {
   /**
    * @ingroup window
    * @brief Hints for window creation
+   * @sa gf::WindowFlags
    */
   enum class WindowHints : uint32_t {
     Resizable = 0x0001, ///< Is the window resizable?
@@ -53,6 +56,7 @@ inline namespace v1 {
   /**
    * @ingroup window
    * @brief Flags for window creation
+   * @sa gf::Flags, gf::WindowHints
    */
   using WindowFlags = Flags<WindowHints>;
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -75,24 +79,9 @@ inline namespace v1 {
    * It also provides event handling through its pollEvent() and waitEvent()
    * functions.
    *
-   * ~~~{.cc}
-   * gf::Window window("My window", { 640, 480 }, gf::WindowHints::Resizable | gf::WindowHints::Visible);
-   *
-   * while (window.isOpen()) {
-   *   // process events
-   *
-   *   gf::Event event;
-   *
-   *   while (window.pollEvent(event)) {
-   *     if (event.type == gf::EventType::Closed) {
-   *       window.close();
-   *     }
-   *   }
-   *
-   * }
+   * @snippet snippets/doc_class_window.cc window
    *
    * @sa gf::RenderWindow
-   * ~~~
    */
   class GF_API Window {
   public:
@@ -253,13 +242,33 @@ inline namespace v1 {
 
     /**
      * @brief Show a window
+     * @sa hide()
      */
     void show();
 
     /**
      * @brief Hide a window
+     * @sa show()
      */
     void hide();
+
+    /**
+     * @brief Show or hide the window
+     *
+     * The window is shown by default.
+     *
+     * @param visible True to show the window, false to hide it
+     * @sa show(), hide(), isVisible()
+     */
+    void setVisible(bool visible = true);
+
+    /**
+     * @brief Show or hide the decoration of the window
+     *
+     * @param decorated True to show decoration
+     * @sa isDecorated()
+     */
+    void setDecorated(bool decorated = true);
 
     /**
      * @brief Check if the window is focused
@@ -360,18 +369,36 @@ inline namespace v1 {
      */
 
     /**
-     * \brief Enable or disable vertical synchronization
+     * @brief Enable or disable vertical synchronization
      *
      * Activating vertical synchronization will limit the number
      * of frames displayed to the refresh rate of the monitor.
      * This can avoid some visual artifacts, and limit the framerate
      * to a good value (but not constant across different computers).
      *
-     * Vertical synchronization is disabled by default.
-     *
-     * \param enabled True to enable v-sync, false to deactivate it
+     * @param enabled True to enable v-sync, false to deactivate it
+     * @sa isVerticalSyncEnabled()
      */
     void setVerticalSyncEnabled(bool enabled);
+
+    /**
+     * @brief Check if the vertical synchronization is enabled
+     *
+     * @returns True if the v-sync is enabled
+     * @sa setVerticalSyncEnabled()
+     */
+    bool isVerticalSyncEnabled() const;
+
+    /**
+     * @brief Limit the framerate to a maximum fixed frequency
+     *
+     * If a limit is set, the window will use a small delay after
+     * each call to display() to ensure that the current frame
+     * lasted long enough to match the framerate limit.
+     *
+     * @param limit Framerate limit, in frames per seconds (use 0 to disable limit)
+     */
+    void setFramerateLimit(unsigned int limit);
 
     /**
      * @brief Display on screen what has been rendered to the window so far
@@ -417,6 +444,7 @@ inline namespace v1 {
 
     /** @} */
 
+
   private:
     Library m_lib; // to automatically initialize SDL
 
@@ -425,6 +453,10 @@ inline namespace v1 {
     void *m_context;
     bool m_shouldClose;
     bool m_isFullscreen;
+
+    // framerate limit handling
+    Clock m_clock;
+    Time m_duration;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

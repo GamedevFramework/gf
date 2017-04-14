@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016 Julien Bernard
+ * Copyright (C) 2016-2017 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -35,13 +35,15 @@
 #include "priv/Debug.h"
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   static std::string loadFile(const Path& filename) {
     std::ifstream file(filename.string());
 
     if (!file) {
-      Log::error(Log::Graphics, "File for shader does not exist: '%s'\n", filename.string().c_str());
+      Log::error("File for shader does not exist: '%s'\n", filename.string().c_str());
       return "";
     }
 
@@ -52,7 +54,7 @@ inline namespace v1 {
       content.append(1, '\n');
     }
 
-    Log::debug(Log::Graphics, "Shader loaded from file: '%s'\n", filename.string().c_str());
+    Log::debug("Shader loaded from file: '%s'\n", filename.string().c_str());
 
     return content;
   }
@@ -113,7 +115,7 @@ inline namespace v1 {
       std::unique_ptr<char[]> infoLog(new char[infoLogLength]);
       glCheck(glGetShaderInfoLog(id, infoLogLength, nullptr, infoLog.get()));
 
-      Log::error(Log::Graphics, "Error while compiling %s shader:\n%s\n", typeString, infoLog.get());
+      Log::error("Error while compiling %s shader:\n%s\n", typeString, infoLog.get());
       return 0;
     }
 
@@ -143,24 +145,24 @@ inline namespace v1 {
     return loadFromMemory(vertexShader, fragmentShader);
   }
 
-  bool Shader::loadFromMemory(const std::string& shader, Type type) {
-    if (shader.empty()) {
+  bool Shader::loadFromMemory(StringRef shader, Type type) {
+    if (shader.isEmpty()) {
       return false;
     }
 
     switch (type) {
       case Vertex:
-        return compile(shader.data(), nullptr);
+        return compile(shader.getData(), nullptr);
       case Fragment:
-        return compile(nullptr, shader.data());
+        return compile(nullptr, shader.getData());
     }
 
     return false;
   }
 
-  bool Shader::loadFromMemory(const std::string& vertexShader, const std::string& fragmentShader) {
-    const char *vertexShaderCode = vertexShader.empty() ? nullptr : vertexShader.data();
-    const char *fragmentShaderCode = fragmentShader.empty() ? nullptr : fragmentShader.data();
+  bool Shader::loadFromMemory(StringRef vertexShader, StringRef fragmentShader) {
+    const char *vertexShaderCode = vertexShader.isEmpty() ? nullptr : vertexShader.getData();
+    const char *fragmentShaderCode = fragmentShader.isEmpty() ? nullptr : fragmentShader.getData();
 
     if (vertexShaderCode == nullptr && fragmentShaderCode == nullptr) {
       return false;
@@ -214,7 +216,7 @@ inline namespace v1 {
       std::unique_ptr<char[]> infoLog(new char[infoLogLength]);
       glCheck(glGetProgramInfoLog(m_program, infoLogLength, nullptr, infoLog.get()));
 
-      Log::error(Log::Graphics, "Error while linking program:\n%s\n", infoLog.get());
+      Log::error("Error while linking program:\n%s\n", infoLog.get());
       return false;
     }
 
@@ -245,49 +247,49 @@ inline namespace v1 {
     GLuint m_curr;
   };
 
-  void Shader::setUniform(const std::string& name, float val) {
+  void Shader::setUniform(StringRef name, float val) {
     Guard guard(*this);
     int loc = getUniformLocation(name);
     glCheck(glUniform1f(loc, val));
   }
 
-  void Shader::setUniform(const std::string& name, int val) {
+  void Shader::setUniform(StringRef name, int val) {
     Guard guard(*this);
     int loc = getUniformLocation(name);
     glCheck(glUniform1i(loc, val));
   }
 
-  void Shader::setUniform(const std::string& name, const Vector2f& vec) {
+  void Shader::setUniform(StringRef name, const Vector2f& vec) {
     Guard guard(*this);
     int loc = getUniformLocation(name);
     glCheck(glUniform2f(loc, vec.x, vec.y));
   }
 
-  void Shader::setUniform(const std::string& name, const Vector3f& vec) {
+  void Shader::setUniform(StringRef name, const Vector3f& vec) {
     Guard guard(*this);
     int loc = getUniformLocation(name);
     glCheck(glUniform3f(loc, vec.x, vec.y, vec.z));
   }
 
-  void Shader::setUniform(const std::string& name, const Vector4f& vec) {
+  void Shader::setUniform(StringRef name, const Vector4f& vec) {
     Guard guard(*this);
     int loc = getUniformLocation(name);
     glCheck(glUniform4f(loc, vec.x, vec.y, vec.z, vec.w));
   }
 
-  void Shader::setUniform(const std::string& name, const Matrix3f& mat) {
+  void Shader::setUniform(StringRef name, const Matrix3f& mat) {
     Guard guard(*this);
     int loc = getUniformLocation(name);
     glCheck(glUniformMatrix3fv(loc, 1, GL_FALSE, mat.data));
   }
 
-  void Shader::setUniform(const std::string& name, const Matrix4f& mat) {
+  void Shader::setUniform(StringRef name, const Matrix4f& mat) {
     Guard guard(*this);
     int loc = getUniformLocation(name);
     glCheck(glUniformMatrix4fv(loc, 1, GL_FALSE, mat.data));
   }
 
-  void Shader::setUniform(const std::string& name, const BareTexture& tex) {
+  void Shader::setUniform(StringRef name, const BareTexture& tex) {
     int loc = getUniformLocation(name);
 
     if (loc == -1) {
@@ -304,23 +306,23 @@ inline namespace v1 {
 
   }
 
-  int Shader::getUniformLocation(const std::string& name) {
+  int Shader::getUniformLocation(StringRef name) {
     GLint loc;
-    glCheck(loc = glGetUniformLocation(static_cast<GLuint>(m_program), name.c_str()));
+    glCheck(loc = glGetUniformLocation(static_cast<GLuint>(m_program), name.getData()));
 
     if (loc == -1) {
-      Log::warning(Log::Graphics, "Uniform not found: '%s'\n", name.c_str());
+      Log::warning("Uniform not found: '%s'\n", name.getData());
     }
 
     return loc;
   }
 
-  int Shader::getAttributeLocation(const std::string& name) {
+  int Shader::getAttributeLocation(StringRef name) {
     GLint loc;
-    glCheck(loc = glGetAttribLocation(static_cast<GLuint>(m_program), name.c_str()));
+    glCheck(loc = glGetAttribLocation(static_cast<GLuint>(m_program), name.getData()));
 
     if (loc == -1) {
-      Log::warning(Log::Graphics, "Attribute not found: '%s'\n", name.c_str());
+      Log::warning("Attribute not found: '%s'\n", name.getData());
     }
 
     return loc;
@@ -344,5 +346,7 @@ inline namespace v1 {
     }
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

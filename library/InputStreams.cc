@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016 Julien Bernard
+ * Copyright (C) 2016-2017 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -29,7 +29,9 @@
 #include <gf/Log.h>
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   // FileInputStream
 
@@ -38,14 +40,14 @@ inline namespace v1 {
   , m_size(0)
   {
     if (!boost::filesystem::is_regular_file(path)) {
-      Log::error(Log::Resources, "Could not find the following file for streaming: %s\n", path.string().c_str());
+      Log::error("Could not find the following file for streaming: %s\n", path.string().c_str());
       return;
     }
 
     m_file = std::fopen(path.string().c_str(), "rb");
 
     if (m_file == nullptr) {
-      Log::error(Log::Resources, "Could not find the following file for streaming: %s\n", path.string().c_str());
+      Log::error("Could not find the following file for streaming: %s\n", path.string().c_str());
     }
 
     m_size = boost::filesystem::file_size(path);
@@ -131,5 +133,7 @@ inline namespace v1 {
     return m_size;
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

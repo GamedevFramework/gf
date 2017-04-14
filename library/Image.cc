@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016 Julien Bernard
+ * Copyright (C) 2016-2017 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -38,7 +38,9 @@
 #include "vendor/stb/stb_image_write.h"
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
 
   static void lower(std::string& str) {
     for (char& c : str) {
@@ -131,7 +133,7 @@ inline namespace v1 {
     uint8_t *ptr = stbi_load(filename.string().c_str(), &width, &height, &n, STBI_rgb_alpha);
 
     if (width == 0 || height == 0 || ptr == nullptr) {
-      Log::warning(Log::Graphics, "Could not load image from file '%s': %s\n", filename.c_str(), stbi_failure_reason());
+      Log::warning("Could not load image from file '%s': %s\n", filename.c_str(), stbi_failure_reason());
       return false;
     }
 
@@ -153,7 +155,7 @@ inline namespace v1 {
     uint8_t *ptr = stbi_load_from_memory(data, length, &width, &height, &n, STBI_rgb_alpha);
 
     if (width == 0 || height == 0 || ptr == nullptr) {
-      Log::warning(Log::Graphics, "Could not load image from memory: %s\n", stbi_failure_reason());
+      Log::warning("Could not load image from memory: %s\n", stbi_failure_reason());
       return false;
     }
 
@@ -180,7 +182,7 @@ inline namespace v1 {
     uint8_t *ptr = stbi_load_from_callbacks(&callbacks, &stream, &width, &height, &n, STBI_rgb_alpha);
 
     if (width == 0 || height == 0 || ptr == nullptr) {
-      Log::warning(Log::Graphics, "Could not load image from stream: %s\n", stbi_failure_reason());
+      Log::warning("Could not load image from stream: %s\n", stbi_failure_reason());
       return false;
     }
 
@@ -198,7 +200,7 @@ inline namespace v1 {
     std::string filenameString = filename.string();
 
     if (m_size.width == 0 || m_size.height == 0 || m_pixels.empty()) {
-      Log::warning(Log::Graphics, "Could not save image to file: '%s'\n", filenameString.c_str());
+      Log::warning("Could not save image to file: '%s'\n", filenameString.c_str());
       return false;
     }
 
@@ -221,7 +223,7 @@ inline namespace v1 {
       return true;
     }
 
-    Log::warning(Log::Graphics, "Format not supported: '%s'\n", ext.c_str());
+    Log::warning("Format not supported: '%s'\n", ext.c_str());
     return false;
   }
 
@@ -293,5 +295,7 @@ inline namespace v1 {
     }
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

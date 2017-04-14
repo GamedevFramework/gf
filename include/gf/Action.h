@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016 Julien Bernard
+ * Copyright (C) 2016-2017 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -207,8 +207,8 @@ inline namespace v1 {
 
   private:
     enum class Type {
-      INSTANTANEOUS,
-      CONTINUOUS,
+      Instantaneous,
+      Continuous,
     };
 
     std::string m_name;
@@ -226,9 +226,35 @@ inline namespace v1 {
     /**
      * @brief Add an action.
      *
-     * @param action the action to add to the set.
+     * @param action The action to add to the set.
      */
     void addAction(Action& action);
+
+    /**
+     * @brief Check if an action exists
+     *
+     * @param name The name of the action
+     * @returns True if there is an action with that name
+     */
+    bool hasAction(const std::string& name) const;
+
+    /**
+     * @brief Get an action thanks to its name.
+     *
+     * @param name The name of the action
+     * @returns The action with that name
+     * @throw std::runtime_error If the action is not found
+     */
+    Action& getAction(const std::string& name);
+
+    /**
+     * @brief Get an action thanks to its name.
+     *
+     * @param name The name of the action
+     * @returns The action with that name
+     * @throw std::runtime_error If the action is not found
+     */
+    const Action& getAction(const std::string& name) const;
 
     /**
      * @brief Update all the actions.

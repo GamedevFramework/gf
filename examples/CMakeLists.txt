@@ -28,12 +28,15 @@ add_gf_example(16_text)
 add_gf_example(17_buffer)
 add_gf_example(18_tilelayer)
 add_gf_example(19_ninepatch)
+add_gf_example(20_framerate)
+add_gf_example(21_particles)
 
 add_gf_example(30_postprocessing)
 add_gf_example(31_pipeline)
 add_gf_example(32_colorblind)
 
-add_gf_example(40_collision)
-add_gf_example(41_ui)
+add_gf_example(40_ui)
+add_gf_example(41_collisions)
+add_gf_example(42_physics)
 
 add_gf_example(98_logo)

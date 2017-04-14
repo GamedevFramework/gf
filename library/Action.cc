@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016 Julien Bernard
+ * Copyright (C) 2016-2017 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -21,34 +21,38 @@
 #include <gf/Action.h>
 
 #include <algorithm>
+#include <stdexcept>
 
 #include <gf/Controls.h>
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
+#endif
+
   struct Event;
 
   Action::Action(std::string name)
   : m_name(std::move(name))
-  , m_type(Type::INSTANTANEOUS)
+  , m_type(Type::Instantaneous)
   {
     
   }
 
   void Action::setContinuous() {
-    m_type = Type::CONTINUOUS;
+    m_type = Type::Continuous;
   }
 
   bool Action::isContinuous() const {
-    return m_type == Type::CONTINUOUS;
+    return m_type == Type::Continuous;
   }
 
   void Action::setInstantaneous() {
-    m_type = Type::INSTANTANEOUS;
+    m_type = Type::Instantaneous;
   }
 
   bool Action::isInstantaneous() const {
-    return m_type == Type::INSTANTANEOUS;
+    return m_type == Type::Instantaneous;
   }
 
   void Action::addKeycodeKeyControl(Keycode code) {
@@ -113,6 +117,38 @@ inline namespace v1 {
     m_actions.push_back(&action);
   }
 
+  bool ActionContainer::hasAction(const std::string& name) const {
+    auto it = std::find_if(m_actions.begin(), m_actions.end(), [&name](const Action *action) {
+      return action->getName() == name;
+    });
+
+    return it != m_actions.end();
+  }
+
+  Action& ActionContainer::getAction(const std::string& name) {
+    auto it = std::find_if(m_actions.begin(), m_actions.end(), [&name](const Action *action) {
+      return action->getName() == name;
+    });
+
+    if (it == m_actions.end()) {
+      throw std::runtime_error("Action not found");
+    }
+
+    return **it;
+  }
+
+  const Action& ActionContainer::getAction(const std::string& name) const {
+    auto it = std::find_if(m_actions.begin(), m_actions.end(), [&name](const Action *action) {
+      return action->getName() == name;
+    });
+
+    if (it == m_actions.end()) {
+      throw std::runtime_error("Action not found");
+    }
+
+    return **it;
+  }
+
   void ActionContainer::processEvent(const Event& event) {
     for (auto action : m_actions) {
       action->processEvent(event);
@@ -125,5 +161,7 @@ inline namespace v1 {
     }
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+#endif
 }

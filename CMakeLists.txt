@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0)
 
 project(GF
-  VERSION 0.3.0
+  VERSION 0.4.0
   LANGUAGES CXX C
 )
 
@@ -16,6 +16,7 @@ option(GF_BUILD_TESTS "Build tests" ON)
 option(GF_BUILD_DOCUMENTATION "Build documentation (needs Doxygen)" ON)
 option(GF_BUILD_GAMES "Build games" OFF)
 option(GF_BUILD_TOOLS "Build tools" OFF)
+option(GF_SINGLE_COMPILTATION_UNIT "Build the library in a single file (unity build)" OFF)
 
 include(GNUInstallDirs)
 set(GF_DATADIR ${CMAKE_INSTALL_FULL_DATADIR})
@@ -89,6 +90,7 @@ if (GF_BUILD_DOCUMENTATION)
 endif()
 
 if(GF_BUILD_GAMES)
+  add_subdirectory(games/bank_robbery_for_dummies)
   add_subdirectory(games/gf_pong)
   add_subdirectory(games/gf_2048)
   add_subdirectory(games/huaca)

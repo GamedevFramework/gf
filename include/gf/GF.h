@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016 Julien Bernard
+ * Copyright (C) 2016-2017 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -24,6 +24,7 @@
 
 #include "Action.h"
 #include "Alignment.h"
+#include "Anchor.h"
 #include "AnimatedSprite.h"
 #include "Animation.h"
 #include "Array2D.h"
@@ -31,6 +32,7 @@
 #include "AssetManager.h"
 #include "Blend.h"
 #include "BufferedGeometry.h"
+#include "BufferRef.h"
 #include "Circ.h"
 #include "Clock.h"
 #include "Collision.h"
@@ -38,6 +40,7 @@
 #include "ColorRamp.h"
 #include "Control.h"
 #include "Controls.h"
+#include "Coordinates.h"
 #include "Curve.h"
 #include "Curves.h"
 #include "Direction.h"
@@ -47,7 +50,6 @@
 #include "EntityContainer.h"
 #include "Entity.h"
 #include "Event.h"
-#include "Filesystem.h"
 #include "Flags.h"
 #include "Font.h"
 #include "Gamepad.h"
@@ -64,12 +66,19 @@
 #include "MessageManager.h"
 #include "ModelContainer.h"
 #include "Model.h"
+#include "Models.h"
 #include "Monitor.h"
 #include "Mouse.h"
 #include "NinePatch.h"
 #include "Noise.h"
 #include "Noises.h"
 #include "Orientation.h"
+#include "Particles.h"
+#include "Path.h"
+#include "Paths.h"
+#include "PhysicsBody.h"
+#include "PhysicsGeometry.h"
+#include "PhysicsModel.h"
 #include "Polygon.h"
 #include "Portability.h"
 #include "PostProcessing.h"
@@ -84,6 +93,7 @@
 #include "RenderTexture.h"
 #include "RenderWindow.h"
 #include "ResourceManager.h"
+#include "Rune.h"
 #include "Shader.h"
 #include "Shape.h"
 #include "Shapes.h"
@@ -109,7 +119,6 @@
 #include "ViewContainer.h"
 #include "View.h"
 #include "Views.h"
-#include "WindowGeometryTracker.h"
 #include "Window.h"
 
 #endif // GF_ALL_H
