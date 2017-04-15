@@ -59,6 +59,8 @@ inline namespace v1 {
     Title           = 0x0040, ///< The window has a title in the header
     ScrollAutoHide  = 0x0080, ///< The window's scrollbar can hide automatically
     Background      = 0x0100, ///< The window is in the background
+    ScaleLeft       = 0x0200, ///< The window's scaler is on the left
+    NoInput         = 0x0400, ///< The window can not scale, move or get focus
   };
 
   /**
@@ -112,7 +114,7 @@ inline namespace v1 {
    * @ingroup graphics
    * @brief State for scrollbar in groups
    */
-  using UIScroll = Vector<unsigned short, 2>;
+  using UIScroll = Vector2u;
 
   /**
    * @ingroup graphics
@@ -168,9 +170,8 @@ inline namespace v1 {
     CtrlEnterNewline    = 0x0080,
     NoHorizontalScroll  = 0x0100,
     AlwaysInsertMode    = 0x0200,
-    // no 0x0400
-    Multiline           = 0x0800,
-    GotoEndOnActivate   = 0x1000,
+    Multiline           = 0x0400,
+    GotoEndOnActivate   = 0x0800,
   };
 
   /**
