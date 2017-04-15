@@ -57,9 +57,9 @@ inline namespace v1 {
    * gf::BareTexture can handle two types of texture:
    *
    * - colored texture that stores RGBA channels (see gf::Texture)
-   * - alpha texture that stores a single alpha channel (see gf::FontTexture)
+   * - alpha texture that stores a single alpha channel (see gf::AlphaTexture)
    *
-   * Generally, you do not manipulated a gf::BareTexture directly but you can
+   * Generally, you do not manipulate a gf::BareTexture directly but you can
    * use a gf::Texture.
    *
    * @sa gf::Texture, gf::AlphaTexture
