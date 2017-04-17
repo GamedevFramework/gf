@@ -20,6 +20,8 @@
  */
 #include <gf/Gamepad.h>
 
+#include <cstring>
+
 #include <SDL.h>
 
 #include <gf/Log.h>
@@ -166,7 +168,7 @@ inline namespace v1 {
   }
 
   void Gamepad::initialize() {
-    int added = SDL_GameControllerAddMappingsFromRW(SDL_RWFromConstMem(gamecontrollerdb, sizeof gamecontrollerdb - 1), 1);
+    int added = SDL_GameControllerAddMappingsFromRW(SDL_RWFromConstMem(gamecontrollerdb, std::strlen(gamecontrollerdb)), 1);
 
     if (added == -1) {
       Log::error("Unable to load game controller mappings: '%s'\n", SDL_GetError());

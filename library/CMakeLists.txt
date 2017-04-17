@@ -135,6 +135,8 @@ else()
     ViewContainer.cc
     Views.cc
     Window.cc
+    # generated
+    data/generated.cc
     # priv
     priv/Debug.cc
     # vendor
