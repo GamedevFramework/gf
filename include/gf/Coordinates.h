@@ -33,6 +33,7 @@ inline namespace v1 {
   class RenderTarget;
 
   /**
+   * @ingroup graphics
    * @brief Helper to compute coordinates in HUD
    */
   class GF_API Coordinates {
