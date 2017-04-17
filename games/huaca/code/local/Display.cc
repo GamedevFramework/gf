@@ -27,7 +27,7 @@
 
 namespace huaca {
 
-  static gf::Texture *loadTexture(const gf::Path& path) {
+  static gf::Texture *loadDisplayTexture(const gf::Path& path) {
     gf::Texture& texture = gResourceManager().getTexture(path);
     texture.setSmooth();
     return &texture;
@@ -41,17 +41,17 @@ namespace huaca {
 
     // load textures
 
-    m_runes[0].texture = loadTexture("img/rune0_yellow.png");
-    m_runes[1].texture = loadTexture("img/rune1_red.png");
-    m_runes[2].texture = loadTexture("img/rune2_green.png");
-    m_runes[3].texture = loadTexture("img/rune3_purple.png");
+    m_runes[0].texture = loadDisplayTexture("img/rune0_yellow.png");
+    m_runes[1].texture = loadDisplayTexture("img/rune1_red.png");
+    m_runes[2].texture = loadDisplayTexture("img/rune2_green.png");
+    m_runes[3].texture = loadDisplayTexture("img/rune3_purple.png");
 
-    m_keys[0].texture = loadTexture("img/key_iron.png");
-    m_keys[1].texture = loadTexture("img/key_bronze.png");
-    m_keys[2].texture = loadTexture("img/key_silver.png");
-    m_keys[3].texture = loadTexture("img/key_gold.png");
+    m_keys[0].texture = loadDisplayTexture("img/key_iron.png");
+    m_keys[1].texture = loadDisplayTexture("img/key_bronze.png");
+    m_keys[2].texture = loadDisplayTexture("img/key_silver.png");
+    m_keys[3].texture = loadDisplayTexture("img/key_gold.png");
 
-    m_portals[0].texture = m_portals[1].texture = loadTexture("img/portal.png");
+    m_portals[0].texture = m_portals[1].texture = loadDisplayTexture("img/portal.png");
 
     // messages
 
@@ -78,19 +78,19 @@ namespace huaca {
     }
   }
 
-  static constexpr float Padding = 20.0f;
+  static constexpr float HudPadding = 20.0f;
 
-  static constexpr float KeySize = 30.0f;
-  static constexpr float KeyTextureSize = 64.0f;
-  static constexpr float KeySpace = 10.0f;
+  static constexpr float HudKeySize = 30.0f;
+  static constexpr float HudKeyTextureSize = 64.0f;
+  static constexpr float HudKeySpace = 10.0f;
 
-  static constexpr float RuneSize = 50.0f;
-  static constexpr float RuneTextureSize = 64.0f;
-  static constexpr float RuneSpace = 10.0f;
+  static constexpr float HudRuneSize = 50.0f;
+  static constexpr float HudRuneTextureSize = 64.0f;
+  static constexpr float HudRuneSpace = 10.0f;
 
-  static constexpr float PortalTextureSize = 64.0f;
-  static constexpr float PortalSize = 40.0f;
-  static constexpr float PortalSpace = 10.0f;
+  static constexpr float HudPortalTextureSize = 64.0f;
+  static constexpr float HudPortalSize = 40.0f;
+  static constexpr float HudPortalSpace = 10.0f;
 
   static constexpr float Transparency = 0.125f;
 
@@ -98,20 +98,20 @@ namespace huaca {
   void Display::render(gf::RenderTarget& target) {
     gf::Coordinates coordinates(target);
 
-    gf::Vector2f position(Padding, Padding);
+    gf::Vector2f position(HudPadding, HudPadding);
 
     for (const auto& key : m_keys) {
       gf::Sprite sprite;
       sprite.setTexture(*key.texture);
       sprite.setPosition(position);
-      sprite.setScale(KeySize / KeyTextureSize);
+      sprite.setScale(HudKeySize / HudKeyTextureSize);
       sprite.setColor({ 1.0f, 1.0f, 1.0f, (key.active ? 1.0f : Transparency) });
       target.draw(sprite);
 
-      position.x += KeySize + KeySpace;
+      position.x += HudKeySize + HudKeySpace;
     }
 
-    position = coordinates.getAbsolutePoint({ Padding, RuneSize + RuneSpace + RuneSize + Padding }, gf::Anchor::BottomLeft);
+    position = coordinates.getAbsolutePoint({ HudPadding, HudRuneSize + HudRuneSpace + HudRuneSize + HudPadding }, gf::Anchor::BottomLeft);
 
     for (unsigned i = 0; i < 2; ++i) {
       for (unsigned j = 0; j < 2; ++j) {
@@ -119,24 +119,24 @@ namespace huaca {
 
         gf::Sprite sprite;
         sprite.setTexture(*rune.texture);
-        sprite.setPosition(position + RuneSize * gf::Vector2f(i, j));
-        sprite.setScale(RuneSize / RuneTextureSize);
+        sprite.setPosition(position + HudRuneSize * gf::Vector2f(i, j));
+        sprite.setScale(HudRuneSize / HudRuneTextureSize);
         sprite.setColor({ 1.0f, 1.0f, 1.0f, (rune.active ? 1.0f : Transparency) });
         target.draw(sprite);
       }
     }
 
-    position = coordinates.getAbsolutePoint({ PortalSize + PortalSpace + PortalSize + Padding, Padding }, gf::Anchor::TopRight);
+    position = coordinates.getAbsolutePoint({ HudPortalSize + HudPortalSpace + HudPortalSize + HudPadding, HudPadding }, gf::Anchor::TopRight);
 
     for (const auto& portal : m_portals) {
       gf::Sprite sprite;
       sprite.setTexture(*portal.texture);
       sprite.setPosition(position);
-      sprite.setScale({ PortalSize / PortalTextureSize });
+      sprite.setScale({ HudPortalSize / HudPortalTextureSize });
       sprite.setColor({ 1.0f, 1.0f, 1.0f, (portal.active ? 1.0f : Transparency) });
       target.draw(sprite);
 
-      position.x += PortalSize + PortalSpace;
+      position.x += HudPortalSize + HudPortalSpace;
     }
 
   }

@@ -80,7 +80,7 @@ namespace lux {
   }
 
 
-  static constexpr float ShootVelocity = -400.0f;
+  static constexpr float HeroShootVelocity = -400.0f;
 
   Hero::Hero(HeroProperties& prop, gf::MessageManager& messages, gf::ResourceManager& resources)
   : Ship(Health)
@@ -147,7 +147,7 @@ namespace lux {
 
     m_elapsedTime += dt;
 
-    gf::Vector2f dir(0.0f, ShootVelocity);
+    gf::Vector2f dir(0.0f, HeroShootVelocity);
     m_shoot->shoot(dt, m_position, dir, m_messages);
   }
 

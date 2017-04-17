@@ -26,7 +26,7 @@
 
 namespace lux {
 
-  static constexpr float ShootVelocity = 400.0f;
+  static constexpr float EnemyShootVelocity = 400.0f;
   static constexpr float BonusFrequency = 0.50f;
 
   Enemy::Enemy(ShipClass ship, gf::Vector2f position, gf::Vector2f velocity, float health, gf::Random& random, gf::MessageManager& messages, gf::ResourceManager &resources)
@@ -101,7 +101,7 @@ namespace lux {
     }
 
     gf::Vector2f dir = m_heroPos - m_position;
-    dir = gf::normalize(dir) * ShootVelocity;
+    dir = gf::normalize(dir) * EnemyShootVelocity;
 
     m_shoot->shoot(dt, m_position, dir, m_messages);
   }

@@ -69,11 +69,11 @@ namespace lux {
     m_bullets.push_back(bullet);
   }
 
-  static constexpr float Extra = 100.0f;
+  static constexpr float BulletsExtra = 100.0f;
 
   void Bullets::update(float dt) {
     gf::RectF view(WorldCenter - WorldSize / 2, WorldSize);
-    view.extend(Extra);
+    view.extend(BulletsExtra);
 
     for (Bullet& bullet : m_bullets) {
       bullet.position += bullet.velocity * dt;
@@ -96,7 +96,7 @@ namespace lux {
     }
   }
 
-  static constexpr bool isTargetReached(gf::Vector2f shipPos, gf::Vector2f bulletPos) {
+  static constexpr bool isTargetReachedByBullet(gf::Vector2f shipPos, gf::Vector2f bulletPos) {
     return shipPos.x - 30.0f <= bulletPos.x && bulletPos.x <= shipPos.x + 30.0f
         && shipPos.y - 30.0f <= bulletPos.y && bulletPos.y <= shipPos.y + 30.0f;
   }
@@ -112,7 +112,7 @@ namespace lux {
         continue;
       }
 
-      if (isTargetReached(loc->position, bullet.position)) {
+      if (isTargetReachedByBullet(loc->position, bullet.position)) {
         loc->ship->impact(10.0f);
         bullet.active = false;
       }

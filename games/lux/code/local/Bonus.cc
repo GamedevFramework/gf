@@ -46,11 +46,11 @@ namespace lux {
     m_bonus.push_back(bonus);
   }
 
-  static constexpr float Extra = 20.0f;
+  static constexpr float BonusExtra = 20.0f;
 
   void BonusManager::update(float dt) {
     gf::RectF view(WorldCenter - WorldSize / 2, WorldSize);
-    view.extend(Extra);
+    view.extend(BonusExtra);
 
     for (Bonus& bonus : m_bonus) {
       bonus.position += bonus.velocity * dt;
@@ -89,7 +89,7 @@ namespace lux {
     }
   }
 
-  static bool isTargetReached(gf::Vector2f shipPos, gf::Vector2f bonusPos) {
+  static bool isTargetReachedByBonus(gf::Vector2f shipPos, gf::Vector2f bonusPos) {
     gf::RectF rectShip(shipPos, { Hero::Width, Hero::Height });
     gf::RectF rectBonus(bonusPos, { BonusSize, BonusSize });
     return rectShip.intersects(rectBonus);
@@ -120,7 +120,7 @@ namespace lux {
 
     // Check if one bonus is hit
     for (Bonus& bonus : m_bonus) {
-      if (isTargetReached(loc->position, bonus.position)) {
+      if (isTargetReachedByBonus(loc->position, bonus.position)) {
         // Remove the bonus
         bonus.active = false;
 
