@@ -27,6 +27,7 @@
 #include <gf/RenderTarget.h>
 #include <gf/Shapes.h>
 #include <gf/Text.h>
+#include <gf/Unused.h>
 
 Board::Board(gf::Font& font, gf::Random& random)
 : m_font(font)
@@ -116,7 +117,8 @@ bool Board::move(gf::Direction dir) {
 }
 
 void Board::update(float dt) {
-  (void) dt;
+  gf::unused(dt);
+
   gf::Vector2u pos;
 
   for (pos.y = 0; pos.y < Grid::Size; ++pos.y) {

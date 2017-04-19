@@ -26,6 +26,7 @@
 #include <gf/RenderTarget.h>
 #include <gf/Shapes.h>
 #include <gf/Transform.h>
+#include <gf/Unused.h>
 
 #include "Messages.h"
 #include "World.h"
@@ -498,7 +499,7 @@ namespace lux {
   }
 
   gf::MessageStatus Scenario::onScore(gf::Id id, gf::Message *msg) {
-    (void) id;
+    gf::unused(id);
 
     auto score = static_cast<ScoreMessage*>(msg);
 
@@ -508,7 +509,7 @@ namespace lux {
   }
 
   gf::MessageStatus Scenario::onDead(gf::Id id, gf::Message *msg) {
-    (void) id;
+    gf::unused(id);
 
     auto dead = static_cast<DeadMessage*>(msg);
 

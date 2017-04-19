@@ -21,6 +21,7 @@
 
 #include <gf/Sprite.h>
 #include <gf/RenderTarget.h>
+#include <gf/Unused.h>
 #include <gf/VectorOps.h>
 
 #include "Messages.h"
@@ -103,7 +104,7 @@ namespace lux {
 
 
   gf::MessageStatus Bullets::onLocation(gf::Id id, gf::Message *msg) {
-    (void) id;
+    gf::unused(id);
 
     auto loc = static_cast<LocationMessage*>(msg);
 
@@ -122,7 +123,7 @@ namespace lux {
   }
 
   gf::MessageStatus Bullets::onShoot(gf::Id id, gf::Message *msg) {
-    (void) id;
+    gf::unused(id);
 
     auto shoot = static_cast<ShootMessage *>(msg);
 

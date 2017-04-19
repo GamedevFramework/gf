@@ -25,6 +25,7 @@
 #include <gf/Shapes.h>
 #include <gf/Sprite.h>
 #include <gf/Text.h>
+#include <gf/Unused.h>
 
 #include "Messages.h"
 #include "World.h"
@@ -174,7 +175,7 @@ namespace lux {
   }
 
   gf::MessageStatus Hero::onDead(gf::Id id, gf::Message *msg) {
-    (void) id;
+    gf::unused(id);
 
     auto dead = static_cast<DeadMessage *>(msg);
 
@@ -210,8 +211,8 @@ namespace lux {
   }
 
   gf::MessageStatus Hero::onRestartGame(gf::Id id, gf::Message *msg) {
-    (void) id;
-    (void) msg;
+    gf::unused(id);
+    gf::unused(msg);
 
     m_inGame = true;
     m_weaponLevel = 1;
@@ -224,7 +225,7 @@ namespace lux {
   }
 
   gf::MessageStatus Hero::onWinGame(gf::Id id, gf::Message *msg) {
-    (void) id;
+    gf::unused(id);
 
     auto winEvent = static_cast<WinGameMessage *>(msg);
 

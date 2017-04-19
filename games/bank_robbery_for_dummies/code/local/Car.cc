@@ -24,6 +24,7 @@
 #include <gf/Shapes.h>
 #include <gf/Sprite.h>
 #include <gf/Transform.h>
+#include <gf/Unused.h>
 #include <gf/VectorOps.h>
 
 #include "Messages.h"
@@ -166,7 +167,7 @@ namespace brfd {
   }
 
   void StaticCar::update(float dt) {
-    (void) dt;
+    gf::unused(dt);
     float angle = m_body.getAngle();
     gf::Vector2f velocity = m_body.getLinearVelocity();
     gf::Vector2f normal = gf::unit(angle + gf::Pi2);

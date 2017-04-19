@@ -21,6 +21,7 @@
 #include <gf/Shapes.h>
 #include <gf/Sprite.h>
 #include <gf/RenderTarget.h>
+#include <gf/Unused.h>
 
 #include "Singletons.h"
 #include "Messages.h"
@@ -143,7 +144,7 @@ namespace huaca {
 
 
   gf::MessageStatus Display::onKeyLooted(gf::Id id, gf::Message *msg) {
-    (void) id; // not used
+    gf::unused(id);
 
     auto keyLooted = static_cast<KeyLootedMessage*>(msg);
     m_keys[keyLooted->number].active = true;
@@ -151,7 +152,7 @@ namespace huaca {
   }
 
   gf::MessageStatus Display::onRunePressed(gf::Id id, gf::Message *msg) {
-    (void) id; // not used
+    gf::unused(id);
 
     auto runePressed = static_cast<RunePressedMessage*>(msg);
     m_runes[runePressed->number].active = true;
@@ -159,8 +160,8 @@ namespace huaca {
   }
 
   gf::MessageStatus Display::onPortalDropped(gf::Id id, gf::Message *msg) {
-    (void) id; // not used
-    (void) msg; // not used
+    gf::unused(id);
+    gf::unused(msg);
 
     if (m_portals[0].active) {
       m_portals[0].active = false;
@@ -172,8 +173,8 @@ namespace huaca {
   }
 
   gf::MessageStatus Display::onSequenceFailed(gf::Id id, gf::Message *msg) {
-    (void) id; // not used
-    (void) msg; // not used
+    gf::unused(id);
+    gf::unused(msg);
 
     for (auto& rune : m_runes) {
       rune.active = false;
@@ -184,16 +185,16 @@ namespace huaca {
 
 
   gf::MessageStatus Display::onResetLevel(gf::Id id, gf::Message *msg) {
-    (void) id; // not used
-    (void) msg; // not used
+    gf::unused(id);
+    gf::unused(msg);
 
     clear();
     return gf::MessageStatus::Keep;
   }
 
   gf::MessageStatus Display::onNewLevel(gf::Id id, gf::Message *msg) {
-    (void) id; // not used
-    (void) msg; // not used
+    gf::unused(id);
+    gf::unused(msg);
 
     clear();
     return gf::MessageStatus::Keep;

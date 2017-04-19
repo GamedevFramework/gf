@@ -25,6 +25,7 @@
 #include <gf/RenderTarget.h>
 #include <gf/Sprite.h>
 #include <gf/Shapes.h>
+#include <gf/Unused.h>
 
 #include "Messages.h"
 #include "Singletons.h"
@@ -241,7 +242,7 @@ namespace huaca {
   }
 
   gf::MessageStatus Level::onHeroPosition(gf::Id id, gf::Message *msg) {
-    (void) id; // not used
+    gf::unused(id);
 
     auto heroPosition = static_cast<HeroPositionMessage*>(msg);
 
@@ -336,8 +337,8 @@ namespace huaca {
   }
 
   gf::MessageStatus Level::onResetLevel(gf::Id id, gf::Message *msg) {
-    (void) id; // not used
-    (void) msg; // not used
+    gf::unused(id);
+    gf::unused(msg);
 
     for (auto& rune : m_runes) {
       rune.isPressed = false;
@@ -376,7 +377,7 @@ namespace huaca {
 
 
   gf::MessageStatus Level::onPortalDropped(gf::Id id, gf::Message *msg) {
-    (void) id;
+    gf::unused(id);
 
     if (m_currentPortal == 2) {
       return gf::MessageStatus::Keep;

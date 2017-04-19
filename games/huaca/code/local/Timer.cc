@@ -20,6 +20,7 @@
 #include <gf/Coordinates.h>
 #include <gf/Shapes.h>
 #include <gf/RenderTarget.h>
+#include <gf/Unused.h>
 
 #include "Messages.h"
 #include "Singletons.h"
@@ -83,8 +84,8 @@ namespace huaca {
   }
 
   gf::MessageStatus Timer::onNewLevel(gf::Id id, gf::Message *msg) {
-    (void) id; // not used
-    (void) msg; // not used
+    gf::unused(id);
+    gf::unused(msg);
 
     m_remainingTime = m_totalTime;
     return gf::MessageStatus::Keep;

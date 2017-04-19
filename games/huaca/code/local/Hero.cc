@@ -19,6 +19,7 @@
 
 #include <gf/AnimatedSprite.h>
 #include <gf/RenderTarget.h>
+#include <gf/Unused.h>
 #include <gf/VectorOps.h>
 
 #include "Level.h"
@@ -131,7 +132,7 @@ namespace huaca {
   }
 
   gf::MessageStatus Hero::onNewLevel(gf::Id id, gf::Message *msg) {
-    (void) id; // not used
+    gf::unused(id);
 
     auto newLevel = static_cast<NewLevelMessage*>(msg);
     m_initialPosition = m_position = newLevel->heroPosition;
@@ -139,8 +140,8 @@ namespace huaca {
   }
 
   gf::MessageStatus Hero::onResetLevel(gf::Id id, gf::Message *msg) {
-    (void) id; // not used
-    (void) msg; // not used
+    gf::unused(id);
+    gf::unused(msg);
 
     m_position = m_initialPosition;
     return gf::MessageStatus::Keep;

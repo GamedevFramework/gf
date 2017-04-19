@@ -26,6 +26,7 @@
 #include <gf/PhysicsModel.h>
 #include <gf/RenderWindow.h>
 #include <gf/ResourceManager.h>
+#include <gf/Unused.h>
 #include <gf/ViewContainer.h>
 #include <gf/Views.h>
 #include <gf/Window.h>
@@ -141,7 +142,7 @@ int main() {
   // event
 
   messages.registerHandler<brfd::HeroPosition>([&mainView](gf::Id type, gf::Message *msg) {
-    (void) type;
+    gf::unused(type);
     auto heroPosition = static_cast<brfd::HeroPosition *>(msg);
 
     mainView.setCenter(heroPosition->position);

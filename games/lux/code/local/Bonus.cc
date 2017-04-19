@@ -19,6 +19,7 @@
 
 #include <gf/Sprite.h>
 #include <gf/RenderTarget.h>
+#include <gf/Unused.h>
 #include <gf/VectorOps.h>
 
 #include "Hero.h"
@@ -98,7 +99,7 @@ namespace lux {
   static constexpr float BonusLinearVelocty = 120.0f;
 
   gf::MessageStatus BonusManager::onDropBonus(gf::Id id, gf::Message *msg) {
-    (void) id;
+    gf::unused(id);
 
     auto drop = static_cast<DropBonusMessage*>(msg);
 
@@ -109,7 +110,7 @@ namespace lux {
   }
 
   gf::MessageStatus BonusManager::onLocation(gf::Id id, gf::Message *msg) {
-    (void) id;
+    gf::unused(id);
 
     auto loc = static_cast<LocationMessage*>(msg);
 

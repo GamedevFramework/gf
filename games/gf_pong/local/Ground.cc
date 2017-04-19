@@ -23,6 +23,7 @@
 #include <gf/Color.h>
 #include <gf/RenderTarget.h>
 #include <gf/Shapes.h>
+#include <gf/Unused.h>
 
 #include "Ball.h"
 #include "Messages.h"
@@ -41,7 +42,7 @@ void Ground::render(gf::RenderTarget& target) {
 }
 
 gf::MessageStatus Ground::onBallLocation(gf::Id id, gf::Message *msg) {
-  (void) id; // not used
+  gf::unused(id);
 
   auto loc = static_cast<BallLocationMessage*>(msg);
 
