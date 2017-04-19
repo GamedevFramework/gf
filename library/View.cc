@@ -24,9 +24,9 @@
 #include <gf/View.h>
 
 #include <gf/Transform.h>
+#include <gf/Unused.h>
 #include <gf/VectorOps.h>
 
-#include "priv/Utils.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -106,8 +106,7 @@ inline namespace v1 {
   }
 
   void View::onWorldResize(Vector2f worldSize) {
-    GF_UNUSED(worldSize);
-
+    gf::unused(worldSize);
     // nothing by default
   }
 

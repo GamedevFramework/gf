@@ -22,7 +22,7 @@
 
 #include <iostream>
 
-#include "priv/Utils.h"
+#include <gf/Unused.h>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -30,7 +30,7 @@ inline namespace v1 {
 #endif
 
   void StretchView::onScreenResize(Vector2u screenSize) {
-    GF_UNUSED(screenSize);
+    gf::unused(screenSize);
 
     // nothing to do, viewport stays the same:
     // {0.0f, 0.0f, 1.0f, 1.0f}

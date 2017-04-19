@@ -23,8 +23,7 @@
 #include <gf/Color.h>
 #include <gf/RenderTarget.h>
 #include <gf/Shapes.h>
-
-#include "priv/Utils.h"
+#include <gf/Unused.h>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -62,7 +61,7 @@ inline namespace v1 {
   }
 
   void CircleGeometry::renderAt(RenderTarget& target, Vector2f position, float angle) const {
-    GF_UNUSED(angle);
+    gf::unused(angle);
 
     CircleShape shape(CircF(position, m_circle.radius));
     shape.setOrigin(m_circle.center);

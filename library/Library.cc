@@ -29,8 +29,7 @@
 #include FT_FREETYPE_H
 
 #include <gf/Log.h>
-
-#include "priv/Utils.h"
+#include <gf/Unused.h>
 
 #include "config.h"
 
@@ -57,13 +56,13 @@ inline namespace v1 {
 
   Library::Library(Library&& other)
   {
-    GF_UNUSED(other);
+    gf::unused(other);
 
     loaded.fetch_add(1);
   }
 
   Library& Library::operator=(Library&& other) {
-    GF_UNUSED(other);
+    gf::unused(other);
 
     loaded.fetch_add(1);
     return *this;

@@ -20,7 +20,7 @@
  */
 #include <gf/Model.h>
 
-#include "priv/Utils.h"
+#include <gf/Unused.h>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -31,7 +31,7 @@ inline namespace v1 {
   }
 
   void Model::update(float dt) {
-    GF_UNUSED(dt);
+    gf::unused(dt);
 
     // default: do nothing
   }

@@ -37,11 +37,11 @@
 #include <gf/RenderTarget.h>
 #include <gf/Transform.h>
 #include <gf/Texture.h>
+#include <gf/Unused.h>
 #include <gf/VectorOps.h>
 #include <gf/Vertex.h>
 
 #include "priv/String.h"
-#include "priv/Utils.h"
 
 // #define NK_PRIVATE
 #define NK_INCLUDE_FIXED_TYPES
@@ -204,7 +204,7 @@ inline namespace v1 {
   }
 
   static void clipboardPaste(nk_handle usr, struct nk_text_edit *edit) {
-    GF_UNUSED(usr);
+    gf::unused(usr);
 
     char *text = SDL_GetClipboardText();
 
@@ -215,7 +215,7 @@ inline namespace v1 {
   }
 
   static void clipboardCopy(nk_handle usr, const char *text, int len) {
-    GF_UNUSED(usr);
+    gf::unused(usr);
 
     if (len == 0) {
       return;

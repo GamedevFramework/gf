@@ -18,13 +18,27 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#ifndef GF_UTILS_H
-#define GF_UTILS_H
-
-#define GF_UNUSED(x) do { (void) (x); } while (0)
+#ifndef GF_UNUSED_H
+#define GF_UNUSED_H
 
 namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+inline namespace v1 {
+#endif
 
+  /**
+   * @ingroup core
+   * @brief A simple way to avoid warnings about unused variables
+   */
+  template <typename... Args>
+  inline
+  void unused(Args&&...) {
+
+  }
+
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+}
+#endif
 }
 
-#endif // GF_UTILS_H
+#endif // GF_UNUSED_H
