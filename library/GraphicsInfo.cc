@@ -76,12 +76,6 @@ inline namespace v1 {
 
   static const char *getTextureFormatName(GLint format) {
     switch (format) {
-      // 3DFX_texture_compression_FXT1
-      case 0x86B0:
-        return "COMPRESSED_RGB_FXT1_3DFX";
-      case 0x86B1:
-        return "COMPRESSED_RGBA_FXT1_3DFX";
-
       // EXT_texture_compression_s3tc
       case 0x83F0:
         return "GL_COMPRESSED_RGB_S3TC_DXT1_EXT";
@@ -91,6 +85,68 @@ inline namespace v1 {
         return "GL_COMPRESSED_RGBA_S3TC_DXT3_EXT";
       case 0x83F3:
         return "GL_COMPRESSED_RGBA_S3TC_DXT5_EXT";
+
+      // 3DFX_texture_compression_FXT1
+      case 0x86B0:
+        return "COMPRESSED_RGB_FXT1_3DFX";
+      case 0x86B1:
+        return "COMPRESSED_RGBA_FXT1_3DFX";
+
+      // OES_compressed_paletted_texture
+      case 0x8B90:
+        return "PALETTE4_RGB8_OES";
+      case 0x8B91:
+        return "PALETTE4_RGBA8_OES";
+      case 0x8B92:
+        return "PALETTE4_R5_G6_B5_OES";
+      case 0x8B93:
+        return "PALETTE4_RGBA4_OES";
+      case 0x8B94:
+        return "PALETTE4_RGB5_A1_OES";
+      case 0x8B95:
+        return "PALETTE8_RGB8_OES";
+      case 0x8B96:
+        return "PALETTE8_RGBA8_OES";
+      case 0x8B97:
+        return "PALETTE8_R5_G6_B5_OES";
+      case 0x8B98:
+        return "PALETTE8_RGBA4_OES";
+      case 0x8B99:
+        return "PALETTE8_RGB5_A1_OES";
+
+      // EXT_texture_sRGB
+      case 0x8C40:
+        return "SRGB_EXT";
+      case 0x8C41:
+        return "SRGB8_EXT";
+      case 0x8C42:
+        return "SRGB_ALPHA_EXT";
+      case 0x8C43:
+        return "SRGB8_ALPHA8_EXT";
+      case 0x8C44:
+        return "SLUMINANCE_ALPHA_EXT";
+      case 0x8C45:
+        return "SLUMINANCE8_ALPHA8_EXT";
+      case 0x8C46:
+        return "SLUMINANCE_EXT";
+      case 0x8C47:
+        return "SLUMINANCE8_EXT";
+      case 0x8C48:
+        return "COMPRESSED_SRGB_EXT";
+      case 0x8C49:
+        return "COMPRESSED_SRGB_ALPHA_EXT";
+      case 0x8C4A:
+        return "COMPRESSED_SLUMINANCE_EXT";
+      case 0x8C4B:
+        return "COMPRESSED_SLUMINANCE_ALPHA_EXT";
+      case 0x8C4C:
+        return "COMPRESSED_SRGB_S3TC_DXT1_EXT";
+      case 0x8C4D:
+        return "COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT";
+      case 0x8C4E:
+        return "COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT";
+      case 0x8C4F:
+        return "COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT";
 
       // OES_compressed_ETC1_RGB8_texture
       case 0x8D64:
@@ -117,6 +173,64 @@ inline namespace v1 {
         return "COMPRESSED_RG11_EAC";
       case 0x9273:
         return "COMPRESSED_SIGNED_RG11_EAC";
+
+      // KHR_texture_compression_astc_hdr
+      case 0x93B0:
+        return "COMPRESSED_RGBA_ASTC_4x4_KHR";
+      case 0x93B1:
+        return "COMPRESSED_RGBA_ASTC_5x4_KHR";
+      case 0x93B2:
+        return "COMPRESSED_RGBA_ASTC_5x5_KHR";
+      case 0x93B3:
+        return "COMPRESSED_RGBA_ASTC_6x5_KHR";
+      case 0x93B4:
+        return "COMPRESSED_RGBA_ASTC_6x6_KHR";
+      case 0x93B5:
+        return "COMPRESSED_RGBA_ASTC_8x5_KHR";
+      case 0x93B6:
+        return "COMPRESSED_RGBA_ASTC_8x6_KHR";
+      case 0x93B7:
+        return "COMPRESSED_RGBA_ASTC_8x8_KHR";
+      case 0x93B8:
+        return "COMPRESSED_RGBA_ASTC_10x5_KHR";
+      case 0x93B9:
+        return "COMPRESSED_RGBA_ASTC_10x6_KHR";
+      case 0x93BA:
+        return "COMPRESSED_RGBA_ASTC_10x8_KHR";
+      case 0x93BB:
+        return "COMPRESSED_RGBA_ASTC_10x10_KHR";
+      case 0x93BC:
+        return "COMPRESSED_RGBA_ASTC_12x10_KHR";
+      case 0x93BD:
+        return "COMPRESSED_RGBA_ASTC_12x12_KHR";
+      case 0x93D0:
+        return "COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR";
+      case 0x93D1:
+        return "COMPRESSED_SRGB8_ALPHA8_ASTC_5x4_KHR";
+      case 0x93D2:
+        return "COMPRESSED_SRGB8_ALPHA8_ASTC_5x5_KHR";
+      case 0x93D3:
+        return "COMPRESSED_SRGB8_ALPHA8_ASTC_6x5_KHR";
+      case 0x93D4:
+        return "COMPRESSED_SRGB8_ALPHA8_ASTC_6x6_KHR";
+      case 0x93D5:
+        return "COMPRESSED_SRGB8_ALPHA8_ASTC_8x5_KHR";
+      case 0x93D6:
+        return "COMPRESSED_SRGB8_ALPHA8_ASTC_8x6_KHR";
+      case 0x93D7:
+        return "COMPRESSED_SRGB8_ALPHA8_ASTC_8x8_KHR";
+      case 0x93D8:
+        return "COMPRESSED_SRGB8_ALPHA8_ASTC_10x5_KHR";
+      case 0x93D9:
+        return "COMPRESSED_SRGB8_ALPHA8_ASTC_10x6_KHR";
+      case 0x93DA:
+        return "COMPRESSED_SRGB8_ALPHA8_ASTC_10x8_KHR";
+      case 0x93DB:
+        return "COMPRESSED_SRGB8_ALPHA8_ASTC_10x10_KHR";
+      case 0x93DC:
+        return "COMPRESSED_SRGB8_ALPHA8_ASTC_12x10_KHR";
+      case 0x93DD:
+        return "COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR";
 
       default:
         break;
