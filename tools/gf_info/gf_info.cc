@@ -51,7 +51,7 @@ int main() {
 
   std::printf("System:\n");
   std::printf("- Platform: %s\n", gf::SystemInfo::getPlatformName().c_str());
-  std::printf("- CPU coun: %i\n", gf::SystemInfo::getCpuCount());
+  std::printf("- CPU count: %i\n", gf::SystemInfo::getCpuCount());
   std::printf("- RAM size: %i MiB\n", gf::SystemInfo::getSystemRamSize());
   std::printf("- Cache line size: %i kiB\n", gf::SystemInfo::getCpuCacheLineSize());
   std::printf("\n");
