@@ -20,6 +20,7 @@
  */
 #include <gf/Library.h>
 
+#include <cassert>
 #include <cstdio>
 #include <atomic>
 
@@ -27,6 +28,8 @@
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
+
+#include <boost/version.hpp>
 
 #include <gf/Log.h>
 #include <gf/Unused.h>
@@ -126,20 +129,26 @@ inline namespace v1 {
     return version;
   }
 
-  void Library::printVersionInfo() {
-    std::printf("Gamedev Framework (gf) version %i.%i.%i\n", GF_VERSION_MAJOR, GF_VERSION_MINOR, GF_VERSION_PATCH);
+  static Library::Version getBoostVersion() {
+    Library::Version version;
+    version.major = BOOST_VERSION / 100000;
+    version.minor = BOOST_VERSION / 100 % 1000;
+    version.patch = BOOST_VERSION % 100;
+    return version;
+  }
 
-    Version scv = getSDLCompiledVersion();
-    Version slv = getSDLLinkedVersion();
+  std::tuple<Library::Version, Library::Version> Library::getDependencyVersion(Dependency dep) {
+    switch (dep) {
+      case Boost:
+        return std::make_tuple(getBoostVersion(), getBoostVersion());
+      case SimpleDirectMediaLayer:
+        return std::make_tuple(getSDLCompiledVersion(), getSDLLinkedVersion());
+      case FreeType:
+        return std::make_tuple(getFreeTypeCompiledVersion(), getFreeTypeLinkedVersion());
+    }
 
-    std::printf("| compiled with Simple DirectMedia Layer (SDL) version %i.%i.%i (linked with version %i.%i.%i)\n",
-        scv.major, scv.minor, scv.patch, slv.major, slv.minor, slv.patch);
-
-    Version fcv = getFreeTypeCompiledVersion();
-    Version flv = getFreeTypeLinkedVersion();
-
-    std::printf("| compiled with FreeType version %i.%i.%i (linked with version %i.%i.%i)\n",
-        fcv.major, fcv.minor, fcv.patch, flv.major, flv.minor, flv.patch);
+    assert(false);
+    return std::make_tuple<Version,Version>({ 0, 0, 0}, { 0, 0, 0 });
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
