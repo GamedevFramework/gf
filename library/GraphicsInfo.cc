@@ -130,8 +130,11 @@ inline namespace v1 {
     glCheck(glGetIntegerv(GL_NUM_COMPRESSED_TEXTURE_FORMATS, &count));
 
     std::vector<GLint> formats(count);
-    glCheck(glGetIntegerv(GL_COMPRESSED_TEXTURE_FORMATS, &formats[0]));
-    std::sort(formats.begin(), formats.end());
+
+	if (count > 0) {
+      glCheck(glGetIntegerv(GL_COMPRESSED_TEXTURE_FORMATS, &formats[0]));
+      std::sort(formats.begin(), formats.end());
+	}
 
     std::vector<Format> ret;
 
@@ -152,8 +155,11 @@ inline namespace v1 {
     glCheck(glGetIntegerv(GL_NUM_SHADER_BINARY_FORMATS, &count));
 
     std::vector<GLint> formats(count);
-    glCheck(glGetIntegerv(GL_SHADER_BINARY_FORMATS, &formats[0]));
-    std::sort(formats.begin(), formats.end());
+
+	if (count > 0) {
+      glCheck(glGetIntegerv(GL_SHADER_BINARY_FORMATS, &formats[0]));
+      std::sort(formats.begin(), formats.end());
+	}
 
     std::vector<Format> ret;
 
