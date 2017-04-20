@@ -37,8 +37,7 @@ inline namespace v1 {
     tinyxml2::XMLDocument doc;
     int err = doc.LoadFile(filename.string().c_str());
 
-    if (doc.Error()) {
-      assert(err != tinyxml2::XML_SUCCESS);
+    if (doc.Error() || err != tinyxml2::XML_SUCCESS) {
       Log::error("Could not load atlas texture: '%s'\n", filename.string().c_str());
       return false;
     }
