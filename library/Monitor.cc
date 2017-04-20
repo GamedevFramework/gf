@@ -53,25 +53,25 @@ inline namespace v1 {
 
   }
 
-  std::string Monitor::getName() {
+  std::string Monitor::getName() const {
     return std::string(SDL_GetDisplayName(m_index));
   }
 
-  Vector2i Monitor::getPosition() {
+  Vector2i Monitor::getPosition() const {
     SDL_Rect rect;
     int err = SDL_GetDisplayBounds(m_index, &rect);
     assert(err == 0);
     return { rect.x, rect.y };
   }
 
-  Vector2u Monitor::getPhysicalSize() {
+  Vector2u Monitor::getPhysicalSize() const {
     SDL_Rect rect;
     int err = SDL_GetDisplayBounds(m_index, &rect);
     assert(err == 0);
     return { static_cast<unsigned>(rect.w), static_cast<unsigned>(rect.h) };
   }
 
-  std::vector<VideoMode> Monitor::getAvailableVideoModes() {
+  std::vector<VideoMode> Monitor::getAvailableVideoModes() const {
     std::vector<VideoMode> list;
 
     int count = SDL_GetNumDisplayModes(m_index);
@@ -91,7 +91,7 @@ inline namespace v1 {
     return list;
   }
 
-  VideoMode Monitor::getCurrentVideoMode() {
+  VideoMode Monitor::getCurrentVideoMode() const {
     SDL_DisplayMode mode;
     int err = SDL_GetCurrentDisplayMode(m_index, &mode);
     assert(err == 0);
