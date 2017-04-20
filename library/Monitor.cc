@@ -24,10 +24,25 @@
 
 #include <SDL.h>
 
+#include <gf/Log.h>
+
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
 #endif
+
+  static void sdlCheckError(int err) {
+    if (err == 0) {
+      return;
+    }
+
+    const char *message = SDL_GetError();
+
+    if (*message) {
+      Log::error("SDL error: %s\n", message);
+      SDL_ClearError();
+    }
+  }
 
   Monitor Monitor::getPrimaryMonitor() {
     Library lib;
@@ -60,14 +75,14 @@ inline namespace v1 {
   Vector2i Monitor::getPosition() const {
     SDL_Rect rect;
     int err = SDL_GetDisplayBounds(m_index, &rect);
-    assert(err == 0);
+    sdlCheckError(err);
     return { rect.x, rect.y };
   }
 
   Vector2u Monitor::getPhysicalSize() const {
     SDL_Rect rect;
     int err = SDL_GetDisplayBounds(m_index, &rect);
-    assert(err == 0);
+    sdlCheckError(err);
     return { static_cast<unsigned>(rect.w), static_cast<unsigned>(rect.h) };
   }
 
@@ -79,13 +94,15 @@ inline namespace v1 {
     for (int i = 0; i < count; ++i) {
       SDL_DisplayMode mode;
       int err = SDL_GetDisplayMode(m_index, i, &mode);
-      assert(err == 0);
+      sdlCheckError(err);
 
-      list.push_back({
-        { static_cast<unsigned>(mode.w), static_cast<unsigned>(mode.h) },
-        SDL_BITSPERPIXEL(mode.format),
-        mode.refresh_rate
-      });
+      if (err == 0) {
+        list.push_back({
+          { static_cast<unsigned>(mode.w), static_cast<unsigned>(mode.h) },
+          SDL_BITSPERPIXEL(mode.format),
+          mode.refresh_rate
+        });
+      }
     }
 
     return list;
@@ -94,7 +111,7 @@ inline namespace v1 {
   VideoMode Monitor::getCurrentVideoMode() const {
     SDL_DisplayMode mode;
     int err = SDL_GetCurrentDisplayMode(m_index, &mode);
-    assert(err == 0);
+    sdlCheckError(err);
 
     return VideoMode{
       { static_cast<unsigned>(mode.w), static_cast<unsigned>(mode.h) },
