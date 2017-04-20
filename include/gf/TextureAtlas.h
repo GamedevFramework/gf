@@ -34,6 +34,7 @@ inline namespace v1 {
 #endif
 
   class Texture;
+  class ResourceManager;
 
   /**
    * @ingroup game
@@ -83,6 +84,18 @@ inline namespace v1 {
     bool loadFromFile(const Path& filename);
 
     /**
+     * @brief Load an atlas from a XML file
+     *
+     * Load the data about the sub-textures from a XML file. In addition, load
+     * the texture thanks to a resource manager.
+     *
+     * @param filename The filename of the XML file
+     * @param resources A resource manager
+     * @return True if the file has been loaded
+     */
+    bool loadFromFile(const Path& filename, ResourceManager& resources);
+
+    /**
      * @brief Set the texture path
      *
      * The texture path comes from the XML file when it is loaded.
@@ -128,12 +141,12 @@ inline namespace v1 {
      * The returned pointer is const, which means that you can't
      * modify the texture when you retrieve it with this function.
      *
-     * @return Pointer to the atlas' texture
+     * @return A reference to the atlas' texture
      *
      * @sa setTexture()
      */
-    const Texture *getTexture() const {
-      return m_texture;
+    const Texture& getTexture() const {
+      return *m_texture;
     }
 
     /**

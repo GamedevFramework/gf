@@ -24,6 +24,7 @@
 #include <cstring>
 
 #include <gf/Log.h>
+#include <gf/ResourceManager.h>
 #include <gf/Texture.h>
 
 #include "vendor/tinyxml2/tinyxml2.h"
@@ -88,6 +89,20 @@ inline namespace v1 {
       child = child->NextSiblingElement();
     }
 
+    return true;
+  }
+
+  bool TextureAtlas::loadFromFile(const Path& filename, ResourceManager& resources) {
+    gf::Path absolute = resources.getAbsolutePath(filename);
+    bool loaded = loadFromFile(absolute);
+
+    if (!loaded) {
+      return false;
+    }
+
+    Path parent = absolute.parent_path();
+    Texture& texture = resources.getTexture(parent / getTexturePath());
+    setTexture(texture);
     return true;
   }
 
