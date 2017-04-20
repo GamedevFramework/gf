@@ -1,0 +1,20 @@
+<TextureAtlas imagePath="sheet.png">
+  <SubTexture name="boat" x="0" y="0" width="256" height="256"/>
+  <SubTexture name="bones" x="256" y="0" width="256" height="256"/>
+  <SubTexture name="campfire" x="512" y="0" width="256" height="256"/>
+  <SubTexture name="chest" x="768" y="0" width="256" height="256"/>
+  <SubTexture name="coin" x="1024" y="0" width="256" height="256"/>
+  <SubTexture name="compass" x="0" y="256" width="256" height="256"/>
+  <SubTexture name="house" x="256" y="256" width="256" height="256"/>
+  <SubTexture name="palm_tree_1" x="512" y="256" width="256" height="256"/>
+  <SubTexture name="palm_tree_2" x="768" y="256" width="256" height="256"/>
+  <SubTexture name="palm_tree_3" x="1024" y="256" width="256" height="256"/>
+  <SubTexture name="pipe" x="0" y="512" width="256" height="256"/>
+  <SubTexture name="pointer" x="256" y="512" width="256" height="256"/>
+  <SubTexture name="relics_1" x="512" y="512" width="256" height="256"/>
+  <SubTexture name="relics_2" x="768" y="512" width="256" height="256"/>
+  <SubTexture name="rocks_1" x="1024" y="512" width="256" height="256"/>
+  <SubTexture name="rocks_2" x="0" y="768" width="256" height="256"/>
+  <SubTexture name="tricorn" x="256" y="768" width="256" height="256"/>
+  <SubTexture name="turret" x="512" y="768" width="256" height="256"/>
+</TextureAtlas>

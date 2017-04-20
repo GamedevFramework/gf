@@ -30,6 +30,13 @@ Want to rob a bank? Follow Flo and Roxy!
 ![Bank Robbery for Dummies](bank_robbery_for_dummies/brfd.png)
 
 
+## Bygone Islands
+
+A steampunk pirate tries to recover enough coins to be able to repay your debt. This won't be a calm journey, with ancient turrets trying to stop you, and dangerous waves.
+
+![Bygone Islands](islands/islands.png)
+
+
 ## Lux
 
 A classical shoot 'em up.
