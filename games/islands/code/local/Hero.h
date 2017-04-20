@@ -8,8 +8,6 @@
 #include "Messages.h"
 #include "Steam.h"
 
-#include <SFML/Audio.hpp>
-
 namespace bi {
   class Hero: public gf::Entity {
   public:
