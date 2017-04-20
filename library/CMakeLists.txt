@@ -80,6 +80,7 @@ else()
     Flags.cc
     Font.cc
     Gamepad.cc
+    GraphicsInfo.cc
     Image.cc
     InputStream.cc
     InputStreams.cc
