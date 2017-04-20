@@ -58,7 +58,7 @@ TEST(BufferRefTest, StdVectorCtor) {
 }
 
 TEST(BufferRefTest, StdArrayCtor) {
-  std::array<int, 8> data = { 1, 2, 3, 4, 5, 6, 7, 8 };
+  std::array<int, 8> data = {{ 1, 2, 3, 4, 5, 6, 7, 8 }};
 
   gf::BufferRef<int> ref(data);
 

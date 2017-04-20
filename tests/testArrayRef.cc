@@ -58,7 +58,7 @@ TEST(ArrayRefTest, StdVectorCtor) {
 }
 
 TEST(ArrayRefTest, StdArrayCtor) {
-  std::array<int, 8> data = { 1, 2, 3, 4, 5, 6, 7, 8 };
+  std::array<int, 8> data = {{ 1, 2, 3, 4, 5, 6, 7, 8 }};
 
   gf::ArrayRef<int> ref(data);
 
