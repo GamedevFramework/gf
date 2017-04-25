@@ -50,6 +50,7 @@
 #include "Flags.cc"
 #include "Font.cc"
 #include "Gamepad.cc"
+#include "Geometry.cc"
 #include "GraphicsInfo.cc"
 #include "Image.cc"
 #include "InputStream.cc"
