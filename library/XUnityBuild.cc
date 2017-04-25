@@ -52,6 +52,7 @@
 #include "Gamepad.cc"
 #include "Geometry.cc"
 #include "GraphicsInfo.cc"
+#include "Grid.cc"
 #include "Image.cc"
 #include "InputStream.cc"
 #include "InputStreams.cc"

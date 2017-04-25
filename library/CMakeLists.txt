@@ -82,6 +82,7 @@ else()
     Gamepad.cc
     Geometry.cc
     GraphicsInfo.cc
+    Grid.cc
     Image.cc
     InputStream.cc
     InputStreams.cc
