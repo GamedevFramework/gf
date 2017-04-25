@@ -169,7 +169,7 @@ inline namespace v1 {
                 e += dx;
 
                 if (e <= 0) {
-                  ++p0.x;
+                  --p0.x;
                   e += dy;
                 }
               }
