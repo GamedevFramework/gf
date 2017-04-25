@@ -39,12 +39,12 @@
 
 static constexpr unsigned GridSize = 60;
 static constexpr float CellSize = 10.0f;
-static constexpr float Size = GridSize * CellSize;
+static constexpr unsigned Size = GridSize * CellSize;
 
 
 
 int main() {
-  gf::Window window("23_bresenham", { 600, 600 }, ~gf::WindowHints::Resizable);
+  gf::Window window("23_bresenham", { Size, Size }, ~gf::WindowHints::Resizable);
   gf::RenderWindow renderer(window);
 
   std::cout << "Gamedev Framework (gf) example #23: Bresenham algorithm\n";
