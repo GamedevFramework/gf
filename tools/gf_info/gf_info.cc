@@ -69,20 +69,20 @@ int main() {
     std::printf("- Monitor '%s':\n", monitor.getName().c_str());
 
     auto size = monitor.getPhysicalSize();
-    std::printf("    Physical size: %ux%u\n", size.width, size.height);
+    std::printf("\tPhysical size: %ux%u\n", size.width, size.height);
 
     auto pos = monitor.getPosition();
-    std::printf("    Position: %ix%i\n", pos.x, pos.y);
+    std::printf("\tPosition: %ix%i\n", pos.x, pos.y);
 
     auto modes = monitor.getAvailableVideoModes();
-    std::printf("    Modes (%zu):\n", modes.size());
+    std::printf("\tModes (%zu):\n", modes.size());
 
     for (const auto& mode : modes) {
-      std::printf("      %ux%u | %u bpp | %i Hz\n", mode.size.width, mode.size.height, mode.bitsPerPixel, mode.refreshRate);
+      std::printf("\t\t%ux%u | %u bpp | %i Hz\n", mode.size.width, mode.size.height, mode.bitsPerPixel, mode.refreshRate);
     }
 
     auto mode = monitor.getCurrentVideoMode();
-    std::printf("    Current mode: %ux%u | %u bpp | %i Hz\n", mode.size.width, mode.size.height, mode.bitsPerPixel, mode.refreshRate);
+    std::printf("\tCurrent mode: %ux%u | %u bpp | %i Hz\n", mode.size.width, mode.size.height, mode.bitsPerPixel, mode.refreshRate);
   }
 
   std::printf("\n");
@@ -104,10 +104,10 @@ int main() {
 
   for (const auto& extension : extensions) {
     if (i % 3 == 0) {
-      std::printf("\n    ");
+      std::printf("\n\t");
     }
 
-    std::printf(" %s", extension.c_str());
+    std::printf("%s ", extension.c_str());
     ++i;
   }
 
@@ -117,32 +117,32 @@ int main() {
   std::printf("- Compressed texture formats (%zu):\n", textures.size());
 
   for (const auto& texture : textures) {
-    std::printf("     %s (0x%X)\n", texture.name.c_str(), texture.symbol);
+    std::printf("\t%s (0x%X)\n", texture.name.c_str(), texture.symbol);
   }
 
   auto shaders = gf::GraphicsInfo::getShaderBinaryFormats();
   std::printf("- Shader binary formats (%zu):\n", shaders.size());
 
   for (const auto& shader : shaders) {
-    std::printf("    %s (0x%X)\n", shader.name.c_str(), shader.symbol);
+    std::printf("\t%s (0x%X)\n", shader.name.c_str(), shader.symbol);
   }
 
   std::printf("- Parameters:\n");
-  std::printf("    GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS: %i\n", gf::GraphicsInfo::getMaxCombinedTextureImageUnits());
-  std::printf("    GL_MAX_CUBE_MAP_TEXTURE_SIZE: %i\n", gf::GraphicsInfo::getMaxCubeMapTextureSize());
-  std::printf("    GL_MAX_FRAGMENT_UNIFORM_VECTORS: %i\n", gf::GraphicsInfo::getMaxFragmentUniformVectors());
-  std::printf("    GL_MAX_RENDERBUFFER_SIZE: %i\n", gf::GraphicsInfo::getMaxRenderbufferSize());
-  std::printf("    GL_MAX_TEXTURE_IMAGE_UNITS: %i\n", gf::GraphicsInfo::getMaxTextureImageUnits());
-  std::printf("    GL_MAX_TEXTURE_SIZE: %i\n", gf::GraphicsInfo::getMaxTextureSize());
-  std::printf("    GL_MAX_VARYING_VECTORS: %i\n", gf::GraphicsInfo::getMaxVaryingVectors());
-  std::printf("    GL_MAX_VERTEX_ATTRIBS: %i\n", gf::GraphicsInfo::getMaxVertexAttribs());
-  std::printf("    GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS: %i\n", gf::GraphicsInfo::getMaxVertexTextureImageUnits());
-  std::printf("    GL_MAX_VERTEX_UNIFORM_VECTORS: %i\n", gf::GraphicsInfo::getMaxVertexUniformVectors());
+  std::printf("\tGL_MAX_COMBINED_TEXTURE_IMAGE_UNITS: %i\n", gf::GraphicsInfo::getMaxCombinedTextureImageUnits());
+  std::printf("\tGL_MAX_CUBE_MAP_TEXTURE_SIZE: %i\n", gf::GraphicsInfo::getMaxCubeMapTextureSize());
+  std::printf("\tGL_MAX_FRAGMENT_UNIFORM_VECTORS: %i\n", gf::GraphicsInfo::getMaxFragmentUniformVectors());
+  std::printf("\tGL_MAX_RENDERBUFFER_SIZE: %i\n", gf::GraphicsInfo::getMaxRenderbufferSize());
+  std::printf("\tGL_MAX_TEXTURE_IMAGE_UNITS: %i\n", gf::GraphicsInfo::getMaxTextureImageUnits());
+  std::printf("\tGL_MAX_TEXTURE_SIZE: %i\n", gf::GraphicsInfo::getMaxTextureSize());
+  std::printf("\tGL_MAX_VARYING_VECTORS: %i\n", gf::GraphicsInfo::getMaxVaryingVectors());
+  std::printf("\tGL_MAX_VERTEX_ATTRIBS: %i\n", gf::GraphicsInfo::getMaxVertexAttribs());
+  std::printf("\tGL_MAX_VERTEX_TEXTURE_IMAGE_UNITS: %i\n", gf::GraphicsInfo::getMaxVertexTextureImageUnits());
+  std::printf("\tGL_MAX_VERTEX_UNIFORM_VECTORS: %i\n", gf::GraphicsInfo::getMaxVertexUniformVectors());
 
   auto dims = gf::GraphicsInfo::getMaxViewportDims();
-  std::printf("    GL_MAX_VIEWPORT_DIMS: %ix%i\n", dims.width, dims.height);
+  std::printf("\tGL_MAX_VIEWPORT_DIMS: %ix%i\n", dims.width, dims.height);
 
-  std::printf("    GL_SUBPIXEL_BITS: %i\n", gf::GraphicsInfo::getSubpixelBits());
+  std::printf("\tGL_SUBPIXEL_BITS: %i\n", gf::GraphicsInfo::getSubpixelBits());
 
   return 0;
 }
