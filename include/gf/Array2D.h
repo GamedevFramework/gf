@@ -22,6 +22,7 @@
 #define ARRAY2D_H
 
 #include <cassert>
+#include <utility>
 #include <vector>
 
 #include "Portability.h"
@@ -109,6 +110,16 @@ inline namespace v1 {
      * @brief Default move assignement
      */
     Array2D& operator=(Array2D&&) = default;
+
+    /**
+     * @brief Swap with another array
+     *
+     * @param other An other array
+     */
+    void swap(Array2D& other) {
+      std::swap(m_data, other.m_data);
+      std::swap(m_size, other.m_size);
+    }
 
     /**
      * @name Raw data access
