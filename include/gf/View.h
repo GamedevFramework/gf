@@ -333,14 +333,21 @@ inline namespace v1 {
     virtual void onSizeChange(Vector2f size);
 
     /**
+     * @brief Set the viewport, without calling onViewportChange()
      *
+     * This function is meant for adaptative views so that they can
+     * adapt the viewport without having a callback infinite loop.
+     *
+     * @param viewport The new viewport
      */
     void setViewportNoCallback(const RectF& viewport) {
       m_viewport = viewport;
     }
 
     /**
+     * @brief Callback when the viewport has just been changed
      *
+     * @param viewport The new viewport
      */
     virtual void onViewportChange(const RectF& viewport);
 
