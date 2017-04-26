@@ -20,28 +20,49 @@
  */
 #include <gf/Views.h>
 
-#include <iostream>
-
 #include <gf/Unused.h>
+#include <gf/VectorOps.h>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
 #endif
 
-  void StretchView::onScreenResize(Vector2u screenSize) {
-    gf::unused(screenSize);
+  /*
+   * StretchView
+   */
 
-    // nothing to do, viewport stays the same:
-    // {0.0f, 0.0f, 1.0f, 1.0f}
+  void StretchView::onScreenSizeChange(Vector2u screenSize) {
+    gf::unused(screenSize);
+    // nothing to do
   };
 
 
-  void FitView::onScreenResize(Vector2u screenSize) {
-    const Vector2f worldSize = getSize();
+  /*
+   * FitView
+   */
 
+  void FitView::onScreenSizeChange(Vector2u screenSize) {
+    m_localScreenSize = screenSize;
+    updateView();
+  };
+
+  void FitView::onSizeChange(Vector2f size) {
+    gf::unused(size);
+    updateView();
+  }
+
+  void FitView::onViewportChange(const RectF& viewport) {
+    m_localViewport = viewport;
+    updateView();
+  }
+
+  void FitView::updateView() {
+    const Vector2f worldSize = getSize();
     float worldRatio = worldSize.width / worldSize.height;
-    float screenRatio = static_cast<float>(screenSize.width) / static_cast<float>(screenSize.height);
+
+    const Vector2f viewportSize = m_localViewport.size * m_localScreenSize;
+    float screenRatio = viewportSize.width / viewportSize.height;
 
     RectF viewport;
 
@@ -63,64 +84,108 @@ inline namespace v1 {
       viewport.width = ratio;
     }
 
-    setViewport(viewport);
+    viewport.position = viewport.position * m_localViewport.size + m_localViewport.position;
+    viewport.size *= m_localViewport.size;
+
+    setViewportNoCallback(viewport);
+  }
+
+  /*
+   * FillView
+   */
+
+  void FillView::onScreenSizeChange(Vector2u screenSize) {
+    m_localScreenSize = screenSize;
+    updateView();
   };
 
+  void FillView::onSizeChange(Vector2f size) {
+    m_localSize = size;
+    updateView();
+  };
 
-  void FillView::onScreenResize(Vector2u screenSize) {
-    float worldRatio = m_worldSize.width / m_worldSize.height;
-    float screenRatio = static_cast<float>(screenSize.width) / static_cast<float>(screenSize.height);
+  void FillView::onViewportChange(const RectF& viewport) {
+    gf::unused(viewport);
+    updateView();
+  }
 
-    Vector2f actualWorldSize = m_worldSize;
+  void FillView::updateView() {
+    float worldRatio = m_localSize.width / m_localSize.height;
+
+    const Vector2f viewportSize = m_localScreenSize * getViewport().size;
+    float screenRatio = viewportSize.width / viewportSize.height;
+
+    Vector2f actualSize = m_localSize;
 
     if (screenRatio < worldRatio) {
       float ratio = screenRatio / worldRatio;
-      actualWorldSize.width *= ratio;
+      actualSize.width *= ratio;
     } else {
       float ratio = worldRatio / screenRatio;
-      actualWorldSize.height *= ratio;
+      actualSize.height *= ratio;
     }
 
-    setWorldSize(actualWorldSize);
-  };
-
-  void FillView::onWorldResize(Vector2f worldSize) {
-    resizeWorld(worldSize);
-  };
-
-  void FillView::resizeWorld(Vector2f worldSize) {
-    m_worldSize = worldSize;
+    setSizeNoCallback(actualSize);
   }
 
-  void ExtendView::onScreenResize(Vector2u screenSize) {
-    float worldRatio = m_worldSize.width / m_worldSize.height;
-    float screenRatio = static_cast<float>(screenSize.width) / static_cast<float>(screenSize.height);
 
-    Vector2f actualWorldSize = m_worldSize;
+  /*
+   * ExtendView
+   */
+
+  void ExtendView::onScreenSizeChange(Vector2u screenSize) {
+    m_localScreenSize = screenSize;
+    updateView();
+  };
+
+  void ExtendView::onSizeChange(Vector2f size) {
+    m_localSize = size;
+    updateView();
+  }
+
+  void ExtendView::onViewportChange(const RectF& viewport) {
+    gf::unused(viewport);
+    updateView();
+  }
+
+  void ExtendView::updateView() {
+    float worldRatio = m_localSize.width / m_localSize.height;
+
+    const Vector2f viewportSize = m_localScreenSize * getViewport().size;
+    float screenRatio = viewportSize.width / viewportSize.height;
+
+    Vector2f actualSize = m_localSize;
 
     if (screenRatio < worldRatio) {
       float ratio = screenRatio / worldRatio;
-      actualWorldSize.height /= ratio;
+      actualSize.height /= ratio;
     } else {
       float ratio = worldRatio / screenRatio;
-      actualWorldSize.width /= ratio;
+      actualSize.width /= ratio;
     }
 
-    setWorldSize(actualWorldSize);
+    setSizeNoCallback(actualSize);
+  }
+
+
+  /*
+   * ScreenView
+   */
+
+  void ScreenView::onScreenSizeChange(Vector2u screenSize) {
+    m_localScreenSize = screenSize;
+    updateView();
   };
 
-  void ExtendView::onWorldResize(Vector2f worldSize) {
-    resizeWorld(worldSize);
+  void ScreenView::onViewportChange(const RectF& viewport) {
+    gf::unused(viewport);
+    updateView();
   }
 
-  void ExtendView::resizeWorld(Vector2f worldSize) {
-    m_worldSize = worldSize;
-  }
-
-  void ScreenView::onScreenResize(Vector2u screenSize) {
-    RectF screen(0.0f, 0.0f, screenSize.width, screenSize.height);
+  void ScreenView::updateView() {
+    RectF screen({ 0.0f, 0.0f }, m_localScreenSize * getViewport().size);
     reset(screen);
-  };
+  }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

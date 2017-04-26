@@ -67,7 +67,7 @@ inline namespace v1 {
   void View::reset(const RectF& rect) {
     m_center = rect.getCenter();
     m_size = rect.getSize();
-    onWorldResize(m_size);
+    onSizeChange(m_size);
   }
 
   void View::rotate(float angle) {
@@ -80,13 +80,13 @@ inline namespace v1 {
 
   void View::zoom(float factor) {
     m_size *= factor;
-    onWorldResize(m_size);
+    onSizeChange(m_size);
   }
 
   void View::zoom(float factor, Vector2f fixed) {
     m_center += (fixed - m_center) * (1 - factor);
     m_size *= factor;
-    onWorldResize(m_size);
+    onSizeChange(m_size);
   }
 
   Matrix3f View::getTransform() const {
@@ -105,17 +105,23 @@ inline namespace v1 {
     return invert(getTransform());
   }
 
-  void View::onWorldResize(Vector2f worldSize) {
-    gf::unused(worldSize);
+  void View::onSizeChange(Vector2f size) {
+    gf::unused(size);
     // nothing by default
   }
+
+  void View::onViewportChange(const RectF& viewport) {
+    gf::unused(viewport);
+    // nothing by default
+  }
+
 
   /*
    * AdaptativeView
    */
 
   void AdaptativeView::setInitialScreenSize(Vector2u screenSize) {
-    onScreenResize(screenSize);
+    onScreenSizeChange(screenSize);
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

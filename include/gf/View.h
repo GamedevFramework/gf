@@ -149,7 +149,7 @@ inline namespace v1 {
      */
     void setSize(Vector2f size) {
       m_size = size;
-      onWorldResize(m_size);
+      onSizeChange(m_size);
     }
 
     /**
@@ -209,6 +209,7 @@ inline namespace v1 {
      */
     void setViewport(const RectF& viewport) {
       m_viewport = viewport;
+      onViewportChange(viewport);
     }
 
     /**
@@ -311,14 +312,14 @@ inline namespace v1 {
 
   protected:
     /**
-     * @brief Set the world size, without calling onWorldResize()
+     * @brief Set the world size, without calling onSizeChange()
      *
      * This function is meant for adaptative views so that they can
      * adapt the world size without having a callback infinite loop.
      *
      * @param size The new world size
      */
-    void setWorldSize(Vector2f size) {
+    void setSizeNoCallback(Vector2f size) {
       m_size = size;
     }
 
@@ -327,9 +328,21 @@ inline namespace v1 {
      *
      * This callback is called when setSize() is called.
      *
-     * @param worldSize The new size of the visible world
+     * @param size The new size of the visible world
      */
-    virtual void onWorldResize(Vector2f worldSize);
+    virtual void onSizeChange(Vector2f size);
+
+    /**
+     *
+     */
+    void setViewportNoCallback(const RectF& viewport) {
+      m_viewport = viewport;
+    }
+
+    /**
+     *
+     */
+    virtual void onViewportChange(const RectF& viewport);
 
   private:
     Vector2f m_center;
@@ -399,18 +412,18 @@ inline namespace v1 {
     }
 
     /**
-     * @brief Callback when the screen has just been resized
-     *
-     * @param screenSize The new size of the screen
-     */
-    virtual void onScreenResize(Vector2u screenSize) = 0;
-
-    /**
      * @brief Set the initial screen size
      *
      * @param screenSize The initial size of the screen
      */
     void setInitialScreenSize(Vector2u screenSize);
+
+    /**
+     * @brief Callback when the screen has just been resized
+     *
+     * @param screenSize The new size of the screen
+     */
+    virtual void onScreenSizeChange(Vector2u screenSize) = 0;
 
   };
 

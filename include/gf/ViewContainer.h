@@ -60,7 +60,7 @@ inline namespace v1 {
     /**
      * @brief Update the views thanks to the event
      *
-     * Internally it calls onScreenResize() if a resize event occurs.
+     * Internally it calls onScreenSizeChange() if a resize event occurs.
      *
      * @param event An event
      */
@@ -71,9 +71,9 @@ inline namespace v1 {
      *
      * @param screenSize The new size of the screen
      *
-     * @sa gf::AdaptativeView::onScreenResize()
+     * @sa gf::AdaptativeView::onScreenSizeChange()
      */
-    void onScreenResize(Vector2u screenSize);
+    void onScreenSizeChange(Vector2u screenSize);
 
     /**
      * @brief Set the initial screen size
