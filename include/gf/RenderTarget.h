@@ -31,6 +31,7 @@
 #include "Portability.h"
 #include "PrimitiveType.h"
 #include "Range.h"
+#include "Region.h"
 #include "RenderStates.h"
 #include "Shader.h"
 #include "View.h"
@@ -64,6 +65,7 @@ inline namespace v1 {
    */
   class GF_API RenderTarget {
   public:
+
     /**
      * @brief Default constructor
      */
@@ -97,18 +99,18 @@ inline namespace v1 {
      */
 
     /**
-     * @brief Tell if the scissor test is enabled
+     * @brief Get the current canonical scissor box
      *
-     * @return True if the scissor test is enabled
+     * @return The current canonical scissor box
      */
-    bool getScissorTest();
+    Region getCanonicalScissorBox();
 
     /**
-     * @brief Enable or disable the scissor test
+     * @brief Define the canonical scissor box
      *
-     * @param scissor True to enable, false to disable the test
+     * @param box The new canonical scissor box
      */
-    void setScissorTest(bool scissor = true);
+    void setCanonicalScissorBox(const Region& box);
 
     /**
      * @brief Get the current scissor box
@@ -120,7 +122,7 @@ inline namespace v1 {
     /**
      * @brief Define the scissor box
      *
-     * @param box The scissor box
+     * @param box The new scissor box
      */
     void setScissorBox(const RectI& box);
 
@@ -247,9 +249,7 @@ inline namespace v1 {
      *
      * @sa getView()
      */
-    void setView(const View& view) {
-      m_view = view;
-    }
+    void setView(const View& view);
 
     /**
      * @brief Get the view currently in use in the render target
@@ -261,6 +261,20 @@ inline namespace v1 {
     const View& getView() const {
       return m_view;
     }
+
+    /**
+     * @brief Get the canonical viewport of a view, applied to this render target
+     *
+     * The viewport is defined in the view as a ratio, this function
+     * simply applies this ratio to the current dimensions of the
+     * render target to calculate the pixels rectangle that the viewport
+     * actually covers in the target.
+     *
+     * @param view The view for which we want to compute the viewport
+     *
+     * @return Canonical viewport rectangle, expressed in pixels
+     */
+    Region getCanonicalViewport(const View& view) const;
 
     /**
      * @brief Get the viewport of a view, applied to this render target

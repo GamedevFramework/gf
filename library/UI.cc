@@ -1182,7 +1182,7 @@ inline namespace v1 {
     auto vertices = static_cast<const Vertex *>(nk_buffer_memory_const(&vertexBuffer));
     auto indices = static_cast<const uint16_t *>(nk_buffer_memory_const(&elementBuffer));
 
-    target.setScissorTest(true);
+    Region box = target.getCanonicalScissorBox();
 
     for (auto command = nk__draw_begin(ctx, cmds); command != nullptr; command = nk__draw_next(command, cmds, ctx)) {
       if (!command->elem_count) {
@@ -1196,7 +1196,7 @@ inline namespace v1 {
       indices += command->elem_count;
     }
 
-    target.setScissorTest(false);
+    target.setCanonicalScissorBox(box);
 
     nk_buffer_free(&elementBuffer);
     nk_buffer_free(&vertexBuffer);

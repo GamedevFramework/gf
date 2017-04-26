@@ -38,6 +38,8 @@
 #include <gf/Sleep.h>
 #include <gf/Vector.h>
 
+#include "priv/Debug.h"
+
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
@@ -97,6 +99,11 @@ inline namespace v1 {
     auto flags = getFlagsFromHints(hints);
     m_window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, size.width, size.height, flags);
     m_context = createContextFromWindow(m_window);
+
+    if (m_context) {
+      glCheck(glEnable(GL_BLEND));
+      glCheck(glEnable(GL_SCISSOR_TEST));
+    }
   }
 
   Window::~Window() {
