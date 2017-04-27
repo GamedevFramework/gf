@@ -47,8 +47,8 @@ inline namespace v1 {
    * - @f$ 0 \leq \mathtt{pos.x} = \mathtt{pos.col} < \mathtt{size.width} = \mathtt{size.col} @f$
    * - @f$ 0 \leq \mathtt{pos.y} = \mathtt{pos.row} < \mathtt{size.height} = \mathtt{size.row} @f$
    *
-   * Some convinient visitors are provided to visit the four neighbours (up,
-   * down, left and right), or the eight neighbours.
+   * Some convinient visitors are provided to visit the four neighbors (up,
+   * down, left and right), or the eight neighbors.
    *
    * @sa gf::Matrix
    */
@@ -249,18 +249,18 @@ inline namespace v1 {
      */
 
     /**
-     * @brief Visit the 4 neighbours of a given position
+     * @brief Visit the 4 neighbors of a given position
      *
-     * This function calls a callback function for every neighbour in the
-     * vertical and horizontal direction. The function checks if the neighbour
+     * This function calls a callback function for every neighbor in the
+     * vertical and horizontal direction. The function checks if the neighbor
      * actually exists.
      *
      * The callback function has the following prototype:
      *
      * ~~~{.cc}
      * void callback(Vector2u pos, T value);
-     * // pos is the position of the neighbour
-     * // value is the value of the neighbour
+     * // pos is the position of the neighbor
+     * // value is the value of the neighbor
      * ~~~
      *
      * The callback function can be a simple function but also a
@@ -270,41 +270,41 @@ inline namespace v1 {
      * @param func A callback function
      */
     template<typename Func>
-    void visit4Neighbours(Vector2u pos, Func func) {
+    void visit4Neighbors(Vector2u pos, Func func) {
       if (pos.row > 0) {
-        Vector2u neighbour{ pos.col, pos.row - 1 };
-        func(neighbour, get(neighbour));
+        Vector2u neighbor{ pos.col, pos.row - 1 };
+        func(neighbor, get(neighbor));
       }
 
       if (pos.row < m_size.row - 1) {
-        Vector2u neighbour{ pos.col, pos.row + 1 };
-        func(neighbour, get(neighbour));
+        Vector2u neighbor{ pos.col, pos.row + 1 };
+        func(neighbor, get(neighbor));
       }
 
       if (pos.col > 0) {
-        Vector2u neighbour{ pos.col - 1, pos.row };
-        func(neighbour, get(neighbour));
+        Vector2u neighbor{ pos.col - 1, pos.row };
+        func(neighbor, get(neighbor));
       }
 
       if (pos.col < m_size.col - 1) {
-        Vector2u neighbour{ pos.col + 1, pos.row };
-        func(neighbour, get(neighbour));
+        Vector2u neighbor{ pos.col + 1, pos.row };
+        func(neighbor, get(neighbor));
       }
     }
 
     /**
-     * @brief Visit the 4 neighbours of a given position
+     * @brief Visit the 4 neighbors of a given position
      *
-     * This function calls a callback function for every neighbour in the
-     * vertical and horizontal direction. The function checks if the neighbour
+     * This function calls a callback function for every neighbor in the
+     * vertical and horizontal direction. The function checks if the neighbor
      * actually exists.
      *
      * The callback function has the following prototype:
      *
      * ~~~{.cc}
      * void callback(Vector2u pos, T value);
-     * // pos is the position of the neighbour
-     * // value is the value of the neighbour
+     * // pos is the position of the neighbor
+     * // value is the value of the neighbor
      * ~~~
      *
      * The callback function can be a simple function but also a
@@ -314,41 +314,41 @@ inline namespace v1 {
      * @param func A callback function
      */
     template<typename Func>
-    void visit4Neighbours(Vector2u pos, Func func) const {
+    void visit4Neighbors(Vector2u pos, Func func) const {
       if (pos.row > 0) {
-        Vector2u neighbour{ pos.col, pos.row - 1 };
-        func(neighbour, get(neighbour));
+        Vector2u neighbor{ pos.col, pos.row - 1 };
+        func(neighbor, get(neighbor));
       }
 
       if (pos.row < m_size.row - 1) {
-        Vector2u neighbour{ pos.col, pos.row + 1 };
-        func(neighbour, get(neighbour));
+        Vector2u neighbor{ pos.col, pos.row + 1 };
+        func(neighbor, get(neighbor));
       }
 
       if (pos.col > 0) {
-        Vector2u neighbour{ pos.col - 1, pos.row };
-        func(neighbour, get(neighbour));
+        Vector2u neighbor{ pos.col - 1, pos.row };
+        func(neighbor, get(neighbor));
       }
 
       if (pos.col < m_size.col - 1) {
-        Vector2u neighbour{ pos.col + 1, pos.row };
-        func(neighbour, get(neighbour));
+        Vector2u neighbor{ pos.col + 1, pos.row };
+        func(neighbor, get(neighbor));
       }
     }
 
     /**
-     * @brief Visit the 8 neighbours of a given position
+     * @brief Visit the 8 neighbors of a given position
      *
-     * This function calls a callback function for every neighbour in the
+     * This function calls a callback function for every neighbor in the
      * vertical, horizontal and diagonal direction. The function checks if the
-     * neighbour actually exists.
+     * neighbor actually exists.
      *
      * The callback function has the following prototype:
      *
      * ~~~{.cc}
      * void callback(Vector2u pos, T value);
-     * // pos is the position of the neighbour
-     * // value is the value of the neighbour
+     * // pos is the position of the neighbor
+     * // value is the value of the neighbor
      * ~~~
      *
      * The callback function can be a simple function but also a
@@ -358,7 +358,7 @@ inline namespace v1 {
      * @param func A callback function
      */
     template<typename Func>
-    void visit8Neighbours(Vector2u pos, Func func) {
+    void visit8Neighbors(Vector2u pos, Func func) {
       for (int i = -1; i <= 1; ++i) {
         if (pos.row == 0 && i == -1) {
           continue;
@@ -378,26 +378,26 @@ inline namespace v1 {
           }
 
           if (i != 0 || j != 0) {
-            Vector2u neighbour{ pos.col + j, pos.row + i };
-            func(neighbour, get(neighbour));
+            Vector2u neighbor{ pos.col + j, pos.row + i };
+            func(neighbor, get(neighbor));
           }
         }
       }
     }
 
     /**
-     * @brief Visit the 8 neighbours of a given position
+     * @brief Visit the 8 neighbors of a given position
      *
-     * This function calls a callback function for every neighbour in the
+     * This function calls a callback function for every neighbor in the
      * vertical, horizontal and diagonal direction. The function checks if the
-     * neighbour actually exists.
+     * neighbor actually exists.
      *
      * The callback function has the following prototype:
      *
      * ~~~{.cc}
      * void callback(Vector2u pos, T value);
-     * // pos is the position of the neighbour
-     * // value is the value of the neighbour
+     * // pos is the position of the neighbor
+     * // value is the value of the neighbor
      * ~~~
      *
      * The callback function can be a simple function but also a
@@ -407,7 +407,7 @@ inline namespace v1 {
      * @param func A callback function
      */
     template<typename Func>
-    void visit8Neighbours(Vector2u pos, Func func) const {
+    void visit8Neighbors(Vector2u pos, Func func) const {
       for (int i = -1; i <= 1; ++i) {
         if (pos.row == 0 && i == -1) {
           continue;
@@ -427,8 +427,8 @@ inline namespace v1 {
           }
 
           if (i != 0 || j != 0) {
-            Vector2u neighbour{ pos.col + j, pos.row + i };
-            func(neighbour, get(neighbour));
+            Vector2u neighbor{ pos.col + j, pos.row + i };
+            func(neighbor, get(neighbor));
           }
         }
       }
