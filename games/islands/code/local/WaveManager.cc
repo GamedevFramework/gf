@@ -4,6 +4,7 @@
 #include <gf/Particles.h>
 #include <gf/RenderTarget.h>
 #include <gf/Shapes.h>
+#include <gf/Unused.h>
 
 #include "Messages.h"
 #include "Sea.h"
@@ -23,8 +24,6 @@ namespace bi {
   static constexpr float BubbleInitialRadius = 6.0f;
   static constexpr float BubbleRadiusIncrease = 10.0f;
   static constexpr float BubbleAdvance = 20.0f;
-
-  static constexpr float LimitSound = 1000.0f;
 
   WaveManager::WaveManager()
   : gf::Entity(15)
@@ -128,6 +127,8 @@ namespace bi {
 
   gf::MessageStatus WaveManager::onHeroPosition(gf::Id id, gf::Message *msg) {
     assert(id == HeroPosition::type);
+    gf::unused(id);
+
     auto hero = static_cast<HeroPosition*>(msg);
     m_hero = hero->position;
     return gf::MessageStatus::Keep;
