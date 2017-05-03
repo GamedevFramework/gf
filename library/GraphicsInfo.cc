@@ -245,10 +245,10 @@ inline namespace v1 {
 
     std::vector<GLint> formats(count);
 
-	if (count > 0) {
+    if (count > 0) {
       glCheck(glGetIntegerv(GL_COMPRESSED_TEXTURE_FORMATS, &formats[0]));
       std::sort(formats.begin(), formats.end());
-	}
+    }
 
     std::vector<Format> ret;
 
@@ -270,10 +270,10 @@ inline namespace v1 {
 
     std::vector<GLint> formats(count);
 
-	if (count > 0) {
+    if (count > 0) {
       glCheck(glGetIntegerv(GL_SHADER_BINARY_FORMATS, &formats[0]));
       std::sort(formats.begin(), formats.end());
-	}
+    }
 
     std::vector<Format> ret;
 
