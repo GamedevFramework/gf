@@ -74,6 +74,7 @@ else()
     Curves.cc
     Direction.cc
     Drawable.cc
+    Easings.cc
     Effects.cc
     Entity.cc
     EntityContainer.cc
