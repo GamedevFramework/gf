@@ -44,6 +44,7 @@
 #include "Curves.cc"
 #include "Direction.cc"
 #include "Drawable.cc"
+#include "Easings.cc"
 #include "Effects.cc"
 #include "Entity.cc"
 #include "EntityContainer.cc"
