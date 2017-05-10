@@ -60,14 +60,14 @@ inline namespace v1 {
   /*
    * smooth
    */
-  float smooth(float t) {
+  float Ease::smooth(float t) {
     return gf::cubicStep(t);
   }
 
   /*
    * smoother
    */
-  float smoother(float t) {
+  float Ease::smoother(float t) {
     return gf::quinticStep(t);
   }
 
