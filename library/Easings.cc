@@ -75,8 +75,10 @@ inline namespace v1 {
    * quad
    */
 
-  static constexpr float quad(float t) {
-    return t * t;
+  namespace {
+    constexpr float quad(float t) {
+      return t * t;
+    }
   }
 
   float Ease::quadIn(float t) {
@@ -99,8 +101,10 @@ inline namespace v1 {
    * cubic
    */
 
-  static constexpr float cubic(float t) {
-    return t * t * t;
+  namespace {
+    constexpr float cubic(float t) {
+      return t * t * t;
+    }
   }
 
   float Ease::cubicIn(float t) {
@@ -123,8 +127,10 @@ inline namespace v1 {
    * quart
    */
 
-  static constexpr float quart(float t) {
-    return t * t * t * t;
+  namespace {
+    constexpr float quart(float t) {
+      return t * t * t * t;
+    }
   }
 
   float Ease::quartIn(float t) {
@@ -147,8 +153,10 @@ inline namespace v1 {
    * quint
    */
 
-  static constexpr float quint(float t) {
-    return t * t * t * t * t;
+  namespace {
+    constexpr float quint(float t) {
+      return t * t * t * t * t;
+    }
   }
 
   float Ease::quintIn(float t) {
@@ -171,8 +179,10 @@ inline namespace v1 {
    * circ
    */
 
-  static inline float circ(float t) {
-    return 1 - std::sqrt(1 - t * t);
+  namespace {
+    float circ(float t) {
+      return 1 - std::sqrt(1 - t * t);
+    }
   }
 
   float Ease::circIn(float t) {
@@ -195,10 +205,11 @@ inline namespace v1 {
    * sine
    */
 
-  static inline float sine(float t) {
-    return (1 - std::cos(Pi2 * t));
+  namespace {
+    inline float sine(float t) {
+      return (1 - std::cos(Pi2 * t));
+    }
   }
-
   float Ease::sineIn(float t) {
     return GenericEasing<sine>::easeIn(t);
   }
@@ -219,10 +230,12 @@ inline namespace v1 {
    * back
    */
 
-  static inline float back(float t) {
-    static constexpr float C1 = 1.70158f;
-    static constexpr float C2 = 1 + C1;
-    return t * t * (C2 * t - C1);
+  namespace {
+    inline float back(float t) {
+      static constexpr float C1 = 1.70158f;
+      static constexpr float C2 = 1 + C1;
+      return t * t * (C2 * t - C1);
+    }
   }
 
   float Ease::backIn(float t) {
@@ -245,25 +258,27 @@ inline namespace v1 {
    * bounce
    */
 
-  static inline float bounce(float t) {
-    static constexpr float C1 = 1.0f / 2.75f;
-    static constexpr float C2 = 7.5625f; // = 2.75f * 2.75f
+  namespace {
+    inline float bounce(float t) {
+      static constexpr float C1 = 1.0f / 2.75f;
+      static constexpr float C2 = 7.5625f; // = 2.75f * 2.75f
 
-    const float u = 1 - t;
+      const float u = 1 - t;
 
-    if (u < 1 * C1) {
-      return 1 - C2 * u * u;
+      if (u < 1 * C1) {
+        return 1 - C2 * u * u;
+      }
+
+      if (u < 2 * C1) {
+        return 1 - (C2 * gf::square(u - 1.5f * C1) + 0.75f);
+      }
+
+      if (u < 2.5f * C1) {
+        return 1 - (C2 * gf::square(u - 2.25f * C1) + 0.9375f);
+      }
+
+      return 1 - (C2 * gf::square(u - 2.625f * C1) + 0.984375);
     }
-
-    if (u < 2 * C1) {
-      return 1 - (C2 * gf::square(u - 1.5f * C1) + 0.75f);
-    }
-
-    if (u < 2.5f * C1) {
-      return 1 - (C2 * gf::square(u - 2.25f * C1) + 0.9375f);
-    }
-
-    return 1 - (C2 * gf::square(u - 2.625f * C1) + 0.984375);
   }
 
   float Ease::bounceIn(float t) {
@@ -286,12 +301,14 @@ inline namespace v1 {
    * elastic
    */
 
-  static inline float elastic(float t) {
-    static constexpr float C0 = 0.3f;
+  namespace {
+    inline float elastic(float t) {
+      static constexpr float C0 = 0.3f;
 
-    const float u = t - 1;
+      const float u = t - 1;
 
-    return - std::pow(2, 10 * u) * std::sin((u - C0 / 4) * 2 * Pi / C0);
+      return -std::pow(2, 10 * u) * std::sin((u - C0 / 4) * 2 * Pi / C0);
+    }
   }
 
   float Ease::elasticIn(float t) {
@@ -314,8 +331,10 @@ inline namespace v1 {
    * expo
    */
 
-  static inline float expo(float t) {
-    return t == 0.0f ? 0.0f : std::pow(2, 10 * (t - 1));
+  namespace {
+    inline float expo(float t) {
+      return t == 0.0f ? 0.0f : std::pow(2, 10 * (t - 1));
+    }
   }
 
   float Ease::expoIn(float t) {
