@@ -32,6 +32,8 @@ inline namespace v1 {
   /**
    * @ingroup window
    * @brief Modifier enumeration
+   *
+   * @sa gf::Modifiers
    */
   enum class Mod : unsigned {
     Shift   = 0x0001, ///< Is the Shift key pressed?
@@ -42,7 +44,9 @@ inline namespace v1 {
 
   /**
    * @ingroup window
-   * @brief Keyboard modifiers
+   * @brief Flags for keyboard modifiers
+   *
+   * @sa gf::Mod
    */
   using Modifiers = Flags<Mod>;
 

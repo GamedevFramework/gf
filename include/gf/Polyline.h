@@ -42,9 +42,12 @@ inline namespace v1 {
    */
   class GF_API Polyline {
   public:
+    /**
+     * @brief The type of polyline
+     */
     enum Type {
-      Chain,
-      Loop,
+      Chain,  ///< The polyline is open
+      Loop,   ///< The polyline is closed
     };
 
     /**
