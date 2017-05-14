@@ -9,16 +9,17 @@
 @defgroup core Core classes and functions
 @brief All the core generic classes and functions.
 
-- Math: gf::Vector, gf::Matrix, gf::Rect, gf::Circ, gf::Range, gf::Direction, gf::Orientation, gf::Array2D
+- Math: gf::Vector, gf::Matrix, gf::Range, gf::Direction, gf::Orientation, gf::Array2D
+- Geometry: gf::Rect, gf::Circ, gf::Polygon, gf::Polyligne
 - Stream: gf::InputStream, gf::FileInputStream, gf::MemoryInputStream
-- Utility: gf::Clock, gf::Time, gf::Random, gf::SystemInfo, gf::Singleton, gf::Flags
+- Utility: gf::Clock, gf::Time, gf::Random, gf::SystemInfo, gf::GraphicsInfo, gf::Singleton, gf::Flags
 - Noise: gf::Noise2D / gf::Noise3D, gf::GradientNoise2D / gf::GradientNoise3D, gf::FractalNoise2D / gf::FractalNoise3D, gf::PerlinNoise2D / gf::PerlinNoise3D, gf::SimplexNoise2D, gf::OpenSimplexNoise2D / gf::OpenSimplexNoise3D, gf::WorleyNoise2D
 
 @defgroup window Window classes
 @brief All the classes related to window management.
 
 - Monitor management: gf::Monitor, gf::VideoMode
-- Window management: gf::Window, gf::WindowHints, gf::WindowGeometryTracker
+- Window management: gf::Window, gf::WindowHints, gf::Coordinates
 - Input: gf::Event, gf::Control, gf::Action
 - Device: gf::Keyboard, gf::Gamepad, gf::Modifiers
 
