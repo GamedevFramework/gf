@@ -1373,6 +1373,13 @@ inline namespace v1 {
     bool isWidgetHovered();
 
     /**
+     * @brief Create a horizontal spacing to fill some columns
+     *
+     * @param cols The number of columns.
+     */
+    void spacing(int cols);
+
+    /**
      * @}
      */
 

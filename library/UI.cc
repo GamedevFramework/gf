@@ -998,6 +998,11 @@ inline namespace v1 {
     return nk_widget_is_hovered(&m_impl->ctx);
   }
 
+  void UI::spacing(int cols) {
+    setState(State::Setup);
+    nk_spacing(&m_impl->ctx, cols);
+  }
+
   /*
    * Predefined styles from nuklear;
    * nuklear/demo/style.c
