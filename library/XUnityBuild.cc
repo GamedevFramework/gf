@@ -27,6 +27,8 @@
 #include "data/generated.cc"
 
 #include "Action.cc"
+#include "Activities.cc"
+#include "Activity.cc"
 #include "AnimatedSprite.cc"
 #include "Animation.cc"
 #include "AssetManager.cc"

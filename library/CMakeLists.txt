@@ -57,6 +57,8 @@ if (GF_SINGLE_COMPILTATION_UNIT)
 else()
   add_library(gf0 SHARED
     Action.cc
+    Activities.cc
+    Activity.cc
     AnimatedSprite.cc
     Animation.cc
     AssetManager.cc
