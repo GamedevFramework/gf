@@ -32,12 +32,19 @@ inline namespace v1 {
 
   /**
    * @ingroup graphics
-   * @brief
+   * @brief The `gf` logo
    *
+   * This class can show the `gf` logo without loading any font. It is loaded
+   * in a texture in the constructor so that you can use it wherever you want.
    *
+   * If you use `gf` and like it, do not hesitate to show this logo in your
+   * game, e.g. on the splash screen. Of course, it is *not* mandatory.
    */
   class GF_API Logo : public Transformable {
   public:
+    /**
+     * @brief Constructor
+     */
     Logo();
 
     /**
