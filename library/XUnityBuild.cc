@@ -60,6 +60,7 @@
 #include "Keyboard.cc"
 #include "Library.cc"
 #include "Log.cc"
+#include "Logo.cc"
 #include "Math.cc"
 #include "Matrix.cc"
 #include "MessageManager.cc"

@@ -90,6 +90,7 @@ else()
     Keyboard.cc
     Library.cc
     Log.cc
+    Logo.cc
     Math.cc
     Matrix.cc
     MessageManager.cc

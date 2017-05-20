@@ -22,29 +22,19 @@
 
 #include <gf/Event.h>
 #include <gf/Font.h>
+#include <gf/Logo.h>
 #include <gf/RenderWindow.h>
 #include <gf/Sprite.h>
 #include <gf/Text.h>
 #include <gf/Window.h>
 
 int main() {
-  gf::Window window("Logo", { 200, 200 });
+  gf::Window window("Logo", { 166, 169 });
   gf::RenderWindow renderer(window);
 
-  gf::Font font;
-  if (!font.loadFromFile("16_DejaVuSans.ttf")) {
-    return EXIT_FAILURE;
-  }
-
-  gf::Text text;
-  text.setColor(gf::Color::Orange);
-  text.setOutlineThickness(12.0f);
-  text.setOutlineColor(gf::Color::Azure);
-  text.setString("gf");
-  text.setCharacterSize(150);
-  text.setFont(font);
-  text.setPosition({ 100, 100 });
-  text.setAnchor(gf::Anchor::Center);
+  gf::Logo logo;
+  logo.setPosition({ 0, 0 });
+  logo.setAnchor(gf::Anchor::TopLeft);
 
   std::cout << "Gamedev Framework (gf) example #98: Logo\n";
   std::cout << "This example prints the logo of Gamedev Framework (gf)\n";
@@ -76,7 +66,7 @@ int main() {
     }
 
     renderer.clear();
-    renderer.draw(text);
+    renderer.draw(logo);
     renderer.display();
   }
 
