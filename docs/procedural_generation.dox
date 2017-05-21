@@ -12,9 +12,22 @@ Gamedev Framework (gf) provides some useful tools for [procedural generation](ht
 
 A coherent noise is a pseudo-random function. It can be used to create textures, or maps. The most well-known type of noise is probably Perlin noise. Noise functions, in general, can be the basic bricks for procedural generation.
 
+Noises classification:
+
+- Lattice based:
+  - Gradient based:
+    - [Gradient noise](https://en.wikipedia.org/wiki/Gradient_noise)
+    - [Simplex noise](https://en.wikipedia.org/wiki/Simplex_noise)
+    - [OpenSimplex noise](https://en.wikipedia.org/wiki/OpenSimplex_noise)
+    - [Wavelet noise](https://en.wikipedia.org/wiki/Wavelet_noise)
+  - Value based:
+    - [Value noise](https://en.wikipedia.org/wiki/Value_noise)
+- Point based:
+  - [Worley noise](https://en.wikipedia.org/wiki/Worley_noise)
+
 @sa [What is coherent noise? - libnoise](http://libnoise.sourceforge.net/coherentnoise/index.html)
 
-@subsection pcg_noise_list List of noise in `gf`
+@subsection pcg_noise_list List of noises
 
 Basic noise:
 
@@ -40,11 +53,6 @@ Noise adapters:
 
 The famous Perlin noise is just the combinaison of a fractal noise and a gradient noise but has its own classes: gf::PerlinNoise2D and gf::PerlinNoise3D.
 
-@sa [Value noise - Wikipedia](https://en.wikipedia.org/wiki/Value_noise)
-@sa [Gradient noise - Wikipedia](https://en.wikipedia.org/wiki/Gradient_noise)
-@sa [Simplex noise - Wikipedia](https://en.wikipedia.org/wiki/Simplex_noise)
-@sa [OpenSimplex noise - Wikipedia](https://en.wikipedia.org/wiki/OpenSimplex_noise)
-@sa [Perlin noise - Wikipedia](https://en.wikipedia.org/wiki/Perlin_noise)
 
 @subsection pcg_noise_gallery Gallery
 
