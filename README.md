@@ -18,17 +18,19 @@ Gamedev Framework (gf) is very open to contributions. See [the contribution guid
 
 ## Build status
 
-- Travis CI: [![Build Status](https://travis-ci.org/GamedevFramework/gf.svg?branch=develop)](https://travis-ci.org/GamedevFramework/gf)
-- AppVeyor: [![Build status](https://ci.appveyor.com/api/projects/status/orf21jbkpoweigjf?svg=true)](https://ci.appveyor.com/project/jube/gf)
+| Service | Status |
+|---------|--------|
+| Travis CI | [![Build Status](https://travis-ci.org/GamedevFramework/gf.svg?branch=develop)](https://travis-ci.org/GamedevFramework/gf) |
+| AppVeyor | [![Build status](https://ci.appveyor.com/api/projects/status/orf21jbkpoweigjf?svg=true)](https://ci.appveyor.com/project/jube/gf) |
 
 ## Quick install
 
 You have to install the following dependencies:
 
-- [SDL2](https://www.libsdl.org/) >= 2.0.2
-- [Boost Filesystem](http://www.boost.org/doc/libs/release/libs/filesystem/) >= 1.55
-- [Boost String Algorithms](http://www.boost.org/doc/libs/release/libs/algorithm/string/) >= 1.55
-- [Freetype](http://freetype.org/) >= 2.5.2
+- [SDL2](https://www.libsdl.org/) >= 2.0.2 (zlib/libpng license)
+- [Boost Filesystem](http://www.boost.org/doc/libs/release/libs/filesystem/) >= 1.55 (Boost license)
+- [Boost String Algorithms](http://www.boost.org/doc/libs/release/libs/algorithm/string/) >= 1.55 (Boost license)
+- [Freetype](http://freetype.org/) >= 2.5.2 (FreeType license)
 - [CMake](https://cmake.org/) >= 3.0.2
 
 For Debian/Ubuntu:
