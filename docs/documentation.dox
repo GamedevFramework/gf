@@ -15,12 +15,12 @@
     - @ref math
     - @ref vectors_matrices_transforms
     - @ref singletons
-    - @ref noise
   2. Graphics classes
     - @ref events_controls_actions
     - @ref shader
   3. Game classes
     - @ref messages
+    - @ref pcg
 4. Developper's corner
   - @ref devel
   - @ref opengl
