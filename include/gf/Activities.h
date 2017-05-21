@@ -22,6 +22,7 @@
 #define GF_ACTIVITIES_H
 
 #include <functional>
+#include <vector>
 
 #include "Activity.h"
 #include "Portability.h"
