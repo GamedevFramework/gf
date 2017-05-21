@@ -68,12 +68,12 @@ Gamedev Framework (gf) is licensed under the terms and conditions of the [zlib/l
     - @ref math
     - @ref vectors_matrices_transforms
     - @ref singletons
+    - @ref pcg
   2. Graphics classes
     - @ref events_controls_actions
     - @ref shader
   3. Game classes
     - @ref messages
-    - @ref pcg
 
 @section source Source
 
