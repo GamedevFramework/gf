@@ -367,6 +367,7 @@ inline namespace v1 {
    * @ingroup core
    * @brief Wavelet 3D noise
    *
+   * @sa [Wavelet Noise. Robert L. Cook, Tony DeRose, Pixar Animation Studios.](https://graphics.pixar.com/library/WaveletNoise/paper.pdf)
    */
   class GF_API WaveletNoise3D : public Noise3D {
   public:
