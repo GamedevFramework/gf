@@ -30,6 +30,10 @@ The gf::sign() function computes the [sign](https://en.wikipedia.org/wiki/Sign_f
 
 @f[ \text{sign}(x) = \begin{cases} -1 & \text{if $x < 0$} \\ 0 & \text{if $x = 0$} \\ 1 & \text{if $x > 0$} \end{cases} @f]
 
+The gf::absdiff() function computes the [absolute difference](https://en.wikipedia.org/wiki/Absolute_difference) of two values.
+
+@f[ \text{absdiff}(x_1, x_2) = | x_1 - x_2 | @f]
+
 @subsection math_steps Step functions
 
 A step @f$ f @f$ is a (mathematical) function which has the following properties:
