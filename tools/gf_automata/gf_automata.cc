@@ -233,8 +233,8 @@ int main() {
 
   gf::ViewContainer views;
 
-  gf::ExtendView automatonView(gf::RectF( { 0.0f, 0.0f }, { Size, Size }));
-  automatonView.setViewport(gf::RectF({ 0.0f, 0.0f }, { ViewportX, 1.0f }));
+  gf::ExtendView automatonView(gf::RectF(0.0f, 0.0f, Size, Size));
+  automatonView.setViewport(gf::RectF(0.0f, 0.0f, ViewportX, 1.0f));
   views.addView(automatonView);
 
   gf::ScreenView uiView;

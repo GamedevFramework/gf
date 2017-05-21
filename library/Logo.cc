@@ -637,7 +637,7 @@ inline namespace v1 {
 
     Image exportToImage() {
       Image image;
-      image.create({ BoundsWidth, BoundsHeight });
+      image.create(Vector2u(BoundsWidth, BoundsHeight));
 
       for (int y = 0; y < BoundsHeight; ++y) {
         for (int x = 0; x < BoundsWidth; ++x) {
@@ -686,10 +686,10 @@ inline namespace v1 {
   void Logo::draw(RenderTarget& target, RenderStates states) {
     Vertex vertices[4];
 
-    vertices[0].position = { 0.0f,        0.0f         };
-    vertices[1].position = { BoundsWidth, 0.0f         };
-    vertices[2].position = { 0.0f,        BoundsHeight };
-    vertices[3].position = { BoundsWidth, BoundsHeight };
+    vertices[0].position = Vector2f(0.0f,        0.0f        );
+    vertices[1].position = Vector2f(BoundsWidth, 0.0f        );
+    vertices[2].position = Vector2f(0.0f,        BoundsHeight);
+    vertices[3].position = Vector2f(BoundsWidth, BoundsHeight);
 
     vertices[0].texCoords = { 0.0f, 0.0f };
     vertices[1].texCoords = { 1.0f, 0.0f };
