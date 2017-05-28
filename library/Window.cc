@@ -357,7 +357,7 @@ inline namespace v1 {
         }
 
         switch (in->window.event) {
-          case SDL_WINDOWEVENT_RESIZED:
+          case SDL_WINDOWEVENT_SIZE_CHANGED:
             out.type = EventType::Resized;
             out.size.width = in->window.data1;
             out.size.height = in->window.data2;
