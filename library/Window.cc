@@ -90,14 +90,14 @@ inline namespace v1 {
     return context;
   }
 
-  Window::Window(const std::string& title, Vector2u size, WindowFlags hints)
+  Window::Window(StringRef title, Vector2u size, WindowFlags hints)
   : m_window(nullptr)
   , m_context(nullptr)
   , m_shouldClose(false)
   , m_isFullscreen(false)
   {
     auto flags = getFlagsFromHints(hints);
-    m_window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, size.width, size.height, flags);
+    m_window = SDL_CreateWindow(title.getData(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, size.width, size.height, flags);
     m_context = createContextFromWindow(m_window);
 
     if (m_context) {
@@ -125,9 +125,9 @@ inline namespace v1 {
     m_shouldClose = true;
   }
 
-  void Window::setTitle(const std::string& title) {
+  void Window::setTitle(StringRef title) {
     assert(m_window);
-    SDL_SetWindowTitle(m_window, title.c_str());
+    SDL_SetWindowTitle(m_window, title.getData());
   }
 
 
