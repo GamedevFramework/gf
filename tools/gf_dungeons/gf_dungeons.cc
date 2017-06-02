@@ -42,55 +42,195 @@
 
 #include "config.h"
 
-static gf::Array2D<float> generateBase(gf::Vector2u size, gf::Random& random) {
-  gf::Array2D<float> ret(size);
 
-  for (auto& value : ret) {
-    value = random.computeUniformFloat(0.0f, 1.0f);
-  }
+namespace {
 
-  return ret;
-}
+  enum class State : uint8_t {
+    Empty,
+    Full,
+  };
 
-enum class State : uint8_t {
-  Empty,
-  Full,
-};
-
-static int number(State state) {
-  switch (state) {
-    case State::Empty:
-      return 0;
-    case State::Full:
-      return 1;
-  }
-
-  assert(false);
-  return 0;
-}
-
-static gf::Array2D<State> computeFirst(const gf::Array2D<float>& array, float threshold) {
-  gf::Array2D<State> ret(array.getSize());
-
-  for (auto pos : array.getPositionRange()) {
-    if (array(pos) > threshold) {
-      ret(pos) = State::Full;
-    } else {
-      ret(pos) = State::Empty;
+  static int number(State state) {
+    switch (state) {
+      case State::Empty:
+        return 0;
+      case State::Full:
+        return 1;
     }
+
+    assert(false);
+    return 0;
   }
 
-  return ret;
+  using Dungeon = gf::Array2D<State>;
+
+  class DungeonGenerator {
+  public:
+    enum class Phase {
+      Start,
+      Iterate,
+      Finish,
+    };
+
+    DungeonGenerator()
+    : m_phase(Phase::Start)
+    {
+
+    }
+
+    virtual ~DungeonGenerator() {
+
+    }
+
+    Phase getPhase() const {
+      return m_phase;
+    }
+
+    void setPhase(Phase phase) {
+      m_phase = phase;
+    }
+
+    virtual Dungeon generate(gf::Vector2u size, gf::Random& random) = 0;
+
+  private:
+    Phase m_phase;
+  };
+
+
+  /*
+   * Cellular automaton
+   */
+  class CellularAutomaton : public DungeonGenerator {
+  public:
+    enum class Mode : int {
+      Diamond4    = 0,
+      Square8     = 1,
+      Diamond12   = 2,
+      Square24    = 3,
+    };
+
+    // public parameters
+
+    float threshold;
+    Mode mode;
+    int survivalThreshold;
+    int birthThreshold;
+    int iterations;
+
+
+    virtual Dungeon generate(gf::Vector2u size, gf::Random& random) override {
+      switch (getPhase()) {
+        case Phase::Start:
+          m_base = generateBase(size, random);
+          // fallthrough
+        case Phase::Iterate:
+          m_dungeon = computeFirst(m_base, threshold);
+          computeIterations(m_dungeon, mode, survivalThreshold, birthThreshold, iterations);
+          // fallthrough
+        case Phase::Finish:
+          break;
+      }
+
+      setPhase(Phase::Finish);
+      return m_dungeon;
+    }
+
+  private:
+    static gf::Array2D<float> generateBase(gf::Vector2u size, gf::Random& random) {
+      gf::Array2D<float> ret(size);
+
+      for (auto& value : ret) {
+        value = random.computeUniformFloat(0.0f, 1.0f);
+      }
+
+      return ret;
+    }
+
+    static Dungeon computeFirst(const gf::Array2D<float>& array, float threshold) {
+      Dungeon ret(array.getSize());
+
+      for (auto pos : array.getPositionRange()) {
+        if (array(pos) > threshold) {
+          ret(pos) = State::Full;
+        } else {
+          ret(pos) = State::Empty;
+        }
+      }
+
+      return ret;
+    }
+
+    static void computeIterations(gf::Array2D<State>& automaton, Mode mode, int survivalThreshold, int birthThreshold, int iterations) {
+      gf::Array2D<State> result(automaton.getSize());
+
+      for (int i = 0; i < iterations; ++i) {
+        for (auto row : automaton.getRowRange()) {
+          for (auto col : automaton.getColRange()) {
+            gf::Vector2u pos(col, row);
+            int count = 0;
+
+            switch (mode) {
+              case Mode::Diamond4:
+                automaton.visit4Neighbors(pos, [&count](gf::Vector2u neighbor, State state) {
+                  gf::unused(neighbor);
+                  count += number(state);
+                });
+                break;
+              case Mode::Square8:
+                automaton.visit8Neighbors(pos, [&count](gf::Vector2u neighbor, State state) {
+                  gf::unused(neighbor);
+                  count += number(state);
+                });
+                break;
+              case Mode::Diamond12:
+                automaton.visit12Neighbors(pos, [&count](gf::Vector2u neighbor, State state) {
+                  gf::unused(neighbor);
+                  count += number(state);
+                });
+                break;
+              case Mode::Square24:
+                automaton.visit24Neighbors(pos, [&count](gf::Vector2u neighbor, State state) {
+                  gf::unused(neighbor);
+                  count += number(state);
+                });
+                break;
+            }
+
+            if (automaton(pos) == State::Full) {
+              if (count >= survivalThreshold) {
+                result(pos) = State::Full;
+              } else {
+                result(pos) = State::Empty;
+              }
+            } else {
+              if (count >= birthThreshold) {
+                result(pos) = State::Full;
+              } else {
+                result(pos) = State::Empty;
+              }
+            }
+          }
+        }
+
+        automaton.swap(result);
+      }
+    }
+
+  private:
+    gf::Array2D<float> m_base;
+    Dungeon m_dungeon;
+  };
+
+
 }
 
-enum class Mode : int {
-  Diamond4    = 0,
-  Square8     = 1,
-  Diamond12   = 2,
-  Square24    = 3,
-};
 
-int modeMax(int mode) {
+
+
+
+
+
+static int modeMax(int mode) {
   switch (mode) {
     case 0:
       return 4;
@@ -109,77 +249,13 @@ int modeMax(int mode) {
   return 0;
 }
 
-struct Params {
-  Mode mode;
-  int survivalThreshold;
-  int birthThreshold;
-  int iterations;
-};
-
-static void computeIterations(gf::Array2D<State>& automaton, const Params& params) {
-  gf::Array2D<State> result(automaton.getSize());
-
-  for (int i = 0; i < params.iterations; ++i) {
-    for (auto row : automaton.getRowRange()) {
-      for (auto col : automaton.getColRange()) {
-        gf::Vector2u pos(col, row);
-        int count = 0;
-
-        switch (params.mode) {
-          case Mode::Diamond4:
-            automaton.visit4Neighbors(pos, [&count](gf::Vector2u neighbor, State state) {
-              gf::unused(neighbor);
-              count += number(state);
-            });
-            break;
-          case Mode::Square8:
-            automaton.visit8Neighbors(pos, [&count](gf::Vector2u neighbor, State state) {
-              gf::unused(neighbor);
-              count += number(state);
-            });
-            break;
-          case Mode::Diamond12:
-            automaton.visit12Neighbors(pos, [&count](gf::Vector2u neighbor, State state) {
-              gf::unused(neighbor);
-              count += number(state);
-            });
-            break;
-          case Mode::Square24:
-            automaton.visit24Neighbors(pos, [&count](gf::Vector2u neighbor, State state) {
-              gf::unused(neighbor);
-              count += number(state);
-            });
-            break;
-        }
-
-        if (automaton(pos) == State::Full) {
-          if (count >= params.survivalThreshold) {
-            result(pos) = State::Full;
-          } else {
-            result(pos) = State::Empty;
-          }
-        } else {
-          if (count >= params.birthThreshold) {
-            result(pos) = State::Full;
-          } else {
-            result(pos) = State::Empty;
-          }
-        }
-      }
-    }
-
-    automaton.swap(result);
-  }
-}
-
-
-static void computeDisplay(const gf::Array2D<State>& automaton, gf::VertexArray& vertices) {
+static void computeDisplay(const Dungeon& dungeon, gf::VertexArray& vertices) {
   static constexpr float CellSize = 16.0f;
 
   vertices.clear();
 
-  for (auto row : automaton.getRowRange()) {
-    for (auto col : automaton.getColRange()) {
+  for (auto row : dungeon.getRowRange()) {
+    for (auto col : dungeon.getColRange()) {
       gf::Vector2u pos(col, row);
 
 
@@ -189,7 +265,7 @@ static void computeDisplay(const gf::Array2D<State>& automaton, gf::VertexArray&
       v[2].position = pos * CellSize + gf::Vector2f(0.0f, CellSize);
       v[3].position = pos * CellSize + gf::Vector2f(CellSize, CellSize);
 
-      if (automaton(pos) == State::Full) {
+      if (dungeon(pos) == State::Full) {
         v[0].color = v[1].color = v[2].color = v[3].color = gf::Color::White;
       } else {
         v[0].color = v[1].color = v[2].color = v[3].color = gf::Color::Black;
@@ -255,20 +331,20 @@ int main() {
 
   unsigned automataSize = 64;
   int log2AutomataSize = 6;
-  float threshold = 0.4;
 
-  Params params;
-  params.mode = Mode::Square8;
-  params.survivalThreshold = 4;
-  params.birthThreshold = 6;
-  params.iterations = 5;
+  CellularAutomaton cellular;
 
-  gf::Array2D<float> base = generateBase({ automataSize, automataSize }, random);
-  gf::Array2D<State> automaton = computeFirst(base, threshold);
-  computeIterations(automaton, params);
+  cellular.threshold = 0.4;
+  cellular.mode = CellularAutomaton::Mode::Square8;
+  cellular.survivalThreshold = 4;
+  cellular.birthThreshold = 6;
+  cellular.iterations = 5;
+
+  DungeonGenerator *currentGenerator = &cellular;
+  auto dungeon = currentGenerator->generate({ automataSize, automataSize }, random);
 
   gf::VertexArray vertices(gf::PrimitiveType::Triangles);
-  computeDisplay(automaton, vertices);
+  computeDisplay(dungeon, vertices);
 
   // zoom and move
 
@@ -328,7 +404,6 @@ int main() {
       views.processEvent(event);
     }
 
-    bool parameterChanged = false;
 
     ui.begin("Dungeons", gf::RectF(Size, 0, ExtraSize, Size), gf::UIWindow::Title | gf::UIWindow::Border);
 
@@ -338,14 +413,12 @@ int main() {
     ui.layoutRowDynamic(20, 1);
     if (ui.sliderInt(5, log2AutomataSize, 9, 1)) {
       automataSize = 1 << log2AutomataSize;
-      base = generateBase({ automataSize, automataSize }, random);
-      parameterChanged = true;
+      currentGenerator->setPhase(DungeonGenerator::Phase::Start);
     }
 
     ui.layoutRowDynamic(20, 1);
     if (ui.buttonLabel("Generate")) {
-      base = generateBase({ automataSize, automataSize }, random);
-      parameterChanged = true;
+      currentGenerator->setPhase(DungeonGenerator::Phase::Start);
     }
 
     ui.layoutRowDynamic(20, 1);
@@ -355,12 +428,15 @@ int main() {
 
     switch (algorithmChoice) {
       case 0: {
+        currentGenerator = &cellular;
 
         ui.layoutRow(gf::UILayout::Dynamic, 20, { 0.75f, 0.25f });
         ui.label("Initial ratio");
-        ui.label(gf::niceNum(threshold, 0.01f), gf::UIAlignment::Right);
+        ui.label(gf::niceNum(cellular.threshold, 0.01f), gf::UIAlignment::Right);
         ui.layoutRowDynamic(20, 1);
-        parameterChanged = ui.sliderFloat(0.0f, threshold, 1.0f, 0.01f) || parameterChanged;
+        if (ui.sliderFloat(0.0f, cellular.threshold, 1.0f, 0.01f)) {
+          currentGenerator->setPhase(DungeonGenerator::Phase::Iterate);
+        }
 
         ui.layoutRowDynamic(20, 1);
         ui.label("Neighborhood");
@@ -369,41 +445,46 @@ int main() {
 
         if (currentModeChoice != modeChoice) {
           currentModeChoice = modeChoice;
-          params.mode = static_cast<Mode>(modeChoice);
-          params.survivalThreshold = std::min(params.survivalThreshold, modeMax(currentModeChoice));
-          params.birthThreshold = std::min(params.birthThreshold, modeMax(currentModeChoice));
-          parameterChanged = true;
+          cellular.mode = static_cast<CellularAutomaton::Mode>(modeChoice);
+          cellular.survivalThreshold = std::min(cellular.survivalThreshold, modeMax(currentModeChoice));
+          cellular.birthThreshold = std::min(cellular.birthThreshold, modeMax(currentModeChoice));
+          currentGenerator->setPhase(DungeonGenerator::Phase::Iterate);
         }
 
         ui.layoutRow(gf::UILayout::Dynamic, 20, { 0.75f, 0.25f });
         ui.label("Survival Threshold");
-        ui.label(std::to_string(params.survivalThreshold), gf::UIAlignment::Right);
+        ui.label(std::to_string(cellular.survivalThreshold), gf::UIAlignment::Right);
         ui.layoutRowDynamic(20, 1);
-        parameterChanged = ui.sliderInt(0, params.survivalThreshold, modeMax(currentModeChoice), 1) || parameterChanged;
+        if (ui.sliderInt(0, cellular.survivalThreshold, modeMax(currentModeChoice), 1)) {
+          currentGenerator->setPhase(DungeonGenerator::Phase::Iterate);
+        }
 
         ui.layoutRow(gf::UILayout::Dynamic, 20, { 0.75f, 0.25f });
         ui.label("Birth Threshold");
-        ui.label(std::to_string(params.birthThreshold), gf::UIAlignment::Right);
+        ui.label(std::to_string(cellular.birthThreshold), gf::UIAlignment::Right);
         ui.layoutRowDynamic(20, 1);
-        parameterChanged = ui.sliderInt(0, params.birthThreshold, modeMax(currentModeChoice), 1) || parameterChanged;
+        if (ui.sliderInt(0, cellular.birthThreshold, modeMax(currentModeChoice), 1)) {
+          currentGenerator->setPhase(DungeonGenerator::Phase::Iterate);
+        }
 
         ui.layoutRow(gf::UILayout::Dynamic, 20, { 0.75f, 0.25f });
         ui.label("Number of Iterations");
-        ui.label(std::to_string(params.iterations), gf::UIAlignment::Right);
+        ui.label(std::to_string(cellular.iterations), gf::UIAlignment::Right);
         ui.layoutRowDynamic(20, 1);
-        parameterChanged = ui.sliderInt(0, params.iterations, 20, 1) || parameterChanged;
+        if (ui.sliderInt(0, cellular.iterations, 20, 1)) {
+          currentGenerator->setPhase(DungeonGenerator::Phase::Iterate);
+        }
 
         ui.end();
-
-        if (parameterChanged) {
-          automaton = computeFirst(base, threshold);
-          computeIterations(automaton, params);
-          computeDisplay(automaton, vertices);
-        }
       }
 
       default:
         break;
+    }
+
+    if (currentGenerator->getPhase() != DungeonGenerator::Phase::Finish) {
+      dungeon = currentGenerator->generate({ automataSize, automataSize }, random);
+      computeDisplay(dungeon, vertices);
     }
 
     renderer.clear();
