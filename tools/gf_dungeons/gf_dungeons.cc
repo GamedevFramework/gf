@@ -218,7 +218,7 @@ int main() {
   static constexpr float ZoomInFactor = 0.8f;
   static constexpr float ZoomOutFactor = 1.25f;
 
-  gf::Window window("gf automata", { Size + ExtraSize, Size }, ~gf::WindowHints::Resizable);
+  gf::Window window("gf dungeons", { Size + ExtraSize, Size }, ~gf::WindowHints::Resizable);
   gf::RenderWindow renderer(window);
 
   gf::Font font;
