@@ -244,6 +244,9 @@ int main() {
 
   // ui
 
+  std::vector<std::string> algorithmChoices = { "Cellular automata" };
+  int algorithmChoice = 0;
+
   std::vector<std::string> modeChoices = { "Diamond-4", "Square-8", "Diamond-12", "Square-24" };
   int modeChoice = 1;
   int currentModeChoice = modeChoice;
@@ -327,7 +330,7 @@ int main() {
 
     bool parameterChanged = false;
 
-    ui.begin("Cellular automata", gf::RectF(Size, 0, ExtraSize, Size), gf::UIWindow::Title | gf::UIWindow::Border);
+    ui.begin("Dungeons", gf::RectF(Size, 0, ExtraSize, Size), gf::UIWindow::Title | gf::UIWindow::Border);
 
     ui.layoutRow(gf::UILayout::Dynamic, 20, { 0.75f, 0.25f });
     ui.label("Size");
@@ -339,12 +342,6 @@ int main() {
       parameterChanged = true;
     }
 
-    ui.layoutRow(gf::UILayout::Dynamic, 20, { 0.75f, 0.25f });
-    ui.label("Initial ratio");
-    ui.label(gf::niceNum(threshold, 0.01f), gf::UIAlignment::Right);
-    ui.layoutRowDynamic(20, 1);
-    parameterChanged = ui.sliderFloat(0.0f, threshold, 1.0f, 0.01f) || parameterChanged;
-
     ui.layoutRowDynamic(20, 1);
     if (ui.buttonLabel("Generate")) {
       base = generateBase({ automataSize, automataSize }, random);
@@ -352,42 +349,61 @@ int main() {
     }
 
     ui.layoutRowDynamic(20, 1);
-    ui.label("Neighborhood");
-    auto bounds = ui.getWidgetBounds();
-    ui.combobox(modeChoices, modeChoice, 20, { bounds.width, ComboHeightMax });
+    ui.label("Algorithm");
+    auto algorithmBounds = ui.getWidgetBounds();
+    ui.combobox(algorithmChoices, algorithmChoice, 20, { algorithmBounds.width, ComboHeightMax });
 
-    if (currentModeChoice != modeChoice) {
-      currentModeChoice = modeChoice;
-      params.mode = static_cast<Mode>(modeChoice);
-      params.survivalThreshold = std::min(params.survivalThreshold, modeMax(currentModeChoice));
-      params.birthThreshold = std::min(params.birthThreshold, modeMax(currentModeChoice));
-      parameterChanged = true;
-    }
+    switch (algorithmChoice) {
+      case 0: {
 
-    ui.layoutRow(gf::UILayout::Dynamic, 20, { 0.75f, 0.25f });
-    ui.label("Survival Threshold");
-    ui.label(std::to_string(params.survivalThreshold), gf::UIAlignment::Right);
-    ui.layoutRowDynamic(20, 1);
-    parameterChanged = ui.sliderInt(0, params.survivalThreshold, modeMax(currentModeChoice), 1) || parameterChanged;
+        ui.layoutRow(gf::UILayout::Dynamic, 20, { 0.75f, 0.25f });
+        ui.label("Initial ratio");
+        ui.label(gf::niceNum(threshold, 0.01f), gf::UIAlignment::Right);
+        ui.layoutRowDynamic(20, 1);
+        parameterChanged = ui.sliderFloat(0.0f, threshold, 1.0f, 0.01f) || parameterChanged;
 
-    ui.layoutRow(gf::UILayout::Dynamic, 20, { 0.75f, 0.25f });
-    ui.label("Birth Threshold");
-    ui.label(std::to_string(params.birthThreshold), gf::UIAlignment::Right);
-    ui.layoutRowDynamic(20, 1);
-    parameterChanged = ui.sliderInt(0, params.birthThreshold, modeMax(currentModeChoice), 1) || parameterChanged;
+        ui.layoutRowDynamic(20, 1);
+        ui.label("Neighborhood");
+        auto bounds = ui.getWidgetBounds();
+        ui.combobox(modeChoices, modeChoice, 20, { bounds.width, ComboHeightMax });
 
-    ui.layoutRow(gf::UILayout::Dynamic, 20, { 0.75f, 0.25f });
-    ui.label("Number of Iterations");
-    ui.label(std::to_string(params.iterations), gf::UIAlignment::Right);
-    ui.layoutRowDynamic(20, 1);
-    parameterChanged = ui.sliderInt(0, params.iterations, 20, 1) || parameterChanged;
+        if (currentModeChoice != modeChoice) {
+          currentModeChoice = modeChoice;
+          params.mode = static_cast<Mode>(modeChoice);
+          params.survivalThreshold = std::min(params.survivalThreshold, modeMax(currentModeChoice));
+          params.birthThreshold = std::min(params.birthThreshold, modeMax(currentModeChoice));
+          parameterChanged = true;
+        }
 
-    ui.end();
+        ui.layoutRow(gf::UILayout::Dynamic, 20, { 0.75f, 0.25f });
+        ui.label("Survival Threshold");
+        ui.label(std::to_string(params.survivalThreshold), gf::UIAlignment::Right);
+        ui.layoutRowDynamic(20, 1);
+        parameterChanged = ui.sliderInt(0, params.survivalThreshold, modeMax(currentModeChoice), 1) || parameterChanged;
 
-    if (parameterChanged) {
-      automaton = computeFirst(base, threshold);
-      computeIterations(automaton, params);
-      computeDisplay(automaton, vertices);
+        ui.layoutRow(gf::UILayout::Dynamic, 20, { 0.75f, 0.25f });
+        ui.label("Birth Threshold");
+        ui.label(std::to_string(params.birthThreshold), gf::UIAlignment::Right);
+        ui.layoutRowDynamic(20, 1);
+        parameterChanged = ui.sliderInt(0, params.birthThreshold, modeMax(currentModeChoice), 1) || parameterChanged;
+
+        ui.layoutRow(gf::UILayout::Dynamic, 20, { 0.75f, 0.25f });
+        ui.label("Number of Iterations");
+        ui.label(std::to_string(params.iterations), gf::UIAlignment::Right);
+        ui.layoutRowDynamic(20, 1);
+        parameterChanged = ui.sliderInt(0, params.iterations, 20, 1) || parameterChanged;
+
+        ui.end();
+
+        if (parameterChanged) {
+          automaton = computeFirst(base, threshold);
+          computeIterations(automaton, params);
+          computeDisplay(automaton, vertices);
+        }
+      }
+
+      default:
+        break;
     }
 
     renderer.clear();
