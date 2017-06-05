@@ -27,6 +27,7 @@
 
 #include <gf/Array2D.h>
 #include <gf/Color.h>
+#include <gf/Direction.h>
 #include <gf/Event.h>
 #include <gf/Font.h>
 #include <gf/Log.h>
@@ -516,6 +517,153 @@ namespace {
     Dungeon m_dungeon;
   };
 
+
+  /*
+   * Drunkard's March
+   */
+  class DrunkardMarch : public DungeonGenerator {
+  public:
+    // public parameters
+
+    float percentGoal;
+    float weightForCenter;
+    float weightForPreviousDirection;
+
+    virtual Dungeon generate(gf::Vector2u size, gf::Random& random) override {
+      switch (getPhase()) {
+        case Phase::Start:
+          // fallthrough
+        case Phase::Iterate:
+          generateDungeon(size, random);
+          // fallthrough
+        case Phase::Finish:
+          break;
+      }
+
+      setPhase(Phase::Finish);
+      return m_dungeon;
+    }
+
+  private:
+    void generateDungeon(gf::Vector2u size, gf::Random& random) {
+      m_dungeon = Dungeon(size, State::Empty);
+
+      m_filled = 0;
+      m_currentDirection = gf::Direction::Center;
+
+      m_currentPosition.x = random.computeUniformInteger(2u, size.width - 2);
+      m_currentPosition.y = random.computeUniformInteger(2u, size.height - 2);
+
+      unsigned filledGoal = size.width * size.height * percentGoal;
+      unsigned maxIterations = size.width * size.height * 10;
+
+      for (unsigned i = 0; i < maxIterations; ++i) {
+        walk(size, random);
+
+        if (m_filled >= filledGoal) {
+          break;
+        }
+      }
+
+    }
+
+    void walk(gf::Vector2u size, gf::Random& random) {
+      static constexpr gf::Direction Directions[4] = {
+        gf::Direction::Up,
+        gf::Direction::Right,
+        gf::Direction::Down,
+        gf::Direction::Left
+      };
+
+      static constexpr float EdgePercent = 0.25f;
+
+      double upWeigth = 1.0;
+      double rightWeight = 1.0;
+      double downWeight = 1.0;
+      double leftWeight = 1.0;
+
+      if (m_currentPosition.x <= size.width * EdgePercent) {
+        rightWeight += weightForCenter;
+      }
+
+      if (m_currentPosition.x >= size.width * (1 - EdgePercent)) {
+        leftWeight += weightForCenter;
+      }
+
+      if (m_currentPosition.y <= size.height * EdgePercent) {
+        downWeight += weightForCenter;
+      }
+
+      if (m_currentPosition.y >= size.height * (1 - EdgePercent)) {
+        upWeigth += weightForCenter;
+      }
+
+      switch (m_currentDirection) {
+        case gf::Direction::Up:
+          upWeigth += weightForPreviousDirection;
+          break;
+        case gf::Direction::Right:
+          rightWeight += weightForPreviousDirection;
+          break;
+        case gf::Direction::Down:
+          downWeight += weightForPreviousDirection;
+          break;
+        case gf::Direction::Left:
+          leftWeight += weightForPreviousDirection;
+          break;
+        default:
+          break;
+      }
+
+      std::discrete_distribution<unsigned> distribution({ upWeigth, rightWeight, downWeight, leftWeight });
+      unsigned chosenDirection = distribution(random.getEngine());
+      gf::Direction newDirection = Directions[chosenDirection];
+      gf::Vector2u newPosition = m_currentPosition;
+
+      switch (newDirection) {
+        case gf::Direction::Up:
+          if (newPosition.y > 2) {
+            --newPosition.y;
+          }
+          break;
+        case gf::Direction::Down:
+          if (newPosition.y < size.height - 2) {
+            ++newPosition.y;
+          }
+          break;
+        case gf::Direction::Left:
+          if (newPosition.x > 2) {
+            --newPosition.x;
+          }
+          break;
+        case gf::Direction::Right:
+          if (newPosition.x < size.width - 2) {
+            ++newPosition.x;
+          }
+          break;
+        default:
+          break;
+      }
+
+      if (m_currentPosition != newPosition) {
+        if (m_dungeon(newPosition) == State::Empty) {
+          m_dungeon(newPosition) = State::Full;
+          ++m_filled;
+        }
+
+        m_currentPosition = newPosition;
+        m_currentDirection = newDirection;
+      }
+    }
+
+  private:
+    Dungeon m_dungeon;
+    unsigned m_filled;
+    gf::Direction m_currentDirection;
+    gf::Vector2u m_currentPosition;
+  };
+
+
 }
 
 
@@ -614,7 +762,7 @@ int main() {
 
   // ui
 
-  std::vector<std::string> algorithmChoices = { "Cellular Automaton", "Tunneling", "Binary Space Partioning Tree" };
+  std::vector<std::string> algorithmChoices = { "Cellular Automaton", "Tunneling", "Binary Space Partioning Tree", "Drunkard's March" };
   int algorithmChoice = 0;
   int currentAlgorithmChoice = algorithmChoice;
 
@@ -644,6 +792,11 @@ int main() {
   bsp.leafSizeMaximum = 24;
   bsp.roomSizeMinimum = 6;
   bsp.roomSizeMaximum = 15;
+
+  DrunkardMarch march;
+  march.percentGoal = 0.4f;
+  march.weightForCenter = 0.15f;
+  march.weightForPreviousDirection = 0.7f;
 
   DungeonGenerator *currentGenerator = &cellular;
   auto dungeon = currentGenerator->generate({ dungeonSize, dungeonSize }, random);
@@ -736,7 +889,7 @@ int main() {
         currentGenerator = &cellular;
 
         ui.layoutRow(gf::UILayout::Dynamic, 20, { 0.75f, 0.25f });
-        ui.label("Initial ratio");
+        ui.label("Initial Ratio");
         ui.label(gf::niceNum(cellular.threshold, 0.01f), gf::UIAlignment::Right);
         ui.layoutRowDynamic(20, 1);
         if (ui.sliderFloat(0.0f, cellular.threshold, 1.0f, 0.01f)) {
@@ -887,6 +1040,36 @@ int main() {
 
           currentGenerator->setPhase(DungeonGenerator::Phase::Iterate);
         }
+        break;
+      }
+
+      case 3: {
+        currentGenerator = &march;
+
+        ui.layoutRow(gf::UILayout::Dynamic, 20, { 0.75f, 0.25f });
+        ui.label("Fill Percentage Goal");
+        ui.label(gf::niceNum(march.percentGoal, 0.01f), gf::UIAlignment::Right);
+        ui.layoutRowDynamic(20, 1);
+        if (ui.sliderFloat(0.0f, march.percentGoal, 1.0f, 0.01f)) {
+          currentGenerator->setPhase(DungeonGenerator::Phase::Iterate);
+        }
+
+        ui.layoutRow(gf::UILayout::Dynamic, 20, { 0.75f, 0.25f });
+        ui.label("Weight for Center");
+        ui.label(gf::niceNum(march.weightForCenter, 0.01f), gf::UIAlignment::Right);
+        ui.layoutRowDynamic(20, 1);
+        if (ui.sliderFloat(0.0f, march.weightForCenter, 1.0f, 0.05f)) {
+          currentGenerator->setPhase(DungeonGenerator::Phase::Iterate);
+        }
+
+        ui.layoutRow(gf::UILayout::Dynamic, 20, { 0.75f, 0.25f });
+        ui.label("Weight for Previous Direction");
+        ui.label(gf::niceNum(march.weightForPreviousDirection, 0.01f), gf::UIAlignment::Right);
+        ui.layoutRowDynamic(20, 1);
+        if (ui.sliderFloat(0.0f, march.weightForPreviousDirection, 1.0f, 0.05f)) {
+          currentGenerator->setPhase(DungeonGenerator::Phase::Iterate);
+        }
+
         break;
       }
 
