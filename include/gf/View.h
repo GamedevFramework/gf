@@ -33,6 +33,8 @@ namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
 #endif
+  struct Event;
+  class RenderTarget;
 
   /**
    * @ingroup graphics
@@ -432,6 +434,40 @@ inline namespace v1 {
      */
     virtual void onScreenSizeChange(Vector2u screenSize) = 0;
 
+  };
+
+  /**
+   * @ingroup graphics
+   * @brief A view adaptor for zooming/moving with the mouse
+   */
+  class GF_API ZoomingViewAdaptor {
+  public:
+    /**
+     * @brief Constructor
+     *
+     * @param target The rendering target
+     * @param view The original view to zoom/move
+     */
+    ZoomingViewAdaptor(const RenderTarget& target, View& view);
+
+    /**
+     * @brief Update the original view thanks to the event
+     *
+     * @param event An event
+     */
+    void processEvent(const Event& event);
+
+  private:
+    const RenderTarget& m_target;
+    View& m_view;
+    gf::Vector2i m_mousePosition;
+
+    enum class State {
+      Stationary,
+      Moving,
+    };
+
+    State m_state;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

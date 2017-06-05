@@ -23,6 +23,8 @@
  */
 #include <gf/View.h>
 
+#include <gf/Event.h>
+#include <gf/RenderTarget.h>
 #include <gf/Transform.h>
 #include <gf/Unused.h>
 #include <gf/VectorOps.h>
@@ -122,6 +124,63 @@ inline namespace v1 {
 
   void AdaptativeView::setInitialScreenSize(Vector2u screenSize) {
     onScreenSizeChange(screenSize);
+  }
+
+
+  /*
+   * ZoomingViewAdaptor
+   */
+
+  ZoomingViewAdaptor::ZoomingViewAdaptor(const RenderTarget& target, View& view)
+  : m_target(target)
+  , m_view(view)
+  , m_mousePosition({ 0, 0 })
+  , m_state(State::Stationary)
+  {
+
+  }
+
+  static bool isCursorOnView(Vector2i cursor, Vector2u screenSize, const RectF& viewport) {
+    RectF visible(viewport.position * screenSize, viewport.size * screenSize);
+    return visible.contains(cursor);
+  }
+
+  void ZoomingViewAdaptor::processEvent(const Event& event) {
+    static constexpr float ZoomInFactor = 0.8f;
+    static constexpr float ZoomOutFactor = 1.25f;
+
+    switch (event.type) {
+      case gf::EventType::MouseMoved:
+        if (m_state == State::Moving) {
+          gf::Vector2f oldPosition = m_target.mapPixelToCoords(m_mousePosition, m_view);
+          gf::Vector2f newPosition = m_target.mapPixelToCoords(event.mouseCursor.coords, m_view);
+          m_view.move(oldPosition - newPosition);
+        }
+
+        m_mousePosition = event.mouseCursor.coords;
+        break;
+
+      case gf::EventType::MouseButtonPressed:
+        if (isCursorOnView(event.mouseButton.coords, m_target.getSize(), m_view.getViewport())) {
+          m_state = State::Moving;
+        }
+        break;
+
+      case gf::EventType::MouseButtonReleased:
+        m_state = State::Stationary;
+        break;
+
+      case gf::EventType::MouseWheelScrolled:
+        if (event.mouseWheel.offset.y > 0) {
+          m_view.zoom(ZoomInFactor, m_target.mapPixelToCoords(m_mousePosition, m_view));
+        } else {
+          m_view.zoom(ZoomOutFactor, m_target.mapPixelToCoords(m_mousePosition, m_view));
+        }
+        break;
+
+      default:
+        break;
+    }
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
