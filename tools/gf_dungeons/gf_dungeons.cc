@@ -112,6 +112,25 @@ namespace {
       Square24    = 3,
     };
 
+    static int modeMax(int mode) {
+      switch (mode) {
+        case 0:
+          return 4;
+        case 1:
+          return 8;
+        case 2:
+          return 12;
+        case 3:
+          return 24;
+        default:
+          assert(false);
+          break;
+      }
+
+      assert(false);
+      return 0;
+    }
+
     // public parameters
 
     float threshold;
@@ -663,33 +682,8 @@ namespace {
     gf::Vector2u m_currentPosition;
   };
 
-
 }
 
-
-
-
-
-
-
-static int modeMax(int mode) {
-  switch (mode) {
-    case 0:
-      return 4;
-    case 1:
-      return 8;
-    case 2:
-      return 12;
-    case 3:
-      return 24;
-    default:
-      assert(false);
-      break;
-  }
-
-  assert(false);
-  return 0;
-}
 
 static void computeDisplay(const Dungeon& dungeon, gf::VertexArray& vertices) {
   static constexpr float CellSize = 16.0f;
@@ -723,6 +717,8 @@ static void computeDisplay(const Dungeon& dungeon, gf::VertexArray& vertices) {
     }
   }
 }
+
+// inspired by https://github.com/AtTheMatinee/dungeon-generation (MIT)
 
 int main() {
   gf::Random random;
@@ -904,8 +900,8 @@ int main() {
         if (currentModeChoice != modeChoice) {
           currentModeChoice = modeChoice;
           cellular.mode = static_cast<CellularAutomaton::Mode>(modeChoice);
-          cellular.survivalThreshold = std::min(cellular.survivalThreshold, modeMax(currentModeChoice));
-          cellular.birthThreshold = std::min(cellular.birthThreshold, modeMax(currentModeChoice));
+          cellular.survivalThreshold = std::min(cellular.survivalThreshold, CellularAutomaton::modeMax(currentModeChoice));
+          cellular.birthThreshold = std::min(cellular.birthThreshold, CellularAutomaton::modeMax(currentModeChoice));
           currentGenerator->setPhase(DungeonGenerator::Phase::Iterate);
         }
 
@@ -913,7 +909,7 @@ int main() {
         ui.label("Survival Threshold");
         ui.label(std::to_string(cellular.survivalThreshold), gf::UIAlignment::Right);
         ui.layoutRowDynamic(20, 1);
-        if (ui.sliderInt(0, cellular.survivalThreshold, modeMax(currentModeChoice), 1)) {
+        if (ui.sliderInt(0, cellular.survivalThreshold, CellularAutomaton::modeMax(currentModeChoice), 1)) {
           currentGenerator->setPhase(DungeonGenerator::Phase::Iterate);
         }
 
@@ -921,7 +917,7 @@ int main() {
         ui.label("Birth Threshold");
         ui.label(std::to_string(cellular.birthThreshold), gf::UIAlignment::Right);
         ui.layoutRowDynamic(20, 1);
-        if (ui.sliderInt(0, cellular.birthThreshold, modeMax(currentModeChoice), 1)) {
+        if (ui.sliderInt(0, cellular.birthThreshold, CellularAutomaton::modeMax(currentModeChoice), 1)) {
           currentGenerator->setPhase(DungeonGenerator::Phase::Iterate);
         }
 
