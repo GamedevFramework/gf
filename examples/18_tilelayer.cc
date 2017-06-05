@@ -82,6 +82,8 @@ int main() {
 
   views.setInitialScreenSize(ScreenSize);
 
+  gf::ZoomingViewAdaptor adaptor(renderer, view);
+
   gf::Texture texture;
 
   if (!texture.loadFromFile("18_tilelayer.png")) {
@@ -109,9 +111,6 @@ int main() {
   std::cout << "\tLeft/Right: Rotate\n";
   std::cout << "\tMouse: Scroll to zoom, press to move\n";
 
-  gf::Vector2i mousePosition;
-  bool isMoving = false;
-
   renderer.clear(gf::Color::darker(gf::Color::Spring));
 
   while (window.isOpen()) {
@@ -121,32 +120,6 @@ int main() {
       switch (event.type) {
         case gf::EventType::Closed:
           window.close();
-          break;
-
-        case gf::EventType::MouseMoved:
-          if (isMoving) {
-            gf::Vector2f oldPosition = renderer.mapPixelToCoords(mousePosition, view);
-            gf::Vector2f newPosition = renderer.mapPixelToCoords(event.mouseCursor.coords, view);
-            view.move(oldPosition - newPosition);
-          }
-
-          mousePosition = event.mouseCursor.coords;
-          break;
-
-        case gf::EventType::MouseButtonPressed:
-          isMoving = true;
-          break;
-
-        case gf::EventType::MouseButtonReleased:
-          isMoving = false;
-          break;
-
-        case gf::EventType::MouseWheelScrolled:
-          if (event.mouseWheel.offset.y > 0) {
-            view.zoom(ZoomInFactor, renderer.mapPixelToCoords(mousePosition, view));
-          } else {
-            view.zoom(ZoomOutFactor, renderer.mapPixelToCoords(mousePosition, view));
-          }
           break;
 
         case gf::EventType::KeyPressed:
@@ -176,6 +149,7 @@ int main() {
           break;
       }
 
+      adaptor.processEvent(event);
       views.processEvent(event);
     }
 

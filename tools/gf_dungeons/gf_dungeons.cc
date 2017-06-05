@@ -719,6 +719,7 @@ static void computeDisplay(const Dungeon& dungeon, gf::VertexArray& vertices) {
 }
 
 // inspired by https://github.com/AtTheMatinee/dungeon-generation (MIT)
+// see also: https://www.reddit.com/r/roguelikedev/comments/6df0aw/my_implementation_of_a_bunch_of_dungeon_algorithms/
 
 int main() {
   gf::Random random;
@@ -728,9 +729,6 @@ int main() {
   static constexpr float ViewportX = static_cast<float>(Size) / (Size + ExtraSize);
 
   static constexpr float ComboHeightMax = 200.0f;
-
-  static constexpr float ZoomInFactor = 0.8f;
-  static constexpr float ZoomOutFactor = 1.25f;
 
   gf::Window window("gf dungeons", { Size + ExtraSize, Size }, ~gf::WindowHints::Resizable);
   gf::RenderWindow renderer(window);
@@ -755,6 +753,8 @@ int main() {
   views.addView(uiView);
 
   views.setInitialScreenSize({ Size + ExtraSize, Size });
+
+  gf::ZoomingViewAdaptor adaptor(renderer, automatonView);
 
   // ui
 
@@ -800,11 +800,6 @@ int main() {
   gf::VertexArray vertices(gf::PrimitiveType::Triangles);
   computeDisplay(dungeon, vertices);
 
-  // zoom and move
-
-  gf::Vector2i mousePosition;
-  bool isMoving = false;
-
   renderer.clear(gf::Color::Gray());
 
   while (window.isOpen()) {
@@ -822,38 +817,11 @@ int main() {
           }
           break;
 
-        case gf::EventType::MouseMoved:
-          if (isMoving) {
-            gf::Vector2f oldPosition = renderer.mapPixelToCoords(mousePosition, automatonView);
-            gf::Vector2f newPosition = renderer.mapPixelToCoords(event.mouseCursor.coords, automatonView);
-            automatonView.move(oldPosition - newPosition);
-          }
-
-          mousePosition = event.mouseCursor.coords;
-          break;
-
-        case gf::EventType::MouseButtonPressed:
-          if (event.mouseButton.coords.x < static_cast<int>(Size)) {
-            isMoving = true;
-          }
-          break;
-
-        case gf::EventType::MouseButtonReleased:
-          isMoving = false;
-          break;
-
-        case gf::EventType::MouseWheelScrolled:
-          if (event.mouseWheel.offset.y > 0) {
-            automatonView.zoom(ZoomInFactor, renderer.mapPixelToCoords(mousePosition, automatonView));
-          } else {
-            automatonView.zoom(ZoomOutFactor, renderer.mapPixelToCoords(mousePosition, automatonView));
-          }
-          break;
-
         default:
           break;
       }
 
+      adaptor.processEvent(event);
       ui.processEvent(event);
       views.processEvent(event);
     }
