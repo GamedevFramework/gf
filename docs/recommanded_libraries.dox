@@ -24,4 +24,9 @@ gf does not provide everything, its main focus is on graphics. Here is a list of
 
 - [Box2D](http://box2d.org/): This library is a 2D physics engine for games (zlib/libpng license).
 
+@section recommanded_libraries_serialization Serialization
+
+- [Boost Serialization](http://www.boost.org/libs/serialization): The serialization library of the Boost project (Boost Software License)
+- [cereal](http://uscilab.github.io/cereal/): This library is a header-only C++11 serialization library (BSD license).
+
 */
