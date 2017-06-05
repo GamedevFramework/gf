@@ -102,6 +102,7 @@ inline namespace v1 {
      */
     FitView()
     : AdaptativeView()
+    , m_localViewport(0.0f, 0.0f, 1.0f, 1.0f)
     {
 
     }
@@ -113,6 +114,7 @@ inline namespace v1 {
      */
     explicit FitView(const RectF& rect)
     : AdaptativeView(rect)
+    , m_localViewport(0.0f, 0.0f, 1.0f, 1.0f)
     {
 
     }
@@ -125,6 +127,7 @@ inline namespace v1 {
      */
     FitView(Vector2f center, Vector2f size)
     : AdaptativeView(center, size)
+    , m_localViewport(0.0f, 0.0f, 1.0f, 1.0f)
     {
 
     }

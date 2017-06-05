@@ -66,6 +66,20 @@ inline namespace v1 {
 
   }
 
+  static bool isClamped(float value) {
+    return 0.0f <= value && value <= 1.0f;
+  }
+
+  void View::setViewport(const RectF& viewport) {
+    assert(isClamped(viewport.top));
+    assert(isClamped(viewport.left));
+    assert(isClamped(viewport.width));
+    assert(isClamped(viewport.height));
+
+    m_viewport = viewport;
+    onViewportChange(viewport);
+  }
+
   void View::reset(const RectF& rect) {
     m_center = rect.getCenter();
     m_size = rect.getSize();
@@ -110,6 +124,15 @@ inline namespace v1 {
   void View::onSizeChange(Vector2f size) {
     gf::unused(size);
     // nothing by default
+  }
+
+  void View::setViewportNoCallback(const RectF& viewport) {
+    assert(isClamped(viewport.top));
+    assert(isClamped(viewport.left));
+    assert(isClamped(viewport.width));
+    assert(isClamped(viewport.height));
+
+    m_viewport = viewport;
   }
 
   void View::onViewportChange(const RectF& viewport) {

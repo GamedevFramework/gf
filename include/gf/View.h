@@ -209,10 +209,7 @@ inline namespace v1 {
      *
      * @sa getViewport()
      */
-    void setViewport(const RectF& viewport) {
-      m_viewport = viewport;
-      onViewportChange(viewport);
-    }
+    void setViewport(const RectF& viewport);
 
     /**
      * @brief Get the target viewport rectangle of the view
@@ -342,9 +339,7 @@ inline namespace v1 {
      *
      * @param viewport The new viewport
      */
-    void setViewportNoCallback(const RectF& viewport) {
-      m_viewport = viewport;
-    }
+    void setViewportNoCallback(const RectF& viewport);
 
     /**
      * @brief Callback when the viewport has just been changed

@@ -61,7 +61,7 @@ inline namespace v1 {
     const Vector2f worldSize = getSize();
     float worldRatio = worldSize.width / worldSize.height;
 
-    const Vector2f viewportSize = m_localViewport.size * m_localScreenSize;
+    const Vector2f viewportSize = m_localScreenSize * m_localViewport.size;
     float screenRatio = viewportSize.width / viewportSize.height;
 
     RectF viewport;

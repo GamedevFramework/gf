@@ -354,11 +354,15 @@ inline namespace v1 {
     auto size = getSize();
     const RectF& viewport = view.getViewport();
 
+//     gf::Log::info("Normalized viewport: %fx%f %fx%f\n", viewport.left, viewport.top, viewport.width, viewport.height);
+
     Region region;
     region.left = static_cast<int>(viewport.left * size.width + 0.5f);
     region.bottom = static_cast<int>((1.0f - (viewport.top + viewport.height)) * size.height + 0.5f);
     region.width = static_cast<int>(viewport.width * size.width + 0.5f);
     region.height = static_cast<int>(viewport.height * size.height + 0.5f);
+
+//     gf::Log::info("Computed viewport: %ix%i %ix%i\n", region.left, region.bottom, region.width, region.height);
 
     return region;
   }
