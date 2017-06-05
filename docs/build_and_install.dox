@@ -1,0 +1,117 @@
+/**
+@page build_and_install Build and install gf
+
+@tableofcontents
+
+In this document, you will learn how to build and install `gf` so that you are ready for your first project with `gf`. It is assumed you already have a compiler installed (gcc or clang for Linux; MSVC included in Visual Studio for Windows).
+
+@section dependencies Dependencies
+
+`gf` needs some external libraries and tools that you must install before compiling `gf`. Here are some information about these libraries, especially the required minimum version.
+
+Libraries:
+
+| Name                                                                                    | Version | License     |
+|-----------------------------------------------------------------------------------------|:-------:|:-----------:|
+| [SDL2](https://www.libsdl.org/)                                                         | 2.0.2   | zlib/libpng |
+| [Boost Filesystem](http://www.boost.org/doc/libs/release/libs/filesystem/)              | 1.55    | Boost       |
+| [Boost String Algorithms](http://www.boost.org/doc/libs/release/libs/algorithm/string/) | 1.55    | Boost       |
+| [Freetype](http://freetype.org/)                                                        | 2.5.2   | Freetype    |
+
+Tools:
+
+| Name                        | Version |
+|-----------------------------|:-------:|
+| [CMake](https://cmake.org/) | 3.0.2   |
+
+
+@section getting_started_with_linux Getting started with Linux
+
+This section assumes you have a working compiler, either [gcc](https://gcc.gnu.org/) or [clang](https://clang.llvm.org/), and [git](https://git-scm.com/).
+
+@subsection dependencies_for_linux Dependencies for Linux
+
+The recommanded way for handling dependencies on Linux is to use your favorite distribution's package manager. Here are the packages needed to build `gf` for various widespread distributions.
+
+For Debian/Ubuntu:
+
+~~~{.sh}
+apt-get install libsdl2-dev libboost-filesystem-dev libboost-dev libfreetype6-dev cmake
+~~~
+
+For Archlinux:
+
+~~~{.sh}
+pacman -S sdl2 boost freetype2 cmake
+~~~
+
+For Fedora/Red Hat/CentOS:
+
+~~~{.sh}
+dnf install SDL2 boost freetype cmake
+~~~
+
+@subsection build_and_install_for_linux Build and install
+
+First, build:
+
+~~~{.sh}
+git clone https://github.com/GamedevFramework/gf.git
+cd gf
+git submodule update --init
+mkdir build
+cd build
+cmake ../ -DGF_BUILD_GAMES=ON -DGF_BUILD_TOOLS=ON
+make
+~~~
+
+Then install:
+
+~~~{.sh}
+make install # may require root permissions
+~~~
+
+@section getting_started_with_windows Getting started with Windows
+
+This section assumes you are using at least [Visual Studio Community 2015](https://www.visualstudio.com/vs/community/). You also need [git for Windows](https://git-for-windows.github.io/) and [CMake 3.8 or newer](https://cmake.org/download/). Finally, the working directory where everything will be installed is set to `C:\Local\`. You can choose whatever directory you want.
+
+@subsection dependencies_for_windows Dependencies for Windows
+
+For Windows, [vcpkg](https://github.com/Microsoft/vcpkg) can handle the dependencies.
+
+First, you have to install vcpkg from its git repository. From a command line, in the working directory:
+
+~~~{.bat}
+C:\Local> git clone https://github.com/Microsoft/vcpkg.git
+C:\Local> cd vcpkg
+~~~
+
+Then, you have to follow the instructions from the vcpkg documentation. Normally, during the installation process, it will detect and the installed CMake.
+
+~~~{.bat}
+C:\Local\vcpkg> .\bootstrap-vcpkg.bat
+C:\Local\vcpkg> .\vcpkg integrate install
+~~~
+
+Then, you can install the dependencies:
+
+~~~{.bat}
+C:\Local\vcpkg> .\vcpkg install sdl2 freetype boost
+~~~
+
+@subsection build_and_install_for_windows Build and install
+
+Back in the working directory, you can prepare the build of `gf`. Everything will be installed in the vcpkg hierarchy.
+
+~~~{.bat}
+C:\Local> git clone https://github.com/GamedevFramework/gf.git
+C:\Local> cd gf
+C:\Local\gf> git submodule update --init
+C:\Local\gf> mkdir build
+C:\Local\gf> cd build
+C:\Local\gf\build> cmake ../ -DCMAKE_TOOLCHAIN_FILE=C:\Local\vcpkg\scripts\buildsystems\vcpkg.cmake -DCMAKE_INSTALL_PREFIX=C:\Local\vcpkg\installed\x86-windows -DGF_BUILD_GAMES=ON -DGF_BUILD_TOOLS=ON
+~~~
+
+Finally, open Visual Studio. Then, open the `gf` solution located at `C:\Local\gf\build\GF.sln`. Then, choose "Release" and build the solution (F7). Finally, build the "INSTALL" project. `gf` is installed as well as its tools and games.
+
+*/
