@@ -19,10 +19,11 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 #include <cassert>
+
 #include <algorithm>
 #include <fstream>
-#include <tuple>
 #include <iostream>
+#include <tuple>
 
 #include <gf/Array2D.h>
 #include <gf/Color.h>
@@ -100,6 +101,7 @@ namespace {
   /*
    * Cellular automaton
    */
+
   class CellularAutomaton : public DungeonGenerator {
   public:
     enum class Mode : int {
@@ -125,7 +127,7 @@ namespace {
           // fallthrough
         case Phase::Iterate:
           m_dungeon = computeFirst(m_base, threshold);
-          computeIterations(m_dungeon, mode, survivalThreshold, birthThreshold, iterations);
+          computeIterations();
           // fallthrough
         case Phase::Finish:
           break;
@@ -160,43 +162,43 @@ namespace {
       return ret;
     }
 
-    static void computeIterations(gf::Array2D<State>& automaton, Mode mode, int survivalThreshold, int birthThreshold, int iterations) {
-      gf::Array2D<State> result(automaton.getSize());
+    void computeIterations() {
+      Dungeon result(m_dungeon.getSize());
 
       for (int i = 0; i < iterations; ++i) {
-        for (auto row : automaton.getRowRange()) {
-          for (auto col : automaton.getColRange()) {
+        for (auto row : m_dungeon.getRowRange()) {
+          for (auto col : m_dungeon.getColRange()) {
             gf::Vector2u pos(col, row);
             int count = 0;
 
             switch (mode) {
               case Mode::Diamond4:
-                automaton.visit4Neighbors(pos, [&count](gf::Vector2u neighbor, State state) {
+                m_dungeon.visit4Neighbors(pos, [&count](gf::Vector2u neighbor, State state) {
                   gf::unused(neighbor);
                   count += number(state);
                 });
                 break;
               case Mode::Square8:
-                automaton.visit8Neighbors(pos, [&count](gf::Vector2u neighbor, State state) {
+                m_dungeon.visit8Neighbors(pos, [&count](gf::Vector2u neighbor, State state) {
                   gf::unused(neighbor);
                   count += number(state);
                 });
                 break;
               case Mode::Diamond12:
-                automaton.visit12Neighbors(pos, [&count](gf::Vector2u neighbor, State state) {
+                m_dungeon.visit12Neighbors(pos, [&count](gf::Vector2u neighbor, State state) {
                   gf::unused(neighbor);
                   count += number(state);
                 });
                 break;
               case Mode::Square24:
-                automaton.visit24Neighbors(pos, [&count](gf::Vector2u neighbor, State state) {
+                m_dungeon.visit24Neighbors(pos, [&count](gf::Vector2u neighbor, State state) {
                   gf::unused(neighbor);
                   count += number(state);
                 });
                 break;
             }
 
-            if (automaton(pos) == State::Full) {
+            if (m_dungeon(pos) == State::Full) {
               if (count >= survivalThreshold) {
                 result(pos) = State::Full;
               } else {
@@ -212,7 +214,7 @@ namespace {
           }
         }
 
-        automaton.swap(result);
+        m_dungeon.swap(result);
       }
     }
 
@@ -221,6 +223,298 @@ namespace {
     Dungeon m_dungeon;
   };
 
+
+  /*
+   * Tunneling
+   */
+
+  class Tunneling : public DungeonGenerator {
+  public:
+
+    // public parameters
+
+    int maxRooms;
+    int roomSizeMinimum;
+    int roomSizeMaximum;
+
+    virtual Dungeon generate(gf::Vector2u size, gf::Random& random) override {
+      switch (getPhase()) {
+        case Phase::Start:
+          m_savedRandom = random;
+          // fallthrough
+        case Phase::Iterate:
+          m_random = m_savedRandom;
+          generateRooms(size);
+          // fallthrough
+        case Phase::Finish:
+          random = m_random;
+          break;
+      }
+
+      setPhase(Phase::Finish);
+      return m_dungeon;
+    }
+
+  private:
+    void generateRooms(gf::Vector2u size) {
+      m_rooms.clear();
+      m_dungeon = Dungeon(size, State::Empty);
+
+      for (int i = 0; i < maxRooms; ++i) {
+        gf::RectU room;
+
+        room.width = m_random.computeUniformInteger(roomSizeMinimum, roomSizeMaximum);
+        room.height = m_random.computeUniformInteger(roomSizeMinimum, roomSizeMaximum);
+        room.left = m_random.computeUniformInteger(0u, size.width - room.width - 1);
+        room.top = m_random.computeUniformInteger(0u, size.height - room.height - 1);
+
+        if (m_rooms.empty()) {
+          createRoom(room);
+          m_rooms.push_back(room);
+        } else {
+          if (std::any_of(m_rooms.begin(), m_rooms.end(), [&room](const gf::RectU& other) { return room.intersects(other); })) {
+            continue;
+          }
+
+          createRoom(room);
+
+          auto center = room.getCenter();
+          auto previousCenter = m_rooms.back().getCenter();
+
+          if (m_random.computeBernoulli(0.5)) {
+            createHorizontalTunnel(previousCenter.x, center.x, previousCenter.y);
+            createVerticalTunnel(center.x, center.y, previousCenter.y);
+          } else {
+            createVerticalTunnel(previousCenter.x, center.y, previousCenter.y);
+            createHorizontalTunnel(previousCenter.x, center.x, center.y);
+          }
+
+          m_rooms.push_back(room);
+        }
+      }
+    }
+
+    void createRoom(const gf::RectU& room) {
+      for (unsigned x = 1; x < room.width; ++x) {
+        for (unsigned y = 1; y < room.height; ++y) {
+          m_dungeon({ room.left + x, room.top + y }) = State::Full;
+        }
+      }
+    }
+
+    void createHorizontalTunnel(unsigned x1, unsigned x2, unsigned y) {
+      if (x2 < x1) {
+        std::swap(x1, x2);
+      }
+
+      for (unsigned x = x1; x <= x2; ++x) {
+        m_dungeon({ x, y }) = State::Full;
+      }
+    }
+
+    void createVerticalTunnel(unsigned x, unsigned y1, unsigned y2) {
+      if (y2 < y1) {
+        std::swap(y1, y2);
+      }
+
+      for (unsigned y = y1; y <= y2; ++y) {
+        m_dungeon({ x, y }) = State::Full;
+      }
+    }
+
+  private:
+    gf::Random m_savedRandom;
+    gf::Random m_random;
+    std::vector<gf::RectU> m_rooms;
+    Dungeon m_dungeon;
+  };
+
+  /*
+   * BSP Tree
+   */
+
+  struct Tree {
+    std::unique_ptr<Tree> left;
+    std::unique_ptr<Tree> right;
+
+    gf::RectU space;
+    gf::RectU room;
+
+    Tree(gf::RectU initialSpace)
+    : left(nullptr)
+    , right(nullptr)
+    , space(initialSpace)
+    {
+
+    }
+
+    bool split(gf::Random& random, unsigned leafSizeMinimum) {
+      if (left || right) {
+        return false;
+      }
+
+      bool splitHorizontally = random.computeBernoulli(0.5);
+
+      if (space.width >= 1.25 * space.height) {
+        splitHorizontally = false;
+      } else if (space.height >= 1.25 * space.width) {
+        splitHorizontally = true;
+      }
+
+      unsigned max = splitHorizontally ? space.height : space.width;
+
+      if (max <= 2 * leafSizeMinimum) {
+        return false;
+      }
+
+      unsigned split = random.computeUniformInteger(leafSizeMinimum, max - leafSizeMinimum);
+
+      if (splitHorizontally) {
+        left = std::unique_ptr<Tree>(new Tree({ space.left, space.top, space.width, split }));
+        right = std::unique_ptr<Tree>(new Tree({ space.left, space.top + split, space.width, space.height - split }));
+      } else {
+        left = std::unique_ptr<Tree>(new Tree({ space.left, space.top, split, space.height }));
+        right = std::unique_ptr<Tree>(new Tree({ space.left + split, space.top, space.width - split, space.height  }));
+      }
+
+      return true;
+    }
+
+    void recursiveSplit(gf::Random& random, unsigned leafSizeMinimum, unsigned leafSizeMaximum) {
+      assert(!left && !right);
+
+      if (space.width > leafSizeMaximum || space.height > leafSizeMaximum || random.computeBernoulli(0.2)) {
+        if (split(random, leafSizeMinimum)) {
+          assert(left);
+          left->recursiveSplit(random, leafSizeMinimum, leafSizeMaximum);
+          assert(right);
+          right->recursiveSplit(random, leafSizeMinimum, leafSizeMaximum);
+        }
+      }
+    }
+
+    void createRooms(gf::Random& random, unsigned roomSizeMinimum, unsigned roomSizeMaximum) {
+      if (left || right) {
+        assert(left && right);
+
+        left->createRooms(random, roomSizeMinimum, roomSizeMaximum);
+        right->createRooms(random, roomSizeMinimum, roomSizeMaximum);
+
+        if (random.computeBernoulli(0.5)) {
+          room = left->room;
+        } else {
+          room = right->room;
+        }
+      } else {
+        room.width = random.computeUniformInteger(roomSizeMinimum, std::min(roomSizeMaximum, space.width - 1));
+        room.height = random.computeUniformInteger(roomSizeMinimum, std::min(roomSizeMaximum, space.height - 1));
+        room.left = space.left + random.computeUniformInteger(0u, space.width - room.width - 1);
+        room.top = space.top + random.computeUniformInteger(0u, space.height - room.height - 1);
+      }
+    }
+
+  };
+
+  class BinarySpacePartioningTree : public DungeonGenerator {
+  public:
+    BinarySpacePartioningTree()
+    : m_root({ 0u, 0u, 1u, 1u })
+    {
+
+    }
+
+    // public parameters
+
+    int leafSizeMinimum;
+    int leafSizeMaximum;
+    int roomSizeMinimum;
+    int roomSizeMaximum;
+
+    virtual Dungeon generate(gf::Vector2u size, gf::Random& random) override {
+      switch (getPhase()) {
+        case Phase::Start:
+          m_savedRandom = random;
+          // fallthrough
+        case Phase::Iterate:
+          m_random = m_savedRandom;
+          generateRooms(size);
+          // fallthrough
+        case Phase::Finish:
+          random = m_random;
+          break;
+      }
+
+      setPhase(Phase::Finish);
+      return m_dungeon;
+    }
+
+  private:
+    void generateRooms(gf::Vector2u size) {
+      m_dungeon = Dungeon(size, State::Empty);
+
+      m_root.space = gf::RectU({ 0u, 0u }, size);
+      m_root.left = nullptr;
+      m_root.right = nullptr;
+
+      m_root.recursiveSplit(m_random, leafSizeMinimum, leafSizeMaximum);
+      m_root.createRooms(m_random, roomSizeMinimum, roomSizeMaximum);
+      walkTree(m_root);
+    }
+
+    void walkTree(const Tree& tree) {
+      if (tree.left || tree.right) {
+        assert(tree.left && tree.right);
+        walkTree(*tree.left);
+        walkTree(*tree.right);
+
+        auto leftRoom = tree.left->room.getCenter();
+        auto rightRoom = tree.right->room.getCenter();
+
+        if (m_random.computeBernoulli(0.5)) {
+          createHorizontalTunnel(rightRoom.x, leftRoom.x, rightRoom.y);
+          createVerticalTunnel(leftRoom.x, leftRoom.y, rightRoom.y);
+        } else {
+          createVerticalTunnel(rightRoom.x, leftRoom.y, rightRoom.y);
+          createHorizontalTunnel(rightRoom.x, leftRoom.x, leftRoom.y);
+        }
+      } else {
+        createRoom(tree.room);
+      }
+    }
+
+    void createRoom(const gf::RectU& room) {
+      for (unsigned x = 1; x < room.width; ++x) {
+        for (unsigned y = 1; y < room.height; ++y) {
+          m_dungeon({ room.left + x, room.top + y }) = State::Full;
+        }
+      }
+    }
+
+    void createHorizontalTunnel(unsigned x1, unsigned x2, unsigned y) {
+      if (x2 < x1) {
+        std::swap(x1, x2);
+      }
+
+      for (unsigned x = x1; x <= x2; ++x) {
+        m_dungeon({ x, y }) = State::Full;
+      }
+    }
+
+    void createVerticalTunnel(unsigned x, unsigned y1, unsigned y2) {
+      if (y2 < y1) {
+        std::swap(y1, y2);
+      }
+
+      for (unsigned y = y1; y <= y2; ++y) {
+        m_dungeon({ x, y }) = State::Full;
+      }
+    }
+  private:
+    gf::Random m_savedRandom;
+    gf::Random m_random;
+    Tree m_root;
+    Dungeon m_dungeon;
+  };
 
 }
 
@@ -320,8 +614,9 @@ int main() {
 
   // ui
 
-  std::vector<std::string> algorithmChoices = { "Cellular automata" };
+  std::vector<std::string> algorithmChoices = { "Cellular Automaton", "Tunneling", "Binary Space Partioning Tree" };
   int algorithmChoice = 0;
+  int currentAlgorithmChoice = algorithmChoice;
 
   std::vector<std::string> modeChoices = { "Diamond-4", "Square-8", "Diamond-12", "Square-24" };
   int modeChoice = 1;
@@ -329,19 +624,29 @@ int main() {
 
   // state
 
-  unsigned automataSize = 64;
-  int log2AutomataSize = 6;
+  unsigned dungeonSize = 64;
+  int log2DungeonSize = 6;
 
   CellularAutomaton cellular;
-
   cellular.threshold = 0.4;
   cellular.mode = CellularAutomaton::Mode::Square8;
   cellular.survivalThreshold = 4;
   cellular.birthThreshold = 6;
   cellular.iterations = 5;
 
+  Tunneling tunneling;
+  tunneling.maxRooms = 30;
+  tunneling.roomSizeMinimum = 6;
+  tunneling.roomSizeMaximum = 10;
+
+  BinarySpacePartioningTree bsp;
+  bsp.leafSizeMinimum = 10;
+  bsp.leafSizeMaximum = 24;
+  bsp.roomSizeMinimum = 6;
+  bsp.roomSizeMaximum = 15;
+
   DungeonGenerator *currentGenerator = &cellular;
-  auto dungeon = currentGenerator->generate({ automataSize, automataSize }, random);
+  auto dungeon = currentGenerator->generate({ dungeonSize, dungeonSize }, random);
 
   gf::VertexArray vertices(gf::PrimitiveType::Triangles);
   computeDisplay(dungeon, vertices);
@@ -409,10 +714,10 @@ int main() {
 
     ui.layoutRow(gf::UILayout::Dynamic, 20, { 0.75f, 0.25f });
     ui.label("Size");
-    ui.label(std::to_string(automataSize), gf::UIAlignment::Right);
+    ui.label(std::to_string(dungeonSize), gf::UIAlignment::Right);
     ui.layoutRowDynamic(20, 1);
-    if (ui.sliderInt(5, log2AutomataSize, 9, 1)) {
-      automataSize = 1 << log2AutomataSize;
+    if (ui.sliderInt(5, log2DungeonSize, 9, 1)) {
+      dungeonSize = 1 << log2DungeonSize;
       currentGenerator->setPhase(DungeonGenerator::Phase::Start);
     }
 
@@ -475,15 +780,129 @@ int main() {
           currentGenerator->setPhase(DungeonGenerator::Phase::Iterate);
         }
 
-        ui.end();
+        break;
+      }
+
+      case 1: {
+        currentGenerator = &tunneling;
+
+        ui.layoutRow(gf::UILayout::Dynamic, 20, { 0.75f, 0.25f });
+        ui.label("Maximum Number of Rooms");
+        ui.label(std::to_string(tunneling.maxRooms), gf::UIAlignment::Right);
+        ui.layoutRowDynamic(20, 1);
+        if (ui.sliderInt(2, tunneling.maxRooms, 100, 1)) {
+          currentGenerator->setPhase(DungeonGenerator::Phase::Iterate);
+        }
+
+        ui.layoutRow(gf::UILayout::Dynamic, 20, { 0.75f, 0.25f });
+        ui.label("Minimum Size of Rooms");
+        ui.label(std::to_string(tunneling.roomSizeMinimum), gf::UIAlignment::Right);
+        ui.layoutRowDynamic(20, 1);
+        if (ui.sliderInt(2, tunneling.roomSizeMinimum, dungeonSize / 2, 1)) {
+          if (tunneling.roomSizeMinimum > tunneling.roomSizeMaximum) {
+            tunneling.roomSizeMaximum = tunneling.roomSizeMinimum;
+          }
+
+          currentGenerator->setPhase(DungeonGenerator::Phase::Iterate);
+        }
+
+        ui.layoutRow(gf::UILayout::Dynamic, 20, { 0.75f, 0.25f });
+        ui.label("Maximum Size of Rooms");
+        ui.label(std::to_string(tunneling.roomSizeMaximum), gf::UIAlignment::Right);
+        ui.layoutRowDynamic(20, 1);
+        if (ui.sliderInt(2, tunneling.roomSizeMaximum, dungeonSize / 2, 1)) {
+          if (tunneling.roomSizeMaximum < tunneling.roomSizeMinimum) {
+            tunneling.roomSizeMinimum = tunneling.roomSizeMaximum;
+          }
+
+          currentGenerator->setPhase(DungeonGenerator::Phase::Iterate);
+        }
+
+        break;
+      }
+
+      case 2: {
+        currentGenerator = &bsp;
+
+        ui.layoutRow(gf::UILayout::Dynamic, 20, { 0.75f, 0.25f });
+        ui.label("Minimum Size of Leafs");
+        ui.label(std::to_string(bsp.leafSizeMinimum), gf::UIAlignment::Right);
+        ui.layoutRowDynamic(20, 1);
+        if (ui.sliderInt(3, bsp.leafSizeMinimum, dungeonSize / 2, 1)) {
+          if (bsp.leafSizeMinimum > bsp.leafSizeMaximum) {
+            bsp.leafSizeMaximum = bsp.leafSizeMinimum;
+          }
+
+          if (bsp.leafSizeMinimum <= bsp.roomSizeMinimum) {
+            bsp.roomSizeMinimum = bsp.leafSizeMinimum - 1;
+          }
+
+          currentGenerator->setPhase(DungeonGenerator::Phase::Iterate);
+        }
+
+        ui.layoutRow(gf::UILayout::Dynamic, 20, { 0.75f, 0.25f });
+        ui.label("Maximum Size of Leafs");
+        ui.label(std::to_string(bsp.leafSizeMaximum), gf::UIAlignment::Right);
+        ui.layoutRowDynamic(20, 1);
+        if (ui.sliderInt(3, bsp.leafSizeMaximum, dungeonSize / 2, 1)) {
+          if (bsp.leafSizeMaximum < bsp.leafSizeMinimum) {
+            bsp.leafSizeMinimum = bsp.leafSizeMaximum;
+          }
+
+          if (bsp.leafSizeMinimum <= bsp.roomSizeMinimum) {
+            bsp.roomSizeMinimum = bsp.leafSizeMinimum - 1;
+          }
+
+          currentGenerator->setPhase(DungeonGenerator::Phase::Iterate);
+        }
+
+        ui.layoutRow(gf::UILayout::Dynamic, 20, { 0.75f, 0.25f });
+        ui.label("Minimum Size of Rooms");
+        ui.label(std::to_string(bsp.roomSizeMinimum), gf::UIAlignment::Right);
+        ui.layoutRowDynamic(20, 1);
+        if (ui.sliderInt(2, bsp.roomSizeMinimum, dungeonSize / 2 - 1, 1)) {
+          if (bsp.roomSizeMinimum > bsp.roomSizeMaximum) {
+            bsp.roomSizeMaximum = bsp.roomSizeMinimum;
+          }
+
+          if (bsp.roomSizeMinimum >= bsp.leafSizeMinimum) {
+            bsp.leafSizeMinimum = bsp.roomSizeMinimum + 1;
+          }
+
+          if (bsp.leafSizeMinimum > bsp.leafSizeMaximum) {
+            bsp.leafSizeMaximum = bsp.leafSizeMinimum;
+          }
+
+          currentGenerator->setPhase(DungeonGenerator::Phase::Iterate);
+        }
+
+        ui.layoutRow(gf::UILayout::Dynamic, 20, { 0.75f, 0.25f });
+        ui.label("Maximum Size of Rooms");
+        ui.label(std::to_string(bsp.roomSizeMaximum), gf::UIAlignment::Right);
+        ui.layoutRowDynamic(20, 1);
+        if (ui.sliderInt(2, bsp.roomSizeMaximum, dungeonSize / 2 - 1, 1)) {
+          if (bsp.roomSizeMaximum < bsp.roomSizeMinimum) {
+            bsp.roomSizeMinimum = bsp.roomSizeMaximum;
+          }
+
+          currentGenerator->setPhase(DungeonGenerator::Phase::Iterate);
+        }
+        break;
       }
 
       default:
         break;
     }
 
+    ui.end();
+
+    if (currentAlgorithmChoice != algorithmChoice) {
+      currentAlgorithmChoice = algorithmChoice;
+      currentGenerator->setPhase(DungeonGenerator::Phase::Start);
+    }
+
     if (currentGenerator->getPhase() != DungeonGenerator::Phase::Finish) {
-      dungeon = currentGenerator->generate({ automataSize, automataSize }, random);
+      dungeon = currentGenerator->generate({ dungeonSize, dungeonSize }, random);
       computeDisplay(dungeon, vertices);
     }
 
