@@ -63,6 +63,15 @@ inline namespace v1 {
     }
 
     /**
+     * @brief Get the origin of the activity
+     *
+     * @returns The current origin
+     */
+    float getOrigin() const noexcept {
+      return m_tween.getOrigin();
+    }
+
+    /**
      * @brief Change the target of the activity
      *
      * @param target The new target
@@ -72,12 +81,30 @@ inline namespace v1 {
     }
 
     /**
+     * @brief Get the target of the activity
+     *
+     * @returns The current target
+     */
+    float getTarget() const noexcept {
+      return m_tween.getTarget();
+    }
+
+    /**
      * @brief Change the duration of the activity
      *
      * @param duration The new duration
      */
     void setDuration(float duration) {
       m_tween.setDuration(duration);
+    }
+
+    /**
+     * @brief Get the duration of the activity
+     *
+     * @returns The current duration
+     */
+    float getDuration() const noexcept {
+      return m_tween.getDuration();
     }
 
     virtual ActivityStatus run(float dt) override;
@@ -119,6 +146,15 @@ inline namespace v1 {
     }
 
     /**
+     * @brief Get the origin of the activity
+     *
+     * @returns The current origin
+     */
+    float getOrigin() const noexcept {
+      return m_tween.getOrigin();
+    }
+
+    /**
      * @brief Change the target of the activity
      *
      * @param target The new target
@@ -128,12 +164,30 @@ inline namespace v1 {
     }
 
     /**
+     * @brief Get the target of the activity
+     *
+     * @returns The current target
+     */
+    float getTarget() const noexcept {
+      return m_tween.getTarget();
+    }
+
+    /**
      * @brief Change the duration of the activity
      *
      * @param duration The new duration
      */
     void setDuration(float duration) {
       m_tween.setDuration(duration);
+    }
+
+    /**
+     * @brief Get the duration of the activity
+     *
+     * @returns The current duration
+     */
+    float getDuration() const noexcept {
+      return m_tween.getDuration();
     }
 
     virtual ActivityStatus run(float dt) override;
@@ -173,6 +227,15 @@ inline namespace v1 {
     }
 
     /**
+     * @brief Get the origin of the activity
+     *
+     * @returns The current origin
+     */
+    Vector2f getOrigin() const noexcept {
+      return m_tween.getOrigin();
+    }
+
+    /**
      * @brief Change the target of the activity
      *
      * @param target The new target
@@ -182,12 +245,30 @@ inline namespace v1 {
     }
 
     /**
+     * @brief Get the target of the activity
+     *
+     * @returns The current target
+     */
+    Vector2f getTarget() const noexcept {
+      return m_tween.getTarget();
+    }
+
+    /**
      * @brief Change the duration of the activity
      *
      * @param duration The new duration
      */
     void setDuration(float duration) {
       m_tween.setDuration(duration);
+    }
+
+    /**
+     * @brief Get the duration of the activity
+     *
+     * @returns The current duration
+     */
+    float getDuration() const noexcept {
+      return m_tween.getDuration();
     }
 
     virtual ActivityStatus run(float dt) override;
@@ -227,6 +308,15 @@ inline namespace v1 {
     }
 
     /**
+     * @brief Get the origin of the activity
+     *
+     * @returns The current origin
+     */
+    Color4f getOrigin() const noexcept {
+      return m_tween.getOrigin();
+    }
+
+    /**
      * @brief Change the target of the activity
      *
      * @param target The new target
@@ -236,12 +326,30 @@ inline namespace v1 {
     }
 
     /**
+     * @brief Get the target of the activity
+     *
+     * @returns The current target
+     */
+    Color4f getTarget() const noexcept {
+      return m_tween.getTarget();
+    }
+
+    /**
      * @brief Change the duration of the activity
      *
      * @param duration The new duration
      */
     void setDuration(float duration) {
       m_tween.setDuration(duration);
+    }
+
+    /**
+     * @brief Get the duration of the activity
+     *
+     * @returns The current duration
+     */
+    float getDuration() const noexcept {
+      return m_tween.getDuration();
     }
 
     virtual ActivityStatus run(float dt) override;

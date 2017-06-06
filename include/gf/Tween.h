@@ -94,6 +94,15 @@ inline namespace v1 {
     }
 
     /**
+     * @brief Get the origin of the tween
+     *
+     * @returns The current origin
+     */
+    constexpr T getOrigin() const noexcept {
+      return m_origin;
+    }
+
+    /**
      * @brief Change the target of the tween
      *
      * @param target The new target
@@ -103,12 +112,30 @@ inline namespace v1 {
     }
 
     /**
+     * @brief Get the target of the tween
+     *
+     * @returns The current target
+     */
+    constexpr T getTarget() const noexcept {
+      return m_target;
+    }
+
+    /**
      * @brief Change the duration of the tween
      *
      * @param duration The new duration
      */
     void setDuration(float duration) {
       m_duration = duration;
+    }
+
+    /**
+     * @brief Get the duration of the tween
+     *
+     * @returns The current duration
+     */
+    constexpr float getDuration() const noexcept {
+      return m_duration;
     }
 
     /**
