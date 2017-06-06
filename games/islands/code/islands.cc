@@ -5,6 +5,7 @@
 #include <gf/Event.h>
 #include <gf/Gamepad.h>
 #include <gf/Log.h>
+#include <gf/Logo.h>
 #include <gf/Random.h>
 #include <gf/RenderWindow.h>
 #include <gf/Sprite.h>
@@ -35,7 +36,9 @@ int main() {
   // initialization
 
   gf::Window window("Bygone Islands", ScreenSize);
-  // window.setFullscreen(true);
+  window.setVerticalSyncEnabled(true);
+  window.setFramerateLimit(60);
+
   gf::RenderWindow renderer(window);
 
   gf::SingletonStorage<gf::MessageManager> storageForMessageManager(bi::gMessageManager);
@@ -48,8 +51,13 @@ int main() {
 
   // splash screen
 
-  gf::Sprite logo(bi::gResourceManager().getTexture("logo.png"));
+  gf::Sprite splash(bi::gResourceManager().getTexture("logo.png"));
+  gf::Logo logo;
+  logo.setPosition({ 500.0f, 500.0f });
+  logo.setScale(0.5f);
+
   renderer.clear();
+  renderer.draw(splash);
   renderer.draw(logo);
   renderer.display();
 
