@@ -49,6 +49,9 @@ int main() {
 
   gf::Vector2u screenSize = { 1024, 576 };
   gf::Window window("Huaca", screenSize);
+  window.setVerticalSyncEnabled(true);
+  window.setFramerateLimit(60);
+
   gf::RenderWindow renderer(window);
 
   // setup resource directories

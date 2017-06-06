@@ -41,6 +41,9 @@ int main() {
   // initialization
 
   gf::Window window("Lux - Year of Light", ScreenSize);
+  window.setVerticalSyncEnabled(true);
+  window.setFramerateLimit(60);
+
   gf::RenderWindow renderer(window);
 
   // resources

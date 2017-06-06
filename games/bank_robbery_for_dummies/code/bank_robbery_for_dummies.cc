@@ -48,6 +48,9 @@ int main() {
   // initialization
 
   gf::Window window("Bank Robbery for Dummies", ScreenSize);
+  window.setVerticalSyncEnabled(true);
+  window.setFramerateLimit(60);
+
   gf::RenderWindow renderer(window);
 
   // managers and utilities

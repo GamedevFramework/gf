@@ -51,6 +51,9 @@ int main() {
   // initialize window
 
   gf::Window window("gf Pong!", ScreenSize);
+  window.setVerticalSyncEnabled(true);
+  window.setFramerateLimit(60);
+
   gf::RenderWindow renderer(window);
 
   // add cameras
