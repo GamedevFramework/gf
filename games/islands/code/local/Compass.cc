@@ -1,5 +1,7 @@
 #include "Compass.h"
 
+#include <iostream>
+
 #include <gf/Color.h>
 #include <gf/Coordinates.h>
 #include <gf/Curves.h>
@@ -25,6 +27,9 @@ namespace bi {
   : gf::Entity(15)
   , m_position(0.0f, 0.0f)
   , m_angle(0.0f)
+  , m_angleCurrent(0.0f)
+  , m_angleRange(0.0f)
+  , m_angleActivity(0.0f, 0.0f, m_angleCurrent, ScanCooldown / 12, gf::Ease::bounceInOut)
   , m_timeElapsed(0.0f)
   , m_displayed(false)
   , m_texture(gTextureAtlas().getTexture())
@@ -50,6 +55,15 @@ namespace bi {
       m_displayed = false;
       StopScan message;
       gMessageManager().sendMessage(&message);
+    }
+
+    auto status = m_angleActivity.run(dt);
+
+    if (status == gf::ActivityStatus::Finished) {
+      m_angleRange /= 1.2f;
+      m_angleActivity.setOrigin(m_angleActivity.getTarget());
+      m_angleActivity.setTarget(gRandom().computeUniformFloat(m_angle - m_angleRange, m_angle + m_angleRange));
+      m_angleActivity.restart();
     }
 
     // radars
@@ -112,7 +126,7 @@ namespace bi {
     pointer.setTextureRect(m_pointer);
     pointer.setScale(PointerSize / SpriteSize);
     pointer.setPosition(m_position);
-    pointer.setRotation(m_angle);
+    pointer.setRotation(m_angleCurrent);
     pointer.setAnchor(gf::Anchor::Center);
     target.draw(pointer, states);
   }
@@ -136,6 +150,12 @@ namespace bi {
 
     auto nearestTreasure = static_cast<NearestTreasure*>(msg);
     m_angle = gf::angle(nearestTreasure->position - m_position);
+
+    m_angleRange = gf::Pi2;
+    m_angleActivity.setOrigin(gRandom().computeUniformFloat(m_angle - m_angleRange, m_angle + m_angleRange));
+    m_angleActivity.setTarget(gRandom().computeUniformFloat(m_angle - m_angleRange, m_angle + m_angleRange));
+    m_angleActivity.restart();
+
     return gf::MessageStatus::Keep;
   }
 

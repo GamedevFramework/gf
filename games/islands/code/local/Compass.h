@@ -3,6 +3,7 @@
 
 #include <deque>
 
+#include <gf/Activities.h>
 #include <gf/Entity.h>
 #include <gf/Texture.h>
 
@@ -24,6 +25,10 @@ namespace bi {
   private:
     gf::Vector2f m_position;
     float m_angle;
+
+    float m_angleCurrent;
+    float m_angleRange;
+    gf::RotateToActivity m_angleActivity;
 
     float m_timeElapsed;
     bool m_displayed;
