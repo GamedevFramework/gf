@@ -20,7 +20,7 @@ namespace bi {
 
     void addDecoration(const gf::Vector2f position);
 
-    virtual void render(gf::RenderTarget& target) override;
+    virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
 
   private:
     struct Decoration {

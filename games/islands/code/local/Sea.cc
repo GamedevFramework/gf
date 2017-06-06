@@ -275,8 +275,8 @@ namespace bi {
     }
   }
 
-  void Sea::render(gf::RenderTarget& target) {
-    target.draw(m_vertices);
+  void Sea::render(gf::RenderTarget& target, const gf::RenderStates& states) {
+    target.draw(m_vertices, states);
   }
 
   gf::MessageStatus Sea::onHeroPosition(gf::Id id, gf::Message *msg) {

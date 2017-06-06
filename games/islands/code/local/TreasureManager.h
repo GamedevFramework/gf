@@ -18,7 +18,7 @@ namespace bi {
     void addTreasure(const gf::Vector2f position);
 
     virtual void update(float dt) override;
-    virtual void render(gf::RenderTarget& target) override;
+    virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
 
   private:
     gf::Vector2f getNearestTreasure() const;

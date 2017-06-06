@@ -122,13 +122,13 @@ namespace huaca {
     m_position = msg.position;
   }
 
-  void Hero::render(gf::RenderTarget& target) {
+  void Hero::render(gf::RenderTarget& target, const gf::RenderStates& states) {
     gf::AnimatedSprite sprite;
     sprite.setAnimation(*m_currentAnimation);
     sprite.setScale(Level::BlockSize / TextureSize);
     sprite.setPosition(m_position);
     sprite.setAnchor(gf::Anchor::Center);
-    target.draw(sprite);
+    target.draw(sprite, states);
   }
 
   gf::MessageStatus Hero::onNewLevel(gf::Id id, gf::Message *msg) {

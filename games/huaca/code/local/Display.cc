@@ -96,7 +96,7 @@ namespace huaca {
   static constexpr float Transparency = 0.125f;
 
 
-  void Display::render(gf::RenderTarget& target) {
+  void Display::render(gf::RenderTarget& target, const gf::RenderStates& states) {
     gf::Coordinates coordinates(target);
 
     gf::Vector2f position(HudPadding, HudPadding);
@@ -107,7 +107,7 @@ namespace huaca {
       sprite.setPosition(position);
       sprite.setScale(HudKeySize / HudKeyTextureSize);
       sprite.setColor({ 1.0f, 1.0f, 1.0f, (key.active ? 1.0f : Transparency) });
-      target.draw(sprite);
+      target.draw(sprite, states);
 
       position.x += HudKeySize + HudKeySpace;
     }
@@ -123,7 +123,7 @@ namespace huaca {
         sprite.setPosition(position + HudRuneSize * gf::Vector2f(i, j));
         sprite.setScale(HudRuneSize / HudRuneTextureSize);
         sprite.setColor({ 1.0f, 1.0f, 1.0f, (rune.active ? 1.0f : Transparency) });
-        target.draw(sprite);
+        target.draw(sprite, states);
       }
     }
 
@@ -135,7 +135,7 @@ namespace huaca {
       sprite.setPosition(position);
       sprite.setScale({ HudPortalSize / HudPortalTextureSize });
       sprite.setColor({ 1.0f, 1.0f, 1.0f, (portal.active ? 1.0f : Transparency) });
-      target.draw(sprite);
+      target.draw(sprite, states);
 
       position.x += HudPortalSize + HudPortalSpace;
     }

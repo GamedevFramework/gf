@@ -89,7 +89,7 @@ namespace bi {
     m_decorations.push_back(decoration);
   }
 
-  void DecorationManager::render(gf::RenderTarget& target) {
+  void DecorationManager::render(gf::RenderTarget& target, const gf::RenderStates& states) {
     gf::SpriteBatch batch(target);
     batch.begin();
 
@@ -102,7 +102,7 @@ namespace bi {
       sprite.setScale(decoration.size / SpriteSize);
       sprite.setRotation(decoration.angle);
 
-      batch.draw(sprite);
+      batch.draw(sprite, states);
     }
 
     batch.end();

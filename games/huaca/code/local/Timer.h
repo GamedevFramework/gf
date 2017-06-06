@@ -28,7 +28,7 @@ namespace huaca {
     Timer();
 
     virtual void update(float dt) override;
-    virtual void render(gf::RenderTarget& target) override;
+    virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
 
   private:
     gf::MessageStatus onNewLevel(gf::Id id, gf::Message *msg);

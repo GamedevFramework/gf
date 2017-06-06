@@ -32,7 +32,7 @@ namespace huaca {
   public:
     Roof();
     void addRoof(gf::Vector2u coords);
-    virtual void render(gf::RenderTarget& target) override;
+    virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
   private:
     gf::VertexArray m_vertices;
   };
@@ -80,7 +80,7 @@ namespace huaca {
 
 //     virtual void update(float dt) override;
 
-    virtual void render(gf::RenderTarget& target) override;
+    virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
 
     void generateFirst(gf::Random& random);
     void generateNew(gf::Random& random);

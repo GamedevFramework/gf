@@ -35,8 +35,9 @@ inline namespace v1 {
     // default: do nothing
   }
 
-  void Entity::render(RenderTarget& target) {
+  void Entity::render(RenderTarget& target, const RenderStates& states) {
     gf::unused(target);
+    gf::unused(states);
     // default: do nothing
   }
 

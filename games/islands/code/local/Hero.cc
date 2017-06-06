@@ -125,7 +125,7 @@ namespace bi {
     m_position = message.position;
   }
 
-  void Hero::render(gf::RenderTarget& target) {
+  void Hero::render(gf::RenderTarget& target, const gf::RenderStates& states) {
     gf::Sprite sprite;
     sprite.setTexture(m_texture);
 
@@ -154,7 +154,7 @@ namespace bi {
     sprite.setPosition(m_position);
     sprite.setAnchor(gf::Anchor::Center);
 
-    target.draw(sprite);
+    target.draw(sprite, states);
   }
 
   gf::MessageStatus Hero::onStartScan(gf::Id id, gf::Message *msg) {

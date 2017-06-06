@@ -66,12 +66,12 @@ namespace lux {
     m_particleSystems.erase(trash, m_particleSystems.end());
   }
 
-  void Particles::render(gf::RenderTarget& target) {
-    gf::RenderStates states;
-    states.lineWidth = 10.0f;
+  void Particles::render(gf::RenderTarget& target, const gf::RenderStates& states) {
+    gf::RenderStates localStates = states;
+    localStates.lineWidth = 10.0f;
 
     for (ParticleSystem& sys : m_particleSystems) {
-      target.draw(sys.vertices, states);
+      target.draw(sys.vertices, localStates);
     }
   }
 

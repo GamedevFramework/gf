@@ -51,7 +51,7 @@ public:
   }
 
   virtual void update(float dt) override;
-  virtual void render(gf::RenderTarget& target) override;
+  virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
 
 private:
   gf::MessageStatus onBallLocation(gf::Id id, gf::Message *msg);

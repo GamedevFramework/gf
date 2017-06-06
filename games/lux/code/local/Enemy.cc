@@ -107,14 +107,14 @@ namespace lux {
     m_shoot->shoot(dt, m_position, dir, m_messages);
   }
 
-  void Enemy::render(gf::RenderTarget& target) {
+  void Enemy::render(gf::RenderTarget& target, const gf::RenderStates& states) {
     gf::Sprite sprite;
     sprite.setTexture(*m_texture);
     sprite.setScale({ ScaleX, ScaleY });
     sprite.setPosition(m_position);
     sprite.setAnchor(gf::Anchor::Center);
     sprite.setRotation(-gf::Pi2);
-    target.draw(sprite);
+    target.draw(sprite, states);
   }
 
 
@@ -168,9 +168,9 @@ namespace lux {
     m_enemies.erase(trash, m_enemies.end());
   }
 
-  void EnemyManager::render(gf::RenderTarget& target) {
+  void EnemyManager::render(gf::RenderTarget& target, const gf::RenderStates& states) {
     for (auto enemy : m_enemies) {
-      enemy->render(target);
+      enemy->render(target, states);
     }
   }
 

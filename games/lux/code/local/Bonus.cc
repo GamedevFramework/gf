@@ -68,7 +68,7 @@ namespace lux {
   static constexpr float RatioLifeBonus = BonusSize / 256.0f;
   static constexpr float RatioWeaponBonus = BonusSize / 256.0f;
 
-  void BonusManager::render(gf::RenderTarget& target) {
+  void BonusManager::render(gf::RenderTarget& target, const gf::RenderStates& states) {
     gf::Sprite sprite;
 
     for (const Bonus& bonus : m_bonus) {
@@ -86,7 +86,7 @@ namespace lux {
 
       sprite.setAnchor(gf::Anchor::Center);
       sprite.setPosition(bonus.position);
-      target.draw(sprite);
+      target.draw(sprite, states);
     }
   }
 

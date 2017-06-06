@@ -35,7 +35,7 @@ namespace lux {
 
 
     virtual void update(float dt) override;
-    virtual void render(gf::RenderTarget& target) override;
+    virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
 
   private:
     static constexpr std::size_t Count = 50;

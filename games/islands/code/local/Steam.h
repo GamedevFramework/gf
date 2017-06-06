@@ -24,7 +24,7 @@ namespace bi {
     }
 
     virtual void update(float dt) override;
-    virtual void render(gf::RenderTarget& target) override;
+    virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
 
   private:
     gf::MessageStatus onHeroPosition(gf::Id id, gf::Message *msg);

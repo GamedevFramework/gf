@@ -94,7 +94,7 @@ namespace bi {
     m_treasures.erase(trash, m_treasures.end());
   }
 
-  void TreasureManager::render(gf::RenderTarget& target) {
+  void TreasureManager::render(gf::RenderTarget& target, const gf::RenderStates& states) {
     gf::SpriteBatch batch(target);
     batch.begin();
 
@@ -107,7 +107,7 @@ namespace bi {
       sprite.setColor(gf::Color::Opaque(treasure.alpha));
       sprite.setAnchor(gf::Anchor::Center);
 
-      batch.draw(sprite);
+      batch.draw(sprite, states);
     }
 
     batch.end();

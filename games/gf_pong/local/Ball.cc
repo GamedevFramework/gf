@@ -39,10 +39,10 @@ void Ball::update(float dt) {
   m_velocity = loc.velocity;
 }
 
-void Ball::render(gf::RenderTarget& target) {
+void Ball::render(gf::RenderTarget& target, const gf::RenderStates& states) {
   gf::CircleShape shape(Radius);
   shape.setAnchor(gf::Anchor::Center);
   shape.setPosition(m_position);
   shape.setColor(gf::Color::White);
-  target.draw(shape);
+  target.draw(shape, states);
 }

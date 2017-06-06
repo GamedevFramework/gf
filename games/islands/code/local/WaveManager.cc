@@ -112,7 +112,7 @@ namespace bi {
     gMessageManager().sendMessage(&msg);
   }
 
-  void WaveManager::render(gf::RenderTarget& target) {
+  void WaveManager::render(gf::RenderTarget& target, const gf::RenderStates& states) {
     gf::Color4f deepBlue = gf::Color::fromRgba32(2, 43, 68, 0);
 
     gf::ShapeParticles particles;
@@ -122,7 +122,7 @@ namespace bi {
       particles.addCircle(bubble.position, bubble.radius, color);
     }
 
-    target.draw(particles);
+    target.draw(particles, states);
   }
 
   gf::MessageStatus WaveManager::onHeroPosition(gf::Id id, gf::Message *msg) {

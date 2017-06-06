@@ -40,7 +40,7 @@ namespace lux {
 
     virtual void update(float dt) override;
 
-    virtual void render(gf::RenderTarget& target) override;
+    virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
 
     void setHeroPosition(gf::Vector2f position) {
       m_heroPos = position;
@@ -79,7 +79,7 @@ namespace lux {
 
     virtual void update(float dt) override;
 
-    virtual void render(gf::RenderTarget& target) override;
+    virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
 
   private:
     gf::Random& m_random;

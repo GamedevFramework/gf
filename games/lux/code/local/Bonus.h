@@ -38,7 +38,7 @@ namespace lux {
     void addBonus(gf::Vector2f position, gf::Vector2f velocity, BonusType type);
 
     virtual void update(float dt) override;
-    virtual void render(gf::RenderTarget& target) override;
+    virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
 
     gf::MessageStatus onDropBonus(gf::Id id, gf::Message *msg);
     gf::MessageStatus onLocation(gf::Id id, gf::Message *msg);

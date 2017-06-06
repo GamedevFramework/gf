@@ -25,7 +25,7 @@ namespace bi {
     gMessageManager().registerHandler<GoldLooted>(&Gold::onGoldLooted, this);
   }
 
-  void Gold::render(gf::RenderTarget& target) {
+  void Gold::render(gf::RenderTarget& target, const gf::RenderStates& states) {
     gf::Coordinates coords(target);
 
     if (m_gameOver || m_win) {
@@ -42,7 +42,7 @@ namespace bi {
         text.setAnchor(gf::Anchor::Center);
         text.setPosition(center);
 
-        target.draw(text);
+        target.draw(text, states);
       } else {
         gf::Text text("Game Over!\nYour score is : " + std::to_string(m_score), m_font, fontSize);
         text.setColor(gf::Color::White);
@@ -50,7 +50,7 @@ namespace bi {
         text.setAnchor(gf::Anchor::Center);
         text.setPosition(center);
 
-        target.draw(text);
+        target.draw(text, states);
       }
     } else {
       // Compute the margin 5% of screen
@@ -65,7 +65,7 @@ namespace bi {
       text.setAnchor(gf::Anchor::TopLeft);
       text.setPosition(position);
 
-      target.draw(text);
+      target.draw(text, states);
 
       // Draw the coins
       position.x -= 10.0f;
@@ -77,7 +77,7 @@ namespace bi {
       sprite.setScale(fontSize / SpriteSize);
       sprite.setAnchor(gf::Anchor::TopRight);
 
-      target.draw(sprite);
+      target.draw(sprite, states);
     }
   }
 

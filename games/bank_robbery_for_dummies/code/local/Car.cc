@@ -140,13 +140,13 @@ namespace brfd {
 
   static constexpr gf::Vector2f TileScale(CarWidth / TilesetWidth, CarHeight / TilesetHeight);
 
-  void HeroCar::render(gf::RenderTarget& target) {
+  void HeroCar::render(gf::RenderTarget& target, const gf::RenderStates& states) {
     gf::Sprite sprite(m_texture, gf::RectF(TileScale * gf::Vector2u(1, 1), TileScale));
     sprite.setAnchor(gf::Anchor::Center);
     sprite.setRotation(m_body.getAngle());
     sprite.setPosition(m_body.getPosition());
 
-    target.draw(sprite);
+    target.draw(sprite, states);
 
 //     m_body.render(target);
   }

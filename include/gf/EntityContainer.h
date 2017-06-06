@@ -25,6 +25,7 @@
 #include <vector>
 
 #include "Portability.h"
+#include "RenderStates.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -77,7 +78,7 @@ inline namespace v1 {
      * @param target The render target
      * @sa gf::Entity::render()
      */
-    void render(RenderTarget& target);
+    void render(RenderTarget& target, const RenderStates& states = RenderStates());
 
     /**
      * @name Entities management

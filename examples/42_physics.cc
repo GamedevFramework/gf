@@ -62,12 +62,12 @@ public:
     return m_body;
   }
 
-  virtual void render(gf::RenderTarget &target) override {
+  virtual void render(gf::RenderTarget &target, const gf::RenderStates& states) override {
     gf::RectangleShape shape({ SideLength, SideLength });
     shape.setColor(gf::Color::Azure);
     shape.setPosition(m_body.getPosition());
     shape.setAnchor(gf::Anchor::Center);
-    target.draw(shape);
+    target.draw(shape, states);
 
 //     m_body.render(target);
   }
@@ -92,12 +92,12 @@ public:
     return m_body;
   }
 
-  virtual void render(gf::RenderTarget &target) override {
+  virtual void render(gf::RenderTarget &target, const gf::RenderStates& states) override {
     gf::CircleShape shape(Radius);
     shape.setColor(gf::Color::Orange);
     shape.setPosition(m_body.getPosition());
     shape.setAnchor(gf::Anchor::Center);
-    target.draw(shape);
+    target.draw(shape, states);
 
 //     m_body.render(target);
   }
@@ -134,9 +134,9 @@ public:
     }
   }
 
-  void render(gf::RenderTarget& target) {
+  void render(gf::RenderTarget& target, const gf::RenderStates& states = gf::RenderStates()) {
     for (auto& entity : m_entities) {
-      entity->render(target);
+      entity->render(target, states);
     }
   }
 

@@ -216,7 +216,7 @@ int main() {
 
     if (gold.isGameOver() || gold.isWin()) {
       renderer.setView(hudView);
-      gold.render(renderer);
+      gold.render(renderer, gf::RenderStates());
     } else {
       renderer.setView(mainView);
       mainEntities.render(renderer);

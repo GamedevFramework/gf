@@ -34,7 +34,7 @@ namespace lux {
     void addBullet(Origin origin, ShipClass shipClass, gf::Vector2f position, gf::Vector2f velocity);
 
     virtual void update(float dt) override;
-    virtual void render(gf::RenderTarget& target) override;
+    virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
 
   private:
     gf::MessageStatus onLocation(gf::Id id, gf::Message *msg);

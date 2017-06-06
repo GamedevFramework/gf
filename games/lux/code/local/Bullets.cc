@@ -87,13 +87,13 @@ namespace lux {
     m_bullets.erase(std::remove_if(m_bullets.begin(), m_bullets.end(), [](const Bullet& b) { return !b.active; }), m_bullets.end());
   }
 
-  void Bullets::render(gf::RenderTarget& target) {
+  void Bullets::render(gf::RenderTarget& target, const gf::RenderStates& states) {
     for (Bullet& bullet : m_bullets) {
       gf::Sprite sprite;
       sprite.setTexture(*bullet.texture);
       sprite.setPosition(bullet.position);
       sprite.setAnchor(gf::Anchor::Center);
-      target.draw(sprite);
+      target.draw(sprite, states);
     }
   }
 

@@ -76,7 +76,7 @@ namespace bi {
     }
   }
 
-  void Compass::render(gf::RenderTarget& target) {
+  void Compass::render(gf::RenderTarget& target, const gf::RenderStates& states) {
     if (!m_displayed) {
       return;
     }
@@ -94,7 +94,7 @@ namespace bi {
       circle.setOutlineColor(radarColor);
       circle.setRadius(radar.radius);
       circle.setAnchor(gf::Anchor::Center);
-      target.draw(circle);
+      target.draw(circle, states);
     }
 
     // Draw the background
@@ -104,7 +104,7 @@ namespace bi {
     compass.setScale(CompassSize / SpriteSize);
     compass.setPosition(m_position);
     compass.setAnchor(gf::Anchor::Center);
-    target.draw(compass);
+    target.draw(compass, states);
 
     // Draw the pointer
     gf::Sprite pointer;
@@ -114,7 +114,7 @@ namespace bi {
     pointer.setPosition(m_position);
     pointer.setRotation(m_angle);
     pointer.setAnchor(gf::Anchor::Center);
-    target.draw(pointer);
+    target.draw(pointer, states);
   }
 
 

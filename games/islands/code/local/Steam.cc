@@ -61,7 +61,7 @@ namespace bi {
     m_timer += GenerationTime;
   }
 
-  void Steam::render(gf::RenderTarget& target) {
+  void Steam::render(gf::RenderTarget& target, const gf::RenderStates& states) {
     gf::Color4f color(0.5f, 0.5f, 0.5f, 1.0f);
 
     gf::ShapeParticles particles;
@@ -71,7 +71,7 @@ namespace bi {
       particles.addCircle(cloud.position, cloud.radius, color);
     }
 
-    target.draw(particles);
+    target.draw(particles, states);
   }
 
   gf::MessageStatus Steam::onHeroPosition(gf::Id id, gf::Message *msg) {

@@ -77,7 +77,7 @@ namespace bi {
     }
   }
 
-  void TurretManager::render(gf::RenderTarget& target) {
+  void TurretManager::render(gf::RenderTarget& target, const gf::RenderStates& states) {
     for (auto &turret: m_turrets) {
       // Draw the turret
       gf::Sprite sprite;
@@ -87,7 +87,7 @@ namespace bi {
       sprite.setScale(TurretSize / SpriteSize);
       sprite.setAnchor(gf::Anchor::Center);
 
-      target.draw(sprite);
+      target.draw(sprite, states);
 
       // Draw the bullet
       for (auto &bullet: turret.bullets) {
@@ -96,7 +96,7 @@ namespace bi {
         shape.setColor(gf::Color::Black);
         shape.setPosition(bullet.position);
         shape.setAnchor(gf::Anchor::Center);
-        target.draw(shape);
+        target.draw(shape, states);
       }
     }
   }

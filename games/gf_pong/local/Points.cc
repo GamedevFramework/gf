@@ -110,7 +110,7 @@ static const char digits[10][5][4] = {
   },
 };
 
-static void displayDigit(int d, gf::Vector2f position, const gf::Color4f& color, gf::RenderTarget& target) {
+static void displayDigit(int d, gf::Vector2f position, const gf::Color4f& color, gf::RenderTarget& target, const gf::RenderStates& states) {
   assert(0 <= d && d <= 9);
 
   static constexpr float Width = 1.3f;
@@ -124,22 +124,22 @@ static void displayDigit(int d, gf::Vector2f position, const gf::Color4f& color,
     for (int j = 0; j < 3; ++j) {
       if (digits[d][i][j] == '#') {
         shape.setPosition({ position.x + (j - 1) * Width, position.y + (i - 2) * Height });
-        target.draw(shape);
+        target.draw(shape, states);
       }
     }
   }
 }
 
-void Points::render(gf::RenderTarget& target) {
+void Points::render(gf::RenderTarget& target, const gf::RenderStates& states) {
   static constexpr float HiX = 85.0f;
   static constexpr float LoX = 90.0f;
   static constexpr float Y = 40.0f;
 
-  displayDigit((m_leftPlayerPoints / 10) % 10, { -LoX, -Y }, gf::Color::Orange, target);
-  displayDigit(m_leftPlayerPoints % 10, { - HiX, -Y }, gf::Color::Orange, target);
+  displayDigit((m_leftPlayerPoints / 10) % 10, { -LoX, -Y }, gf::Color::Orange, target, states);
+  displayDigit(m_leftPlayerPoints % 10, { - HiX, -Y }, gf::Color::Orange, target, states);
 
-  displayDigit((m_rightPlayerPoints / 10) % 10, { HiX, -Y }, gf::Color::Azure, target);
-  displayDigit(m_rightPlayerPoints % 10, { LoX, -Y }, gf::Color::Azure, target);
+  displayDigit((m_rightPlayerPoints / 10) % 10, { HiX, -Y }, gf::Color::Azure, target, states);
+  displayDigit(m_rightPlayerPoints % 10, { LoX, -Y }, gf::Color::Azure, target, states);
 }
 
 

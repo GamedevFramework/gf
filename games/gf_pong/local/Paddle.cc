@@ -80,10 +80,10 @@ gf::MessageStatus Paddle::onBallLocation(gf::Id id, gf::Message *msg) {
   return gf::MessageStatus::Keep;
 }
 
-void Paddle::render(gf::RenderTarget& target) {
+void Paddle::render(gf::RenderTarget& target, const gf::RenderStates& states) {
   gf::RectangleShape shape({ Width, Height });
   shape.setAnchor(gf::Anchor::Center);
   shape.setPosition(m_position);
   shape.setColor(m_location == Location::Left ? gf::Color::Orange : gf::Color::Azure);
-  target.draw(shape);
+  target.draw(shape, states);
 }

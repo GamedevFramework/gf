@@ -48,7 +48,7 @@ namespace lux {
 
   }
 
-  void HeroProperties::render(gf::RenderTarget& target) {
+  void HeroProperties::render(gf::RenderTarget& target, const gf::RenderStates& states) {
     gf::Coordinates coordinates(target);
 
     gf::Vector2f position = coordinates.getRelativePoint({ 0.5f, 0.95f });
@@ -60,13 +60,13 @@ namespace lux {
     healthBg.setColor(gf::Color::Transparent);
     healthBg.setOutlineColor(gf::Color::White);
     healthBg.setOutlineThickness(HealthThickness);
-    target.draw(healthBg);
+    target.draw(healthBg, states);
 
     gf::RoundedRectangleShape healthFg({ m_healthPercent * HealthWidth, HealthHeight }, HealthRadius);
     healthFg.setPosition(position);
     healthFg.setAnchor(gf::Anchor::CenterLeft);
     healthFg.setColor(gf::Color::Red);
-    target.draw(healthFg);
+    target.draw(healthFg, states);
 
     position.x += HealthWidth + ScorePadding;
 
@@ -77,7 +77,7 @@ namespace lux {
     score.setString("Score: " + std::to_string(m_score));
     score.setPosition(position);
     score.setAnchor(gf::Anchor::CenterLeft);
-    target.draw(score);
+    target.draw(score, states);
   }
 
 
@@ -152,7 +152,7 @@ namespace lux {
     m_shoot->shoot(dt, m_position, dir, m_messages);
   }
 
-  void Hero::render(gf::RenderTarget& target) {
+  void Hero::render(gf::RenderTarget& target, const gf::RenderStates& states) {
     if (isDamaged()) {
       return;
     }
@@ -163,7 +163,7 @@ namespace lux {
     sprite.setAnchor(gf::Anchor::Center);
     sprite.setScale({ ScaleX, ScaleY });
     sprite.setRotation(-gf::Pi2);
-    target.draw(sprite);
+    target.draw(sprite, states);
   }
 
   void Hero::upgradeWeapon() {

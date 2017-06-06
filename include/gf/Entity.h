@@ -28,6 +28,7 @@ namespace gf {
 inline namespace v1 {
 #endif
 
+  struct RenderStates;
   class RenderTarget;
 
   /**
@@ -131,7 +132,7 @@ inline namespace v1 {
      * @param target The render target
      * @sa gf::EntityContainer::render()
      */
-    virtual void render(RenderTarget& target);
+    virtual void render(RenderTarget& target, const RenderStates& states);
 
   private:
     enum class Liveness : int {

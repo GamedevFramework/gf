@@ -44,9 +44,9 @@ inline namespace v1 {
     }
   }
 
-  void EntityContainer::render(RenderTarget& target) {
+  void EntityContainer::render(RenderTarget& target, const RenderStates& states) {
     for (auto entity : m_entities) {
-      entity->render(target);
+      entity->render(target, states);
     }
   }
 

@@ -54,7 +54,7 @@ namespace huaca {
   static constexpr float TimerHeight = 300.0f;
   static constexpr float TimerCorner = 5.0f;
 
-  void Timer::render(gf::RenderTarget& target) {
+  void Timer::render(gf::RenderTarget& target, const gf::RenderStates& states) {
     gf::Coordinates coordinates(target);
 
     gf::Vector2f position = coordinates.getAbsolutePoint({ TimerWidth + Padding, TimerHeight + Padding }, gf::Anchor::BottomRight);
@@ -69,7 +69,7 @@ namespace huaca {
     shape.setRadius(TimerCorner);
     shape.setPosition(position);
     shape.setColor(color);
-    target.draw(shape);
+    target.draw(shape, states);
 
     float remaining = m_remainingTime / m_totalTime * TimerHeight;
     color.a = 1.0f;
@@ -80,7 +80,7 @@ namespace huaca {
     shape.setRadius(std::min(remaining / 2, TimerCorner));
     shape.setPosition(position);
     shape.setColor(color);
-    target.draw(shape);
+    target.draw(shape, states);
   }
 
   gf::MessageStatus Timer::onNewLevel(gf::Id id, gf::Message *msg) {

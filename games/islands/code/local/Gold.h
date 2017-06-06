@@ -13,7 +13,7 @@ namespace bi {
   public:
     Gold();
 
-    virtual void render(gf::RenderTarget& target) override;
+    virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
 
     bool isGameOver() { return m_gameOver; }
     bool isWin() { return m_win; }
