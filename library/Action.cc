@@ -85,6 +85,10 @@ inline namespace v1 {
     m_controls.push_back(std::move(ptr));
   }
 
+  void Action::addControl(std::unique_ptr<Control> control) {
+    m_controls.push_back(std::move(control));
+  }
+
   void Action::processEvent(const Event& event) {
     for (auto& control : m_controls) {
       control->processEvent(event);

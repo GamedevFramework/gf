@@ -169,6 +169,14 @@ inline namespace v1 {
      * @sa CloseControl
      */
     void addCloseControl();
+
+
+    /**
+     * @brief Add a user-defined control
+     *
+     * @param control The control
+     */
+    void addControl(std::unique_ptr<Control> control);
     /** @} */
 
     /**
