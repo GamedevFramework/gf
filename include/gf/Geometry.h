@@ -33,6 +33,7 @@ inline namespace v1 {
 #endif
 
   /**
+   * @ingroup game
    * @brief Generate a line between two positions
    *
    * This function uses [Bresenham's line algorithm](https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm).
@@ -44,6 +45,7 @@ inline namespace v1 {
   GF_API std::vector<Vector2i> generateLine(Vector2i p0, Vector2i p1);
 
   /**
+   * @ingroup game
    * @brief 1D midpoint displacement
    *
    * @param p0 The first end point
@@ -57,6 +59,7 @@ inline namespace v1 {
   GF_API std::vector<Vector2f> midpointDisplacement1D(Vector2f p0, Vector2f p1, Random& random, unsigned iterations, Vector2f direction, float initialFactor = 1.0f, float reductionFactor = 0.5f);
 
   /**
+   * @ingroup game
    * @brief 1D midpoint displacement
    *
    * The direction is perpendicular to the segment @f$ [P_0 P_1] @f$

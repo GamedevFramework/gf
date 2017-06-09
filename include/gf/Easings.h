@@ -35,6 +35,7 @@ inline namespace v1 {
 #endif
 
   /**
+   * @ingroup core
    * @brief An easing function
    *
    * An easing function is a function that specifies how a value changes over
@@ -51,6 +52,7 @@ inline namespace v1 {
 
 
   /**
+   * @ingroup core
    * @brief Predefined easing functions
    *
    * This class defines usual easing functions.

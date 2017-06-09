@@ -130,6 +130,7 @@ inline namespace v1 {
      * @brief Render the entity
      *
      * @param target The render target
+     * @param states The render states to use for drawing
      * @sa gf::EntityContainer::render()
      */
     virtual void render(RenderTarget& target, const RenderStates& states);

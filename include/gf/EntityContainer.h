@@ -76,6 +76,7 @@ inline namespace v1 {
      * higher priority last.
      *
      * @param target The render target
+     * @param states The render states to use for drawing
      * @sa gf::Entity::render()
      */
     void render(RenderTarget& target, const RenderStates& states = RenderStates());

@@ -31,6 +31,7 @@ inline namespace v1 {
 #endif
 
   /**
+   * @ingroup window
    * @brief A character encoded in UTF-8
    */
   struct GF_API Rune {
