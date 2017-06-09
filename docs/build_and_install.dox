@@ -86,7 +86,7 @@ C:\Local> git clone https://github.com/Microsoft/vcpkg.git
 C:\Local> cd vcpkg
 ~~~
 
-Then, you have to follow the instructions from the vcpkg documentation. Normally, during the installation process, it will detect and the installed CMake.
+Then, you have to follow the instructions from the vcpkg documentation. Normally, during the installation process, it will detect the installed CMake.
 
 ~~~{.bat}
 C:\Local\vcpkg> .\bootstrap-vcpkg.bat
