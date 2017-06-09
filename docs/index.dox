@@ -39,6 +39,7 @@
 - Application messages: gf::MessageManager, gf::Message
 - Resources: gf::AssetManager, gf::ResourceCache, gf::ResourceManager, gf::TextureAtlas
 - Physics: gf::PhysicsBody, gf::PhysicsGeometry, gf::PhysicsModel
+- Animations: gf::Activity, gf::Tween
 - Geometry: gf::generateLine(), gf::midpointDisplacement1D()
 
 @mainpage
