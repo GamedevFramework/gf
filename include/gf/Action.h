@@ -176,7 +176,7 @@ inline namespace v1 {
      *
      * @param control The control
      */
-    void addControl(std::unique_ptr<Control> control);
+    void addControl(Control& control);
     /** @} */
 
     /**
@@ -221,7 +221,8 @@ inline namespace v1 {
 
     std::string m_name;
     Type m_type;
-    std::vector<std::unique_ptr<Control>> m_controls;
+    std::vector<std::unique_ptr<Control>> m_ownedControls;
+    std::vector<Control *> m_controls;
   };
 
   /**
