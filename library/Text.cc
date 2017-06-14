@@ -31,10 +31,9 @@
 
 #include <gf/Color.h>
 #include <gf/Font.h>
+#include <gf/StringUtils.h>
 #include <gf/RenderTarget.h>
 #include <gf/VectorOps.h>
-
-#include "priv/String.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -315,7 +314,7 @@ inline namespace v1 {
   }
 
   std::vector<Text::Paragraph> Text::makeParagraphs(const std::string& str, float spaceWidth) {
-    std::u32string unicodeString = getUnicodeString(str);
+    std::u32string unicodeString = computeUnicodeString(str);
     std::vector<std::u32string> paragraphs = splitInParagraphs(unicodeString);
     std::vector<Paragraph> out;
 

@@ -34,6 +34,7 @@
 #include <gf/Math.h>
 #include <gf/Random.h>
 #include <gf/RenderWindow.h>
+#include <gf/StringUtils.h>
 #include <gf/UI.h>
 #include <gf/Unused.h>
 #include <gf/VectorOps.h>

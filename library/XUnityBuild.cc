@@ -96,6 +96,7 @@
 #include "Sleep.cc"
 #include "SpriteBatch.cc"
 #include "Sprite.cc"
+#include "StringUtils.cc"
 #include "SystemInfo.cc"
 #include "Text.cc"
 #include "TextureAtlas.cc"

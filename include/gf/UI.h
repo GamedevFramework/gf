@@ -1420,18 +1420,6 @@ inline namespace v1 {
   };
 
 
-  /**
-   * @ingroup graphics
-   * @brief Create a string representation of a floating point number
-   *
-   * It is based on [Python niceNum](https://mail.python.org/pipermail/python-list/1999-October/005748.html).
-   *
-   * @param num The number to display
-   * @param precision The precision to use for display
-   * @returns A string representing the number
-   */
-  GF_API std::string niceNum(float num, float precision);
-
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif

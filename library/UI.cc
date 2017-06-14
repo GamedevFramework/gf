@@ -25,7 +25,6 @@
 #include <cstring>
 #include <cstdlib>
 
-#include <algorithm>
 #include <string>
 #include <type_traits>
 
@@ -35,13 +34,12 @@
 
 #include <gf/Paths.h>
 #include <gf/RenderTarget.h>
+#include <gf/StringUtils.h>
 #include <gf/Transform.h>
 #include <gf/Texture.h>
 #include <gf/Unused.h>
 #include <gf/VectorOps.h>
 #include <gf/Vertex.h>
-
-#include "priv/String.h"
 
 // #define NK_PRIVATE
 #define NK_INCLUDE_FIXED_TYPES
@@ -167,7 +165,7 @@ inline namespace v1 {
     auto font = static_cast<Font *>(handle.ptr);
 
     std::string originalText(text, len);
-    std::u32string unicodeText = getUnicodeString(originalText);
+    std::u32string unicodeText = computeUnicodeString(originalText);
 
     float textWidth = 0;
     char32_t prevCodepoint = '\0';
@@ -1268,61 +1266,6 @@ inline namespace v1 {
     }
 
     m_impl->state = state;
-  }
-
-
-  std::string niceNum(float num, float precision) {
-    float accpow = std::floor(std::log10(precision));
-
-    int digits = 0;
-
-    if (num < 0) {
-      digits = static_cast<int>(std::fabs(num / std::pow(10, accpow) - 0.5f));
-    } else {
-      digits = static_cast<int>(std::fabs(num / std::pow(10, accpow) + 0.5f));
-    }
-
-    std::string result;
-
-    if (digits > 0) {
-      int curpow = static_cast<int>(accpow);
-
-      for (int i = 0; i < curpow; ++i) {
-        result += '0';
-      }
-
-      while (digits > 0) {
-        char adigit = (digits % 10) + '0';
-
-        if (curpow == 0 && result.length() > 0) {
-          result += '.';
-          result += adigit;
-        } else {
-          result += adigit;
-        }
-
-        digits /= 10;
-        curpow += 1;
-      }
-
-      for (int i = curpow; i < 0; ++i) {
-        result += '0';
-      }
-
-      if (curpow <= 0) {
-        result += ".0";
-      }
-
-      if (num < 0) {
-        result += '-';
-      }
-
-      std::reverse(result.begin(), result.end());
-    } else {
-      result = "0";
-    }
-
-    return result;
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

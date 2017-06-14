@@ -126,6 +126,7 @@ else()
     Sleep.cc
     SpriteBatch.cc
     Sprite.cc
+    StringUtils.cc
     SystemInfo.cc
     Text.cc
     TextureAtlas.cc
