@@ -44,7 +44,7 @@ inline namespace v1 {
 
   /**
    * @ingroup core
-   * @brief Transform a UTF-8 string into a UTF-32 string
+   * @brief Compute a UTF-32 string from a UTF-8 string
    *
    * @param str A UTF-8 string
    * @returns The corresponding UTF-32 string
