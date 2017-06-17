@@ -284,11 +284,13 @@ inline namespace v1 {
     Mode = 257,
   };
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
   namespace {
     constexpr int getKeycodeFromScancode(Scancode scancode) {
       return static_cast<int>(scancode) | (1 << 30);
     }
   }
+#endif // DOXYGEN_SHOULD_SKIP_THIS
 
   /**
    * @ingroup window
