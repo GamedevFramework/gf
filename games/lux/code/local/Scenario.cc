@@ -361,7 +361,8 @@ namespace lux {
   static constexpr float MenuTime = 15.0f;
   static constexpr unsigned long WinBonusScore = 5000;
 
-  void Scenario::update(float dt) {
+  void Scenario::update(gf::Time time) {
+    float dt = time.asSeconds();
     m_elapsedTime += dt;
 
 

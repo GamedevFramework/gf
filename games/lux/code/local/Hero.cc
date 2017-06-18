@@ -104,11 +104,12 @@ namespace lux {
     m_targetPos = gf::clamp(position, WorldCenter - WorldSize / 2, WorldCenter + WorldSize / 2);
   }
 
-  void Hero::update(float dt) {
+  void Hero::update(gf::Time time) {
     if (!m_inGame) {
       return;
     }
 
+    float dt = time.asSeconds();
     gf::Vector2f diffPos = m_targetPos - m_position;
 
     if (std::abs(diffPos.x) > 0.1f || std::abs(diffPos.y) > 0.1f) {

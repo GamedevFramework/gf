@@ -37,7 +37,9 @@ namespace huaca {
     gMessageManager().registerHandler<NewLevelMessage>(&Timer::onNewLevel, this);
   }
 
-  void Timer::update(float dt) {
+  void Timer::update(gf::Time time) {
+    float dt = time.asSeconds();
+
     m_remainingTime -= dt;
 
     if (m_remainingTime < 0) {

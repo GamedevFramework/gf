@@ -26,6 +26,7 @@
 
 #include "Portability.h"
 #include "RenderStates.h"
+#include "Time.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -64,10 +65,10 @@ inline namespace v1 {
      * This function first eliminates the dead entities, then sort them
      * by priority. Finally, each entity is updated.
      *
-     * @param dt The time (in seconds) since the last update
+     * @param time The time since the last update
      * @sa gf::Entity::update()
      */
-    void update(float dt);
+    void update(Time time);
 
     /**
      * @brief Render the entities on the target

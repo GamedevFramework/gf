@@ -29,7 +29,9 @@ namespace bi {
     gMessageManager().registerHandler<HeroPosition>(&Steam::onHeroPosition, this);
   }
 
-  void Steam::update(float dt) {
+  void Steam::update(gf::Time time) {
+    float dt = time.asSeconds();
+
     while (!m_clouds.empty() && m_clouds.front().alpha < 0) {
       m_clouds.pop_front();
     }

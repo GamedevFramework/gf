@@ -151,8 +151,8 @@ int main() {
     }
 
     // update
-    auto dt = clock.restart().asSeconds();
-    mainEntities.update(dt);
+    gf::Time time = clock.restart();
+    mainEntities.update(time);
 
     // render
     renderer.clear();

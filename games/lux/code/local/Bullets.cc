@@ -72,7 +72,9 @@ namespace lux {
 
   static constexpr float BulletsExtra = 100.0f;
 
-  void Bullets::update(float dt) {
+  void Bullets::update(gf::Time time) {
+    float dt = time.asSeconds();
+
     gf::RectF view(WorldCenter - WorldSize / 2, WorldSize);
     view.extend(BulletsExtra);
 

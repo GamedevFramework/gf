@@ -69,7 +69,8 @@ namespace brfd {
     m_currentStep = m_steps[m_currentStepIndex];
   }
 
-  void StoryModel::update(float dt) {
+  void StoryModel::update(gf::Time time) {
+    float dt = time.asSeconds();
     m_currentStep.caption.timer -= dt;
 
     if (m_state != State::Running) {

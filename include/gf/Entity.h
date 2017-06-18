@@ -22,6 +22,7 @@
 #define GF_ENTITY_H
 
 #include "Portability.h"
+#include "Time.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -121,10 +122,10 @@ inline namespace v1 {
      * given as a parameter to help in the update. This time is in
      * seconds.
      *
-     * @param dt The time (in seconds) since the last update
+     * @param time The time since the last update
      * @sa gf::EntityContainer::update()
      */
-    virtual void update(float dt);
+    virtual void update(Time time);
 
     /**
      * @brief Render the entity

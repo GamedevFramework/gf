@@ -116,8 +116,8 @@ bool Board::move(gf::Direction dir) {
   return moved;
 }
 
-void Board::update(float dt) {
-  gf::unused(dt);
+void Board::update(gf::Time time) {
+  gf::unused(time);
 
   gf::Vector2u pos;
 

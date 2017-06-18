@@ -26,7 +26,9 @@
 #include "Messages.h"
 #include "Singletons.h"
 
-void Ball::update(float dt) {
+void Ball::update(gf::Time time) {
+  float dt = time.asSeconds();
+
   m_position += m_velocity * dt;
 
   BallLocationMessage loc;

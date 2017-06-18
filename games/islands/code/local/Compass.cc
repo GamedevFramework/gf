@@ -43,11 +43,12 @@ namespace bi {
     gMessageManager().registerHandler<NearestTreasure>(&Compass::onNearestTreasure, this);
   }
 
-  void Compass::update(float dt) {
+  void Compass::update(gf::Time time) {
     if (!m_displayed) {
       return;
     }
 
+    float dt = time.asSeconds();
     m_timeElapsed += dt;
 
     if (m_timeElapsed > ScanCooldown) {

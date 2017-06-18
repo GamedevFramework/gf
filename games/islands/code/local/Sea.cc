@@ -233,8 +233,8 @@ namespace bi {
     }
   }
 
-  void Sea::update(float dt) {
-    gf::unused(dt);
+  void Sea::update(gf::Time time) {
+    gf::unused(time);
 
     unsigned rowMin = (m_hero.y > DisplayHalfRange) ? (m_hero.y - DisplayHalfRange) : 0;
     unsigned rowMax = (m_hero.y + DisplayHalfRange < Size) ? (m_hero.y + DisplayHalfRange) : Size - 1;

@@ -88,7 +88,7 @@ inline namespace v1 {
      *
      * @param duration A duration expressed with a `std::chrono` type
      */
-    explicit Time(std::chrono::steady_clock::duration duration)
+    constexpr explicit Time(std::chrono::steady_clock::duration duration)
     : m_duration(duration)
     {
 
@@ -128,6 +128,28 @@ inline namespace v1 {
      */
     std::chrono::steady_clock::duration asDuration() const {
       return m_duration;
+    }
+
+    /**
+     * @brief Addition and assignement
+     *
+     * @param other The time to add to the current time
+     * @return The current time
+     */
+    Time& operator+=(Time other) {
+      m_duration += other.m_duration;
+      return *this;
+    }
+
+    /**
+     * @brief Substraction and assignement
+     *
+     * @param other The time to substract to the current time
+     * @return The current time
+     */
+    Time& operator-=(Time other) {
+      m_duration -= other.m_duration;
+      return *this;
     }
 
     static const Time Zero;

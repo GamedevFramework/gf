@@ -196,9 +196,9 @@ int main() {
       roof = level.getRoof();
     }
 
-    auto dt = clock.restart().asSeconds();
-    mainEntities.update(dt);
-    hudEntities.update(dt);
+    gf::Time time = clock.restart();
+    mainEntities.update(time);
+    hudEntities.update(time);
 
     // render
 

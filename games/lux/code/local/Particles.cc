@@ -33,7 +33,9 @@ namespace lux {
     messages.registerHandler<DeadMessage>(&Particles::onDead, this);
   }
 
-  void Particles::update(float dt) {
+  void Particles::update(gf::Time time) {
+    float dt = time.asSeconds();
+
     for (ParticleSystem& sys : m_particleSystems) {
       sys.elapsed += dt;
 

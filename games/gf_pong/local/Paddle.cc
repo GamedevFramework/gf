@@ -37,7 +37,9 @@ Paddle::Paddle(Location loc)
   gMessageManager().registerHandler<BallLocationMessage>(&Paddle::onBallLocation, this);
 }
 
-void Paddle::update(float dt) {
+void Paddle::update(gf::Time time) {
+  float dt = time.asSeconds();
+
   switch (m_move) {
     case Move::Up:
       if (m_position.y > - (Ground::Height - Height) / 2) {

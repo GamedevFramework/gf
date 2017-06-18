@@ -45,14 +45,14 @@ inline namespace v1 {
      * @param model The original model
      * @param timestep The fixed timestep
      */
-    FixedTimestepModel(Model& model, float timestep = 1 / 60.0f);
+    FixedTimestepModel(Model& model, Time timestep = gf::seconds(1 / 60.0f));
 
-    virtual void update(float dt) override;
+    virtual void update(Time time) override;
 
   private:
     Model& m_model;
-    float m_timestep;
-    float m_elapsed;
+    Time m_timestep;
+    Time m_elapsed;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

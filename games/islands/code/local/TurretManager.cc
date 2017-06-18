@@ -31,7 +31,9 @@ namespace bi {
     m_turrets.push_back(turret);
   }
 
-  void TurretManager::update(float dt) {
+  void TurretManager::update(gf::Time time) {
+    float dt = time.asSeconds();
+
     for (auto &turret: m_turrets) {
       // Update the bullet
       for (auto &bullet: turret.bullets) {

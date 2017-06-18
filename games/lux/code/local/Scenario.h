@@ -29,7 +29,7 @@ namespace lux {
   public:
     Scenario(EnemyManager& enemies, gf::MessageManager& messages, gf::ResourceManager& resources);
 
-    virtual void update(float dt) override;
+    virtual void update(gf::Time time) override;
     virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
 
     gf::MessageStatus onScore(gf::Id id, gf::Message *msg);

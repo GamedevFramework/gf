@@ -65,9 +65,10 @@ namespace lux {
   }
 
 
-  void Enemy::update(float dt) {
+  void Enemy::update(gf::Time time) {
     assert(isAlive());
 
+    float dt = time.asSeconds();
     m_position += m_velocity * dt;
 
     if (m_position.y > WorldCenter.y + WorldSize.height / 2 + Height) {
@@ -149,10 +150,10 @@ namespace lux {
     return gf::MessageStatus::Keep;
   }
 
-  void EnemyManager::update(float dt) {
+  void EnemyManager::update(gf::Time time) {
     for (auto enemy : m_enemies) {
       enemy->setHeroPosition(m_heroPos);
-      enemy->update(dt);
+      enemy->update(time);
     }
 
     const auto trash = std::partition(m_enemies.begin(), m_enemies.end(), [](const Enemy *e) {

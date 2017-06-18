@@ -211,11 +211,11 @@ int main() {
 
     // 2. update
 
-    float dt = clock.restart().asSeconds();
+    gf::Time time = clock.restart();
 
     if (!gold.isGameOver()) {
-      mainEntities.update(dt);
-      hudEntities.update(dt);
+      mainEntities.update(time);
+      hudEntities.update(time);
     }
 
     // 3. draw

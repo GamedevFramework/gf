@@ -68,8 +68,8 @@ namespace bi {
     m_treasures.push_back(treasure);
   }
 
-  void TreasureManager::update(float dt) {
-    gf::unused(dt);
+  void TreasureManager::update(gf::Time time) {
+    gf::unused(time);
 
     for (auto &treasure: m_treasures) {
       float distance = gf::euclideanDistance(treasure.position, m_heroPosition);

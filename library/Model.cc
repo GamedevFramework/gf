@@ -30,8 +30,8 @@ inline namespace v1 {
   Model::~Model() {
   }
 
-  void Model::update(float dt) {
-    gf::unused(dt);
+  void Model::update(Time time) {
+    gf::unused(time);
 
     // default: do nothing
   }

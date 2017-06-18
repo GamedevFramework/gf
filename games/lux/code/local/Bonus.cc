@@ -49,7 +49,8 @@ namespace lux {
 
   static constexpr float BonusExtra = 20.0f;
 
-  void BonusManager::update(float dt) {
+  void BonusManager::update(gf::Time time) {
+    float dt = time.asSeconds();
     gf::RectF view(WorldCenter - WorldSize / 2, WorldSize);
     view.extend(BonusExtra);
 

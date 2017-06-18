@@ -85,7 +85,8 @@ namespace brfd {
   static constexpr float VelocityMax = 1500.0f;
   static constexpr float VelocityMin = -500.0f;
 
-  void HeroCar::update(float dt) {
+  void HeroCar::update(gf::Time time) {
+    float dt = time.asSeconds();
     gf::Vector2f position = m_body.getPosition();
 
     HeroPosition msg;
@@ -166,8 +167,9 @@ namespace brfd {
     m_body.setLinearDamping(5.0f);
   }
 
-  void StaticCar::update(float dt) {
-    gf::unused(dt);
+  void StaticCar::update(gf::Time time) {
+    gf::unused(time);
+
     float angle = m_body.getAngle();
     gf::Vector2f velocity = m_body.getLinearVelocity();
     gf::Vector2f normal = gf::unit(angle + gf::Pi2);

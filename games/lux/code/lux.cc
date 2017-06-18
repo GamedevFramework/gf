@@ -150,9 +150,9 @@ int main() {
 
     // 2. update
 
-    float dt = clock.restart().asSeconds();
-    mainEntities.update(dt);
-    hudEntities.update(dt);
+    gf::Time time = clock.restart();
+    mainEntities.update(time);
+    hudEntities.update(time);
 
 
     // 3. draw

@@ -70,7 +70,7 @@ namespace lux {
 
     void setPosition(gf::Vector2f position);
 
-    virtual void update(float dt) override;
+    virtual void update(gf::Time time) override;
     virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
 
     void upgradeWeapon();

@@ -134,10 +134,12 @@ inline namespace v1 {
     data.secondPhysicsBody->move(secondInverseMass * correction);
   }
 
-  void PhysicsModel::update(float dt) {
+  void PhysicsModel::update(Time time) {
     for (auto body : m_dynamicBodies) {
       body->applyForce(m_gravity);
     }
+
+    float dt = time.asSeconds();
 
     for (auto body : m_dynamicBodies) {
       body->update(dt);

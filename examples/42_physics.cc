@@ -126,11 +126,11 @@ public:
     m_entities.clear();
   }
 
-  void update(float dt) {
-    m_fixed.update(dt);
+  void update(gf::Time time) {
+    m_fixed.update(time);
 
     for (auto& entity : m_entities) {
-      entity->update(dt);
+      entity->update(time);
     }
   }
 
@@ -320,8 +320,8 @@ int main() {
       }
     }
 
-    float dt = clock.restart().asSeconds();
-    world.update(dt);
+    gf::Time time = clock.restart();
+    world.update(time);
 
     renderer.clear();
     world.render(renderer);

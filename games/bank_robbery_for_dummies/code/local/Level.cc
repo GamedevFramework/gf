@@ -455,9 +455,9 @@ namespace brfd {
     }
   }
 
-  void Level::update(float dt) {
+  void Level::update(gf::Time time) {
     for (auto& car : m_cars) {
-      car.update(dt);
+      car.update(time);
     }
   }
 

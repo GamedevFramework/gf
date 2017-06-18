@@ -35,7 +35,9 @@ namespace bi {
     m_p1 = { 6000.0f + WaveWidth / 2, 5500.0f };
   }
 
-  void WaveManager::update(float dt) {
+  void WaveManager::update(gf::Time time) {
+    float dt = time.asSeconds();
+
     while (!m_bubbles.empty() && m_bubbles.front().lifetime < 0) {
       m_bubbles.pop_front();
     }

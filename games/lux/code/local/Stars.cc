@@ -65,7 +65,9 @@ namespace lux {
     }
   }
 
-  void Stars::update(float dt) {
+  void Stars::update(gf::Time time) {
+    float dt = time.asSeconds();
+
     for (Star& star : m_stars) {
       if (star.position.y > getWorldBottom()) {
         star.position.x = m_random.computeUniformFloat(getWorldLeft(), getWorldRight());

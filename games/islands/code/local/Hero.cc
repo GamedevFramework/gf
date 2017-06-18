@@ -58,11 +58,12 @@ namespace bi {
     return m_isOnIsland && !m_isFrozen;
   }
 
-  void Hero::update(float dt) {
+  void Hero::update(gf::Time time) {
     if (m_isGameOver) {
       return;
     }
 
+    float dt = time.asSeconds();
     m_timeElapsed += dt;
 
     if (!m_isFrozen) {

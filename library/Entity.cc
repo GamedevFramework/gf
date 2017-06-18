@@ -30,8 +30,8 @@ inline namespace v1 {
   Entity::~Entity() {
   }
 
-  void Entity::update(float dt) {
-    gf::unused(dt);
+  void Entity::update(Time time) {
+    gf::unused(time);
     // default: do nothing
   }
 

@@ -90,7 +90,9 @@ namespace huaca {
     return bounds;
   }
 
-  void Hero::update(float dt) {
+  void Hero::update(gf::Time time) {
+    float dt = time.asSeconds();
+
     // update position
 
     if (m_isRunning) {

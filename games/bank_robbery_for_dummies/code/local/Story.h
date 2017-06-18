@@ -76,7 +76,7 @@ namespace brfd {
       return m_currentStep.target;
     }
 
-    virtual void update(float dt) override;
+    virtual void update(gf::Time time) override;
 
   private:
     gf::MessageStatus onHeroPosition(gf::Id id, gf::Message *msg);
