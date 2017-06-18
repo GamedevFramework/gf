@@ -160,6 +160,10 @@ inline namespace v1 {
 
     static const Time Zero;
 
+    static constexpr Time zero() {
+      return Time();
+    }
+
   private:
     std::chrono::steady_clock::duration m_duration;
   };
@@ -174,7 +178,10 @@ inline namespace v1 {
    *
    * @sa milliseconds(), microseconds()
    */
-  GF_API Time seconds(float amount);
+  constexpr
+  Time seconds(float amount) {
+    return Time(std::chrono::duration_cast<std::chrono::steady_clock::duration>(std::chrono::duration<float>(amount)));
+  }
 
   /**
    * @relates Time
@@ -186,7 +193,10 @@ inline namespace v1 {
    *
    * @sa seconds(), microseconds()
    */
-  GF_API Time milliseconds(int32_t amount);
+  constexpr
+  Time milliseconds(int32_t amount) {
+    return Time(std::chrono::duration_cast<std::chrono::steady_clock::duration>(std::chrono::duration<int32_t, std::milli>(amount)));
+  }
 
   /**
    * @relates Time
@@ -198,7 +208,10 @@ inline namespace v1 {
    *
    * @sa seconds(), milliseconds()
    */
-  GF_API Time microseconds(int64_t amount);
+  constexpr
+  Time microseconds(int64_t amount) {
+    return Time(std::chrono::duration_cast<std::chrono::steady_clock::duration>(std::chrono::duration<int64_t, std::micro>(amount)));
+  }
 
   /**
    * @relates Time

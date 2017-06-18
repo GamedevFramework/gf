@@ -32,21 +32,6 @@ inline namespace v1 {
 
   const Time Time::Zero = Time();
 
-  Time seconds(float amount) {
-    std::chrono::duration<float> time(amount);
-    return Time(std::chrono::duration_cast<std::chrono::steady_clock::duration>(time));
-  }
-
-  Time milliseconds(int32_t amount) {
-    std::chrono::duration<int32_t, std::milli> time(amount);
-    return Time(std::chrono::duration_cast<std::chrono::steady_clock::duration>(time));
-  }
-
-  Time microseconds(int64_t amount) {
-    std::chrono::duration<int64_t, std::micro> time(amount);
-    return Time(std::chrono::duration_cast<std::chrono::steady_clock::duration>(time));
-  }
-
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif
