@@ -30,18 +30,6 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  float Time::asSeconds() const {
-    return std::chrono::duration_cast<std::chrono::duration<float>>(m_duration).count();
-  }
-
-  int32_t Time::asMilliseconds() const {
-    return std::chrono::duration_cast<std::chrono::duration<int32_t, std::milli>>(m_duration).count();
-  }
-
-  int64_t Time::asMicroseconds() const {
-    return std::chrono::duration_cast<std::chrono::duration<int64_t, std::micro>>(m_duration).count();
-  }
-
   const Time Time::Zero = Time();
 
   Time seconds(float amount) {
