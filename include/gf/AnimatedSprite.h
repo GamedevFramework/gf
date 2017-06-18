@@ -23,6 +23,7 @@
 
 #include "Portability.h"
 #include "Sprite.h"
+#include "Time.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -56,9 +57,9 @@ inline namespace v1 {
     /**
      * @brief Update the state of the animation
      *
-     * @param dt The time (in seconds) since the last update
+     * @param time The time since the last update
      */
-    void update(float dt);
+    void update(Time time);
 
   private:
     Animation *m_animation;

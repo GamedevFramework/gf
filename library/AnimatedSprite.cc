@@ -39,12 +39,12 @@ inline namespace v1 {
     setTextureRect(m_animation->getCurrentBounds());
   }
 
-  void AnimatedSprite::update(float dt) {
+  void AnimatedSprite::update(Time time) {
     if (m_animation == nullptr) {
       return;
     }
 
-    if (m_animation->update(dt)) {
+    if (m_animation->update(time)) {
       setTexture(*m_animation->getCurrentTexture());
       setTextureRect(m_animation->getCurrentBounds());
     }

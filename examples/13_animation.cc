@@ -48,7 +48,7 @@ int main() {
   for (unsigned frame = 0; frame < 8; ++frame) {
     unsigned x = frame % 4;
     unsigned y = frame / 4;
-    animation.addFrame(texture, { 0.25f * x, 0.5f * y, 0.25f, 0.5f }, 0.1f);
+    animation.addFrame(texture, { 0.25f * x, 0.5f * y, 0.25f, 0.5f }, gf::milliseconds(100));
   }
 
   gf::AnimatedSprite animatedSprite;
@@ -79,7 +79,7 @@ int main() {
     }
 
     gf::Time time = clock.restart();
-    animatedSprite.update(time.asSeconds());
+    animatedSprite.update(time);
 
     renderer.clear();
     renderer.draw(animatedSprite);

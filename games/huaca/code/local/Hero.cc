@@ -30,14 +30,14 @@ namespace huaca {
 
   static constexpr float TextureSize = 256.0f;
 
-  static constexpr float FrameTime = 0.05f;
+  static constexpr gf::Time FrameTime = gf::milliseconds(50);
 
   static constexpr float Speed = 180.0f;
 
   static void loadSingleFrameAnimation(gf::Animation& animation, const gf::Path& path) {
     gf::Texture& texture = gResourceManager().getTexture(path);
     texture.setSmooth();
-    animation.addFrame(texture, { 0.0f, 0.0f, 1.0f, 1.0f }, 1.0f);
+    animation.addFrame(texture, { 0.0f, 0.0f, 1.0f, 1.0f }, gf::seconds(1));
   }
 
   static void loadMultiFrameAnimation(gf::Animation& animation, const gf::Path& path) {
@@ -110,7 +110,7 @@ namespace huaca {
       m_currentAnimation = &m_static[dir];
     }
 
-    m_currentAnimation->update(dt);
+    m_currentAnimation->update(time);
 
     // send message
 
