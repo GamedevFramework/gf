@@ -30,18 +30,18 @@ namespace bi {
     float m_angleRange;
     gf::RotateToActivity m_angleActivity;
 
-    float m_timeElapsed;
+    gf::Time m_timeElapsed;
     bool m_displayed;
 
     const gf::Texture &m_texture;
     gf::RectF m_compass;
     gf::RectF m_pointer;
 
-    float m_timeUntilNextRadar;
+    gf::Time m_timeUntilNextRadar;
 
     struct Radar {
       float radius;
-      float lifetime;
+      gf::Time lifetime;
     };
 
     std::deque<Radar> m_radars;

@@ -14,14 +14,15 @@
 #include "Singletons.h"
 
 namespace bi {
-  static constexpr float ScanCooldown = 6.0f;
+  static constexpr gf::Time ScanCooldown = gf::seconds(6.0f);
+  static constexpr gf::Time AngleChange = gf::seconds(0.5f);
   static constexpr float CompassSize = 80.0f;
   static constexpr float PointerSize = 80.0f;
   static constexpr float SpriteSize = 256.0f;
 
-  static constexpr float TimeBetweenRadars = 1.5f;
+  static constexpr gf::Time TimeBetweenRadars = gf::seconds(1.5f);
   static constexpr float RadarRadiusIncrease = 100.0f;
-  static constexpr float RadarLifetime = 5.0f;
+  static constexpr gf::Time RadarLifetime = gf::seconds(5.0f);
 
   Compass::Compass()
   : gf::Entity(15)
@@ -29,13 +30,13 @@ namespace bi {
   , m_angle(0.0f)
   , m_angleCurrent(0.0f)
   , m_angleRange(0.0f)
-  , m_angleActivity(0.0f, 0.0f, m_angleCurrent, ScanCooldown / 12, gf::Ease::bounceInOut)
-  , m_timeElapsed(0.0f)
+  , m_angleActivity(0.0f, 0.0f, m_angleCurrent, AngleChange, gf::Ease::bounceInOut)
+  , m_timeElapsed() // 0
   , m_displayed(false)
   , m_texture(gTextureAtlas().getTexture())
   , m_compass(gTextureAtlas().getTextureRect("compass"))
   , m_pointer(gTextureAtlas().getTextureRect("pointer"))
-  , m_timeUntilNextRadar(0)
+  , m_timeUntilNextRadar() // 0
   {
     // Register message
     gMessageManager().registerHandler<HeroPosition>(&Compass::onHeroPosition, this);
@@ -49,16 +50,16 @@ namespace bi {
     }
 
     float dt = time.asSeconds();
-    m_timeElapsed += dt;
+    m_timeElapsed += time;
 
     if (m_timeElapsed > ScanCooldown) {
-      m_timeElapsed = 0.0f;
+      m_timeElapsed = gf::Time::zero();
       m_displayed = false;
       StopScan message;
       gMessageManager().sendMessage(&message);
     }
 
-    auto status = m_angleActivity.run(dt);
+    auto status = m_angleActivity.run(time);
 
     if (status == gf::ActivityStatus::Finished) {
       m_angleRange /= 1.2f;
@@ -69,13 +70,13 @@ namespace bi {
 
     // radars
 
-    while (!m_radars.empty() && m_radars.front().lifetime < 0) {
+    while (!m_radars.empty() && m_radars.front().lifetime < gf::Time::zero()) {
       m_radars.pop_front();
     }
 
-    m_timeUntilNextRadar -= dt;
+    m_timeUntilNextRadar -= time;
 
-    if (m_timeUntilNextRadar < 0) {
+    if (m_timeUntilNextRadar < gf::Time::zero()) {
       m_timeUntilNextRadar += TimeBetweenRadars;
 
       Radar radar;
@@ -87,7 +88,7 @@ namespace bi {
 
     for (auto& radar : m_radars) {
       radar.radius += RadarRadiusIncrease * dt;
-      radar.lifetime -= dt;
+      radar.lifetime -= time;
     }
   }
 
@@ -105,7 +106,7 @@ namespace bi {
 
     // Draw the radar
     for (const auto& radar : m_radars) {
-      radarColor.a = radar.lifetime / RadarLifetime;
+      radarColor.a = radar.lifetime.asSeconds() / RadarLifetime.asSeconds();
       circle.setOutlineColor(radarColor);
       circle.setRadius(radar.radius);
       circle.setAnchor(gf::Anchor::Center);
@@ -140,7 +141,7 @@ namespace bi {
 
     m_displayed = true;
     m_radars.clear();
-    m_timeUntilNextRadar = 0;
+    m_timeUntilNextRadar = gf::Time::zero();
 
     return gf::MessageStatus::Keep;
   }

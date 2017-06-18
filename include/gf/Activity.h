@@ -22,6 +22,7 @@
 #define GF_ACTIVITY_H
 
 #include "Portability.h"
+#include "Time.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -68,10 +69,10 @@ inline namespace v1 {
     /**
      * @brief Run the activity
      *
-     * @param dt The time (in seconds) since the last run
+     * @param time The time since the last run
      * @returns The status of the activity (running or finished)
      */
-    virtual ActivityStatus run(float dt) = 0;
+    virtual ActivityStatus run(Time time) = 0;
 
     /**
      * @brief Restart the activity

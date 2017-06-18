@@ -34,18 +34,18 @@ inline namespace v1 {
    * ValueActivity
    */
 
-  ValueActivity::ValueActivity(float from, float target, float& value, float duration, Easing easing)
+  ValueActivity::ValueActivity(float from, float target, float& value, Time duration, Easing easing)
   : m_tween(from, target, value, duration, easing)
   {
 
   }
 
-  ActivityStatus ValueActivity::run(float dt) {
+  ActivityStatus ValueActivity::run(Time time) {
     if (m_tween.isFinished()) {
       return ActivityStatus::Finished;
     }
 
-    m_tween.update(dt);
+    m_tween.update(time);
     return m_tween.isFinished() ? ActivityStatus::Finished : ActivityStatus::Running;
   }
 
@@ -57,7 +57,7 @@ inline namespace v1 {
    * RotateToActivity
    */
 
-  RotateToActivity::RotateToActivity(float origin, float target, float& angle, float duration, Easing easing)
+  RotateToActivity::RotateToActivity(float origin, float target, float& angle, Time duration, Easing easing)
   : m_tween(origin, target, angle, duration, easing)
   {
     if (origin > target) {
@@ -75,12 +75,12 @@ inline namespace v1 {
     m_tween.setTarget(target);
   }
 
-  ActivityStatus RotateToActivity::run(float dt) {
+  ActivityStatus RotateToActivity::run(Time time) {
     if (m_tween.isFinished()) {
       return ActivityStatus::Finished;
     }
 
-    m_tween.update(dt);
+    m_tween.update(time);
     return m_tween.isFinished() ? ActivityStatus::Finished : ActivityStatus::Running;
   }
 
@@ -92,18 +92,18 @@ inline namespace v1 {
    * MoveToActivity
    */
 
-  MoveToActivity::MoveToActivity(Vector2f origin, Vector2f target, Vector2f& position, float duration, Easing easing)
+  MoveToActivity::MoveToActivity(Vector2f origin, Vector2f target, Vector2f& position, Time duration, Easing easing)
   : m_tween(origin, target, position, duration, easing)
   {
 
   }
 
-  ActivityStatus MoveToActivity::run(float dt) {
+  ActivityStatus MoveToActivity::run(Time time) {
     if (m_tween.isFinished()) {
       return ActivityStatus::Finished;
     }
 
-    m_tween.update(dt);
+    m_tween.update(time);
     return m_tween.isFinished() ? ActivityStatus::Finished : ActivityStatus::Running;
   }
 
@@ -115,18 +115,18 @@ inline namespace v1 {
    * ColorActivity
    */
 
-  ColorActivity::ColorActivity(Color4f origin, Color4f target, Color4f& color, float duration, Easing easing)
+  ColorActivity::ColorActivity(Color4f origin, Color4f target, Color4f& color, Time duration, Easing easing)
   : m_tween(origin, target, color, duration, easing)
   {
 
   }
 
-  ActivityStatus ColorActivity::run(float dt) {
+  ActivityStatus ColorActivity::run(Time time) {
     if (m_tween.isFinished()) {
       return ActivityStatus::Finished;
     }
 
-    m_tween.update(dt);
+    m_tween.update(time);
     return m_tween.isFinished() ? ActivityStatus::Finished : ActivityStatus::Running;
   }
 
@@ -145,8 +145,8 @@ inline namespace v1 {
 
   }
 
-  ActivityStatus CallbackActivity::run(float dt) {
-    gf::unused(dt);
+  ActivityStatus CallbackActivity::run(Time time) {
+    gf::unused(time);
 
     if (!m_called) {
       m_callback();
@@ -164,15 +164,15 @@ inline namespace v1 {
    * DelayActivity
    */
 
-  DelayActivity::DelayActivity(float duration)
-  : m_elapsed(0.0f)
+  DelayActivity::DelayActivity(Time duration)
+  : m_elapsed() // 0
   , m_duration(duration)
   {
 
   }
 
-  ActivityStatus DelayActivity::run(float dt) {
-    m_elapsed += dt;
+  ActivityStatus DelayActivity::run(Time time) {
+    m_elapsed += time;
 
     if (m_elapsed > m_duration) {
       return ActivityStatus::Finished;
@@ -182,7 +182,7 @@ inline namespace v1 {
   }
 
   void DelayActivity::restart() {
-    m_elapsed = 0.0f;
+    m_elapsed = Time::zero();
   }
 
   /*
@@ -199,12 +199,12 @@ inline namespace v1 {
     m_activities.push_back(&activity);
   }
 
-  ActivityStatus SequenceActivity::run(float dt) {
+  ActivityStatus SequenceActivity::run(Time time) {
     if (m_current == m_activities.size()) {
       return ActivityStatus::Finished;
     }
 
-    auto status = m_activities[m_current]->run(dt);
+    auto status = m_activities[m_current]->run(time);
 
     if (status == ActivityStatus::Finished) {
       m_current++;
@@ -233,12 +233,12 @@ inline namespace v1 {
 
   }
 
-  ActivityStatus RepeatActivity::run(float dt) {
+  ActivityStatus RepeatActivity::run(Time time) {
     if (m_count > 0 && m_repeat == m_count) {
       return ActivityStatus::Finished;
     }
 
-    auto status = m_activity.run(dt);
+    auto status = m_activity.run(time);
 
     if (status == ActivityStatus::Finished) {
       m_activity.restart();
@@ -268,7 +268,7 @@ inline namespace v1 {
     m_activities.push_back(&activity);
   }
 
-  ActivityStatus ParallelActivity::run(float dt) {
+  ActivityStatus ParallelActivity::run(Time time) {
     if (m_status == ActivityStatus::Finished) {
       return ActivityStatus::Finished;
     }
@@ -276,7 +276,7 @@ inline namespace v1 {
     std::size_t finished = 0;
 
     for (auto activity : m_activities) {
-      auto status = activity->run(dt);
+      auto status = activity->run(time);
 
       if (status == ActivityStatus::Finished) {
         finished++;

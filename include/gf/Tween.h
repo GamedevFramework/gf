@@ -53,11 +53,11 @@ inline namespace v1 {
      * @param duration The duration of the tween
      * @param easing The easing for the interpolation
      */
-    Tween(T origin, T target, Setter setter, float duration, Easing easing = Ease::linear)
+    Tween(T origin, T target, Setter setter, Time duration, Easing easing = Ease::linear)
     : m_origin(origin)
     , m_target(target)
     , m_setter(setter)
-    , m_elapsed(0.0f)
+    , m_elapsed() // 0
     , m_duration(duration)
     , m_easing(easing)
     {
@@ -73,11 +73,11 @@ inline namespace v1 {
      * @param duration The duration of the tween
      * @param easing The easing for the interpolation
      */
-    Tween(T origin, T target, T& value, float duration, Easing easing = Ease::linear)
+    Tween(T origin, T target, T& value, Time duration, Easing easing = Ease::linear)
     : m_origin(origin)
     , m_target(target)
     , m_setter([&value](const T& newValue) { value = newValue; })
-    , m_elapsed(0.0f)
+    , m_elapsed() // 0
     , m_duration(duration)
     , m_easing(easing)
     {
@@ -125,7 +125,7 @@ inline namespace v1 {
      *
      * @param duration The new duration
      */
-    void setDuration(float duration) {
+    void setDuration(Time duration) {
       m_duration = duration;
     }
 
@@ -134,7 +134,7 @@ inline namespace v1 {
      *
      * @returns The current duration
      */
-    constexpr float getDuration() const noexcept {
+    constexpr Time getDuration() const noexcept {
       return m_duration;
     }
 
@@ -144,7 +144,7 @@ inline namespace v1 {
      * @returns The interpolated value
      */
     T getValue() const {
-      return gf::lerp(m_origin, m_target, m_easing(m_elapsed / m_duration));
+      return gf::lerp(m_origin, m_target, m_easing(m_elapsed.asSeconds() / m_duration.asSeconds()));
     }
 
     /**
@@ -159,10 +159,10 @@ inline namespace v1 {
     /**
      * @brief Update the tween
      *
-     * @param dt The time (in seconds) since the last update
+     * @param time The time since the last update
      */
-    void update(float dt) {
-      m_elapsed += dt;
+    void update(Time time) {
+      m_elapsed += time;
 
       if (m_elapsed >= m_duration) {
         m_elapsed = m_duration;
@@ -175,15 +175,15 @@ inline namespace v1 {
      * @brief Restart the tween
      */
     void restart() {
-      m_elapsed = 0.0f;
+      m_elapsed = Time::zero();
     }
 
   private:
     T m_origin;
     T m_target;
     Setter m_setter;
-    float m_elapsed;
-    float m_duration;
+    Time m_elapsed;
+    Time m_duration;
     Easing m_easing;
   };
 

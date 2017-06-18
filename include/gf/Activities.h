@@ -51,7 +51,7 @@ inline namespace v1 {
      * @param duration The duration of the tween
      * @param easing The easing for the interpolation
      */
-    ValueActivity(float origin, float target, float& value, float duration, Easing easing = Ease::linear);
+    ValueActivity(float origin, float target, float& value, Time duration, Easing easing = Ease::linear);
 
     /**
      * @brief Change the origin of the activity
@@ -94,7 +94,7 @@ inline namespace v1 {
      *
      * @param duration The new duration
      */
-    void setDuration(float duration) {
+    void setDuration(Time duration) {
       m_tween.setDuration(duration);
     }
 
@@ -103,11 +103,11 @@ inline namespace v1 {
      *
      * @returns The current duration
      */
-    float getDuration() const noexcept {
+    Time getDuration() const noexcept {
       return m_tween.getDuration();
     }
 
-    virtual ActivityStatus run(float dt) override;
+    virtual ActivityStatus run(Time time) override;
     virtual void restart() override;
 
   private:
@@ -134,7 +134,7 @@ inline namespace v1 {
      * @param duration The duration of the tween
      * @param easing The easing for the interpolation
      */
-    RotateToActivity(float origin, float target, float& angle, float duration, Easing easing = Ease::linear);
+    RotateToActivity(float origin, float target, float& angle, Time duration, Easing easing = Ease::linear);
 
     /**
      * @brief Change the origin of the activity
@@ -177,7 +177,7 @@ inline namespace v1 {
      *
      * @param duration The new duration
      */
-    void setDuration(float duration) {
+    void setDuration(Time duration) {
       m_tween.setDuration(duration);
     }
 
@@ -186,11 +186,11 @@ inline namespace v1 {
      *
      * @returns The current duration
      */
-    float getDuration() const noexcept {
+    Time getDuration() const noexcept {
       return m_tween.getDuration();
     }
 
-    virtual ActivityStatus run(float dt) override;
+    virtual ActivityStatus run(Time time) override;
     virtual void restart() override;
 
   private:
@@ -215,7 +215,7 @@ inline namespace v1 {
      * @param duration The duration of the tween
      * @param easing The easing for the interpolation
      */
-    MoveToActivity(Vector2f origin, Vector2f target, Vector2f& position, float duration, Easing easing = Ease::linear);
+    MoveToActivity(Vector2f origin, Vector2f target, Vector2f& position, Time duration, Easing easing = Ease::linear);
 
     /**
      * @brief Change the origin of the activity
@@ -258,7 +258,7 @@ inline namespace v1 {
      *
      * @param duration The new duration
      */
-    void setDuration(float duration) {
+    void setDuration(Time duration) {
       m_tween.setDuration(duration);
     }
 
@@ -267,11 +267,11 @@ inline namespace v1 {
      *
      * @returns The current duration
      */
-    float getDuration() const noexcept {
+    Time getDuration() const noexcept {
       return m_tween.getDuration();
     }
 
-    virtual ActivityStatus run(float dt) override;
+    virtual ActivityStatus run(Time time) override;
     virtual void restart() override;
 
   private:
@@ -296,7 +296,7 @@ inline namespace v1 {
      * @param duration The duration of the tween
      * @param easing The easing for the interpolation
      */
-    ColorActivity(Color4f origin, Color4f target, Color4f& color, float duration, Easing easing = Ease::linear);
+    ColorActivity(Color4f origin, Color4f target, Color4f& color, Time duration, Easing easing = Ease::linear);
 
     /**
      * @brief Change the origin of the activity
@@ -339,7 +339,7 @@ inline namespace v1 {
      *
      * @param duration The new duration
      */
-    void setDuration(float duration) {
+    void setDuration(Time duration) {
       m_tween.setDuration(duration);
     }
 
@@ -348,11 +348,11 @@ inline namespace v1 {
      *
      * @returns The current duration
      */
-    float getDuration() const noexcept {
+    Time getDuration() const noexcept {
       return m_tween.getDuration();
     }
 
-    virtual ActivityStatus run(float dt) override;
+    virtual ActivityStatus run(Time time) override;
     virtual void restart() override;
 
   private:
@@ -373,7 +373,7 @@ inline namespace v1 {
      */
     CallbackActivity(std::function<void()> callback);
 
-    virtual ActivityStatus run(float dt) override;
+    virtual ActivityStatus run(Time time) override;
     virtual void restart() override;
 
   private:
@@ -393,14 +393,14 @@ inline namespace v1 {
      *
      * @param duration The duration to wait for
      */
-    DelayActivity(float duration);
+    DelayActivity(Time duration);
 
-    virtual ActivityStatus run(float dt) override;
+    virtual ActivityStatus run(Time time) override;
     virtual void restart() override;
 
   private:
-    float m_elapsed;
-    float m_duration;
+    Time m_elapsed;
+    Time m_duration;
   };
 
 
@@ -422,7 +422,7 @@ inline namespace v1 {
      */
     void addActivity(Activity& activity);
 
-    virtual ActivityStatus run(float dt) override;
+    virtual ActivityStatus run(Time time) override;
     virtual void restart() override;
 
   private:
@@ -445,7 +445,7 @@ inline namespace v1 {
      */
     RepeatActivity(Activity& activity, unsigned repeat = 0);
 
-    virtual ActivityStatus run(float dt) override;
+    virtual ActivityStatus run(Time time) override;
     virtual void restart() override;
 
   private:
@@ -482,7 +482,7 @@ inline namespace v1 {
      */
     void addActivity(Activity& activity);
 
-    virtual ActivityStatus run(float dt) override;
+    virtual ActivityStatus run(Time time) override;
     virtual void restart() override;
 
   private:
