@@ -103,22 +103,14 @@ inline namespace v1 {
 
 
 
-  static std::map<GamepadId, SDL_GameController*> g_controllers;
-
   static SDL_GameController *getController(GamepadId id) {
-    auto it = g_controllers.find(id);
-
-    if (it == g_controllers.end()) {
-      return nullptr;
-    }
-
-    return it->second;
+    return SDL_GameControllerFromInstanceID(static_cast<SDL_JoystickID>(id));
   }
 
   static GamepadId openController(int index) {
     SDL_GameController *controller = SDL_GameControllerOpen(index);
 
-    if (!controller) {
+    if (controller == nullptr) {
       Log::error("Could not open gamepad %i: %s\n", index, SDL_GetError());
       return static_cast<GamepadId>(-1);
     }
@@ -128,7 +120,6 @@ inline namespace v1 {
 
     Log::debug("New gamepad (device: %i / instance: %i)\n", index, instanceId);
 
-    g_controllers.insert(std::make_pair(static_cast<GamepadId>(instanceId), controller));
     return static_cast<GamepadId>(instanceId);
   }
 
@@ -153,7 +144,6 @@ inline namespace v1 {
       return;
     }
 
-    g_controllers.erase(id);
     SDL_GameControllerClose(controller);
   }
 

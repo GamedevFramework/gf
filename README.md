@@ -27,7 +27,7 @@ Gamedev Framework (gf) is very open to contributions. See [the contribution guid
 
 You have to install the following dependencies:
 
-- [SDL2](https://www.libsdl.org/) >= 2.0.2 (zlib/libpng license)
+- [SDL2](https://www.libsdl.org/) >= 2.0.4 (zlib/libpng license)
 - [Boost Filesystem](http://www.boost.org/doc/libs/release/libs/filesystem/) >= 1.55 (Boost license)
 - [Boost String Algorithms](http://www.boost.org/doc/libs/release/libs/algorithm/string/) >= 1.55 (Boost license)
 - [Freetype](http://freetype.org/) >= 2.5.2 (FreeType license)
