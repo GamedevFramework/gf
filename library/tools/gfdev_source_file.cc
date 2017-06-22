@@ -95,7 +95,7 @@ int main(int argc, char *argv[]) {
 
   outFile.printf("0x00\n};\n\n");
   outFile.printf("// size = %zu;\n", count);
-  outFile.printf("#endif // GF_SHADER_IMPLEMENTATION\n\n");
+  outFile.printf("#endif // GF_IMPLEMENTATION\n\n");
 
   outFile.printf("} // namespace generated\n");
   outFile.printf("} // namespace gf\n\n");
