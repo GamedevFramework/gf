@@ -119,12 +119,12 @@ inline namespace v1 {
      * The returned pointer is const, which means that you can't
      * modify the texture when you retrieve it with this function.
      *
-     * @return Pointer to the geometry's texture
+     * @return Reference to the geometry's texture
      *
      * @sa setTexture()
      */
-    const BareTexture *getTexture() const {
-      return m_texture;
+    const BareTexture& getTexture() const {
+      return *m_texture;
     }
 
     /**
