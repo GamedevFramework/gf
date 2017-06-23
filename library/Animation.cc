@@ -20,6 +20,8 @@
  */
 #include <gf/Animation.h>
 
+#include <stdexcept>
+
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
@@ -43,17 +45,17 @@ inline namespace v1 {
     m_frames.push_back({ &texture, bounds, duration });
   }
 
-  const Texture *Animation::getCurrentTexture() const {
+  const Texture& Animation::getCurrentTexture() const {
     if (m_frames.empty()) {
-      return nullptr;
+      throw std::runtime_error("No frame in the animation");
     }
 
-    return m_frames[m_currentFrame].texture;
+    return *m_frames[m_currentFrame].texture;
   }
 
   RectF Animation::getCurrentBounds() const {
     if (m_frames.empty()) {
-      return RectF(0, 0, 0, 0);
+      throw std::runtime_error("No frame in the animation");
     }
 
     return m_frames[m_currentFrame].bounds;

@@ -68,14 +68,16 @@ inline namespace v1 {
     /**
      * @brief Get the current texture
      *
-     * @return The current texture or `nullptr` if the animation is empty
+     * @return The current texture
+     * @throw std::runtime_error If the animation is empty
      */
-    const Texture *getCurrentTexture() const;
+    const Texture& getCurrentTexture() const;
 
     /**
      * @brief Get the current texture rectangle
      *
      * @return The current texture rectangle
+     * @throw std::runtime_error If the animation is empty
      */
     RectF getCurrentBounds() const;
 

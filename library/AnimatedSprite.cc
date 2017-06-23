@@ -35,7 +35,7 @@ inline namespace v1 {
 
   void AnimatedSprite::setAnimation(Animation& animation) {
     m_animation = &animation;
-    setTexture(*m_animation->getCurrentTexture());
+    setTexture(m_animation->getCurrentTexture());
     setTextureRect(m_animation->getCurrentBounds());
   }
 
@@ -45,7 +45,7 @@ inline namespace v1 {
     }
 
     if (m_animation->update(time)) {
-      setTexture(*m_animation->getCurrentTexture());
+      setTexture(m_animation->getCurrentTexture());
       setTextureRect(m_animation->getCurrentBounds());
     }
   }
