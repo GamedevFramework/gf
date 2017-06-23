@@ -142,7 +142,7 @@ inline namespace v1 {
     float dt = time.asSeconds();
 
     for (auto body : m_dynamicBodies) {
-      body->update(dt);
+      body->step(dt);
       body->updateTransform();
     }
 

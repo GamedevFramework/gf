@@ -32,6 +32,7 @@ namespace gf {
 inline namespace v1 {
 #endif
 
+  struct RenderStates;
   class RenderTarget;
 
   /**
@@ -95,10 +96,11 @@ inline namespace v1 {
      * @brief Render the geometry
      *
      * @param target The render target
+     * @param states The render states to use for drawing
      * @param position The position of the geometry
      * @param angle The angle of the geometry
      */
-    virtual void renderAt(RenderTarget& target, Vector2f position, float angle) const = 0;
+    virtual void renderAt(RenderTarget& target, const RenderStates& states, Vector2f position, float angle) const = 0;
 
   private:
     Type m_type;
@@ -134,7 +136,7 @@ inline namespace v1 {
 
     virtual float getArea() const override;
     virtual CircF getBoundingCircle() const override;
-    virtual void renderAt(RenderTarget& target, Vector2f position, float angle) const override;
+    virtual void renderAt(RenderTarget& target, const RenderStates& states, Vector2f position, float angle) const override;
 
   private:
     CircF m_circle;
@@ -179,7 +181,7 @@ inline namespace v1 {
 
     virtual float getArea() const override;
     virtual CircF getBoundingCircle() const override;
-    virtual void renderAt(RenderTarget& target, Vector2f position, float angle) const override;
+    virtual void renderAt(RenderTarget& target, const RenderStates& states, Vector2f position, float angle) const override;
 
   private:
     void computeBoundingCircle();

@@ -60,7 +60,7 @@ inline namespace v1 {
     return m_circle;
   }
 
-  void CircleGeometry::renderAt(RenderTarget& target, Vector2f position, float angle) const {
+  void CircleGeometry::renderAt(RenderTarget& target, const RenderStates& states, Vector2f position, float angle) const {
     gf::unused(angle);
 
     CircleShape shape(CircF(position, m_circle.radius));
@@ -68,7 +68,7 @@ inline namespace v1 {
     shape.setColor(Color::Transparent);
     shape.setOutlineColor(Color::Red);
     shape.setOutlineThickness(1.0f);
-    target.draw(shape);
+    target.draw(shape, states);
   }
 
 
@@ -114,14 +114,14 @@ inline namespace v1 {
     return m_boundingCircle;
   }
 
-  void PolygonGeometry::renderAt(RenderTarget& target, Vector2f position, float angle) const {
+  void PolygonGeometry::renderAt(RenderTarget& target, const RenderStates& states, Vector2f position, float angle) const {
     ConvexShape shape(m_polygon);
     shape.setPosition(position);
     shape.setRotation(angle);
     shape.setColor(Color::Transparent);
     shape.setOutlineColor(Color::Red);
     shape.setOutlineThickness(1.0f);
-    target.draw(shape);
+    target.draw(shape, states);
   }
 
   void PolygonGeometry::computeBoundingCircle() {

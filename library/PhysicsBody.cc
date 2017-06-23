@@ -58,7 +58,7 @@ inline namespace v1 {
     }
   }
 
-  void PhysicsBody::update(float dt) {
+  void PhysicsBody::step(float dt) {
     // https://www.niksula.hut.fi/~hkankaan/Homepages/gravity.html
     m_linearVelocity += m_acceleration * dt / 2;
     m_position += m_linearVelocity * dt;
@@ -68,8 +68,8 @@ inline namespace v1 {
     m_acceleration = Vector2f(0.0f, 0.0f);
   }
 
-  void PhysicsBody::render(RenderTarget& target) const {
-    m_geometry.renderAt(target, getPosition(), getAngle());
+  void PhysicsBody::render(RenderTarget& target, const RenderStates& states) const {
+    m_geometry.renderAt(target, states, getPosition(), getAngle());
   }
 
   void PhysicsBody::setPosition(Vector2f position) {
