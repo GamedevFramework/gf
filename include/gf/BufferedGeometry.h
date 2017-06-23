@@ -115,8 +115,7 @@ inline namespace v1 {
     /**
      * @brief Get the source texture of the geometry
      *
-     * If the geometry has no source texture, a `nullptr` pointer is returned.
-     * The returned pointer is const, which means that you can't
+     * The returned reference is const, which means that you can't
      * modify the texture when you retrieve it with this function.
      *
      * @return Reference to the geometry's texture
