@@ -47,7 +47,11 @@ inline namespace v1 {
   }
 
   void SpriteBatch::draw(Sprite& sprite, const RenderStates& states) {
-    const Texture *texture = sprite.getTexture();
+    if (!sprite.hasTexture()) {
+      return;
+    }
+
+    const Texture& texture = sprite.getTexture();
     RectF textureRect = sprite.getTextureRect();
     Matrix3f transform = sprite.getTransform();
     Color4f color = sprite.getColor();
@@ -55,15 +59,15 @@ inline namespace v1 {
     if (m_count == 0) {
       m_currentRenderStates.mode = states.mode;
       m_currentRenderStates.transform = states.transform;
-      m_currentRenderStates.texture = texture;
+      m_currentRenderStates.texture = &texture;
       m_currentRenderStates.shader = states.shader;
     } else {
-      if (m_count == MaxSpriteCount || m_currentRenderStates.texture != texture || !areStatesSimilar(m_currentRenderStates, states)) {
+      if (m_count == MaxSpriteCount || m_currentRenderStates.texture != &texture || !areStatesSimilar(m_currentRenderStates, states)) {
         renderBatch();
 
         m_currentRenderStates.mode = states.mode;
         m_currentRenderStates.transform = states.transform;
-        m_currentRenderStates.texture = texture;
+        m_currentRenderStates.texture = &texture;
         m_currentRenderStates.shader = states.shader;
       }
     }
@@ -72,7 +76,7 @@ inline namespace v1 {
 
     // compute sprite position
 
-    Vector2u textureSize = texture->getSize();
+    Vector2u textureSize = texture.getSize();
     Vector2f spriteSize = textureSize * textureRect.size;
 
     vertices[0].position = {  0.0f,            0.0f };

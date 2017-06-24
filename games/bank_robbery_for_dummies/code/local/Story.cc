@@ -235,7 +235,7 @@ namespace brfd {
         break;
     }
 
-    gf::Vector2f textureSize = sprite.getTexture()->getSize();
+    gf::Vector2f textureSize = sprite.getTexture().getSize();
     float scale = (size.height - 2 * padding) / textureSize.height;
 
     sprite.setPosition(position + padding);

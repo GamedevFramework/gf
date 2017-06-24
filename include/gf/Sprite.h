@@ -143,7 +143,18 @@ inline namespace v1 {
      * @sa setTexture()
      */
     const Texture& getTexture() const {
-      return m_texture;
+      return *m_texture;
+    }
+
+    /**
+     * @brief Check if a texture is set
+     *
+     * @returns True if a texture is already set
+     *
+     * @sa setTexture(), getTexture()
+     */
+    bool hasTexture() const {
+      return m_texture != nullptr;
     }
 
     /**
