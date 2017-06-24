@@ -96,7 +96,7 @@ inline namespace v1 {
      * The returned reference is const, which means that you can't
      * modify the texture when you retrieve it with this function.
      *
-     * @return Pointer to the tileset's texture
+     * @return Reference to the tileset's texture
      * @sa setTexture()
      */
     const Texture& getTexture() const {
