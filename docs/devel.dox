@@ -66,7 +66,7 @@ namespace v1 {
 gf uses [glad](https://github.com/Dav1dde/glad) as its OpenGL loader. The loader is generated with the following command in the `library/vendor` directory.
 
 ~~~{.sh}
-glad --api gles2=2.0 --generator c --spec gl --out-path glad --generator c --no-loader
+glad --api gles2=2.0 --profile core --generator c --spec gl --out-path glad --generator c --no-loader
 ~~~
 
 The resulting file `src/glad.c` is then renamed to `src/glad.cc`.
