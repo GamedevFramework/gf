@@ -93,15 +93,14 @@ inline namespace v1 {
     /**
      * @brief Get the source texture of the tileset
      *
-     * If the tile layer has no source texture, a `nullptr` pointer is returned.
-     * The returned pointer is const, which means that you can't
+     * The returned reference is const, which means that you can't
      * modify the texture when you retrieve it with this function.
      *
      * @return Pointer to the tileset's texture
      * @sa setTexture()
      */
-    const Texture *getTexture() const {
-      return m_texture;
+    const Texture& getTexture() const {
+      return *m_texture;
     }
 
     /**
