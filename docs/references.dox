@@ -1,6 +1,20 @@
 /**
 @page references References
 
+@section references_deps Documentation of dependencies
+- SDL
+  - [SDL documentation](https://wiki.libsdl.org/APIByCategory)
+- Freetype
+  - [Freetype documentation](http://www.freetype.org/freetype2/docs/documentation.html)
+- OpenGL
+  - [OpenGL tutorials (open.gl)](https://open.gl/)
+  - [OpenGL tutorials (learnopengl.com)](http://learnopengl.com/)
+  - [OpenGL API documentation (docs.gl)](http://docs.gl/)
+  - [OpenGL SDK (Khronos)](https://www.khronos.org/opengles/sdk/docs/man/)
+  - [OpenGL Wiki](https://www.opengl.org/wiki/Main_Page)
+
+@section references_concepts Concepts
+
 - Collisions
   - [SAT (Separating Axis Theorem)](http://www.dyn4j.org/2010/01/sat/), dyn4j.org
   - [GJK (Gilbert–Johnson–Keerthi)](http://www.dyn4j.org/2010/04/gjk-gilbert-johnson-keerthi/), dyn4j.org

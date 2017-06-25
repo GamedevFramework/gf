@@ -7,8 +7,6 @@
 
 Gamedev Framework (gf) follows the [successful Git branching model from Vincent Driessen](http://nvie.com/posts/a-successful-git-branching-model/).
 
-![successful Git branching model](http://nvie.com/img/git-model@2x.png)
-
 @section devel_versioning Versioning
 
 gf uses [Semantic Versioning 2.0.0](http://semver.org/).
@@ -70,15 +68,5 @@ glad --api gles2=2.0 --profile core --generator c --spec gl --out-path glad --ge
 ~~~
 
 The resulting file `src/glad.c` is then renamed to `src/glad.cc`.
-
-@section devel_related_documentation Related documentation
-
-- [SDL documentation](https://wiki.libsdl.org/APIByCategory)
-- [OpenGL tutorials (open.gl)](https://open.gl/)
-- [OpenGL tutorials (learnopengl.com)](http://learnopengl.com/)
-- [OpenGL API documentation (docs.gl)](http://docs.gl/)
-- [OpenGL SDK (Khronos)](https://www.khronos.org/opengles/sdk/docs/man/)
-- [OpenGL Wiki](https://www.opengl.org/wiki/Main_Page)
-- [Freetype documentation](http://www.freetype.org/freetype2/docs/documentation.html)
 
 */
