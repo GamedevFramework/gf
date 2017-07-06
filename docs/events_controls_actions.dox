@@ -2,5 +2,33 @@
 
 @page events_controls_actions Events, controls, actions
 
+@section eca_events Events
+
+| Event type                            | Field in gf::Event      | Field structure                 |
+|---------------------------------------|-------------------------|---------------------------------|
+| gf::EventType::Resized                | `size`                  | gf::Vector2u                    |
+| gf::EventType::Closed                 |                         |                                 |
+| gf::EventType::FocusGained            |                         |                                 |
+| gf::EventType::FocusLost              |                         |                                 |
+| gf::EventType::KeyPressed             | `key`                   | gf::Event::KeyEvent             |
+| gf::EventType::KeyRepeated            | `key`                   | gf::Event::KeyEvent             |
+| gf::EventType::KeyReleased            | `key`                   | gf::Event::KeyEvent             |
+| gf::EventType::MouseWheelScrolled     | `mouseWheel`            | gf::Event::MouseWheelEvent      |
+| gf::EventType::MouseButtonPressed     | `mouseButton`           | gf::Event::MouseButtonEvent     |
+| gf::EventType::MouseButtonReleased    | `mouseButton`           | gf::Event::MouseButtonEvent     |
+| gf::EventType::MouseMoved             | `mouseCursor`           | gf::Event::MouseCursorEvent     |
+| gf::EventType::MouseEntered           |                         |                                 |
+| gf::EventType::MouseLeft              |                         |                                 |
+| gf::EventType::GamepadButtonPressed   | `gamepadButton`         | gf::Event::GamepadButtonEvent   |
+| gf::EventType::GamepadButtonReleased  | `gamepadButton`         | gf::Event::GamepadButtonEvent   |
+| gf::EventType::GamepadAxisMoved       | `gamepadAxis`           | gf::Event::GamepadAxisEvent     |
+| gf::EventType::GamepadConnected       | `gamepadConnection`     | gf::Event::GamepadConnection    |
+| gf::EventType::GamepadDisconnected    | `gamepadDisconnection`  | gf::Event::GamepadDisconnection |
+| gf::EventType::TextEntered            | `text`                  | gf::Event::TextEvent            |
+
+
+@section eca_controls Controls
+
+@section eca_actions Actions
 
 */
