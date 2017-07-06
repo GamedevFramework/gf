@@ -32,6 +32,7 @@
 
 #include <SDL.h>
 
+#include <gf/Log.h>
 #include <gf/Paths.h>
 #include <gf/RenderTarget.h>
 #include <gf/StringUtils.h>
@@ -204,12 +205,19 @@ inline namespace v1 {
   static void clipboardPaste(nk_handle usr, struct nk_text_edit *edit) {
     gf::unused(usr);
 
+    if (SDL_HasClipboardText() == SDL_FALSE) {
+      return;
+    }
+
     char *text = SDL_GetClipboardText();
 
-    if (text) {
-      nk_textedit_paste(edit, text, nk_strlen(text));
-      SDL_free(text);
+    if (text == nullptr) {
+      Log::error("Unable to get clipboard text: '%s'\n", SDL_GetError());
+      return;
     }
+
+    nk_textedit_paste(edit, text, nk_strlen(text));
+    SDL_free(text);
   }
 
   static void clipboardCopy(nk_handle usr, const char *text, int len) {
