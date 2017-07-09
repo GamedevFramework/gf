@@ -16,6 +16,7 @@ Here are the the roadmap that will lead to version 1.0:
 For now, the _possible_ features not yet implemented are:
 
 - Geometry algorithms (Delaunay triangulation, convex hull, ...)
+- Roguelike toolkit (virtual console, square grid algorithms: FOV, shortest path, ...)
 - _Put your own feature_: [open an issue](https://github.com/GamedevFramework/gf/issues) with the ["enhancement" label](https://github.com/GamedevFramework/gf/labels/enhancement)
 
 @section guarantees Guarantees until 1.0
