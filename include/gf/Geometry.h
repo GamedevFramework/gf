@@ -34,6 +34,39 @@ inline namespace v1 {
 
   /**
    * @ingroup game
+   * @brief State for the Bresenham's line algorithm
+   *
+   * @sa gf::generateLine()
+   * @sa [Bresenham's line algorithm - Wikipedia](https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm)
+   */
+  class Bresenham {
+  public:
+    /**
+     * @brief Constructor
+     *
+     * @param p0 The first point of the line
+     * @param p1 The last point of the line
+     */
+    Bresenham(Vector2i p0, Vector2i p1);
+
+    /**
+     * @brief Generate a new point on the line
+     *
+     * @param res The resulting point if one was generated
+     * @returns True if the algorithm is finished
+     */
+    bool step(Vector2i& res);
+
+  private:
+    Vector2i m_p0;
+    Vector2i m_p1;
+    Vector2i m_delta;
+    Vector2i m_step;
+    int m_error;
+  };
+
+  /**
+   * @ingroup game
    * @brief Generate a line between two positions
    *
    * This function uses [Bresenham's line algorithm](https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm).
@@ -41,6 +74,8 @@ inline namespace v1 {
    * @param p0 The first point of the line
    * @param p1 The last point of the line
    * @return A series of point beginning at the first point and ending just before the last point
+   *
+   * @sa gf::Bresenham
    */
   GF_API std::vector<Vector2i> generateLine(Vector2i p0, Vector2i p1);
 

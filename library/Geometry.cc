@@ -30,220 +30,58 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  std::vector<Vector2i> generateLine(Vector2i p0, Vector2i p1) {
-    std::vector<Vector2i> ret;
-    int dx = p1.x - p0.x;
-    int dy = p1.y - p0.y;
+  Bresenham::Bresenham(Vector2i p0, Vector2i p1)
+  : m_p0(p0)
+  , m_p1(p1)
+  , m_delta(p1 - p0)
+  {
+    m_step.x = gf::sign(m_delta.x);
+    m_step.y = gf::sign(m_delta.y);
+    m_error = std::max(m_step.x * m_delta.x, m_step.y * m_delta.y);
+    m_delta *= 2;
+  }
 
-    if (dx != 0) {
-      if (dx > 0) {
-        if (dy != 0) {
-          if (dy > 0) {
-            if (dx >= dy) {
-              int e = dx;
-              dx *= 2;
-              dy *= 2;
-
-              for (;;) {
-                ret.push_back(p0);
-                ++p0.x;
-
-                if (p0.x == p1.x) {
-                  break;
-                }
-
-                e -= dy;
-
-                if (e < 0) {
-                  ++p0.y;
-                  e += dx;
-                }
-              }
-            } else {
-              int e = dy;
-              dy *= 2;
-              dx *= 2;
-
-              for (;;) {
-                ret.push_back(p0);
-                ++p0.y;
-
-                if (p0.y == p1.y) {
-                  break;
-                }
-
-                e -= dx;
-
-                if (e < 0) {
-                  ++p0.x;
-                  e += dy;
-                }
-              }
-            }
-
-          } else { // dy < 0 (and dx > 0)
-            if (dx >= -dy) {
-              int e = dx;
-              dx *= 2;
-              dy *= 2;
-
-              for (;;) {
-                ret.push_back(p0);
-                ++p0.x;
-
-                if (p0.x == p1.x) {
-                  break;
-                }
-
-                e += dy;
-
-                if (e < 0) {
-                  --p0.y;
-                  e += dx;
-                }
-              }
-            } else {
-              int e = dy;
-              dy *= 2;
-              dx *= 2;
-
-              for (;;) {
-                ret.push_back(p0);
-                --p0.y;
-
-                if (p0.y == p1.y) {
-                  break;
-                }
-
-                e += dx;
-
-                if (e > 0) {
-                  ++p0.x;
-                  e += dy;
-                }
-              }
-            }
-          }
-        } else { // dy = 0 (and dx > 0)
-          do {
-            ret.push_back(p0);
-            ++p0.x;
-          } while (p0.x != p1.x);
-        }
-      } else { // dx < 0
-        if (dy != 0) {
-          if (dy > 0) {
-            if (-dx >= dy) {
-              int e = dx;
-              dx *= 2;
-              dy *= 2;
-
-              for (;;) {
-                ret.push_back(p0);
-                --p0.x;
-
-                if (p0.x == p1.x) {
-                  break;
-                }
-
-                e += dy;
-
-                if (e >= 0) {
-                  ++p0.y;
-                  e += dx;
-                }
-              }
-            } else {
-              int e = dx;
-              dx *= 2;
-              dy *= 2;
-
-              for (;;) {
-                ret.push_back(p0);
-                ++p0.y;
-
-                if (p0.y == p1.y) {
-                  break;
-                }
-
-                e += dx;
-
-                if (e <= 0) {
-                  --p0.x;
-                  e += dy;
-                }
-              }
-            }
-          } else { // dy < 0 (and dx < 0)
-
-            if (dx <= dy) {
-              int e = dx;
-              dx *= 2;
-              dy *= 2;
-
-              for (;;) {
-                ret.push_back(p0);
-                --p0.x;
-
-                if (p0.x == p1.x) {
-                  break;
-                }
-
-                e -= dy;
-
-                if (e >= 0) {
-                  --p0.y;
-                  e += dx;
-                }
-              }
-            } else {
-              int e = dy;
-              dy *= 2;
-              dx *= 2;
-
-              for (;;) {
-                ret.push_back(p0);
-                --p0.y;
-
-                if (p0.y == p1.y) {
-                  break;
-                }
-
-                e -= dx;
-
-                if (e >= 0) {
-                  --p0.x;
-                  e += dy;
-                }
-              }
-            }
-
-          }
-        } else { // dy = 0 (and dx < 0)
-
-          do {
-            ret.push_back(p0);
-            --p0.x;
-          } while (p0.x != p1.x);
-        }
+  bool Bresenham::step(Vector2i& res) {
+    if (m_step.x * m_delta.x > m_step.y * m_delta.y) {
+      if (m_p0.x == m_p1.x) {
+        return true;
       }
-    } else { // dx = 0
-      if (dy != 0) {
-        if (dy > 0) {
-          do {
-            ret.push_back(p0);
-            ++p0.y;
-          } while (p0.y != p1.y);
-        } else { // dy < 0 (and dx = 0)
-          do {
-            ret.push_back(p0);
-            --p0.y;
-          } while (p0.y != p1.y);
-        }
+
+      m_p0.x += m_step.x;
+      m_error -= m_step.y * m_delta.y;
+
+      if (m_error < 0) {
+        m_p0.y += m_step.y;
+        m_error += m_step.x * m_delta.x;
+      }
+    } else {
+      if (m_p0.y == m_p1.y) {
+        return true;
+      }
+
+      m_p0.y += m_step.y;
+      m_error -= m_step.x * m_delta.x;
+
+      if (m_error < 0) {
+        m_p0.x += m_step.x;
+        m_error += m_step.y * m_delta.y;
       }
     }
 
-    // p1 is not included
+    res = m_p0;
+    return false;
+  }
+
+  std::vector<Vector2i> generateLine(Vector2i p0, Vector2i p1) {
+    Bresenham bresenham(p0, p1);
+
+    std::vector<Vector2i> ret;
+    Vector2i p;
+
+    while (!bresenham.step(p)) {
+      ret.push_back(p);
+    }
+
     return ret;
   }
 
