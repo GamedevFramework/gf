@@ -81,11 +81,10 @@ inline namespace v1 {
     m_vertices.clear();
     Vector2f max = m_gridSize * m_cellSize;
 
+    Vertex vertices[2];
+    vertices[0].color = vertices[1].color = m_color;
+
     for (unsigned i = 0; i < m_gridSize.width; ++i) {
-      Vertex vertices[2];
-
-      vertices[0].color = vertices[1].color = m_color;
-
       float x = i * m_cellSize.width;
       vertices[0].position = { x, 0.0f };
       vertices[1].position = { x, max.y };
@@ -95,10 +94,6 @@ inline namespace v1 {
     }
 
     for (unsigned j = 0; j < m_gridSize.height; ++j) {
-      Vertex vertices[2];
-
-      vertices[0].color = vertices[1].color = m_color;
-
       float y = j * m_cellSize.height;
       vertices[0].position = { 0.0f, y };
       vertices[1].position = { max.x, y };
