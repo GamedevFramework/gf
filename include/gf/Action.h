@@ -50,7 +50,7 @@ inline namespace v1 {
      *
      * @param name the name of the action.
      */
-    Action(std::string name);
+    explicit Action(std::string name);
 
     /**
      * @brief Deleted copy constructor
