@@ -133,7 +133,7 @@ namespace huaca {
       gf::Sprite sprite;
       sprite.setTexture(*portal.texture);
       sprite.setPosition(position);
-      sprite.setScale({ HudPortalSize / HudPortalTextureSize });
+      sprite.setScale(HudPortalSize / HudPortalTextureSize);
       sprite.setColor({ 1.0f, 1.0f, 1.0f, (portal.active ? 1.0f : Transparency) });
       target.draw(sprite, states);
 
