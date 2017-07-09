@@ -190,6 +190,17 @@ inline namespace v1 {
       return m_data.empty();
     }
 
+    /**
+     * @brief Check if a position is valid
+     *
+     * A valid position is a position inside the array
+     *
+     * @return True if the position is valid
+     */
+    constexpr bool isValid(Vector<I, 2> pos) const noexcept {
+      return pos.col < m_size.col && pos.row < m_size.row && (std::is_unsigned<I>::value || (0 <= pos.col && 0 <= pos.row));
+    }
+
     /** @} */
 
     /**
@@ -549,10 +560,7 @@ inline namespace v1 {
 
     template<typename Func>
     void visitNeighborsSquare(Vector<I, 2> pos, Func func, unsigned n) const {
-      assert(std::is_unsigned<I>::value || 0 <= pos.col);
-      assert(pos.col < m_size.col);
-      assert(std::is_unsigned<I>::value || 0 <= pos.row);
-      assert(pos.row < m_size.row);
+      assert(isValid(pos));
 
       unsigned colMin = pos.col - std::min(pos.col, n);
       unsigned colMax = pos.col + std::min(m_size.col - pos.col - 1, n);
@@ -572,10 +580,7 @@ inline namespace v1 {
 
     template<typename Func>
     void visitNeighborsSquare(Vector<I, 2> pos, Func func, unsigned n) {
-      assert(std::is_unsigned<I>::value || 0 <= pos.col);
-      assert(pos.col < m_size.col);
-      assert(std::is_unsigned<I>::value || 0 <= pos.row);
-      assert(pos.row < m_size.row);
+      assert(isValid(pos));
 
       unsigned colMin = pos.col - std::min(pos.col, n);
       unsigned colMax = pos.col + std::min(m_size.col - pos.col - 1, n);
@@ -596,10 +601,7 @@ inline namespace v1 {
 
     template<typename Func>
     void visitNeighborsDiamond(Vector<I, 2> pos, Func func, unsigned n) const {
-      assert(std::is_unsigned<I>::value || 0 <= pos.col);
-      assert(pos.col < m_size.col);
-      assert(std::is_unsigned<I>::value || 0 <= pos.row);
-      assert(pos.row < m_size.row);
+      assert(isValid(pos));
 
       unsigned colMin = pos.col - std::min(pos.col, n);
       unsigned colMax = pos.col + std::min(m_size.col - pos.col - 1, n);
@@ -623,10 +625,7 @@ inline namespace v1 {
 
     template<typename Func>
     void visitNeighborsDiamond(Vector<I, 2> pos, Func func, unsigned n) {
-      assert(std::is_unsigned<I>::value || 0 <= pos.col);
-      assert(pos.col < m_size.col);
-      assert(std::is_unsigned<I>::value || 0 <= pos.row);
-      assert(pos.row < m_size.row);
+      assert(isValid(pos));
 
       unsigned colMin = pos.col - std::min(pos.col, n);
       unsigned colMax = pos.col + std::min(m_size.col - pos.col - 1, n);
