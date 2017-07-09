@@ -22,6 +22,7 @@
 #define ARRAY2D_H
 
 #include <cassert>
+#include <type_traits>
 #include <utility>
 #include <vector>
 
@@ -55,7 +56,7 @@ inline namespace v1 {
    *
    * @sa gf::Matrix
    */
-  template<class T>
+  template<typename T, typename I = unsigned>
   class Array2D {
   public:
     /**
@@ -74,7 +75,7 @@ inline namespace v1 {
      *
      * @param size The size of the array
      */
-    Array2D(Vector2u size)
+    Array2D(Vector<I, 2> size)
     : m_size(size)
     , m_data(size.width * size.height)
     {
@@ -87,7 +88,7 @@ inline namespace v1 {
      * @param size The size of the array
      * @param value The initial value in the array
      */
-    Array2D(Vector2u size, const T& value)
+    Array2D(Vector<I, 2> size, const T& value)
     : m_size(size)
     , m_data(size.width * size.height, value)
     {
@@ -155,7 +156,7 @@ inline namespace v1 {
      *
      * @return The size of the array
      */
-    constexpr Vector2u getSize() const noexcept {
+    constexpr Vector<I, 2> getSize() const noexcept {
       return m_size;
     }
 
@@ -201,7 +202,7 @@ inline namespace v1 {
      *
      * @param pos The 2D position of the element
      */
-    T& operator()(Vector2u pos) {
+    T& operator()(Vector<I, 2> pos) {
       return get(pos);
     }
 
@@ -220,7 +221,7 @@ inline namespace v1 {
      *
      * @param pos The 2D position of the element
      */
-    const T& operator()(Vector2u pos) const {
+    const T& operator()(Vector<I, 2> pos) const {
       return get(pos);
     }
 
@@ -240,7 +241,7 @@ inline namespace v1 {
      * @param pos A 1D position
      * @return The corresponding 2D position
      */
-    constexpr Vector2u toPosition(std::size_t pos) const noexcept {
+    constexpr Vector<I, 2> toPosition(std::size_t pos) const noexcept {
       return { pos % m_size.col, pos / m_size.col };
     }
 
@@ -261,7 +262,7 @@ inline namespace v1 {
      * The callback function has the following prototype:
      *
      * ~~~{.cc}
-     * void callback(Vector2u pos, T value);
+     * void callback(Vector<I, 2> pos, T value);
      * // pos is the position of the neighbor
      * // value is the value of the neighbor
      * ~~~
@@ -273,7 +274,7 @@ inline namespace v1 {
      * @param func A callback function
      */
     template<typename Func>
-    void visit4Neighbors(Vector2u pos, Func func) {
+    void visit4Neighbors(Vector<I, 2> pos, Func func) {
       visitNeighborsDiamond(pos, func, 1);
     }
 
@@ -287,7 +288,7 @@ inline namespace v1 {
      * The callback function has the following prototype:
      *
      * ~~~{.cc}
-     * void callback(Vector2u pos, T value);
+     * void callback(Vector<I, 2> pos, T value);
      * // pos is the position of the neighbor
      * // value is the value of the neighbor
      * ~~~
@@ -299,7 +300,7 @@ inline namespace v1 {
      * @param func A callback function
      */
     template<typename Func>
-    void visit4Neighbors(Vector2u pos, Func func) const {
+    void visit4Neighbors(Vector<I, 2> pos, Func func) const {
       visitNeighborsDiamond(pos, func, 1);
     }
 
@@ -313,7 +314,7 @@ inline namespace v1 {
      * The callback function has the following prototype:
      *
      * ~~~{.cc}
-     * void callback(Vector2u pos, T value);
+     * void callback(Vector<I, 2> pos, T value);
      * // pos is the position of the neighbor
      * // value is the value of the neighbor
      * ~~~
@@ -325,7 +326,7 @@ inline namespace v1 {
      * @param func A callback function
      */
     template<typename Func>
-    void visit12Neighbors(Vector2u pos, Func func) {
+    void visit12Neighbors(Vector<I, 2> pos, Func func) {
       visitNeighborsDiamond(pos, func, 2);
     }
 
@@ -339,7 +340,7 @@ inline namespace v1 {
      * The callback function has the following prototype:
      *
      * ~~~{.cc}
-     * void callback(Vector2u pos, T value);
+     * void callback(Vector<I, 2> pos, T value);
      * // pos is the position of the neighbor
      * // value is the value of the neighbor
      * ~~~
@@ -351,7 +352,7 @@ inline namespace v1 {
      * @param func A callback function
      */
     template<typename Func>
-    void visit12Neighbors(Vector2u pos, Func func) const {
+    void visit12Neighbors(Vector<I, 2> pos, Func func) const {
       visitNeighborsDiamond(pos, func, 2);
     }
 
@@ -365,7 +366,7 @@ inline namespace v1 {
      * The callback function has the following prototype:
      *
      * ~~~{.cc}
-     * void callback(Vector2u pos, T value);
+     * void callback(Vector<I, 2> pos, T value);
      * // pos is the position of the neighbor
      * // value is the value of the neighbor
      * ~~~
@@ -377,7 +378,7 @@ inline namespace v1 {
      * @param func A callback function
      */
     template<typename Func>
-    void visit8Neighbors(Vector2u pos, Func func) {
+    void visit8Neighbors(Vector<I, 2> pos, Func func) {
       visitNeighborsSquare(pos, func, 1);
     }
 
@@ -391,7 +392,7 @@ inline namespace v1 {
      * The callback function has the following prototype:
      *
      * ~~~{.cc}
-     * void callback(Vector2u pos, T value);
+     * void callback(Vector<I, 2> pos, T value);
      * // pos is the position of the neighbor
      * // value is the value of the neighbor
      * ~~~
@@ -405,7 +406,7 @@ inline namespace v1 {
 
 
     template<typename Func>
-    void visit8Neighbors(Vector2u pos, Func func) const {
+    void visit8Neighbors(Vector<I, 2> pos, Func func) const {
       visitNeighborsSquare(pos, func, 1);
     }
 
@@ -419,7 +420,7 @@ inline namespace v1 {
      * The callback function has the following prototype:
      *
      * ~~~{.cc}
-     * void callback(Vector2u pos, T value);
+     * void callback(Vector<I, 2> pos, T value);
      * // pos is the position of the neighbor
      * // value is the value of the neighbor
      * ~~~
@@ -431,7 +432,7 @@ inline namespace v1 {
      * @param func A callback function
      */
     template<typename Func>
-    void visit24Neighbors(Vector2u pos, Func func) {
+    void visit24Neighbors(Vector<I, 2> pos, Func func) {
       visitNeighborsSquare(pos, func, 2);
     }
 
@@ -445,7 +446,7 @@ inline namespace v1 {
      * The callback function has the following prototype:
      *
      * ~~~{.cc}
-     * void callback(Vector2u pos, T value);
+     * void callback(Vector<I, 2> pos, T value);
      * // pos is the position of the neighbor
      * // value is the value of the neighbor
      * ~~~
@@ -457,7 +458,7 @@ inline namespace v1 {
      * @param func A callback function
      */
     template<typename Func>
-    void visit24Neighbors(Vector2u pos, Func func) const {
+    void visit24Neighbors(Vector<I, 2> pos, Func func) const {
       visitNeighborsSquare(pos, func, 2);
     }
 
@@ -538,17 +539,19 @@ inline namespace v1 {
     /** @} */
 
   private:
-    T& get(Vector2u pos) {
+    T& get(Vector<I, 2> pos) {
       return m_data[pos.row * m_size.col + pos.col];
     }
 
-    const T& get(Vector2u pos) const {
+    const T& get(Vector<I, 2> pos) const {
       return m_data[pos.row * m_size.col + pos.col];
     }
 
     template<typename Func>
-    void visitNeighborsSquare(Vector2u pos, Func func, unsigned n) const {
+    void visitNeighborsSquare(Vector<I, 2> pos, Func func, unsigned n) const {
+      assert(std::is_signed<I>::value && 0 <= pos.col);
       assert(pos.col < m_size.col);
+      assert(std::is_signed<I>::value && 0 <= pos.row);
       assert(pos.row < m_size.row);
 
       unsigned colMin = pos.col - std::min(pos.col, n);
@@ -568,8 +571,10 @@ inline namespace v1 {
     }
 
     template<typename Func>
-    void visitNeighborsSquare(Vector2u pos, Func func, unsigned n) {
+    void visitNeighborsSquare(Vector<I, 2> pos, Func func, unsigned n) {
+      assert(std::is_signed<I>::value && 0 <= pos.col);
       assert(pos.col < m_size.col);
+      assert(std::is_signed<I>::value && 0 <= pos.row);
       assert(pos.row < m_size.row);
 
       unsigned colMin = pos.col - std::min(pos.col, n);
@@ -590,8 +595,10 @@ inline namespace v1 {
 
 
     template<typename Func>
-    void visitNeighborsDiamond(Vector2u pos, Func func, unsigned n) const {
+    void visitNeighborsDiamond(Vector<I, 2> pos, Func func, unsigned n) const {
+      assert(std::is_signed<I>::value && 0 <= pos.col);
       assert(pos.col < m_size.col);
+      assert(std::is_signed<I>::value && 0 <= pos.row);
       assert(pos.row < m_size.row);
 
       unsigned colMin = pos.col - std::min(pos.col, n);
@@ -615,8 +622,10 @@ inline namespace v1 {
     }
 
     template<typename Func>
-    void visitNeighborsDiamond(Vector2u pos, Func func, unsigned n) {
+    void visitNeighborsDiamond(Vector<I, 2> pos, Func func, unsigned n) {
+      assert(std::is_signed<I>::value && 0 <= pos.col);
       assert(pos.col < m_size.col);
+      assert(std::is_signed<I>::value && 0 <= pos.row);
       assert(pos.row < m_size.row);
 
       unsigned colMin = pos.col - std::min(pos.col, n);
@@ -640,7 +649,7 @@ inline namespace v1 {
     }
 
   private:
-    Vector2u m_size;
+    Vector<I, 2> m_size;
     std::vector<T> m_data;
   };
 
