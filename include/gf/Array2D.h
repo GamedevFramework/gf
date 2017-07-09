@@ -549,9 +549,9 @@ inline namespace v1 {
 
     template<typename Func>
     void visitNeighborsSquare(Vector<I, 2> pos, Func func, unsigned n) const {
-      assert(std::is_signed<I>::value && 0 <= pos.col);
+      assert(std::is_unsigned<I>::value || 0 <= pos.col);
       assert(pos.col < m_size.col);
-      assert(std::is_signed<I>::value && 0 <= pos.row);
+      assert(std::is_unsigned<I>::value || 0 <= pos.row);
       assert(pos.row < m_size.row);
 
       unsigned colMin = pos.col - std::min(pos.col, n);
@@ -572,9 +572,9 @@ inline namespace v1 {
 
     template<typename Func>
     void visitNeighborsSquare(Vector<I, 2> pos, Func func, unsigned n) {
-      assert(std::is_signed<I>::value && 0 <= pos.col);
+      assert(std::is_unsigned<I>::value || 0 <= pos.col);
       assert(pos.col < m_size.col);
-      assert(std::is_signed<I>::value && 0 <= pos.row);
+      assert(std::is_unsigned<I>::value || 0 <= pos.row);
       assert(pos.row < m_size.row);
 
       unsigned colMin = pos.col - std::min(pos.col, n);
@@ -596,9 +596,9 @@ inline namespace v1 {
 
     template<typename Func>
     void visitNeighborsDiamond(Vector<I, 2> pos, Func func, unsigned n) const {
-      assert(std::is_signed<I>::value && 0 <= pos.col);
+      assert(std::is_unsigned<I>::value || 0 <= pos.col);
       assert(pos.col < m_size.col);
-      assert(std::is_signed<I>::value && 0 <= pos.row);
+      assert(std::is_unsigned<I>::value || 0 <= pos.row);
       assert(pos.row < m_size.row);
 
       unsigned colMin = pos.col - std::min(pos.col, n);
@@ -623,9 +623,9 @@ inline namespace v1 {
 
     template<typename Func>
     void visitNeighborsDiamond(Vector<I, 2> pos, Func func, unsigned n) {
-      assert(std::is_signed<I>::value && 0 <= pos.col);
+      assert(std::is_unsigned<I>::value || 0 <= pos.col);
       assert(pos.col < m_size.col);
-      assert(std::is_signed<I>::value && 0 <= pos.row);
+      assert(std::is_unsigned<I>::value || 0 <= pos.row);
       assert(pos.row < m_size.row);
 
       unsigned colMin = pos.col - std::min(pos.col, n);
