@@ -555,7 +555,7 @@ inline namespace v1 {
    *
    * By default, the @f$ z = 0 @f$ plane is used.
    */
-  class Noise3DTo2DAdapter : public Noise2D {
+  class GF_API Noise3DTo2DAdapter : public Noise2D {
   public:
     /**
      * @brief Constructor
