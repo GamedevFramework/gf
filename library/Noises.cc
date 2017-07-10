@@ -1266,7 +1266,7 @@ inline namespace v1 {
 
       for (std::ptrdiff_t k = 2 * i - DownCoeffsCount; k <=  2 * i - DownCoeffsCount; ++k) {
         std::ptrdiff_t index = k - 2 * i;
-        assert(0 <= index && index < 2 * DownCoeffsCount);
+        assert(-DownCoeffsCount <= index && index < DownCoeffsCount);
         value += coeffs[index] * from[positiveMod(k, n) * stride];
       }
 
@@ -1287,7 +1287,7 @@ inline namespace v1 {
 
       for (std::ptrdiff_t k = i/2; k <= i/2 + 1; ++k) {
         std::ptrdiff_t index = i - 2 * k;
-        assert(0 <= index && index < 2 * UpCoeffsCount);
+        assert(-UpCoeffsCount <= index && index < UpCoeffsCount);
         value += coeffs[index] * from[positiveMod(k, n/2) * stride];
       }
 
@@ -1389,7 +1389,7 @@ inline namespace v1 {
       double t = mid[i] - (p[i] - 0.5);
       w[i][0] = t * t / 2;
       w[i][2] = (1 - t) * (1 - t) / 2;
-      w[i][1] = w[i][0] - w[i][2];
+      w[i][1] = 1 - w[i][0] - w[i][2];
     }
 
     // evaluate noise by weighting noise coefficients by basis function values
@@ -1668,6 +1668,25 @@ inline namespace v1 {
     }
 
     return value;
+  }
+
+
+  Noise3DTo2DAdapter::Noise3DTo2DAdapter(Noise3D& noise, Vector3d normal, Vector3d point)
+  : m_noise(noise)
+  , m_normal(normal)
+  , m_point(point)
+  {
+
+  }
+
+  double Noise3DTo2DAdapter::getValue(double x, double y) {
+    double z = 0.0;
+
+    if (std::abs(m_normal.z) > gf::Epsilon) {
+       z = m_point.z + (m_normal.x * (m_point.x - x) + m_normal.y * (m_point.y - y)) / m_normal.z;
+    }
+
+    return m_noise(x, y, z);
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

@@ -545,6 +545,19 @@ inline namespace v1 {
     double m_dimension;
   };
 
+
+  class Noise3DTo2DAdapter : public Noise2D {
+  public:
+    Noise3DTo2DAdapter(Noise3D& noise, Vector3d normal = Vector3d(0.0, 0.0, 1.0), Vector3d point = Vector3d(0.0, 0.0, 0.0));
+
+    virtual double getValue(double x, double y) override;
+
+  private:
+    Noise3D& m_noise;
+    Vector3d m_normal;
+    Vector3d m_point;
+  };
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif

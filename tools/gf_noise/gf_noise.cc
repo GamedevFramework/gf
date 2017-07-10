@@ -324,6 +324,7 @@ enum class NoiseFunction : std::size_t {
   Simplex         = 3,
   OpenSimplex     = 4,
   Worley          = 5,
+  Wavelet         = 6,
 };
 
 enum class StepFunction : std::size_t {
@@ -426,7 +427,7 @@ int main() {
 
   // noise states
 
-  std::vector<std::string> noiseChoices = { "Value", "Gradient", "Better Gradient", "Simplex", "OpenSimplex", "Worley" }; // keep in line with NoiseFunction
+  std::vector<std::string> noiseChoices = { "Value", "Gradient", "Better Gradient", "Simplex", "OpenSimplex", "Worley", "Wavelet" }; // keep in line with NoiseFunction
   int noiseChoice = 1;
 
   std::vector<std::string> stepChoices = { "Linear", "Cubic", "Quintic", "Cosine" }; // keep in line with StepFunction
@@ -662,6 +663,12 @@ int main() {
           gf::WorleyNoise2D noise(random, pointCount, distance, combination);
           generate(texture, image, renderingParams, array, noise, fractalParams, scale);
           break;
+        }
+
+        case NoiseFunction::Wavelet: {
+          gf::WaveletNoise3D noise(random);
+          gf::Noise3DTo2DAdapter adapter(noise);
+          generate(texture, image, renderingParams, array, adapter, fractalParams, scale);
         }
       }
 
