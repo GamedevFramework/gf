@@ -3,11 +3,11 @@
 
 @tableofcontents
 
-In this document, you will learn how to build and install `gf` so that you are ready for your first project with `gf`. It is assumed you already have a compiler installed (gcc or clang for Linux; MSVC included in Visual Studio for Windows).
+In this document, you will learn how to build and install gf so that you are ready for your first project with gf. It is assumed you already have a compiler installed (gcc or clang for Linux; MSVC included in Visual Studio for Windows).
 
 @section dependencies Dependencies
 
-`gf` needs some external libraries and tools that you must install before compiling `gf`. Here are some information about these libraries, especially the required minimum version.
+gf needs some external libraries and tools that you must install before compiling gf. Here are some information about these libraries, especially the required minimum version.
 
 Libraries:
 
@@ -31,7 +31,7 @@ This section assumes you have a working compiler, either [gcc](https://gcc.gnu.o
 
 @subsection dependencies_for_linux Dependencies for Linux
 
-The recommanded way for handling dependencies on Linux is to use your favorite distribution's package manager. Here are the packages needed to build `gf` for various widespread distributions.
+The recommanded way for handling dependencies on Linux is to use your favorite distribution's package manager. Here are the packages needed to build gf for various widespread distributions.
 
 For Debian/Ubuntu:
 
@@ -101,7 +101,7 @@ C:\Local\vcpkg> .\vcpkg install sdl2 freetype boost
 
 @subsection build_and_install_for_windows Build and install
 
-Back in the working directory, you can prepare the build of `gf`. Everything will be installed in the vcpkg hierarchy.
+Back in the working directory, you can prepare the build of gf. Everything will be installed in the vcpkg hierarchy.
 
 ~~~{.bat}
 C:\Local> git clone https://github.com/GamedevFramework/gf.git
@@ -112,6 +112,6 @@ C:\Local\gf> cd build
 C:\Local\gf\build> cmake ../ -DCMAKE_TOOLCHAIN_FILE=C:\Local\vcpkg\scripts\buildsystems\vcpkg.cmake -DCMAKE_INSTALL_PREFIX=C:\Local\vcpkg\installed\x86-windows -DGF_BUILD_GAMES=ON -DGF_BUILD_TOOLS=ON
 ~~~
 
-Finally, open Visual Studio. Then, open the `gf` solution located at `C:\Local\gf\build\GF.sln`. Then, choose "Release" and build the solution (F7). Finally, build the "INSTALL" project. `gf` is installed as well as its tools and games.
+Finally, open Visual Studio. Then, open the gf solution located at `C:\Local\gf\build\GF.sln`. Then, choose "Release" and build the solution (F7). Finally, build the "INSTALL" project. gf is installed as well as its tools and games.
 
 */
