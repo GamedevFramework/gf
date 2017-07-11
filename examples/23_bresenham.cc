@@ -72,14 +72,10 @@ int main() {
           break;
 
         case gf::EventType::KeyPressed:
-          switch (event.key.keycode) {
-            case gf::Keycode::Escape:
-              window.close();
-              break;
-
-            default:
-              break;
+          if (event.key.scancode == gf::Scancode::Escape) {
+            window.close();
           }
+          break;
 
         case gf::EventType::MouseMoved:
           end = renderer.mapPixelToCoords(event.mouseCursor.coords / CellSize);

@@ -140,6 +140,10 @@ int main() {
               view.zoom(ZoomOutFactor);
               break;
 
+            case gf::Scancode::Escape:
+              window.close();
+              break;
+
             default:
               break;
           }

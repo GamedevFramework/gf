@@ -106,6 +106,10 @@ int main() {
               velocity = gf::Vector2f(Speed, 0.0f);
               break;
 
+            case gf::Scancode::Escape:
+              window.close();
+              break;
+
             default:
               break;
           }

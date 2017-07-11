@@ -51,6 +51,12 @@ int main() {
           std::cout << "FocusLost\n";
           break;
 
+        case gf::EventType::KeyPressed:
+          if (event.key.scancode == gf::Scancode::Escape) {
+            window.close();
+          }
+          break;
+
         default:
           break;
       }

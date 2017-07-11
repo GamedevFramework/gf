@@ -94,6 +94,10 @@ int main() {
               window.toggleFullscreen();
               break;
 
+            case gf::Keycode::Escape:
+              window.close();
+              break;
+
             default:
               break;
           }
