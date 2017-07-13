@@ -49,15 +49,15 @@
 namespace {
 
   enum class State : uint8_t {
-    Empty,
-    Full,
+    Wall,
+    Void,
   };
 
   static int number(State state) {
     switch (state) {
-      case State::Empty:
+      case State::Wall:
         return 0;
-      case State::Full:
+      case State::Void:
         return 1;
     }
 
@@ -174,9 +174,9 @@ namespace {
 
       for (auto pos : array.getPositionRange()) {
         if (array(pos) > threshold) {
-          ret(pos) = State::Full;
+          ret(pos) = State::Void;
         } else {
-          ret(pos) = State::Empty;
+          ret(pos) = State::Wall;
         }
       }
 
@@ -219,17 +219,17 @@ namespace {
                 break;
             }
 
-            if (m_dungeon(pos) == State::Full) {
+            if (m_dungeon(pos) == State::Void) {
               if (count >= survivalThreshold) {
-                result(pos) = State::Full;
+                result(pos) = State::Void;
               } else {
-                result(pos) = State::Empty;
+                result(pos) = State::Wall;
               }
             } else {
               if (count >= birthThreshold) {
-                result(pos) = State::Full;
+                result(pos) = State::Void;
               } else {
-                result(pos) = State::Empty;
+                result(pos) = State::Wall;
               }
             }
           }
@@ -279,7 +279,7 @@ namespace {
   private:
     void generateRooms(gf::Vector2u size) {
       m_rooms.clear();
-      m_dungeon = Dungeon(size, State::Empty);
+      m_dungeon = Dungeon(size, State::Wall);
 
       for (int i = 0; i < maxRooms; ++i) {
         gf::RectU room;
@@ -318,7 +318,7 @@ namespace {
     void createRoom(const gf::RectU& room) {
       for (unsigned x = 1; x < room.width; ++x) {
         for (unsigned y = 1; y < room.height; ++y) {
-          m_dungeon({ room.left + x, room.top + y }) = State::Full;
+          m_dungeon({ room.left + x, room.top + y }) = State::Void;
         }
       }
     }
@@ -329,7 +329,7 @@ namespace {
       }
 
       for (unsigned x = x1; x <= x2; ++x) {
-        m_dungeon({ x, y }) = State::Full;
+        m_dungeon({ x, y }) = State::Void;
       }
     }
 
@@ -339,7 +339,7 @@ namespace {
       }
 
       for (unsigned y = y1; y <= y2; ++y) {
-        m_dungeon({ x, y }) = State::Full;
+        m_dungeon({ x, y }) = State::Void;
       }
     }
 
@@ -471,7 +471,7 @@ namespace {
 
   private:
     void generateRooms(gf::Vector2u size) {
-      m_dungeon = Dungeon(size, State::Empty);
+      m_dungeon = Dungeon(size, State::Wall);
 
       m_root.space = gf::RectU({ 0u, 0u }, size);
       m_root.left = nullptr;
@@ -506,7 +506,7 @@ namespace {
     void createRoom(const gf::RectU& room) {
       for (unsigned x = 1; x < room.width; ++x) {
         for (unsigned y = 1; y < room.height; ++y) {
-          m_dungeon({ room.left + x, room.top + y }) = State::Full;
+          m_dungeon({ room.left + x, room.top + y }) = State::Void;
         }
       }
     }
@@ -517,7 +517,7 @@ namespace {
       }
 
       for (unsigned x = x1; x <= x2; ++x) {
-        m_dungeon({ x, y }) = State::Full;
+        m_dungeon({ x, y }) = State::Void;
       }
     }
 
@@ -527,7 +527,7 @@ namespace {
       }
 
       for (unsigned y = y1; y <= y2; ++y) {
-        m_dungeon({ x, y }) = State::Full;
+        m_dungeon({ x, y }) = State::Void;
       }
     }
   private:
@@ -566,7 +566,7 @@ namespace {
 
   private:
     void generateDungeon(gf::Vector2u size, gf::Random& random) {
-      m_dungeon = Dungeon(size, State::Empty);
+      m_dungeon = Dungeon(size, State::Wall);
 
       m_filled = 0;
       m_currentDirection = gf::Direction::Center;
@@ -666,8 +666,8 @@ namespace {
       }
 
       if (m_currentPosition != newPosition) {
-        if (m_dungeon(newPosition) == State::Empty) {
-          m_dungeon(newPosition) = State::Full;
+        if (m_dungeon(newPosition) == State::Wall) {
+          m_dungeon(newPosition) = State::Void;
           ++m_filled;
         }
 
@@ -702,7 +702,7 @@ static void computeDisplay(const Dungeon& dungeon, gf::VertexArray& vertices) {
       v[2].position = pos * CellSize + gf::Vector2f(0.0f, CellSize);
       v[3].position = pos * CellSize + gf::Vector2f(CellSize, CellSize);
 
-      if (dungeon(pos) == State::Full) {
+      if (dungeon(pos) == State::Void) {
         v[0].color = v[1].color = v[2].color = v[3].color = gf::Color::White;
       } else {
         v[0].color = v[1].color = v[2].color = v[3].color = gf::Color::Black;
@@ -759,8 +759,13 @@ int main() {
 
   // ui
 
-  std::vector<std::string> algorithmChoices = { "Cellular Automaton", "Tunneling", "Binary Space Partioning Tree", "Drunkard's March" };
-  int algorithmChoice = 0;
+  static constexpr int AlgorithmCellularAutomaton = 0;
+  static constexpr int AlgorithmDrunkardsMarch = 1;
+  static constexpr int AlgorithmTunneling = 2;
+  static constexpr int AlgorithmBinarySpacePartitioningTree = 3;
+
+  std::vector<std::string> algorithmChoices = { "Cellular Automaton", "Drunkard's March", "Tunneling", "Binary Space Partioning Tree" };
+  int algorithmChoice = AlgorithmCellularAutomaton;
   int currentAlgorithmChoice = algorithmChoice;
 
   std::vector<std::string> modeChoices = { "Diamond-4", "Square-8", "Diamond-12", "Square-24" };
@@ -779,6 +784,11 @@ int main() {
   cellular.birthThreshold = 6;
   cellular.iterations = 5;
 
+  DrunkardMarch march;
+  march.percentGoal = 0.4f;
+  march.weightForCenter = 0.15f;
+  march.weightForPreviousDirection = 0.7f;
+
   Tunneling tunneling;
   tunneling.maxRooms = 30;
   tunneling.roomSizeMinimum = 6;
@@ -789,11 +799,6 @@ int main() {
   bsp.leafSizeMaximum = 24;
   bsp.roomSizeMinimum = 6;
   bsp.roomSizeMaximum = 15;
-
-  DrunkardMarch march;
-  march.percentGoal = 0.4f;
-  march.weightForCenter = 0.15f;
-  march.weightForPreviousDirection = 0.7f;
 
   DungeonGenerator *currentGenerator = &cellular;
   auto dungeon = currentGenerator->generate({ dungeonSize, dungeonSize }, random);
@@ -850,7 +855,7 @@ int main() {
     ui.combobox(algorithmChoices, algorithmChoice, 20, { algorithmBounds.width, ComboHeightMax });
 
     switch (algorithmChoice) {
-      case 0: {
+      case AlgorithmCellularAutomaton: {
         currentGenerator = &cellular;
 
         ui.layoutRow(gf::UILayout::Dynamic, 20, { 0.75f, 0.25f });
@@ -901,7 +906,37 @@ int main() {
         break;
       }
 
-      case 1: {
+      case AlgorithmDrunkardsMarch: {
+        currentGenerator = &march;
+
+        ui.layoutRow(gf::UILayout::Dynamic, 20, { 0.75f, 0.25f });
+        ui.label("Fill Percentage Goal");
+        ui.label(gf::niceNum(march.percentGoal, 0.01f), gf::UIAlignment::Right);
+        ui.layoutRowDynamic(20, 1);
+        if (ui.sliderFloat(0.0f, march.percentGoal, 1.0f, 0.01f)) {
+          currentGenerator->setPhase(DungeonGenerator::Phase::Iterate);
+        }
+
+        ui.layoutRow(gf::UILayout::Dynamic, 20, { 0.75f, 0.25f });
+        ui.label("Weight for Center");
+        ui.label(gf::niceNum(march.weightForCenter, 0.01f), gf::UIAlignment::Right);
+        ui.layoutRowDynamic(20, 1);
+        if (ui.sliderFloat(0.0f, march.weightForCenter, 1.0f, 0.05f)) {
+          currentGenerator->setPhase(DungeonGenerator::Phase::Iterate);
+        }
+
+        ui.layoutRow(gf::UILayout::Dynamic, 20, { 0.75f, 0.25f });
+        ui.label("Weight for Previous Direction");
+        ui.label(gf::niceNum(march.weightForPreviousDirection, 0.01f), gf::UIAlignment::Right);
+        ui.layoutRowDynamic(20, 1);
+        if (ui.sliderFloat(0.0f, march.weightForPreviousDirection, 1.0f, 0.05f)) {
+          currentGenerator->setPhase(DungeonGenerator::Phase::Iterate);
+        }
+
+        break;
+      }
+
+      case AlgorithmTunneling: {
         currentGenerator = &tunneling;
 
         ui.layoutRow(gf::UILayout::Dynamic, 20, { 0.75f, 0.25f });
@@ -939,7 +974,7 @@ int main() {
         break;
       }
 
-      case 2: {
+      case AlgorithmBinarySpacePartitioningTree: {
         currentGenerator = &bsp;
 
         ui.layoutRow(gf::UILayout::Dynamic, 20, { 0.75f, 0.25f });
@@ -1005,36 +1040,6 @@ int main() {
 
           currentGenerator->setPhase(DungeonGenerator::Phase::Iterate);
         }
-        break;
-      }
-
-      case 3: {
-        currentGenerator = &march;
-
-        ui.layoutRow(gf::UILayout::Dynamic, 20, { 0.75f, 0.25f });
-        ui.label("Fill Percentage Goal");
-        ui.label(gf::niceNum(march.percentGoal, 0.01f), gf::UIAlignment::Right);
-        ui.layoutRowDynamic(20, 1);
-        if (ui.sliderFloat(0.0f, march.percentGoal, 1.0f, 0.01f)) {
-          currentGenerator->setPhase(DungeonGenerator::Phase::Iterate);
-        }
-
-        ui.layoutRow(gf::UILayout::Dynamic, 20, { 0.75f, 0.25f });
-        ui.label("Weight for Center");
-        ui.label(gf::niceNum(march.weightForCenter, 0.01f), gf::UIAlignment::Right);
-        ui.layoutRowDynamic(20, 1);
-        if (ui.sliderFloat(0.0f, march.weightForCenter, 1.0f, 0.05f)) {
-          currentGenerator->setPhase(DungeonGenerator::Phase::Iterate);
-        }
-
-        ui.layoutRow(gf::UILayout::Dynamic, 20, { 0.75f, 0.25f });
-        ui.label("Weight for Previous Direction");
-        ui.label(gf::niceNum(march.weightForPreviousDirection, 0.01f), gf::UIAlignment::Right);
-        ui.layoutRowDynamic(20, 1);
-        if (ui.sliderFloat(0.0f, march.weightForPreviousDirection, 1.0f, 0.05f)) {
-          currentGenerator->setPhase(DungeonGenerator::Phase::Iterate);
-        }
-
         break;
       }
 
