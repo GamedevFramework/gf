@@ -52,6 +52,10 @@ inline namespace v1 {
     m_texture = &texture;
   }
 
+  void TileLayer::unsetTexture() {
+    m_texture = nullptr;
+  }
+
   void TileLayer::setTileSize(Vector2u tileSize) {
     m_tileSize = tileSize;
   }

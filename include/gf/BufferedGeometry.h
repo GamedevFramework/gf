@@ -127,6 +127,17 @@ inline namespace v1 {
     }
 
     /**
+     * @brief Check if a texture is set
+     *
+     * @returns True if a texture is already set
+     *
+     * @sa setTexture(), getTexture()
+     */
+    bool hasTexture() const {
+      return m_texture != nullptr;
+    }
+
+    /**
      * @brief Unset the source texture of the geometry
      *
      * After a call to this function, the geometry has no source texture.

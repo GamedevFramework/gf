@@ -104,6 +104,26 @@ inline namespace v1 {
     }
 
     /**
+     * @brief Check if a texture is set
+     *
+     * @returns True if a texture is already set
+     *
+     * @sa setTexture(), getTexture()
+     */
+    bool hasTexture() const {
+      return m_texture != nullptr;
+    }
+
+    /**
+     * @brief Unset the source texture of the tile layer
+     *
+     * After a call to this function, the tile layer has no source texture.
+     *
+     * @sa setTexture()
+     */
+    void unsetTexture();
+
+    /**
      * @brief Set the tile size in the tileset
      *
      * @param tileSize The new tile size, in pixels
