@@ -51,6 +51,9 @@ int main() {
   // initialize window
 
   gf::Window window("gf Pong!", ScreenSize);
+  window.setVerticalSyncEnabled(true);
+  window.setFramerateLimit(60);
+
   gf::RenderWindow renderer(window);
 
   // add cameras
@@ -158,8 +161,8 @@ int main() {
     }
 
     // update
-    auto dt = clock.restart().asSeconds();
-    mainEntities.update(dt);
+    gf::Time time = clock.restart();
+    mainEntities.update(time);
 
     // render
     renderer.clear();

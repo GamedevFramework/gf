@@ -78,7 +78,7 @@ inline namespace v1 {
 
     }
 
-    virtual void onScreenResize(Vector2u screenSize) override;
+    virtual void onScreenSizeChange(Vector2u screenSize) override;
   };
 
   /**
@@ -102,6 +102,7 @@ inline namespace v1 {
      */
     FitView()
     : AdaptativeView()
+    , m_localViewport(0.0f, 0.0f, 1.0f, 1.0f)
     {
 
     }
@@ -113,6 +114,7 @@ inline namespace v1 {
      */
     explicit FitView(const RectF& rect)
     : AdaptativeView(rect)
+    , m_localViewport(0.0f, 0.0f, 1.0f, 1.0f)
     {
 
     }
@@ -125,11 +127,22 @@ inline namespace v1 {
      */
     FitView(Vector2f center, Vector2f size)
     : AdaptativeView(center, size)
+    , m_localViewport(0.0f, 0.0f, 1.0f, 1.0f)
     {
 
     }
 
-    virtual void onScreenResize(Vector2u screenSize) override;
+    virtual void onScreenSizeChange(Vector2u screenSize) override;
+
+  protected:
+    virtual void onSizeChange(Vector2f size) override;
+    virtual void onViewportChange(const RectF& viewport) override;
+
+    void updateView();
+
+  private:
+    Vector2u m_localScreenSize;
+    RectF m_localViewport;
   };
 
   /**
@@ -163,8 +176,9 @@ inline namespace v1 {
      */
     explicit FillView(const RectF& rect)
     : AdaptativeView(rect)
+    , m_localSize(rect.size)
     {
-      resizeWorld(getSize());
+
     }
 
     /**
@@ -175,20 +189,22 @@ inline namespace v1 {
      */
     FillView(Vector2f center, Vector2f size)
     : AdaptativeView(center, size)
+    , m_localSize(size)
     {
-      resizeWorld(getSize());
+
     }
 
-    virtual void onScreenResize(Vector2u screenSize) override;
+    virtual void onScreenSizeChange(Vector2u screenSize) override;
 
   protected:
-    virtual void onWorldResize(Vector2f worldSize) override;
+    virtual void onSizeChange(Vector2f size) override;
+    virtual void onViewportChange(const RectF& viewport) override;
+
+    void updateView();
 
   private:
-    void resizeWorld(Vector2f worldSize);
-
-  private:
-    Vector2f m_worldSize;
+    Vector2f m_localSize;
+    Vector2u m_localScreenSize;
   };
 
   /**
@@ -223,8 +239,9 @@ inline namespace v1 {
      */
     explicit ExtendView(const RectF& rect)
     : AdaptativeView(rect)
+    , m_localSize(rect.size)
     {
-      resizeWorld(getSize());
+
     }
 
     /**
@@ -235,20 +252,22 @@ inline namespace v1 {
      */
     ExtendView(Vector2f center, Vector2f size)
     : AdaptativeView(center, size)
+    , m_localSize(size)
     {
-      resizeWorld(getSize());
+
     }
 
-    virtual void onScreenResize(Vector2u screenSize) override;
+    virtual void onScreenSizeChange(Vector2u screenSize) override;
 
   protected:
-    virtual void onWorldResize(Vector2f worldSize) override;
+    virtual void onSizeChange(Vector2f size) override;
+    virtual void onViewportChange(const RectF& viewport) override;
+
+    void updateView();
 
   private:
-    void resizeWorld(Vector2f worldSize);
-
-  private:
-    Vector2f m_worldSize;
+    Vector2f m_localSize;
+    Vector2u m_localScreenSize;
   };
 
   /**
@@ -268,7 +287,13 @@ inline namespace v1 {
    */
   class GF_API ScreenView : public AdaptativeView {
   public:
-    virtual void onScreenResize(Vector2u screenSize) override;
+    virtual void onScreenSizeChange(Vector2u screenSize) override;
+    virtual void onViewportChange(const RectF& viewport) override;
+
+    void updateView();
+
+  private:
+    Vector2u m_localScreenSize;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

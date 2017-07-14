@@ -25,10 +25,10 @@
 #include <glad/glad.h>
 
 #include <gf/PostProcessing.h>
+#include <gf/Unused.h>
 #include <gf/Window.h>
 
 #include "priv/Debug.h"
-#include "priv/Utils.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -144,8 +144,8 @@ inline namespace v1 {
   }
 
   void RenderPipeline::onFramebufferResize(Vector2u size) {
+    gf::unused(size);
     // nothing by default
-    GF_UNUSED(size);
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

@@ -37,11 +37,11 @@ inline namespace v1 {
 
   /**
    * @ingroup core
-   * @brief The direction of the rotation
+   * @brief The direction of a polygon's rotation
    */
   enum class Winding {
-    Clockwise,        //< Same direction as a clock's hands
-    Counterclockwise, //< Opposite direction of a clock's hands
+    Clockwise,        ///< Same direction as a clock's hands
+    Counterclockwise, ///< Opposite direction of a clock's hands
   };
 
   /**

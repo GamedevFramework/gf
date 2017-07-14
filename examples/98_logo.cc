@@ -20,37 +20,38 @@
  */
 #include <iostream>
 
+#include <gf/Coordinates.h>
 #include <gf/Event.h>
-#include <gf/Font.h>
+#include <gf/Logo.h>
 #include <gf/RenderWindow.h>
 #include <gf/Sprite.h>
 #include <gf/Text.h>
+#include <gf/Views.h>
+#include <gf/ViewContainer.h>
 #include <gf/Window.h>
 
 int main() {
-  gf::Window window("Logo", { 200, 200 });
+  constexpr gf::Vector2u InitialScreenSize = { 166, 169 };
+
+  gf::Window window("Logo", InitialScreenSize);
   gf::RenderWindow renderer(window);
 
-  gf::Font font;
-  if (!font.loadFromFile("16_DejaVuSans.ttf")) {
-    return EXIT_FAILURE;
-  }
+  gf::ViewContainer views;
 
-  gf::Text text;
-  text.setColor(gf::Color::Orange);
-  text.setOutlineThickness(12.0f);
-  text.setOutlineColor(gf::Color::Azure);
-  text.setString("gf");
-  text.setCharacterSize(150);
-  text.setFont(font);
-  text.setPosition({ 100, 100 });
-  text.setAnchor(gf::Anchor::Center);
+  gf::ScreenView screenView;
+  views.addView(screenView);
+
+  views.setInitialScreenSize(InitialScreenSize);
+
+  gf::Logo logo;
+  logo.setAnchor(gf::Anchor::Center);
 
   std::cout << "Gamedev Framework (gf) example #98: Logo\n";
   std::cout << "This example prints the logo of Gamedev Framework (gf)\n";
   std::cout << "How to use:\n";
   std::cout << "\tS: Capture the image in 'gf_logo.png'\n";
 
+  renderer.setView(screenView);
   renderer.clear({ 1.0f, 1.0f, 1.0f, 0.0f }); // transparent white
 
   while (window.isOpen()) {
@@ -63,20 +64,39 @@ int main() {
           break;
 
         case gf::EventType::KeyPressed:
-          if (event.key.keycode == gf::Keycode::S) {
-            auto image = renderer.capture();
-            image.saveToFile("gf_logo.png");
-            std::cout << "Logo saved!\n";
+          switch (event.key.keycode) {
+            case gf::Keycode::S: {
+              auto image = renderer.capture();
+              image.saveToFile("gf_logo.png");
+              std::cout << "Logo saved!\n";
+            }
+
+            case gf::Keycode::Space:
+              window.setSize({ 200, 200 });
+              break;
+
+            case gf::Keycode::Escape:
+              window.close();
+              break;
+
+            default:
+              break;
           }
           break;
 
         default:
           break;
       }
+
+      views.processEvent(event);
     }
 
+    gf::Coordinates coordinates(renderer);
+    logo.setPosition(coordinates.getCenter());
+
     renderer.clear();
-    renderer.draw(text);
+    renderer.setView(screenView);
+    renderer.draw(logo);
     renderer.display();
   }
 

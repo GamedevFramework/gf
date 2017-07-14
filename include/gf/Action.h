@@ -50,7 +50,7 @@ inline namespace v1 {
      *
      * @param name the name of the action.
      */
-    Action(std::string name);
+    explicit Action(std::string name);
 
     /**
      * @brief Deleted copy constructor
@@ -169,6 +169,14 @@ inline namespace v1 {
      * @sa CloseControl
      */
     void addCloseControl();
+
+
+    /**
+     * @brief Add a user-defined control
+     *
+     * @param control The control
+     */
+    void addControl(Control& control);
     /** @} */
 
     /**
@@ -213,7 +221,8 @@ inline namespace v1 {
 
     std::string m_name;
     Type m_type;
-    std::vector<std::unique_ptr<Control>> m_controls;
+    std::vector<std::unique_ptr<Control>> m_ownedControls;
+    std::vector<Control *> m_controls;
   };
 
   /**

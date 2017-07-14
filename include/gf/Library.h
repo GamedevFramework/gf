@@ -23,6 +23,8 @@
 
 #include "Portability.h"
 
+#include <tuple>
+
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
@@ -92,9 +94,21 @@ inline namespace v1 {
     static Version getVersion();
 
     /**
-     * @brief Print the version information about the library and its dependencies
+     * @brief Depedencies of gf
      */
-    static void printVersionInfo();
+    enum Dependency {
+      Boost,                  ///< Boost
+      SimpleDirectMediaLayer, ///< SDL
+      FreeType,               ///< FreeType
+    };
+
+    /**
+     * @brief Get the version information about the library dependencies
+     *
+     * @return A tuple with the compiled version and the linked version
+     */
+    static std::tuple<Version, Version> getDependencyVersion(Dependency dep);
+
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

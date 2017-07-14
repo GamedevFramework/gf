@@ -23,6 +23,8 @@
 #include <cassert>
 #include <cstdio>
 #include <ctime>
+
+#include <chrono>
 #include <utility>
 
 #include "config.h"
@@ -72,9 +74,20 @@ inline namespace v1 {
       return;
     }
 
-    unsigned long t = std::time(nullptr);
-    std::fprintf(stderr, "[%lu][%s] ", t, getStringFromLevel(level));
+    auto now = std::chrono::system_clock::now();
+    auto epoch = now.time_since_epoch();
+    auto seconds = std::chrono::duration_cast<std::chrono::seconds>(epoch);
+    std::time_t integerPart = seconds.count();
 
+    auto microseconds = std::chrono::duration_cast<std::chrono::microseconds>(epoch) % std::chrono::seconds(1);
+    long fractionalPart = microseconds.count();
+
+    static constexpr std::size_t BufferSize = 1024;
+    char buffer[BufferSize];
+    std::size_t size = strftime(buffer, BufferSize, "%F %T", std::localtime(&integerPart));
+    std::snprintf(buffer + size, BufferSize - size, ".%06ld", fractionalPart);
+
+    std::fprintf(stderr, "[%s][%s] ", buffer, getStringFromLevel(level));
     std::vfprintf(stderr, fmt, ap);
   }
 

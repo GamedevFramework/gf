@@ -23,10 +23,12 @@
  */
 #include <gf/View.h>
 
+#include <gf/Event.h>
+#include <gf/RenderTarget.h>
 #include <gf/Transform.h>
+#include <gf/Unused.h>
 #include <gf/VectorOps.h>
 
-#include "priv/Utils.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -64,10 +66,24 @@ inline namespace v1 {
 
   }
 
+  static bool isClamped(float value) {
+    return 0.0f <= value && value <= 1.0f;
+  }
+
+  void View::setViewport(const RectF& viewport) {
+    assert(isClamped(viewport.top));
+    assert(isClamped(viewport.left));
+    assert(isClamped(viewport.width));
+    assert(isClamped(viewport.height));
+
+    m_viewport = viewport;
+    onViewportChange(viewport);
+  }
+
   void View::reset(const RectF& rect) {
     m_center = rect.getCenter();
     m_size = rect.getSize();
-    onWorldResize(m_size);
+    onSizeChange(m_size);
   }
 
   void View::rotate(float angle) {
@@ -80,13 +96,13 @@ inline namespace v1 {
 
   void View::zoom(float factor) {
     m_size *= factor;
-    onWorldResize(m_size);
+    onSizeChange(m_size);
   }
 
   void View::zoom(float factor, Vector2f fixed) {
     m_center += (fixed - m_center) * (1 - factor);
     m_size *= factor;
-    onWorldResize(m_size);
+    onSizeChange(m_size);
   }
 
   Matrix3f View::getTransform() const {
@@ -105,18 +121,89 @@ inline namespace v1 {
     return invert(getTransform());
   }
 
-  void View::onWorldResize(Vector2f worldSize) {
-    GF_UNUSED(worldSize);
-
+  void View::onSizeChange(Vector2f size) {
+    gf::unused(size);
     // nothing by default
   }
+
+  void View::setViewportNoCallback(const RectF& viewport) {
+    assert(isClamped(viewport.top));
+    assert(isClamped(viewport.left));
+    assert(isClamped(viewport.width));
+    assert(isClamped(viewport.height));
+
+    m_viewport = viewport;
+  }
+
+  void View::onViewportChange(const RectF& viewport) {
+    gf::unused(viewport);
+    // nothing by default
+  }
+
 
   /*
    * AdaptativeView
    */
 
   void AdaptativeView::setInitialScreenSize(Vector2u screenSize) {
-    onScreenResize(screenSize);
+    onScreenSizeChange(screenSize);
+  }
+
+
+  /*
+   * ZoomingViewAdaptor
+   */
+
+  ZoomingViewAdaptor::ZoomingViewAdaptor(const RenderTarget& target, View& view)
+  : m_target(target)
+  , m_view(view)
+  , m_mousePosition({ 0, 0 })
+  , m_state(State::Stationary)
+  {
+
+  }
+
+  static bool isCursorOnView(Vector2i cursor, Vector2u screenSize, const RectF& viewport) {
+    RectF visible(viewport.position * screenSize, viewport.size * screenSize);
+    return visible.contains(cursor);
+  }
+
+  void ZoomingViewAdaptor::processEvent(const Event& event) {
+    static constexpr float ZoomInFactor = 0.8f;
+    static constexpr float ZoomOutFactor = 1.25f;
+
+    switch (event.type) {
+      case gf::EventType::MouseMoved:
+        if (m_state == State::Moving) {
+          gf::Vector2f oldPosition = m_target.mapPixelToCoords(m_mousePosition, m_view);
+          gf::Vector2f newPosition = m_target.mapPixelToCoords(event.mouseCursor.coords, m_view);
+          m_view.move(oldPosition - newPosition);
+        }
+
+        m_mousePosition = event.mouseCursor.coords;
+        break;
+
+      case gf::EventType::MouseButtonPressed:
+        if (isCursorOnView(event.mouseButton.coords, m_target.getSize(), m_view.getViewport())) {
+          m_state = State::Moving;
+        }
+        break;
+
+      case gf::EventType::MouseButtonReleased:
+        m_state = State::Stationary;
+        break;
+
+      case gf::EventType::MouseWheelScrolled:
+        if (event.mouseWheel.offset.y > 0) {
+          m_view.zoom(ZoomInFactor, m_target.mapPixelToCoords(m_mousePosition, m_view));
+        } else {
+          m_view.zoom(ZoomOutFactor, m_target.mapPixelToCoords(m_mousePosition, m_view));
+        }
+        break;
+
+      default:
+        break;
+    }
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

@@ -26,6 +26,7 @@
 
 #include "Portability.h"
 #include "Rect.h"
+#include "Time.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -62,39 +63,41 @@ inline namespace v1 {
      * @param bounds The texture rectangle where the sprite is
      * @param duration The amount of time to display the frame
      */
-    void addFrame(const Texture& texture, const RectF& bounds, float duration);
+    void addFrame(const Texture& texture, const RectF& bounds, Time duration);
 
     /**
      * @brief Get the current texture
      *
-     * @return The current texture or `nullptr` if the animation is empty
+     * @return The current texture
+     * @throw std::runtime_error If the animation is empty
      */
-    const Texture *getCurrentTexture() const;
+    const Texture& getCurrentTexture() const;
 
     /**
      * @brief Get the current texture rectangle
      *
      * @return The current texture rectangle
+     * @throw std::runtime_error If the animation is empty
      */
     RectF getCurrentBounds() const;
 
     /**
      * @brief Update the state of the animation
      *
-     * @param dt The time (in seconds) since the last update
+     * @param time The time since the last update
      * @return True if the current frame has changed
      */
-    bool update(float dt);
+    bool update(Time time);
 
   private:
     struct Frame {
       const Texture *texture;
       RectF bounds;
-      float duration;
+      Time duration;
     };
 
     std::size_t m_currentFrame;
-    float m_currentDurationInFrame;
+    Time m_currentDurationInFrame;
     std::vector<Frame> m_frames;
   };
 

@@ -31,7 +31,7 @@ namespace huaca {
 
     void clear();
 
-    virtual void render(gf::RenderTarget& target) override;
+    virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
 
   private:
     gf::MessageStatus onKeyLooted(gf::Id id, gf::Message *msg);

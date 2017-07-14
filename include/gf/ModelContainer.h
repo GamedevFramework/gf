@@ -24,6 +24,7 @@
 #include <vector>
 
 #include "Portability.h"
+#include "Time.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -55,10 +56,10 @@ inline namespace v1 {
     /**
      * @brief Update the models
      *
-     * @param dt The time (in seconds) since the last update
+     * @param time The time since the last update
      * @sa gf::Model::update()
      */
-    void update(float dt);
+    void update(Time time);
 
     /**
      * @brief Add a model to the collection

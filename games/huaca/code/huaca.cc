@@ -21,6 +21,7 @@
 #include <gf/Event.h>
 #include <gf/Log.h>
 #include <gf/RenderWindow.h>
+#include <gf/Unused.h>
 #include <gf/ViewContainer.h>
 #include <gf/Views.h>
 #include <gf/Window.h>
@@ -48,6 +49,9 @@ int main() {
 
   gf::Vector2u screenSize = { 1024, 576 };
   gf::Window window("Huaca", screenSize);
+  window.setVerticalSyncEnabled(true);
+  window.setFramerateLimit(60);
+
   gf::RenderWindow renderer(window);
 
   // setup resource directories
@@ -139,6 +143,7 @@ int main() {
 
   huaca::gMessageManager().registerHandler<huaca::HeroPositionMessage>([&mainView](gf::Id id, gf::Message *msg) {
     assert(id = huaca::HeroPositionMessage::type);
+    gf::unused(id);
     auto heroPosition = static_cast<huaca::HeroPositionMessage*>(msg);
     mainView.setCenter(heroPosition->position);
     return gf::MessageStatus::Keep;
@@ -191,9 +196,9 @@ int main() {
       roof = level.getRoof();
     }
 
-    auto dt = clock.restart().asSeconds();
-    mainEntities.update(dt);
-    hudEntities.update(dt);
+    gf::Time time = clock.restart();
+    mainEntities.update(time);
+    hudEntities.update(time);
 
     // render
 

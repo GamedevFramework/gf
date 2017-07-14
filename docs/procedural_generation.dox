@@ -1,0 +1,82 @@
+/**
+
+@page pcg Procedural content generation
+
+@tableofcontents
+
+Gamedev Framework (gf) provides some useful tools for [procedural generation](https://en.wikipedia.org/wiki/Procedural_generation). Here is a quick overview.
+
+@sa [Procedural Content Generation Wiki](http://pcg.wikidot.com/)
+
+@section pcg_noise Noise
+
+A coherent noise is a pseudo-random function. It can be used to create textures, or maps. The most well-known type of noise is probably Perlin noise. Noise functions, in general, can be the basic bricks for procedural generation.
+
+Noises classification:
+
+- Lattice based:
+  - Gradient based:
+    - [Gradient noise](https://en.wikipedia.org/wiki/Gradient_noise)
+    - [Simplex noise](https://en.wikipedia.org/wiki/Simplex_noise)
+    - [OpenSimplex noise](https://en.wikipedia.org/wiki/OpenSimplex_noise)
+    - [Wavelet noise](https://en.wikipedia.org/wiki/Wavelet_noise)
+  - Value based:
+    - [Value noise](https://en.wikipedia.org/wiki/Value_noise)
+- Point based:
+  - [Worley noise](https://en.wikipedia.org/wiki/Worley_noise)
+
+@sa [What is coherent noise? - libnoise](http://libnoise.sourceforge.net/coherentnoise/index.html)
+
+@subsection pcg_noise_list List of noises
+
+Basic noise:
+
+| Name                  | 2D                        | 3D                     |
+|-----------------------|---------------------------|------------------------|
+| Value noise           | gf::ValueNoise2D          |                        |
+| Gradient noise        | gf::GradientNoise2D       | gf::GradientNoise3D    |
+| Better Gradient noise | gf::BetterGradientNoise2D |                        |
+| Simplex noise         | gf::SimplexNoise2D        |                        |
+| OpenSimplex noise     | gf::OpenSimplexNoise2D    | gf::OpenSimplexNoise3D |
+| Worley noise          | gf::WorleyNoise2D         |                        |
+| Wavelet noise         |                           | gf::WaveletNoise3D     |
+
+Noise adapters:
+
+| Name                | 2D                       | 3D                 |
+|---------------------|--------------------------|--------------------|
+| Fractal noise (fBm) | gf::FractalNoise2D       | gf::FractalNoise3D |
+| Multifractal        | gf::Multifractal2D       |                    |
+| Hybrid Multifractal | gf::HybridMultifractal2D |                    |
+| Ridged Multifractal | gf::RidgedMultifractal2D |                    |
+| Hetero terrain      | gf::HeteroTerrain2D      |                    |
+
+The famous Perlin noise is just the combinaison of a fractal noise and a gradient noise but has its own classes: gf::PerlinNoise2D and gf::PerlinNoise3D.
+
+
+@subsection pcg_noise_gallery Gallery
+
+Value noise:
+@image html value_noise.png
+
+Gradient noise:
+@image html gradient_noise.png
+
+Simplex noise:
+@image html simplex_noise.png
+
+OpenSimplex noise:
+@image html opensimplex_noise.png
+
+Perlin noise:
+@image html perlin_noise.png
+
+@section pcg_algorithms Algorithms
+
+@subsection pcg_midpoint_displacement Midpoint displacement
+
+Midpoint displacement is a method for generating a heightmap, in 1D or 2D.
+
+- gf::midpointDisplacement1D
+
+*/

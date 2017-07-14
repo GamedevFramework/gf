@@ -88,7 +88,7 @@ inline namespace v1 {
      *
      * @param duration A duration expressed with a `std::chrono` type
      */
-    explicit Time(std::chrono::steady_clock::duration duration)
+    constexpr explicit Time(std::chrono::steady_clock::duration duration)
     : m_duration(duration)
     {
 
@@ -101,7 +101,9 @@ inline namespace v1 {
      *
      * @sa asMilliseconds(), asMicroseconds()
      */
-    float asSeconds() const;
+    constexpr float asSeconds() const {
+      return std::chrono::duration_cast<std::chrono::duration<float>>(m_duration).count();
+    }
 
     /**
      * @brief Return the time value as a number of milliseconds
@@ -110,7 +112,9 @@ inline namespace v1 {
      *
      * @sa asSeconds(), asMicroseconds()
      */
-    int32_t asMilliseconds() const;
+    constexpr int32_t asMilliseconds() const {
+      return std::chrono::duration_cast<std::chrono::duration<int32_t, std::milli>>(m_duration).count();
+    }
 
     /**
      * @brief Return the time value as a number of microseconds
@@ -119,18 +123,46 @@ inline namespace v1 {
      *
      * @sa asSeconds(), asMilliseconds()
      */
-    int64_t asMicroseconds() const;
+    constexpr int64_t asMicroseconds() const {
+      return std::chrono::duration_cast<std::chrono::duration<int64_t, std::micro>>(m_duration).count();
+    }
 
     /**
      * @brief Return the time value as a duration
      *
      * @return Time as a duration (`std::chrono` type)
      */
-    std::chrono::steady_clock::duration asDuration() const {
+    constexpr std::chrono::steady_clock::duration asDuration() const {
       return m_duration;
     }
 
+    /**
+     * @brief Add another time
+     *
+     * @param other The time to add to the current time
+     * @return The current time
+     */
+    Time& addTo(Time other) {
+      m_duration += other.m_duration;
+      return *this;
+    }
+
+    /**
+     * @brief Substract another time
+     *
+     * @param other The time to substract to the current time
+     * @return The current time
+     */
+    Time& subTo(Time other) {
+      m_duration -= other.m_duration;
+      return *this;
+    }
+
     static const Time Zero;
+
+    static constexpr Time zero() {
+      return Time();
+    }
 
   private:
     std::chrono::steady_clock::duration m_duration;
@@ -146,7 +178,10 @@ inline namespace v1 {
    *
    * @sa milliseconds(), microseconds()
    */
-  GF_API Time seconds(float amount);
+  constexpr
+  Time seconds(float amount) {
+    return Time(std::chrono::duration_cast<std::chrono::steady_clock::duration>(std::chrono::duration<float>(amount)));
+  }
 
   /**
    * @relates Time
@@ -158,7 +193,10 @@ inline namespace v1 {
    *
    * @sa seconds(), microseconds()
    */
-  GF_API Time milliseconds(int32_t amount);
+  constexpr
+  Time milliseconds(int32_t amount) {
+    return Time(std::chrono::duration_cast<std::chrono::steady_clock::duration>(std::chrono::duration<int32_t, std::milli>(amount)));
+  }
 
   /**
    * @relates Time
@@ -170,7 +208,10 @@ inline namespace v1 {
    *
    * @sa seconds(), milliseconds()
    */
-  GF_API Time microseconds(int64_t amount);
+  constexpr
+  Time microseconds(int64_t amount) {
+    return Time(std::chrono::duration_cast<std::chrono::steady_clock::duration>(std::chrono::duration<int64_t, std::micro>(amount)));
+  }
 
   /**
    * @relates Time
@@ -180,7 +221,7 @@ inline namespace v1 {
    * @param lhs Second time
    * @return True if the first time and the second time are the same
    */
-  inline
+  constexpr
   bool operator==(Time rhs, Time lhs) {
     return rhs.asDuration() == lhs.asDuration();
   }
@@ -193,7 +234,7 @@ inline namespace v1 {
    * @param lhs Second time
    * @return True if the first time and the second time are different
    */
-  inline
+  constexpr
   bool operator!=(Time rhs, Time lhs) {
     return rhs.asDuration() != lhs.asDuration();
   }
@@ -206,7 +247,7 @@ inline namespace v1 {
    * @param lhs Second time
    * @return True if the first time is lesser than the second time
    */
-  inline
+  constexpr
   bool operator<(Time rhs, Time lhs) {
     return rhs.asDuration() < lhs.asDuration();
   }
@@ -219,7 +260,7 @@ inline namespace v1 {
    * @param lhs Second time
    * @return True if the first time is greater than the second time
    */
-  inline
+  constexpr
   bool operator>(Time rhs, Time lhs) {
     return rhs.asDuration() > lhs.asDuration();
   }
@@ -232,7 +273,7 @@ inline namespace v1 {
    * @param lhs Second time
    * @return True if the first time is lesser or equal than the second time
    */
-  inline
+  constexpr
   bool operator<=(Time rhs, Time lhs) {
     return rhs.asDuration() <= lhs.asDuration();
   }
@@ -245,7 +286,7 @@ inline namespace v1 {
    * @param lhs Second time
    * @return True if the first time is greater or equal than the second time
    */
-  inline
+  constexpr
   bool operator>=(Time rhs, Time lhs) {
     return rhs.asDuration() >= lhs.asDuration();
   }
@@ -258,9 +299,22 @@ inline namespace v1 {
    * @param lhs Second time
    * @return The sum of two times
    */
-  inline
+  constexpr
   Time operator+(Time rhs, Time lhs) {
     return Time(rhs.asDuration() + lhs.asDuration());
+  }
+
+  /**
+   * @relates Time
+   * @brief Addition and assignement
+   *
+   * @param rhs First time
+   * @param lhs Second time
+   * @return The sum of two times
+   */
+  inline
+  Time operator+=(Time& rhs, Time lhs) {
+    return rhs.addTo(lhs);
   }
 
   /**
@@ -271,9 +325,22 @@ inline namespace v1 {
    * @param lhs Second time
    * @return The difference of two times
    */
-  inline
+  constexpr
   Time operator-(Time rhs, Time lhs) {
     return Time(rhs.asDuration() - lhs.asDuration());
+  }
+
+  /**
+   * @relates Time
+   * @brief Substraction and assignment
+   *
+   * @param rhs First time
+   * @param lhs Second time
+   * @return The difference of two times
+   */
+  inline
+  Time operator-=(Time& rhs, Time lhs) {
+    return rhs.subTo(lhs);
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

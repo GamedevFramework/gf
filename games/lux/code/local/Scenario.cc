@@ -26,6 +26,7 @@
 #include <gf/RenderTarget.h>
 #include <gf/Shapes.h>
 #include <gf/Transform.h>
+#include <gf/Unused.h>
 
 #include "Messages.h"
 #include "World.h"
@@ -360,7 +361,8 @@ namespace lux {
   static constexpr float MenuTime = 15.0f;
   static constexpr unsigned long WinBonusScore = 5000;
 
-  void Scenario::update(float dt) {
+  void Scenario::update(gf::Time time) {
+    float dt = time.asSeconds();
     m_elapsedTime += dt;
 
 
@@ -445,7 +447,7 @@ namespace lux {
 
   static constexpr float Margin = 50.0f;
 
-  void Scenario::render(gf::RenderTarget& target) {
+  void Scenario::render(gf::RenderTarget& target, const gf::RenderStates& states) {
     if (m_currentWave != m_waves.size()) {
       return;
     }
@@ -478,7 +480,7 @@ namespace lux {
     position.y -= bounds.height / 2;
 
     text.setPosition(position);
-    target.draw(text);
+    target.draw(text, states);
 
     // Display the high score
     report = "High scores:\n";
@@ -494,11 +496,11 @@ namespace lux {
     position.y += bounds.height + Margin;
 
     text.setPosition(position);
-    target.draw(text);
+    target.draw(text, states);
   }
 
   gf::MessageStatus Scenario::onScore(gf::Id id, gf::Message *msg) {
-    (void) id;
+    gf::unused(id);
 
     auto score = static_cast<ScoreMessage*>(msg);
 
@@ -508,7 +510,7 @@ namespace lux {
   }
 
   gf::MessageStatus Scenario::onDead(gf::Id id, gf::Message *msg) {
-    (void) id;
+    gf::unused(id);
 
     auto dead = static_cast<DeadMessage*>(msg);
 

@@ -19,6 +19,7 @@
 
 #include <gf/Math.h>
 #include <gf/RenderTarget.h>
+#include <gf/Unused.h>
 #include <gf/VectorOps.h>
 
 #include "Messages.h"
@@ -32,7 +33,9 @@ namespace lux {
     messages.registerHandler<DeadMessage>(&Particles::onDead, this);
   }
 
-  void Particles::update(float dt) {
+  void Particles::update(gf::Time time) {
+    float dt = time.asSeconds();
+
     for (ParticleSystem& sys : m_particleSystems) {
       sys.elapsed += dt;
 
@@ -65,12 +68,12 @@ namespace lux {
     m_particleSystems.erase(trash, m_particleSystems.end());
   }
 
-  void Particles::render(gf::RenderTarget& target) {
-    gf::RenderStates states;
-    states.lineWidth = 10.0f;
+  void Particles::render(gf::RenderTarget& target, const gf::RenderStates& states) {
+    gf::RenderStates localStates = states;
+    localStates.lineWidth = 10.0f;
 
     for (ParticleSystem& sys : m_particleSystems) {
-      target.draw(sys.vertices, states);
+      target.draw(sys.vertices, localStates);
     }
   }
 
@@ -95,7 +98,7 @@ namespace lux {
   static constexpr float ParticleSystemLifetime = 1.5f;
 
   gf::MessageStatus Particles::onDead(gf::Id id, gf::Message *msg) {
-    (void) id;
+    gf::unused(id);
     auto dead = static_cast<DeadMessage*>(msg);
 
     ParticleSystem sys;

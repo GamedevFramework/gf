@@ -367,6 +367,7 @@ inline namespace v1 {
    * @ingroup core
    * @brief Wavelet 3D noise
    *
+   * @sa [Wavelet Noise. Robert L. Cook, Tony DeRose, Pixar Animation Studios.](https://graphics.pixar.com/library/WaveletNoise/paper.pdf)
    */
   class GF_API WaveletNoise3D : public Noise3D {
   public:
@@ -542,6 +543,35 @@ inline namespace v1 {
     double m_lacunarity;
     double m_persistence;
     double m_dimension;
+  };
+
+  /**
+   * @ingroup core
+   * @brief An adapter that make a 2D noise from a 3D noise
+   *
+   * The 3D point is taken on a plane defined by a normal and a point. The
+   * 3D point has the same @f$ x @f$ and @f$ y @f$ coordinates as the
+   * 2D point, and the plane is used to determine the @f$ z @f$ coordinate.
+   *
+   * By default, the @f$ z = 0 @f$ plane is used.
+   */
+  class GF_API Noise3DTo2DAdapter : public Noise2D {
+  public:
+    /**
+     * @brief Constructor
+     *
+     * @param noise The original 3D noise
+     * @param normal The normal of the 3D plane
+     * @param point The point of the 3D plane
+     */
+    Noise3DTo2DAdapter(Noise3D& noise, Vector3d normal = Vector3d(0.0, 0.0, 1.0), Vector3d point = Vector3d(0.0, 0.0, 0.0));
+
+    virtual double getValue(double x, double y) override;
+
+  private:
+    Noise3D& m_noise;
+    Vector3d m_normal;
+    Vector3d m_point;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

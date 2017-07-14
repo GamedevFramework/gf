@@ -30,9 +30,9 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  void ModelContainer::update(float dt) {
+  void ModelContainer::update(Time time) {
     for (auto model : m_models) {
-      model->update(dt);
+      model->update(time);
     }
   }
 

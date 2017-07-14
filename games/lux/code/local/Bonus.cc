@@ -19,6 +19,7 @@
 
 #include <gf/Sprite.h>
 #include <gf/RenderTarget.h>
+#include <gf/Unused.h>
 #include <gf/VectorOps.h>
 
 #include "Hero.h"
@@ -46,11 +47,12 @@ namespace lux {
     m_bonus.push_back(bonus);
   }
 
-  static constexpr float Extra = 20.0f;
+  static constexpr float BonusExtra = 20.0f;
 
-  void BonusManager::update(float dt) {
+  void BonusManager::update(gf::Time time) {
+    float dt = time.asSeconds();
     gf::RectF view(WorldCenter - WorldSize / 2, WorldSize);
-    view.extend(Extra);
+    view.extend(BonusExtra);
 
     for (Bonus& bonus : m_bonus) {
       bonus.position += bonus.velocity * dt;
@@ -67,7 +69,7 @@ namespace lux {
   static constexpr float RatioLifeBonus = BonusSize / 256.0f;
   static constexpr float RatioWeaponBonus = BonusSize / 256.0f;
 
-  void BonusManager::render(gf::RenderTarget& target) {
+  void BonusManager::render(gf::RenderTarget& target, const gf::RenderStates& states) {
     gf::Sprite sprite;
 
     for (const Bonus& bonus : m_bonus) {
@@ -85,11 +87,11 @@ namespace lux {
 
       sprite.setAnchor(gf::Anchor::Center);
       sprite.setPosition(bonus.position);
-      target.draw(sprite);
+      target.draw(sprite, states);
     }
   }
 
-  static bool isTargetReached(gf::Vector2f shipPos, gf::Vector2f bonusPos) {
+  static bool isTargetReachedByBonus(gf::Vector2f shipPos, gf::Vector2f bonusPos) {
     gf::RectF rectShip(shipPos, { Hero::Width, Hero::Height });
     gf::RectF rectBonus(bonusPos, { BonusSize, BonusSize });
     return rectShip.intersects(rectBonus);
@@ -98,7 +100,7 @@ namespace lux {
   static constexpr float BonusLinearVelocty = 120.0f;
 
   gf::MessageStatus BonusManager::onDropBonus(gf::Id id, gf::Message *msg) {
-    (void) id;
+    gf::unused(id);
 
     auto drop = static_cast<DropBonusMessage*>(msg);
 
@@ -109,7 +111,7 @@ namespace lux {
   }
 
   gf::MessageStatus BonusManager::onLocation(gf::Id id, gf::Message *msg) {
-    (void) id;
+    gf::unused(id);
 
     auto loc = static_cast<LocationMessage*>(msg);
 
@@ -120,7 +122,7 @@ namespace lux {
 
     // Check if one bonus is hit
     for (Bonus& bonus : m_bonus) {
-      if (isTargetReached(loc->position, bonus.position)) {
+      if (isTargetReachedByBonus(loc->position, bonus.position)) {
         // Remove the bonus
         bonus.active = false;
 

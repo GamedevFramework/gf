@@ -24,25 +24,12 @@ What resources? Well, basically everything. Images must be loaded and transfered
 
 gf helps you for the loading of multimedia resources. gf::Texture and gf::Font can be loaded directly from a file.
 
-~~~{.cc}
-gf::Font font;
-font.loadFromFile("path/to/Arial.ttf");
-
-gf::Texture texture;
-texture.loadFromFile("path/to/image.png");
-~~~
+@snippet snippets/doc_gamedev_101.cc init
 
 If all your multimedia data is in a single directory, you can also use a gf::ResourceManager. You juste have to indicate the directory and then load textures and fonts with a relative path. The main advantage of a resource manager is that the resources are loaded only once and kept in a cache for the subsequent uses.
 
-~~~{.cc}
-gf::ResourceManager resources;
-resources.addSearchDir("path/to/data");
+@snippet snippets/doc_gamedev_101.cc resources
 
-gf::Font& font = resources.getFont("Arial.ttf");
-gf::Texture& texture = resources.getTexture("image.png");
-
-gf::Font& anotherFont == resources.getFont("Arial.ttf"); // the font is not loaded a second time
-~~~
 
 @subsection gamedev_101_game_loop The game loop
 
@@ -129,17 +116,8 @@ An entity (a.k.a. game object) is an element of the game. It can be anything tha
 
 For your game entites, you can derive from gf::Entity, but it's not mandatory.
 
-~~~{.cc}
-class MyEntity : public gf::Entity {
-public:
-  virtual void update(float dt) override;
+@snippet snippets/doc_gamedev_101.cc entity
 
-  virtual void render(gf::RenderTarget& target) override;
-
-private:
-  // data of my entity
-};
-~~~
 
 @section gamedev_101_it_moves It moves!
 

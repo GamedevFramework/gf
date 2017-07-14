@@ -22,6 +22,7 @@
 #include <cassert>
 #include <gf/Message.h>
 #include <gf/MessageManager.h>
+#include <gf/Unused.h>
 #include <gf/Vector.h>
 
 
@@ -40,8 +41,8 @@ gf::MessageManager messageManager;
 
 // dummy function
 static gf::Vector2f computeNewPosition(gf::Vector2f pos, float dt) {
-  (void) pos;
-  (void) dt;
+  gf::unused(pos);
+  gf::unused(dt);
   return { 0.0f, 0.0f };
 }
 
@@ -76,6 +77,7 @@ private:
   gf::MessageStatus onHeroPosition(gf::Id id, gf::Message *msg) {
     // verify that we have the right message type
     assert(id == HeroPosition::type);
+    gf::unused(id); // we do not use id after this
 
     // we can now safely cast the message...
     auto heroPosition = static_cast<HeroPosition*>(msg);
@@ -104,6 +106,12 @@ struct Baz : public gf::Message {
   static constexpr gf::Id type = "Baz"_id;
 };
 
+// dummy function
+static void doSomethingUsefulWith(gf::Id id, gf::Message *msg) {
+  gf::unused(id);
+  gf::unused(msg);
+}
+
 /// [short]
 class ShortLife {
   ShortLife() {
@@ -120,11 +128,15 @@ class ShortLife {
 private:
   gf::MessageStatus onFoo(gf::Id id, gf::Message *msg) {
     // do something useful
+    doSomethingUsefulWith(id, msg);
+
     return gf::MessageStatus::Keep;
   }
 
   gf::MessageStatus onBarOrBaz(gf::Id id, gf::Message *msg) {
     // do something useful
+    doSomethingUsefulWith(id, msg);
+
     return gf::MessageStatus::Keep;
   }
 

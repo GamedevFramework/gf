@@ -65,7 +65,7 @@ inline namespace v1 {
      */
     void clear();
 
-    virtual void update(float dt) override;
+    virtual void update(Time time) override;
 
   private:
     Vector2f m_gravity;

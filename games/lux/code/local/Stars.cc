@@ -65,7 +65,9 @@ namespace lux {
     }
   }
 
-  void Stars::update(float dt) {
+  void Stars::update(gf::Time time) {
+    float dt = time.asSeconds();
+
     for (Star& star : m_stars) {
       if (star.position.y > getWorldBottom()) {
         star.position.x = m_random.computeUniformFloat(getWorldLeft(), getWorldRight());
@@ -87,14 +89,14 @@ namespace lux {
     }
   }
 
-  void Stars::render(gf::RenderTarget& target) {
+  void Stars::render(gf::RenderTarget& target, const gf::RenderStates& states) {
     gf::CircleShape shape(m_radius);
     shape.setAnchor(gf::Anchor::Center);
 
     for (Star& star : m_stars) {
       shape.setPosition(star.position);
       shape.setColor(star.color);
-      target.draw(shape);
+      target.draw(shape, states);
     }
   }
 

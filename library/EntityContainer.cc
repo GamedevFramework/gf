@@ -29,7 +29,7 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  void EntityContainer::update(float dt) {
+  void EntityContainer::update(Time time) {
     // erase-remove idiom
     m_entities.erase(std::remove_if(m_entities.begin(), m_entities.end(), [](const Entity *e) {
       return !e->isAlive();
@@ -40,13 +40,13 @@ inline namespace v1 {
     });
 
     for (auto entity : m_entities) {
-      entity->update(dt);
+      entity->update(time);
     }
   }
 
-  void EntityContainer::render(RenderTarget& target) {
+  void EntityContainer::render(RenderTarget& target, const RenderStates& states) {
     for (auto entity : m_entities) {
-      entity->render(target);
+      entity->render(target, states);
     }
   }
 

@@ -1,5 +1,44 @@
 # ChangeLog for gf
 
+## gf 0.5.0 (14 Jul 2017)
+
+- Core module
+  - Add gf::unused()
+  - Add Array2D::swap()
+  - Add gf::niceNum()
+  - Add gf::absdiff()
+  - Improve Array2D visitors
+  - Improve Time and make everything constexpr
+  - Improve log date printing
+  - Add index type in Array2D template parameters
+  - Fix a bug in WaveletNoise3D
+  - Add Noise3DTo2DAdapter
+- Window module
+  - Change views to handle viewport changes
+  - Add ZoomingViewAdaptor
+  - Add Action::addControl()
+- Graphics module
+  - Add GraphicsInfo
+  - Add SquareGrid
+  - Add UI::spacing
+  - Add Logo
+  - Change getTexture() from various classes to return a reference
+- Game module
+  - Add TextureAtlas::loadFromFile()
+  - Add midpoint displacement algorithm in 1D
+  - Add Bresenham algorithm (with a function and a class)
+  - Add Tween and easing functions in Ease
+  - Add Activity and activities
+  - Add a RenderStates parameters in Entity::render()
+  - Change `float dt` to `gf::Time time` in Entity::update()
+- Tools and games
+  - Add gf_info
+  - Add Bygone Islands
+  - Add gf_dungeons
+- Misc
+  - Limit framerate in all games
+  - Can now quit all the examples with escape
+
 ## gf 0.4.0 (14 Apr 2017)
 
 - Core module

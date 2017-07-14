@@ -55,6 +55,9 @@ int main() {
   // initialize window
 
   gf::Window window("gf 2048!", ScreenSize, ~gf::WindowHints::Resizable);
+  window.setVerticalSyncEnabled(true);
+  window.setFramerateLimit(60);
+
   gf::RenderWindow renderer(window);
 
   // add cameras
@@ -148,8 +151,8 @@ int main() {
     }
 
     // update
-    auto dt = clock.restart().asSeconds();
-    mainEntities.update(dt);
+    gf::Time time = clock.restart();
+    mainEntities.update(time);
 
     // render
     renderer.clear();

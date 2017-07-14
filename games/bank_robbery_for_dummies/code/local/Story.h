@@ -76,7 +76,7 @@ namespace brfd {
       return m_currentStep.target;
     }
 
-    virtual void update(float dt) override;
+    virtual void update(gf::Time time) override;
 
   private:
     gf::MessageStatus onHeroPosition(gf::Id id, gf::Message *msg);
@@ -107,7 +107,7 @@ namespace brfd {
   public:
     StoryView(const StoryModel& model, gf::MessageManager& messages);
 
-    virtual void render(gf::RenderTarget& target) override;
+    virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
 
   private:
     gf::MessageStatus onHeroPosition(gf::Id id, gf::Message *msg);
@@ -121,7 +121,7 @@ namespace brfd {
   public:
     StoryHUD(const StoryModel& model, gf::ResourceManager& resources);
 
-    virtual void render(gf::RenderTarget& target) override;
+    virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
 
   private:
     const StoryModel& m_model;

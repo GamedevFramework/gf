@@ -44,7 +44,7 @@ inline namespace v1 {
     /**
      * @brief Default constructor
      *
-     * Data is nullptr and size is 0.
+     * Data is `nullptr` and size is 0.
      */
     constexpr ArrayRef()
     : m_data(nullptr)

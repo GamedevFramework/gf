@@ -28,7 +28,7 @@ class Points : public gf::Entity {
 public:
   Points();
 
-  virtual void render(gf::RenderTarget& target) override;
+  virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
 
 private:
   gf::MessageStatus onPoint(gf::Id id, gf::Message *msg);

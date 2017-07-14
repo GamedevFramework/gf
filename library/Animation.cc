@@ -20,6 +20,8 @@
  */
 #include <gf/Animation.h>
 
+#include <stdexcept>
+
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
@@ -29,12 +31,12 @@ inline namespace v1 {
 
   Animation::Animation()
   : m_currentFrame(0)
-  , m_currentDurationInFrame(0.0f)
+  , m_currentDurationInFrame(Time::zero())
   {
 
   }
 
-  void Animation::addFrame(const Texture &texture, const RectF& bounds, float duration) {
+  void Animation::addFrame(const Texture &texture, const RectF& bounds, Time duration) {
     if (m_frames.empty()) {
       m_currentDurationInFrame = duration;
       m_currentFrame = 0;
@@ -43,31 +45,31 @@ inline namespace v1 {
     m_frames.push_back({ &texture, bounds, duration });
   }
 
-  const Texture *Animation::getCurrentTexture() const {
+  const Texture& Animation::getCurrentTexture() const {
     if (m_frames.empty()) {
-      return nullptr;
+      throw std::runtime_error("No frame in the animation");
     }
 
-    return m_frames[m_currentFrame].texture;
+    return *m_frames[m_currentFrame].texture;
   }
 
   RectF Animation::getCurrentBounds() const {
     if (m_frames.empty()) {
-      return RectF(0, 0, 0, 0);
+      throw std::runtime_error("No frame in the animation");
     }
 
     return m_frames[m_currentFrame].bounds;
   }
 
-  bool Animation::update(float dt) {
+  bool Animation::update(Time time) {
     if (m_frames.empty()) {
       return false;
     }
 
     auto prevFrame = m_currentFrame;
-    m_currentDurationInFrame -= dt;
+    m_currentDurationInFrame -= time;
 
-    while (m_currentDurationInFrame < 0) {
+    while (m_currentDurationInFrame < Time::zero()) {
       m_currentFrame = (m_currentFrame + 1) % m_frames.size();
       m_currentDurationInFrame += m_frames[m_currentFrame].duration;
     }

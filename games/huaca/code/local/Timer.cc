@@ -20,6 +20,7 @@
 #include <gf/Coordinates.h>
 #include <gf/Shapes.h>
 #include <gf/RenderTarget.h>
+#include <gf/Unused.h>
 
 #include "Messages.h"
 #include "Singletons.h"
@@ -36,7 +37,9 @@ namespace huaca {
     gMessageManager().registerHandler<NewLevelMessage>(&Timer::onNewLevel, this);
   }
 
-  void Timer::update(float dt) {
+  void Timer::update(gf::Time time) {
+    float dt = time.asSeconds();
+
     m_remainingTime -= dt;
 
     if (m_remainingTime < 0) {
@@ -53,7 +56,7 @@ namespace huaca {
   static constexpr float TimerHeight = 300.0f;
   static constexpr float TimerCorner = 5.0f;
 
-  void Timer::render(gf::RenderTarget& target) {
+  void Timer::render(gf::RenderTarget& target, const gf::RenderStates& states) {
     gf::Coordinates coordinates(target);
 
     gf::Vector2f position = coordinates.getAbsolutePoint({ TimerWidth + Padding, TimerHeight + Padding }, gf::Anchor::BottomRight);
@@ -68,7 +71,7 @@ namespace huaca {
     shape.setRadius(TimerCorner);
     shape.setPosition(position);
     shape.setColor(color);
-    target.draw(shape);
+    target.draw(shape, states);
 
     float remaining = m_remainingTime / m_totalTime * TimerHeight;
     color.a = 1.0f;
@@ -79,12 +82,12 @@ namespace huaca {
     shape.setRadius(std::min(remaining / 2, TimerCorner));
     shape.setPosition(position);
     shape.setColor(color);
-    target.draw(shape);
+    target.draw(shape, states);
   }
 
   gf::MessageStatus Timer::onNewLevel(gf::Id id, gf::Message *msg) {
-    (void) id; // not used
-    (void) msg; // not used
+    gf::unused(id);
+    gf::unused(msg);
 
     m_remainingTime = m_totalTime;
     return gf::MessageStatus::Keep;

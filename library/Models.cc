@@ -25,18 +25,18 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  FixedTimestepModel::FixedTimestepModel(Model& model, float timestep)
+  FixedTimestepModel::FixedTimestepModel(Model& model, Time timestep)
   : m_model(model)
   , m_timestep(timestep)
-  , m_elapsed(0.0f)
+  , m_elapsed() // 0
   {
 
   }
 
-  static constexpr float MaxElapsed = 0.5f;
+  static const Time MaxElapsed = gf::seconds(0.5f);
 
-  void FixedTimestepModel::update(float dt) {
-    m_elapsed += dt;
+  void FixedTimestepModel::update(Time time) {
+    m_elapsed += time;
 
     if (m_elapsed > MaxElapsed) {
       m_elapsed = MaxElapsed;

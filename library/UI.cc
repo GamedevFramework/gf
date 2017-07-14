@@ -25,7 +25,6 @@
 #include <cstring>
 #include <cstdlib>
 
-#include <algorithm>
 #include <string>
 #include <type_traits>
 
@@ -33,15 +32,15 @@
 
 #include <SDL.h>
 
+#include <gf/Log.h>
 #include <gf/Paths.h>
 #include <gf/RenderTarget.h>
+#include <gf/StringUtils.h>
 #include <gf/Transform.h>
 #include <gf/Texture.h>
+#include <gf/Unused.h>
 #include <gf/VectorOps.h>
 #include <gf/Vertex.h>
-
-#include "priv/String.h"
-#include "priv/Utils.h"
 
 // #define NK_PRIVATE
 #define NK_INCLUDE_FIXED_TYPES
@@ -62,12 +61,112 @@ namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
 #endif
+  /*
+   * gf pass some values directly to nuklear without any checks. These static
+   * asserts verify at compile time that the values in gf and nuklear are
+   * consistent to avoid errors.
+   */
+
+#define FLAG_CHECK(GF_VAL, NK_VAL) static_assert(static_cast<uint32_t>(GF_VAL) == NK_VAL, "Problem with " #NK_VAL)
+#define ENUM_CHECK(GF_VAL, NK_VAL) static_assert(static_cast<int>(GF_VAL) == NK_VAL, "Problem with " #NK_VAL)
+
+  // checks for UIWindow / nk_panel_flags
+
+  FLAG_CHECK(UIWindow::Border, NK_WINDOW_BORDER);
+  FLAG_CHECK(UIWindow::Movable, NK_WINDOW_MOVABLE);
+  FLAG_CHECK(UIWindow::Scalable, NK_WINDOW_SCALABLE);
+  FLAG_CHECK(UIWindow::Closable, NK_WINDOW_CLOSABLE);
+  FLAG_CHECK(UIWindow::Minimizable, NK_WINDOW_MINIMIZABLE);
+  FLAG_CHECK(UIWindow::NoScrollbar, NK_WINDOW_NO_SCROLLBAR);
+  FLAG_CHECK(UIWindow::Title, NK_WINDOW_TITLE);
+  FLAG_CHECK(UIWindow::ScrollAutoHide, NK_WINDOW_SCROLL_AUTO_HIDE);
+  FLAG_CHECK(UIWindow::Background, NK_WINDOW_BACKGROUND);
+  FLAG_CHECK(UIWindow::ScaleLeft, NK_WINDOW_SCALE_LEFT);
+  FLAG_CHECK(UIWindow::NoInput, NK_WINDOW_NO_INPUT);
+
+  // checks for UICollapse / nk_collapse_states
+
+  ENUM_CHECK(UICollapse::Minimized, NK_MINIMIZED);
+  ENUM_CHECK(UICollapse::Maximized, NK_MAXIMIZED);
+
+  // checks for UILayout / enum nk_layout_format
+
+  ENUM_CHECK(UILayout::Dynamic, NK_DYNAMIC);
+  ENUM_CHECK(UILayout::Static, NK_STATIC);
+
+  // checks for UITree / nk_tree_type
+
+  ENUM_CHECK(UITree::Node, NK_TREE_NODE);
+  ENUM_CHECK(UITree::Tab, NK_TREE_TAB);
+
+  // checks for UIAlignment / nk_text_alignment
+
+  ENUM_CHECK(UIAlignment::Left, NK_TEXT_LEFT);
+  ENUM_CHECK(UIAlignment::Center, NK_TEXT_CENTERED);
+  ENUM_CHECK(UIAlignment::Right, NK_TEXT_RIGHT);
+
+  // check for UIScroll / nk_scroll
+
+  static_assert(sizeof(nk_scroll) == sizeof(UIScroll), "Problem with size of gf::UIScroll");
+
+  // checks for UIButtonBehavior / nk_button_behavior
+
+  ENUM_CHECK(UIButtonBehavior::Default, NK_BUTTON_DEFAULT);
+  ENUM_CHECK(UIButtonBehavior::Repeater, NK_BUTTON_REPEATER);
+
+  // checks for UISymbol / nk_symbol_type
+
+  ENUM_CHECK(UISymbol::None, NK_SYMBOL_NONE);
+  ENUM_CHECK(UISymbol::X, NK_SYMBOL_X);
+  ENUM_CHECK(UISymbol::Underscore, NK_SYMBOL_UNDERSCORE);
+  ENUM_CHECK(UISymbol::CircleSolid, NK_SYMBOL_CIRCLE_SOLID);
+  ENUM_CHECK(UISymbol::CircleOutline, NK_SYMBOL_CIRCLE_OUTLINE);
+  ENUM_CHECK(UISymbol::RectSolid, NK_SYMBOL_RECT_SOLID);
+  ENUM_CHECK(UISymbol::RectOutline, NK_SYMBOL_RECT_OUTLINE);
+  ENUM_CHECK(UISymbol::TriangleUp, NK_SYMBOL_TRIANGLE_UP);
+  ENUM_CHECK(UISymbol::TriangleDown, NK_SYMBOL_TRIANGLE_DOWN);
+  ENUM_CHECK(UISymbol::TriangleLeft, NK_SYMBOL_TRIANGLE_LEFT);
+  ENUM_CHECK(UISymbol::TriangleRight, NK_SYMBOL_TRIANGLE_RIGHT);
+  ENUM_CHECK(UISymbol::Plus, NK_SYMBOL_PLUS);
+  ENUM_CHECK(UISymbol::Minus, NK_SYMBOL_MINUS);
+
+  // checks for UIEdit / nk_edit_flags
+
+  FLAG_CHECK(UIEdit::Default, NK_EDIT_DEFAULT);
+  FLAG_CHECK(UIEdit::ReadOnly, NK_EDIT_READ_ONLY);
+  FLAG_CHECK(UIEdit::AutoSelect, NK_EDIT_AUTO_SELECT);
+  FLAG_CHECK(UIEdit::SigEnter, NK_EDIT_SIG_ENTER);
+  FLAG_CHECK(UIEdit::AllowTab, NK_EDIT_ALLOW_TAB);
+  FLAG_CHECK(UIEdit::NoCursor, NK_EDIT_NO_CURSOR);
+  FLAG_CHECK(UIEdit::Selectable, NK_EDIT_SELECTABLE);
+  FLAG_CHECK(UIEdit::Clipboard, NK_EDIT_CLIPBOARD);
+  FLAG_CHECK(UIEdit::CtrlEnterNewline, NK_EDIT_CTRL_ENTER_NEWLINE);
+  FLAG_CHECK(UIEdit::NoHorizontalScroll, NK_EDIT_NO_HORIZONTAL_SCROLL);
+  FLAG_CHECK(UIEdit::AlwaysInsertMode, NK_EDIT_ALWAYS_INSERT_MODE);
+  FLAG_CHECK(UIEdit::Multiline, NK_EDIT_MULTILINE);
+  FLAG_CHECK(UIEdit::GotoEndOnActivate, NK_EDIT_GOTO_END_ON_ACTIVATE);
+
+  // checks for UIEditEvent / nk_edit_events
+
+  FLAG_CHECK(UIEditEvent::Active, NK_EDIT_ACTIVE);
+  FLAG_CHECK(UIEditEvent::Inactive, NK_EDIT_INACTIVE);
+  FLAG_CHECK(UIEditEvent::Activated, NK_EDIT_ACTIVATED);
+  FLAG_CHECK(UIEditEvent::Deactivated, NK_EDIT_DEACTIVATED);
+  FLAG_CHECK(UIEditEvent::Commited, NK_EDIT_COMMITED);
+
+  // checks for UIPopup / nk_popup_type
+
+  ENUM_CHECK(UIPopup::Static, NK_POPUP_STATIC);
+  ENUM_CHECK(UIPopup::Dynamic, NK_POPUP_DYNAMIC);
+
+#undef ENUM_CHECK
+#undef FLAG_CHECK
 
   static float getTextWidth(nk_handle handle, float characterSize, const char *text, int len) {
     auto font = static_cast<Font *>(handle.ptr);
 
     std::string originalText(text, len);
-    std::u32string unicodeText = getUnicodeString(originalText);
+    std::u32string unicodeText = computeUnicodeString(originalText);
 
     float textWidth = 0;
     char32_t prevCodepoint = '\0';
@@ -104,18 +203,25 @@ inline namespace v1 {
   }
 
   static void clipboardPaste(nk_handle usr, struct nk_text_edit *edit) {
-    GF_UNUSED(usr);
+    gf::unused(usr);
+
+    if (SDL_HasClipboardText() == SDL_FALSE) {
+      return;
+    }
 
     char *text = SDL_GetClipboardText();
 
-    if (text) {
-      nk_textedit_paste(edit, text, nk_strlen(text));
-      SDL_free(text);
+    if (text == nullptr) {
+      Log::error("Unable to get clipboard text: '%s'\n", SDL_GetError());
+      return;
     }
+
+    nk_textedit_paste(edit, text, nk_strlen(text));
+    SDL_free(text);
   }
 
   static void clipboardCopy(nk_handle usr, const char *text, int len) {
-    GF_UNUSED(usr);
+    gf::unused(usr);
 
     if (len == 0) {
       return;
@@ -178,7 +284,7 @@ inline namespace v1 {
         break;
 
       case EventType::MouseWheelScrolled:
-        nk_input_scroll(&m_impl->ctx, event.mouseWheel.offset.y);
+        nk_input_scroll(&m_impl->ctx, nk_vec2(event.mouseWheel.offset.x, event.mouseWheel.offset.y));
         break;
 
       case EventType::MouseButtonPressed:
@@ -277,6 +383,12 @@ inline namespace v1 {
 
           case Keycode::PageDown:
             nk_input_key(&m_impl->ctx, NK_KEY_SCROLL_DOWN, down);
+            break;
+
+          case Keycode::A:
+            if (event.key.modifiers.test(Mod::Control)) {
+              nk_input_key(&m_impl->ctx, NK_KEY_TEXT_SELECT_ALL, down);
+            }
             break;
 
           case Keycode::C:
@@ -409,7 +521,6 @@ inline namespace v1 {
   }
 
   bool UI::groupScrolledBegin(UIScroll& scroll, const std::string& title, UIWindowFlags flags) {
-    static_assert(sizeof(nk_scroll) == sizeof(UIScroll), "scroll types are not the same");
     setState(State::Setup);
     return nk_group_scrolled_begin(&m_impl->ctx, reinterpret_cast<nk_scroll*>(&scroll), title.c_str(), flags.getValue()) != 0;
   }
@@ -893,6 +1004,11 @@ inline namespace v1 {
     return nk_widget_is_hovered(&m_impl->ctx);
   }
 
+  void UI::spacing(int cols) {
+    setState(State::Setup);
+    nk_spacing(&m_impl->ctx, cols);
+  }
+
   /*
    * Predefined styles from nuklear;
    * nuklear/demo/style.c
@@ -1077,7 +1193,7 @@ inline namespace v1 {
     auto vertices = static_cast<const Vertex *>(nk_buffer_memory_const(&vertexBuffer));
     auto indices = static_cast<const uint16_t *>(nk_buffer_memory_const(&elementBuffer));
 
-    target.setScissorTest(true);
+    Region box = target.getCanonicalScissorBox();
 
     for (auto command = nk__draw_begin(ctx, cmds); command != nullptr; command = nk__draw_next(command, cmds, ctx)) {
       if (!command->elem_count) {
@@ -1091,7 +1207,7 @@ inline namespace v1 {
       indices += command->elem_count;
     }
 
-    target.setScissorTest(false);
+    target.setCanonicalScissorBox(box);
 
     nk_buffer_free(&elementBuffer);
     nk_buffer_free(&vertexBuffer);

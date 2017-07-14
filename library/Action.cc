@@ -57,42 +57,52 @@ inline namespace v1 {
 
   void Action::addKeycodeKeyControl(Keycode code) {
     std::unique_ptr<Control> ptr(new KeycodeKeyControl(code));
-    m_controls.push_back(std::move(ptr));
+    addControl(*ptr);
+    m_ownedControls.push_back(std::move(ptr));
   }
 
   void Action::addScancodeKeyControl(Scancode code) {
     std::unique_ptr<Control> ptr(new ScancodeKeyControl(code));
-    m_controls.push_back(std::move(ptr));
+    addControl(*ptr);
+    m_ownedControls.push_back(std::move(ptr));
   }
 
   void Action::addMouseButtonControl(MouseButton button) {
     std::unique_ptr<Control> ptr(new MouseButtonControl(button));
-    m_controls.push_back(std::move(ptr));
+    addControl(*ptr);
+    m_ownedControls.push_back(std::move(ptr));
   }
 
   void Action::addGamepadAxisControl(GamepadId id, GamepadAxis axis, GamepadAxisDirection dir) {
     std::unique_ptr<Control> ptr(new GamepadAxisControl(id, axis, dir));
-    m_controls.push_back(std::move(ptr));
+    addControl(*ptr);
+    m_ownedControls.push_back(std::move(ptr));
   }
 
   void Action::addGamepadButtonControl(GamepadId id, GamepadButton button) {
     std::unique_ptr<Control> ptr(new GamepadButtonControl(id, button));
-    m_controls.push_back(std::move(ptr));
+    addControl(*ptr);
+    m_ownedControls.push_back(std::move(ptr));
   }
 
   void Action::addCloseControl() {
     std::unique_ptr<Control> ptr(new CloseControl);
-    m_controls.push_back(std::move(ptr));
+    addControl(*ptr);
+    m_ownedControls.push_back(std::move(ptr));
+  }
+
+  void Action::addControl(Control& control) {
+    m_controls.push_back(&control);
   }
 
   void Action::processEvent(const Event& event) {
-    for (auto& control : m_controls) {
+    for (auto control : m_controls) {
       control->processEvent(event);
     }
   }
 
   bool Action::isActive() {
-    for (auto& control : m_controls) {
+    for (auto control : m_controls) {
       if (control->isActive()) {
         return true;
       }
@@ -106,7 +116,7 @@ inline namespace v1 {
       return;
     }
 
-    for (auto& control : m_controls) {
+    for (auto control : m_controls) {
       control->reset();
     }
   }

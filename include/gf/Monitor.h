@@ -87,35 +87,35 @@ inline namespace v1 {
      *
      * @return A string containing the name of the monitor
      */
-    std::string getName();
+    std::string getName() const;
 
     /**
      * @brief Get the position of the monitor
      *
      * @return The position of the monitor
      */
-    Vector2i getPosition();
+    Vector2i getPosition() const;
 
     /**
      * @brief Get the physical size of the monitor
      *
      * @return The physical size of the monitor
      */
-    Vector2u getPhysicalSize();
+    Vector2u getPhysicalSize() const;
 
     /**
      * @brief Get the available video modes for this monitor
      *
      * @return The video modes for this monitor
      */
-    std::vector<VideoMode> getAvailableVideoModes();
+    std::vector<VideoMode> getAvailableVideoModes() const;
 
     /**
      * @brief Get the current video mode
      *
      * @return The current video mode
      */
-    VideoMode getCurrentVideoMode();
+    VideoMode getCurrentVideoMode() const;
 
   private:
     friend class Window;

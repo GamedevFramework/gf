@@ -22,8 +22,13 @@
 #define ARRAY2D_H
 
 #include <cassert>
+#include <type_traits>
+#include <utility>
 #include <vector>
 
+#include "Log.h"
+
+#include "Math.h"
 #include "Portability.h"
 #include "Range.h"
 #include "Vector.h"
@@ -46,12 +51,12 @@ inline namespace v1 {
    * - @f$ 0 \leq \mathtt{pos.x} = \mathtt{pos.col} < \mathtt{size.width} = \mathtt{size.col} @f$
    * - @f$ 0 \leq \mathtt{pos.y} = \mathtt{pos.row} < \mathtt{size.height} = \mathtt{size.row} @f$
    *
-   * Some convinient visitors are provided to visit the four neighbours (up,
-   * down, left and right), or the eight neighbours.
+   * Some convinient visitors are provided to visit the four neighbors (up,
+   * down, left and right), or the eight neighbors.
    *
    * @sa gf::Matrix
    */
-  template<class T>
+  template<typename T, typename I = unsigned>
   class Array2D {
   public:
     /**
@@ -70,7 +75,7 @@ inline namespace v1 {
      *
      * @param size The size of the array
      */
-    Array2D(Vector2u size)
+    Array2D(Vector<I, 2> size)
     : m_size(size)
     , m_data(size.width * size.height)
     {
@@ -83,7 +88,7 @@ inline namespace v1 {
      * @param size The size of the array
      * @param value The initial value in the array
      */
-    Array2D(Vector2u size, const T& value)
+    Array2D(Vector<I, 2> size, const T& value)
     : m_size(size)
     , m_data(size.width * size.height, value)
     {
@@ -109,6 +114,16 @@ inline namespace v1 {
      * @brief Default move assignement
      */
     Array2D& operator=(Array2D&&) = default;
+
+    /**
+     * @brief Swap with another array
+     *
+     * @param other An other array
+     */
+    void swap(Array2D& other) {
+      std::swap(m_data, other.m_data);
+      std::swap(m_size, other.m_size);
+    }
 
     /**
      * @name Raw data access
@@ -141,7 +156,7 @@ inline namespace v1 {
      *
      * @return The size of the array
      */
-    constexpr Vector2u getSize() const noexcept {
+    constexpr Vector<I, 2> getSize() const noexcept {
       return m_size;
     }
 
@@ -175,6 +190,17 @@ inline namespace v1 {
       return m_data.empty();
     }
 
+    /**
+     * @brief Check if a position is valid
+     *
+     * A valid position is a position inside the array
+     *
+     * @return True if the position is valid
+     */
+    constexpr bool isValid(Vector<I, 2> pos) const noexcept {
+      return pos.col < m_size.col && pos.row < m_size.row && (std::is_unsigned<I>::value || (0 <= pos.col && 0 <= pos.row));
+    }
+
     /** @} */
 
     /**
@@ -187,7 +213,7 @@ inline namespace v1 {
      *
      * @param pos The 2D position of the element
      */
-    T& operator()(Vector2u pos) {
+    T& operator()(Vector<I, 2> pos) {
       return get(pos);
     }
 
@@ -206,7 +232,7 @@ inline namespace v1 {
      *
      * @param pos The 2D position of the element
      */
-    const T& operator()(Vector2u pos) const {
+    const T& operator()(Vector<I, 2> pos) const {
       return get(pos);
     }
 
@@ -226,7 +252,7 @@ inline namespace v1 {
      * @param pos A 1D position
      * @return The corresponding 2D position
      */
-    constexpr Vector2u toPosition(std::size_t pos) const noexcept {
+    constexpr Vector<I, 2> toPosition(std::size_t pos) const noexcept {
       return { pos % m_size.col, pos / m_size.col };
     }
 
@@ -238,18 +264,18 @@ inline namespace v1 {
      */
 
     /**
-     * @brief Visit the 4 neighbours of a given position
+     * @brief Visit the 4 neighbors of a given position
      *
-     * This function calls a callback function for every neighbour in the
-     * vertical and horizontal direction. The function checks if the neighbour
+     * This function calls a callback function for every neighbor in the
+     * vertical and horizontal direction. The function checks if the neighbor
      * actually exists.
      *
      * The callback function has the following prototype:
      *
      * ~~~{.cc}
-     * void callback(Vector2u pos, T value);
-     * // pos is the position of the neighbour
-     * // value is the value of the neighbour
+     * void callback(Vector<I, 2> pos, T value);
+     * // pos is the position of the neighbor
+     * // value is the value of the neighbor
      * ~~~
      *
      * The callback function can be a simple function but also a
@@ -259,41 +285,23 @@ inline namespace v1 {
      * @param func A callback function
      */
     template<typename Func>
-    void visit4Neighbours(Vector2u pos, Func func) {
-      if (pos.row > 0) {
-        Vector2u neighbour{ pos.col, pos.row - 1 };
-        func(neighbour, get(neighbour));
-      }
-
-      if (pos.row < m_size.row - 1) {
-        Vector2u neighbour{ pos.col, pos.row + 1 };
-        func(neighbour, get(neighbour));
-      }
-
-      if (pos.col > 0) {
-        Vector2u neighbour{ pos.col - 1, pos.row };
-        func(neighbour, get(neighbour));
-      }
-
-      if (pos.col < m_size.col - 1) {
-        Vector2u neighbour{ pos.col + 1, pos.row };
-        func(neighbour, get(neighbour));
-      }
+    void visit4Neighbors(Vector<I, 2> pos, Func func) {
+      visitNeighborsDiamond(pos, func, 1);
     }
 
     /**
-     * @brief Visit the 4 neighbours of a given position
+     * @brief Visit the 4 neighbors of a given position
      *
-     * This function calls a callback function for every neighbour in the
-     * vertical and horizontal direction. The function checks if the neighbour
+     * This function calls a callback function for every neighbor in the
+     * vertical and horizontal direction. The function checks if the neighbor
      * actually exists.
      *
      * The callback function has the following prototype:
      *
      * ~~~{.cc}
-     * void callback(Vector2u pos, T value);
-     * // pos is the position of the neighbour
-     * // value is the value of the neighbour
+     * void callback(Vector<I, 2> pos, T value);
+     * // pos is the position of the neighbor
+     * // value is the value of the neighbor
      * ~~~
      *
      * The callback function can be a simple function but also a
@@ -303,41 +311,23 @@ inline namespace v1 {
      * @param func A callback function
      */
     template<typename Func>
-    void visit4Neighbours(Vector2u pos, Func func) const {
-      if (pos.row > 0) {
-        Vector2u neighbour{ pos.col, pos.row - 1 };
-        func(neighbour, get(neighbour));
-      }
-
-      if (pos.row < m_size.row - 1) {
-        Vector2u neighbour{ pos.col, pos.row + 1 };
-        func(neighbour, get(neighbour));
-      }
-
-      if (pos.col > 0) {
-        Vector2u neighbour{ pos.col - 1, pos.row };
-        func(neighbour, get(neighbour));
-      }
-
-      if (pos.col < m_size.col - 1) {
-        Vector2u neighbour{ pos.col + 1, pos.row };
-        func(neighbour, get(neighbour));
-      }
+    void visit4Neighbors(Vector<I, 2> pos, Func func) const {
+      visitNeighborsDiamond(pos, func, 1);
     }
 
     /**
-     * @brief Visit the 8 neighbours of a given position
+     * @brief Visit the 12 neighbors of a given position
      *
-     * This function calls a callback function for every neighbour in the
-     * vertical, horizontal and diagonal direction. The function checks if the
-     * neighbour actually exists.
+     * This function calls a callback function for every neighbor in the
+     * vertical and horizontal direction. The function checks if the neighbor
+     * actually exists.
      *
      * The callback function has the following prototype:
      *
      * ~~~{.cc}
-     * void callback(Vector2u pos, T value);
-     * // pos is the position of the neighbour
-     * // value is the value of the neighbour
+     * void callback(Vector<I, 2> pos, T value);
+     * // pos is the position of the neighbor
+     * // value is the value of the neighbor
      * ~~~
      *
      * The callback function can be a simple function but also a
@@ -347,46 +337,23 @@ inline namespace v1 {
      * @param func A callback function
      */
     template<typename Func>
-    void visit8Neighbours(Vector2u pos, Func func) {
-      for (int i = -1; i <= 1; ++i) {
-        if (pos.row == 0 && i == -1) {
-          continue;
-        }
-
-        if (pos.row + 1 == m_size.row && i == 1) {
-          continue;
-        }
-
-        for (int j = -1; j <= 1; ++j) {
-          if (pos.col == 0 && j == -1) {
-            continue;
-          }
-
-          if (pos.col + 1 == m_size.col && j == 1) {
-            continue;
-          }
-
-          if (i != 0 || j != 0) {
-            Vector2u neighbour{ pos.col + j, pos.row + i };
-            func(neighbour, get(neighbour));
-          }
-        }
-      }
+    void visit12Neighbors(Vector<I, 2> pos, Func func) {
+      visitNeighborsDiamond(pos, func, 2);
     }
 
     /**
-     * @brief Visit the 8 neighbours of a given position
+     * @brief Visit the 12 neighbors of a given position
      *
-     * This function calls a callback function for every neighbour in the
-     * vertical, horizontal and diagonal direction. The function checks if the
-     * neighbour actually exists.
+     * This function calls a callback function for every neighbor in the
+     * vertical and horizontal direction. The function checks if the neighbor
+     * actually exists.
      *
      * The callback function has the following prototype:
      *
      * ~~~{.cc}
-     * void callback(Vector2u pos, T value);
-     * // pos is the position of the neighbour
-     * // value is the value of the neighbour
+     * void callback(Vector<I, 2> pos, T value);
+     * // pos is the position of the neighbor
+     * // value is the value of the neighbor
      * ~~~
      *
      * The callback function can be a simple function but also a
@@ -396,31 +363,114 @@ inline namespace v1 {
      * @param func A callback function
      */
     template<typename Func>
-    void visit8Neighbours(Vector2u pos, Func func) const {
-      for (int i = -1; i <= 1; ++i) {
-        if (pos.row == 0 && i == -1) {
-          continue;
-        }
+    void visit12Neighbors(Vector<I, 2> pos, Func func) const {
+      visitNeighborsDiamond(pos, func, 2);
+    }
 
-        if (pos.row + 1 == m_size.row && i == 1) {
-          continue;
-        }
+    /**
+     * @brief Visit the 8 neighbors of a given position
+     *
+     * This function calls a callback function for every neighbor in the
+     * vertical, horizontal and diagonal direction. The function checks if the
+     * neighbor actually exists.
+     *
+     * The callback function has the following prototype:
+     *
+     * ~~~{.cc}
+     * void callback(Vector<I, 2> pos, T value);
+     * // pos is the position of the neighbor
+     * // value is the value of the neighbor
+     * ~~~
+     *
+     * The callback function can be a simple function but also a
+     * [lambda expression](http://en.cppreference.com/w/cpp/language/lambda).
+     *
+     * @param pos The position
+     * @param func A callback function
+     */
+    template<typename Func>
+    void visit8Neighbors(Vector<I, 2> pos, Func func) {
+      visitNeighborsSquare(pos, func, 1);
+    }
 
-        for (int j = -1; j <= 1; ++j) {
-          if (pos.col == 0 && j == -1) {
-            continue;
-          }
+    /**
+     * @brief Visit the 8 neighbors of a given position
+     *
+     * This function calls a callback function for every neighbor in the
+     * vertical, horizontal and diagonal direction. The function checks if the
+     * neighbor actually exists.
+     *
+     * The callback function has the following prototype:
+     *
+     * ~~~{.cc}
+     * void callback(Vector<I, 2> pos, T value);
+     * // pos is the position of the neighbor
+     * // value is the value of the neighbor
+     * ~~~
+     *
+     * The callback function can be a simple function but also a
+     * [lambda expression](http://en.cppreference.com/w/cpp/language/lambda).
+     *
+     * @param pos The position
+     * @param func A callback function
+     */
 
-          if (pos.col + 1 == m_size.col && j == 1) {
-            continue;
-          }
 
-          if (i != 0 || j != 0) {
-            Vector2u neighbour{ pos.col + j, pos.row + i };
-            func(neighbour, get(neighbour));
-          }
-        }
-      }
+    template<typename Func>
+    void visit8Neighbors(Vector<I, 2> pos, Func func) const {
+      visitNeighborsSquare(pos, func, 1);
+    }
+
+    /**
+     * @brief Visit the 24 neighbors of a given position
+     *
+     * This function calls a callback function for every neighbor in the
+     * vertical, horizontal and diagonal direction. The function checks if the
+     * neighbor actually exists.
+     *
+     * The callback function has the following prototype:
+     *
+     * ~~~{.cc}
+     * void callback(Vector<I, 2> pos, T value);
+     * // pos is the position of the neighbor
+     * // value is the value of the neighbor
+     * ~~~
+     *
+     * The callback function can be a simple function but also a
+     * [lambda expression](http://en.cppreference.com/w/cpp/language/lambda).
+     *
+     * @param pos The position
+     * @param func A callback function
+     */
+    template<typename Func>
+    void visit24Neighbors(Vector<I, 2> pos, Func func) {
+      visitNeighborsSquare(pos, func, 2);
+    }
+
+    /**
+     * @brief Visit the 24 neighbors of a given position
+     *
+     * This function calls a callback function for every neighbor in the
+     * vertical, horizontal and diagonal direction. The function checks if the
+     * neighbor actually exists.
+     *
+     * The callback function has the following prototype:
+     *
+     * ~~~{.cc}
+     * void callback(Vector<I, 2> pos, T value);
+     * // pos is the position of the neighbor
+     * // value is the value of the neighbor
+     * ~~~
+     *
+     * The callback function can be a simple function but also a
+     * [lambda expression](http://en.cppreference.com/w/cpp/language/lambda).
+     *
+     * @param pos The position
+     * @param func A callback function
+     */
+    template<typename Func>
+    void visit24Neighbors(Vector<I, 2> pos, Func func) const {
+      visitNeighborsSquare(pos, func, 2);
     }
 
     /** @} */
@@ -500,16 +550,105 @@ inline namespace v1 {
     /** @} */
 
   private:
-    T& get(Vector2u pos) {
+    T& get(Vector<I, 2> pos) {
       return m_data[pos.row * m_size.col + pos.col];
     }
 
-    const T& get(Vector2u pos) const {
+    const T& get(Vector<I, 2> pos) const {
       return m_data[pos.row * m_size.col + pos.col];
+    }
+
+    template<typename Func>
+    void visitNeighborsSquare(Vector<I, 2> pos, Func func, unsigned n) const {
+      assert(isValid(pos));
+
+      unsigned colMin = pos.col - std::min(pos.col, n);
+      unsigned colMax = pos.col + std::min(m_size.col - pos.col - 1, n);
+      unsigned rowMin = pos.row - std::min(pos.row, n);
+      unsigned rowMax = pos.row + std::min(m_size.row - pos.row - 1, n);
+
+      for (unsigned row = rowMin; row <= rowMax; ++row) {
+        for (unsigned col = colMin; col <= colMax; ++col) {
+          if (col == pos.col && row == pos.row) { // avoid to include VectorOps.h
+            continue;
+          }
+
+          func({ col, row }, get({ col, row }));
+        }
+      }
+    }
+
+    template<typename Func>
+    void visitNeighborsSquare(Vector<I, 2> pos, Func func, unsigned n) {
+      assert(isValid(pos));
+
+      unsigned colMin = pos.col - std::min(pos.col, n);
+      unsigned colMax = pos.col + std::min(m_size.col - pos.col - 1, n);
+      unsigned rowMin = pos.row - std::min(pos.row, n);
+      unsigned rowMax = pos.row + std::min(m_size.row - pos.row - 1, n);
+
+      for (unsigned row = rowMin; row <= rowMax; ++row) {
+        for (unsigned col = colMin; col <= colMax; ++col) {
+          if (col == pos.col && row == pos.row) { // avoid to include VectorOps.h
+            continue;
+          }
+
+          func({ col, row }, get({ col, row }));
+        }
+      }
+    }
+
+
+    template<typename Func>
+    void visitNeighborsDiamond(Vector<I, 2> pos, Func func, unsigned n) const {
+      assert(isValid(pos));
+
+      unsigned colMin = pos.col - std::min(pos.col, n);
+      unsigned colMax = pos.col + std::min(m_size.col - pos.col - 1, n);
+      unsigned rowMin = pos.row - std::min(pos.row, n);
+      unsigned rowMax = pos.row + std::min(m_size.row - pos.row - 1, n);
+
+      for (unsigned row = rowMin; row <= rowMax; ++row) {
+        for (unsigned col = colMin; col <= colMax; ++col) {
+          if (col == pos.col && row == pos.row) { // avoid to include VectorOps.h
+            continue;
+          }
+
+          if (gf::absdiff(col, pos.col) + gf::absdiff(row, pos.row) > n) {
+            continue;
+          }
+
+          func({ col, row }, get({ col, row }));
+        }
+      }
+    }
+
+    template<typename Func>
+    void visitNeighborsDiamond(Vector<I, 2> pos, Func func, unsigned n) {
+      assert(isValid(pos));
+
+      unsigned colMin = pos.col - std::min(pos.col, n);
+      unsigned colMax = pos.col + std::min(m_size.col - pos.col - 1, n);
+      unsigned rowMin = pos.row - std::min(pos.row, n);
+      unsigned rowMax = pos.row + std::min(m_size.row - pos.row - 1, n);
+
+      for (unsigned row = rowMin; row <= rowMax; ++row) {
+        for (unsigned col = colMin; col <= colMax; ++col) {
+          if (col == pos.col && row == pos.row) { // avoid to include VectorOps.h
+            continue;
+          }
+
+          if (gf::absdiff(col, pos.col) + gf::absdiff(row, pos.row) > n) {
+            continue;
+          }
+
+          func({ col, row }, get({ col, row }));
+        }
+      }
     }
 
   private:
-    Vector2u m_size;
+    Vector<I, 2> m_size;
     std::vector<T> m_data;
   };
 

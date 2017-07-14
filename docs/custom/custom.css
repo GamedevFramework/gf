@@ -15,10 +15,18 @@ body, table, div, p, dl {
   font-size: 16pt;
 }
 
+h2.memtitle {
+  display: none;
+}
+
+div.fragment {
+  padding: 1ex 1em;
+}
+
 div.line {
   font-size: 11pt;
 }
 
 img {
-  max-width: 50%;
+  max-width: 80%;
 }

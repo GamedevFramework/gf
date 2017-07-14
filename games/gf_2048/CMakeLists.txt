@@ -2,11 +2,18 @@
 set(GF_2048_DATA_DIR "${CMAKE_INSTALL_PREFIX}/share/games/gf_2048")
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/code/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h @ONLY)
 
-add_executable(gf_2048
-  code/gf_2048.cc
-  code/local/Board.cc
-  code/local/Grid.cc
-)
+if (GF_SINGLE_COMPILTATION_UNIT)
+  add_executable(gf_2048
+    code/gf_2048.cc
+    code/XUnityBuild.cc
+  )
+else()
+  add_executable(gf_2048
+    code/gf_2048.cc
+    code/local/Board.cc
+    code/local/Grid.cc
+  )
+endif()
 
 target_include_directories(gf_2048
   PRIVATE

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0)
 
 project(GF
-  VERSION 0.4.0
+  VERSION 0.5.0
   LANGUAGES CXX C
 )
 
@@ -94,11 +94,14 @@ if(GF_BUILD_GAMES)
   add_subdirectory(games/gf_pong)
   add_subdirectory(games/gf_2048)
   add_subdirectory(games/huaca)
+  add_subdirectory(games/islands)
   add_subdirectory(games/lux)
 endif()
 
 if(GF_BUILD_TOOLS)
+  add_subdirectory(tools/gf_info)
   add_subdirectory(tools/gf_noise)
+  add_subdirectory(tools/gf_dungeons)
 
   install(
     DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/data/gf_tools"

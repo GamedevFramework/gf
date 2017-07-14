@@ -64,9 +64,9 @@ namespace brfd {
       m_turn = Turn::None;
     }
 
-    virtual void update(float dt) override;
+    virtual void update(gf::Time time) override;
 
-    virtual void render(gf::RenderTarget& target) override;
+    virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
 
   private:
     gf::MessageManager& m_messages;
@@ -110,7 +110,7 @@ namespace brfd {
       return m_body;
     }
 
-    virtual void update(float dt) override;
+    virtual void update(gf::Time time) override;
 
   private:
     gf::RectF m_textureRect;

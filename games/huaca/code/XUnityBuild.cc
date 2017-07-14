@@ -18,13 +18,14 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#ifndef GF_UTILS_H
-#define GF_UTILS_H
 
-#define GF_UNUSED(x) do { (void) (x); } while (0)
+/*
+ * This file is meant for single compilation unit (a.k.a. unity build)
+ * See: https://en.wikipedia.org/wiki/Single_Compilation_Unit
+ */
 
-namespace gf {
-
-}
-
-#endif // GF_UTILS_H
+#include "local/Display.cc"
+#include "local/Hero.cc"
+#include "local/Level.cc"
+#include "local/Singletons.cc"
+#include "local/Timer.cc"

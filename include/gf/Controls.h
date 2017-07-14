@@ -43,7 +43,7 @@ inline namespace v1 {
      *
      * @param code The keycode of the key
      */
-    KeycodeKeyControl(Keycode code);
+    explicit KeycodeKeyControl(Keycode code);
 
     virtual void processEvent(const Event& event) override;
 
@@ -62,7 +62,7 @@ inline namespace v1 {
      *
      * @param code The scancode of the key
      */
-    ScancodeKeyControl(Scancode code);
+    explicit ScancodeKeyControl(Scancode code);
 
     virtual void processEvent(const Event& event) override;
 
@@ -81,7 +81,7 @@ inline namespace v1 {
      *
      * @param button The button of the mouse.
      */
-    MouseButtonControl(MouseButton button);
+    explicit MouseButtonControl(MouseButton button);
 
     virtual void processEvent(const Event& event) override;
 

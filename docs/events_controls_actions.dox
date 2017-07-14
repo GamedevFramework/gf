@@ -2,5 +2,50 @@
 
 @page events_controls_actions Events, controls, actions
 
+@section eca_events Events
+
+| Event type                            | Field in gf::Event      | Field structure                 |
+|---------------------------------------|-------------------------|---------------------------------|
+| gf::EventType::Resized                | `size`                  | gf::Vector2u                    |
+| gf::EventType::Closed                 |                         |                                 |
+| gf::EventType::FocusGained            |                         |                                 |
+| gf::EventType::FocusLost              |                         |                                 |
+| gf::EventType::KeyPressed             | `key`                   | gf::Event::KeyEvent             |
+| gf::EventType::KeyRepeated            | `key`                   | gf::Event::KeyEvent             |
+| gf::EventType::KeyReleased            | `key`                   | gf::Event::KeyEvent             |
+| gf::EventType::MouseWheelScrolled     | `mouseWheel`            | gf::Event::MouseWheelEvent      |
+| gf::EventType::MouseButtonPressed     | `mouseButton`           | gf::Event::MouseButtonEvent     |
+| gf::EventType::MouseButtonReleased    | `mouseButton`           | gf::Event::MouseButtonEvent     |
+| gf::EventType::MouseMoved             | `mouseCursor`           | gf::Event::MouseCursorEvent     |
+| gf::EventType::MouseEntered           |                         |                                 |
+| gf::EventType::MouseLeft              |                         |                                 |
+| gf::EventType::GamepadButtonPressed   | `gamepadButton`         | gf::Event::GamepadButtonEvent   |
+| gf::EventType::GamepadButtonReleased  | `gamepadButton`         | gf::Event::GamepadButtonEvent   |
+| gf::EventType::GamepadAxisMoved       | `gamepadAxis`           | gf::Event::GamepadAxisEvent     |
+| gf::EventType::GamepadConnected       | `gamepadConnection`     | gf::Event::GamepadConnection    |
+| gf::EventType::GamepadDisconnected    | `gamepadDisconnection`  | gf::Event::GamepadDisconnection |
+| gf::EventType::TextEntered            | `text`                  | gf::Event::TextEvent            |
+
+
+@section eca_controls Controls
+
+A gf::Control is a object that can react to an event. A control can be active or not. For example, a control for a key is active when the key is pressed and inactive when the key is released.
+
+gf provides some predefined simple controls:
+
+- gf::KeycodeKeyControl
+- gf::ScancodeKeyControl
+- gf::MouseButtonControl
+- gf::GamepadButtonControl
+- gf::GamepadAxisControl
+- gf::CloseControl
+
+You can define your own controls. For example, you could define a control for a [combo](https://en.wikipedia.org/wiki/Combo_%28video_gaming%29) or a control for [Konami Code](https://en.wikipedia.org/wiki/Konami_Code).
+
+@section eca_actions Actions
+
+A gf::Action is an abstract description of a user action. An action can be associated with several controls, an action becomes active when one of the controls is active. Then an action can be instantaneous ou continuous. An instantaneous action is active only once and then becomes inactive. A continuous action is active as long as one of the control is active.
+
+A gf::ActionContainer allows to group actions and easily broadcast the events to all controls of all actions.
 
 */

@@ -22,12 +22,14 @@
 #define GF_ENTITY_H
 
 #include "Portability.h"
+#include "Time.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
 #endif
 
+  struct RenderStates;
   class RenderTarget;
 
   /**
@@ -120,18 +122,19 @@ inline namespace v1 {
      * given as a parameter to help in the update. This time is in
      * seconds.
      *
-     * @param dt The time (in seconds) since the last update
+     * @param time The time since the last update
      * @sa gf::EntityContainer::update()
      */
-    virtual void update(float dt);
+    virtual void update(Time time);
 
     /**
      * @brief Render the entity
      *
      * @param target The render target
+     * @param states The render states to use for drawing
      * @sa gf::EntityContainer::render()
      */
-    virtual void render(RenderTarget& target);
+    virtual void render(RenderTarget& target, const RenderStates& states);
 
   private:
     enum class Liveness : int {

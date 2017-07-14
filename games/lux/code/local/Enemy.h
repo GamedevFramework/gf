@@ -38,9 +38,9 @@ namespace lux {
 
     Enemy(ShipClass ship, gf::Vector2f position, gf::Vector2f velocity, float health, gf::Random& Random, gf::MessageManager& messages, gf::ResourceManager &resources);
 
-    virtual void update(float dt) override;
+    virtual void update(gf::Time time) override;
 
-    virtual void render(gf::RenderTarget& target) override;
+    virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
 
     void setHeroPosition(gf::Vector2f position) {
       m_heroPos = position;
@@ -77,9 +77,9 @@ namespace lux {
 
     gf::MessageStatus onLocation(gf::Id id, gf::Message *msg);
 
-    virtual void update(float dt) override;
+    virtual void update(gf::Time time) override;
 
-    virtual void render(gf::RenderTarget& target) override;
+    virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
 
   private:
     gf::Random& m_random;

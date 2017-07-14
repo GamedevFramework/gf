@@ -30,6 +30,7 @@
 
 #include <gf/Drawable.h>
 #include <gf/Image.h>
+#include <gf/Log.h>
 #include <gf/Transform.h>
 #include <gf/Vertex.h>
 #include <gf/VertexBuffer.h>
@@ -49,30 +50,26 @@ inline namespace v1 {
 
   }
 
-  bool RenderTarget::getScissorTest() {
-    GLboolean test;
-    glCheck(glGetBooleanv(GL_SCISSOR_TEST, &test));
-    return test == GL_TRUE;
-  }
-
-  void RenderTarget::setScissorTest(bool scissor) {
-    if (scissor) {
-      glCheck(glEnable(GL_SCISSOR_TEST));
-    } else {
-      glCheck(glDisable(GL_SCISSOR_TEST));
-    }
-  }
-
-  RectI RenderTarget::getScissoBox() {
+  Region RenderTarget::getCanonicalScissorBox() {
     GLint box[4];
     glCheck(glGetIntegerv(GL_SCISSOR_BOX, &box[0]));
+    return { box[0], box[1], box[2], box[3] };
+  }
+
+  void RenderTarget::setCanonicalScissorBox(const Region& box) {
+    glCheck(glScissor(box.left, box.bottom, box.width, box.height));
+  }
+
+  RectI RenderTarget::getScissorBox() {
+    Region region = getCanonicalScissorBox();
     Vector2i size = getSize();
-    return RectI(box[0], (size.height - box[1]) - box[3], box[2], box[3]);
+    return RectI(region.left, size.height - (region.bottom + region.height), region.width, region.height);
   }
 
   void RenderTarget::setScissorBox(const RectI& box) {
     Vector2i size = getSize();
-    glCheck(glScissor(box.left, size.height - (box.top + box.height), box.width, box.height));
+    Region region = { box.left, size.height - (box.top + box.height), box.width, box.height };
+    setCanonicalScissorBox(region);
   }
 
   void RenderTarget::clear(const Color4f& color) {
@@ -297,14 +294,6 @@ inline namespace v1 {
     }
 
     /*
-     * viewport
-     */
-
-    RectI viewport = getViewport(getView());
-    int bottom = getSize().height - (viewport.top + viewport.height);
-    glCheck(glViewport(viewport.left, bottom, viewport.width, viewport.height));
-
-    /*
      * prepare data
      */
 
@@ -342,16 +331,40 @@ inline namespace v1 {
     drawable.draw(*this, states);
   }
 
+  void RenderTarget::setView(const View& view) {
+    m_view = view;
+
+    // set the GL viewport everytime a new view is defined
+    Region viewport = getCanonicalViewport(getView());
+    glCheck(glViewport(viewport.left, viewport.bottom, viewport.width, viewport.height));
+
+//     Log::info("Viewport: %i %i %i %i\n", viewport.left, viewport.bottom, viewport.width, viewport.height);
+
+    // the viewport does not scissor
+    setCanonicalScissorBox(viewport);
+  }
+
   RectI RenderTarget::getViewport(const View& view) const {
+    Region region = getCanonicalViewport(view);
+    Vector2i size = getSize();
+    return RectI(region.left, size.height - (region.bottom + region.height), region.width, region.height);
+  }
+
+  Region RenderTarget::getCanonicalViewport(const View& view) const {
     auto size = getSize();
     const RectF& viewport = view.getViewport();
 
-    int left = static_cast<int>(viewport.left * size.width + 0.5);
-    int top = static_cast<int>(viewport.top * size.height + 0.5);
-    int width = static_cast<int>(viewport.width * size.width + 0.5);
-    int height = static_cast<int>(viewport.height * size.height + 0.5);
+//     gf::Log::info("Normalized viewport: %fx%f %fx%f\n", viewport.left, viewport.top, viewport.width, viewport.height);
 
-    return RectI{left, top, width, height};
+    Region region;
+    region.left = static_cast<int>(viewport.left * size.width + 0.5f);
+    region.bottom = static_cast<int>((1.0f - (viewport.top + viewport.height)) * size.height + 0.5f);
+    region.width = static_cast<int>(viewport.width * size.width + 0.5f);
+    region.height = static_cast<int>(viewport.height * size.height + 0.5f);
+
+//     gf::Log::info("Computed viewport: %ix%i %ix%i\n", region.left, region.bottom, region.width, region.height);
+
+    return region;
   }
 
   Vector2f RenderTarget::mapPixelToCoords(Vector2i point, const View& view) const {
@@ -411,8 +424,6 @@ inline namespace v1 {
   }
 
   void RenderTarget::initialize() {
-    glCheck(glEnable(GL_BLEND));
-
     initializeViews();
     initializeTexture();
     initializeShader();

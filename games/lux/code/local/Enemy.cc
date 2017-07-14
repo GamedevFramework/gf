@@ -19,6 +19,7 @@
 
 #include <gf/Sprite.h>
 #include <gf/RenderTarget.h>
+#include <gf/Unused.h>
 #include <gf/VectorOps.h>
 
 #include "Messages.h"
@@ -26,7 +27,7 @@
 
 namespace lux {
 
-  static constexpr float ShootVelocity = 400.0f;
+  static constexpr float EnemyShootVelocity = 400.0f;
   static constexpr float BonusFrequency = 0.50f;
 
   Enemy::Enemy(ShipClass ship, gf::Vector2f position, gf::Vector2f velocity, float health, gf::Random& random, gf::MessageManager& messages, gf::ResourceManager &resources)
@@ -64,9 +65,10 @@ namespace lux {
   }
 
 
-  void Enemy::update(float dt) {
+  void Enemy::update(gf::Time time) {
     assert(isAlive());
 
+    float dt = time.asSeconds();
     m_position += m_velocity * dt;
 
     if (m_position.y > WorldCenter.y + WorldSize.height / 2 + Height) {
@@ -101,19 +103,19 @@ namespace lux {
     }
 
     gf::Vector2f dir = m_heroPos - m_position;
-    dir = gf::normalize(dir) * ShootVelocity;
+    dir = gf::normalize(dir) * EnemyShootVelocity;
 
     m_shoot->shoot(dt, m_position, dir, m_messages);
   }
 
-  void Enemy::render(gf::RenderTarget& target) {
+  void Enemy::render(gf::RenderTarget& target, const gf::RenderStates& states) {
     gf::Sprite sprite;
     sprite.setTexture(*m_texture);
     sprite.setScale({ ScaleX, ScaleY });
     sprite.setPosition(m_position);
     sprite.setAnchor(gf::Anchor::Center);
     sprite.setRotation(-gf::Pi2);
-    target.draw(sprite);
+    target.draw(sprite, states);
   }
 
 
@@ -138,6 +140,7 @@ namespace lux {
 
   gf::MessageStatus EnemyManager::onLocation(gf::Id id, gf::Message *msg) {
     assert(id == LocationMessage::type);
+    gf::unused(id);
     auto loc = static_cast<LocationMessage*>(msg);
 
     if (loc->origin == Origin::Hero) {
@@ -147,10 +150,10 @@ namespace lux {
     return gf::MessageStatus::Keep;
   }
 
-  void EnemyManager::update(float dt) {
+  void EnemyManager::update(gf::Time time) {
     for (auto enemy : m_enemies) {
       enemy->setHeroPosition(m_heroPos);
-      enemy->update(dt);
+      enemy->update(time);
     }
 
     const auto trash = std::partition(m_enemies.begin(), m_enemies.end(), [](const Enemy *e) {
@@ -166,9 +169,9 @@ namespace lux {
     m_enemies.erase(trash, m_enemies.end());
   }
 
-  void EnemyManager::render(gf::RenderTarget& target) {
+  void EnemyManager::render(gf::RenderTarget& target, const gf::RenderStates& states) {
     for (auto enemy : m_enemies) {
-      enemy->render(target);
+      enemy->render(target, states);
     }
   }
 

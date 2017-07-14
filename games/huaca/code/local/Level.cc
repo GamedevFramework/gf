@@ -25,6 +25,7 @@
 #include <gf/RenderTarget.h>
 #include <gf/Sprite.h>
 #include <gf/Shapes.h>
+#include <gf/Unused.h>
 
 #include "Messages.h"
 #include "Singletons.h"
@@ -84,8 +85,8 @@ namespace huaca {
     m_vertices.append(vertices[3]);
   }
 
-  void Roof::render(gf::RenderTarget& target) {
-    target.draw(m_vertices);
+  void Roof::render(gf::RenderTarget& target, const gf::RenderStates& states) {
+    target.draw(m_vertices, states);
   }
 
   static gf::Texture *loadTexture(const gf::Path& path) {
@@ -171,9 +172,9 @@ namespace huaca {
 //
 //   }
 
-  void Level::render(gf::RenderTarget& target) {
-    target.draw(m_groundLayer);
-    target.draw(m_wallLayer);
+  void Level::render(gf::RenderTarget& target, const gf::RenderStates& states) {
+    target.draw(m_groundLayer, states);
+    target.draw(m_wallLayer, states);
 
     for (const auto& rune : m_runes) {
       gf::Sprite sprite;
@@ -187,7 +188,7 @@ namespace huaca {
         sprite.setColor({ 1.0f, 1.0f, 1.0f, 0.5f });
       }
 
-      target.draw(sprite);
+      target.draw(sprite, states);
     }
 
     for (const auto& key : m_keys) {
@@ -200,7 +201,7 @@ namespace huaca {
       sprite.setPosition(key.bounds.getCenter());
       sprite.setAnchor(gf::Anchor::Center);
       sprite.setScale(KeySize / KeyTextureSize);
-      target.draw(sprite);
+      target.draw(sprite, states);
     }
 
     for (const auto& door : m_doors) {
@@ -222,7 +223,7 @@ namespace huaca {
       }
 
       sprite.setAnchor(gf::Anchor::Center);
-      target.draw(sprite);
+      target.draw(sprite, states);
     }
 
     for (const auto& portal : m_portals) {
@@ -235,13 +236,13 @@ namespace huaca {
       sprite.setPosition(portal.bounds.getCenter());
       sprite.setAnchor(gf::Anchor::Center);
       sprite.setScale(PortalSize / PortalTextureSize);
-      target.draw(sprite);
+      target.draw(sprite, states);
     }
 
   }
 
   gf::MessageStatus Level::onHeroPosition(gf::Id id, gf::Message *msg) {
-    (void) id; // not used
+    gf::unused(id);
 
     auto heroPosition = static_cast<HeroPositionMessage*>(msg);
 
@@ -336,8 +337,8 @@ namespace huaca {
   }
 
   gf::MessageStatus Level::onResetLevel(gf::Id id, gf::Message *msg) {
-    (void) id; // not used
-    (void) msg; // not used
+    gf::unused(id);
+    gf::unused(msg);
 
     for (auto& rune : m_runes) {
       rune.isPressed = false;
@@ -376,7 +377,7 @@ namespace huaca {
 
 
   gf::MessageStatus Level::onPortalDropped(gf::Id id, gf::Message *msg) {
-    (void) id;
+    gf::unused(id);
 
     if (m_currentPortal == 2) {
       return gf::MessageStatus::Keep;

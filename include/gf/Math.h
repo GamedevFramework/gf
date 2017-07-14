@@ -296,6 +296,24 @@ inline namespace v1 {
     return (val > T(0)) - (val < T(0));
   }
 
+  /**
+   * @ingroup core
+   * @brief Absolute difference of two values
+   *
+   * This function is defined as:
+   *
+   * @f[ \text{absdiff}(a, b) = | a - b | @f]
+   *
+   * @param lhs The first value
+   * @param rhs The second value
+   * @returns The absolute difference between the two values
+   */
+  template<typename T>
+  constexpr
+  T absdiff(T lhs, T rhs) {
+    return lhs > rhs ? lhs - rhs : rhs - lhs;
+  }
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif

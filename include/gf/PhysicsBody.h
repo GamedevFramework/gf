@@ -7,6 +7,7 @@
 #include "PhysicsGeometry.h"
 #include "Polygon.h"
 #include "Rect.h"
+#include "Time.h"
 #include "Transform.h"
 #include "Vector.h"
 
@@ -15,6 +16,7 @@ namespace gf {
 inline namespace v1 {
 #endif
 
+  struct RenderStates;
   class RenderTarget;
   struct Penetration;
 
@@ -63,7 +65,7 @@ inline namespace v1 {
      *
      * @param dt The time (in seconds) since the last update
      */
-    void update(float dt);
+    void step(float dt);
 
     /**
      * @brief Render the body
@@ -71,8 +73,9 @@ inline namespace v1 {
      * This function is for debugging purpose. The body is outlined in red.
      *
      * @param target The render target
+     * @param states The render states to use for drawing
      */
-    void render(RenderTarget& target) const;
+    void render(RenderTarget& target, const RenderStates& states) const;
 
     /**
      * @name Position, angle, velocity and acceleration

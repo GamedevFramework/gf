@@ -134,6 +134,10 @@ int main() {
               effect.setType(gf::ColorBlindEffect::Achromatomaly);
               break;
 
+            case gf::Scancode::Escape:
+              window.close();
+              break;
+
             default:
               break;
           }

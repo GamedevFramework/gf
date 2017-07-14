@@ -23,6 +23,7 @@
 #include <gf/Color.h>
 #include <gf/RenderTarget.h>
 #include <gf/Shapes.h>
+#include <gf/Unused.h>
 
 #include "Ball.h"
 #include "Messages.h"
@@ -32,16 +33,16 @@ Ground::Ground() {
   gMessageManager().registerHandler<BallLocationMessage>(&Ground::onBallLocation, this);
 }
 
-void Ground::render(gf::RenderTarget& target) {
+void Ground::render(gf::RenderTarget& target, const gf::RenderStates& states) {
   gf::RectangleShape shape({ Width, Height });
   shape.setPosition({ 0.0f, 0.0f });
   shape.setAnchor(gf::Anchor::Center);
   shape.setColor(gf::Color::Black);
-  target.draw(shape);
+  target.draw(shape, states);
 }
 
 gf::MessageStatus Ground::onBallLocation(gf::Id id, gf::Message *msg) {
-  (void) id; // not used
+  gf::unused(id);
 
   auto loc = static_cast<BallLocationMessage*>(msg);
 

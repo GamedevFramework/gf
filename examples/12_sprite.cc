@@ -101,6 +101,10 @@ int main() {
               spriteWithMipmap.scale(1.25);
               break;
 
+            case gf::Scancode::Escape:
+              window.close();
+              break;
+
             default:
               break;
           }

@@ -25,6 +25,7 @@
 #include <gf/Shapes.h>
 #include <gf/Sprite.h>
 #include <gf/Text.h>
+#include <gf/Unused.h>
 #include <gf/VectorOps.h>
 
 #include <gf/Log.h>
@@ -68,7 +69,8 @@ namespace brfd {
     m_currentStep = m_steps[m_currentStepIndex];
   }
 
-  void StoryModel::update(float dt) {
+  void StoryModel::update(gf::Time time) {
+    float dt = time.asSeconds();
     m_currentStep.caption.timer -= dt;
 
     if (m_state != State::Running) {
@@ -95,7 +97,7 @@ namespace brfd {
   }
 
   gf::MessageStatus StoryModel::onHeroPosition(gf::Id id, gf::Message *msg) {
-    (void) id;
+    gf::unused(id);
 
     if (m_state != State::Running) {
       return gf::MessageStatus::Keep;
@@ -135,7 +137,7 @@ namespace brfd {
   static constexpr float CompassRadius = 120.0f;
   static constexpr float CompassSize = 60.0f;
 
-  void StoryView::render(gf::RenderTarget& target) {
+  void StoryView::render(gf::RenderTarget& target, const gf::RenderStates& states) {
     if (!m_model.hasTarget()) {
       return;
     }
@@ -146,7 +148,7 @@ namespace brfd {
     shape.setColor(gf::Color::Red * gf::Color::Opaque(0.5f));
     shape.setPosition(point);
     shape.setAnchor(gf::Anchor::Center);
-    target.draw(shape);
+    target.draw(shape, states);
 
     float direction = gf::angle(point - m_hero);
 
@@ -158,11 +160,11 @@ namespace brfd {
     compass.setColor(gf::Color::Red * gf::Color::Opaque(0.5f));
     compass.setRotation(direction);
     compass.setAnchor(gf::Anchor::Center);
-    target.draw(compass);
+    target.draw(compass, states);
   }
 
   gf::MessageStatus StoryView::onHeroPosition(gf::Id id, gf::Message *msg) {
-    (void) id;
+    gf::unused(id);
     m_hero = static_cast<HeroPosition*>(msg)->position;
     return gf::MessageStatus::Keep;
   }
@@ -185,7 +187,7 @@ namespace brfd {
   static constexpr float TextHeight = 100.0f;
   static constexpr unsigned TextSize = 32;
 
-  void StoryHUD::render(gf::RenderTarget& target) {
+  void StoryHUD::render(gf::RenderTarget& target, const gf::RenderStates& states) {
     gf::Coordinates coordinates(target);
 
     if (m_model.hasTarget()) {
@@ -205,7 +207,7 @@ namespace brfd {
       text.setString(buffer.data());
       text.setPosition(position);
       text.setAnchor(gf::Anchor::TopLeft);
-      target.draw(text);
+      target.draw(text, states);
     }
 
     if (!m_model.hasCaption()) {
@@ -220,7 +222,7 @@ namespace brfd {
     gf::RectangleShape textBackground(size);
     textBackground.setColor(gf::Color::fromRgba32(0xA7, 0x13, 0x13, 0x95));
     textBackground.setPosition(position);
-    target.draw(textBackground);
+    target.draw(textBackground, states);
 
     gf::Sprite sprite;
 
@@ -233,13 +235,13 @@ namespace brfd {
         break;
     }
 
-    gf::Vector2f textureSize = sprite.getTexture()->getSize();
+    gf::Vector2f textureSize = sprite.getTexture().getSize();
     float scale = (size.height - 2 * padding) / textureSize.height;
 
     sprite.setPosition(position + padding);
     sprite.setAnchor(gf::Anchor::TopLeft);
     sprite.setScale(scale);
-    target.draw(sprite);
+    target.draw(sprite, states);
 
     position.x += padding + textureSize.width * scale;
     float paragraphWidth = size.width - textureSize.width * scale - 3 * padding;
@@ -256,7 +258,7 @@ namespace brfd {
     text.setColor(gf::Color::White);
     text.setOutlineThickness(1.0f);
     text.setOutlineColor(gf::Color::Black);
-    target.draw(text);
+    target.draw(text, states);
 
   }
 

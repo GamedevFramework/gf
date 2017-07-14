@@ -24,6 +24,7 @@
 #include <cstring>
 
 #include <gf/Log.h>
+#include <gf/ResourceManager.h>
 #include <gf/Texture.h>
 
 #include "vendor/tinyxml2/tinyxml2.h"
@@ -37,8 +38,7 @@ inline namespace v1 {
     tinyxml2::XMLDocument doc;
     int err = doc.LoadFile(filename.string().c_str());
 
-    if (doc.Error()) {
-      assert(err != tinyxml2::XML_SUCCESS);
+    if (doc.Error() || err != tinyxml2::XML_SUCCESS) {
       Log::error("Could not load atlas texture: '%s'\n", filename.string().c_str());
       return false;
     }
@@ -89,6 +89,20 @@ inline namespace v1 {
       child = child->NextSiblingElement();
     }
 
+    return true;
+  }
+
+  bool TextureAtlas::loadFromFile(const Path& filename, ResourceManager& resources) {
+    gf::Path absolute = resources.getAbsolutePath(filename);
+    bool loaded = loadFromFile(absolute);
+
+    if (!loaded) {
+      return false;
+    }
+
+    Path parent = absolute.parent_path();
+    Texture& texture = resources.getTexture(parent / getTexturePath());
+    setTexture(texture);
     return true;
   }
 

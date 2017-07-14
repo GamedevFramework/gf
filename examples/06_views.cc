@@ -62,6 +62,13 @@ int main() {
   gf::AdaptativeView *currentView = &stretchView;
 
   /*
+   * viewports
+   */
+
+  gf::RectF maxiViewport({ 0.0f, 0.0f }, { 1.0f, 1.0f });
+  gf::RectF miniViewport({ 0.75f, 0.15f }, { 0.20f, 0.40f });
+
+  /*
    * some things to draw
    */
 
@@ -84,6 +91,12 @@ int main() {
   gf::RectangleShape hud({ 64.0f, 64.0f });
   hud.setPosition({ 10.0f, 10.0f });
   hud.setColor(gf::Color::Red);
+
+  gf::RectangleShape frame(miniViewport.size * ScreenSize);
+  frame.setPosition(miniViewport.position * ScreenSize);
+  frame.setColor(gf::Color::Transparent);
+  frame.setOutlineColor(gf::Color::Red);
+  frame.setOutlineThickness(2.0f);
 
   std::cout << "Gamedev Framework (gf) example #06: Views\n";
   std::cout << "The scene is composed of:\n";
@@ -129,6 +142,10 @@ int main() {
               currentView = &extendView;
               break;
 
+            case gf::Scancode::Escape:
+              window.close();
+              break;
+
             default:
               break;
           }
@@ -143,12 +160,32 @@ int main() {
 
     renderer.clear();
 
+    // draw with maxi viewport
+
+    currentView->setViewport(maxiViewport);
     renderer.setView(*currentView);
+
     renderer.draw(extendedBackground);
     renderer.draw(background);
     renderer.draw(triangle, 3, gf::PrimitiveType::Triangles);
 
+    // draw with mini viewport
+
+    currentView->setViewport(miniViewport);
+    renderer.setView(*currentView);
+
+    renderer.draw(extendedBackground);
+    renderer.draw(background);
+    renderer.draw(triangle, 3, gf::PrimitiveType::Triangles);
+
+    // draw hud and frame
+
+    gf::RectI viewport = renderer.getViewport(*currentView);
+    frame.setPosition(viewport.position);
+    frame.setSize(viewport.size);
+
     renderer.setView(screenView);
+    renderer.draw(frame);
     renderer.draw(hud);
 
     renderer.display();

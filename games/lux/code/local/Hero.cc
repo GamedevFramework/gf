@@ -25,6 +25,7 @@
 #include <gf/Shapes.h>
 #include <gf/Sprite.h>
 #include <gf/Text.h>
+#include <gf/Unused.h>
 
 #include "Messages.h"
 #include "World.h"
@@ -47,7 +48,7 @@ namespace lux {
 
   }
 
-  void HeroProperties::render(gf::RenderTarget& target) {
+  void HeroProperties::render(gf::RenderTarget& target, const gf::RenderStates& states) {
     gf::Coordinates coordinates(target);
 
     gf::Vector2f position = coordinates.getRelativePoint({ 0.5f, 0.95f });
@@ -59,13 +60,13 @@ namespace lux {
     healthBg.setColor(gf::Color::Transparent);
     healthBg.setOutlineColor(gf::Color::White);
     healthBg.setOutlineThickness(HealthThickness);
-    target.draw(healthBg);
+    target.draw(healthBg, states);
 
     gf::RoundedRectangleShape healthFg({ m_healthPercent * HealthWidth, HealthHeight }, HealthRadius);
     healthFg.setPosition(position);
     healthFg.setAnchor(gf::Anchor::CenterLeft);
     healthFg.setColor(gf::Color::Red);
-    target.draw(healthFg);
+    target.draw(healthFg, states);
 
     position.x += HealthWidth + ScorePadding;
 
@@ -76,11 +77,11 @@ namespace lux {
     score.setString("Score: " + std::to_string(m_score));
     score.setPosition(position);
     score.setAnchor(gf::Anchor::CenterLeft);
-    target.draw(score);
+    target.draw(score, states);
   }
 
 
-  static constexpr float ShootVelocity = -400.0f;
+  static constexpr float HeroShootVelocity = -400.0f;
 
   Hero::Hero(HeroProperties& prop, gf::MessageManager& messages, gf::ResourceManager& resources)
   : Ship(Health)
@@ -103,11 +104,12 @@ namespace lux {
     m_targetPos = gf::clamp(position, WorldCenter - WorldSize / 2, WorldCenter + WorldSize / 2);
   }
 
-  void Hero::update(float dt) {
+  void Hero::update(gf::Time time) {
     if (!m_inGame) {
       return;
     }
 
+    float dt = time.asSeconds();
     gf::Vector2f diffPos = m_targetPos - m_position;
 
     if (std::abs(diffPos.x) > 0.1f || std::abs(diffPos.y) > 0.1f) {
@@ -147,11 +149,11 @@ namespace lux {
 
     m_elapsedTime += dt;
 
-    gf::Vector2f dir(0.0f, ShootVelocity);
+    gf::Vector2f dir(0.0f, HeroShootVelocity);
     m_shoot->shoot(dt, m_position, dir, m_messages);
   }
 
-  void Hero::render(gf::RenderTarget& target) {
+  void Hero::render(gf::RenderTarget& target, const gf::RenderStates& states) {
     if (isDamaged()) {
       return;
     }
@@ -162,7 +164,7 @@ namespace lux {
     sprite.setAnchor(gf::Anchor::Center);
     sprite.setScale({ ScaleX, ScaleY });
     sprite.setRotation(-gf::Pi2);
-    target.draw(sprite);
+    target.draw(sprite, states);
   }
 
   void Hero::upgradeWeapon() {
@@ -174,7 +176,7 @@ namespace lux {
   }
 
   gf::MessageStatus Hero::onDead(gf::Id id, gf::Message *msg) {
-    (void) id;
+    gf::unused(id);
 
     auto dead = static_cast<DeadMessage *>(msg);
 
@@ -210,8 +212,8 @@ namespace lux {
   }
 
   gf::MessageStatus Hero::onRestartGame(gf::Id id, gf::Message *msg) {
-    (void) id;
-    (void) msg;
+    gf::unused(id);
+    gf::unused(msg);
 
     m_inGame = true;
     m_weaponLevel = 1;
@@ -224,7 +226,7 @@ namespace lux {
   }
 
   gf::MessageStatus Hero::onWinGame(gf::Id id, gf::Message *msg) {
-    (void) id;
+    gf::unused(id);
 
     auto winEvent = static_cast<WinGameMessage *>(msg);
 

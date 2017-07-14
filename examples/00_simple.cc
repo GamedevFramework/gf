@@ -26,11 +26,7 @@
 #include <gf/SystemInfo.h>
 
 int main() {
-  std::cout << "Gamedev Framework (gf) example #00: Version Info, System Info and Path Info\n";
-
-  std::cout << '\n';
-
-  gf::Library::printVersionInfo();
+  std::cout << "Gamedev Framework (gf) example #00: System Info and Path Info\n";
 
   std::cout << '\n';
 

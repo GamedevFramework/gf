@@ -27,6 +27,7 @@
 #include <gf/RenderTarget.h>
 #include <gf/Shapes.h>
 #include <gf/Text.h>
+#include <gf/Unused.h>
 
 Board::Board(gf::Font& font, gf::Random& random)
 : m_font(font)
@@ -55,8 +56,8 @@ static bool isOnSide(gf::Vector2u pos, gf::Direction dir) {
 
 
 bool Board::move(gf::Direction dir) {
-  std::array<unsigned, 4> xIndices{ 0, 1, 2, 3 };
-  std::array<unsigned, 4> yIndices{ 0, 1, 2, 3 };
+  std::array<unsigned, 4> xIndices = {{ 0, 1, 2, 3 }};
+  std::array<unsigned, 4> yIndices = {{ 0, 1, 2, 3 }};
 
   auto vec = gf::displacement(dir);
 
@@ -115,8 +116,9 @@ bool Board::move(gf::Direction dir) {
   return moved;
 }
 
-void Board::update(float dt) {
-  (void) dt;
+void Board::update(gf::Time time) {
+  gf::unused(time);
+
   gf::Vector2u pos;
 
   for (pos.y = 0; pos.y < Grid::Size; ++pos.y) {
@@ -225,10 +227,10 @@ static constexpr float TileSpace = 15.0f;
 static constexpr float TileCorner = 3.0f;
 static constexpr float ContainerSize = Grid::Size * TileSize + (Grid::Size + 1) * TileSpace;
 
-void Board::render(gf::RenderTarget& target) {
+void Board::render(gf::RenderTarget& target, const gf::RenderStates& states) {
   gf::RoundedRectangleShape background({ ContainerSize, ContainerSize }, TileCorner);
   background.setColor(gf::Color::fromRgba32(0xBBADA0FF));
-  target.draw(background);
+  target.draw(background, states);
 
   for (unsigned y = 0; y < Grid::Size; ++y) {
     for (unsigned x = 0; x < Grid::Size; ++x) {
@@ -240,13 +242,13 @@ void Board::render(gf::RenderTarget& target) {
         gf::RoundedRectangleShape shape({ TileSize, TileSize }, TileCorner);
         shape.setPosition(pos);
         shape.setColor(getTileColor(tile));
-        target.draw(shape);
+        target.draw(shape, states);
 
         gf::Text text(std::to_string(tile), m_font, getTextSize(tile));
         text.setColor(getTextColor(tile));
         text.setAnchor(gf::Anchor::Center);
         text.setPosition(pos + TileSize / 2);
-        target.draw(text);
+        target.draw(text, states);
       }
     }
   }

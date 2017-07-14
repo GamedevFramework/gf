@@ -32,8 +32,8 @@ namespace lux {
   public:
     Particles(gf::Random& random, gf::MessageManager& messages);
 
-    virtual void update(float dt) override;
-    virtual void render(gf::RenderTarget& target) override;
+    virtual void update(gf::Time time) override;
+    virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
 
     gf::MessageStatus onDead(gf::Id id, gf::Message *msg);
 

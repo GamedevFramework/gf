@@ -20,6 +20,8 @@
  */
 #include <gf/Gamepad.h>
 
+#include <cstring>
+
 #include <SDL.h>
 
 #include <gf/Log.h>
@@ -100,7 +102,11 @@ inline namespace v1 {
   }
 
 
-
+#if SDL_VERSION_ATLEAST(2,0,4)
+  static SDL_GameController *getController(GamepadId id) {
+    return SDL_GameControllerFromInstanceID(static_cast<SDL_JoystickID>(id));
+  }
+#else
   static std::map<GamepadId, SDL_GameController*> g_controllers;
 
   static SDL_GameController *getController(GamepadId id) {
@@ -112,11 +118,12 @@ inline namespace v1 {
 
     return it->second;
   }
+#endif
 
   static GamepadId openController(int index) {
     SDL_GameController *controller = SDL_GameControllerOpen(index);
 
-    if (!controller) {
+    if (controller == nullptr) {
       Log::error("Could not open gamepad %i: %s\n", index, SDL_GetError());
       return static_cast<GamepadId>(-1);
     }
@@ -126,7 +133,10 @@ inline namespace v1 {
 
     Log::debug("New gamepad (device: %i / instance: %i)\n", index, instanceId);
 
+#if !SDL_VERSION_ATLEAST(2,0,4)
     g_controllers.insert(std::make_pair(static_cast<GamepadId>(instanceId), controller));
+#endif
+
     return static_cast<GamepadId>(instanceId);
   }
 
@@ -151,7 +161,10 @@ inline namespace v1 {
       return;
     }
 
+#if !SDL_VERSION_ATLEAST(2,0,4)
     g_controllers.erase(id);
+#endif
+
     SDL_GameControllerClose(controller);
   }
 
@@ -166,7 +179,7 @@ inline namespace v1 {
   }
 
   void Gamepad::initialize() {
-    int added = SDL_GameControllerAddMappingsFromRW(SDL_RWFromConstMem(gamecontrollerdb, sizeof gamecontrollerdb - 1), 1);
+    int added = SDL_GameControllerAddMappingsFromRW(SDL_RWFromConstMem(gamecontrollerdb, std::strlen(gamecontrollerdb)), 1);
 
     if (added == -1) {
       Log::error("Unable to load game controller mappings: '%s'\n", SDL_GetError());

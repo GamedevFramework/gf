@@ -57,6 +57,8 @@ if (GF_SINGLE_COMPILTATION_UNIT)
 else()
   add_library(gf0 SHARED
     Action.cc
+    Activities.cc
+    Activity.cc
     AnimatedSprite.cc
     Animation.cc
     AssetManager.cc
@@ -74,18 +76,23 @@ else()
     Curves.cc
     Direction.cc
     Drawable.cc
+    Easings.cc
     Effects.cc
     Entity.cc
     EntityContainer.cc
     Flags.cc
     Font.cc
     Gamepad.cc
+    Geometry.cc
+    GraphicsInfo.cc
+    Grid.cc
     Image.cc
     InputStream.cc
     InputStreams.cc
     Keyboard.cc
     Library.cc
     Log.cc
+    Logo.cc
     Math.cc
     Matrix.cc
     MessageManager.cc
@@ -119,6 +126,7 @@ else()
     Sleep.cc
     SpriteBatch.cc
     Sprite.cc
+    StringUtils.cc
     SystemInfo.cc
     Text.cc
     TextureAtlas.cc
@@ -135,6 +143,8 @@ else()
     ViewContainer.cc
     Views.cc
     Window.cc
+    # generated
+    data/generated.cc
     # priv
     priv/Debug.cc
     # vendor

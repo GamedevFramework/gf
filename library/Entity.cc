@@ -20,7 +20,7 @@
  */
 #include <gf/Entity.h>
 
-#include "priv/Utils.h"
+#include <gf/Unused.h>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -30,13 +30,14 @@ inline namespace v1 {
   Entity::~Entity() {
   }
 
-  void Entity::update(float dt) {
-    GF_UNUSED(dt);
+  void Entity::update(Time time) {
+    gf::unused(time);
     // default: do nothing
   }
 
-  void Entity::render(RenderTarget& target) {
-    GF_UNUSED(target);
+  void Entity::render(RenderTarget& target, const RenderStates& states) {
+    gf::unused(target);
+    gf::unused(states);
     // default: do nothing
   }
 

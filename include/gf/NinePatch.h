@@ -94,16 +94,26 @@ inline namespace v1 {
     /**
      * @brief Get the source texture of the nine-patch
      *
-     * If the nine-patch has no source texture, a `nullptr` pointer is returned.
-     * The returned pointer is const, which means that you can't
+     * The returned reference is const, which means that you can't
      * modify the texture when you retrieve it with this function.
      *
-     * @return Pointer to the nine-patch's texture
+     * @return Reference to the nine-patch's texture
      *
      * @sa setTexture()
      */
-    const Texture *getTexture() const {
-      return m_texture;
+    const Texture& getTexture() const {
+      return *m_texture;
+    }
+
+    /**
+     * @brief Check if a texture is set
+     *
+     * @returns True if a texture is already set
+     *
+     * @sa setTexture(), getTexture()
+     */
+    bool hasTexture() const {
+      return m_texture != nullptr;
     }
 
     /**

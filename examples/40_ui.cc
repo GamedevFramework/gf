@@ -62,6 +62,7 @@ static void overview(gf::UI& ui) {
   static bool movable = true;
   static bool noScrollbar = false;
   static bool minimizable = true;
+  static bool scaleLeft = false;
 
   static gf::UIWindowFlags windowFlags = gf::None;
 
@@ -78,6 +79,7 @@ static void overview(gf::UI& ui) {
   if (movable) { windowFlags |= gf::UIWindow::Movable; }
   if (noScrollbar) { windowFlags |= gf::UIWindow::NoScrollbar; }
   if (minimizable) { windowFlags |= gf::UIWindow::Minimizable; }
+  if (scaleLeft) { windowFlags |= gf::UIWindow::ScaleLeft; }
 
   if (ui.begin("Overview", gf::RectF(300, 50, 400, 600), windowFlags)) {
     if (showMenu) {
@@ -147,6 +149,7 @@ static void overview(gf::UI& ui) {
       ui.checkbox("Movable", movable);
       ui.checkbox("No scrollbar", noScrollbar);
       ui.checkbox("Minimizable", minimizable);
+      ui.checkbox("Scale left", scaleLeft);
       ui.treePop();
     }
 
@@ -774,6 +777,12 @@ int main() {
       switch (event.type) {
         case gf::EventType::Closed:
           window.close();
+          break;
+
+        case gf::EventType::KeyPressed:
+          if (event.key.scancode == gf::Scancode::Escape) {
+            window.close();
+          }
           break;
 
         default:

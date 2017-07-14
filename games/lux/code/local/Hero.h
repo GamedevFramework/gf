@@ -48,7 +48,7 @@ namespace lux {
       m_score = 0;
     }
 
-    virtual void render(gf::RenderTarget& target) override;
+    virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
 
   private:
     unsigned long m_score;
@@ -70,8 +70,8 @@ namespace lux {
 
     void setPosition(gf::Vector2f position);
 
-    virtual void update(float dt) override;
-    virtual void render(gf::RenderTarget& target) override;
+    virtual void update(gf::Time time) override;
+    virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
 
     void upgradeWeapon();
 

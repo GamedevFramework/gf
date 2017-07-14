@@ -24,6 +24,7 @@
 #include <gf/Shapes.h>
 #include <gf/Sprite.h>
 #include <gf/Transform.h>
+#include <gf/Unused.h>
 #include <gf/VectorOps.h>
 
 #include "Messages.h"
@@ -84,7 +85,8 @@ namespace brfd {
   static constexpr float VelocityMax = 1500.0f;
   static constexpr float VelocityMin = -500.0f;
 
-  void HeroCar::update(float dt) {
+  void HeroCar::update(gf::Time time) {
+    float dt = time.asSeconds();
     gf::Vector2f position = m_body.getPosition();
 
     HeroPosition msg;
@@ -139,13 +141,13 @@ namespace brfd {
 
   static constexpr gf::Vector2f TileScale(CarWidth / TilesetWidth, CarHeight / TilesetHeight);
 
-  void HeroCar::render(gf::RenderTarget& target) {
+  void HeroCar::render(gf::RenderTarget& target, const gf::RenderStates& states) {
     gf::Sprite sprite(m_texture, gf::RectF(TileScale * gf::Vector2u(1, 1), TileScale));
     sprite.setAnchor(gf::Anchor::Center);
     sprite.setRotation(m_body.getAngle());
     sprite.setPosition(m_body.getPosition());
 
-    target.draw(sprite);
+    target.draw(sprite, states);
 
 //     m_body.render(target);
   }
@@ -165,8 +167,9 @@ namespace brfd {
     m_body.setLinearDamping(5.0f);
   }
 
-  void StaticCar::update(float dt) {
-    (void) dt;
+  void StaticCar::update(gf::Time time) {
+    gf::unused(time);
+
     float angle = m_body.getAngle();
     gf::Vector2f velocity = m_body.getLinearVelocity();
     gf::Vector2f normal = gf::unit(angle + gf::Pi2);

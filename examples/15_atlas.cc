@@ -50,12 +50,12 @@ int main() {
   atlas.setTexture(texture);
 
   gf::Sprite brickRed06;
-  brickRed06.setTexture(*atlas.getTexture());
+  brickRed06.setTexture(atlas.getTexture());
   brickRed06.setTextureRect(atlas.getTextureRect("brickRed06.png"));
   brickRed06.setPosition({ 200.0f, 200.0f });
 
   gf::Sprite brickBlack01;
-  brickBlack01.setTexture(*atlas.getTexture());
+  brickBlack01.setTexture(atlas.getTexture());
   brickBlack01.setTextureRect(atlas.getTextureRect("brickBlack01.png"));
   brickBlack01.setPosition({ 200.0f, 176.0f });
 
@@ -71,6 +71,12 @@ int main() {
       switch (event.type) {
         case gf::EventType::Closed:
           window.close();
+          break;
+
+        case gf::EventType::KeyPressed:
+          if (event.key.scancode == gf::Scancode::Escape) {
+            window.close();
+          }
           break;
 
         default:

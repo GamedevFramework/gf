@@ -455,13 +455,13 @@ namespace brfd {
     }
   }
 
-  void Level::update(float dt) {
+  void Level::update(gf::Time time) {
     for (auto& car : m_cars) {
-      car.update(dt);
+      car.update(time);
     }
   }
 
-  void Level::render(gf::RenderTarget& target) {
+  void Level::render(gf::RenderTarget& target, const gf::RenderStates& states) {
     target.draw(m_layer);
 
     gf::SpriteBatch batch(target);
@@ -472,7 +472,7 @@ namespace brfd {
       sprite.setAnchor(gf::Anchor::Center);
       sprite.setPosition(car.getBody().getPosition());
       sprite.setRotation(car.getBody().getAngle());
-      batch.draw(sprite);
+      batch.draw(sprite, states);
     }
 
     batch.end();

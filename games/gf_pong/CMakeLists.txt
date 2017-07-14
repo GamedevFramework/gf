@@ -1,12 +1,18 @@
-
-add_executable(gf_pong
-  gf_pong.cc
-  local/Ball.cc
-  local/Ground.cc
-  local/Paddle.cc
-  local/Points.cc
-  local/Singletons.cc
-)
+if (GF_SINGLE_COMPILTATION_UNIT)
+  add_executable(gf_pong
+    gf_pong.cc
+    XUnityBuild.cc
+  )
+else()
+  add_executable(gf_pong
+    gf_pong.cc
+    local/Ball.cc
+    local/Ground.cc
+    local/Paddle.cc
+    local/Points.cc
+    local/Singletons.cc
+  )
+endif()
 
 target_include_directories(gf_pong
   PRIVATE

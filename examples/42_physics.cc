@@ -62,12 +62,12 @@ public:
     return m_body;
   }
 
-  virtual void render(gf::RenderTarget &target) override {
+  virtual void render(gf::RenderTarget &target, const gf::RenderStates& states) override {
     gf::RectangleShape shape({ SideLength, SideLength });
     shape.setColor(gf::Color::Azure);
     shape.setPosition(m_body.getPosition());
     shape.setAnchor(gf::Anchor::Center);
-    target.draw(shape);
+    target.draw(shape, states);
 
 //     m_body.render(target);
   }
@@ -92,12 +92,12 @@ public:
     return m_body;
   }
 
-  virtual void render(gf::RenderTarget &target) override {
+  virtual void render(gf::RenderTarget &target, const gf::RenderStates& states) override {
     gf::CircleShape shape(Radius);
     shape.setColor(gf::Color::Orange);
     shape.setPosition(m_body.getPosition());
     shape.setAnchor(gf::Anchor::Center);
-    target.draw(shape);
+    target.draw(shape, states);
 
 //     m_body.render(target);
   }
@@ -126,17 +126,17 @@ public:
     m_entities.clear();
   }
 
-  void update(float dt) {
-    m_fixed.update(dt);
+  void update(gf::Time time) {
+    m_fixed.update(time);
 
     for (auto& entity : m_entities) {
-      entity->update(dt);
+      entity->update(time);
     }
   }
 
-  void render(gf::RenderTarget& target) {
+  void render(gf::RenderTarget& target, const gf::RenderStates& states = gf::RenderStates()) {
     for (auto& entity : m_entities) {
-      entity->render(target);
+      entity->render(target, states);
     }
   }
 
@@ -320,8 +320,8 @@ int main() {
       }
     }
 
-    float dt = clock.restart().asSeconds();
-    world.update(dt);
+    gf::Time time = clock.restart();
+    world.update(time);
 
     renderer.clear();
     world.render(renderer);

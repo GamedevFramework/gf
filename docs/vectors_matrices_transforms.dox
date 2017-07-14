@@ -2,5 +2,65 @@
 
 @page vectors_matrices_transforms Vectors, matrices and transforms
 
+@tableofcontents
+
+gf provides a generic gf::Vector type and a generic gf::Matrix type that are used throughout the library.
+
+@section vmt_vectors Vectors
+
+@subsection vmt_vector_types Vector types
+
+A gf::Vector represents a [mathematical vector](https://en.wikipedia.org/wiki/Euclidean_vector) in a @f$ N @f$-dimensional space. It has a broad range of applications. The most obvious is to represent the position of an object in the world space but it's not the only one.
+
+~~~{.cc}
+#include <gf/Vector.h>
+~~~
+
+The gf::Vector type is totally generic regarding its type but also its dimension @f$ N @f$.
+
+
+
+@subsection vmt_vectors_ops Operations on vectors
+
+~~~{.cc}
+#include <gf/VectorOps.h>
+~~~
+
+gf defines common mathematical operators for two vectors but also for a vector and a scalar. In each case, type conversion is made if necessary, following the usual rules of the language. The following table gives the semantics of the main operations between two vectors @f$ \mathbf{a} @f$ and @f$ \mathbf{b} @f$, or between a vector @f$ \mathbf{a} @f$ and a scalar @f$ \lambda @f$. These operations are all defined component-wise.
+
+| @f$ \bullet @f$ | @f$ \mathbf{a} \bullet \mathbf{b} @f$ | @f$ \mathbf{a} \bullet \lambda @f$ | @f$ \lambda \bullet \mathbf{a} @f$ |
+|:---------------:|:-------------------------------------:|:----------------------------------:|:----------------------------------:|
+| @f$ + @f$       | @f$ a_i + b_i @f$                     | @f$ a_i + \lambda @f$              | @f$ \lambda + a_i @f$              |
+| @f$ - @f$       | @f$ a_i - b_i @f$                     | @f$ a_i - \lambda @f$              | @f$ \lambda - a_i @f$              |
+| @f$ * @f$       | @f$ a_i * b_i @f$                     | @f$ a_i * \lambda @f$              | @f$ \lambda * a_i @f$              |
+| @f$ / @f$       | @f$ a_i / b_i @f$                     | @f$ a_i / \lambda @f$              | @f$ \lambda / a_i @f$              |
+
+
+
+gf also defines equality and inequality operators for vectors.
+
+@subsection vmt_vectors_functions Functions on vectors
+
+~~~{.cc}
+#include <gf/VectorOps.h>
+~~~
+
+
+
+@section vmt_matrices Matrices
+
+
+@section vmt_transforms Transforms
+
+@subsection vmt_simple_transformation Simple transformation
+
+A simple transformation in gf is a rotation followed by a translation. A simple rotation is represented by the gf::Rotation type, a simple translation is represented by the gf::Translation type, and the simple transformation is represented by the gf::Transform type.
+
+These simple transformations are useful in the physics engine.
+
+@subsection vmt_affine_transformation Affine transformation
+
+You can define a generic affine transformation in 2D with a [transformation matrix](https://en.wikipedia.org/wiki/Transformation_matrix) thanks to the gf::Matrix3f type.
+
 
 */

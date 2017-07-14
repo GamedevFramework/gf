@@ -33,6 +33,8 @@ namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
 #endif
+  struct Event;
+  class RenderTarget;
 
   /**
    * @ingroup graphics
@@ -149,7 +151,7 @@ inline namespace v1 {
      */
     void setSize(Vector2f size) {
       m_size = size;
-      onWorldResize(m_size);
+      onSizeChange(m_size);
     }
 
     /**
@@ -207,9 +209,7 @@ inline namespace v1 {
      *
      * @sa getViewport()
      */
-    void setViewport(const RectF& viewport) {
-      m_viewport = viewport;
-    }
+    void setViewport(const RectF& viewport);
 
     /**
      * @brief Get the target viewport rectangle of the view
@@ -311,14 +311,14 @@ inline namespace v1 {
 
   protected:
     /**
-     * @brief Set the world size, without calling onWorldResize()
+     * @brief Set the world size, without calling onSizeChange()
      *
      * This function is meant for adaptative views so that they can
      * adapt the world size without having a callback infinite loop.
      *
      * @param size The new world size
      */
-    void setWorldSize(Vector2f size) {
+    void setSizeNoCallback(Vector2f size) {
       m_size = size;
     }
 
@@ -327,9 +327,26 @@ inline namespace v1 {
      *
      * This callback is called when setSize() is called.
      *
-     * @param worldSize The new size of the visible world
+     * @param size The new size of the visible world
      */
-    virtual void onWorldResize(Vector2f worldSize);
+    virtual void onSizeChange(Vector2f size);
+
+    /**
+     * @brief Set the viewport, without calling onViewportChange()
+     *
+     * This function is meant for adaptative views so that they can
+     * adapt the viewport without having a callback infinite loop.
+     *
+     * @param viewport The new viewport
+     */
+    void setViewportNoCallback(const RectF& viewport);
+
+    /**
+     * @brief Callback when the viewport has just been changed
+     *
+     * @param viewport The new viewport
+     */
+    virtual void onViewportChange(const RectF& viewport);
 
   private:
     Vector2f m_center;
@@ -399,19 +416,53 @@ inline namespace v1 {
     }
 
     /**
-     * @brief Callback when the screen has just been resized
-     *
-     * @param screenSize The new size of the screen
-     */
-    virtual void onScreenResize(Vector2u screenSize) = 0;
-
-    /**
      * @brief Set the initial screen size
      *
      * @param screenSize The initial size of the screen
      */
     void setInitialScreenSize(Vector2u screenSize);
 
+    /**
+     * @brief Callback when the screen has just been resized
+     *
+     * @param screenSize The new size of the screen
+     */
+    virtual void onScreenSizeChange(Vector2u screenSize) = 0;
+
+  };
+
+  /**
+   * @ingroup graphics
+   * @brief A view adaptor for zooming/moving with the mouse
+   */
+  class GF_API ZoomingViewAdaptor {
+  public:
+    /**
+     * @brief Constructor
+     *
+     * @param target The rendering target
+     * @param view The original view to zoom/move
+     */
+    ZoomingViewAdaptor(const RenderTarget& target, View& view);
+
+    /**
+     * @brief Update the original view thanks to the event
+     *
+     * @param event An event
+     */
+    void processEvent(const Event& event);
+
+  private:
+    const RenderTarget& m_target;
+    View& m_view;
+    gf::Vector2i m_mousePosition;
+
+    enum class State {
+      Stationary,
+      Moving,
+    };
+
+    State m_state;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

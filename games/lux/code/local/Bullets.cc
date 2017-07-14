@@ -21,6 +21,7 @@
 
 #include <gf/Sprite.h>
 #include <gf/RenderTarget.h>
+#include <gf/Unused.h>
 #include <gf/VectorOps.h>
 
 #include "Messages.h"
@@ -69,11 +70,13 @@ namespace lux {
     m_bullets.push_back(bullet);
   }
 
-  static constexpr float Extra = 100.0f;
+  static constexpr float BulletsExtra = 100.0f;
 
-  void Bullets::update(float dt) {
+  void Bullets::update(gf::Time time) {
+    float dt = time.asSeconds();
+
     gf::RectF view(WorldCenter - WorldSize / 2, WorldSize);
-    view.extend(Extra);
+    view.extend(BulletsExtra);
 
     for (Bullet& bullet : m_bullets) {
       bullet.position += bullet.velocity * dt;
@@ -86,24 +89,24 @@ namespace lux {
     m_bullets.erase(std::remove_if(m_bullets.begin(), m_bullets.end(), [](const Bullet& b) { return !b.active; }), m_bullets.end());
   }
 
-  void Bullets::render(gf::RenderTarget& target) {
+  void Bullets::render(gf::RenderTarget& target, const gf::RenderStates& states) {
     for (Bullet& bullet : m_bullets) {
       gf::Sprite sprite;
       sprite.setTexture(*bullet.texture);
       sprite.setPosition(bullet.position);
       sprite.setAnchor(gf::Anchor::Center);
-      target.draw(sprite);
+      target.draw(sprite, states);
     }
   }
 
-  static constexpr bool isTargetReached(gf::Vector2f shipPos, gf::Vector2f bulletPos) {
+  static constexpr bool isTargetReachedByBullet(gf::Vector2f shipPos, gf::Vector2f bulletPos) {
     return shipPos.x - 30.0f <= bulletPos.x && bulletPos.x <= shipPos.x + 30.0f
         && shipPos.y - 30.0f <= bulletPos.y && bulletPos.y <= shipPos.y + 30.0f;
   }
 
 
   gf::MessageStatus Bullets::onLocation(gf::Id id, gf::Message *msg) {
-    (void) id;
+    gf::unused(id);
 
     auto loc = static_cast<LocationMessage*>(msg);
 
@@ -112,7 +115,7 @@ namespace lux {
         continue;
       }
 
-      if (isTargetReached(loc->position, bullet.position)) {
+      if (isTargetReachedByBullet(loc->position, bullet.position)) {
         loc->ship->impact(10.0f);
         bullet.active = false;
       }
@@ -122,7 +125,7 @@ namespace lux {
   }
 
   gf::MessageStatus Bullets::onShoot(gf::Id id, gf::Message *msg) {
-    (void) id;
+    gf::unused(id);
 
     auto shoot = static_cast<ShootMessage *>(msg);
 

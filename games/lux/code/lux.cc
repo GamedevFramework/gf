@@ -41,6 +41,9 @@ int main() {
   // initialization
 
   gf::Window window("Lux - Year of Light", ScreenSize);
+  window.setVerticalSyncEnabled(true);
+  window.setFramerateLimit(60);
+
   gf::RenderWindow renderer(window);
 
   // resources
@@ -147,9 +150,9 @@ int main() {
 
     // 2. update
 
-    float dt = clock.restart().asSeconds();
-    mainEntities.update(dt);
-    hudEntities.update(dt);
+    gf::Time time = clock.restart();
+    mainEntities.update(time);
+    hudEntities.update(time);
 
 
     // 3. draw

@@ -22,6 +22,7 @@
 
 #include <gf/RenderTarget.h>
 #include <gf/Shapes.h>
+#include <gf/Unused.h>
 
 #include "Ball.h"
 #include "Ground.h"
@@ -36,7 +37,9 @@ Paddle::Paddle(Location loc)
   gMessageManager().registerHandler<BallLocationMessage>(&Paddle::onBallLocation, this);
 }
 
-void Paddle::update(float dt) {
+void Paddle::update(gf::Time time) {
+  float dt = time.asSeconds();
+
   switch (m_move) {
     case Move::Up:
       if (m_position.y > - (Ground::Height - Height) / 2) {
@@ -58,7 +61,7 @@ void Paddle::update(float dt) {
 }
 
 gf::MessageStatus Paddle::onBallLocation(gf::Id id, gf::Message *msg) {
-  (void) id; // not used
+  gf::unused(id);
 
   auto loc = static_cast<BallLocationMessage*>(msg);
 
@@ -79,10 +82,10 @@ gf::MessageStatus Paddle::onBallLocation(gf::Id id, gf::Message *msg) {
   return gf::MessageStatus::Keep;
 }
 
-void Paddle::render(gf::RenderTarget& target) {
+void Paddle::render(gf::RenderTarget& target, const gf::RenderStates& states) {
   gf::RectangleShape shape({ Width, Height });
   shape.setAnchor(gf::Anchor::Center);
   shape.setPosition(m_position);
   shape.setColor(m_location == Location::Left ? gf::Color::Orange : gf::Color::Azure);
-  target.draw(shape);
+  target.draw(shape, states);
 }
