@@ -712,16 +712,6 @@ inline namespace v1 {
     return nk_filter_default;
   }
 
-  template<typename E>
-  static constexpr Flags<E> combineFlags(E flag) {
-    return Flags<E>(flag);
-  }
-
-  template<typename E, typename ... F>
-  static constexpr Flags<E> combineFlags(E flag, F ... others) {
-    return Flags<E>(flag) | combineFlags(others ...);
-  }
-
   const UIEditFlags UIEditType::Simple =
       UIEdit::AlwaysInsertMode;
 
@@ -783,7 +773,7 @@ inline namespace v1 {
 
     assert(boost::filesystem::is_directory(browser.currentPath));
 
-    if (!popupBegin(UIPopup::Dynamic, title, UIWindowFlags(UIWindow::Border) | UIWindow::Title | UIWindow::Closable, bounds)) {
+    if (!popupBegin(UIPopup::Dynamic, title, combineFlags(UIWindow::Border, UIWindow::Title, UIWindow::Closable), bounds)) {
       return false;
     }
 

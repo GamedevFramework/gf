@@ -268,6 +268,32 @@ inline namespace v1 {
     return Flags<E>(lhs) & rhs;
   }
 
+
+  /**
+   * @relates Flags
+   * @brief Combine a single enum value into a flag value
+   *
+   * @param flag An enum value
+   * @returns The enum value turned into a flag value
+   */
+  template<typename E>
+  constexpr Flags<E> combineFlags(E flag) {
+    return Flags<E>(flag);
+  }
+
+  /**
+   * @relates Flags
+   * @brief Combine several enum values into a flag value
+   *
+   * @param flag An enum value
+   * @param others The other enum values
+   * @returns The enum values turned into a flag value
+   */
+  template<typename E, typename ... F>
+  constexpr Flags<E> combineFlags(E flag, F ... others) {
+    return Flags<E>(flag) | combineFlags(others ...);
+  }
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif
