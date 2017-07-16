@@ -534,7 +534,7 @@ inline namespace v1 {
      *
      * @return A range with all the rows
      */
-    constexpr RangeU getRowRange() const noexcept {
+    constexpr Range<I> getRowRange() const noexcept {
       return { 0, m_size.row };
     }
 
@@ -543,7 +543,7 @@ inline namespace v1 {
      *
      * @return A range with all the columns
      */
-    constexpr RangeU getColRange() const noexcept {
+    constexpr Range<I> getColRange() const noexcept {
       return { 0, m_size.col };
     }
 
