@@ -78,12 +78,12 @@ int main() {
           break;
 
         case gf::EventType::MouseMoved:
-          end = renderer.mapPixelToCoords(event.mouseCursor.coords / CellSize);
+          end = renderer.mapPixelToCoords(event.mouseCursor.coords) / CellSize;
           points = gf::generateLine(start, end);
           break;
 
         case gf::EventType::MouseButtonPressed:
-          start = renderer.mapPixelToCoords(event.mouseButton.coords / CellSize);
+          start = renderer.mapPixelToCoords(event.mouseButton.coords) / CellSize;
           points = gf::generateLine(start, end);
           break;
 
