@@ -71,13 +71,24 @@ inline namespace v1 {
       }
 
       /**
-       * @brief Increment operator
+       * @brief Increment operator (prefix)
        *
        * @return The iterator
        */
       Iterator& operator++() noexcept {
         ++index;
         return *this;
+      }
+
+      /**
+       * @brief Increment operator (postfix)
+       *
+       * @return The iterator
+       */
+      Iterator operator++(int) noexcept {
+        Iterator copy = *this;
+        ++index;
+        return copy;
       }
 
       /**
@@ -99,6 +110,7 @@ inline namespace v1 {
       constexpr bool operator==(const Iterator& other) const noexcept {
         return index == other.index;
       }
+
     };
 
     /**
