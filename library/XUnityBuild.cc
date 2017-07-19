@@ -63,6 +63,7 @@
 #include "Library.cc"
 #include "Log.cc"
 #include "Logo.cc"
+#include "Map.cc"
 #include "Math.cc"
 #include "Matrix.cc"
 #include "MessageManager.cc"

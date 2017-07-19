@@ -93,6 +93,7 @@ else()
     Library.cc
     Log.cc
     Logo.cc
+    Map.cc
     Math.cc
     Matrix.cc
     MessageManager.cc
@@ -210,11 +211,11 @@ install(
 
 if(WIN32)
   install(
-    TARGETS gf0 
+    TARGETS gf0
     RUNTIME DESTINATION "${CMAKE_INSTALL_DOCDIR}/examples"
   )
   install(
-    TARGETS gf0 
+    TARGETS gf0
     RUNTIME DESTINATION games
   )
 endif()
