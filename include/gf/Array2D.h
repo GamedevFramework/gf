@@ -52,16 +52,17 @@ inline namespace v1 {
      */
     struct Iterator : public std::iterator<std::input_iterator_tag, T> {
       Range<T> range;
-      Vector<T, 2> index;
+      Vector<T, 2> position;
 
       /**
        * @brief Constructor
        *
-       * @param iteratorIndex Index in the range
+       * @param iteratorRange The range in the first dimension
+       * @param iteratorPosition The current position in 2D
        */
-      constexpr Iterator(Range<T> iteratorRange, Vector<T, 2> iteratorIndex) noexcept
+      constexpr Iterator(Range<T> iteratorRange, Vector<T, 2> iteratorPosition) noexcept
       : range(iteratorRange)
-      , index(iteratorIndex)
+      , position(iteratorPosition)
       {
 
       }
@@ -69,10 +70,10 @@ inline namespace v1 {
       /**
        * @brief Dereference operator
        *
-       * @return The index
+       * @return The position
        */
       Vector<T, 2> operator*() noexcept {
-        return index;
+        return position;
       }
 
       /**
@@ -103,7 +104,7 @@ inline namespace v1 {
        * @return True if the iterator are different
        */
       constexpr bool operator!=(const Iterator& other) const noexcept {
-        return index != other.index;
+        return position != other.position;
       }
 
       /**
@@ -113,16 +114,16 @@ inline namespace v1 {
        * @return True if the iterator are the same
        */
       constexpr bool operator==(const Iterator& other) const noexcept {
-        return index == other.index;
+        return position == other.position;
       }
 
     private:
       void step() {
-        ++index.x;
+        ++position.x;
 
-        if (index.x == range.hi) {
-          index.x = range.lo;
-          ++index.y;
+        if (position.x == range.hi) {
+          position.x = range.lo;
+          ++position.y;
         }
       }
     };
