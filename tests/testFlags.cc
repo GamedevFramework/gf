@@ -179,6 +179,8 @@ TEST(FlagsTest, FlagsNot) {
 }
 
 TEST(FlagsTest, EnumOr) {
+  using gf::operator|;
+
   gf::Flags<Foo> foo = Foo1 | Foo2;
   ASSERT_TRUE(foo);
   ASSERT_TRUE(foo.test(Foo1));
@@ -211,6 +213,8 @@ namespace gf {
 }
 
 TEST(FlagsTest, Example) {
+  using gf::operator|;
+
   gf::Flags<AnimalProperties> seahawk = AnimalProperties::CanFly | AnimalProperties::EatsFish;
   seahawk |= AnimalProperties::IsEndangered;
 

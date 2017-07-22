@@ -296,39 +296,40 @@ inline namespace v1 {
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
-#endif
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-// this traits is not versioned to ease external usage
+
+// this traits is not versioned
+
 template<typename E>
 struct EnableBitmaskOperators {
   static constexpr bool value = false;
 };
-#endif
 
-}
+// these overloads are only available to gf enum types and gf flags
+// unless you add: "using gf::operator|;"
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
 template<typename E>
 constexpr
-typename std::enable_if<gf::EnableBitmaskOperators<E>::value, gf::Flags<E>>::type
+typename std::enable_if<EnableBitmaskOperators<E>::value, gf::Flags<E>>::type
 operator|(E lhs, E rhs) {
   return gf::Flags<E>(lhs) | gf::Flags<E>(rhs);
 }
 
 template<typename E>
 constexpr
-typename std::enable_if<gf::EnableBitmaskOperators<E>::value, gf::Flags<E>>::type
+typename std::enable_if<EnableBitmaskOperators<E>::value, gf::Flags<E>>::type
 operator&(E lhs, E rhs) {
   return gf::Flags<E>(lhs) & gf::Flags<E>(rhs);
 }
 
 template<typename E>
 constexpr
-typename std::enable_if<gf::EnableBitmaskOperators<E>::value, gf::Flags<E>>::type
+typename std::enable_if<EnableBitmaskOperators<E>::value, gf::Flags<E>>::type
 operator~(E val) {
   return ~gf::Flags<E>(val);
 }
+
 #endif
+}
 
 #endif // GF_FLAGS_H

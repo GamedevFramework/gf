@@ -50,17 +50,6 @@ inline namespace v1 {
    */
   using Modifiers = Flags<Mod>;
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-}
-
-template<>
-struct EnableBitmaskOperators<Modifiers> {
-  static constexpr bool value = true;
-};
-
-inline namespace v1 {
-#endif
-
   /**
    * @ingroup window
    * @brief Scancodes
@@ -560,6 +549,12 @@ inline namespace v1 {
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+
+template<>
+struct EnableBitmaskOperators<Modifiers> {
+  static constexpr bool value = true;
+};
+
 #endif
 }
 
