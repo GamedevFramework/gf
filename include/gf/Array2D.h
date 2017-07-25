@@ -104,7 +104,7 @@ inline namespace v1 {
        * @return True if the iterator are different
        */
       constexpr bool operator!=(const Iterator& other) const noexcept {
-        return position != other.position;
+        return position.x != other.position.x || position.y != other.position.y;
       }
 
       /**
@@ -114,7 +114,7 @@ inline namespace v1 {
        * @return True if the iterator are the same
        */
       constexpr bool operator==(const Iterator& other) const noexcept {
-        return position == other.position;
+        return position.x == other.position.x && position.y == other.position.y;
       }
 
     private:
