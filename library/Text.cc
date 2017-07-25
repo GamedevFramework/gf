@@ -333,7 +333,7 @@ inline namespace v1 {
         Line currentLine;
         float currentWidth = 0.0f;
 
-        for (auto& word : words) {
+        for (const auto& word : words) {
           float wordWith = getWordWidth(word);
 
           if (!currentLine.words.empty() && currentWidth + spaceWidth + wordWith > m_paragraphWidth) {
