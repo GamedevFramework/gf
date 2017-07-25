@@ -40,7 +40,7 @@ inline namespace v1 {
   enum class CellProperty : uint8_t {
     Transparent = 0x01, ///< The cell is transparent
     Walkable    = 0x02, ///< The cell is walkable
-    Visible     = 0x04, ///< The cell is visible (computed by FoV)
+    Visible     = 0x10, ///< The cell is visible (computed by FoV)
   };
 
   /**
