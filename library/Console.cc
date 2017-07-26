@@ -50,13 +50,13 @@ inline namespace v1 {
 
   namespace {
 
-    struct Line {
+    struct ConsoleLine {
       std::vector<std::string> words;
       int indent;
     };
 
-    struct Paragraph {
-      std::vector<Line> lines;
+    struct ConsoleParagraph {
+      std::vector<ConsoleLine> lines;
     };
 
   }
@@ -110,16 +110,16 @@ inline namespace v1 {
 
   // adaptation of the algorithm in gf::Text
 
-  static std::vector<Paragraph> makeParagraphs(const std::string& message, ConsoleAlignment alignment, int paragraphWidth) {
+  static std::vector<ConsoleParagraph> makeParagraphs(const std::string& message, ConsoleAlignment alignment, int paragraphWidth) {
     std::vector<std::string> paragraphs = splitInParagraphs(message);
-    std::vector<Paragraph> out;
+    std::vector<ConsoleParagraph> out;
 
     for (const auto& simpleParagraph : paragraphs) {
       std::vector<std::string> words = splitInWords(simpleParagraph);
 
-      Paragraph paragraph;
+      ConsoleParagraph paragraph;
 
-      Line currentLine;
+      ConsoleLine currentLine;
       int currentWidth = 0;
 
       for (const auto& word : words) {
