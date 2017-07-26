@@ -135,7 +135,7 @@ int main() {
   std::cout << '\n';
 
   gf::SquareMap map({ GridSize, GridSize });
-  gf::SquareGrid grid({ GridSize, GridSize }, { CellSize, CellSize }, gf::Color::Azure);
+  gf::SquareGrid grid(gf::Vector2u(GridSize, GridSize), { CellSize, CellSize }, gf::Color::Azure);
 
   // build a map
 
