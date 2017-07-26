@@ -116,7 +116,7 @@ int main() {
   static constexpr std::size_t DiagonalCostsCount = 3;
   static constexpr float DiagonalCosts[DiagonalCostsCount] = { 0.0f, 1.0f, gf::Sqrt2 };
 
-  gf::Window window("26_map", { Size, Size }, ~gf::WindowHints::Resizable);
+  gf::Window window("26_map", gf::Vector2u(Size, Size), ~gf::WindowHints::Resizable);
   gf::RenderWindow renderer(window);
 
   std::cout << "Gamedev Framework (gf) example #26: Map\n";
