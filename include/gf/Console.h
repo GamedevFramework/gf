@@ -358,7 +358,7 @@ inline namespace v1 {
    *
    * @sa gf::Console
    */
-  class ConsoleEffect {
+  class GF_API ConsoleEffect {
   public:
 
     /**
