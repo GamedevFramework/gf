@@ -39,6 +39,7 @@
 #include "Collision.cc"
 #include "Color.cc"
 #include "ColorRamp.cc"
+#include "Console.cc"
 #include "Control.cc"
 #include "Controls.cc"
 #include "Coordinates.cc"
