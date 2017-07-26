@@ -69,6 +69,7 @@ else()
     Collision.cc
     Color.cc
     ColorRamp.cc
+    Console.cc
     Control.cc
     Controls.cc
     Coordinates.cc
