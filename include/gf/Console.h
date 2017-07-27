@@ -925,6 +925,17 @@ inline namespace v1 {
      * @}
      */
 
+    /**
+     * @brief Blit a console on another console
+     *
+     * @param src The source rectangle on the source console
+     * @param con The destination console
+     * @param dst The destination position on the destination console
+     * @param foregroundAlpha The alpha of the blitted console foreground color, 0 is a completely transparent source console and 1 is a completely opaque source console
+     * @param backgroundAlpha The alpha of the blitted console background color, 0 is a completely transparent source console and 1 is a completely opaque source console
+     */
+    void blit(const RectI& src, Console& con, Vector2i dst, float foregroundAlpha = 1.0f, float backgroundAlpha = 1.0f) const;
+
     virtual void draw(RenderTarget& target, RenderStates states) override;
 
   private:

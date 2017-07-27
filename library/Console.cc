@@ -868,6 +868,86 @@ inline namespace v1 {
     std::swap(m_background, m_foreground);
   }
 
+  void Console::blit(const RectI& src, Console& con, Vector2i dst, float foregroundAlpha, float backgroundAlpha) const {
+    Vector2i origin = src.position;
+    Vector2i size = src.size;
+    Vector2i target = dst;
+
+    // clip source
+
+    if (origin.x < 0) {
+      size.width += origin.x;
+      target.x -= origin.x;
+      origin.x = 0;
+    }
+
+    int maxWidth = getWidth() - origin.x;
+
+    if (size.width > maxWidth) {
+      size.width = maxWidth;
+    }
+
+    if (origin.y < 0) {
+      size.height += origin.y;
+      target.y -= origin.y;
+      origin.y = 0;
+    }
+
+    int maxHeight = getHeight() - origin.y;
+
+    if (size.height > maxHeight) {
+      size.height = maxHeight;
+    }
+
+    // clip destination
+
+    if (target.x < 0) {
+      size.width += target.x;
+      origin.x -= target.x;
+      target.x = 0;
+    }
+
+    int dx = target.x + size.width - con.getWidth();
+
+    if (dx > 0) {
+      size.width -= dx;
+    }
+
+    if (target.y < 0) {
+      size.height += target.y;
+      origin.y -= target.y;
+      target.y = 0;
+    }
+
+    int dy = target.y + size.height - con.getHeight();
+
+    if (dy > 0) {
+      size.height -= dy;
+    }
+
+    if (size.width <= 0 || size.height <= 0) {
+      return;
+    }
+
+    // blit
+
+    Vector2i offset;
+
+    for (offset.y = 0; offset.y < size.height; ++offset.y) {
+      for (offset.x = 0; offset.x < size.width; ++offset.x) {
+        assert(con.m_data.isValid(target + offset));
+        assert(m_data.isValid(origin + offset));
+
+        auto& targetCell = con.m_data(target + offset);
+        auto& originCell = m_data(origin + offset);
+
+        targetCell.bg = gf::lerp(targetCell.bg, originCell.bg, backgroundAlpha);
+        targetCell.fg = gf::lerp(targetCell.fg, originCell.fg, foregroundAlpha);
+        targetCell.c = originCell.c;
+      }
+    }
+
+  }
 
   void Console::draw(RenderTarget& target, RenderStates states) {
     if (m_font == nullptr) {
