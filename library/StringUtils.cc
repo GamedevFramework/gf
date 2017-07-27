@@ -24,6 +24,7 @@
 #include <cmath>
 
 #include <algorithm>
+#include <memory>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -120,6 +121,33 @@ inline namespace v1 {
     }
 
     return out;
+  }
+
+  std::string formatString(const char *fmt, ...) {
+    va_list ap;
+    va_start(ap, fmt);
+    std::string res = formatString(fmt, ap);
+    va_end(ap);
+    return res;
+  }
+
+  std::string formatString(const char *fmt, va_list ap) {
+    if (fmt == nullptr) {
+      return "";
+    }
+
+    va_list test;
+    va_copy(test, ap);
+
+    int size = std::vsnprintf(nullptr, 0, fmt, test);
+    assert(size > 0);
+
+    ++size; // for '\0'
+
+    std::unique_ptr<char[]> buffer(new char[size]);
+    std::vsnprintf(buffer.get(), size, fmt, ap);
+
+    return std::string(buffer.get());
   }
 
 

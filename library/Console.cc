@@ -32,6 +32,7 @@
 #include <gf/Color.h>
 #include <gf/Image.h>
 #include <gf/RenderTarget.h>
+#include <gf/StringUtils.h>
 #include <gf/VectorOps.h>
 #include <gf/VertexArray.h>
 
@@ -632,25 +633,6 @@ inline namespace v1 {
     return width;
   }
 
-  static std::string computeString(const char *fmt, va_list ap) {
-    if (fmt == nullptr) {
-      return "";
-    }
-
-    va_list test;
-    va_copy(test, ap);
-
-    int size = std::vsnprintf(nullptr, 0, fmt, test);
-    assert(size > 0);
-
-    ++size; // for '\0'
-
-    std::unique_ptr<char[]> buffer(new char[size]);
-    std::vsnprintf(buffer.get(), size, fmt, ap);
-
-    return std::string(buffer.get());
-  }
-
   int Console::printInternal(const RectI& rect, ConsoleEffect effect, ConsoleAlignment alignment, const std::string& message, PrintOptionFlags flags) {
     // checks
     Vector2i consoleSize = m_data.getSize();
@@ -752,7 +734,7 @@ inline namespace v1 {
   void Console::print(Vector2i position, const char *fmt, ...) {
     va_list ap;
     va_start(ap, fmt);
-    auto message = computeString(fmt, ap);
+    auto message = formatString(fmt, ap);
     va_end(ap);
 
     printInternal(RectI(position, { 0, 0 }), m_effect, m_alignment, message);
@@ -761,7 +743,7 @@ inline namespace v1 {
   void Console::print(Vector2i position, ConsoleEffect effect, ConsoleAlignment alignment, const char *fmt, ...) {
     va_list ap;
     va_start(ap, fmt);
-    auto message = computeString(fmt, ap);
+    auto message = formatString(fmt, ap);
     va_end(ap);
 
     printInternal(RectI(position, { 0, 0 }), effect, alignment, message);
@@ -770,7 +752,7 @@ inline namespace v1 {
   int Console::printRect(const RectI& rect, const char *fmt, ...) {
     va_list ap;
     va_start(ap, fmt);
-    auto message = computeString(fmt, ap);
+    auto message = formatString(fmt, ap);
     va_end(ap);
 
     printInternal(rect, m_effect, m_alignment, message, PrintOption::Split);
@@ -780,7 +762,7 @@ inline namespace v1 {
   int Console::printRect(const RectI& rect, ConsoleEffect effect, ConsoleAlignment alignment, const char *fmt, ...) {
     va_list ap;
     va_start(ap, fmt);
-    auto message = computeString(fmt, ap);
+    auto message = formatString(fmt, ap);
     va_end(ap);
 
     printInternal(rect, effect, alignment, message, PrintOption::Split);
@@ -790,7 +772,7 @@ inline namespace v1 {
   int Console::getHeight(const RectI& rect, const char *fmt, ...) {
     va_list ap;
     va_start(ap, fmt);
-    auto message = computeString(fmt, ap);
+    auto message = formatString(fmt, ap);
     va_end(ap);
 
     printInternal(rect, m_effect, m_alignment, message, gf::Console::PrintOption::Split | gf::Console::PrintOption::CountOnly);
@@ -860,7 +842,7 @@ inline namespace v1 {
 
     va_list ap;
     va_start(ap, fmt);
-    auto message = computeString(fmt, ap);
+    auto message = formatString(fmt, ap);
     va_end(ap);
 
     std::swap(m_background, m_foreground);

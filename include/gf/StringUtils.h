@@ -21,6 +21,8 @@
 #ifndef GF_STRING_UTILS_H
 #define GF_STRING_UTILS_H
 
+#include <cstdarg>
+
 #include <string>
 
 #include "Portability.h"
@@ -50,6 +52,23 @@ inline namespace v1 {
    * @returns The corresponding UTF-32 string
    */
   GF_API std::u32string computeUnicodeString(const std::string& str);
+
+  /**
+   * @ingroup core
+   * @brief Format a string like printf
+   *
+   * @param fmt The [format string](http://en.cppreference.com/w/cpp/io/c/fprintf)
+   */
+  GF_API std::string formatString(const char *fmt, ...);
+
+  /**
+   * @ingroup core
+   * @brief Format a string like vprintf
+   *
+   * @param fmt The [format string](http://en.cppreference.com/w/cpp/io/c/fprintf)
+   * @param ap The arguments of the format string
+   */
+  GF_API std::string formatString(const char *fmt, va_list ap);
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
