@@ -147,27 +147,23 @@ inline namespace v1 {
 
   }
 
-  void SquareMap::computeFieldOfVision(Vector2i pos, int maxRadius, FieldOfVision algorithm) {
+  static void computeGenericFieldOfVision(Array2D<CellFlags, int>& cells, Vector2i pos, int maxRadius, FieldOfVision algorithm, CellFlags modification) {
     switch (algorithm) {
       case FieldOfVision::Basic:
-        computeBasicFov(m_cells, pos, maxRadius, CellProperty::Visible | CellProperty::Explored);
+        computeBasicFov(cells, pos, maxRadius, modification);
         break;
 
       default:
         break;
     }
+  }
 
+  void SquareMap::computeFieldOfVision(Vector2i pos, int maxRadius, FieldOfVision algorithm) {
+    computeGenericFieldOfVision(m_cells, pos, maxRadius, algorithm, CellProperty::Visible | CellProperty::Explored);
   }
 
   void SquareMap::computeLocalFieldOfVision(Vector2i pos, int maxRadius, FieldOfVision algorithm) {
-    switch (algorithm) {
-      case FieldOfVision::Basic:
-        computeBasicFov(m_cells, pos, maxRadius, CellProperty::Visible);
-        break;
-
-      default:
-        break;
-    }
+    computeGenericFieldOfVision(m_cells, pos, maxRadius, algorithm, CellProperty::Visible);
   }
 
   bool SquareMap::isInFieldOfVision(Vector2i pos) const {
