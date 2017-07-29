@@ -87,7 +87,13 @@ inline namespace v1 {
     }
   }
 
-  static void castRay(Array2D<CellFlags, int>& cells, Vector2i p0, Vector2i p1, int maxRadius2) {
+  void SquareMap::clearExplored() {
+    for (auto& cell : m_cells) {
+      cell.reset(CellProperty::Explored);
+    }
+  }
+
+  static void castRay(Array2D<CellFlags, int>& cells, Vector2i p0, Vector2i p1, int maxRadius2, CellFlags modification) {
     Bresenham bresenham(p0, p1);
     Vector2i curr;
 
@@ -105,14 +111,14 @@ inline namespace v1 {
       }
 
       if (cells(curr).test(CellProperty::Transparent)) {
-        cells(curr).set(CellProperty::Visible);
+        cells(curr) |= modification;
       } else {
         return;
       }
     }
   }
 
-  static void computeBasicFov(Array2D<CellFlags, int>& cells, Vector2i pos, int maxRadius) {
+  static void computeBasicFov(Array2D<CellFlags, int>& cells, Vector2i pos, int maxRadius, CellFlags modification) {
     RangeI xRange = cells.getColRange();
     RangeI yRange = cells.getRowRange();
 
@@ -127,16 +133,16 @@ inline namespace v1 {
       maxRadius2 = 0;
     }
 
-    cells(pos).set(CellProperty::Visible);
+    cells(pos) |= modification;
 
     for (auto x : xRange) {
-      castRay(cells, pos, { x, yRange.lo }, maxRadius2);
-      castRay(cells, pos, { x, yRange.hi }, maxRadius2);
+      castRay(cells, pos, { x, yRange.lo }, maxRadius2, modification);
+      castRay(cells, pos, { x, yRange.hi }, maxRadius2, modification);
     }
 
     for (auto y : yRange) {
-      castRay(cells, pos, { xRange.lo, y }, maxRadius2);
-      castRay(cells, pos, { xRange.hi, y }, maxRadius2);
+      castRay(cells, pos, { xRange.lo, y }, maxRadius2, modification);
+      castRay(cells, pos, { xRange.hi, y }, maxRadius2, modification);
     }
 
   }
@@ -144,7 +150,7 @@ inline namespace v1 {
   void SquareMap::computeFieldOfVision(Vector2i pos, int maxRadius, FieldOfVision algorithm) {
     switch (algorithm) {
       case FieldOfVision::Basic:
-        computeBasicFov(m_cells, pos, maxRadius);
+        computeBasicFov(m_cells, pos, maxRadius, CellProperty::Visible | CellProperty::Explored);
         break;
 
       default:
@@ -153,10 +159,24 @@ inline namespace v1 {
 
   }
 
+  void SquareMap::computeLocalFieldOfVision(Vector2i pos, int maxRadius, FieldOfVision algorithm) {
+    switch (algorithm) {
+      case FieldOfVision::Basic:
+        computeBasicFov(m_cells, pos, maxRadius, CellProperty::Visible);
+        break;
+
+      default:
+        break;
+    }
+  }
+
   bool SquareMap::isInFieldOfVision(Vector2i pos) const {
     return m_cells(pos).test(CellProperty::Visible);
   }
 
+  bool SquareMap::isExplored(Vector2i pos) const {
+    return m_cells(pos).test(CellProperty::Explored);
+  }
 
   /*
    * Route

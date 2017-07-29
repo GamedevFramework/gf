@@ -41,6 +41,7 @@ inline namespace v1 {
     Transparent = 0x01, ///< The cell is transparent
     Walkable    = 0x02, ///< The cell is walkable
     Visible     = 0x10, ///< The cell is visible (computed by FoV)
+    Explored    = 0x20, ///< The cell has been explored (computed by FoV)
   };
 
   /**
@@ -211,11 +212,22 @@ inline namespace v1 {
     void clearFieldOfVision();
 
     /**
+     * @brief Make the whole map not explored
+     *
+     * You should call this function before exploring a new map.
+     *
+     * @sa computeFieldOfVision()
+     */
+    void clearExplored();
+
+    /**
      * @brief Compute a field of vision
      *
      * The map is not cleared before computing the field of vision. The
      * algorithm use the transparent property of the cells. After calling this
      * function, some cells are marked visible.
+     *
+     * This algorithm marks visible cells as explored.
      *
      * @param pos The position of the entity
      * @param maxRadius The maximum radius that the entity can see
@@ -226,7 +238,26 @@ inline namespace v1 {
     void computeFieldOfVision(Vector2i pos, int maxRadius = 0, FieldOfVision algorithm = FieldOfVision::Basic);
 
     /**
-     * @brief Check if a cell if visible
+     * @brief Compute a local field of vision
+     *
+     * The map is not cleared before computing the field of vision. The
+     * algorithm use the transparent property of the cells. After calling this
+     * function, some cells are marked visible.
+     *
+     * This algorithm does not mark visible cells as explored. It can be used
+     * for computing an ennemy field of view without modifying the explored
+     * area of the hero.
+     *
+     * @param pos The position of the entity
+     * @param maxRadius The maximum radius that the entity can see
+     * @param algorithm The algorithm to use for computing the field of vision
+     *
+     * @sa clearFieldOfVision(), isInFieldOfVision()
+     */
+    void computeLocalFieldOfVision(Vector2i pos, int maxRadius = 0, FieldOfVision algorithm = FieldOfVision::Basic);
+
+    /**
+     * @brief Check if a cell is visible
      *
      * Cells can be made visible by computing a field of vision.
      *
@@ -235,6 +266,16 @@ inline namespace v1 {
      * @sa computeFieldOfVision()
      */
     bool isInFieldOfVision(Vector2i pos) const;
+
+    /**
+     * @brief Check if a cell is explored
+     *
+     * Cells are explored if they have been in the field of vision after a
+     * call to clearExplored().
+     *
+     * @sa computeFieldOfVision(), isInFieldOfVision()
+     */
+    bool isExplored(Vector2i pos) const;
 
     /**
      * @}

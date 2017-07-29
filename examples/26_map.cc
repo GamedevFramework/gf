@@ -127,6 +127,7 @@ int main() {
   std::cout << "How to use (Mode: FoV):\n";
   std::cout << "\tMouse move: Set the origin of the field of vision\n";
   std::cout << "\tR: Toggle max radius betwen 0 (no limit) and " << ExampleMaxRadius << '\n';
+  std::cout << "\tC: Clear the explored cells\n";
   std::cout << "How to use (Mode: Route):\n";
   std::cout << "\tMouse button: Set the first end point\n";
   std::cout << "\tMouse move: Set the second end point\n";
@@ -226,6 +227,12 @@ int main() {
               }
               break;
 
+            case gf::Keycode::C:
+              if (mode == Mode::FoV) {
+                map.clearExplored();
+              }
+              break;
+
             default:
               break;
           }
@@ -285,6 +292,8 @@ int main() {
       for (auto point : map.getRange()) {
         if (map.isInFieldOfVision(point)) {
           particles.addRectangle(point * CellSize, { CellSize, CellSize }, gf::Color::Yellow);
+        } else if (map.isExplored(point)) {
+          particles.addRectangle(point * CellSize, { CellSize, CellSize }, gf::Color::lighter(gf::Color::Yellow, 0.7f));
         }
       }
 
