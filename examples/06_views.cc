@@ -34,8 +34,8 @@ int main() {
   gf::Window window("06_views", ScreenSize);
   gf::RenderWindow renderer(window);
 
-  gf::RectF world(-1, -1, 2, 2);
-  gf::RectF extendedWorld = world.extend(1);
+  gf::RectF world(-100, -100, 200, 200);
+  gf::RectF extendedWorld = world.extend(100);
 
   /*
    * views
@@ -53,6 +53,9 @@ int main() {
 
   gf::ExtendView extendView(world);
   views.addView(extendView);
+
+  gf::LockedView lockedView(world);
+  views.addView(lockedView);
 
   gf::ScreenView screenView;
   views.addView(screenView);
@@ -73,11 +76,11 @@ int main() {
    */
 
   gf::Vertex triangle[3];
-  triangle[0].position = { 0.0f, 0.5f };
+  triangle[0].position = { 0.0f, 50.0f };
   triangle[0].color = gf::Color::Red;
-  triangle[1].position = { 0.5f, -0.5f };
+  triangle[1].position = { 50.0f, -50.0f };
   triangle[1].color = gf::Color::Green;
-  triangle[2].position = { -0.5f, -0.5f };
+  triangle[2].position = { -50.0f, -50.0f };
   triangle[2].color = gf::Color::Yellow;
 
   gf::RectangleShape background(world.size);
@@ -107,6 +110,7 @@ int main() {
   std::cout << "\t2: Switch to FitView\n";
   std::cout << "\t3: Switch to FillView\n";
   std::cout << "\t4: Switch to ExtendView\n";
+  std::cout << "\t5: Switch to LockedView\n";
   std::cout << "Current view: StretchView\n";
 
   renderer.clear(gf::Color::Black);
@@ -140,6 +144,11 @@ int main() {
             case gf::Scancode::Num4:
               std::cout << "Current view: ExtendView\n";
               currentView = &extendView;
+              break;
+
+            case gf::Scancode::Num5:
+              std::cout << "Current view: LockedView\n";
+              currentView = &lockedView;
               break;
 
             case gf::Scancode::Escape:

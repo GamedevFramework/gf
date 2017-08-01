@@ -270,6 +270,74 @@ inline namespace v1 {
     Vector2u m_localScreenSize;
   };
 
+
+  /**
+   * @ingroup graphics
+   * @brief Locked view
+   *
+   * This view keeps the world size constant and add black bars if the world
+   * is smaller than the screen size or make a zoom in the center of the
+   * world if the world is bigger than the screen size.
+   *
+   * ![Locked view](@ref lockedview.png)
+   *
+   * @sa gf::AdaptativeView
+   */
+  class GF_API LockedView : public AdaptativeView {
+  public:
+    /**
+     * @brief Default constructor
+     *
+     * This constructor creates a default view of @f$(0, 0, 1000, 1000)@f$.
+     */
+    LockedView()
+    : AdaptativeView()
+    , m_localViewport(0.0f, 0.0f, 1.0f, 1.0f)
+    {
+
+    }
+
+    /**
+     * @brief Construct the view from a rectangle
+     *
+     * @param rect Rectangle defining the zone to display
+     */
+    explicit LockedView(const RectF& rect)
+    : AdaptativeView(rect)
+    , m_localSize(rect.size)
+    , m_localViewport(0.0f, 0.0f, 1.0f, 1.0f)
+    {
+
+    }
+
+    /**
+     * @brief Construct the view from its center and size
+     *
+     * @param center Center of the zone to display
+     * @param size Size of the zone to display
+     */
+    LockedView(Vector2f center, Vector2f size)
+    : AdaptativeView(center, size)
+    , m_localSize(size)
+    , m_localViewport(0.0f, 0.0f, 1.0f, 1.0f)
+    {
+
+    }
+
+    virtual void onScreenSizeChange(Vector2u screenSize) override;
+
+  protected:
+    virtual void onSizeChange(Vector2f size) override;
+    virtual void onViewportChange(const RectF& viewport) override;
+
+    void updateView();
+
+  private:
+    Vector2f m_localSize;
+    Vector2u m_localScreenSize;
+    RectF m_localViewport;
+  };
+
   /**
    * @ingroup graphics
    * @brief Screen view
