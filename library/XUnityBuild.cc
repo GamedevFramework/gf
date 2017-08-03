@@ -96,6 +96,7 @@
 #include "Shape.cc"
 #include "Shapes.cc"
 #include "Sleep.cc"
+#include "SpaceTree.cc"
 #include "SpriteBatch.cc"
 #include "Sprite.cc"
 #include "StringUtils.cc"

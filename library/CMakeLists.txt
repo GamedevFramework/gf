@@ -126,6 +126,7 @@ else()
     Shape.cc
     Shapes.cc
     Sleep.cc
+    SpaceTree.cc
     SpriteBatch.cc
     Sprite.cc
     StringUtils.cc
