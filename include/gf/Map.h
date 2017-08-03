@@ -74,6 +74,19 @@ inline namespace v1 {
 
   /**
    * @ingroup game
+   * @brief Constant to indicate if the limit is part of the field of vision
+   *
+   * The limit is generally a wall that is next to a visible ground cell.
+   *
+   * @sa gf::SquareMap
+   */
+  enum class FieldOfVisionLimit {
+    Included, ///< The limits are included in the field of vision
+    Excluded, ///< The limits are *not* included in the field of vision
+  };
+
+  /**
+   * @ingroup game
    * @brief Algorithm for computing a route
    *
    * @sa gf::SquareMap
@@ -102,6 +115,8 @@ inline namespace v1 {
    */
   class GF_API SquareMap {
   public:
+
+
     /**
      * @brief Constructor
      *
@@ -231,11 +246,12 @@ inline namespace v1 {
      *
      * @param pos The position of the entity
      * @param maxRadius The maximum radius that the entity can see
+     * @param limit Is the limit included in the field of vision?
      * @param algorithm The algorithm to use for computing the field of vision
      *
      * @sa clearFieldOfVision(), isInFieldOfVision()
      */
-    void computeFieldOfVision(Vector2i pos, int maxRadius = 0, FieldOfVision algorithm = FieldOfVision::Basic);
+    void computeFieldOfVision(Vector2i pos, int maxRadius = 0, FieldOfVisionLimit limit = FieldOfVisionLimit::Included, FieldOfVision algorithm = FieldOfVision::Basic);
 
     /**
      * @brief Compute a local field of vision
@@ -250,11 +266,12 @@ inline namespace v1 {
      *
      * @param pos The position of the entity
      * @param maxRadius The maximum radius that the entity can see
+     * @param limit Is the limit included in the field of vision?
      * @param algorithm The algorithm to use for computing the field of vision
      *
      * @sa clearFieldOfVision(), isInFieldOfVision()
      */
-    void computeLocalFieldOfVision(Vector2i pos, int maxRadius = 0, FieldOfVision algorithm = FieldOfVision::Basic);
+    void computeLocalFieldOfVision(Vector2i pos, int maxRadius = 0, FieldOfVisionLimit limit = FieldOfVisionLimit::Included, FieldOfVision algorithm = FieldOfVision::Basic);
 
     /**
      * @brief Check if a cell is visible

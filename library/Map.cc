@@ -93,9 +93,55 @@ inline namespace v1 {
     }
   }
 
-  static void castRay(Array2D<CellFlags, int>& cells, Vector2i p0, Vector2i p1, int maxRadius2, CellFlags modification) {
+  static void postProcessMap(Array2D<CellFlags, int>& cells, Vector2i q0, Vector2i q1, Vector2i step) {
+    int xLo, xHi, yLo, yHi;
+    std::tie(xLo, xHi) = std::minmax(q0.x, q1.x);
+    std::tie(yLo, yHi) = std::minmax(q0.y, q1.y);
+
+    for (int y = yLo; y <= yHi; ++y) {
+      for (int x = xLo; x <= xHi; ++x) {
+        if (!cells.isValid({ x, y })) {
+          continue;
+        }
+
+        if (!cells({ x, y }).test(CellProperty::Visible) || !cells({ x, y }).test(CellProperty::Transparent)) {
+          continue;
+        }
+
+        int x2 = x + step.x;
+        int y2 = y + step.y;
+
+        if (xLo <= x2 && x2 <= xHi) {
+          gf::Vector2i target = { x2, y };
+
+          if (cells.isValid(target) && !cells(target).test(CellProperty::Transparent)) {
+            cells(target).set(CellProperty::Visible);
+          }
+        }
+
+        if (yLo <= y2 && y2 <= yHi) {
+          gf::Vector2i target = { x, y2 };
+
+          if (cells.isValid(target) && !cells(target).test(CellProperty::Transparent)) {
+            cells(target).set(CellProperty::Visible);
+          }
+        }
+
+        if (xLo <= x2 && x2 <= xHi && yLo <= y2 && y2 <= yHi) {
+          gf::Vector2i target = { x2, y2 };
+
+          if (cells.isValid(target) && !cells(target).test(CellProperty::Transparent)) {
+            cells(target).set(CellProperty::Visible);
+          }
+        }
+      }
+    }
+  }
+
+  static void castRay(Array2D<CellFlags, int>& cells, Vector2i p0, Vector2i p1, int maxRadius2, FieldOfVisionLimit limit, CellFlags modification) {
     Bresenham bresenham(p0, p1);
     Vector2i curr;
+    bool blocked = false;
 
     while (!bresenham.step(curr)) {
       if (!cells.isValid(curr)) {
@@ -110,15 +156,19 @@ inline namespace v1 {
         }
       }
 
-      if (cells(curr).test(CellProperty::Transparent)) {
+      if (!blocked && !cells(curr).test(CellProperty::Transparent)) {
+        blocked = true;
+      } else if (blocked) {
+        return; // wall
+      }
+
+      if (limit == FieldOfVisionLimit::Included || !blocked) {
         cells(curr) |= modification;
-      } else {
-        return;
       }
     }
   }
 
-  static void computeBasicFov(Array2D<CellFlags, int>& cells, Vector2i pos, int maxRadius, CellFlags modification) {
+  static void computeBasicFov(Array2D<CellFlags, int>& cells, Vector2i pos, int maxRadius, FieldOfVisionLimit limit, CellFlags modification) {
     RangeI xRange = cells.getColRange();
     RangeI yRange = cells.getRowRange();
 
@@ -126,9 +176,9 @@ inline namespace v1 {
 
     if (maxRadius > 0) {
       xRange.lo = std::max(xRange.lo, pos.x - maxRadius);
-      xRange.hi = std::min(xRange.hi, pos.x + maxRadius + 1);
+      xRange.hi = std::min(xRange.hi, pos.x + maxRadius);
       yRange.lo = std::max(yRange.lo, pos.y - maxRadius);
-      yRange.hi = std::min(yRange.hi, pos.y + maxRadius + 1);
+      yRange.hi = std::min(yRange.hi, pos.y + maxRadius);
     } else {
       maxRadius2 = 0;
     }
@@ -136,21 +186,27 @@ inline namespace v1 {
     cells(pos) |= modification;
 
     for (auto x : xRange) {
-      castRay(cells, pos, { x, yRange.lo }, maxRadius2, modification);
-      castRay(cells, pos, { x, yRange.hi }, maxRadius2, modification);
+      castRay(cells, pos, { x, yRange.lo }, maxRadius2, limit, modification);
+      castRay(cells, pos, { x, yRange.hi }, maxRadius2, limit, modification);
     }
 
     for (auto y : yRange) {
-      castRay(cells, pos, { xRange.lo, y }, maxRadius2, modification);
-      castRay(cells, pos, { xRange.hi, y }, maxRadius2, modification);
+      castRay(cells, pos, { xRange.lo, y }, maxRadius2, limit, modification);
+      castRay(cells, pos, { xRange.hi, y }, maxRadius2, limit, modification);
     }
 
+    if (limit == FieldOfVisionLimit::Included) {
+      postProcessMap(cells, pos, { xRange.lo, yRange.lo }, { -1, -1 });
+      postProcessMap(cells, pos, { xRange.hi, yRange.lo }, {  1, -1 });
+      postProcessMap(cells, pos, { xRange.lo, yRange.hi }, { -1,  1 });
+      postProcessMap(cells, pos, { xRange.hi, yRange.hi }, {  1,  1 });
+    }
   }
 
-  static void computeGenericFieldOfVision(Array2D<CellFlags, int>& cells, Vector2i pos, int maxRadius, FieldOfVision algorithm, CellFlags modification) {
+  static void computeGenericFieldOfVision(Array2D<CellFlags, int>& cells, Vector2i pos, int maxRadius, FieldOfVisionLimit limit, FieldOfVision algorithm, CellFlags modification) {
     switch (algorithm) {
       case FieldOfVision::Basic:
-        computeBasicFov(cells, pos, maxRadius, modification);
+        computeBasicFov(cells, pos, maxRadius, limit, modification);
         break;
 
       default:
@@ -158,12 +214,12 @@ inline namespace v1 {
     }
   }
 
-  void SquareMap::computeFieldOfVision(Vector2i pos, int maxRadius, FieldOfVision algorithm) {
-    computeGenericFieldOfVision(m_cells, pos, maxRadius, algorithm, CellProperty::Visible | CellProperty::Explored);
+  void SquareMap::computeFieldOfVision(Vector2i pos, int maxRadius, FieldOfVisionLimit limit, FieldOfVision algorithm) {
+    computeGenericFieldOfVision(m_cells, pos, maxRadius, limit, algorithm, CellProperty::Visible | CellProperty::Explored);
   }
 
-  void SquareMap::computeLocalFieldOfVision(Vector2i pos, int maxRadius, FieldOfVision algorithm) {
-    computeGenericFieldOfVision(m_cells, pos, maxRadius, algorithm, CellProperty::Visible);
+  void SquareMap::computeLocalFieldOfVision(Vector2i pos, int maxRadius, FieldOfVisionLimit limit, FieldOfVision algorithm) {
+    computeGenericFieldOfVision(m_cells, pos, maxRadius, limit, algorithm, CellProperty::Visible);
   }
 
   bool SquareMap::isInFieldOfVision(Vector2i pos) const {

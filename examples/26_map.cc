@@ -291,9 +291,11 @@ int main() {
 
       for (auto point : map.getRange()) {
         if (map.isInFieldOfVision(point)) {
-          particles.addRectangle(point * CellSize, { CellSize, CellSize }, gf::Color::Yellow);
+          particles.addRectangle(point * CellSize, { CellSize, CellSize },
+            map.isWalkable(point) ? gf::Color::Yellow : gf::Color::Gray());
         } else if (map.isExplored(point)) {
-          particles.addRectangle(point * CellSize, { CellSize, CellSize }, gf::Color::lighter(gf::Color::Yellow, 0.7f));
+          particles.addRectangle(point * CellSize, { CellSize, CellSize },
+            map.isWalkable(point) ? gf::Color::lighter(gf::Color::Yellow, 0.7f) : gf::Color::Gray(0.7f));
         }
       }
 
