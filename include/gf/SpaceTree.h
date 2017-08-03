@@ -123,7 +123,7 @@ inline namespace v1 {
     /**
      * @brief Get the left child
      *
-     * @returns The left child if it exist or `nullptr`
+     * @returns The left child if it exists or `nullptr`
      */
     const SpaceTree *getLeftChild() const {
       return m_left.get();
@@ -132,7 +132,7 @@ inline namespace v1 {
     /**
      * @brief Get the right child
      *
-     * @returns The right child if it exist or `nullptr`
+     * @returns The right child if it exists or `nullptr`
      */
     const SpaceTree *getRightChild() const {
       return m_right.get();
