@@ -85,7 +85,7 @@ See the [online documentation for Gamedev Framework (gf)](http://gamedevframewor
 
 ## Contact
 
-If you want to talk directly with the developpers, you can join the [#gf-devel IRC channel on Freenode](irc://chat.freenode.net/gf-devel).
+If you want to talk directly with the developpers, you can join the [#gf-devel IRC channel on Freenode](irc://chat.freenode.net/gf-devel). Or you can post a message on [/r/GamedevFramework](https://www.reddit.com/r/GamedevFramework/).
 
 ## Contribution
 
