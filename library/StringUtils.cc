@@ -85,8 +85,8 @@ inline namespace v1 {
     return result;
   }
 
-  std::u32string computeUnicodeString(const std::string& str) {
-    static constexpr uint8_t utf8Table[4][2] = {
+  std::u32string computeUnicodeString(StringRef str) {
+    static constexpr uint8_t Utf8Table[4][2] = {
       { 0x7F, 0x00 },
       { 0x1F, 0xC0 },
       { 0x0F, 0xE0 },
@@ -95,18 +95,18 @@ inline namespace v1 {
 
     std::u32string out;
 
-    for (std::size_t k = 0; k < str.size(); ++k) {
+    for (std::size_t k = 0; k < str.getSize(); ++k) {
       uint8_t c = str[k];
       char32_t codepoint = 0;
 
       for (std::size_t i = 0; i < 4; ++i) {
-        if ((c & ~utf8Table[i][0]) == utf8Table[i][1]) {
-          codepoint = c & utf8Table[i][0];
+        if ((c & ~Utf8Table[i][0]) == Utf8Table[i][1]) {
+          codepoint = c & Utf8Table[i][0];
 
           for (std::size_t j = 0; j < i; ++j) {
             ++k;
 
-            assert(k < str.size());
+            assert(k < str.getSize());
             c = str[k];
 
             assert((c & ~0x3F) == 0x80);

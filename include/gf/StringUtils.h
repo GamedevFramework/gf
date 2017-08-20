@@ -26,6 +26,7 @@
 #include <string>
 
 #include "Portability.h"
+#include "StringRef.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -51,7 +52,7 @@ inline namespace v1 {
    * @param str A UTF-8 string
    * @returns The corresponding UTF-32 string
    */
-  GF_API std::u32string computeUnicodeString(const std::string& str);
+  GF_API std::u32string computeUnicodeString(StringRef str);
 
   /**
    * @ingroup core
