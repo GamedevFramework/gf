@@ -28,6 +28,7 @@ Gamedev Framework (gf) is a game framework, it provides some useful features for
   - Resource loader
   - Application messages
   - Simple physics engine
+  - Roguelike toolkit and console
 
 If you are looking for a full game engine, you should take a look at [the list of game engines on Wikipedia](https://en.wikipedia.org/wiki/List_of_game_engines).
 

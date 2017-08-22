@@ -41,6 +41,8 @@
 - Physics: gf::PhysicsBody, gf::PhysicsGeometry, gf::PhysicsModel
 - Animations: gf::Activity, gf::Tween
 - Geometry: gf::generateLine(), gf::midpointDisplacement1D()
+- Virtual console: gf::Console, gf::ConsoleFont, gf::ConsoleChar
+- Roguelike toolkit: gf::SquareMap, gf::SpaceTree
 
 @mainpage
 
