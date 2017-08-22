@@ -26,9 +26,6 @@
 #include <algorithm>
 #include <limits>
 
-#include <boost/algorithm/string/split.hpp>
-#include <boost/algorithm/string/classification.hpp>
-
 #include <gf/Color.h>
 #include <gf/Font.h>
 #include <gf/StringUtils.h>
@@ -293,24 +290,6 @@ inline namespace v1 {
     }
 
     return width;
-  }
-
-  static std::vector<std::u32string> splitInParagraphs(const std::u32string& str) {
-    std::vector<std::u32string> out;
-    boost::algorithm::split(out, str, boost::is_any_of(U"\n"), boost::algorithm::token_compress_on);
-    out.erase(std::remove_if(out.begin(), out.end(), [](const std::u32string& s) {
-      return s.empty();
-    }), out.end());
-    return out;
-  }
-
-  static std::vector<std::u32string> splitInWords(const std::u32string& str) {
-    std::vector<std::u32string> out;
-    boost::algorithm::split(out, str, boost::is_any_of(U" \t"), boost::algorithm::token_compress_on);
-    out.erase(std::remove_if(out.begin(), out.end(), [](const std::u32string& s) {
-      return s.empty();
-    }), out.end());
-    return out;
   }
 
   std::vector<Text::Paragraph> Text::makeParagraphs(const std::string& str, float spaceWidth) {

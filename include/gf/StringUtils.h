@@ -23,6 +23,7 @@
 
 #include <cstdarg>
 
+#include <vector>
 #include <string>
 
 #include "Portability.h"
@@ -70,6 +71,14 @@ inline namespace v1 {
    * @param ap The arguments of the format string
    */
   GF_API std::string formatString(const char *fmt, va_list ap);
+
+
+  /**
+   * @ingroup core
+   */
+  std::vector<std::u32string> splitInParagraphs(const std::u32string& str);
+
+  std::vector<std::u32string> splitInWords(const std::u32string& str);
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

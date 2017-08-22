@@ -26,6 +26,9 @@
 #include <algorithm>
 #include <memory>
 
+#include <boost/algorithm/string/split.hpp>
+#include <boost/algorithm/string/classification.hpp>
+
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
@@ -150,6 +153,23 @@ inline namespace v1 {
     return std::string(buffer.get());
   }
 
+  std::vector<std::u32string> splitInParagraphs(const std::u32string& str) {
+    std::vector<std::u32string> out;
+    boost::algorithm::split(out, str, boost::is_any_of(U"\n"), boost::algorithm::token_compress_on);
+    out.erase(std::remove_if(out.begin(), out.end(), [](const std::u32string& s) {
+      return s.empty();
+    }), out.end());
+    return out;
+  }
+
+  std::vector<std::u32string> splitInWords(const std::u32string& str) {
+    std::vector<std::u32string> out;
+    boost::algorithm::split(out, str, boost::is_any_of(U" \t"), boost::algorithm::token_compress_on);
+    out.erase(std::remove_if(out.begin(), out.end(), [](const std::u32string& s) {
+      return s.empty();
+    }), out.end());
+    return out;
+  }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
