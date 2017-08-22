@@ -26,6 +26,7 @@
 #include "Alignment.h"
 #include "Array2D.h"
 #include "Blend.h"
+#include "ConsoleFont.h"
 #include "Flags.h"
 #include "Path.h"
 #include "Portability.h"
@@ -39,106 +40,6 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  /**
-   * @ingroup game
-   * @brief Special characters to use in a virtual console
-   *
-   * The values of these characters use the values of non-printable characters
-   * in ASCII and the @f$ [128, 255] @f$ range.
-   *
-   * @sa gf::Console, gf::ConsoleFont
-   */
-  enum class SpecialChar : uint8_t {
-    // single walls
-    WallHorizontalLine        = 196,  ///< A horizontal line
-    WallVerticalLine          = 179,  ///< A vertical line
-    WallNorthEast             = 191,  ///< A corner in north-east
-    WallNorthWest             = 218,  ///< A corner in north-west
-    WallSouthEast             = 217,  ///< A corner in south-east
-    WallSouthWest             = 192,  ///< A corner in south-west
-    WallTeeWest               = 180,  ///< A tee in the west
-    WallTeeEast               = 195,  ///< A tee in the east
-    WallTeeNorth              = 193,  ///< A tee in the north
-    WallTeeSouth              = 194,  ///< A tee in the south
-    WallCross                 = 197,  ///< A cross
-    // double walls
-    DoubleWallHorizontalLine  = 205,  ///< A double horizontal line
-    DoubleWallVerticalLine    = 186,  ///< A double vertical line
-    DoubleWallNorthEast       = 187,  ///< A double corner in north-east
-    DoubleWallNorthWest       = 201,  ///< A double corner in north-west
-    DoubleWallSouthEast       = 188,  ///< A double corner in south-east
-    DoubleWallSouthWest       = 200,  ///< A double corner in south-west
-    DoubleWallTeeWest         = 185,  ///< A double tee in the west
-    DoubleWallTeeEast         = 204,  ///< A double tee in the east
-    DoubleWallTeeNorth        = 202,  ///< A double tee in the north
-    DoubleWallTeeSouth        = 203,  ///< A double tee in the south
-    DoubleWallCross           = 206,  ///< A double cross
-    // blocks
-    Block1                    = 176,  ///< A block of type 1
-    Block2                    = 177,  ///< A block of type 2
-    Block3                    = 178,  ///< A block of type 3
-    // arrows
-    ArrowNorth                = 24,   ///< An arrow pointing north
-    ArrowSouth                = 25,   ///< An arrow pointing south
-    ArrowEast                 = 26,   ///< An arrow pointing east
-    ArrowWest                 = 27,   ///< An arrow pointing west
-    // arrows without tail
-    ArrowNoTailNorth          = 30,   ///< An arrow pointing north with no tail
-    ArrowNoTailSouth          = 31,   ///< An arrow pointing south with no tail
-    ArrowNoTailEast           = 16,   ///< An arrow pointing east with no tail
-    ArrowNoTailWest           = 17,   ///< An arrow pointing west with no tail
-    // double arrows
-    DoubleArrowHorizontal     = 29,   ///< A horizontal double arrow
-    DoubleArrowVertical       = 18,   ///< A vertical double arrow
-    // gui
-    CheckboxUnset             = 224,  ///< A checkbox unset
-    CheckboxSet               = 225,  ///< A checkbox set
-    RadioUnset                = 9,    ///< A radio button unset
-    RadioSet                  = 10,   ///< A radio button set
-    // sub-pixel resolution kit
-    SubPixelNorthWest         = 226,  ///< Sub-pixel in the north-west
-    SubPixelNorthEast         = 227,  ///< Sub-pixel in the north-east
-    SubPixelNorth             = 228,  ///< Sub-pixel in the north
-    SubPixelSouthEast         = 229,  ///< Sub-pixel in the south-east
-    SubPixelDiagonal          = 230,  ///< Sub-pixel in the diagonal
-    SubPixelEast              = 231,  ///< Sub-pixel in the east
-    SubPixelSouthWest         = 232,  ///< Sub-pixel in the south-west
-    // miscellaneous
-    Smilie                    = 1,    ///< A smilie
-    SmilieInverted            = 2,    ///< An inverted smilie
-    Heart                     = 3,    ///< The heart suit
-    Diamond                   = 4,    ///< The diamond suit
-    Club                      = 5,    ///< The club suit
-    Spade                     = 6,    ///< The spade suit
-    Bullet                    = 7,    ///< A bullet
-    BulletInverted            = 8,    ///< An inverted bullet
-    Male                      = 11,   ///< The male symbol
-    Female                    = 12,   ///< The female symbol
-    Note                      = 13,   ///< A note
-    NoteDouble                = 14,   ///< A double note
-    Light                     = 15,   ///< A light
-    ExclamationDouble         = 19,   ///< A double exclamation mark
-    Pilcrow                   = 20,   ///< A pilcrow (¶)
-    Section                   = 21,   ///< A section sign (§)
-    Pound                     = 156,  ///< The pound sign (£)
-    Multiplication            = 158,  ///< The multiplication sign
-    Function                  = 159,  ///< The function sign
-    Reserved                  = 169,  ///< The registered trademark sign (®)
-    Half                      = 171,  ///< One over two
-    OneQuarter                = 172,  ///< One over four
-    Copyright                 = 184,  ///< The copyright sign (©)
-    Cent                      = 189,  ///< The cent sign (¢)
-    Yen                       = 190,  ///< The yen sign (¥)
-    Currency                  = 207,  ///< The currency sign (¤)
-    ThreeQuarters             = 243,  ///< Three over four
-    Division                  = 246,  ///< The division sign
-    Grade                     = 248,
-    Umlaut                    = 249,  ///< The umlaut diacritics
-    Pow1                      = 251,  ///< Power one
-    Pow2                      = 252,  ///< Power two
-    Pow3                      = 253,  ///< Power three
-    BulletSquare              = 254,  ///< A square bullet
-  };
 
   /**
    * @ingroup game
@@ -209,142 +110,6 @@ inline namespace v1 {
   constexpr ConsoleColorControl ConsoleColorControlStop = '\x06';
 
 
-  /**
-   * @ingroup game
-   * @brief A bitmap console font
-   *
-   * This class is based on [libtcod](http://roguecentral.org/doryen/libtcod/)
-   * console font handling. It supports bitmap fonts provided by libtcod but
-   * can also be used to define a custom mapping.
-   *
-   * @sa gf::Console
-   */
-  class GF_API ConsoleFont {
-  public:
-
-    /**
-     * @brief Console font layout
-     *
-     * A layout specifies how the characters are organized in the bitmap. The
-     * predefined layouts are: in column (the default), in row, special
-     * (libtcod layout).
-     *
-     * The transparency information can be given in three ways:
-     *
-     * - standard: transparency is given by a key color (assumed white)
-     * - alpha: transparency is given by the alpha channel of the image
-     * - grayscale: transparency is given by the value of gray
-     */
-    enum class Layout {
-      InColumn,           ///< In column
-      InRow,              ///< In row
-      Special,            ///< Special libtcod mapping
-      Custom,             ///< Custom mapping, i.e. not predefined
-      GrayscaleInColumn,  ///< In column, grayscale
-      GrayscaleInRow,     ///< In row, grayscale
-      GrayscaleSpecial,   ///< Special libtcod mapping, grayscale
-      GrayscaleCustom,    ///< Custom mapping, grayscale
-    };
-
-    /**
-     * @brief Constructor
-     *
-     * No font is loaded.
-     */
-    ConsoleFont();
-
-    /**
-     * @brief Load a console font from a file
-     *
-     * @param filename The name of the file
-     * @param layout The layout of the console font
-     * @param size The size, in characters, of the font
-     */
-    bool loadFromFile(const Path& filename, Layout layout = Layout::InColumn, Vector2u size = { 0u, 0u });
-
-    /**
-     * @brief Get the texture rectangle for a character
-     *
-     * @param c A character
-     * @returns The corresponding texture rectangle
-     *
-     * @sa getTexture()
-     */
-    RectF getTextureRect(uint8_t c) const;
-
-    /**
-     * @brief Get the texture rectangle for a special character
-     *
-     * @param c A special character
-     * @returns The corresponding texture rectangle
-     *
-     * @sa getTexture()
-     */
-    RectF getTextureRect(SpecialChar c) const;
-
-    /**
-     * @brief Get the texture of the console font
-     *
-     * @returns The texture of the font
-     */
-    const AlphaTexture *getTexture() const;
-
-    /**
-     * @brief Get the character size
-     *
-     * @returns The size of the characters in the font
-     */
-    Vector2u getCharacterSize() const {
-      return m_characterSize;
-    }
-
-    /**
-     * @name Mapping
-     * @{
-     */
-
-    /**
-     * @brief Map a character to a position in the font
-     *
-     * @param c A character
-     * @param position The position, in characters, of the character
-     */
-    void mapAsciiCode(uint8_t c, Vector2u position);
-
-    /**
-     * @brief Map a special character to a position in the font
-     *
-     * @param c A special character
-     * @param position The position, in characters, of the special character
-     */
-    void mapAsciiCode(SpecialChar c, Vector2u position);
-
-    /**
-     * @brief Map a range of characters to consecutive positions in the font
-     *
-     * @param c The first character in the range
-     * @param count The number of character in the range
-     * @param position The position, in characters, of the first character
-     */
-    void mapAsciiCodeRange(uint8_t c, std::size_t count, Vector2u position);
-
-    /**
-     * @brief Map characters from a string to consecutive positions in the font
-     *
-     * @param str The string with the characters
-     * @param position The position, in characters, of the first character of the string
-     */
-    void mapString(StringRef str, Vector2u position);
-
-    /**
-     * @}
-     */
-
-  private:
-    AlphaTexture m_texture;
-    std::vector<Vector2u> m_mapping;
-    Vector2u m_characterSize;
-  };
 
   /**
    * @brief A console effect on the background color
@@ -592,17 +357,7 @@ inline namespace v1 {
      *
      * @sa putChar(), getChar()
      */
-    void setChar(Vector2i position, uint8_t c);
-
-    /**
-     * @brief Set a special character
-     *
-     * @param position The position of the cell
-     * @param c The special character
-     *
-     * @sa putChar(), getChar()
-     */
-    void setChar(Vector2i position, SpecialChar c);
+    void setChar(Vector2i position, char16_t c);
 
     /**
      * @brief Get a character
@@ -612,7 +367,7 @@ inline namespace v1 {
      *
      * @sa setChar()
      */
-    uint8_t getChar(Vector2i position) const;
+    char16_t getChar(Vector2i position) const;
 
     /**
      * @brief Modify a cell in the console
@@ -626,21 +381,7 @@ inline namespace v1 {
      * @param c The character to set
      * @param effect The effect to apply to the background
      */
-    void putChar(Vector2i position, uint8_t c, ConsoleEffect effect = ConsoleEffect::Default);
-
-    /**
-     * @brief Modify a cell in the console
-     *
-     * At the specified position, this function:
-     * - sets the background color thanks to the effect and the default background color
-     * - sets the foreground color thanks to the default foreground color
-     * - sets the character to a new value
-     *
-     * @param position The position of the cell
-     * @param c The special character to set
-     * @param effect The effect to apply to the background
-     */
-    void putChar(Vector2i position, SpecialChar c, ConsoleEffect effect = ConsoleEffect::Default);
+    void putChar(Vector2i position, char16_t c, ConsoleEffect effect = ConsoleEffect::Default);
 
     /**
      * @brief Modify a cell in the console
@@ -655,22 +396,7 @@ inline namespace v1 {
      * @param foreground The foreground color to set
      * @param background The background color to set
      */
-    void putChar(Vector2i position, uint8_t c, const Color4f& foreground, const Color4f& background);
-
-    /**
-     * @brief Modify a cell in the console
-     *
-     * At the specified position, this function:
-     * - sets the background color to the specified color
-     * - sets the foreground color to the specified color
-     * - sets the character to a new value
-     *
-     * @param position The position of the cell
-     * @param c The special character to set
-     * @param foreground The foreground color to set
-     * @param background The background color to set
-     */
-    void putChar(Vector2i position, SpecialChar c, const Color4f& foreground, const Color4f& background);
+    void putChar(Vector2i position, char16_t c, const Color4f& foreground, const Color4f& background);
 
     /**
      * @}
@@ -941,7 +667,7 @@ inline namespace v1 {
   private:
     Color4f computeColor(ConsoleEffect effect, const Color4f& existing, const Color4f& current);
 
-    int putWord(Vector2i position, ConsoleEffect effect, const std::string& message, const Color4f& foreground, const Color4f& background);
+    int putWord(Vector2i position, ConsoleEffect effect, const std::u32string& message, const Color4f& foreground, const Color4f& background);
 
     enum class PrintOption {
       Split     = 0x01,
@@ -956,7 +682,7 @@ inline namespace v1 {
     struct Cell {
       Color4f fg;
       Color4f bg;
-      uint8_t c;
+      char16_t c;
     };
 
     const ConsoleFont *m_font;

@@ -26,10 +26,8 @@
 
 #include <memory>
 
-#include <boost/algorithm/string/split.hpp>
-#include <boost/algorithm/string/classification.hpp>
-
 #include <gf/Color.h>
+#include <gf/ConsoleChar.h>
 #include <gf/Image.h>
 #include <gf/RenderTarget.h>
 #include <gf/StringUtils.h>
@@ -52,7 +50,7 @@ inline namespace v1 {
   namespace {
 
     struct ConsoleLine {
-      std::vector<std::string> words;
+      std::vector<std::u32string> words;
       int indent;
     };
 
@@ -62,25 +60,7 @@ inline namespace v1 {
 
   }
 
-  static std::vector<std::string> splitInParagraphs(const std::string& str) {
-    std::vector<std::string> out;
-    boost::algorithm::split(out, str, boost::is_any_of("\n"), boost::algorithm::token_compress_on);
-    out.erase(std::remove_if(out.begin(), out.end(), [](const std::string& s) {
-      return s.empty();
-    }), out.end());
-    return out;
-  }
-
-  static std::vector<std::string> splitInWords(const std::string& str) {
-    std::vector<std::string> out;
-    boost::algorithm::split(out, str, boost::is_any_of(" \t"), boost::algorithm::token_compress_on);
-    out.erase(std::remove_if(out.begin(), out.end(), [](const std::string& s) {
-      return s.empty();
-    }), out.end());
-    return out;
-  }
-
-  static bool isColorControl(char c) {
+  static bool isColorControl(char32_t c) {
     switch (c) {
       case ConsoleColorControl1:
       case ConsoleColorControl2:
@@ -97,7 +77,7 @@ inline namespace v1 {
     return false;
   }
 
-  static int getWordWidth(const std::string& word) {
+  static int getWordWidth(const std::u32string& word) {
     int width = 0;
 
     for (const auto& c : word) {
@@ -112,11 +92,12 @@ inline namespace v1 {
   // adaptation of the algorithm in gf::Text
 
   static std::vector<ConsoleParagraph> makeParagraphs(const std::string& message, ConsoleAlignment alignment, int paragraphWidth) {
-    std::vector<std::string> paragraphs = splitInParagraphs(message);
+    auto unicodeString = computeUnicodeString(message);
+    auto paragraphs = splitInParagraphs(unicodeString);
     std::vector<ConsoleParagraph> out;
 
     for (const auto& simpleParagraph : paragraphs) {
-      std::vector<std::string> words = splitInWords(simpleParagraph);
+      auto words = splitInWords(simpleParagraph);
 
       ConsoleParagraph paragraph;
 
@@ -178,239 +159,6 @@ inline namespace v1 {
     }
 
     return out;
-  }
-
-
-  /*
-   * ConsoleFont
-   */
-
-  ConsoleFont::ConsoleFont()
-  : m_characterSize(0, 0)
-  {
-    m_mapping.reserve(256);
-  }
-
-  static constexpr uint8_t AsciiToSpecial[256] = {
-      0,   0,   0,   0,   0,   0,   0,   0,   0,  76,  77,   0,   0,   0,   0,   0,
-     71,  70,  72,   0,   0,   0,   0,   0,  64,  65,  67,  66,   0,  73,  68,  69,
-      0,   1,   2,   3,   4,   5,   6,   7,   8,   9,  10,  11,  12,  13,  14,  15,
-     16,  17,  18,  19,  20,  21,  22,  23,  24,  25,  26,  27,  28,  29,  30,  31,
-     32,  96,  97,  98,  99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110,
-    111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121,  33,  34,  35,  36,  37,
-     38, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142,
-    143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153,  39,  40,  41,  42,   0,
-      0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-      0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-      0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-     43,  44,  45,  46,  49,   0,   0,   0,   0,  81,  78,  87,  88,   0,   0,  55,
-     53,  50,  52,  51,  47,  48,   0,   0,  85,  86,  82,  84,  83,  79,  80,   0,
-      0,   0,   0,   0,   0,   0,   0,   0,   0,  56,  54,   0,   0,   0,   0,   0,
-     74,  75,  57,  58,  59,  60,  61,  62,  63,   0,   0,   0,   0,   0,   0,   0,
-      0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-  };
-
-  static bool imageHasAlpha(const Image& image) {
-    Vector2u size = image.getSize();
-    const uint8_t *pixels = image.getPixelsPtr();
-
-    for (unsigned i = 0; i < size.width * size.height; ++i) {
-      if (pixels[4 * i + 3] < 255) {
-        return true;
-      }
-    }
-
-    return false;
-  }
-
-  bool ConsoleFont::loadFromFile(const Path& filename, Layout layout, Vector2u size) {
-    Image image;
-
-    if (!image.loadFromFile(filename)) {
-      return false;
-    }
-
-    bool grayscale = false;
-
-    switch (layout) {
-      case Layout::GrayscaleInColumn:
-        grayscale = true;
-        layout = Layout::InColumn;
-        break;
-
-      case Layout::GrayscaleInRow:
-        grayscale = true;
-        layout = Layout::InRow;
-        break;
-
-      case Layout::GrayscaleSpecial:
-        grayscale = true;
-        layout = Layout::Special;
-        break;
-
-      case Layout::GrayscaleCustom:
-        grayscale = true;
-        layout = Layout::Custom;
-        break;
-
-      default:
-        break;
-    }
-
-    bool hasAlpha = imageHasAlpha(image);
-    Color4u reference(0xFF, 0xFF, 0xFF, 0xFF); // assume white
-
-    if (size == Vector2u(0, 0)) {
-      switch (layout) {
-        case Layout::InColumn:
-        case Layout::InRow:
-          size = Vector2u(16u, 16u);
-          break;
-
-        case Layout::Special:
-          size = Vector2u(32u, 8u);
-          break;
-
-        case Layout::Custom:
-          Log::error("Undefined size for a custom font\n");
-          return false;
-
-        default:
-          assert(false);
-          break;
-      }
-    }
-
-    unsigned charsCount = size.width * size.height;
-    Vector2u imageSize = image.getSize();
-
-    if (imageSize.width % size.width != 0 || imageSize.height % size.height != 0) {
-      Log::error("Image size (%ux%u) is not a multiple of font layout (%ux%u)\n", imageSize.width, imageSize.height, size.width, size.height);
-      return false;
-    }
-
-    m_characterSize = imageSize / size;
-
-    Log::info("Console font '%s': %ux%u with characters %ux%u, %s\n", filename.string().c_str(),
-      size.width, size.height, m_characterSize.width, m_characterSize.height,
-      grayscale ? "grayscale" : (hasAlpha ? "antialiased" : "standard")
-    );
-
-    std::vector<uint8_t> pixels(charsCount * m_characterSize.width * m_characterSize.height, 0x00);
-
-    std::size_t index = 0;
-
-    for (unsigned y = 0; y < imageSize.height; ++y) {
-      for (unsigned x = 0; x < imageSize.width; ++x) {
-        Color4u color = image.getPixel({ x, y });
-
-        if (grayscale) {
-          assert(color.r == color.g && color.g == color.b);
-          pixels[index++] = color.r;
-        } else {
-          if (hasAlpha) {
-            pixels[index++] = color.a;
-          } else {
-            if (color == reference) {
-              pixels[index++] = 255;
-            } else {
-              pixels[index++] = 0;
-            }
-          }
-        }
-      }
-    }
-
-    m_texture.create(imageSize);
-    m_texture.update(pixels.data());
-
-    // define mapping
-
-    m_mapping.clear();
-
-    switch (layout) {
-      case Layout::InColumn:
-        for (unsigned i = 0; i < charsCount; ++i) {
-          m_mapping.push_back({ i / size.height, i % size.height });
-        }
-        break;
-
-      case Layout::InRow:
-        for (unsigned i = 0; i < charsCount; ++i) {
-          m_mapping.push_back({ i % size.width, i / size.width });
-        }
-        break;
-
-      case Layout::Special:
-        for (auto c : AsciiToSpecial) {
-          m_mapping.push_back({ c % size.width, c / size.width });
-        }
-        break;
-
-      case Layout::Custom:
-        m_mapping.resize(charsCount, { 0u, 0u }); // waiting for custom mapping
-        break;
-
-      default:
-        assert(false);
-        break;
-    }
-
-    return true;
-  }
-
-  RectF ConsoleFont::getTextureRect(uint8_t c) const {
-    assert(c < m_mapping.size());
-    RectU rect(m_mapping[c] * m_characterSize, m_characterSize);
-    return m_texture.computeTextureCoords(rect);
-  }
-
-  RectF ConsoleFont::getTextureRect(SpecialChar c) const {
-    return getTextureRect(static_cast<uint8_t>(c));
-  }
-
-  const AlphaTexture *ConsoleFont::getTexture() const {
-    return &m_texture;
-  }
-
-  void ConsoleFont::mapAsciiCode(uint8_t c, Vector2u position) {
-    if (c < m_mapping.size()) {
-      m_mapping[c] = position;
-    }
-  }
-
-  void ConsoleFont::mapAsciiCode(SpecialChar c, Vector2u position) {
-    mapAsciiCode(static_cast<uint8_t>(c), position);
-  }
-
-  void ConsoleFont::mapAsciiCodeRange(uint8_t c, std::size_t count, Vector2u position) {
-    Vector2u fontSize = m_texture.getSize() / m_characterSize;
-
-    for (std::size_t i = 0; i < count; ++i) {
-      m_mapping[c++] = position;
-      ++position.x;
-
-      if (position.x == fontSize.width) {
-        position.x = 0;
-        ++position.y;
-        assert(position.y < fontSize.height);
-      }
-    }
-  }
-
-  void ConsoleFont::mapString(StringRef str, Vector2u position) {
-    Vector2u fontSize = m_texture.getSize() / m_characterSize;
-
-    for (auto c : str) {
-      m_mapping[c] = position;
-      ++position.x;
-
-      if (position.x == fontSize.width) {
-        position.x = 0;
-        ++position.y;
-        assert(position.y < fontSize.height);
-      }
-    }
   }
 
   /*
@@ -543,7 +291,7 @@ inline namespace v1 {
     return m_data(position).fg;
   }
 
-  void Console::setChar(Vector2i position, uint8_t c) {
+  void Console::setChar(Vector2i position, char16_t c) {
     if (!m_data.isValid(position)) {
       return;
     }
@@ -551,16 +299,12 @@ inline namespace v1 {
     m_data(position).c = c;
   }
 
-  void Console::setChar(Vector2i position, SpecialChar c) {
-    setChar(position, static_cast<uint8_t>(c));
-  }
-
-  uint8_t Console::getChar(Vector2i position) const {
+  char16_t Console::getChar(Vector2i position) const {
     assert(m_data.isValid(position));
     return m_data(position).c;
   }
 
-  void Console::putChar(Vector2i position, uint8_t c, ConsoleEffect effect) {
+  void Console::putChar(Vector2i position, char16_t c, ConsoleEffect effect) {
     if (!m_data.isValid(position)) {
       return;
     }
@@ -571,11 +315,7 @@ inline namespace v1 {
     cell.c = c;
   }
 
-  void Console::putChar(Vector2i position, SpecialChar c, ConsoleEffect effect) {
-    putChar(position, static_cast<uint8_t>(c), effect);
-  }
-
-  void Console::putChar(Vector2i position, uint8_t c, const Color4f& foreground, const Color4f& background) {
+  void Console::putChar(Vector2i position, char16_t c, const Color4f& foreground, const Color4f& background) {
     if (!m_data.isValid(position)) {
       return;
     }
@@ -583,11 +323,7 @@ inline namespace v1 {
     m_data(position) = { foreground, background, c };
   }
 
-  void Console::putChar(Vector2i position, SpecialChar c, const Color4f& foreground, const Color4f& background) {
-    putChar(position, static_cast<uint8_t>(c), foreground, background);
-  }
-
-  int Console::putWord(Vector2i position, ConsoleEffect effect, const std::string& message, const Color4f& foreground, const Color4f& background) {
+  int Console::putWord(Vector2i position, ConsoleEffect effect, const std::u32string& message, const Color4f& foreground, const Color4f& background) {
     int width = 0;
 
     for (auto c : message) {
@@ -623,7 +359,17 @@ inline namespace v1 {
           break;
 
         default:
-          putChar(position, c, effect);
+          if (c >= 0x10000) {
+            // outside BMP
+            c = '\0';
+          }
+
+          if (c < 0x20) {
+            // control chars
+            c = '\0';
+          }
+
+          putChar(position, static_cast<char16_t>(c), effect);
           ++position.x;
           ++width;
           break;
@@ -707,7 +453,9 @@ inline namespace v1 {
       // single line
       assert(rect.width == 0 && rect.height == 0);
       Vector2i position = rect.position;
-      int width = getWordWidth(message);
+
+      std::u32string unicodeString = computeUnicodeString(message);
+      int width = getWordWidth(unicodeString);
 
       switch (alignment) {
         case ConsoleAlignment::Left:
@@ -722,7 +470,7 @@ inline namespace v1 {
           break;
       }
 
-      putWord(position, effect, message, currentForeground, currentBackground);
+      putWord(position, effect, unicodeString, currentForeground, currentBackground);
       lineCount = 1;
     }
 
@@ -808,14 +556,14 @@ inline namespace v1 {
 
   void Console::drawHorizontalLine(Vector2i left, int width, ConsoleEffect effect) {
     for (int i = 0; i < width; ++i) {
-      putChar(left, SpecialChar::WallHorizontalLine, effect);
+      putChar(left, ConsoleChar::BoxDrawingsLightHorizontal, effect);
       ++left.x;
     }
   }
 
   void Console::drawVerticalLine(Vector2i top, int height, ConsoleEffect effect) {
     for (int i = 0; i < height; ++i) {
-      putChar(top, SpecialChar::WallVerticalLine, effect);
+      putChar(top, ConsoleChar::BoxDrawingsLightVertical, effect);
       ++top.y;
     }
   }
@@ -827,10 +575,10 @@ inline namespace v1 {
     int xEast = rect.left + rect.width - 1;
     int yNorth = rect.top;
     int ySouth = rect.top + rect.height - 1;
-    putChar({ xWest, yNorth }, SpecialChar::WallNorthWest, effect);
-    putChar({ xEast, yNorth }, SpecialChar::WallNorthEast, effect);
-    putChar({ xWest, ySouth }, SpecialChar::WallSouthWest, effect);
-    putChar({ xEast, ySouth }, SpecialChar::WallSouthEast, effect);
+    putChar({ xWest, yNorth }, ConsoleChar::BoxDrawingsLightDownAndRight, effect);
+    putChar({ xEast, yNorth }, ConsoleChar::BoxDrawingsLightDownAndLeft, effect);
+    putChar({ xWest, ySouth }, ConsoleChar::BoxDrawingsLightUpAndRight, effect);
+    putChar({ xEast, ySouth }, ConsoleChar::BoxDrawingsLightUpAndLeft, effect);
     drawHorizontalLine({ xWest + 1, yNorth }, rect.width - 2, effect);
     drawHorizontalLine({ xWest + 1, ySouth }, rect.width - 2, effect);
     drawVerticalLine({ xWest, yNorth + 1 }, rect.height - 2, effect);

@@ -40,6 +40,7 @@
 #include "Color.cc"
 #include "ColorRamp.cc"
 #include "Console.cc"
+#include "ConsoleFont.cc"
 #include "Control.cc"
 #include "Controls.cc"
 #include "Coordinates.cc"

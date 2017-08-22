@@ -24,13 +24,14 @@
 
 #include <gf/Color.h>
 #include <gf/Console.h>
+#include <gf/ConsoleChar.h>
 #include <gf/Event.h>
 #include <gf/RenderWindow.h>
 #include <gf/VectorOps.h>
 #include <gf/Window.h>
 
 int main() {
-  static constexpr gf::Vector2u CharacterSize(8u, 8u);
+  static constexpr gf::Vector2u CharacterSize(12u, 12u);
   static constexpr gf::Vector2i ConsoleSize(80, 50);
 
   const gf::Vector2u ScreenSize = CharacterSize * ConsoleSize;
@@ -44,19 +45,19 @@ int main() {
 //   std::cout << "\tM: change mode between field of vision and route finding\n";
 //   std::cout << "\tEscape: Close the window\n";
 
-  gf::ConsoleFont font;
+  gf::BitmapConsoleFont font;
 
-  if (!font.loadFromFile("27_terminal.png")) {
+  if (!font.loadFromFile("27_terminal.png", { gf::ConsoleFontFormat::Grayscale, gf::ConsoleFontFormat::InRow, gf::ConsoleFontFormat::ModifiedCodePage437 })) {
     return EXIT_FAILURE;
   }
 
   assert(CharacterSize == font.getCharacterSize());
 
   gf::Console console(font, ConsoleSize);
-  console.setDefaultBackground(gf::Color::Gray());
+  console.setDefaultBackground(gf::Color::Gray(0.25f));
 
   console.putChar({ 40, 25 }, '@');
-  console.putChar({ 42, 25 }, gf::SpecialChar::Smilie);
+  console.putChar({ 42, 25 }, gf::ConsoleChar::WhiteSmilingFace);
 
   console.setColorControl(gf::ConsoleColorControl1, gf::Color::Red, gf::Color::Black);
   console.print({ 1, 1 }, "String with a %cred%c word.", gf::ConsoleColorControl1, gf::ConsoleColorControlStop);

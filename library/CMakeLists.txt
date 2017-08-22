@@ -70,6 +70,7 @@ else()
     Color.cc
     ColorRamp.cc
     Console.cc
+    ConsoleFont.cc
     Control.cc
     Controls.cc
     Coordinates.cc
