@@ -105,6 +105,7 @@ static double valueWithWaterLevel(double value, double waterLevel) {
 static void generateArrayFromNoise(gf::Array2D<double>& array, gf::Noise2D& noise, double scale = 1.0) {
   for (auto row : array.getRowRange()) {
     double y = static_cast<double>(row) / array.getRows() * scale;
+
     for (auto col : array.getColRange()) {
       double x = static_cast<double>(col) / array.getCols() * scale;
       array({ col, row }) = noise(x, y);
@@ -127,87 +128,82 @@ static void generateShadedImage(gf::Image& image, const RenderingParams& renderi
 
   gf::Array2D<double> factor(array.getSize());
 
-  for (auto row : array.getRowRange()) {
-    for (auto col : array.getColRange()) {
-      double x = col;
-      double y = row;
+  for (auto pos : array.getPositionRange()) {
+    double x = pos.col;
+    double y = pos.row;
 
-      // compute the normal vector
-      gf::Vector3d normal(0, 0, 0);
-      unsigned count = 0;
+    // compute the normal vector
+    gf::Vector3d normal(0, 0, 0);
+    unsigned count = 0;
 
-      gf::Vector3d p{x, y, array({ row, col })};
+    gf::Vector3d p{x, y, array(pos)};
 
-      if (col > 0 && row > 0) {
-        gf::Vector3d pn{x    , y - 1, array({ row - 1, col     })};
-        gf::Vector3d pw{x - 1, y    , array({ row    , col - 1 })};
+    if (pos.col > 0 && pos.row > 0) {
+      gf::Vector3d pn{x    , y - 1, array({ pos.col    , pos.row - 1 })};
+      gf::Vector3d pw{x - 1, y    , array({ pos.col - 1, pos.row     })};
 
-        gf::Vector3d v3 = cross(p - pw, p - pn);
-        assert(v3.z > 0);
+      gf::Vector3d v3 = cross(p - pw, p - pn);
+      assert(v3.z > 0);
 
-        normal += v3;
-        count += 1;
-      }
-
-      if (col > 0 && row < array.getRows() - 1) {
-        gf::Vector3d pw{x - 1, y    , array({ row    , col - 1 })};
-        gf::Vector3d ps{x    , y + 1, array({ row + 1, col     })};
-
-        gf::Vector3d v3 = cross(p - ps, p - pw);
-        assert(v3.z > 0);
-
-        normal += v3;
-        count += 1;
-      }
-
-      if (col < array.getCols() - 1 && row > 0) {
-        gf::Vector3d pe{x + 1, y    , array({ row    , col + 1 })};
-        gf::Vector3d pn{x    , y - 1, array({ row - 1, col     })};
-
-        gf::Vector3d v3 = cross(p - pn, p - pe);
-        assert(v3.z > 0);
-
-        normal += v3;
-        count += 1;
-      }
-
-      if (col < array.getCols() - 1 && row < array.getRows() - 1) {
-        gf::Vector3d pe{x + 1, y    , array({ row    , col + 1 })};
-        gf::Vector3d ps{x    , y + 1, array({ row + 1, col     })};
-
-        gf::Vector3d v3 = cross(p - pe, p - ps);
-        assert(v3.z > 0);
-
-        normal += v3;
-        count += 1;
-      }
-
-      normal = gf::normalize(normal / count);
-      double d = gf::dot(Light, normal);
-      d = gf::clamp(0.5 + 35 * d, 0.0, 1.0);
-      factor({ row, col }) = d;
+      normal += v3;
+      count += 1;
     }
+
+    if (pos.col > 0 && pos.row < array.getRows() - 1) {
+      gf::Vector3d pw{x - 1, y    , array({ pos.col - 1, pos.row     })};
+      gf::Vector3d ps{x    , y + 1, array({ pos.col    , pos.row + 1 })};
+
+      gf::Vector3d v3 = cross(p - ps, p - pw);
+      assert(v3.z > 0);
+
+      normal += v3;
+      count += 1;
+    }
+
+    if (pos.col < array.getCols() - 1 && pos.row > 0) {
+      gf::Vector3d pe{x + 1, y    , array({ pos.col + 1, pos.row     })};
+      gf::Vector3d pn{x    , y - 1, array({ pos.col    , pos.row - 1 })};
+
+      gf::Vector3d v3 = cross(p - pn, p - pe);
+      assert(v3.z > 0);
+
+      normal += v3;
+      count += 1;
+    }
+
+    if (pos.col < array.getCols() - 1 && pos.row < array.getRows() - 1) {
+      gf::Vector3d pe{x + 1, y    , array({ pos.col + 1, pos.row     })};
+      gf::Vector3d ps{x    , y + 1, array({ pos.col    , pos.row + 1 })};
+
+      gf::Vector3d v3 = cross(p - pe, p - ps);
+      assert(v3.z > 0);
+
+      normal += v3;
+      count += 1;
+    }
+
+    normal = gf::normalize(normal / count);
+    double d = gf::dot(Light, normal);
+    d = gf::clamp(0.5 + 35 * d, 0.0, 1.0);
+    factor(pos) = d;
   }
 
-  for (auto row : array.getRowRange()) {
-    for (auto col : array.getColRange()) {
-      if (array({ row, col }) < renderingParams.waterLevel) {
-        continue;
-      }
+  for (auto pos : array.getPositionRange()) {
+    if (array(pos) < renderingParams.waterLevel) {
+      continue;
+    }
 
-      double d = factor({row, col});
+    double d = factor(pos);
 
-      gf::Color4u pixel = image.getPixel({ col, row });
+    gf::Color4u pixel = image.getPixel(pos);
 
-      gf::Color4u lo = gf::lerp(pixel, gf::Color4u(0x33, 0x11, 0x33, 0xFF), 0.7);
-      gf::Color4u hi = gf::lerp(pixel, gf::Color4u(0xFF, 0xFF, 0xCC, 0xFF), 0.3);
+    gf::Color4u lo = gf::lerp(pixel, gf::Color4u(0x33, 0x11, 0x33, 0xFF), 0.7);
+    gf::Color4u hi = gf::lerp(pixel, gf::Color4u(0xFF, 0xFF, 0xCC, 0xFF), 0.3);
 
-      if (d < 0.5) {
-        image.setPixel({ col, row }, gf::lerp(lo, pixel, 2 * d));
-      } else {
-        image.setPixel({ col, row }, gf::lerp(pixel, hi, 2 * d - 1));
-      }
-
+    if (d < 0.5) {
+      image.setPixel(pos, gf::lerp(lo, pixel, 2 * d));
+    } else {
+      image.setPixel(pos, gf::lerp(pixel, hi, 2 * d - 1));
     }
   }
 }
@@ -216,11 +212,9 @@ static void generateShadedImage(gf::Image& image, const RenderingParams& renderi
 static void generateImageFromArray(gf::Image& image, const RenderingParams& renderingParams, const gf::Array2D<double>& array) {
   switch (renderingParams.rendering) {
     case Rendering::Grayscale:
-      for (auto row : array.getRowRange()) {
-        for (auto col : array.getColRange()) {
-          uint8_t val = static_cast<uint8_t>(array({ row, col }) * 255);
-          image.setPixel({ col, row }, { val, val, val, 255 });
-        }
+      for (auto pos : array.getPositionRange()) {
+        uint8_t val = static_cast<uint8_t>(array(pos) * 255);
+        image.setPixel(pos, { val, val, val, 255 });
       }
       break;
 
@@ -237,12 +231,10 @@ static void generateImageFromArray(gf::Image& image, const RenderingParams& rend
       ramp.addColorStop(0.950f, gf::Color::fromRgba32(179, 179, 179)); // grey: rocks
       ramp.addColorStop(1.000f, gf::Color::fromRgba32(255, 255, 255)); // white: snow
 
-      for (auto row : array.getRowRange()) {
-        for (auto col : array.getColRange()) {
-          double val = valueWithWaterLevel(array({ row, col }), renderingParams.waterLevel);
-          gf::Color4f color = ramp.computeColor(val);
-          image.setPixel({ col, row }, gf::Color::toRgba32(color));
-        }
+      for (auto pos : array.getPositionRange()) {
+        double val = valueWithWaterLevel(array(pos), renderingParams.waterLevel);
+        gf::Color4f color = ramp.computeColor(val);
+        image.setPixel(pos, gf::Color::toRgba32(color));
       }
 
       if (renderingParams.shaded) {
@@ -307,7 +299,7 @@ static void exportToPortableGraymap(const gf::Array2D<double>& array, const char
 
   for (auto row : array.getRowRange()) {
     for (auto col : array.getColRange()) {
-      unsigned value = static_cast<unsigned>(array({ row, col }) * Max);
+      unsigned value = static_cast<unsigned>(array({ col, row }) * Max);
       assert(value <= Max);
       out << value << ' ';
     }
