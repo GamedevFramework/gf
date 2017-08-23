@@ -25,6 +25,7 @@
 #include <string>
 
 #include "Portability.h"
+#include "StringRef.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -70,9 +71,12 @@ inline namespace v1 {
    * The hash is a Fowler–Noll–Vo 1a hash. This function can be used
    * for computing an id at runtime. For computing an id from a string
    * at compile time, you should use the the user-defined literal `_id`.
+   *
+   * @param str The string
+   * @returns The hash of the string
    */
-  inline Id hash(const std::string& str) {
-    return hash(str.c_str(), str.size());
+  constexpr Id hash(StringRef str) {
+    return hash(str.getData(), str.getSize());
   }
 
   namespace literals {
