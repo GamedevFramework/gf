@@ -40,118 +40,6 @@ inline namespace v1 {
 
   /**
    * @ingroup core
-   * @brief A 2D range
-   */
-  template<typename T>
-  struct Range2D {
-    Range<T> first;   ///< The range in the first dimension
-    Range<T> second;  ///< The range in the second dimension
-
-    /**
-     * @brief An iterator for a 2D range
-     */
-    struct Iterator : public std::iterator<std::input_iterator_tag, T> {
-      Range<T> range;
-      Vector<T, 2> position;
-
-      /**
-       * @brief Constructor
-       *
-       * @param iteratorRange The range in the first dimension
-       * @param iteratorPosition The current position in 2D
-       */
-      constexpr Iterator(Range<T> iteratorRange, Vector<T, 2> iteratorPosition) noexcept
-      : range(iteratorRange)
-      , position(iteratorPosition)
-      {
-
-      }
-
-      /**
-       * @brief Dereference operator
-       *
-       * @return The position
-       */
-      Vector<T, 2> operator*() noexcept {
-        return position;
-      }
-
-      /**
-       * @brief Increment operator (prefix)
-       *
-       * @return The iterator
-       */
-      Iterator& operator++() noexcept {
-        step();
-        return *this;
-      }
-
-      /**
-       * @brief Increment operator (postfix)
-       *
-       * @return The iterator
-       */
-      Iterator operator++(int) noexcept {
-        Iterator copy = *this;
-        step();
-        return copy;
-      }
-
-      /**
-       * @brief Inequality operator
-       *
-       * @param other Another iterator
-       * @return True if the iterator are different
-       */
-      constexpr bool operator!=(const Iterator& other) const noexcept {
-        return position.x != other.position.x || position.y != other.position.y;
-      }
-
-      /**
-       * @brief Equality operator
-       *
-       * @param other Another iterator
-       * @return True if the iterator are the same
-       */
-      constexpr bool operator==(const Iterator& other) const noexcept {
-        return position.x == other.position.x && position.y == other.position.y;
-      }
-
-    private:
-      void step() {
-        ++position.x;
-
-        if (position.x == range.hi) {
-          position.x = range.lo;
-          ++position.y;
-        }
-      }
-    };
-
-    /**
-     * @brief Get a begin iterator
-     *
-     * @return A begin iterator
-     * @sa end()
-     */
-    constexpr Iterator begin() const noexcept {
-      return Iterator(first, { first.lo, second.lo });
-    }
-
-    /**
-     * @brief Get a end iterator
-     *
-     * @return A end iterator
-     * @sa begin()
-     */
-    constexpr Iterator end() const noexcept {
-      return Iterator(first, { first.lo, second.hi });
-    }
-
-  };
-
-  /**
-   * @ingroup core
    * @brief A two-dimensional array
    *
    * gf::Array represents a two-dimensional array, organized in row-major order.
@@ -664,7 +552,7 @@ inline namespace v1 {
      *
      * @return A range for iterating among the positions
      */
-    constexpr Range2D<I> getPositionRange() const noexcept {
+    constexpr PositionRange<I> getPositionRange() const noexcept {
       return { getColRange(), getRowRange() };
     }
 

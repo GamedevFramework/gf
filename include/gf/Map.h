@@ -138,7 +138,7 @@ inline namespace v1 {
      *
      * @sa Array2D::getPositionRange()
      */
-    Range2D<int> getRange() const;
+    PositionRange<int> getRange() const;
 
     /**
      * @name Cell properties

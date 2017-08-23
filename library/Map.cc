@@ -43,7 +43,7 @@ inline namespace v1 {
     return m_cells.getSize();
   }
 
-  Range2D<int> SquareMap::getRange() const {
+  PositionRange<int> SquareMap::getRange() const {
     return m_cells.getPositionRange();
   }
 
