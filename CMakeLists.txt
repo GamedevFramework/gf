@@ -40,7 +40,7 @@ find_package(Freetype REQUIRED)
 
 if(MSVC)
   message(STATUS "Using MSVC compiler")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /DNOMINMAX /W4")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /DNOMINMAX /W4 /utf-8")
   link_directories(${Boost_LIBRARY_DIRS})
 else()
   message(STATUS "Using GCC or Clang compiler")
