@@ -215,7 +215,14 @@ inline namespace v1 {
   };
 
   static constexpr ConsoleFontElement ModifiedCodePage437Mapping[] = {
-    // remove some mapping
+    // remove some mapping in 0xE2-0xE8
+    { u'\u0393', 0x00 }, { u'\u03C0', 0x00 }, { u'\u03A3', 0x00 }, { u'\u03C3', 0x00 },
+    { u'\u00B5', 0x00 }, { u'\u03C4', 0x00 }, { u'\u03A6', 0x00 }, { u'\u03A0', 0x00 },
+    { u'\u220F', 0x00 }, { u'\u2211', 0x00 }, { u'\u03BC', 0x00 },
+
+    //add new mapping
+    { u'\u2598', 0xE2 }, { u'\u259D', 0xE3 }, { u'\u2580', 0xE4 }, { u'\u2597', 0xE5 },
+    { u'\u259A', 0xE6 }, { u'\u2590', 0xE7 }, { u'\u2596', 0xE8 },
   };
 
   static constexpr ConsoleFontElement SpecialMapping[] = {
@@ -279,6 +286,7 @@ inline namespace v1 {
         break;
       case ConsoleFontFormat::ModifiedCodePage437:
         mapElements(CodePage437Mapping);
+        mapElements(ModifiedCodePage437Mapping);
         break;
       case ConsoleFontFormat::Special:
         mapElements(SpecialMapping);

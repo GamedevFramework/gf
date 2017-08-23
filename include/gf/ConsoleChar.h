@@ -1018,6 +1018,41 @@ inline namespace v1 {
      */
     static constexpr char16_t ElementOf = u'∈';
 
+    /**
+     * @brief U+2598 Quadrant Upper Left
+     *
+     * Appears in gf::ConsoleFontFormat::ModifiedCodePage437
+     */
+    static constexpr char16_t QuadrantUpperLeft = u'▘';
+
+    /**
+     * @brief U+259D Quadrant Upper Right
+     *
+     * Appears in gf::ConsoleFontFormat::ModifiedCodePage437
+     */
+    static constexpr char16_t QuadrantUpperRight = u'▝';
+
+    /**
+     * @brief U+2597 Quadrant Lower Right
+     *
+     * Appears in gf::ConsoleFontFormat::ModifiedCodePage437
+     */
+    static constexpr char16_t QuadrantLowerRight = u'▗';
+
+    /**
+     * @brief U+259A Quadrant Upper Left And Lower Right
+     *
+     * Appears in gf::ConsoleFontFormat::ModifiedCodePage437
+     */
+    static constexpr char16_t QuadrantUpperLeftAndLowerRight = u'▚';
+
+    /**
+     * @brief U+2596 Quadrant Lower Left
+     *
+     * Appears in gf::ConsoleFontFormat::ModifiedCodePage437
+     */
+    static constexpr char16_t QuadrantLowerLeft = u'▖';
+
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
