@@ -65,6 +65,7 @@ else()
     Blend.cc
     BufferedGeometry.cc
     Circ.cc
+    Clipboard.cc
     Clock.cc
     Collision.cc
     Color.cc

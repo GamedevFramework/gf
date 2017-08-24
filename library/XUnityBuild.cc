@@ -35,6 +35,7 @@
 #include "Blend.cc"
 #include "BufferedGeometry.cc"
 #include "Circ.cc"
+#include "Clipboard.cc"
 #include "Clock.cc"
 #include "Collision.cc"
 #include "Color.cc"
