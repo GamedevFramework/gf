@@ -41,7 +41,7 @@ inline namespace v1 {
    * Usage example:
    * @code
    * // get the clipboard content as a string
-   * std::string string = sf::Clipboard::getString();
+   * std::string string = gf::Clipboard::getString();
    *
    * // or use it in the event loop
    * gf::Event event;
@@ -54,7 +54,7 @@ inline namespace v1 {
    *   if (event.type == gf::EventType::KeyPressed) {
    *     // Using Ctrl + V to paste a string
    *     if (event.key.modifiers.test(gf::Mod::Control) && event.key.keycode == gf::Keycode::V) {
-   *       string = sf::Clipboard::getString();
+   *       string = gf::Clipboard::getString();
    *     }
    *   }
    * }
