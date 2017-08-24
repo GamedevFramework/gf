@@ -61,6 +61,10 @@ inline namespace v1 {
   }
 
   bool Cursor::loadFromPixels(const uint8_t* pixels, Vector2u size, Vector2u hotspot) {
+    if (pixels == nullptr || size.width == 0 || size.height == 0) {
+      return false;
+    }
+
     if (m_cursor != nullptr) {
       SDL_FreeCursor(m_cursor);
       m_cursor = nullptr;
