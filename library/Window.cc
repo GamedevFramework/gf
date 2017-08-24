@@ -30,6 +30,7 @@
 
 #include <glad/glad.h>
 
+#include <gf/Cursor.h>
 #include <gf/Event.h>
 #include <gf/Gamepad.h>
 #include <gf/Keyboard.h>
@@ -575,6 +576,14 @@ inline namespace v1 {
 
   void Window::setMouseCursorGrabbed(bool grabbed) {
     SDL_SetWindowGrab(m_window, grabbed ? SDL_TRUE : SDL_FALSE);
+  }
+
+  void Window::setMouseCursor(const Cursor& cursor) {
+    if (cursor.m_cursor == nullptr) {
+      return;
+    }
+
+    SDL_SetCursor(cursor.m_cursor);
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

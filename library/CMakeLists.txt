@@ -75,6 +75,7 @@ else()
     Control.cc
     Controls.cc
     Coordinates.cc
+    Cursor.cc
     Curve.cc
     Curves.cc
     Direction.cc

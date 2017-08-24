@@ -45,6 +45,7 @@
 #include "Control.cc"
 #include "Controls.cc"
 #include "Coordinates.cc"
+#include "Cursor.cc"
 #include "Curve.cc"
 #include "Curves.cc"
 #include "Direction.cc"

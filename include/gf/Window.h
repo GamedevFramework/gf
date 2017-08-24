@@ -42,6 +42,7 @@ inline namespace v1 {
 #endif
 
   struct Event;
+  class Cursor;
 
   /**
    * @ingroup window
@@ -442,6 +443,18 @@ inline namespace v1 {
      * @param grabbed True to enable, false to disable
      */
     void setMouseCursorGrabbed(bool grabbed);
+
+
+    /**
+     * @brief Set the displayed cursor to a native system cursor
+     *
+     * Upon window creation, the arrow cursor is used by default.
+     *
+     * @warning The cursor must not be destroyed while in use by the window.
+     *
+     * @param cursor Native system cursor type to display
+     */
+    void setMouseCursor(const Cursor& cursor);
 
     /** @} */
 
