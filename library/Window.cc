@@ -104,6 +104,7 @@ inline namespace v1 {
     if (m_context) {
       glCheck(glEnable(GL_BLEND));
       glCheck(glEnable(GL_SCISSOR_TEST));
+      glCheck(glClear(GL_COLOR_BUFFER_BIT));
     }
   }
 
