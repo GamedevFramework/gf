@@ -468,7 +468,7 @@ inline namespace v1 {
     NumpadAmpersand = getKeycodeFromScancode(Scancode::NumpadAmpersand),
     NumpadDblAmpersand = getKeycodeFromScancode(Scancode::NumpadDblAmpersand),
     NumpadVerticalBar = getKeycodeFromScancode(Scancode::NumpadVerticalBar),
-    NumpadDblVerticalbar = getKeycodeFromScancode(Scancode::NumpadDblVerticalBar),
+    NumpadDblVerticalBar = getKeycodeFromScancode(Scancode::NumpadDblVerticalBar),
     NumpadColon = getKeycodeFromScancode(Scancode::NumpadColon),
     NumpadHash = getKeycodeFromScancode(Scancode::NumpadHash),
     NumpadSpace = getKeycodeFromScancode(Scancode::NumpadSpace),
