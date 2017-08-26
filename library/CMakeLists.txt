@@ -90,6 +90,7 @@ else()
     Geometry.cc
     GraphicsInfo.cc
     Grid.cc
+    Heightmap.cc
     Image.cc
     InputStream.cc
     InputStreams.cc

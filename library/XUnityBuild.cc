@@ -60,6 +60,7 @@
 #include "Geometry.cc"
 #include "GraphicsInfo.cc"
 #include "Grid.cc"
+#include "Heightmap.cc"
 #include "Image.cc"
 #include "InputStream.cc"
 #include "InputStreams.cc"

@@ -23,6 +23,8 @@
 
 #include <vector>
 
+#include "ArrayRef.h"
+#include "Heightmap.h"
 #include "Portability.h"
 #include "Random.h"
 #include "Vector.h"
@@ -107,6 +109,49 @@ inline namespace v1 {
    * @param reductionFactor The factor to apply at each iteration
    */
   GF_API std::vector<Vector2f> midpointDisplacement1D(Vector2f p0, Vector2f p1, Random& random, unsigned iterations, float initialFactor = 1.0f, float reductionFactor = 0.5f);
+
+
+  /**
+   * @ingroup game
+   * @brief 2D midpoint displacement
+   *
+   * The size can be anything. If the size is not a power of two plus one,
+   * then a greater heightmap is generated and a submap of the right size
+   * is returned (in the middle of the generated map).
+   *
+   * The function takes initial values. If there are less than three values,
+   * only the first one is used to initialize the four corners. If there are
+   * more than four, only the first four are used to initialize the four
+   * corners in that order: north-west, north-east, south-east, south-west.
+   * If no values are given, the four corners are initialized to @f$ 0.0 @f$.
+   *
+   * @param size The size of the map
+   * @param random A random engine
+   * @param initialValues The initial values of the four corners
+   */
+  GF_API Heightmap midpointDisplacement2D(Vector2i size, Random& random, ArrayRef<double> initialValues = nullptr);
+
+
+  /**
+   * @ingroup game
+   * @brief 2D diamond square
+   *
+   * The size can be anything. If the size is not a power of two plus one,
+   * then a greater heightmap is generated and a submap of the right size
+   * is returned (in the middle of the generated map).
+   *
+   * The function takes initial values. If there are less than three values,
+   * only the first one is used to initialize the four corners. If there are
+   * more than four, only the first four are used to initialize the four
+   * corners in that order: north-west, north-east, south-east, south-west.
+   * If no values are given, the four corners are initialized to @f$ 0.0 @f$.
+   *
+   * @param size The size of the map
+   * @param random A random engine
+   * @param initialValues The initial values of the four corners
+   */
+  GF_API Heightmap diamondSquare2D(Vector2i size, Random& random, ArrayRef<double> initialValues = nullptr);
+
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
