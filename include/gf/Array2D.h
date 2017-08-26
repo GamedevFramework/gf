@@ -44,9 +44,12 @@ inline namespace v1 {
    *
    * gf::Array represents a two-dimensional array, organized in row-major order.
    *
+   * The array is templated with the type of the data and the type of the
+   * indices (defaults to `unsigned`).
+   *
    * Contrary to the usual way of accessing 2D arrays, the first coordinate is
    * the column and the second coordinate is the row. So that, if `size` is the
-   * size of the array and `pos` if the position in the array:
+   * size of the array and `pos` is the position in the array:
    *
    * - @f$ 0 \leq \mathtt{pos.x} = \mathtt{pos.col} < \mathtt{size.width} = \mathtt{size.col} @f$
    * - @f$ 0 \leq \mathtt{pos.y} = \mathtt{pos.row} < \mathtt{size.height} = \mathtt{size.row} @f$
