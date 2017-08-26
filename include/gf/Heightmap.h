@@ -22,6 +22,8 @@
 #define GF_HEIGHTMAP_H
 
 #include "Array2D.h"
+#include "ColorRamp.h"
+#include "Image.h"
 #include "Noise.h"
 #include "Portability.h"
 #include "Rect.h"
@@ -110,6 +112,43 @@ inline namespace v1 {
      * @param area The area of the sub-map in the heightmap
      */
     Heightmap subMap(RectI area) const;
+
+    /**
+     * @brief Export to a grayscale image
+     *
+     * The heightmap is assumed to be normalized.
+     *
+     * @returns A grayscale image representing the heightmap
+     *
+     * @sa copyToColoredImage()
+     */
+    Image copyToGrayscaleImage() const;
+
+    /**
+     * @brief Rendering mode
+     */
+    enum class Render {
+      Colored, ///< Export to a simply colored image
+      Shaded,  ///< Export to a shaded image
+    };
+
+    /**
+     * @brief Export to a colored image
+     *
+     * The heightmap is assumed to be normalized.
+     *
+     * The color ramp assumes that the water level is at @f$ 0.5 @f$. The
+     * actual water level can be specified and the ramp is automatically
+     * adapted on the fly.
+     *
+     * @param ramp A color ramp
+     * @param waterLevel The actual waterLevel (defaults to @f$ 0.5 @f$)
+     * @param render The rendering mode
+     * @returns A colored image representing the heightmap
+     *
+     * @sa copyToGrayscaleImage()
+     */
+    Image copyToColoredImage(const ColorRamp& ramp, double waterLevel = 0.5, Render render = Render::Colored) const;
 
   private:
     Array2D<double, int> m_data;
