@@ -165,7 +165,7 @@ inline namespace v1 {
      *
      * @return The number of columns
      */
-    constexpr unsigned getCols() const noexcept {
+    constexpr I getCols() const noexcept {
       return m_size.col;
     }
 
@@ -174,7 +174,7 @@ inline namespace v1 {
      *
      * @return The number of rows
      */
-    constexpr unsigned getRows() const noexcept {
+    constexpr I getRows() const noexcept {
       return m_size.row;
     }
 
