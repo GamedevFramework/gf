@@ -54,6 +54,18 @@ inline namespace v1 {
     }
 
     /**
+     * @brief Null constructor
+     *
+     * Data is `nullptr` and size is 0.
+     */
+    constexpr ArrayRef(std::nullptr_t)
+    : m_data(nullptr)
+    , m_size(0)
+    {
+
+    }
+
+    /**
      * @brief Constructor from a pointer and a size
      *
      * @param data A pointer to the elements in the array
