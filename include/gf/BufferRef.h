@@ -147,6 +147,18 @@ inline namespace v1 {
       return m_data + m_size;
     }
 
+    /**
+     * @brief Get an element at a given index
+     *
+     * No verification is done on the index.
+     *
+     * @param index The index of the element
+     * @returns The element at the given index
+     */
+    T& operator[](std::size_t index) {
+      return m_data[index];
+    }
+
   private:
     T *m_data;
     std::size_t m_size;
