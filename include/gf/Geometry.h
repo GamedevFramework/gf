@@ -128,6 +128,8 @@ inline namespace v1 {
    * @param size The size of the map
    * @param random A random engine
    * @param initialValues The initial values of the four corners
+   *
+   * @sa gf::diamondSquare2D()
    */
   GF_API Heightmap midpointDisplacement2D(Vector2i size, Random& random, ArrayRef<double> initialValues = nullptr);
 
@@ -149,6 +151,8 @@ inline namespace v1 {
    * @param size The size of the map
    * @param random A random engine
    * @param initialValues The initial values of the four corners
+   *
+   * @sa gf::midpointDisplacement2D()
    */
   GF_API Heightmap diamondSquare2D(Vector2i size, Random& random, ArrayRef<double> initialValues = nullptr);
 
