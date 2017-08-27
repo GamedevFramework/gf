@@ -527,6 +527,7 @@ int main() {
           gf::WaveletNoise3D noise(random);
           gf::Noise3DTo2DAdapter adapter(noise);
           image = generate(texture, renderingParams, heightmap, adapter, fractalParams, scale);
+          break;
         }
       }
 
