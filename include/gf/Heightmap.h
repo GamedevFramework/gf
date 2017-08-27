@@ -34,6 +34,7 @@ inline namespace v1 {
 #endif
 
   /**
+   * @ingroup core
    * @brief A heightmap
    *
    * @sa gf::midpointDisplacement2D(), gf::diamondSquare2D()
