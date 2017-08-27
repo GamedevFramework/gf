@@ -107,6 +107,88 @@ inline namespace v1 {
     void addNoise(Noise2D& noise, double scale = 1.0);
 
     /**
+     * @brief Add a constant to the heightmap
+     *
+     * @param value The value of the constant
+     */
+    void addValue(double value);
+
+    /**
+     * @brief Scale the values of the heightmap
+     *
+     * @param value The factor of scaling
+     */
+    void scale(double value);
+
+    /**
+     * @brief Clamp the values of the heightmap
+     *
+     * @param min The minimum value (defaults to @f$ 0.0f @f$)
+     * @param max The maximum value (defaults to @f$ 1.0f @f$)
+     * @sa normalize()
+     */
+    void clamp(double min = 0.0, double max = 1.0);
+
+    /**
+     * @name Erosion
+     * @{
+     */
+
+    /**
+     * @brief Compute the slope at a position
+     *
+     * The slope is defined as "the greatest of the height differences between
+     * the cell and its four neighbours in a Von Neumann neighbourhood".
+     *
+     * @f[ \text{slope}(x, y) = \max(|h(x,y) - h(x - 1, y)|, |h(x,y) - h(x + 1, y)|, |h(x,y) - h(x, y - 1)|, |h(x,y) - h(x, y + 1)|) @f]
+     *
+     * @param position The given position
+     */
+    double getSlope(Vector2i position) const;
+
+    /**
+     * @brief Apply thermal erosion to the heightmap
+     *
+     * @param iterations The number of iterations
+     * @param talus The minimum difference for a move of material (typically @f$ \frac{4}{N} @f$)
+     * @param fraction The fraction of material that moves (typically @f$ 0.5 @f$)
+     */
+    void thermalErosion(unsigned iterations, double talus, double fraction);
+
+    /**
+     * @brief Apply hydraulic erosision to the heightmap
+     *
+     * @param iterations The number of iterations
+     * @param rainAmount The amount of rain each cell receives at each iteration (typically @f$ 0.01 @f$)
+     * @param solubility The solubility of the terrain (typically @f$ 0.01 @f$)
+     * @param evaporation The proportion of evaporated water at each iteration (typically @f$ 0.5 @f$)
+     * @param capacity The maximum proportion of material that can be carried by water (typically @f$ 0.01 @f$)
+     */
+    void hydraulicErosion(unsigned iterations, double rainAmount, double solubility, double evaporation, double capacity);
+
+    /**
+     * @brief Apply fast erosion to the heightmap
+     *
+     * @param iterations The number of iterations
+     * @param talus The maximum difference for a move of material (typically @f$ \frac{8}{N} @f$ or more)
+     * @param fraction The fraction of material that moves (typically @f$ 0.5 @f$)
+     */
+    void fastErosion(unsigned iterations, double talus, double fraction);
+
+    /**
+     * @brief Compute the erosion score for the heightmap
+     *
+     * The erosion score is the average slope divided by the standard
+     * deviation of slopes. A high erosion score means that the terrain has
+     * large flat areas and has some steep areas.
+     */
+    double getErosionScore() const;
+
+    /**
+     * @}
+     */
+
+    /**
      * @brief Get a sub-map of the heightmap
      *
      * @param area The area of the sub-map in the heightmap
@@ -142,7 +224,7 @@ inline namespace v1 {
      * adapted on the fly.
      *
      * @param ramp A color ramp
-     * @param waterLevel The actual waterLevel (defaults to @f$ 0.5 @f$)
+     * @param waterLevel The actual water level (defaults to @f$ 0.5 @f$)
      * @param render The rendering mode
      * @returns A colored image representing the heightmap
      *

@@ -24,6 +24,7 @@
 
 #include <gf/Color.h>
 #include <gf/VectorOps.h>
+#include <gf/Unused.h>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -73,6 +74,243 @@ inline namespace v1 {
         m_data({ col, row }) = noise(x, y);
       }
     }
+  }
+
+  void Heightmap::addValue(double value) {
+    for (auto& currentValue : m_data) {
+      currentValue += value;
+    }
+  }
+
+  void Heightmap::scale(double value) {
+    for (auto& currentValue : m_data) {
+      currentValue *= value;
+    }
+  }
+
+  void Heightmap::clamp(double min, double max) {
+    for (auto& value : m_data) {
+      value = gf::clamp(value, min, max);
+    }
+  }
+
+  double Heightmap::getSlope(Vector2i position) const {
+    const double altitudeHere = m_data(position);
+    double altitudeDifferenceMax = 0.0;
+
+    m_data.visit4Neighbors(position, [altitudeHere, &altitudeDifferenceMax](Vector2i positionThere, double altitudeThere) {
+      gf::unused(positionThere);
+      double altitudeDifference = std::abs(altitudeHere - altitudeThere);
+
+      if (altitudeDifference > altitudeDifferenceMax) {
+        altitudeDifferenceMax = altitudeDifference;
+      }
+    });
+
+    return altitudeDifferenceMax;
+  }
+
+  void Heightmap::thermalErosion(unsigned iterations, double talus, double fraction) {
+    double d[3][3];
+
+    Array2D<double, int> material(m_data.getSize());
+
+    for (unsigned k = 0; k < iterations; ++k) {
+
+      // initialize material map
+      std::fill(material.begin(), material.end(), 0.0);
+
+      // compute material map
+      for (int y = 1; y < m_data.getRows() - 1; ++y) {
+        for (int x = 1; x < m_data.getCols() - 1; ++x) {
+          double diffTotal = 0.0;
+          double diffMax = 0.0;
+
+          for (int i = -1; i <= 1; ++i) {
+            for (int j = -1; j <= 1; ++j) {
+              double diff = m_data({ x, y }) - m_data({ x+i, y+j });
+              d[1+i][1+j] = diff;
+
+              if (diff > talus) {
+                diffTotal += diff;
+
+                if (diff > diffMax) {
+                  diffMax = diff;
+                }
+              }
+            }
+          }
+
+          for (int i = -1; i <= 1; ++i) {
+            for (int j = -1; j <= 1; ++j) {
+              double diff = d[1+i][1+j];
+
+              if (diff > talus) {
+                material({ x+i, y+j }) += fraction * (diffMax - talus) * (diff / diffTotal);
+              }
+            }
+          }
+        }
+      }
+
+      // add material map to the heightmap
+      for (int y = 1; y < m_data.getRows() - 1; ++y) {
+        for (int x = 1; x < m_data.getCols() - 1; ++x) {
+          m_data({ x, y }) += material({ x, y });
+        }
+      }
+    }
+  }
+
+  void Heightmap::hydraulicErosion(unsigned iterations, double rainAmount, double solubility, double evaporation, double capacity) {
+    Array2D<double, int> waterMap(m_data.getSize(), 0.0);
+    Array2D<double, int> waterDiff(m_data.getSize(), 0.0);
+
+    Array2D<double, int> materialMap(m_data.getSize(), 0.0);
+    Array2D<double, int> materialDiff(m_data.getSize(), 0.0);
+
+    double d[3][3];
+
+    for (unsigned k = 0; k < iterations; ++k) {
+
+      // 1. appearance of new water
+      for (auto& water : waterMap) {
+        water += rainAmount;
+      }
+
+      // 2. water erosion of the terrain
+      for (auto pos : waterMap.getPositionRange()) {
+        double material = solubility * waterMap(pos);
+        m_data(pos) -= material;
+        materialMap(pos) += material;
+      }
+
+      // 3. transportation of water
+      std::fill(waterDiff.begin(), waterDiff.end(), 0.0);
+      std::fill(materialDiff.begin(), materialDiff.end(), 0.0);
+
+      for (int y = 1; y < m_data.getRows() - 1; ++y) {
+        for (int x = 1; x < m_data.getCols() - 1; ++x) {
+          double diffTotal = 0.0;
+          double altitudeTotal = 0.0;
+          double altitude = m_data({ x, y }) + waterMap({ x, y });
+          int n = 0;
+
+          for (int i = -1; i <= 1; ++i) {
+            for (int j = -1; j <= 1; ++j) {
+              double altitudeLocal = m_data({ x+i, y+j }) + waterMap({ x+i, y+j });
+              double diff = altitude - altitudeLocal;
+              d[1+i][1+j] = diff;
+
+              if (diff > 0.0) {
+                diffTotal += diff;
+                altitudeTotal += altitudeLocal;
+                n++;
+              }
+            }
+          }
+
+          if (n == 0) {
+            continue;
+          }
+
+          double altitudeAverage = altitudeTotal / n;
+          double diffAltitude = std::min(waterMap({ x, y }), altitude - altitudeAverage);
+
+          for (int i = -1; i <= 1; ++i) {
+            for (int j = -1; j <= 1; ++j) {
+              double diff = d[1+i][1+j];
+
+              if (diff > 0.0) {
+                double diffWater = diffAltitude * (diff / diffTotal);
+                waterDiff({ x + i, y + j }) += diffWater;
+                waterDiff({ x, y }) -= diffWater;
+
+                double diffMaterial = materialMap({ x, y }) * (diffWater / waterMap({ x, y }));
+                materialDiff({ x + i, y + j }) += diffMaterial;
+                materialDiff({ x, y }) -= diffMaterial;
+              }
+            }
+          }
+        }
+      }
+
+      for (auto pos : waterMap.getPositionRange()) {
+        waterMap(pos) += waterDiff(pos);
+      }
+
+      for (auto pos : materialMap.getPositionRange()) {
+        materialMap(pos) += materialDiff(pos);
+      }
+
+      // 4. evaporation of water
+      for (auto pos : waterMap.getPositionRange()) {
+        double water = waterMap(pos) * (1 - evaporation);
+
+        waterMap(pos) = water;
+
+        double materialMax = capacity * water;
+        double diffMaterial = std::max(double(0), materialMap(pos) - materialMax);
+        materialMap(pos) -= diffMaterial;
+        m_data(pos) += diffMaterial;
+      }
+
+    }
+
+  }
+
+  void Heightmap::fastErosion(unsigned iterations, double talus, double fraction) {
+    Array2D<double, int> material(m_data.getSize());
+
+    for (unsigned k = 0; k < iterations; ++k) {
+
+      // initialize material map
+      std::fill(material.begin(), material.end(), 0.0);
+
+      // compute material map
+      for (auto position : m_data.getPositionRange()) {
+        double altitudeDifferenceMax = 0.0;
+        Vector2i positionMax = position;
+
+        const double altitudeHere = m_data(position);
+
+        m_data.visit8Neighbors(position, [altitudeHere, &altitudeDifferenceMax, &positionMax](Vector2i positionThere, double altitudeThere) {
+          double altitudeDifference = altitudeHere - altitudeThere;
+          if (altitudeDifference > altitudeDifferenceMax) {
+            altitudeDifferenceMax = altitudeDifference;
+            positionMax = positionThere;
+          }
+        });
+
+        if (0 < altitudeDifferenceMax && altitudeDifferenceMax <= talus) {
+          material(position) -= fraction * altitudeDifferenceMax;
+          material(positionMax) += fraction * altitudeDifferenceMax;
+        }
+      }
+
+      // add material map to the map
+      for (auto position : m_data.getPositionRange()) {
+        m_data(position) += material(position);
+      }
+    }
+  }
+
+  double Heightmap::getErosionScore() const {
+    double total = 0.0;
+    double totalSquare = 0.0;
+    int n = 0;
+
+    for (auto position : m_data.getPositionRange()) {
+      double value = getSlope(position);
+      total += value;
+      totalSquare += gf::square(value);
+      n++;
+    }
+
+    double average = total / n;
+    double averageSquare = totalSquare / n;
+    double stdDev = std::sqrt(averageSquare - gf::square(average));
+    return stdDev / average;
   }
 
   Heightmap Heightmap::subMap(RectI area) const {
