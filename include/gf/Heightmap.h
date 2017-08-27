@@ -92,12 +92,35 @@ inline namespace v1 {
     std::pair<double, double> getMinMax() const;
 
     /**
+     * @name Shaping
+     * @{
+     */
+
+    /**
      * @brief Normalize the heightmap
      *
      * @param min The new minimum value (defaults to @f$ 0.0f @f$)
      * @param max The new maximum value (defaults to @f$ 1.0f @f$)
      */
     void normalize(double min = 0.0, double max = 1.0);
+
+    /**
+     * @brief Add a hill to the heightmap
+     *
+     * @param center The center of the hill
+     * @param radius The radius of the hill
+     * @param height The height of the hill
+     */
+    void addHill(Vector2d center, double radius, double height);
+
+    /**
+     * @brief Dig a hill in the heightmap
+     *
+     * @param center The center of the hill
+     * @param radius The radius of the hill
+     * @param height The height of the hill
+     */
+    void digHill(Vector2d center, double radius, double height);
 
     /**
      * @brief Add a noise to the heightmap
@@ -129,6 +152,10 @@ inline namespace v1 {
      * @sa normalize()
      */
     void clamp(double min = 0.0, double max = 1.0);
+
+    /**
+     * @}
+     */
 
     /**
      * @name Erosion
@@ -190,6 +217,11 @@ inline namespace v1 {
      */
 
     /**
+     * @name Export
+     * @{
+     */
+
+    /**
      * @brief Get a sub-map of the heightmap
      *
      * @param area The area of the sub-map in the heightmap
@@ -232,6 +264,10 @@ inline namespace v1 {
      * @sa copyToGrayscaleImage()
      */
     Image copyToColoredImage(const ColorRamp& ramp, double waterLevel = 0.5, Render render = Render::Colored) const;
+
+    /**
+     * @}
+     */
 
   private:
     Array2D<double, int> m_data;

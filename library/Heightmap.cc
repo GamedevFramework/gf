@@ -54,7 +54,7 @@ inline namespace v1 {
     double currMin, currMax;
     std::tie(currMin, currMax) = getMinMax();
 
-    double factor = 0.0f;
+    double factor = 0.0;
 
     if (!gf::almostEquals(currMin, currMax)) {
       factor = (max - min) / (currMax - currMin);
@@ -62,6 +62,63 @@ inline namespace v1 {
 
     for (auto& value : m_data) {
       value = min + (value - currMin) * factor;
+    }
+  }
+
+  void Heightmap::addHill(Vector2d center, double radius, double height) {
+    Vector2i size = m_data.getSize();
+    double radiusSquare = gf::square(radius);
+    double coeff = height / radiusSquare;
+    int minX = std::max(0, static_cast<int>(center.x - radius));
+    int maxX = std::min(size.width, static_cast<int>(center.x + radius));
+    int minY = std::max(0, static_cast<int>(center.y - radius));
+    int maxY = std::min(size.height, static_cast<int>(center.y + radius));
+
+    for (int y = minY; y < maxY; ++y) {
+      double yDistSquare = gf::square(y - center.y);
+
+      for (int x = minX; x < maxX; ++x) {
+        double xDistSquare = gf::square(x - center.x);
+        double z = radiusSquare - (yDistSquare + xDistSquare);
+
+        if (z > 0.0) {
+          m_data({ x, y }) += z * coeff;
+        }
+      }
+    }
+  }
+
+  void Heightmap::digHill(Vector2d center, double radius, double height) {
+    Vector2i size = m_data.getSize();
+    double radiusSquare = gf::square(radius);
+    double coeff = height / radiusSquare;
+    int minX = std::max(0, static_cast<int>(center.x - radius));
+    int maxX = std::min(size.width, static_cast<int>(center.x + radius));
+    int minY = std::max(0, static_cast<int>(center.y - radius));
+    int maxY = std::min(size.height, static_cast<int>(center.y + radius));
+
+    for (int y = minY; y < maxY; ++y) {
+      double yDistSquare = gf::square(y - center.y);
+
+      for (int x = minX; x < maxX; ++x) {
+        double xDistSquare = gf::square(x - center.x);
+        double distSquare = yDistSquare + xDistSquare;
+
+        if (distSquare < radiusSquare) {
+          double z = (radiusSquare - distSquare) * coeff;
+
+          if (height > 0.0) {
+            if (m_data( { x, y }) < z) {
+              m_data( { x, y }) = z;
+            }
+          } else {
+            if (m_data( { x, y }) > z) {
+              m_data( { x, y }) = z;
+            }
+          }
+        }
+
+      }
     }
   }
 
