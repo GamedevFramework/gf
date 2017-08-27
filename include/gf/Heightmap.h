@@ -217,6 +217,14 @@ inline namespace v1 {
      */
 
     /**
+     * @brief Rendering mode
+     */
+    enum class Render {
+      Colored, ///< Export to a simply colored image
+      Shaded,  ///< Export to a shaded image
+    };
+
+    /**
      * @name Export
      * @{
      */
@@ -238,14 +246,6 @@ inline namespace v1 {
      * @sa copyToColoredImage()
      */
     Image copyToGrayscaleImage() const;
-
-    /**
-     * @brief Rendering mode
-     */
-    enum class Render {
-      Colored, ///< Export to a simply colored image
-      Shaded,  ///< Export to a shaded image
-    };
 
     /**
      * @brief Export to a colored image
