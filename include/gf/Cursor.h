@@ -69,7 +69,7 @@ inline namespace v1 {
    *
    * @see gf::Window::setMouseCursor()
    */
-  class Cursor {
+  class GF_API Cursor {
   public:
 
     /**
