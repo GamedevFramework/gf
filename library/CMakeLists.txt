@@ -182,6 +182,7 @@ target_include_directories(gf0
   PRIVATE
     ${SDL2_INCLUDE_DIR}
     ${FREETYPE_INCLUDE_DIRS}
+    ${ZLIB_INCLUDE_DIRS}
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/vendor/glad/include
 )
@@ -190,6 +191,7 @@ target_link_libraries(gf0
   ${SDL2_LIBRARY}
   ${Boost_LIBRARIES}
   ${FREETYPE_LIBRARIES}
+  ${ZLIB_LIBRARIES}
 )
 
 # workaround for Travis-CI

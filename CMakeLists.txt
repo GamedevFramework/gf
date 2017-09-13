@@ -37,6 +37,7 @@ find_package(SDL2 REQUIRED)
 
 find_package(Boost REQUIRED COMPONENTS filesystem system)
 find_package(Freetype REQUIRED)
+find_package(ZLIB REQUIRED)
 
 if(MSVC)
   message(STATUS "Using MSVC compiler")
