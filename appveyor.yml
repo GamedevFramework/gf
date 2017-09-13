@@ -8,7 +8,7 @@ image: Visual Studio 2015
 clone_folder: C:\projects\GF
 
 install:
-  - cmd: vcpkg install sdl2 freetype zlib
+  - cmd: vcpkg install sdl2:x64-windows freetype:x64-windows zlib:x64-windows
   - cmd: git submodule update --init
 
 environment:
@@ -20,7 +20,7 @@ before_build:
   - cmd: cd C:\projects\GF
   - cmd: mkdir build
   - cmd: cd build
-  - cmd: cmake -DGF_DEBUG=OFF -DGF_BUILD_GAMES=ON -DGF_BUILD_TOOLS=ON -DGF_SINGLE_COMPILTATION_UNIT=ON -DCMAKE_TOOLCHAIN_FILE=C:\Tools\vcpkg\scripts\buildsystems\vcpkg.cmake ..
+  - cmd: cmake -A x64 -DGF_DEBUG=OFF -DGF_BUILD_GAMES=ON -DGF_BUILD_TOOLS=ON -DGF_SINGLE_COMPILTATION_UNIT=ON -DCMAKE_TOOLCHAIN_FILE=C:\Tools\vcpkg\scripts\buildsystems\vcpkg.cmake ..
 
 platform: x64
 configuration: Release
