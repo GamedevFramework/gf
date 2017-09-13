@@ -10,6 +10,7 @@ addons:
       - libboost-dev
       - libfreetype6-dev
       - libsdl2-dev
+      - zlib1g-dev
 
 matrix:
   include:

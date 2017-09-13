@@ -8,13 +8,8 @@ image: Visual Studio 2015
 clone_folder: C:\projects\GF
 
 install:
+  - cmd: vcpkg install sdl2 freetype boost zlib
   - cmd: git submodule update --init
-  - ps: Start-FileDownload 'https://sourceforge.net/projects/boost/files/boost-binaries/1.61.0/boost_1_61_0-msvc-14.0-32.exe' -FileName boost.exe -Timeout 1200000
-  - ps: Start-FileDownload 'https://www.libsdl.org/release/SDL2-devel-2.0.4-VC.zip'
-  - ps: Start-FileDownload 'https://sourceforge.net/projects/gnuwin32/files/freetype/2.3.5-1/freetype-2.3.5-1-lib.zip'
-  - cmd: .\boost.exe /DIR="C:\projects\boost\" /VERYSILENT
-  - cmd: 7z x ".\SDL2-devel-2.0.4-VC.zip" -o"C:\projects\SDL\"
-  - cmd: 7z x ".\freetype-2.3.5-1-lib.zip" -o"C:\projects\freetype\"
 
 environment:
   BOOST_ROOT: C:\projects\boost\
@@ -26,15 +21,15 @@ environment:
 
 cache:
   - boost.exe
-  
+
 before_build:
   - cmd: cd C:\projects\GF
-  - cmd: mkdir build 
-  - cmd: cd build 
-  - cmd: cmake -DGF_DEBUG=OFF -DGF_BUILD_GAMES=ON -DGF_BUILD_TOOLS=ON -DGF_SINGLE_COMPILTATION_UNIT=ON ..
+  - cmd: mkdir build
+  - cmd: cd build
+  - cmd: cmake -DGF_DEBUG=OFF -DGF_BUILD_GAMES=ON -DGF_BUILD_TOOLS=ON -DGF_SINGLE_COMPILTATION_UNIT=ON -DCMAKE_TOOLCHAIN_FILE=C:\Tools\vcpkg\scripts\buildsystems\vcpkg.cmake ..
 
 configuration: Release
-  
+
 build:
   project: C:\projects\GF\build\GF.sln
   verbosity: normal
