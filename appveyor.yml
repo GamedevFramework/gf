@@ -8,19 +8,13 @@ image: Visual Studio 2015
 clone_folder: C:\projects\GF
 
 install:
-  - cmd: vcpkg install sdl2 freetype boost zlib
+  - cmd: vcpkg install sdl2 freetype zlib
   - cmd: git submodule update --init
 
 environment:
-  BOOST_ROOT: C:\projects\boost\
-  BOOST_INCLUDEDIR: C:\projects\boost\boost\
-  BOOST_LIBRARYDIR: C:\projects\boost\lib32-msvc-14.0\
-  SDL2DIR: C:\projects\SDL\SDL2-2.0.4\
-  SDL2ARCH: x86
-  FREETYPE_DIR: C:\projects\freetype\
-
-cache:
-  - boost.exe
+  BOOST_ROOT: C:\Libraries\boost_1_63_0
+  BOOST_INCLUDEDIR: C:\Libraries\boost_1_63_0\boost\
+  BOOST_LIBRARYDIR: C:\Libraries\boost_1_63_0\lib64-msvc-14.0\
 
 before_build:
   - cmd: cd C:\projects\GF
@@ -28,8 +22,10 @@ before_build:
   - cmd: cd build
   - cmd: cmake -DGF_DEBUG=OFF -DGF_BUILD_GAMES=ON -DGF_BUILD_TOOLS=ON -DGF_SINGLE_COMPILTATION_UNIT=ON -DCMAKE_TOOLCHAIN_FILE=C:\Tools\vcpkg\scripts\buildsystems\vcpkg.cmake ..
 
+platform: x64
 configuration: Release
 
 build:
+  parallel: true
   project: C:\projects\GF\build\GF.sln
   verbosity: normal
