@@ -35,4 +35,11 @@
   #define GF_API GF_API_IMPORT
 #endif
 
+
+#ifdef __GNUC__
+  #define GF_FORMAT(X, Y) __attribute__ ((format (printf, X, Y)))
+#else
+  #define GF_FORMAT(X, Y)
+#endif
+
 #endif // GF_PORTABILITY_H

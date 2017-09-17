@@ -61,7 +61,7 @@ inline namespace v1 {
    *
    * @param fmt The [format string](http://en.cppreference.com/w/cpp/io/c/fprintf)
    */
-  GF_API std::string formatString(const char *fmt, ...);
+  GF_API std::string formatString(const char *fmt, ...) GF_FORMAT(1, 2);
 
   /**
    * @ingroup core

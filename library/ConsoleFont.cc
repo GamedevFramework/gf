@@ -90,7 +90,7 @@ inline namespace v1 {
     for (auto codepoint : unicodeString) {
       if (codepoint >= 0x10000) {
         std::uint_least32_t value = static_cast<std::uint_least32_t>(codepoint);
-        Log::error("Can not map a codepoint outside the Basic Multilingual Plane (BMP): U+" PRIXLEAST32, value);
+        Log::error("Can not map a codepoint outside the Basic Multilingual Plane (BMP): U+%" PRIXLEAST32, value);
       } else {
         char16_t c = static_cast<char16_t>(codepoint);
         assert(index < 0x100);

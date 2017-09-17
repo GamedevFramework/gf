@@ -467,7 +467,7 @@ inline namespace v1 {
      * @param position The position of a cell
      * @param fmt The [format string](http://en.cppreference.com/w/cpp/io/c/fprintf)
      */
-    void print(Vector2i position, const char *fmt, ...);
+    void print(Vector2i position, const char *fmt, ...) GF_FORMAT(3, 4);
 
     /**
      * @brief Print a formatted string
@@ -485,7 +485,7 @@ inline namespace v1 {
      * @param alignment The alignment of the text
      * @param fmt The [format string](http://en.cppreference.com/w/cpp/io/c/fprintf)
      */
-    void print(Vector2i position, ConsoleEffect effect, ConsoleAlignment alignment, const char *fmt, ...);
+    void print(Vector2i position, ConsoleEffect effect, ConsoleAlignment alignment, const char *fmt, ...) GF_FORMAT(5, 6);
 
     /**
      * @brief Print a multi-line formatted string
@@ -499,7 +499,7 @@ inline namespace v1 {
      * @param fmt The [format string](http://en.cppreference.com/w/cpp/io/c/fprintf)
      * @returns The height in console lines of the printed string
      */
-    int printRect(const RectI& rect, const char *fmt, ...);
+    int printRect(const RectI& rect, const char *fmt, ...) GF_FORMAT(3, 4);
 
     /**
      * @brief Print a multi-line formatted string
@@ -515,7 +515,7 @@ inline namespace v1 {
      * @param fmt The [format string](http://en.cppreference.com/w/cpp/io/c/fprintf)
      * @returns The height in console lines of the printed string
      */
-    int printRect(const RectI& rect, ConsoleEffect effect, ConsoleAlignment alignment, const char *fmt, ...);
+    int printRect(const RectI& rect, ConsoleEffect effect, ConsoleAlignment alignment, const char *fmt, ...) GF_FORMAT(5, 6);
 
     /**
      * @brief Get the expected number of console lines of a multi-line formatted string
@@ -529,7 +529,7 @@ inline namespace v1 {
      *
      * @sa printRect()
      */
-    int getHeight(const RectI& rect, const char *fmt, ...);
+    int getHeight(const RectI& rect, const char *fmt, ...) GF_FORMAT(3, 4);
 
     /**
      * @brief Set a color for color control
@@ -607,7 +607,7 @@ inline namespace v1 {
      * @param effect The effect to apply to the background
      * @param title The [format string](http://en.cppreference.com/w/cpp/io/c/fprintf) of the title
      */
-    void drawFrame(const RectI& rect, PrintAction action = PrintAction::None, ConsoleEffect effect = ConsoleEffect::Default, const char *title = nullptr, ...);
+    void drawFrame(const RectI& rect, PrintAction action = PrintAction::None, ConsoleEffect effect = ConsoleEffect::Default, const char *title = nullptr, ...) GF_FORMAT(5, 6);
 
     /**
      * @}
