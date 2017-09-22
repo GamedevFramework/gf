@@ -554,6 +554,31 @@ inline namespace v1 {
    * @brief A set of tiles in a single file (image or TSX file)
    */
   struct GF_API TmxTileset {
+    /**
+     * @brief Default constructor
+     */
+    TmxTileset() = default;
+
+    /**
+     * @brief Deleted copy constructor
+     */
+    TmxTileset(const TmxTileset&) = delete;
+
+    /**
+     * @brief Deleted copy assignment
+     */
+    TmxTileset& operator=(const TmxTileset&) = delete;
+
+    /**
+     * @brief Default move constructor
+     */
+    TmxTileset(TmxTileset&&) = default;
+
+    /**
+     * @brief Default move assignment
+     */
+    TmxTileset& operator=(TmxTileset&&) = default;
+
     TmxProperties properties; ///< The properties of the tileset
 
     unsigned firstGid;        ///< The first global id of the tileset
