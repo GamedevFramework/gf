@@ -110,6 +110,7 @@
 #include "Texture.cc"
 #include "TileLayer.cc"
 #include "Time.cc"
+#include "Tmx.cc"
 #include "Transformable.cc"
 #include "Transform.cc"
 #include "UI.cc"

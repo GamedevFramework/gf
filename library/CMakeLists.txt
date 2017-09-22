@@ -140,6 +140,7 @@ else()
     Texture.cc
     TileLayer.cc
     Time.cc
+    Tmx.cc
     Transformable.cc
     Transform.cc
     UI.cc
@@ -172,7 +173,9 @@ if (GF_DEBUG)
 endif()
 
 target_compile_definitions(gf0
-  PRIVATE GF_EXPORT_SYMBOLS
+  PRIVATE
+    GF_EXPORT_SYMBOLS
+    ZLIB_CONST
 )
 
 target_include_directories(gf0
