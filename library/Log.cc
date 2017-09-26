@@ -84,7 +84,7 @@ inline namespace v1 {
 
     static constexpr std::size_t BufferSize = 1024;
     char buffer[BufferSize];
-    std::size_t size = strftime(buffer, BufferSize, "%F %T", std::localtime(&integerPart));
+    std::size_t size = std::strftime(buffer, BufferSize, "%F %T", std::localtime(&integerPart));
     std::snprintf(buffer + size, BufferSize - size, ".%06ld", fractionalPart);
 
     std::fprintf(stderr, "[%s][%s] ", buffer, getStringFromLevel(level));
