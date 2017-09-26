@@ -88,10 +88,19 @@ inline namespace v1 {
    */
   class GF_API TmxProperties {
   public:
+    /**
+     * @brief Default constructor
+     */
     TmxProperties() = default;
 
+    /**
+     * @brief Default move constructor
+     */
     TmxProperties(TmxProperties&&) = default;
 
+    /**
+     * @brief Default move assignment
+     */
     TmxProperties& operator=(TmxProperties&&) = default;
 
     /**
