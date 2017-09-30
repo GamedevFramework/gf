@@ -16,7 +16,9 @@ Libraries:
 | [SDL2](https://www.libsdl.org/)                                                         | 2.0.2   | zlib/libpng |
 | [Boost Filesystem](http://www.boost.org/doc/libs/release/libs/filesystem/)              | 1.55    | Boost       |
 | [Boost String Algorithms](http://www.boost.org/doc/libs/release/libs/algorithm/string/) | 1.55    | Boost       |
+| [Boost Heap](http://www.boost.org/doc/libs/release/libs/heap/)                          | 1.55    | Boost       |
 | [Freetype](http://freetype.org/)                                                        | 2.5.2   | Freetype    |
+| [zlib](https://zlib.net/)                                                               | 1.2.8   | zlib/libpng |
 
 Tools:
 
@@ -36,19 +38,19 @@ The recommanded way for handling dependencies on Linux is to use your favorite d
 For Debian/Ubuntu:
 
 ~~~{.sh}
-apt-get install libsdl2-dev libboost-filesystem-dev libboost-dev libfreetype6-dev cmake
+apt-get install libsdl2-dev libboost-filesystem-dev libboost-dev libfreetype6-dev zlib1g-dev cmake
 ~~~
 
 For Archlinux:
 
 ~~~{.sh}
-pacman -S sdl2 boost freetype2 cmake
+pacman -S sdl2 boost freetype2 zlib cmake
 ~~~
 
 For Fedora/Red Hat/CentOS:
 
 ~~~{.sh}
-dnf install SDL2 boost freetype cmake
+dnf install SDL2-devel boost-devel freetype-devel zlib-devel cmake
 ~~~
 
 @subsection build_and_install_for_linux Build and install
@@ -96,7 +98,7 @@ C:\Local\vcpkg> .\vcpkg integrate install
 Then, you can install the dependencies:
 
 ~~~{.bat}
-C:\Local\vcpkg> .\vcpkg install sdl2 freetype boost
+C:\Local\vcpkg> .\vcpkg install sdl2 freetype boost zlib
 ~~~
 
 @subsection build_and_install_for_windows Build and install
