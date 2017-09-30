@@ -328,16 +328,17 @@ inline namespace v1 {
 
         switch (size) {
           case 6:
-            color.r = (convertHexChar(attr[1]) << 4) + convertHexChar(attr[2]);
-            color.g = (convertHexChar(attr[3]) << 4) + convertHexChar(attr[4]);
-            color.b = (convertHexChar(attr[5]) << 4) + convertHexChar(attr[6]);
+            color.a = 0xFF;
+            color.r = (convertHexChar(attr[0]) << 4) + convertHexChar(attr[1]);
+            color.g = (convertHexChar(attr[2]) << 4) + convertHexChar(attr[3]);
+            color.b = (convertHexChar(attr[4]) << 4) + convertHexChar(attr[5]);
             break;
 
           case 8:
-            color.a = (convertHexChar(attr[1]) << 4) + convertHexChar(attr[2]);
-            color.r = (convertHexChar(attr[3]) << 4) + convertHexChar(attr[4]);
-            color.g = (convertHexChar(attr[5]) << 4) + convertHexChar(attr[6]);
-            color.b = (convertHexChar(attr[7]) << 4) + convertHexChar(attr[8]);
+            color.a = (convertHexChar(attr[0]) << 4) + convertHexChar(attr[1]);
+            color.r = (convertHexChar(attr[2]) << 4) + convertHexChar(attr[3]);
+            color.g = (convertHexChar(attr[4]) << 4) + convertHexChar(attr[5]);
+            color.b = (convertHexChar(attr[6]) << 4) + convertHexChar(attr[7]);
             break;
 
           default:
@@ -374,6 +375,11 @@ inline namespace v1 {
           return val;
         }
 
+        if (err == tinyxml2::XML_WRONG_ATTRIBUTE_TYPE) {
+          Log::error("Wrong attribute type: %s\n", name);
+          return val;
+        }
+
         Log::error("Unknown error with attribute: %s\n", name);
         return val;
       }
@@ -381,6 +387,14 @@ inline namespace v1 {
       static uint8_t convertHexChar(char c) {
         if ('0' <= c && c <= '9') {
           return c - '0';
+        }
+
+        if ('a' <= c && c <= 'f') {
+          return c - 'a' + 10;
+        }
+
+        if (!('A' <= c && c <= 'F')) {
+          Log::error("Invalid character: '%c' (%x)\n", c, static_cast<int>(c));
         }
 
         assert('A' <= c && c <= 'F');
@@ -608,7 +622,9 @@ inline namespace v1 {
             } else if (elt.isEnumAttribute("type", "float")) {
               tmx.addFloatProperty(std::move(name), elt.getDoubleAttribute("value"));
             } else if (elt.isEnumAttribute("type", "bool")) {
-              tmx.addBoolProperty(std::move(name), elt.getBoolAttribute("value"));
+              std::string value = elt.getStringAttribute("value");
+              assert(value == "true" || value == "false");
+              tmx.addBoolProperty(std::move(name), value == "true");
             } else if (elt.isEnumAttribute("type", "color")) {
               tmx.addColorProperty(std::move(name), elt.getColorAttribute("value"));
             } else if (elt.isEnumAttribute("type", "file")) {
