@@ -21,6 +21,8 @@
 #ifndef GF_HEIGHTMAP_H
 #define GF_HEIGHTMAP_H
 
+#include <tuple>
+
 #include "Array2D.h"
 #include "ColorRamp.h"
 #include "Image.h"
@@ -89,7 +91,7 @@ inline namespace v1 {
      *
      * @returns A pair with the first element being the minimum and the second element the maximum
      */
-    std::pair<double, double> getMinMax() const;
+    std::tuple<double, double> getMinMax() const;
 
     /**
      * @name Shaping
@@ -99,8 +101,8 @@ inline namespace v1 {
     /**
      * @brief Normalize the heightmap
      *
-     * @param min The new minimum value (defaults to @f$ 0.0f @f$)
-     * @param max The new maximum value (defaults to @f$ 1.0f @f$)
+     * @param min The new minimum value (defaults to @f$ 0.0 @f$)
+     * @param max The new maximum value (defaults to @f$ 1.0 @f$)
      */
     void normalize(double min = 0.0, double max = 1.0);
 
@@ -147,8 +149,8 @@ inline namespace v1 {
     /**
      * @brief Clamp the values of the heightmap
      *
-     * @param min The minimum value (defaults to @f$ 0.0f @f$)
-     * @param max The maximum value (defaults to @f$ 1.0f @f$)
+     * @param min The minimum value (defaults to @f$ 0.0 @f$)
+     * @param max The maximum value (defaults to @f$ 1.0 @f$)
      * @sa normalize()
      */
     void clamp(double min = 0.0, double max = 1.0);

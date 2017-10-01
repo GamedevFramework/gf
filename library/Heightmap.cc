@@ -41,7 +41,7 @@ inline namespace v1 {
     std::fill(m_data.begin(), m_data.end(), 0.0);
   }
 
-  std::pair<double, double> Heightmap::getMinMax() const {
+  std::tuple<double, double> Heightmap::getMinMax() const {
     auto p = std::minmax_element(m_data.begin(), m_data.end());
     return { *p.first, *p.second };
   }
@@ -128,7 +128,7 @@ inline namespace v1 {
 
       for (auto col : m_data.getColRange()) {
         double x = static_cast<double>(col) / m_data.getCols() * scale;
-        m_data({ col, row }) = noise(x, y);
+        m_data({ col, row }) += noise(x, y);
       }
     }
   }
