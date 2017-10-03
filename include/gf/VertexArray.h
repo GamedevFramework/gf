@@ -51,7 +51,7 @@ inline namespace v1 {
    * Example:
    *
    * ~~~{.cc}
-   * gf::VertexArray lines(gf::PrimitiveType::LinesStrip, 4);
+   * gf::VertexArray lines(gf::PrimitiveType::LineStrip, 4);
    * lines[0].position = gf::Vector2f(10, 0);
    * lines[1].position = gf::Vector2f(20, 0);
    * lines[2].position = gf::Vector2f(30, 5);
