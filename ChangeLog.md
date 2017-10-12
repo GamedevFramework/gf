@@ -1,5 +1,30 @@
 # ChangeLog for gf
 
+## gf 0.6.0 (14 Oct 2017)
+
+- Core module
+  - Put index type as a template in range classes
+  - Add gf::PositionRange
+  - Add gf::formatString()
+  - Improve gf::ArrayRef, gf::StringRef and gf::BufferRef
+  - Add gf::Heightmap
+  - Add gf::midpointDisplacement2D() and gf::diamondSquare2D()
+  - Add a TMX parser
+- Window module
+  - Add gf::Clipboard
+  - Add gf::Cursor
+- Graphics module
+  - Add gf::LockedView
+- Game module
+  - Add gf::SquareMap
+  - Add gf::Console
+  - Add gf::ConsoleFont (and gf::BitmapConsoleFont and gf::ColoredConsoleFont)
+  - Add gf::SpaceTree
+- Tools and games
+- Misc
+  - Improve Appveyor build
+
+
 ## gf 0.5.0 (14 Jul 2017)
 
 - Core module
