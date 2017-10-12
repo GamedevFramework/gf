@@ -286,6 +286,7 @@ inline namespace v1 {
   };
 
   /**
+   * @ingroup game
    * @brief A bitmap console font
    *
    * This class is based on [libtcod](http://roguecentral.org/doryen/libtcod/)
@@ -313,10 +314,11 @@ inline namespace v1 {
   };
 
   /**
+   * @ingroup game
    * @brief A colored console font
    *
    * This class handles colored fonts such as the fonts created for
-   * [Dwarf Fortress]().
+   * [Dwarf Fortress](http://dwarffortresswiki.org/Tileset_repository).
    */
   class GF_API ColoredConsoleFont : public ConsoleFont {
   public:
