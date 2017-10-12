@@ -76,11 +76,16 @@ inline namespace v1 {
     Bresenham bresenham(p0, p1);
 
     std::vector<Vector2i> ret;
+    ret.push_back(p0);
+
     Vector2i p;
 
     while (!bresenham.step(p)) {
       ret.push_back(p);
     }
+
+    assert(ret.back() == p1);
+    ret.pop_back(); // to remove p1
 
     return ret;
   }
