@@ -8,7 +8,7 @@ image: Visual Studio 2015
 clone_folder: C:\projects\GF
 
 install:
-  - cmd: vcpkg update
+  - cmd: git -C C:\Tools\vcpkg pull
   - cmd: vcpkg install sdl2:x64-windows freetype:x64-windows zlib:x64-windows
   - cmd: git submodule update --init
 
