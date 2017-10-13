@@ -43,7 +43,7 @@ inline namespace v1 {
 
   std::tuple<double, double> Heightmap::getMinMax() const {
     auto p = std::minmax_element(m_data.begin(), m_data.end());
-    return { *p.first, *p.second };
+    return std::make_tuple(*p.first, *p.second);
   }
 
   void Heightmap::normalize(double min, double max) {
