@@ -484,7 +484,13 @@ inline namespace v1 {
      */
     void end();
 
-    void windowSetBounds(const RectF& bounds);
+    /**
+     * @brief Get the window bounds
+     *
+     * This function must be called between begin() and end().
+     *
+     * @returns The bounds of the current window
+     */
     RectF windowGetBounds();
 
     /**
