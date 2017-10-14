@@ -53,16 +53,16 @@ inline namespace v1 {
 
   }
 
-  void ShapeParticles::addCircle(Vector2f position, float radius, Color4f color, std::size_t pointCount) {
-    Vector2f prev = { position.x + radius, position.y };
+  void ShapeParticles::addCircle(Vector2f center, float radius, Color4f color, std::size_t pointCount) {
+    Vector2f prev = { center.x + radius, center.y };
 
     Vertex vertices[3];
-    vertices[0].position = position;
+    vertices[0].position = center;
     vertices[0].color = vertices[1].color = vertices[2].color = color;
 
     for (std::size_t i = 1; i <= pointCount; ++i) {
       float angle = i * 2.0f * gf::Pi / pointCount;
-      Vector2f curr = position + radius * gf::unit(angle);
+      Vector2f curr = center + radius * gf::unit(angle);
 
       vertices[1].position = prev;
       vertices[2].position = curr;
@@ -73,6 +73,35 @@ inline namespace v1 {
 
       prev = curr;
     }
+  }
+
+  void ShapeParticles::addCircle(const CircF& circ, Color4f color, std::size_t pointCount) {
+    addCircle(circ.center, circ.radius, color, pointCount);
+  }
+
+  void ShapeParticles::addRectangle(Vector2f position, Vector2f size, Color4f color) {
+    addRectangle(RectF(position, size), color);
+  }
+
+  void ShapeParticles::addRectangle(const RectF& rect, Color4f color) {
+    Vertex vertices[4];
+
+    vertices[0].color = vertices[1].color = vertices[2].color = vertices[3].color = color;
+
+    vertices[0].position = rect.getTopLeft();
+    vertices[1].position = rect.getTopRight();
+    vertices[2].position = rect.getBottomLeft();
+    vertices[3].position = rect.getBottomRight();
+
+    // first triangle
+    m_vertices.append(vertices[0]);
+    m_vertices.append(vertices[1]);
+    m_vertices.append(vertices[2]);
+
+    // second triangle
+    m_vertices.append(vertices[2]);
+    m_vertices.append(vertices[1]);
+    m_vertices.append(vertices[3]);
   }
 
   void ShapeParticles::draw(RenderTarget& target, RenderStates states) {

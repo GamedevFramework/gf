@@ -29,6 +29,7 @@
 #include <gf/ColorRamp.h>
 #include <gf/Event.h>
 #include <gf/Font.h>
+#include <gf/Heightmap.h>
 #include <gf/Image.h>
 #include <gf/Math.h>
 #include <gf/Noises.h>
@@ -94,134 +95,19 @@ struct FractalParams {
   float persistence;
 };
 
-static double valueWithWaterLevel(double value, double waterLevel) {
-  if (value < waterLevel) {
-    return value / waterLevel * 0.5;
-  }
 
-  return (value - waterLevel) / (1.0 - waterLevel) * 0.5 + 0.5;
+static void generateArrayFromNoise(gf::Heightmap& heightmap, gf::Noise2D& noise, double scale = 1.0) {
+  heightmap.reset();
+  heightmap.addNoise(noise, scale);
+  heightmap.normalize();
 }
 
-static void generateArrayFromNoise(gf::Array2D<double>& array, gf::Noise2D& noise, double scale = 1.0) {
-  for (auto row : array.getRowRange()) {
-    double y = static_cast<double>(row) / array.getRows() * scale;
-    for (auto col : array.getColRange()) {
-      double x = static_cast<double>(col) / array.getCols() * scale;
-      array({ col, row }) = noise(x, y);
-    }
-  }
+static gf::Image generateImageFromArray(const RenderingParams& renderingParams, const gf::Heightmap& heightmap) {
+  gf::Image image;
 
-  // normalize
-  double min = *std::min_element(array.begin(), array.end());
-  double max = *std::max_element(array.begin(), array.end());
-
-  for (auto& val : array) {
-    val = (val - min) / (max - min);
-    assert(0.0 <= val && val <= 1.0);
-  }
-}
-
-static void generateShadedImage(gf::Image& image, const RenderingParams& renderingParams, const gf::Array2D<double>& array) {
-
-  static constexpr gf::Vector3d Light = { -1, -1, 0 };
-
-  gf::Array2D<double> factor(array.getSize());
-
-  for (auto row : array.getRowRange()) {
-    for (auto col : array.getColRange()) {
-      double x = col;
-      double y = row;
-
-      // compute the normal vector
-      gf::Vector3d normal(0, 0, 0);
-      unsigned count = 0;
-
-      gf::Vector3d p{x, y, array({ row, col })};
-
-      if (col > 0 && row > 0) {
-        gf::Vector3d pn{x    , y - 1, array({ row - 1, col     })};
-        gf::Vector3d pw{x - 1, y    , array({ row    , col - 1 })};
-
-        gf::Vector3d v3 = cross(p - pw, p - pn);
-        assert(v3.z > 0);
-
-        normal += v3;
-        count += 1;
-      }
-
-      if (col > 0 && row < array.getRows() - 1) {
-        gf::Vector3d pw{x - 1, y    , array({ row    , col - 1 })};
-        gf::Vector3d ps{x    , y + 1, array({ row + 1, col     })};
-
-        gf::Vector3d v3 = cross(p - ps, p - pw);
-        assert(v3.z > 0);
-
-        normal += v3;
-        count += 1;
-      }
-
-      if (col < array.getCols() - 1 && row > 0) {
-        gf::Vector3d pe{x + 1, y    , array({ row    , col + 1 })};
-        gf::Vector3d pn{x    , y - 1, array({ row - 1, col     })};
-
-        gf::Vector3d v3 = cross(p - pn, p - pe);
-        assert(v3.z > 0);
-
-        normal += v3;
-        count += 1;
-      }
-
-      if (col < array.getCols() - 1 && row < array.getRows() - 1) {
-        gf::Vector3d pe{x + 1, y    , array({ row    , col + 1 })};
-        gf::Vector3d ps{x    , y + 1, array({ row + 1, col     })};
-
-        gf::Vector3d v3 = cross(p - pe, p - ps);
-        assert(v3.z > 0);
-
-        normal += v3;
-        count += 1;
-      }
-
-      normal = gf::normalize(normal / count);
-      double d = gf::dot(Light, normal);
-      d = gf::clamp(0.5 + 35 * d, 0.0, 1.0);
-      factor({ row, col }) = d;
-    }
-  }
-
-  for (auto row : array.getRowRange()) {
-    for (auto col : array.getColRange()) {
-      if (array({ row, col }) < renderingParams.waterLevel) {
-        continue;
-      }
-
-      double d = factor({row, col});
-
-      gf::Color4u pixel = image.getPixel({ col, row });
-
-      gf::Color4u lo = gf::lerp(pixel, gf::Color4u(0x33, 0x11, 0x33, 0xFF), 0.7);
-      gf::Color4u hi = gf::lerp(pixel, gf::Color4u(0xFF, 0xFF, 0xCC, 0xFF), 0.3);
-
-      if (d < 0.5) {
-        image.setPixel({ col, row }, gf::lerp(lo, pixel, 2 * d));
-      } else {
-        image.setPixel({ col, row }, gf::lerp(pixel, hi, 2 * d - 1));
-      }
-
-    }
-  }
-}
-
-
-static void generateImageFromArray(gf::Image& image, const RenderingParams& renderingParams, const gf::Array2D<double>& array) {
   switch (renderingParams.rendering) {
     case Rendering::Grayscale:
-      for (auto row : array.getRowRange()) {
-        for (auto col : array.getColRange()) {
-          uint8_t val = static_cast<uint8_t>(array({ row, col }) * 255);
-          image.setPixel({ col, row }, { val, val, val, 255 });
-        }
-      }
+      image = heightmap.copyToGrayscaleImage();
       break;
 
     case Rendering::Colored: {
@@ -237,85 +123,57 @@ static void generateImageFromArray(gf::Image& image, const RenderingParams& rend
       ramp.addColorStop(0.950f, gf::Color::fromRgba32(179, 179, 179)); // grey: rocks
       ramp.addColorStop(1.000f, gf::Color::fromRgba32(255, 255, 255)); // white: snow
 
-      for (auto row : array.getRowRange()) {
-        for (auto col : array.getColRange()) {
-          double val = valueWithWaterLevel(array({ row, col }), renderingParams.waterLevel);
-          gf::Color4f color = ramp.computeColor(val);
-          image.setPixel({ col, row }, gf::Color::toRgba32(color));
-        }
-      }
-
-      if (renderingParams.shaded) {
-        generateShadedImage(image, renderingParams, array);
-      }
+      gf::Heightmap::Render renderMode = renderingParams.shaded ? gf::Heightmap::Render::Shaded : gf::Heightmap::Render::Colored;
+      image = heightmap.copyToColoredImage(ramp, renderingParams.waterLevel, renderMode);
       break;
     }
   }
 
+  return image;
 }
 
-static void generate(gf::Texture& texture, gf::Image& image, const RenderingParams& renderingParams, gf::Array2D<double>& array, gf::Noise2D& noise, const FractalParams& fractalParams, double scale = 1.0) {
+static gf::Image generate(gf::Texture& texture, const RenderingParams& renderingParams, gf::Heightmap& heightmap, gf::Noise2D& noise, const FractalParams& fractalParams, double scale = 1.0) {
 
   switch (fractalParams.fractal) {
     case Fractal::None:
-      generateArrayFromNoise(array, noise, scale);
+      generateArrayFromNoise(heightmap, noise, scale);
       break;
 
     case Fractal::FBm: {
       gf::FractalNoise2D fractalNoise(noise, 1, fractalParams.octaves, fractalParams.lacunarity, fractalParams.persistence, fractalParams.f.dimension);
-      generateArrayFromNoise(array, fractalNoise, scale);
+      generateArrayFromNoise(heightmap, fractalNoise, scale);
       break;
     }
 
     case Fractal::Multifractal:  {
       gf::Multifractal2D fractalNoise(noise, 1, fractalParams.octaves, fractalParams.lacunarity, fractalParams.persistence, fractalParams.m.dimension);
-      generateArrayFromNoise(array, fractalNoise, scale);
+      generateArrayFromNoise(heightmap, fractalNoise, scale);
       break;
     }
 
     case Fractal::HeteroTerrain: {
       gf::HeteroTerrain2D fractalNoise(noise, 1, fractalParams.ht.offset, fractalParams.octaves, fractalParams.lacunarity, fractalParams.persistence, fractalParams.ht.dimension);
-      generateArrayFromNoise(array, fractalNoise, scale);
+      generateArrayFromNoise(heightmap, fractalNoise, scale);
       break;
     }
 
     case Fractal::HybridMultifractal: {
       gf::HybridMultifractal2D fractalNoise(noise, 1, fractalParams.hm.offset, fractalParams.octaves, fractalParams.lacunarity, fractalParams.persistence, fractalParams.hm.dimension);
-      generateArrayFromNoise(array, fractalNoise, scale);
+      generateArrayFromNoise(heightmap, fractalNoise, scale);
       break;
     }
 
     case Fractal::RidgedMultifractal: {
       gf::RidgedMultifractal2D fractalNoise(noise, 1, fractalParams.rm.offset, fractalParams.rm.gain, fractalParams.octaves, fractalParams.lacunarity, fractalParams.persistence, fractalParams.rm.dimension);
-      generateArrayFromNoise(array, fractalNoise, scale);
+      generateArrayFromNoise(heightmap, fractalNoise, scale);
       break;
     }
   }
 
-  generateImageFromArray(image, renderingParams, array);
+  gf::Image image = generateImageFromArray(renderingParams, heightmap);
   texture.update(image);
+  return image;
 }
-
-static void exportToPortableGraymap(const gf::Array2D<double>& array, const char *filename) {
-  static constexpr unsigned Max = 65536;
-
-  std::ofstream out(filename);
-
-  out << "P2\n";
-  out << array.getCols() << ' ' << array.getRows() << '\n';
-  out << Max << '\n';
-
-  for (auto row : array.getRowRange()) {
-    for (auto col : array.getColRange()) {
-      unsigned value = static_cast<unsigned>(array({ row, col }) * Max);
-      assert(value <= Max);
-      out << value << ' ';
-    }
-
-    out << '\n';
-  }
-}
-
 
 enum class NoiseFunction : std::size_t {
   Noise           = 0,
@@ -404,9 +262,9 @@ int main() {
 
   gf::RectF bounds;
 
-  gf::Array2D<double> array({ Size, Size });
+  gf::Heightmap heightmap({ static_cast<int>(Size), static_cast<int>(Size) });
   gf::Image image;
-  image.create({ Size, Size });
+  image.create({ Size, Size }); // initial image
 
   gf::Window window("gf noise", { Size + ExtraSize, Size }, ~gf::WindowHints::Resizable);
   gf::RenderWindow renderer(window);
@@ -622,7 +480,7 @@ int main() {
           gf::Step<double> step = getStepFunction(stepFunction);
 
           gf::ValueNoise2D noise(random, step);
-          generate(texture, image, renderingParams, array, noise, fractalParams, scale);
+          image = generate(texture, renderingParams, heightmap, noise, fractalParams, scale);
           break;
         }
 
@@ -631,25 +489,25 @@ int main() {
           gf::Step<double> step = getStepFunction(stepFunction);
 
           gf::GradientNoise2D noise(random, step);
-          generate(texture, image, renderingParams, array, noise, fractalParams, scale);
+          image = generate(texture, renderingParams, heightmap, noise, fractalParams, scale);
           break;
         }
 
         case NoiseFunction::BetterGradient: {
           gf::BetterGradientNoise2D noise(random);
-          generate(texture, image, renderingParams, array, noise, fractalParams, scale);
+          image = generate(texture, renderingParams, heightmap, noise, fractalParams, scale);
           break;
         }
 
         case NoiseFunction::Simplex: {
           gf::SimplexNoise2D noise(random);
-          generate(texture, image, renderingParams, array, noise, fractalParams, scale);
+          image = generate(texture, renderingParams, heightmap, noise, fractalParams, scale);
           break;
         }
 
         case NoiseFunction::OpenSimplex: {
           gf::OpenSimplexNoise2D noise(random);
-          generate(texture, image, renderingParams, array, noise, fractalParams, scale);
+          image = generate(texture, renderingParams, heightmap, noise, fractalParams, scale);
           break;
         }
 
@@ -661,14 +519,15 @@ int main() {
           std::vector<double> combination = getCombinationVector(combinationFunction);
 
           gf::WorleyNoise2D noise(random, pointCount, distance, combination);
-          generate(texture, image, renderingParams, array, noise, fractalParams, scale);
+          image = generate(texture, renderingParams, heightmap, noise, fractalParams, scale);
           break;
         }
 
         case NoiseFunction::Wavelet: {
           gf::WaveletNoise3D noise(random);
           gf::Noise3DTo2DAdapter adapter(noise);
-          generate(texture, image, renderingParams, array, adapter, fractalParams, scale);
+          image = generate(texture, renderingParams, heightmap, adapter, fractalParams, scale);
+          break;
         }
       }
 
@@ -678,10 +537,6 @@ int main() {
 
     if (ui.buttonLabel("Save to 'noise.png'")) {
       image.saveToFile("noise.png");
-    }
-
-    if (ui.buttonLabel("Save to 'noise.pnm'")) {
-      exportToPortableGraymap(array, "noise.pnm");
     }
 
     if (!feedback.empty()) {

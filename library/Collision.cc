@@ -283,8 +283,10 @@ inline namespace v1 {
         switch (index) {
           case 0:
             m_v[0] = m_v[1];
+            // fallthrough
           case 1:
             m_v[1] = m_v[2];
+            // fallthrough
           default:
             break;
         }

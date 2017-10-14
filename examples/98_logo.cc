@@ -54,6 +54,7 @@ int main() {
   renderer.setView(screenView);
   renderer.clear({ 1.0f, 1.0f, 1.0f, 0.0f }); // transparent white
 
+
   while (window.isOpen()) {
     gf::Event event;
 
@@ -69,6 +70,7 @@ int main() {
               auto image = renderer.capture();
               image.saveToFile("gf_logo.png");
               std::cout << "Logo saved!\n";
+              break;
             }
 
             case gf::Keycode::Space:

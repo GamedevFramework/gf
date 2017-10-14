@@ -21,9 +21,13 @@
 #ifndef GF_STRING_UTILS_H
 #define GF_STRING_UTILS_H
 
+#include <cstdarg>
+
+#include <vector>
 #include <string>
 
 #include "Portability.h"
+#include "StringRef.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -49,7 +53,32 @@ inline namespace v1 {
    * @param str A UTF-8 string
    * @returns The corresponding UTF-32 string
    */
-  GF_API std::u32string computeUnicodeString(const std::string& str);
+  GF_API std::u32string computeUnicodeString(StringRef str);
+
+  /**
+   * @ingroup core
+   * @brief Format a string like printf
+   *
+   * @param fmt The [format string](http://en.cppreference.com/w/cpp/io/c/fprintf)
+   */
+  GF_API std::string formatString(const char *fmt, ...) GF_FORMAT(1, 2);
+
+  /**
+   * @ingroup core
+   * @brief Format a string like vprintf
+   *
+   * @param fmt The [format string](http://en.cppreference.com/w/cpp/io/c/fprintf)
+   * @param ap The arguments of the format string
+   */
+  GF_API std::string formatString(const char *fmt, va_list ap);
+
+
+  /**
+   * @ingroup core
+   */
+  std::vector<std::u32string> splitInParagraphs(const std::u32string& str);
+
+  std::vector<std::u32string> splitInWords(const std::u32string& str);
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

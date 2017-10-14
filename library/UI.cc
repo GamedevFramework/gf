@@ -32,6 +32,7 @@
 
 #include <SDL.h>
 
+#include <gf/Clipboard.h>
 #include <gf/Log.h>
 #include <gf/Paths.h>
 #include <gf/RenderTarget.h>
@@ -205,19 +206,11 @@ inline namespace v1 {
   static void clipboardPaste(nk_handle usr, struct nk_text_edit *edit) {
     gf::unused(usr);
 
-    if (SDL_HasClipboardText() == SDL_FALSE) {
-      return;
+    auto text = Clipboard::getString();
+
+    if (!text.empty()) {
+      nk_textedit_paste(edit, text.c_str(), text.size());
     }
-
-    char *text = SDL_GetClipboardText();
-
-    if (text == nullptr) {
-      Log::error("Unable to get clipboard text: '%s'\n", SDL_GetError());
-      return;
-    }
-
-    nk_textedit_paste(edit, text, nk_strlen(text));
-    SDL_free(text);
   }
 
   static void clipboardCopy(nk_handle usr, const char *text, int len) {
@@ -228,7 +221,7 @@ inline namespace v1 {
     }
 
     std::string str(text, len);
-    SDL_SetClipboardText(str.c_str());
+    Clipboard::setString(str);
   }
 
   struct UI::UIImpl {
@@ -462,11 +455,6 @@ inline namespace v1 {
   void UI::end() {
     setState(State::Setup);
     nk_end(&m_impl->ctx);
-  }
-
-  void UI::windowSetBounds(const RectF& bounds) {
-    setState(State::Setup);
-    nk_window_set_bounds(&m_impl->ctx, { bounds.left, bounds.top, bounds.width, bounds.height });
   }
 
   RectF UI::windowGetBounds() {
@@ -712,16 +700,6 @@ inline namespace v1 {
     return nk_filter_default;
   }
 
-  template<typename E>
-  static constexpr Flags<E> combineFlags(E flag) {
-    return Flags<E>(flag);
-  }
-
-  template<typename E, typename ... F>
-  static constexpr Flags<E> combineFlags(E flag, F ... others) {
-    return Flags<E>(flag) | combineFlags(others ...);
-  }
-
   const UIEditFlags UIEditType::Simple =
       UIEdit::AlwaysInsertMode;
 
@@ -783,7 +761,7 @@ inline namespace v1 {
 
     assert(boost::filesystem::is_directory(browser.currentPath));
 
-    if (!popupBegin(UIPopup::Dynamic, title, UIWindowFlags(UIWindow::Border) | UIWindow::Title | UIWindow::Closable, bounds)) {
+    if (!popupBegin(UIPopup::Dynamic, title, combineFlags(UIWindow::Border, UIWindow::Title, UIWindow::Closable), bounds)) {
       return false;
     }
 

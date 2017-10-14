@@ -55,6 +55,18 @@ inline namespace v1 {
     }
 
     /**
+     * @brief Null constructor
+     *
+     * Data is `nullptr` and size is 0.
+     */
+    constexpr BufferRef(std::nullptr_t)
+    : m_data(nullptr)
+    , m_size(0)
+    {
+
+    }
+
+    /**
      * @brief Constructor from a pointer and a size
      *
      * @param data A pointer to a buffer
@@ -145,6 +157,18 @@ inline namespace v1 {
      */
     T *end() noexcept {
       return m_data + m_size;
+    }
+
+    /**
+     * @brief Get an element at a given index
+     *
+     * No verification is done on the index.
+     *
+     * @param index The index of the element
+     * @returns The element at the given index
+     */
+    T& operator[](std::size_t index) {
+      return m_data[index];
     }
 
   private:

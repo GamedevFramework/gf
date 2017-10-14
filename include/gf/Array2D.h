@@ -44,9 +44,12 @@ inline namespace v1 {
    *
    * gf::Array represents a two-dimensional array, organized in row-major order.
    *
+   * The array is templated with the type of the data and the type of the
+   * indices (defaults to `unsigned`).
+   *
    * Contrary to the usual way of accessing 2D arrays, the first coordinate is
    * the column and the second coordinate is the row. So that, if `size` is the
-   * size of the array and `pos` if the position in the array:
+   * size of the array and `pos` is the position in the array:
    *
    * - @f$ 0 \leq \mathtt{pos.x} = \mathtt{pos.col} < \mathtt{size.width} = \mathtt{size.col} @f$
    * - @f$ 0 \leq \mathtt{pos.y} = \mathtt{pos.row} < \mathtt{size.height} = \mathtt{size.row} @f$
@@ -165,7 +168,7 @@ inline namespace v1 {
      *
      * @return The number of columns
      */
-    constexpr unsigned getCols() const noexcept {
+    constexpr I getCols() const noexcept {
       return m_size.col;
     }
 
@@ -174,7 +177,7 @@ inline namespace v1 {
      *
      * @return The number of rows
      */
-    constexpr unsigned getRows() const noexcept {
+    constexpr I getRows() const noexcept {
       return m_size.row;
     }
 
@@ -218,13 +221,13 @@ inline namespace v1 {
     }
 
     /**
-     * @brief Get the element at a given 1D position
+     * @brief Get the element at a given 1D index
      *
-     * @param pos The 1D position of the element
+     * @param index The 1D index of the element
      * @sa getPositionRange()
      */
-    T& operator()(std::size_t pos) {
-      return m_data[pos];
+    T& operator()(std::size_t index) {
+      return m_data[index];
     }
 
     /**
@@ -237,13 +240,13 @@ inline namespace v1 {
     }
 
     /**
-     * @brief Get the element at a given 1D position
+     * @brief Get the element at a given 1D index
      *
-     * @param pos The 1D position of the element
+     * @param index The 1D index of the element
      * @sa getPositionRange()
      */
-    const T& operator()(std::size_t pos) const {
-      return m_data[pos];
+    const T& operator()(std::size_t index) const {
+      return m_data[index];
     }
 
     /**
@@ -521,11 +524,11 @@ inline namespace v1 {
     }
 
     /**
-     * @brief Get the 1D position range of the array
+     * @brief Get the 1D index range of the array
      *
-     * @return A range with all the 1D positions in the array
+     * @return A range with all the 1D index in the array
      */
-    constexpr RangeZ getPositionRange() const noexcept {
+    constexpr RangeZ getIndexRange() const noexcept {
       return { 0, m_size.col * m_size.row };
     }
 
@@ -534,7 +537,7 @@ inline namespace v1 {
      *
      * @return A range with all the rows
      */
-    constexpr RangeU getRowRange() const noexcept {
+    constexpr Range<I> getRowRange() const noexcept {
       return { 0, m_size.row };
     }
 
@@ -543,8 +546,17 @@ inline namespace v1 {
      *
      * @return A range with all the columns
      */
-    constexpr RangeU getColRange() const noexcept {
+    constexpr Range<I> getColRange() const noexcept {
       return { 0, m_size.col };
+    }
+
+    /**
+     * @brief Get the position range
+     *
+     * @return A range for iterating among the positions
+     */
+    constexpr PositionRange<I> getPositionRange() const noexcept {
+      return { getColRange(), getRowRange() };
     }
 
     /** @} */
@@ -559,16 +571,16 @@ inline namespace v1 {
     }
 
     template<typename Func>
-    void visitNeighborsSquare(Vector<I, 2> pos, Func func, unsigned n) const {
+    void visitNeighborsSquare(Vector<I, 2> pos, Func func, I n) const {
       assert(isValid(pos));
 
-      unsigned colMin = pos.col - std::min(pos.col, n);
-      unsigned colMax = pos.col + std::min(m_size.col - pos.col - 1, n);
-      unsigned rowMin = pos.row - std::min(pos.row, n);
-      unsigned rowMax = pos.row + std::min(m_size.row - pos.row - 1, n);
+      auto colMin = pos.col - std::min(pos.col, n);
+      auto colMax = pos.col + std::min(m_size.col - pos.col - 1, n);
+      auto rowMin = pos.row - std::min(pos.row, n);
+      auto rowMax = pos.row + std::min(m_size.row - pos.row - 1, n);
 
-      for (unsigned row = rowMin; row <= rowMax; ++row) {
-        for (unsigned col = colMin; col <= colMax; ++col) {
+      for (auto row = rowMin; row <= rowMax; ++row) {
+        for (auto col = colMin; col <= colMax; ++col) {
           if (col == pos.col && row == pos.row) { // avoid to include VectorOps.h
             continue;
           }
@@ -579,16 +591,16 @@ inline namespace v1 {
     }
 
     template<typename Func>
-    void visitNeighborsSquare(Vector<I, 2> pos, Func func, unsigned n) {
+    void visitNeighborsSquare(Vector<I, 2> pos, Func func, I n) {
       assert(isValid(pos));
 
-      unsigned colMin = pos.col - std::min(pos.col, n);
-      unsigned colMax = pos.col + std::min(m_size.col - pos.col - 1, n);
-      unsigned rowMin = pos.row - std::min(pos.row, n);
-      unsigned rowMax = pos.row + std::min(m_size.row - pos.row - 1, n);
+      auto colMin = pos.col - std::min(pos.col, n);
+      auto colMax = pos.col + std::min(m_size.col - pos.col - 1, n);
+      auto rowMin = pos.row - std::min(pos.row, n);
+      auto rowMax = pos.row + std::min(m_size.row - pos.row - 1, n);
 
-      for (unsigned row = rowMin; row <= rowMax; ++row) {
-        for (unsigned col = colMin; col <= colMax; ++col) {
+      for (auto row = rowMin; row <= rowMax; ++row) {
+        for (auto col = colMin; col <= colMax; ++col) {
           if (col == pos.col && row == pos.row) { // avoid to include VectorOps.h
             continue;
           }
@@ -600,16 +612,16 @@ inline namespace v1 {
 
 
     template<typename Func>
-    void visitNeighborsDiamond(Vector<I, 2> pos, Func func, unsigned n) const {
+    void visitNeighborsDiamond(Vector<I, 2> pos, Func func, I n) const {
       assert(isValid(pos));
 
-      unsigned colMin = pos.col - std::min(pos.col, n);
-      unsigned colMax = pos.col + std::min(m_size.col - pos.col - 1, n);
-      unsigned rowMin = pos.row - std::min(pos.row, n);
-      unsigned rowMax = pos.row + std::min(m_size.row - pos.row - 1, n);
+      auto colMin = pos.col - std::min(pos.col, n);
+      auto colMax = pos.col + std::min(m_size.col - pos.col - 1, n);
+      auto rowMin = pos.row - std::min(pos.row, n);
+      auto rowMax = pos.row + std::min(m_size.row - pos.row - 1, n);
 
-      for (unsigned row = rowMin; row <= rowMax; ++row) {
-        for (unsigned col = colMin; col <= colMax; ++col) {
+      for (auto row = rowMin; row <= rowMax; ++row) {
+        for (auto col = colMin; col <= colMax; ++col) {
           if (col == pos.col && row == pos.row) { // avoid to include VectorOps.h
             continue;
           }
@@ -624,16 +636,16 @@ inline namespace v1 {
     }
 
     template<typename Func>
-    void visitNeighborsDiamond(Vector<I, 2> pos, Func func, unsigned n) {
+    void visitNeighborsDiamond(Vector<I, 2> pos, Func func, I n) {
       assert(isValid(pos));
 
-      unsigned colMin = pos.col - std::min(pos.col, n);
-      unsigned colMax = pos.col + std::min(m_size.col - pos.col - 1, n);
-      unsigned rowMin = pos.row - std::min(pos.row, n);
-      unsigned rowMax = pos.row + std::min(m_size.row - pos.row - 1, n);
+      auto colMin = pos.col - std::min(pos.col, n);
+      auto colMax = pos.col + std::min(m_size.col - pos.col - 1, n);
+      auto rowMin = pos.row - std::min(pos.row, n);
+      auto rowMax = pos.row + std::min(m_size.row - pos.row - 1, n);
 
-      for (unsigned row = rowMin; row <= rowMax; ++row) {
-        for (unsigned col = colMin; col <= colMax; ++col) {
+      for (auto row = rowMin; row <= rowMax; ++row) {
+        for (auto col = colMin; col <= colMax; ++col) {
           if (col == pos.col && row == pos.row) { // avoid to include VectorOps.h
             continue;
           }

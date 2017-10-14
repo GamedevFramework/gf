@@ -167,6 +167,58 @@ inline namespace v1 {
     setSizeNoCallback(actualSize);
   }
 
+  /*
+   * LockedView
+   */
+
+  void LockedView::onScreenSizeChange(Vector2u screenSize) {
+    m_localScreenSize = screenSize;
+    updateView();
+  }
+
+  void LockedView::onSizeChange(Vector2f size) {
+    m_localSize = size;
+    updateView();
+  }
+
+  void LockedView::onViewportChange(const RectF& viewport) {
+    m_localViewport = viewport;
+    updateView();
+  }
+
+  void LockedView::updateView() {
+    Vector2f actualSize = m_localSize;
+
+    const Vector2f viewportSize = m_localScreenSize * m_localViewport.size;
+
+    RectF viewport;
+
+    if (m_localSize.width > viewportSize.width) {
+      viewport.left = 0.0f;
+      viewport.width = 1.0f;
+      actualSize.width = viewportSize.width;
+    } else {
+      viewport.width = m_localSize.width / viewportSize.width;
+      viewport.left = (1.0f - viewport.width) / 2.0f;
+    }
+
+    if (m_localSize.height > viewportSize.height) {
+      viewport.top = 0.0f;
+      viewport.height = 1.0f;
+      actualSize.height = viewportSize.height;
+    } else {
+      viewport.height = m_localSize.height / viewportSize.height;
+      viewport.top = (1.0f - viewport.height) / 2.0f;
+    }
+
+    setSizeNoCallback(actualSize);
+
+    viewport.position = viewport.position * m_localViewport.size + m_localViewport.position;
+    viewport.size *= m_localViewport.size;
+
+    setViewportNoCallback(viewport);
+  }
+
 
   /*
    * ScreenView

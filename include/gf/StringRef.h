@@ -53,6 +53,18 @@ inline namespace v1 {
     }
 
     /**
+     * @brief Null constructor
+     *
+     * Data is `nullptr` and size is 0.
+     */
+    constexpr StringRef(std::nullptr_t)
+    : m_data(nullptr)
+    , m_size(0)
+    {
+
+    }
+
+    /**
      * @brief Constructor from a pointer and a size
      *
      * @param str A pointer to a string
@@ -140,6 +152,18 @@ inline namespace v1 {
      */
     constexpr const char *end() const noexcept {
       return m_data + m_size;
+    }
+
+    /**
+     * @brief Get a character at a given index
+     *
+     * No verification is done on the index.
+     *
+     * @param index The index of character
+     * @returns The character at the given index
+     */
+    constexpr char operator[](std::size_t index) const {
+      return m_data[index];
     }
 
   private:

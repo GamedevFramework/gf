@@ -486,6 +486,21 @@ inline namespace v1 {
     return out;
   }
 
+  /**
+   * @relates Vector
+   * @brief Component-wise sign value
+   */
+  template<typename T, std::size_t N>
+  inline
+  Vector<int, N> sign(Vector<T, N> val) {
+    Vector<int, N> out;
+
+    for (std::size_t i = 0; i < N; ++i) {
+      out.data[i] = gf::sign(val.data[i]);
+    }
+
+    return out;
+  }
 
   /**
    * @relates Vector

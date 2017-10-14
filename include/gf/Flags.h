@@ -268,41 +268,68 @@ inline namespace v1 {
     return Flags<E>(lhs) & rhs;
   }
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-}
-#endif
+
+  /**
+   * @relates Flags
+   * @brief Combine a single enum value into a flag value
+   *
+   * @param flag An enum value
+   * @returns The enum value turned into a flag value
+   */
+  template<typename E>
+  constexpr Flags<E> combineFlags(E flag) {
+    return Flags<E>(flag);
+  }
+
+  /**
+   * @relates Flags
+   * @brief Combine several enum values into a flag value
+   *
+   * @param flag An enum value
+   * @param others The other enum values
+   * @returns The enum values turned into a flag value
+   */
+  template<typename E, typename ... F>
+  constexpr Flags<E> combineFlags(E flag, F ... others) {
+    return Flags<E>(flag) | combineFlags(others ...);
+  }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
-// this traits is not versioned to ease external usage
+}
+
+
+// this traits is not versioned
+
 template<typename E>
 struct EnableBitmaskOperators {
   static constexpr bool value = false;
 };
-#endif
 
-}
+// these overloads are only available to gf enum types and gf flags
+// unless you add: "using gf::operator|;"
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
 template<typename E>
 constexpr
-typename std::enable_if<gf::EnableBitmaskOperators<E>::value, gf::Flags<E>>::type
+typename std::enable_if<EnableBitmaskOperators<E>::value, gf::Flags<E>>::type
 operator|(E lhs, E rhs) {
   return gf::Flags<E>(lhs) | gf::Flags<E>(rhs);
 }
 
 template<typename E>
 constexpr
-typename std::enable_if<gf::EnableBitmaskOperators<E>::value, gf::Flags<E>>::type
+typename std::enable_if<EnableBitmaskOperators<E>::value, gf::Flags<E>>::type
 operator&(E lhs, E rhs) {
   return gf::Flags<E>(lhs) & gf::Flags<E>(rhs);
 }
 
 template<typename E>
 constexpr
-typename std::enable_if<gf::EnableBitmaskOperators<E>::value, gf::Flags<E>>::type
+typename std::enable_if<EnableBitmaskOperators<E>::value, gf::Flags<E>>::type
 operator~(E val) {
   return ~gf::Flags<E>(val);
 }
+
 #endif
+}
 
 #endif // GF_FLAGS_H

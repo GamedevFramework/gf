@@ -19,15 +19,29 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 #include <iostream>
+#include <cstdlib>
 
+#include <gf/Cursor.h>
 #include <gf/Event.h>
+#include <gf/Image.h>
 #include <gf/Window.h>
 
 int main() {
-  gf::Window window("02_window", { 640, 480 });
+  gf::Window window("02_window", { 640, 480 }, ~gf::WindowHints::Resizable);
 
   std::cout << "Gamedev Framework (gf) example #02: Window\n";
-  std::cout << "This example prints all window events.\n";
+  std::cout << "This example prints all window events and show different cursors.\n";
+  std::cout << "How to use:\n";
+  std::cout << "\t1...: Show a system cursor\n";
+  std::cout << "\tBackspace: Show an image cursor\n";
+
+  gf::Image image;
+
+  if (!image.loadFromFile("02_cursor.png")) {
+    return EXIT_FAILURE;
+  }
+
+  gf::Cursor cursor;
 
   while (window.isOpen()) {
     gf::Event event;
@@ -52,8 +66,78 @@ int main() {
           break;
 
         case gf::EventType::KeyPressed:
-          if (event.key.scancode == gf::Scancode::Escape) {
-            window.close();
+          switch (event.key.scancode) {
+            case gf::Scancode::Escape:
+              window.close();
+              break;
+
+            case gf::Scancode::Num1:
+              cursor.loadFromSystem(gf::Cursor::Arrow);
+              window.setMouseCursor(cursor);
+              break;
+
+            case gf::Scancode::Num2:
+              cursor.loadFromSystem(gf::Cursor::ArrowWait);
+              window.setMouseCursor(cursor);
+              break;
+
+            case gf::Scancode::Num3:
+              cursor.loadFromSystem(gf::Cursor::Wait);
+              window.setMouseCursor(cursor);
+              break;
+
+            case gf::Scancode::Num4:
+              cursor.loadFromSystem(gf::Cursor::Text);
+              window.setMouseCursor(cursor);
+              break;
+
+            case gf::Scancode::Num5:
+              cursor.loadFromSystem(gf::Cursor::Hand);
+              window.setMouseCursor(cursor);
+              break;
+
+            case gf::Scancode::Num6:
+              cursor.loadFromSystem(gf::Cursor::SizeHorizontal);
+              window.setMouseCursor(cursor);
+              break;
+
+            case gf::Scancode::Num7:
+              cursor.loadFromSystem(gf::Cursor::SizeVertical);
+              window.setMouseCursor(cursor);
+              break;
+
+            case gf::Scancode::Num8:
+              cursor.loadFromSystem(gf::Cursor::SizeTopLeftBottomRight);
+              window.setMouseCursor(cursor);
+              break;
+
+            case gf::Scancode::Num9:
+              cursor.loadFromSystem(gf::Cursor::SizeBottomLeftTopRight);
+              window.setMouseCursor(cursor);
+              break;
+
+            case gf::Scancode::Num0:
+              cursor.loadFromSystem(gf::Cursor::SizeAll);
+              window.setMouseCursor(cursor);
+              break;
+
+            case gf::Scancode::Minus:
+              cursor.loadFromSystem(gf::Cursor::Cross);
+              window.setMouseCursor(cursor);
+              break;
+
+            case gf::Scancode::Equals:
+              cursor.loadFromSystem(gf::Cursor::NotAllowed);
+              window.setMouseCursor(cursor);
+              break;
+
+            case gf::Scancode::Backspace:
+              cursor.loadFromImage(image, { 4u, 4u });
+              window.setMouseCursor(cursor);
+              break;
+
+            default:
+              break;
           }
           break;
 

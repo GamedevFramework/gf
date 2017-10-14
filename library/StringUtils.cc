@@ -24,6 +24,10 @@
 #include <cmath>
 
 #include <algorithm>
+#include <memory>
+
+#include <boost/algorithm/string/split.hpp>
+#include <boost/algorithm/string/classification.hpp>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -84,8 +88,8 @@ inline namespace v1 {
     return result;
   }
 
-  std::u32string computeUnicodeString(const std::string& str) {
-    static constexpr uint8_t utf8Table[4][2] = {
+  std::u32string computeUnicodeString(StringRef str) {
+    static constexpr uint8_t Utf8Table[4][2] = {
       { 0x7F, 0x00 },
       { 0x1F, 0xC0 },
       { 0x0F, 0xE0 },
@@ -94,18 +98,18 @@ inline namespace v1 {
 
     std::u32string out;
 
-    for (std::size_t k = 0; k < str.size(); ++k) {
+    for (std::size_t k = 0; k < str.getSize(); ++k) {
       uint8_t c = str[k];
       char32_t codepoint = 0;
 
       for (std::size_t i = 0; i < 4; ++i) {
-        if ((c & ~utf8Table[i][0]) == utf8Table[i][1]) {
-          codepoint = c & utf8Table[i][0];
+        if ((c & ~Utf8Table[i][0]) == Utf8Table[i][1]) {
+          codepoint = c & Utf8Table[i][0];
 
           for (std::size_t j = 0; j < i; ++j) {
             ++k;
 
-            assert(k < str.size());
+            assert(k < str.getSize());
             c = str[k];
 
             assert((c & ~0x3F) == 0x80);
@@ -122,6 +126,50 @@ inline namespace v1 {
     return out;
   }
 
+  std::string formatString(const char *fmt, ...) {
+    va_list ap;
+    va_start(ap, fmt);
+    std::string res = formatString(fmt, ap);
+    va_end(ap);
+    return res;
+  }
+
+  std::string formatString(const char *fmt, va_list ap) {
+    if (fmt == nullptr) {
+      return "";
+    }
+
+    va_list test;
+    va_copy(test, ap);
+
+    int size = std::vsnprintf(nullptr, 0, fmt, test);
+    assert(size > 0);
+
+    ++size; // for '\0'
+
+    std::unique_ptr<char[]> buffer(new char[size]);
+    std::vsnprintf(buffer.get(), size, fmt, ap);
+
+    return std::string(buffer.get());
+  }
+
+  std::vector<std::u32string> splitInParagraphs(const std::u32string& str) {
+    std::vector<std::u32string> out;
+    boost::algorithm::split(out, str, boost::is_any_of(U"\n"), boost::algorithm::token_compress_on);
+    out.erase(std::remove_if(out.begin(), out.end(), [](const std::u32string& s) {
+      return s.empty();
+    }), out.end());
+    return out;
+  }
+
+  std::vector<std::u32string> splitInWords(const std::u32string& str) {
+    std::vector<std::u32string> out;
+    boost::algorithm::split(out, str, boost::is_any_of(U" \t"), boost::algorithm::token_compress_on);
+    out.erase(std::remove_if(out.begin(), out.end(), [](const std::u32string& s) {
+      return s.empty();
+    }), out.end());
+    return out;
+  }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

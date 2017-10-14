@@ -71,12 +71,23 @@ OpenSimplex noise:
 Perlin noise:
 @image html perlin_noise.png
 
-@section pcg_algorithms Algorithms
+@section pcg_algorithms_structures Algorithms and structures
+
+@subsection pcg_heightmap Heightmap
+
+- gf::Heightmap
 
 @subsection pcg_midpoint_displacement Midpoint displacement
 
 Midpoint displacement is a method for generating a heightmap, in 1D or 2D.
 
-- gf::midpointDisplacement1D
+- gf::midpointDisplacement1D()
+- gf::midpointDisplacement2D()
+
+@subsection pcg_diamond_square Diamond square
+
+Diamond square is an improvment of midpoint displacement.
+
+- gf::diamondSquare2D()
 
 */

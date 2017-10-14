@@ -34,6 +34,9 @@ add_gf_example(22_midpoint)
 add_gf_example(23_bresenham)
 add_gf_example(24_easings)
 
+add_gf_example(26_map)
+add_gf_example(27_console)
+
 add_gf_example(30_postprocessing)
 add_gf_example(31_pipeline)
 add_gf_example(32_colorblind)

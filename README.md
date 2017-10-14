@@ -85,7 +85,7 @@ See the [online documentation for Gamedev Framework (gf)](http://gamedevframewor
 
 ## Contact
 
-If you want to talk directly with the developpers, you can join the [#gf-devel IRC channel on Freenode](irc://chat.freenode.net/gf-devel).
+If you want to talk directly with the developpers, you can join the [#gf-devel IRC channel on Freenode](irc://chat.freenode.net/gf-devel). Or you can post a message on [/r/GamedevFramework](https://www.reddit.com/r/GamedevFramework/).
 
 ## Contribution
 
@@ -98,7 +98,9 @@ You have to install the following dependencies:
 - [SDL2](https://www.libsdl.org/) >= 2.0.2 (zlib/libpng license)
 - [Boost Filesystem](http://www.boost.org/doc/libs/release/libs/filesystem/) >= 1.55 (Boost license)
 - [Boost String Algorithms](http://www.boost.org/doc/libs/release/libs/algorithm/string/) >= 1.55 (Boost license)
+- [Boost Heap](http://www.boost.org/doc/libs/release/libs/heap/) >= 1.55 (Boost license)
 - [Freetype](http://freetype.org/) >= 2.5.2 (FreeType license)
+- [zlib](https://zlib.net/) >= 1.2.8 (zlib/libpng license)
 - [CMake](https://cmake.org/) >= 3.0.2
 
 See the [documentation](http://gamedevframework.github.io/latest/build_and_install.html) for more information on how to build and install gf.

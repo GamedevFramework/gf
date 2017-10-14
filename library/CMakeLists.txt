@@ -65,13 +65,17 @@ else()
     Blend.cc
     BufferedGeometry.cc
     Circ.cc
+    Clipboard.cc
     Clock.cc
     Collision.cc
     Color.cc
     ColorRamp.cc
+    Console.cc
+    ConsoleFont.cc
     Control.cc
     Controls.cc
     Coordinates.cc
+    Cursor.cc
     Curve.cc
     Curves.cc
     Direction.cc
@@ -86,6 +90,7 @@ else()
     Geometry.cc
     GraphicsInfo.cc
     Grid.cc
+    Heightmap.cc
     Image.cc
     InputStream.cc
     InputStreams.cc
@@ -93,6 +98,7 @@ else()
     Library.cc
     Log.cc
     Logo.cc
+    Map.cc
     Math.cc
     Matrix.cc
     MessageManager.cc
@@ -124,6 +130,7 @@ else()
     Shape.cc
     Shapes.cc
     Sleep.cc
+    SpaceTree.cc
     SpriteBatch.cc
     Sprite.cc
     StringUtils.cc
@@ -133,6 +140,7 @@ else()
     Texture.cc
     TileLayer.cc
     Time.cc
+    Tmx.cc
     Transformable.cc
     Transform.cc
     UI.cc
@@ -165,7 +173,9 @@ if (GF_DEBUG)
 endif()
 
 target_compile_definitions(gf0
-  PRIVATE GF_EXPORT_SYMBOLS
+  PRIVATE
+    GF_EXPORT_SYMBOLS
+    ZLIB_CONST
 )
 
 target_include_directories(gf0
@@ -175,6 +185,7 @@ target_include_directories(gf0
   PRIVATE
     ${SDL2_INCLUDE_DIR}
     ${FREETYPE_INCLUDE_DIRS}
+    ${ZLIB_INCLUDE_DIRS}
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/vendor/glad/include
 )
@@ -183,6 +194,7 @@ target_link_libraries(gf0
   ${SDL2_LIBRARY}
   ${Boost_LIBRARIES}
   ${FREETYPE_LIBRARIES}
+  ${ZLIB_LIBRARIES}
 )
 
 # workaround for Travis-CI
@@ -210,11 +222,11 @@ install(
 
 if(WIN32)
   install(
-    TARGETS gf0 
+    TARGETS gf0
     RUNTIME DESTINATION "${CMAKE_INSTALL_DOCDIR}/examples"
   )
   install(
-    TARGETS gf0 
+    TARGETS gf0
     RUNTIME DESTINATION games
   )
 endif()

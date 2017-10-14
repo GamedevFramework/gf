@@ -375,6 +375,7 @@ inline namespace v1 {
    * | gf::FitView     | @image html fitview.png     |
    * | gf::FillView    | @image html fillview.png    |
    * | gf::ExtendView  | @image html extendview.png  |
+   * | gf::LockedView  | @image html lockedview.png  |
    * | gf::ScreenView  | @image html screenview.png  |
    *
    * @sa gf::ViewContainer

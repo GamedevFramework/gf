@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0)
 
 project(GF
-  VERSION 0.5.0
+  VERSION 0.6.0
   LANGUAGES CXX C
 )
 
@@ -25,9 +25,6 @@ if(MSVC)
   message(STATUS "Environment variables:")
   message(STATUS "- BOOST_INCLUDEDIR: $ENV{BOOST_INCLUDEDIR}")
   message(STATUS "- BOOST_LIBRARYDIR: $ENV{BOOST_LIBRARYDIR}")
-  message(STATUS "- SDL2DIR: $ENV{SDL2DIR}")
-  message(STATUS "- SDL2ARCH: $ENV{SDL2ARCH}")
-  message(STATUS "- FREETYPE_DIR: $ENV{FREETYPE_DIR}")
 endif()
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
@@ -37,10 +34,11 @@ find_package(SDL2 REQUIRED)
 
 find_package(Boost REQUIRED COMPONENTS filesystem system)
 find_package(Freetype REQUIRED)
+find_package(ZLIB REQUIRED)
 
 if(MSVC)
   message(STATUS "Using MSVC compiler")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /DNOMINMAX /W4")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /DNOMINMAX /W4 /utf-8")
   link_directories(${Boost_LIBRARY_DIRS})
 else()
   message(STATUS "Using GCC or Clang compiler")

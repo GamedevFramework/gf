@@ -86,7 +86,7 @@ inline namespace v1 {
      *
      * @param fmt The [format string](http://en.cppreference.com/w/cpp/io/c/fprintf)
      */
-    static void debug(const char *fmt, ...) {
+    static void debug(const char *fmt, ...) GF_FORMAT(1, 2) {
       va_list ap;
       va_start(ap, fmt);
       log(Level::Debug, fmt, ap);
@@ -98,7 +98,7 @@ inline namespace v1 {
      *
      * @param fmt The [format string](http://en.cppreference.com/w/cpp/io/c/fprintf)
      */
-    static void info(const char *fmt, ...) {
+    static void info(const char *fmt, ...) GF_FORMAT(1, 2) {
       va_list ap;
       va_start(ap, fmt);
       log(Level::Info, fmt, ap);
@@ -110,7 +110,7 @@ inline namespace v1 {
      *
      * @param fmt The [format string](http://en.cppreference.com/w/cpp/io/c/fprintf)
      */
-    static void warning(const char *fmt, ...) {
+    static void warning(const char *fmt, ...) GF_FORMAT(1, 2) {
       va_list ap;
       va_start(ap, fmt);
       log(Level::Warn, fmt, ap);
@@ -122,7 +122,7 @@ inline namespace v1 {
      *
      * @param fmt The [format string](http://en.cppreference.com/w/cpp/io/c/fprintf)
      */
-    static void error(const char *fmt, ...) {
+    static void error(const char *fmt, ...) GF_FORMAT(1, 2) {
       va_list ap;
       va_start(ap, fmt);
       log(Level::Error, fmt, ap);
@@ -134,7 +134,7 @@ inline namespace v1 {
      *
      * @param fmt The [format string](http://en.cppreference.com/w/cpp/io/c/fprintf)
      */
-    static void fatal(const char *fmt, ...) {
+    static void fatal(const char *fmt, ...) GF_FORMAT(1, 2) {
       va_list ap;
       va_start(ap, fmt);
       log(Level::Fatal, fmt, ap);

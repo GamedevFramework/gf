@@ -21,9 +21,12 @@
 #ifndef GF_PARTICLES_H
 #define GF_PARTICLES_H
 
+#include "Circ.h"
 #include "Portability.h"
+#include "Rect.h"
 #include "Transformable.h"
 #include "VertexArray.h"
+#include "Vector.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -71,12 +74,38 @@ inline namespace v1 {
     /**
      * @brief Add a circle shape to the particles
      *
-     * @param position The position of the center of the circle
+     * @param center The center of the circle
      * @param radius The radius of the circle
      * @param color The color of the circle
      * @param pointCount The number of points composing the circle
      */
-    void addCircle(Vector2f position, float radius, Color4f color, std::size_t pointCount = 15);
+    void addCircle(Vector2f center, float radius, Color4f color, std::size_t pointCount = 15);
+
+    /**
+     * @brief Add a circle shape to the particles
+     *
+     * @param circ The circle
+     * @param color The color of the circle
+     * @param pointCount The number of points composing the circle
+     */
+    void addCircle(const CircF& circ, Color4f color, std::size_t pointCount = 15);
+
+    /**
+     * @brief Add a rectangle shape to the particles
+     *
+     * @param position The position of the top-left of the rectangle
+     * @param size The size of the rectangle
+     * @param color The color of the rectangle
+     */
+    void addRectangle(Vector2f position, Vector2f size, Color4f color);
+
+    /**
+     * @brief Add a rectangle shape to the particles
+     *
+     * @param rect The rectangle
+     * @param color The color of the rectangle
+     */
+    void addRectangle(const RectF& rect, Color4f color);
 
     virtual void draw(RenderTarget& target, RenderStates states) override;
 

@@ -10,7 +10,7 @@
 @brief All the core generic classes and functions.
 
 - Math: gf::Vector, gf::Matrix, gf::Range, gf::Direction, gf::Orientation, gf::Array2D
-- Geometry: gf::Rect, gf::Circ, gf::Polygon, gf::Polyligne
+- Geometry: gf::Rect, gf::Circ, gf::Polygon, gf::Polyline
 - Stream: gf::InputStream, gf::FileInputStream, gf::MemoryInputStream
 - Utility: gf::Clock, gf::Time, gf::Random, gf::SystemInfo, gf::Singleton, gf::Flags
 - Noise: gf::Noise2D / gf::Noise3D, gf::GradientNoise2D / gf::GradientNoise3D, gf::FractalNoise2D / gf::FractalNoise3D, gf::PerlinNoise2D / gf::PerlinNoise3D, gf::SimplexNoise2D, gf::OpenSimplexNoise2D / gf::OpenSimplexNoise3D, gf::WorleyNoise2D
@@ -41,6 +41,8 @@
 - Physics: gf::PhysicsBody, gf::PhysicsGeometry, gf::PhysicsModel
 - Animations: gf::Activity, gf::Tween
 - Geometry: gf::generateLine(), gf::midpointDisplacement1D()
+- Virtual console: gf::Console, gf::ConsoleFont, gf::ConsoleChar
+- Roguelike toolkit: gf::SquareMap, gf::SpaceTree
 
 @mainpage
 

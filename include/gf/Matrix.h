@@ -39,7 +39,7 @@ inline namespace v1 {
    * gf::Matrix represents a matrix with `ROWS` rows and `COLS` columns. The
    * internal representation uses a [row-major order](https://en.wikipedia.org/wiki/Row-major_order).
    *
-   * The template parameter `T` is the type of coordinates. . It can be any
+   * The template parameter `T` is the type of coordinates. It can be any
    * type that supports arithmetic operations (+, -, *, /).
    *
    * Several specializations are defined for common use cases, especially for
