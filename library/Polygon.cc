@@ -41,6 +41,10 @@ inline namespace v1 {
 
   }
 
+  bool Polygon::isEmpty() const {
+    return m_points.empty();
+  }
+
   void Polygon::addPoint(Vector2f point) {
     m_points.push_back(point);
   }

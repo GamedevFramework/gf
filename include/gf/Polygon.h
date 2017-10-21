@@ -77,6 +77,15 @@ inline namespace v1 {
     }
 
     /**
+     * @brief Check if the polygon is empty
+     *
+     * An empty polygon has no points.
+     *
+     * @returns True if the polygon is empty
+     */
+    bool isEmpty() const;
+
+    /**
      * @brief Add a point to the polygon
      *
      * @param point The point to add to the polygon
