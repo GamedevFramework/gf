@@ -393,12 +393,12 @@ inline namespace v1 {
           return c - 'a' + 10;
         }
 
-        if (!('A' <= c && c <= 'F')) {
-          Log::error("Invalid character: '%c' (%x)\n", c, static_cast<int>(c));
+        if ('A' <= c && c <= 'F') {
+          return c - 'A' + 10;
         }
 
-        assert('A' <= c && c <= 'F');
-        return c - 'A' + 10;
+        Log::error("Invalid character: '%c' (%x)\n", c, static_cast<int>(c));
+        return 0;
       };
 
     };
