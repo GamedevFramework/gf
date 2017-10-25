@@ -162,7 +162,12 @@ inline namespace v1 {
    * @ingroup core
    * @brief Compute the convex hull of a set of points
    *
-   * This function uses the [Quickhull algorithm]().
+   * This function uses the [Quickhull algorithm](https://en.wikipedia.org/wiki/Quickhull).
+   *
+   * Complexity: @f$ O(n \log n)@f$
+   *
+   * @param points The set of points
+   * @returns A (convex) polygon that contains the points
    */
   GF_API Polygon convexHull(ArrayRef<Vector2f> points);
 
