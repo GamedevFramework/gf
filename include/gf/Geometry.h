@@ -25,6 +25,7 @@
 
 #include "ArrayRef.h"
 #include "Heightmap.h"
+#include "Polygon.h"
 #include "Portability.h"
 #include "Random.h"
 #include "Vector.h"
@@ -156,6 +157,14 @@ inline namespace v1 {
    */
   GF_API Heightmap diamondSquare2D(Vector2i size, Random& random, ArrayRef<double> initialValues = nullptr);
 
+
+  /**
+   * @ingroup core
+   * @brief Compute the convex hull of a set of points
+   *
+   * This function uses the [Quickhull algorithm]().
+   */
+  GF_API Polygon convexHull(ArrayRef<Vector2f> points);
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

@@ -298,6 +298,100 @@ inline namespace v1 {
     return map.subMap({ offset, size });
   }
 
+  /*
+   * Convex Hull
+   */
+
+  namespace {
+
+    void findHull(const std::vector<Vector2f>& in, std::vector<Vector2f>& out, Vector2f a, Vector2f b) {
+      if (in.empty()) {
+        return;
+      }
+
+      Vector2f perp = gf::perp(a - b);
+
+      auto it = std::max_element(in.begin(), in.end(), [a, perp](Vector2f p1, Vector2f p2) {
+        Vector2f ap1 = p1 - a;
+        Vector2f ap2 = p2 - a;
+
+        float d1 = gf::dot(ap1, perp);
+        assert(d1 > 0);
+
+        float d2 = gf::dot(ap2, perp);
+        assert(d2 > 0);
+
+        return d1 < d2;
+      });
+
+      Vector2f c = *it;
+
+      std::vector<Vector2f> s1;
+      std::vector<Vector2f> s2;
+
+      for (auto& p : in) {
+        if (p == c) {
+          continue;
+        }
+
+        if (gf::cross(c - a, p - a) < 0) { // P is left of AC
+          s1.push_back(p);
+        }
+
+        if (gf::cross(b - c, p - c) < 0) { // P is left of CB
+          s2.push_back(p);
+        }
+      }
+
+      findHull(s1, out, a, c);
+      out.push_back(c);
+      findHull(s2, out, c, b);
+    }
+
+    void quickHull(ArrayRef<Vector2f> in, std::vector<Vector2f>& out) {
+      const Vector2f *pa;
+      const Vector2f *pb;
+
+      std::tie(pa, pb) = std::minmax_element(in.begin(), in.end(), [](Vector2f p1, Vector2f p2) {
+        return p1.x < p2.x;
+      });
+
+      const Vector2f a = *pa;
+      const Vector2f b = *pb;
+
+      std::vector<Vector2f> s1;
+      std::vector<Vector2f> s2;
+
+      for (auto& p : in) {
+        if (p == a || p == b) {
+          continue;
+        }
+
+        if (gf::cross(b - a, p - a) < 0) { // P is left of AB
+          s1.push_back(p);
+        } else { // P is left of BA
+          s2.push_back(p);
+        }
+      }
+
+      out.push_back(a);
+      findHull(s1, out, a, b);
+      out.push_back(b);
+      findHull(s2, out, b, a);
+    }
+
+  }
+
+  Polygon convexHull(ArrayRef<Vector2f> points) {
+    if (points.getSize() <= 3) {
+      return Polygon(points);
+    }
+
+    std::vector<Vector2f> out;
+    quickHull(points, out);
+    return Polygon(out);
+  }
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif
