@@ -138,6 +138,15 @@ inline namespace v1 {
     }
 
     /**
+     * @brief Check if the buffer is empty
+     *
+     * @returns True if the buffer has no elements
+     */
+    constexpr bool isEmpty() const noexcept {
+      return m_size == 0;
+    }
+
+    /**
      * @brief Get an iterator to the first element
      *
      * @returns A pointer to the first element
