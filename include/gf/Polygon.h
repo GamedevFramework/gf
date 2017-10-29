@@ -27,6 +27,7 @@
 #include "Matrix.h"
 #include "Portability.h"
 #include "Vector.h"
+#include "Winding.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -34,15 +35,6 @@ inline namespace v1 {
 #endif
 
   struct Transform;
-
-  /**
-   * @ingroup core
-   * @brief The direction of a polygon's rotation
-   */
-  enum class Winding {
-    Clockwise,        ///< Same direction as a clock's hands
-    Counterclockwise, ///< Opposite direction of a clock's hands
-  };
 
   /**
    * @ingroup core
