@@ -130,11 +130,29 @@ inline namespace v1 {
     }
 
     /**
+     * @brief Get the left child
+     *
+     * @returns The left child if it exists or `nullptr`
+     */
+    SpaceTree *getLeftChild() {
+      return m_left.get();
+    }
+
+    /**
      * @brief Get the right child
      *
      * @returns The right child if it exists or `nullptr`
      */
     const SpaceTree *getRightChild() const {
+      return m_right.get();
+    }
+
+    /**
+     * @brief Get the right child
+     *
+     * @returns The right child if it exists or `nullptr`
+     */
+    SpaceTree *getRightChild() {
       return m_right.get();
     }
 
