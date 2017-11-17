@@ -164,7 +164,7 @@ inline namespace v1 {
    *
    * This function uses the [Quickhull algorithm](https://en.wikipedia.org/wiki/Quickhull).
    *
-   * Complexity: @f$ O(n \log n)@f$
+   * Complexity: @f$ O(n \log n)@f$ on average, @f$ O(n^2) @f$ on worst case
    *
    * @param points The set of points
    * @returns A (convex) polygon that contains the points
