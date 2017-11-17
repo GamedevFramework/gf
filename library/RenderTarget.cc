@@ -78,7 +78,11 @@ inline namespace v1 {
   }
 
   void RenderTarget::clear() {
+    Region saved = getCanonicalScissorBox();
+    Vector2i size = getSize();
+    setCanonicalScissorBox({ 0, 0, size.width, size.height });
     glCheck(glClear(GL_COLOR_BUFFER_BIT));
+    setCanonicalScissorBox(saved);
   }
 
   RangeF RenderTarget::getAliasedLineWidthRange() const {
