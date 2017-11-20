@@ -507,6 +507,14 @@ inline namespace v1 {
     return static_cast<Keycode>(SDL_GetKeyFromName(name));
   }
 
+  Keycode Keyboard::localize(Scancode scancode) {
+    return static_cast<Keycode>(SDL_GetKeyFromScancode(static_cast<SDL_Scancode>(scancode)));
+  }
+
+  Scancode Keyboard::unlocalize(Keycode keycode) {
+    return static_cast<Scancode>(SDL_GetScancodeFromKey(static_cast<SDL_Keycode>(keycode)));
+  }
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif

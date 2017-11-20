@@ -541,6 +541,31 @@ inline namespace v1 {
     static Keycode getKeycodeFromName(const char *name);
 
     /**
+     * @brief Localize a physical key to a logical one
+     *
+     * @param scancode The scancode to localize
+     * @returns The keycode corresponding to the scancode under the current
+     * keyboard layout used by the operating system, or gf::Keycode::Unknown
+     * when the scancode cannot be mapped to a keycode.
+     *
+     * @sa unlocalize()
+     */
+    static Keycode localize(Scancode scancode);
+
+
+    /**
+     * @brief Identify the physical key corresponding to a logical one
+     *
+     * @param keycode The keycode to "unlocalize"
+     * @returns The scancode corresponding to the key under the current
+     * keyboard layout used by the operating system, or gf::Scancode::Unknown
+     * when the key cannot be mapped to a scancode.
+     *
+     * @sa localize()
+     */
+    static Scancode unlocalize(Keycode keycode);
+
+    /**
      * @brief Deleted constructor
      */
     Keyboard() = delete;
