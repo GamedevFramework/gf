@@ -75,37 +75,41 @@ inline namespace v1 {
     return *this;
   }
 
-  static GLenum getEnum(BareTexture::Format format) {
-    switch (format) {
-      case BareTexture::Format::Color:
-        return GL_RGBA;
-      case BareTexture::Format::Alpha:
-        return GL_ALPHA;
+  namespace {
+
+    GLenum getEnum(BareTexture::Format format) {
+      switch (format) {
+        case BareTexture::Format::Color:
+          return GL_RGBA;
+        case BareTexture::Format::Alpha:
+          return GL_ALPHA;
+      }
+
+      assert(false);
+      return 0;
+    };
+
+    int getAlignment(BareTexture::Format format) {
+      switch (format) {
+        case BareTexture::Format::Color:
+          return 4;
+        case BareTexture::Format::Alpha:
+          return 1;
+      }
+
+      assert(false);
+      return 4;
+    };
+
+    GLenum getMinFilter(bool smooth, bool mipmap) {
+      if (mipmap) {
+        return smooth ? GL_LINEAR_MIPMAP_LINEAR : GL_NEAREST_MIPMAP_LINEAR;
+      }
+
+      return smooth ? GL_LINEAR : GL_NEAREST;
     }
 
-    assert(false);
-    return 0;
-  };
-
-  static int getAlignment(BareTexture::Format format) {
-    switch (format) {
-      case BareTexture::Format::Color:
-        return 4;
-      case BareTexture::Format::Alpha:
-        return 1;
-    }
-
-    assert(false);
-    return 4;
-  };
-
-  static GLenum getMinFilter(bool smooth, bool mipmap) {
-    if (mipmap) {
-      return smooth ? GL_LINEAR_MIPMAP_LINEAR : GL_NEAREST_MIPMAP_LINEAR;
-    }
-
-    return smooth ? GL_LINEAR : GL_NEAREST;
-  }
+  } // anonymous namespace
 
   bool BareTexture::create(Vector2u size, const uint8_t *data) {
     if (size.width == 0 || size.height == 0) {

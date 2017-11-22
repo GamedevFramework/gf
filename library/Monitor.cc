@@ -31,18 +31,22 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  static void sdlCheckError(int err) {
-    if (err == 0) {
-      return;
+  namespace {
+
+    void sdlCheckError(int err) {
+      if (err == 0) {
+        return;
+      }
+
+      const char *message = SDL_GetError();
+
+      if (*message) {
+        Log::error("SDL error: %s\n", message);
+        SDL_ClearError();
+      }
     }
 
-    const char *message = SDL_GetError();
-
-    if (*message) {
-      Log::error("SDL error: %s\n", message);
-      SDL_ClearError();
-    }
-  }
+  } // anonymous namespace
 
   Monitor Monitor::getPrimaryMonitor() {
     Library lib;

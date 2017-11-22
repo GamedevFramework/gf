@@ -42,9 +42,13 @@ inline namespace v1 {
     m_count = 0;
   }
 
-  static bool areStatesSimilar(const RenderStates& lhs, const RenderStates& rhs) {
-    return lhs.mode == rhs.mode && lhs.transform == rhs.transform && lhs.shader == rhs.shader;
-  }
+  namespace {
+
+    bool areStatesSimilar(const RenderStates& lhs, const RenderStates& rhs) {
+      return lhs.mode == rhs.mode && lhs.transform == rhs.transform && lhs.shader == rhs.shader;
+    }
+
+  } // anonymous namespace
 
   void SpriteBatch::draw(Sprite& sprite, const RenderStates& states) {
     if (!sprite.hasTexture()) {

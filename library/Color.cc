@@ -52,92 +52,95 @@ inline namespace v1 {
   constexpr Color4f Color::Violet;
   constexpr Color4f Color::Azure;
 
-  struct Hsv {
-    float h;
-    float s;
-    float v;
-    float a;
-  };
+  namespace {
+    struct Hsv {
+      float h;
+      float s;
+      float v;
+      float a;
+    };
 
-  static Hsv convertRgbToHsv(Color4f color) {
-    float min, max;
-    std::tie(min, max) = std::minmax({ color.r, color.g, color.b });
+    Hsv convertRgbToHsv(Color4f color) {
+      float min, max;
+      std::tie(min, max) = std::minmax({ color.r, color.g, color.b });
 
-    float hue = 0.0f;
+      float hue = 0.0f;
 
-    if ((max - min) > Epsilon) {
-      if (max == color.r) {
-        hue = std::fmod(60.0f * (color.g - color.b) / (max - min) + 360.0f, 360.0f);
-      } else if (max == color.g) {
-        hue = 60.0f * (color.b - color.r) / (max - min) + 120.0f;
-      } else if (max == color.b) {
-        hue = 60.0f * (color.r - color.g) / (max - min) + 240.0f;
-      } else {
-        assert(false);
+      if ((max - min) > Epsilon) {
+        if (max == color.r) {
+          hue = std::fmod(60.0f * (color.g - color.b) / (max - min) + 360.0f, 360.0f);
+        } else if (max == color.g) {
+          hue = 60.0f * (color.b - color.r) / (max - min) + 120.0f;
+        } else if (max == color.b) {
+          hue = 60.0f * (color.r - color.g) / (max - min) + 240.0f;
+        } else {
+          assert(false);
+        }
       }
+
+      float sat = (max < Epsilon) ? 0.0f : (1.0f - min / max);
+      float val = max;
+
+      return { hue, sat, val, color.a };
     }
 
-    float sat = (max < Epsilon) ? 0.0f : (1.0f - min / max);
-    float val = max;
+    Color4f convertHsvToRgb(Hsv hsv) {
+      float hue = hsv.h / 60.0f;
+      float sat = hsv.s;
+      float val = hsv.v;
 
-    return { hue, sat, val, color.a };
-  }
+      int i = static_cast<int>(hue) % 6;
+      assert(0 <= i && i < 6);
 
-  static Color4f convertHsvToRgb(Hsv hsv) {
-    float hue = hsv.h / 60.0f;
-    float sat = hsv.s;
-    float val = hsv.v;
+      float f = hue - i;
 
-    int i = static_cast<int>(hue) % 6;
-    assert(0 <= i && i < 6);
+      float x = val * (1 - sat);
+      float y = val * (1 - (f * sat));
+      float z = val * (1 - ((1 - f) * sat));
 
-    float f = hue - i;
+      Color4f color;
+      color.a = hsv.a;
 
-    float x = val * (1 - sat);
-    float y = val * (1 - (f * sat));
-    float z = val * (1 - ((1 - f) * sat));
+      switch (i) {
+        case 0:
+          color.r = val;
+          color.g = z;
+          color.b = x;
+          break;
+        case 1:
+          color.r = y;
+          color.g = val;
+          color.b = x;
+          break;
+        case 2:
+          color.r = x;
+          color.g = val;
+          color.b = z;
+          break;
+        case 3:
+          color.r = x;
+          color.g = y;
+          color.b = val;
+          break;
+        case 4:
+          color.r = z;
+          color.g = x;
+          color.b = val;
+          break;
+        case 5:
+          color.r = val;
+          color.g = x;
+          color.b = y;
+          break;
+        default:
+          assert(false);
+          break;
+      }
 
-    Color4f color;
-    color.a = hsv.a;
-
-    switch (i) {
-      case 0:
-        color.r = val;
-        color.g = z;
-        color.b = x;
-        break;
-      case 1:
-        color.r = y;
-        color.g = val;
-        color.b = x;
-        break;
-      case 2:
-        color.r = x;
-        color.g = val;
-        color.b = z;
-        break;
-      case 3:
-        color.r = x;
-        color.g = y;
-        color.b = val;
-        break;
-      case 4:
-        color.r = z;
-        color.g = x;
-        color.b = val;
-        break;
-      case 5:
-        color.r = val;
-        color.g = x;
-        color.b = y;
-        break;
-      default:
-        assert(false);
-        break;
+      return color;
     }
 
-    return color;
-  }
+  } // anonymous namespace
 
   Color4f Color::lighter(Color4f color, float percent) {
     assert(0.0f <= percent && percent <= 1.0);

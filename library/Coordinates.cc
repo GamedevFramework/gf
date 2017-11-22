@@ -58,45 +58,49 @@ inline namespace v1 {
     return static_cast<unsigned>(m_size.height * percent);
   }
 
-  static float getXDistance(float width, float dx, Anchor anchor) {
-    switch (anchor) {
-      case Anchor::TopLeft:
-      case Anchor::CenterLeft:
-      case Anchor::BottomLeft:
-        return dx;
-      case Anchor::TopCenter:
-      case Anchor::Center:
-      case Anchor::BottomCenter:
-        return width * 0.5f;
-      case Anchor::TopRight:
-      case Anchor::CenterRight:
-      case Anchor::BottomRight:
-        return width - dx;
+  namespace {
+
+    float getXDistance(float width, float dx, Anchor anchor) {
+      switch (anchor) {
+        case Anchor::TopLeft:
+        case Anchor::CenterLeft:
+        case Anchor::BottomLeft:
+          return dx;
+        case Anchor::TopCenter:
+        case Anchor::Center:
+        case Anchor::BottomCenter:
+          return width * 0.5f;
+        case Anchor::TopRight:
+        case Anchor::CenterRight:
+        case Anchor::BottomRight:
+          return width - dx;
+      }
+
+      assert(false);
+      return 0.0f;
     }
 
-    assert(false);
-    return 0.0f;
-  }
+    float getYDistance(float height, float dy, Anchor anchor) {
+      switch (anchor) {
+        case Anchor::TopLeft:
+        case Anchor::TopCenter:
+        case Anchor::TopRight:
+          return dy;
+        case Anchor::CenterLeft:
+        case Anchor::Center:
+        case Anchor::CenterRight:
+          return height * 0.5f;
+        case Anchor::BottomLeft:
+        case Anchor::BottomCenter:
+        case Anchor::BottomRight:
+          return height - dy;
+      }
 
-  static float getYDistance(float height, float dy, Anchor anchor) {
-    switch (anchor) {
-      case Anchor::TopLeft:
-      case Anchor::TopCenter:
-      case Anchor::TopRight:
-        return dy;
-      case Anchor::CenterLeft:
-      case Anchor::Center:
-      case Anchor::CenterRight:
-        return height * 0.5f;
-      case Anchor::BottomLeft:
-      case Anchor::BottomCenter:
-      case Anchor::BottomRight:
-        return height - dy;
+      assert(false);
+      return 0.0f;
     }
 
-    assert(false);
-    return 0.0f;
-  }
+  } // anonymous namespace
 
   Vector2f Coordinates::getAbsolutePoint(Vector2f distance, Anchor anchor) const {
     return { getXDistance(m_size.width, distance.x, anchor), getYDistance(m_size.height, distance.y, anchor) };

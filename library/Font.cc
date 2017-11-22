@@ -44,46 +44,49 @@ inline namespace v1 {
 
   static constexpr float Scale = (1 << 6);
 
-  static float convert(FT_Pos value) {
-    return static_cast<float>(value) / Scale;
-  }
+  namespace {
 
-  static uint64_t makeKey(char32_t codepoint, float thickness) {
-    static_assert(sizeof(float) == sizeof(uint32_t), "Float is not 32 bits.");
-    uint32_t hex;
-    std::memcpy(&hex, &thickness, sizeof(float));
-    uint64_t key = codepoint | static_cast<uint64_t>(hex) << 32;
-    return key;
-  }
-
-  static const char *FT_ErrorMessage(FT_Error error) {
-    switch (error) {
-
-      #undef FTERRORS_H_
-      #define FT_ERRORDEF( e, v, s )  case v: return s;
-      #include FT_ERRORS_H
-
-      default: return "unknown error";
-    };
-
-    return "";
-  }
-
-  static unsigned long callbackRead(FT_Stream rec, unsigned long offset, unsigned char* buffer, unsigned long count) {
-    InputStream *stream = static_cast<InputStream *>(rec->descriptor.pointer);
-    stream->seek(offset);
-
-    if (count == 0) {
-      return 0;
+    float convert(FT_Pos value) {
+      return static_cast<float>(value) / Scale;
     }
 
-    return stream->read(buffer, count);
-  }
+    uint64_t makeKey(char32_t codepoint, float thickness) {
+      static_assert(sizeof(float) == sizeof(uint32_t), "Float is not 32 bits.");
+      uint32_t hex;
+      std::memcpy(&hex, &thickness, sizeof(float));
+      uint64_t key = codepoint | static_cast<uint64_t>(hex) << 32;
+      return key;
+    }
 
-  static void callbackClose(FT_Stream) {
-    // nothing to do
-  }
+    const char *FT_ErrorMessage(FT_Error error) {
+      switch (error) {
 
+        #undef FTERRORS_H_
+        #define FT_ERRORDEF( e, v, s )  case v: return s;
+        #include FT_ERRORS_H
+
+        default: return "unknown error";
+      };
+
+      return "";
+    }
+
+    unsigned long callbackRead(FT_Stream rec, unsigned long offset, unsigned char* buffer, unsigned long count) {
+      InputStream *stream = static_cast<InputStream *>(rec->descriptor.pointer);
+      stream->seek(offset);
+
+      if (count == 0) {
+        return 0;
+      }
+
+      return stream->read(buffer, count);
+    }
+
+    void callbackClose(FT_Stream) {
+      // nothing to do
+    }
+
+  } // anonymous namespace
 
   Font::Font()
   : m_library(nullptr)

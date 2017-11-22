@@ -552,7 +552,6 @@ inline namespace v1 {
      */
     static Keycode localize(Scancode scancode);
 
-
     /**
      * @brief Identify the physical key corresponding to a logical one
      *

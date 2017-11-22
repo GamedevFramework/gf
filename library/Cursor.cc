@@ -106,37 +106,41 @@ inline namespace v1 {
     return loadFromPixels(image.getPixelsPtr(), image.getSize(), hotspot);
   }
 
-  static SDL_SystemCursor getSDLSystemCursor(Cursor::Type type) {
-    switch (type) {
-      case Cursor::Arrow:
-        return SDL_SYSTEM_CURSOR_ARROW;
-      case Cursor::ArrowWait:
-        return SDL_SYSTEM_CURSOR_WAITARROW;
-      case Cursor::Wait:
-        return SDL_SYSTEM_CURSOR_WAIT;
-      case Cursor::Text:
-        return SDL_SYSTEM_CURSOR_IBEAM;
-      case Cursor::Hand:
-        return SDL_SYSTEM_CURSOR_HAND;
-      case Cursor::SizeHorizontal:
-        return SDL_SYSTEM_CURSOR_SIZEWE;
-      case Cursor::SizeVertical:
-        return SDL_SYSTEM_CURSOR_SIZENS;
-      case Cursor::SizeTopLeftBottomRight:
-        return SDL_SYSTEM_CURSOR_SIZENWSE;
-      case Cursor::SizeBottomLeftTopRight:
-        return SDL_SYSTEM_CURSOR_SIZENESW;
-      case Cursor::SizeAll:
-        return SDL_SYSTEM_CURSOR_SIZEALL;
-      case Cursor::Cross:
-        return SDL_SYSTEM_CURSOR_CROSSHAIR;
-      case Cursor::NotAllowed:
-        return SDL_SYSTEM_CURSOR_NO;
+  namespace {
+
+    SDL_SystemCursor getSDLSystemCursor(Cursor::Type type) {
+      switch (type) {
+        case Cursor::Arrow:
+          return SDL_SYSTEM_CURSOR_ARROW;
+        case Cursor::ArrowWait:
+          return SDL_SYSTEM_CURSOR_WAITARROW;
+        case Cursor::Wait:
+          return SDL_SYSTEM_CURSOR_WAIT;
+        case Cursor::Text:
+          return SDL_SYSTEM_CURSOR_IBEAM;
+        case Cursor::Hand:
+          return SDL_SYSTEM_CURSOR_HAND;
+        case Cursor::SizeHorizontal:
+          return SDL_SYSTEM_CURSOR_SIZEWE;
+        case Cursor::SizeVertical:
+          return SDL_SYSTEM_CURSOR_SIZENS;
+        case Cursor::SizeTopLeftBottomRight:
+          return SDL_SYSTEM_CURSOR_SIZENWSE;
+        case Cursor::SizeBottomLeftTopRight:
+          return SDL_SYSTEM_CURSOR_SIZENESW;
+        case Cursor::SizeAll:
+          return SDL_SYSTEM_CURSOR_SIZEALL;
+        case Cursor::Cross:
+          return SDL_SYSTEM_CURSOR_CROSSHAIR;
+        case Cursor::NotAllowed:
+          return SDL_SYSTEM_CURSOR_NO;
+      }
+
+      assert(false);
+      return SDL_SYSTEM_CURSOR_ARROW;
     }
 
-    assert(false);
-    return SDL_SYSTEM_CURSOR_ARROW;
-  }
+  } // anonymous namespace
 
   bool Cursor::loadFromSystem(Type type) {
     if (m_cursor != nullptr) {

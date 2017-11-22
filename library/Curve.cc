@@ -177,13 +177,17 @@ inline namespace v1 {
     }
   }
 
-  static Vector2f computeNormal(Vector2f prev, Vector2f curr, Vector2f next) {
-    Vector2f normalPrev = normalize(perp(curr - prev));
-    Vector2f normalNext = normalize(perp(next - curr));
+  namespace {
 
-    float factor = 1.0f + dot(normalPrev, normalNext);
-    return (normalPrev + normalNext) / factor;
-  }
+    Vector2f computeNormal(Vector2f prev, Vector2f curr, Vector2f next) {
+      Vector2f normalPrev = normalize(perp(curr - prev));
+      Vector2f normalNext = normalize(perp(next - curr));
+
+      float factor = 1.0f + dot(normalPrev, normalNext);
+      return (normalPrev + normalNext) / factor;
+    }
+
+  } // anonymous namespace
 
   void Curve::computeVertices(VertexArray& vertices, float halfWidth) {
     std::size_t count = getPointCount();

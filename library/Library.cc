@@ -85,57 +85,61 @@ inline namespace v1 {
     return version;
   }
 
-  static Library::Version getSDLCompiledVersion() {
-    SDL_version compiled;
-    SDL_VERSION(&compiled);
+  namespace {
 
-    Library::Version version;
-    version.major = compiled.major;
-    version.minor = compiled.minor;
-    version.patch = compiled.patch;
-    return version;
-  }
+    Library::Version getSDLCompiledVersion() {
+      SDL_version compiled;
+      SDL_VERSION(&compiled);
 
-  static Library::Version getSDLLinkedVersion() {
-    SDL_version linked;
-    SDL_GetVersion(&linked);
+      Library::Version version;
+      version.major = compiled.major;
+      version.minor = compiled.minor;
+      version.patch = compiled.patch;
+      return version;
+    }
 
-    Library::Version version;
-    version.major = linked.major;
-    version.minor = linked.minor;
-    version.patch = linked.patch;
-    return version;
-  }
+    Library::Version getSDLLinkedVersion() {
+      SDL_version linked;
+      SDL_GetVersion(&linked);
 
-  static Library::Version getFreeTypeCompiledVersion() {
-    Library::Version version;
-    version.major = FREETYPE_MAJOR;
-    version.minor = FREETYPE_MINOR;
-    version.patch = FREETYPE_PATCH;
-    return version;
-  }
+      Library::Version version;
+      version.major = linked.major;
+      version.minor = linked.minor;
+      version.patch = linked.patch;
+      return version;
+    }
 
-  static Library::Version getFreeTypeLinkedVersion() {
-    FT_Library library;
-    FT_Init_FreeType(&library);
-    FT_Int major, minor, patch;
-    FT_Library_Version(library, &major, &minor, &patch);
-    FT_Done_FreeType(library);
+    Library::Version getFreeTypeCompiledVersion() {
+      Library::Version version;
+      version.major = FREETYPE_MAJOR;
+      version.minor = FREETYPE_MINOR;
+      version.patch = FREETYPE_PATCH;
+      return version;
+    }
 
-    Library::Version version;
-    version.major = major;
-    version.minor = minor;
-    version.patch = patch;
-    return version;
-  }
+    Library::Version getFreeTypeLinkedVersion() {
+      FT_Library library;
+      FT_Init_FreeType(&library);
+      FT_Int major, minor, patch;
+      FT_Library_Version(library, &major, &minor, &patch);
+      FT_Done_FreeType(library);
 
-  static Library::Version getBoostVersion() {
-    Library::Version version;
-    version.major = BOOST_VERSION / 100000;
-    version.minor = BOOST_VERSION / 100 % 1000;
-    version.patch = BOOST_VERSION % 100;
-    return version;
-  }
+      Library::Version version;
+      version.major = major;
+      version.minor = minor;
+      version.patch = patch;
+      return version;
+    }
+
+    Library::Version getBoostVersion() {
+      Library::Version version;
+      version.major = BOOST_VERSION / 100000;
+      version.minor = BOOST_VERSION / 100 % 1000;
+      version.patch = BOOST_VERSION % 100;
+      return version;
+    }
+
+  } // anonymous namespace
 
   std::tuple<Library::Version, Library::Version> Library::getDependencyVersion(Dependency dep) {
     switch (dep) {
@@ -148,7 +152,7 @@ inline namespace v1 {
     }
 
     assert(false);
-    return std::make_tuple<Version,Version>({ 0, 0, 0}, { 0, 0, 0 });
+    return std::make_tuple<Version,Version>({ 0, 0, 0 }, { 0, 0, 0 });
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

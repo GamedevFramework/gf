@@ -163,66 +163,70 @@ inline namespace v1 {
 #undef ENUM_CHECK
 #undef FLAG_CHECK
 
-  static float getTextWidth(nk_handle handle, float characterSize, const char *text, int len) {
-    auto font = static_cast<Font *>(handle.ptr);
+  namespace {
 
-    std::string originalText(text, len);
-    std::u32string unicodeText = computeUnicodeString(originalText);
+    float getTextWidth(nk_handle handle, float characterSize, const char *text, int len) {
+      auto font = static_cast<Font *>(handle.ptr);
 
-    float textWidth = 0;
-    char32_t prevCodepoint = '\0';
+      std::string originalText(text, len);
+      std::u32string unicodeText = computeUnicodeString(originalText);
 
-    for (char32_t currCodepoint : unicodeText) {
-      textWidth += font->getKerning(prevCodepoint, currCodepoint, characterSize);
-      prevCodepoint = currCodepoint;
+      float textWidth = 0;
+      char32_t prevCodepoint = '\0';
 
+      for (char32_t currCodepoint : unicodeText) {
+        textWidth += font->getKerning(prevCodepoint, currCodepoint, characterSize);
+        prevCodepoint = currCodepoint;
+
+        const Glyph& glyph = font->getGlyph(currCodepoint, characterSize);
+        textWidth += glyph.advance;
+      }
+
+      return textWidth;
+    }
+
+    void getFontGlyph(nk_handle handle, float characterSize, nk_user_font_glyph *g, nk_rune currCodepoint, nk_rune nextCodepoint) {
+      auto font = static_cast<Font *>(handle.ptr);
+      assert(font);
+
+      float kerning = font->getKerning(currCodepoint, nextCodepoint, characterSize);
       const Glyph& glyph = font->getGlyph(currCodepoint, characterSize);
-      textWidth += glyph.advance;
+
+      g->width = glyph.bounds.width;
+      g->height = glyph.bounds.height;
+      g->xadvance = glyph.advance + kerning; // is it good?
+
+      g->uv[0].x = glyph.textureRect.left;
+      g->uv[0].y = glyph.textureRect.top;
+      g->uv[1].x = glyph.textureRect.left + glyph.textureRect.width;
+      g->uv[1].y = glyph.textureRect.top + glyph.textureRect.height;
+
+      g->offset.x = glyph.bounds.left;
+      g->offset.y = glyph.bounds.top + characterSize; // hacky but works
     }
 
-    return textWidth;
-  }
+    void clipboardPaste(nk_handle usr, struct nk_text_edit *edit) {
+      gf::unused(usr);
 
-  static void getFontGlyph(nk_handle handle, float characterSize, nk_user_font_glyph *g, nk_rune currCodepoint, nk_rune nextCodepoint) {
-    auto font = static_cast<Font *>(handle.ptr);
-    assert(font);
+      auto text = Clipboard::getString();
 
-    float kerning = font->getKerning(currCodepoint, nextCodepoint, characterSize);
-    const Glyph& glyph = font->getGlyph(currCodepoint, characterSize);
-
-    g->width = glyph.bounds.width;
-    g->height = glyph.bounds.height;
-    g->xadvance = glyph.advance + kerning; // is it good?
-
-    g->uv[0].x = glyph.textureRect.left;
-    g->uv[0].y = glyph.textureRect.top;
-    g->uv[1].x = glyph.textureRect.left + glyph.textureRect.width;
-    g->uv[1].y = glyph.textureRect.top + glyph.textureRect.height;
-
-    g->offset.x = glyph.bounds.left;
-    g->offset.y = glyph.bounds.top + characterSize; // hacky but works
-  }
-
-  static void clipboardPaste(nk_handle usr, struct nk_text_edit *edit) {
-    gf::unused(usr);
-
-    auto text = Clipboard::getString();
-
-    if (!text.empty()) {
-      nk_textedit_paste(edit, text.c_str(), text.size());
-    }
-  }
-
-  static void clipboardCopy(nk_handle usr, const char *text, int len) {
-    gf::unused(usr);
-
-    if (len == 0) {
-      return;
+      if (!text.empty()) {
+        nk_textedit_paste(edit, text.c_str(), text.size());
+      }
     }
 
-    std::string str(text, len);
-    Clipboard::setString(str);
-  }
+    void clipboardCopy(nk_handle usr, const char *text, int len) {
+      gf::unused(usr);
+
+      if (len == 0) {
+        return;
+      }
+
+      std::string str(text, len);
+      Clipboard::setString(str);
+    }
+
+  } // anonymous namespace
 
   struct UI::UIImpl {
     State state;

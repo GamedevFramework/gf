@@ -46,49 +46,53 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  static Uint32 getFlagsFromHints(WindowFlags hints) {
-    Uint32 flags = SDL_WINDOW_OPENGL;
+  namespace {
 
-    if (hints.test(WindowHints::Resizable)) {
-      flags |= SDL_WINDOW_RESIZABLE;
+    Uint32 getFlagsFromHints(WindowFlags hints) {
+      Uint32 flags = SDL_WINDOW_OPENGL;
+
+      if (hints.test(WindowHints::Resizable)) {
+        flags |= SDL_WINDOW_RESIZABLE;
+      }
+
+      if (hints.test(WindowHints::Visible)) {
+        flags |= SDL_WINDOW_SHOWN;
+      } else {
+        flags |= SDL_WINDOW_HIDDEN;
+      }
+
+      if (!hints.test(WindowHints::Decorated)) {
+        flags |= SDL_WINDOW_BORDERLESS;
+      }
+
+      return flags;
     }
 
-    if (hints.test(WindowHints::Visible)) {
-      flags |= SDL_WINDOW_SHOWN;
-    } else {
-      flags |= SDL_WINDOW_HIDDEN;
+    void *createContextFromWindow(SDL_Window *window) {
+      if (window == nullptr) {
+        return nullptr;
+      }
+
+      void *context = SDL_GL_CreateContext(window);
+
+      if (context == nullptr) {
+        Log::error("Failed to create a context: %s\n", SDL_GetError());
+        return nullptr;
+      }
+
+      int err = SDL_GL_MakeCurrent(window, context);
+
+      if (err != 0) {
+        Log::error("Failed to make the context current: %s\n", SDL_GetError());
+      }
+
+      if (!gladLoadGLES2Loader(SDL_GL_GetProcAddress)) {
+        Log::error("Failed to load GLES2.\n");
+      }
+
+      return context;
     }
 
-    if (!hints.test(WindowHints::Decorated)) {
-      flags |= SDL_WINDOW_BORDERLESS;
-    }
-
-    return flags;
-  }
-
-  static void *createContextFromWindow(SDL_Window *window) {
-    if (window == nullptr) {
-      return nullptr;
-    }
-
-    void *context = SDL_GL_CreateContext(window);
-
-    if (context == nullptr) {
-      Log::error("Failed to create a context: %s\n", SDL_GetError());
-      return nullptr;
-    }
-
-    int err = SDL_GL_MakeCurrent(window, context);
-
-    if (err != 0) {
-      Log::error("Failed to make the context current: %s\n", SDL_GetError());
-    }
-
-    if (!gladLoadGLES2Loader(SDL_GL_GetProcAddress)) {
-      Log::error("Failed to load GLES2.\n");
-    }
-
-    return context;
   }
 
   Window::Window(StringRef title, Vector2u size, WindowFlags hints)
@@ -249,263 +253,267 @@ inline namespace v1 {
     return (flags & SDL_WINDOW_BORDERLESS) == 0;
   }
 
-  static MouseButton getMouseButtonFromButton(Uint8 button) {
-    switch (button) {
-      case SDL_BUTTON_LEFT:
-        return MouseButton::Left;
-      case SDL_BUTTON_MIDDLE:
-        return MouseButton::Middle;
-      case SDL_BUTTON_RIGHT:
-        return MouseButton::Right;
-      case SDL_BUTTON_X1:
-        return MouseButton::XButton1;
-      case SDL_BUTTON_X2:
-        return MouseButton::XButton2;
+  namespace {
+
+    MouseButton getMouseButtonFromButton(Uint8 button) {
+      switch (button) {
+        case SDL_BUTTON_LEFT:
+          return MouseButton::Left;
+        case SDL_BUTTON_MIDDLE:
+          return MouseButton::Middle;
+        case SDL_BUTTON_RIGHT:
+          return MouseButton::Right;
+        case SDL_BUTTON_X1:
+          return MouseButton::XButton1;
+        case SDL_BUTTON_X2:
+          return MouseButton::XButton2;
+      }
+
+      /*
+      * Another button may happen in the case of a touchpad (value 6 or 7),
+      * which happens when pressing with two fingers.
+      */
+      return MouseButton::Other;
     }
 
-    /*
-     * Another button may happen in the case of a touchpad (value 6 or 7),
-     * which happens when pressing with two fingers.
-     */
-    return MouseButton::Other;
-  }
+    GamepadButton getGamepadButtonFromButton(Uint8 button) {
+      switch (button) {
+        case SDL_CONTROLLER_BUTTON_A:
+          return GamepadButton::A;
+        case SDL_CONTROLLER_BUTTON_B:
+          return GamepadButton::B;
+        case SDL_CONTROLLER_BUTTON_X:
+          return GamepadButton::X;
+        case SDL_CONTROLLER_BUTTON_Y:
+          return GamepadButton::Y;
+        case SDL_CONTROLLER_BUTTON_BACK:
+          return GamepadButton::Back;
+        case SDL_CONTROLLER_BUTTON_GUIDE:
+          return GamepadButton::Guide;
+        case SDL_CONTROLLER_BUTTON_START:
+          return GamepadButton::Start;
+        case SDL_CONTROLLER_BUTTON_LEFTSTICK:
+          return GamepadButton::LeftStick;
+        case SDL_CONTROLLER_BUTTON_RIGHTSTICK:
+          return GamepadButton::RightStick;
+        case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:
+          return GamepadButton::LeftBumper;
+        case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:
+          return GamepadButton::RightBumper;
+        case SDL_CONTROLLER_BUTTON_DPAD_UP:
+          return GamepadButton::DPadUp;
+        case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
+          return GamepadButton::DPadDown;
+        case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
+          return GamepadButton::DPadLeft;
+        case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
+          return GamepadButton::DPadRight;
+      }
 
-  static GamepadButton getGamepadButtonFromButton(Uint8 button) {
-    switch (button) {
-      case SDL_CONTROLLER_BUTTON_A:
-        return GamepadButton::A;
-      case SDL_CONTROLLER_BUTTON_B:
-        return GamepadButton::B;
-      case SDL_CONTROLLER_BUTTON_X:
-        return GamepadButton::X;
-      case SDL_CONTROLLER_BUTTON_Y:
-        return GamepadButton::Y;
-      case SDL_CONTROLLER_BUTTON_BACK:
-        return GamepadButton::Back;
-      case SDL_CONTROLLER_BUTTON_GUIDE:
-        return GamepadButton::Guide;
-      case SDL_CONTROLLER_BUTTON_START:
-        return GamepadButton::Start;
-      case SDL_CONTROLLER_BUTTON_LEFTSTICK:
-        return GamepadButton::LeftStick;
-      case SDL_CONTROLLER_BUTTON_RIGHTSTICK:
-        return GamepadButton::RightStick;
-      case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:
-        return GamepadButton::LeftBumper;
-      case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:
-        return GamepadButton::RightBumper;
-      case SDL_CONTROLLER_BUTTON_DPAD_UP:
-        return GamepadButton::DPadUp;
-      case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
-        return GamepadButton::DPadDown;
-      case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
-        return GamepadButton::DPadLeft;
-      case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
-        return GamepadButton::DPadRight;
+      assert(false);
+      return GamepadButton::Invalid;
     }
 
-    assert(false);
-    return GamepadButton::Invalid;
-  }
+    GamepadAxis getGamepadAxisFromAxis(Uint8 axis) {
+      switch (axis) {
+        case SDL_CONTROLLER_AXIS_LEFTX:
+          return GamepadAxis::LeftX;
+        case SDL_CONTROLLER_AXIS_LEFTY:
+          return GamepadAxis::LeftY;
+        case SDL_CONTROLLER_AXIS_RIGHTX:
+          return GamepadAxis::RightX;
+        case SDL_CONTROLLER_AXIS_RIGHTY:
+          return GamepadAxis::RightY;
+        case SDL_CONTROLLER_AXIS_TRIGGERLEFT:
+          return GamepadAxis::TriggerLeft;
+        case SDL_CONTROLLER_AXIS_TRIGGERRIGHT:
+          return GamepadAxis::TriggerRight;
+      }
 
-  static GamepadAxis getGamepadAxisFromAxis(Uint8 axis) {
-    switch (axis) {
-      case SDL_CONTROLLER_AXIS_LEFTX:
-        return GamepadAxis::LeftX;
-      case SDL_CONTROLLER_AXIS_LEFTY:
-        return GamepadAxis::LeftY;
-      case SDL_CONTROLLER_AXIS_RIGHTX:
-        return GamepadAxis::RightX;
-      case SDL_CONTROLLER_AXIS_RIGHTY:
-        return GamepadAxis::RightY;
-      case SDL_CONTROLLER_AXIS_TRIGGERLEFT:
-        return GamepadAxis::TriggerLeft;
-      case SDL_CONTROLLER_AXIS_TRIGGERRIGHT:
-        return GamepadAxis::TriggerRight;
+      assert(false);
+      return GamepadAxis::Invalid;
     }
 
-    assert(false);
-    return GamepadAxis::Invalid;
-  }
+    Modifiers getModifiersFromMod(Uint16 mod) {
+      Modifiers modifiers(None);
 
-  static Modifiers getModifiersFromMod(Uint16 mod) {
-    Modifiers modifiers(None);
+      if ((mod & KMOD_SHIFT) != 0) {
+        modifiers |= Mod::Shift;
+      }
 
-    if ((mod & KMOD_SHIFT) != 0) {
-      modifiers |= Mod::Shift;
+      if ((mod & KMOD_CTRL) != 0) {
+        modifiers |= Mod::Control;
+      }
+
+      if ((mod & KMOD_ALT) != 0) {
+        modifiers |= Mod::Alt;
+      }
+
+      if ((mod & KMOD_GUI) != 0) {
+        modifiers |= Mod::Super;
+      }
+
+      return modifiers;
     }
 
-    if ((mod & KMOD_CTRL) != 0) {
-      modifiers |= Mod::Control;
-    }
 
-    if ((mod & KMOD_ALT) != 0) {
-      modifiers |= Mod::Alt;
-    }
-
-    if ((mod & KMOD_GUI) != 0) {
-      modifiers |= Mod::Super;
-    }
-
-    return modifiers;
-  }
-
-
-  static bool translateEvent(Uint32 windowId, const SDL_Event *in, Event& out) {
-    switch (in->type) {
-      case SDL_WINDOWEVENT:
-        if (windowId != in->window.windowID) {
-          return false;
-        }
-
-        switch (in->window.event) {
-          case SDL_WINDOWEVENT_SIZE_CHANGED:
-            out.type = EventType::Resized;
-            out.size.width = in->window.data1;
-            out.size.height = in->window.data2;
-            break;
-
-          case SDL_WINDOWEVENT_CLOSE:
-            out.type = EventType::Closed;
-            break;
-
-          case SDL_WINDOWEVENT_FOCUS_GAINED:
-            out.type = EventType::FocusGained;
-            break;
-
-          case SDL_WINDOWEVENT_FOCUS_LOST:
-            out.type = EventType::FocusLost;
-            break;
-
-          case SDL_WINDOWEVENT_ENTER:
-            out.type = EventType::MouseEntered;
-            break;
-
-          case SDL_WINDOWEVENT_LEAVE:
-            out.type = EventType::MouseLeft;
-            break;
-
-          default:
+    bool translateEvent(Uint32 windowId, const SDL_Event *in, Event& out) {
+      switch (in->type) {
+        case SDL_WINDOWEVENT:
+          if (windowId != in->window.windowID) {
             return false;
-        }
-        break;
+          }
 
-      case SDL_QUIT:
-        out.type = EventType::Closed;
-        break;
+          switch (in->window.event) {
+            case SDL_WINDOWEVENT_SIZE_CHANGED:
+              out.type = EventType::Resized;
+              out.size.width = in->window.data1;
+              out.size.height = in->window.data2;
+              break;
 
-      case SDL_KEYDOWN:
-        assert(in->key.state == SDL_PRESSED);
+            case SDL_WINDOWEVENT_CLOSE:
+              out.type = EventType::Closed;
+              break;
 
-        if (in->key.repeat == 0) {
-          out.type = EventType::KeyPressed;
-        } else {
-          out.type = EventType::KeyRepeated;
-        }
+            case SDL_WINDOWEVENT_FOCUS_GAINED:
+              out.type = EventType::FocusGained;
+              break;
 
-        out.key.keycode = static_cast<Keycode>(in->key.keysym.sym);
-        out.key.scancode = static_cast<Scancode>(in->key.keysym.scancode);
-        out.key.modifiers = getModifiersFromMod(in->key.keysym.mod);
-        break;
+            case SDL_WINDOWEVENT_FOCUS_LOST:
+              out.type = EventType::FocusLost;
+              break;
 
-      case SDL_KEYUP:
-        assert(in->key.state == SDL_RELEASED);
-        out.type = EventType::KeyReleased;
-        out.key.keycode = static_cast<Keycode>(in->key.keysym.sym);
-        out.key.scancode = static_cast<Scancode>(in->key.keysym.scancode);
-        out.key.modifiers = getModifiersFromMod(in->key.keysym.mod);
-        break;
+            case SDL_WINDOWEVENT_ENTER:
+              out.type = EventType::MouseEntered;
+              break;
 
-      case SDL_MOUSEWHEEL:
-        if (in->wheel.which == SDL_TOUCH_MOUSEID) {
+            case SDL_WINDOWEVENT_LEAVE:
+              out.type = EventType::MouseLeft;
+              break;
+
+            default:
+              return false;
+          }
+          break;
+
+        case SDL_QUIT:
+          out.type = EventType::Closed;
+          break;
+
+        case SDL_KEYDOWN:
+          assert(in->key.state == SDL_PRESSED);
+
+          if (in->key.repeat == 0) {
+            out.type = EventType::KeyPressed;
+          } else {
+            out.type = EventType::KeyRepeated;
+          }
+
+          out.key.keycode = static_cast<Keycode>(in->key.keysym.sym);
+          out.key.scancode = static_cast<Scancode>(in->key.keysym.scancode);
+          out.key.modifiers = getModifiersFromMod(in->key.keysym.mod);
+          break;
+
+        case SDL_KEYUP:
+          assert(in->key.state == SDL_RELEASED);
+          out.type = EventType::KeyReleased;
+          out.key.keycode = static_cast<Keycode>(in->key.keysym.sym);
+          out.key.scancode = static_cast<Scancode>(in->key.keysym.scancode);
+          out.key.modifiers = getModifiersFromMod(in->key.keysym.mod);
+          break;
+
+        case SDL_MOUSEWHEEL:
+          if (in->wheel.which == SDL_TOUCH_MOUSEID) {
+            return false;
+          }
+
+          out.type = EventType::MouseWheelScrolled;
+          out.mouseWheel.offset.x = in->wheel.x;
+          out.mouseWheel.offset.y = in->wheel.y;
+          // TODO: handle SDL_MOUSEWHEEL_FLIPPED?
+          break;
+
+        case SDL_MOUSEBUTTONDOWN:
+          assert(in->button.state == SDL_PRESSED);
+
+          if (in->button.which == SDL_TOUCH_MOUSEID) {
+            return false;
+          }
+
+          out.type = EventType::MouseButtonPressed;
+          out.mouseButton.button = getMouseButtonFromButton(in->button.button);
+          out.mouseButton.coords.x = in->button.x;
+          out.mouseButton.coords.y = in->button.y;
+          break;
+
+        case SDL_MOUSEBUTTONUP:
+          assert(in->button.state == SDL_RELEASED);
+
+          if (in->button.which == SDL_TOUCH_MOUSEID) {
+            return false;
+          }
+
+          out.type = EventType::MouseButtonReleased;
+          out.mouseButton.button = getMouseButtonFromButton(in->button.button);
+          out.mouseButton.coords.x = in->button.x;
+          out.mouseButton.coords.y = in->button.y;
+          break;
+
+        case SDL_MOUSEMOTION:
+          if (in->motion.which == SDL_TOUCH_MOUSEID) {
+            return false;
+          }
+
+          out.type = EventType::MouseMoved;
+          out.mouseCursor.coords.x = in->motion.x;
+          out.mouseCursor.coords.y = in->motion.y;
+          break;
+
+        case SDL_CONTROLLERDEVICEADDED:
+          assert(SDL_IsGameController(in->cdevice.which));
+          out.type = EventType::GamepadConnected;
+          out.gamepadConnection.id = static_cast<GamepadHwId>(in->cdevice.which);
+          break;
+
+        case SDL_CONTROLLERDEVICEREMOVED:
+          out.type = EventType::GamepadDisconnected;
+          out.gamepadDisconnection.id = static_cast<GamepadId>(in->cdevice.which);
+          break;
+
+        case SDL_CONTROLLERBUTTONDOWN:
+          assert(in->cbutton.state == SDL_PRESSED);
+          out.type = EventType::GamepadButtonPressed;
+          out.gamepadButton.id = static_cast<GamepadId>(in->cbutton.which);
+          out.gamepadButton.button = getGamepadButtonFromButton(in->cbutton.button);
+          break;
+
+        case SDL_CONTROLLERBUTTONUP:
+          assert(in->cbutton.state == SDL_RELEASED);
+          out.type = EventType::GamepadButtonReleased;
+          out.gamepadButton.id = static_cast<GamepadId>(in->cbutton.which);
+          out.gamepadButton.button = getGamepadButtonFromButton(in->cbutton.button);
+          break;
+
+        case SDL_CONTROLLERAXISMOTION:
+          out.type = EventType::GamepadAxisMoved;
+          out.gamepadAxis.id = static_cast<GamepadId>(in->caxis.which);
+          out.gamepadAxis.axis = getGamepadAxisFromAxis(in->caxis.axis);
+          out.gamepadAxis.value = in->caxis.value;
+          break;
+
+        case SDL_TEXTINPUT:
+          out.type = EventType::TextEntered;
+          std::strncpy(out.text.rune.data, in->text.text, Rune::Size);
+          break;
+
+        default:
           return false;
-        }
+      }
 
-        out.type = EventType::MouseWheelScrolled;
-        out.mouseWheel.offset.x = in->wheel.x;
-        out.mouseWheel.offset.y = in->wheel.y;
-        // TODO: handle SDL_MOUSEWHEEL_FLIPPED?
-        break;
-
-      case SDL_MOUSEBUTTONDOWN:
-        assert(in->button.state == SDL_PRESSED);
-
-        if (in->button.which == SDL_TOUCH_MOUSEID) {
-          return false;
-        }
-
-        out.type = EventType::MouseButtonPressed;
-        out.mouseButton.button = getMouseButtonFromButton(in->button.button);
-        out.mouseButton.coords.x = in->button.x;
-        out.mouseButton.coords.y = in->button.y;
-        break;
-
-      case SDL_MOUSEBUTTONUP:
-        assert(in->button.state == SDL_RELEASED);
-
-        if (in->button.which == SDL_TOUCH_MOUSEID) {
-          return false;
-        }
-
-        out.type = EventType::MouseButtonReleased;
-        out.mouseButton.button = getMouseButtonFromButton(in->button.button);
-        out.mouseButton.coords.x = in->button.x;
-        out.mouseButton.coords.y = in->button.y;
-        break;
-
-      case SDL_MOUSEMOTION:
-        if (in->motion.which == SDL_TOUCH_MOUSEID) {
-          return false;
-        }
-
-        out.type = EventType::MouseMoved;
-        out.mouseCursor.coords.x = in->motion.x;
-        out.mouseCursor.coords.y = in->motion.y;
-        break;
-
-      case SDL_CONTROLLERDEVICEADDED:
-        assert(SDL_IsGameController(in->cdevice.which));
-        out.type = EventType::GamepadConnected;
-        out.gamepadConnection.id = static_cast<GamepadHwId>(in->cdevice.which);
-        break;
-
-      case SDL_CONTROLLERDEVICEREMOVED:
-        out.type = EventType::GamepadDisconnected;
-        out.gamepadDisconnection.id = static_cast<GamepadId>(in->cdevice.which);
-        break;
-
-      case SDL_CONTROLLERBUTTONDOWN:
-        assert(in->cbutton.state == SDL_PRESSED);
-        out.type = EventType::GamepadButtonPressed;
-        out.gamepadButton.id = static_cast<GamepadId>(in->cbutton.which);
-        out.gamepadButton.button = getGamepadButtonFromButton(in->cbutton.button);
-        break;
-
-      case SDL_CONTROLLERBUTTONUP:
-        assert(in->cbutton.state == SDL_RELEASED);
-        out.type = EventType::GamepadButtonReleased;
-        out.gamepadButton.id = static_cast<GamepadId>(in->cbutton.which);
-        out.gamepadButton.button = getGamepadButtonFromButton(in->cbutton.button);
-        break;
-
-      case SDL_CONTROLLERAXISMOTION:
-        out.type = EventType::GamepadAxisMoved;
-        out.gamepadAxis.id = static_cast<GamepadId>(in->caxis.which);
-        out.gamepadAxis.axis = getGamepadAxisFromAxis(in->caxis.axis);
-        out.gamepadAxis.value = in->caxis.value;
-        break;
-
-      case SDL_TEXTINPUT:
-        out.type = EventType::TextEntered;
-        std::strncpy(out.text.rune.data, in->text.text, Rune::Size);
-        break;
-
-      default:
-        return false;
+      return true;
     }
 
-    return true;
-  }
+  } // anonymous namespace
 
   bool Window::pollEvent(Event& event) {
     assert(m_window);

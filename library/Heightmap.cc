@@ -402,13 +402,17 @@ inline namespace v1 {
     return image;
   }
 
-  static double valueWithWaterLevel(double value, double waterLevel) {
-    if (value < waterLevel) {
-      return value / waterLevel * 0.5;
+  namespace {
+
+    double valueWithWaterLevel(double value, double waterLevel) {
+      if (value < waterLevel) {
+        return value / waterLevel * 0.5;
+      }
+
+      return (value - waterLevel) / (1.0 - waterLevel) * 0.5 + 0.5;
     }
 
-    return (value - waterLevel) / (1.0 - waterLevel) * 0.5 + 0.5;
-  }
+  } // anonymous namespace
 
   Image Heightmap::copyToColoredImage(const ColorRamp& ramp, double waterLevel, Render render) const {
     Image image;

@@ -255,23 +255,27 @@ inline namespace v1 {
     return m_cornerPointCount * 4;
   }
 
-  static Vector2f computeCenter(std::size_t quarter, Vector2f size, float radius) {
-    switch (quarter) {
-      case 0:
-        return { radius, radius };
-      case 1:
-        return { size.width - radius, radius };
-      case 2:
-        return { size.width - radius, size.height - radius };
-      case 3:
-        return { radius, size.height - radius };
-      default:
-        assert(false);
-        break;
+  namespace {
+
+    Vector2f computeCenter(std::size_t quarter, Vector2f size, float radius) {
+      switch (quarter) {
+        case 0:
+          return { radius, radius };
+        case 1:
+          return { size.width - radius, radius };
+        case 2:
+          return { size.width - radius, size.height - radius };
+        case 3:
+          return { radius, size.height - radius };
+        default:
+          assert(false);
+          break;
+      }
+
+      return { 0.0f, 0.0f };
     }
 
-    return { 0.0f, 0.0f };
-  }
+  } // anonymous namespace
 
   Vector2f RoundedRectangleShape::getPoint(std::size_t index) const {
     std::size_t quarter = index / m_cornerPointCount;

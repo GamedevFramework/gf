@@ -33,7 +33,7 @@ inline namespace v1 {
 
   }
 
-  static const Time MaxElapsed = gf::seconds(0.5f);
+  static constexpr Time MaxElapsed = gf::seconds(0.5f);
 
   void FixedTimestepModel::update(Time time) {
     m_elapsed += time;

@@ -133,34 +133,38 @@ inline namespace v1 {
    * Midpoint Displacement 2D
    */
 
-  static int computePowerOfTwoSize(Vector2i size) {
-    int actualSize = 1;
+  namespace {
 
-    while (actualSize + 1 < size.height || actualSize + 1 < size.width) {
-      actualSize = actualSize * 2;
+    int computePowerOfTwoSize(Vector2i size) {
+      int actualSize = 1;
+
+      while (actualSize + 1 < size.height || actualSize + 1 < size.width) {
+        actualSize = actualSize * 2;
+      }
+
+      return actualSize;
     }
 
-    return actualSize;
-  }
-
-  static void initializeCorners(Heightmap& map, ArrayRef<double> initialValues, int d) {
-    if (initialValues.getSize() == 0) {
-      map.setValue({ 0, 0 }, 0.0);
-      map.setValue({ 0, d }, 0.0);
-      map.setValue({ d, d }, 0.0);
-      map.setValue({ d, 0 }, 0.0);
-    } else if (initialValues.getSize() < 4) {
-      map.setValue({ 0, 0 }, initialValues[0]);
-      map.setValue({ 0, d }, initialValues[0]);
-      map.setValue({ d, d }, initialValues[0]);
-      map.setValue({ d, 0 }, initialValues[0]);
-    } else {
-      map.setValue({ 0, 0 }, initialValues[0]);
-      map.setValue({ 0, d }, initialValues[1]);
-      map.setValue({ d, d }, initialValues[2]);
-      map.setValue({ d, 0 }, initialValues[3]);
+    void initializeCorners(Heightmap& map, ArrayRef<double> initialValues, int d) {
+      if (initialValues.getSize() == 0) {
+        map.setValue({ 0, 0 }, 0.0);
+        map.setValue({ 0, d }, 0.0);
+        map.setValue({ d, d }, 0.0);
+        map.setValue({ d, 0 }, 0.0);
+      } else if (initialValues.getSize() < 4) {
+        map.setValue({ 0, 0 }, initialValues[0]);
+        map.setValue({ 0, d }, initialValues[0]);
+        map.setValue({ d, d }, initialValues[0]);
+        map.setValue({ d, 0 }, initialValues[0]);
+      } else {
+        map.setValue({ 0, 0 }, initialValues[0]);
+        map.setValue({ 0, d }, initialValues[1]);
+        map.setValue({ d, d }, initialValues[2]);
+        map.setValue({ d, 0 }, initialValues[3]);
+      }
     }
-  }
+
+  } // anonymous namespace
 
   Heightmap midpointDisplacement2D(Vector2i size, Random& random, ArrayRef<double> initialValues) {
     int actualSize = computePowerOfTwoSize(size);
@@ -216,50 +220,54 @@ inline namespace v1 {
    * Diamond-Square
    */
 
-  static void diamond(Heightmap& map, Random& random, Vector2i pos, int d) {
-    double value = (map.getValue({ pos.x - d, pos.y - d })
-                  + map.getValue({ pos.x - d, pos.y + d })
-                  + map.getValue({ pos.x + d, pos.y - d })
-                  + map.getValue({ pos.x + d, pos.y + d })) / 4;
+  namespace {
 
-    double noise = random.computeUniformFloat(-static_cast<double>(d), static_cast<double>(d));
+    void diamond(Heightmap& map, Random& random, Vector2i pos, int d) {
+      double value = (map.getValue({ pos.x - d, pos.y - d })
+                    + map.getValue({ pos.x - d, pos.y + d })
+                    + map.getValue({ pos.x + d, pos.y - d })
+                    + map.getValue({ pos.x + d, pos.y + d })) / 4;
 
-    map.setValue(pos, value + noise);
-  }
+      double noise = random.computeUniformFloat(-static_cast<double>(d), static_cast<double>(d));
 
-  static void square(Heightmap& map, Random& random, Vector2i pos, int d) {
-    Vector2i size = map.getSize();
-
-    double value = 0.0;
-    int n = 0;
-
-    if (pos.x >= d) {
-      value += map.getValue({ pos.x - d, pos.y });
-      ++n;
+      map.setValue(pos, value + noise);
     }
 
-    if (pos.x + d < size.width) {
-      value += map.getValue({ pos.x + d, pos.y });
-      ++n;
+    void square(Heightmap& map, Random& random, Vector2i pos, int d) {
+      Vector2i size = map.getSize();
+
+      double value = 0.0;
+      int n = 0;
+
+      if (pos.x >= d) {
+        value += map.getValue({ pos.x - d, pos.y });
+        ++n;
+      }
+
+      if (pos.x + d < size.width) {
+        value += map.getValue({ pos.x + d, pos.y });
+        ++n;
+      }
+
+      if (pos.y >= d) {
+        value += map.getValue({ pos.x, pos.y - d });
+        ++n;
+      }
+
+      if (pos.y + d < size.height) {
+        value += map.getValue({ pos.x, pos.y + d });
+        ++n;
+      }
+
+      assert(n > 0);
+      value = value / n;
+
+      double noise = random.computeUniformFloat(-static_cast<double>(d), static_cast<double>(d));
+
+      map.setValue(pos, value + noise);
     }
 
-    if (pos.y >= d) {
-      value += map.getValue({ pos.x, pos.y - d });
-      ++n;
-    }
-
-    if (pos.y + d < size.height) {
-      value += map.getValue({ pos.x, pos.y + d });
-      ++n;
-    }
-
-    assert(n > 0);
-    value = value / n;
-
-    double noise = random.computeUniformFloat(-static_cast<double>(d), static_cast<double>(d));
-
-    map.setValue(pos, value + noise);
-  }
+  } // anonymous namespace
 
   Heightmap diamondSquare2D(Vector2i size, Random& random, ArrayRef<double> initialValues) {
     int actualSize = computePowerOfTwoSize(size);
@@ -380,7 +388,7 @@ inline namespace v1 {
       findHull(s2, out, b, a);
     }
 
-  }
+  } // anonymous namespace
 
   Polygon convexHull(ArrayRef<Vector2f> points) {
     if (points.getSize() <= 3) {

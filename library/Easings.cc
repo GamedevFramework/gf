@@ -47,7 +47,7 @@ inline namespace v1 {
       }
     };
 
-  }
+  } // anonymous namespace
 
   /*
    * linear

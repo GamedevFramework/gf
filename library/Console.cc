@@ -58,56 +58,83 @@ inline namespace v1 {
       std::vector<ConsoleLine> lines;
     };
 
-  }
+    bool isColorControl(char32_t c) {
+      switch (c) {
+        case ConsoleColorControl1:
+        case ConsoleColorControl2:
+        case ConsoleColorControl3:
+        case ConsoleColorControl4:
+        case ConsoleColorControl5:
+        case ConsoleColorControlStop:
+          return true;
 
-  static bool isColorControl(char32_t c) {
-    switch (c) {
-      case ConsoleColorControl1:
-      case ConsoleColorControl2:
-      case ConsoleColorControl3:
-      case ConsoleColorControl4:
-      case ConsoleColorControl5:
-      case ConsoleColorControlStop:
-        return true;
-
-      default:
-        break;
-    }
-
-    return false;
-  }
-
-  static int getWordWidth(const std::u32string& word) {
-    int width = 0;
-
-    for (const auto& c : word) {
-      if (!isColorControl(c)) {
-        ++width;
+        default:
+          break;
       }
+
+      return false;
     }
 
-    return width;
-  }
+    int getWordWidth(const std::u32string& word) {
+      int width = 0;
 
-  // adaptation of the algorithm in gf::Text
+      for (const auto& c : word) {
+        if (!isColorControl(c)) {
+          ++width;
+        }
+      }
 
-  static std::vector<ConsoleParagraph> makeParagraphs(const std::string& message, ConsoleAlignment alignment, int paragraphWidth) {
-    auto unicodeString = computeUnicodeString(message);
-    auto paragraphs = splitInParagraphs(unicodeString);
-    std::vector<ConsoleParagraph> out;
+      return width;
+    }
 
-    for (const auto& simpleParagraph : paragraphs) {
-      auto words = splitInWords(simpleParagraph);
+    // adaptation of the algorithm in gf::Text
 
-      ConsoleParagraph paragraph;
+    std::vector<ConsoleParagraph> makeParagraphs(const std::string& message, ConsoleAlignment alignment, int paragraphWidth) {
+      auto unicodeString = computeUnicodeString(message);
+      auto paragraphs = splitInParagraphs(unicodeString);
+      std::vector<ConsoleParagraph> out;
 
-      ConsoleLine currentLine;
-      int currentWidth = 0;
+      for (const auto& simpleParagraph : paragraphs) {
+        auto words = splitInWords(simpleParagraph);
 
-      for (const auto& word : words) {
-        int wordWidth = getWordWidth(word);
+        ConsoleParagraph paragraph;
 
-        if (!currentLine.words.empty() && currentWidth + 1 + wordWidth > paragraphWidth) {
+        ConsoleLine currentLine;
+        int currentWidth = 0;
+
+        for (const auto& word : words) {
+          int wordWidth = getWordWidth(word);
+
+          if (!currentLine.words.empty() && currentWidth + 1 + wordWidth > paragraphWidth) {
+            switch (alignment) {
+              case ConsoleAlignment::Left:
+                currentLine.indent = 0;
+                break;
+
+              case ConsoleAlignment::Right:
+                currentLine.indent = paragraphWidth - currentWidth;
+                break;
+
+              case ConsoleAlignment::Center:
+                currentLine.indent = (paragraphWidth - currentWidth) / 2;
+                break;
+            }
+
+            paragraph.lines.push_back(std::move(currentLine));
+            currentLine.words.clear();
+          }
+
+          if (currentLine.words.empty()) {
+            currentWidth = wordWidth;
+          } else {
+            currentWidth += 1 + wordWidth;
+          }
+
+          currentLine.words.push_back(word);
+        }
+
+        // add the last line
+        if (!currentLine.words.empty()) {
           switch (alignment) {
             case ConsoleAlignment::Left:
               currentLine.indent = 0;
@@ -123,43 +150,17 @@ inline namespace v1 {
           }
 
           paragraph.lines.push_back(std::move(currentLine));
-          currentLine.words.clear();
         }
 
-        if (currentLine.words.empty()) {
-          currentWidth = wordWidth;
-        } else {
-          currentWidth += 1 + wordWidth;
-        }
-
-        currentLine.words.push_back(word);
+        out.push_back(std::move(paragraph));
+        paragraph.lines.clear();
       }
 
-      // add the last line
-      if (!currentLine.words.empty()) {
-        switch (alignment) {
-          case ConsoleAlignment::Left:
-            currentLine.indent = 0;
-            break;
-
-          case ConsoleAlignment::Right:
-            currentLine.indent = paragraphWidth - currentWidth;
-            break;
-
-          case ConsoleAlignment::Center:
-            currentLine.indent = (paragraphWidth - currentWidth) / 2;
-            break;
-        }
-
-        paragraph.lines.push_back(std::move(currentLine));
-      }
-
-      out.push_back(std::move(paragraph));
-      paragraph.lines.clear();
+      return out;
     }
 
-    return out;
-  }
+  } // anonymous namespace
+
 
   /*
    * Console
@@ -384,7 +385,7 @@ inline namespace v1 {
     Vector2i consoleSize = m_data.getSize();
 
     if (rect.width < 0 || rect.height < 0) {
-      Log::warning("Size of console text rectangle is invalide\n");
+      Log::warning("Size of console text rectangle is invalid\n");
       return 0;
     }
 

@@ -29,15 +29,19 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  // see http://codereview.stackexchange.com/questions/109260/seed-stdmt19937-from-stdrandom-device
-  // and http://www.pcg-random.org/posts/cpp-seeding-surprises.html
-  static std::mt19937 getCorrectlyInitializedEngine() {
-    std::mt19937::result_type data[std::mt19937::state_size];
-    std::random_device source;
-    std::generate(std::begin(data), std::end(data), std::ref(source));
-    std::seed_seq seeds(std::begin(data), std::end(data));
-    return std::mt19937(seeds);
-  }
+  namespace {
+
+    // see http://codereview.stackexchange.com/questions/109260/seed-stdmt19937-from-stdrandom-device
+    // and http://www.pcg-random.org/posts/cpp-seeding-surprises.html
+    std::mt19937 getCorrectlyInitializedEngine() {
+      std::mt19937::result_type data[std::mt19937::state_size];
+      std::random_device source;
+      std::generate(std::begin(data), std::end(data), std::ref(source));
+      std::seed_seq seeds(std::begin(data), std::end(data));
+      return std::mt19937(seeds);
+    }
+
+  } // anonymous namespace
 
   Random::Random()
   : m_engine(getCorrectlyInitializedEngine())

@@ -166,20 +166,20 @@ inline namespace v1 {
       }
     };
 
-  }
+    Vector2f getNormal(Vector2f p1, Vector2f p2, Winding winding) {
+      Vector2f ret = p2 - p1;
 
-  static Vector2f getNormal(Vector2f p1, Vector2f p2, Winding winding) {
-    Vector2f ret = p2 - p1;
+      if (winding == Winding::Clockwise) {
+        ret = -gf::perp(ret);
+      } else {
+        ret = gf::perp(ret);
+      }
 
-    if (winding == Winding::Clockwise) {
-      ret = -gf::perp(ret);
-    } else {
-      ret = gf::perp(ret);
+      ret = gf::normalize(ret);
+      return ret;
     }
 
-    ret = gf::normalize(ret);
-    return ret;
-  }
+  } // anonymous namespace
 
   bool collides(const CircF& lhs, const Transform& lhsTrans, const Polygon& rhs, const Transform& rhsTrans, Penetration& p) {
     std::size_t sz = rhs.getPointCount();
@@ -308,18 +308,17 @@ inline namespace v1 {
       unsigned m_size;
       Vector2f m_v[3];
     };
-  }
 
-  static Edge getEdge(Vector2f p1, Vector2f p2, Winding winding) {
-    Edge ret;
-    ret.p1 = p1;
-    ret.p2 = p2;
-    ret.normal = getNormal(p1, p2, winding);
-    ret.distance = std::abs(gf::dot(p1, ret.normal));
-    return ret;
-  }
 
-  namespace {
+    Edge getEdge(Vector2f p1, Vector2f p2, Winding winding) {
+      Edge ret;
+      ret.p1 = p1;
+      ret.p2 = p2;
+      ret.normal = getNormal(p1, p2, winding);
+      ret.distance = std::abs(gf::dot(p1, ret.normal));
+      return ret;
+    }
+
 
     class ExpandingSimplex {
     public:
@@ -372,50 +371,51 @@ inline namespace v1 {
       Winding m_winding;
     };
 
-  }
 
-  static Vector2f getSupport(const Polygon& lhs, const Transform& lhsTrans, const Polygon& rhs, const Transform& rhsTrans, Vector2f direction) {
-    return lhs.getSupport(direction, lhsTrans) - rhs.getSupport(-direction, rhsTrans);
-  }
-
-  static bool checkSimplex(Simplex& simplex, Vector2f& direction) {
-    Vector2f a = simplex.getLast();
-    Vector2f ao = -a;
-
-    if (simplex.getSize() == 3) {
-      Vector2f b = simplex[1];
-      Vector2f c = simplex[0];
-
-      Vector2f ab = b - a;
-      Vector2f ac = c - a;
-
-      Vector2f abPerp = inverseVectorTripleProduct(ac, ab, ab);
-      Vector2f acPerp = inverseVectorTripleProduct(ab, ac, ac);
-
-      if (gf::dot(acPerp, ao) >= 0) {
-        simplex.remove(1);
-        direction = acPerp;
-      } else {
-        if (gf::dot(abPerp, ao) < 0) {
-          return true;
-        }
-
-        simplex.remove(0);
-        direction = abPerp;
-      }
-    } else {
-      Vector2f b = simplex[0];
-      Vector2f ab = b - a;
-
-      direction = inverseVectorTripleProduct(ab, ao, ab);
-
-      if (gf::squareLength(direction) < Epsilon) {
-        direction = gf::perp(ab);
-      }
+    static Vector2f getSupport(const Polygon& lhs, const Transform& lhsTrans, const Polygon& rhs, const Transform& rhsTrans, Vector2f direction) {
+      return lhs.getSupport(direction, lhsTrans) - rhs.getSupport(-direction, rhsTrans);
     }
 
-    return false;
-  }
+    bool checkSimplex(Simplex& simplex, Vector2f& direction) {
+      Vector2f a = simplex.getLast();
+      Vector2f ao = -a;
+
+      if (simplex.getSize() == 3) {
+        Vector2f b = simplex[1];
+        Vector2f c = simplex[0];
+
+        Vector2f ab = b - a;
+        Vector2f ac = c - a;
+
+        Vector2f abPerp = inverseVectorTripleProduct(ac, ab, ab);
+        Vector2f acPerp = inverseVectorTripleProduct(ab, ac, ac);
+
+        if (gf::dot(acPerp, ao) >= 0) {
+          simplex.remove(1);
+          direction = acPerp;
+        } else {
+          if (gf::dot(abPerp, ao) < 0) {
+            return true;
+          }
+
+          simplex.remove(0);
+          direction = abPerp;
+        }
+      } else {
+        Vector2f b = simplex[0];
+        Vector2f ab = b - a;
+
+        direction = inverseVectorTripleProduct(ab, ao, ab);
+
+        if (gf::squareLength(direction) < Epsilon) {
+          direction = gf::perp(ab);
+        }
+      }
+
+      return false;
+    }
+
+  } // anonymous namespace
 
 
   static constexpr unsigned MaxIterations = 100;

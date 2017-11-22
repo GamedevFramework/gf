@@ -66,8 +66,14 @@ inline namespace v1 {
 
   }
 
-  static bool isClamped(float value) {
-    return 0.0f <= value && value <= 1.0f;
+  namespace {
+
+#ifndef NDEBUG
+    bool isClamped(float value) {
+      return 0.0f <= value && value <= 1.0f;
+    }
+#endif
+
   }
 
   void View::setViewport(const RectF& viewport) {
@@ -163,9 +169,13 @@ inline namespace v1 {
 
   }
 
-  static bool isCursorOnView(Vector2i cursor, Vector2u screenSize, const RectF& viewport) {
-    RectF visible(viewport.position * screenSize, viewport.size * screenSize);
-    return visible.contains(cursor);
+  namespace {
+
+    bool isCursorOnView(Vector2i cursor, Vector2u screenSize, const RectF& viewport) {
+      RectF visible(viewport.position * screenSize, viewport.size * screenSize);
+      return visible.contains(cursor);
+    }
+
   }
 
   void ZoomingViewAdaptor::processEvent(const Event& event) {
