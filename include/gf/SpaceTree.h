@@ -168,6 +168,17 @@ inline namespace v1 {
     }
 
     /**
+     * @brief Get the father of the node
+     *
+     * The root of the tree has no father.
+     *
+     * @returns The father of the node
+     */
+    SpaceTree *getFather() {
+      return m_father;
+    }
+
+    /**
      * @brief Check if the area of the node contains a position
      *
      * @param position The position to check
