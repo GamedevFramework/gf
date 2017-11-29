@@ -599,7 +599,7 @@ inline namespace v1 {
       }
 
       // Clear the flags
-      cell.gid &= ~(FlippedHorizontallyFlag | FlippedVerticallyFlag | FlippedDiagonallyFlag);
+      cell.gid = gid & ~(FlippedHorizontallyFlag | FlippedVerticallyFlag | FlippedDiagonallyFlag);
 
       return cell;
     }

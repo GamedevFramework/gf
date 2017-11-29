@@ -81,10 +81,12 @@ inline namespace v1 {
   }
 
   void TileLayer::setTile(Vector2u position, int tile) {
+    assert(m_tiles.isValid(position));
     m_tiles(position) = tile;
   }
 
   int TileLayer::getTile(Vector2u position) const {
+    assert(m_tiles.isValid(position));
     return m_tiles(position);
   }
 
@@ -160,6 +162,8 @@ inline namespace v1 {
     for (local.y = 0; local.y < rect.height; ++local.y) {
       for (local.x = 0; local.x < rect.width; ++local.x) {
         Vector2u cell(rect.position + local);
+
+        assert(m_tiles.isValid(cell));
         int tile = m_tiles(cell);
 
         if (tile == NoTile) {
