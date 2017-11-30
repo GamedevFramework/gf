@@ -41,6 +41,7 @@ inline namespace v1 {
    * - the number of CPU cores
    * - the amount of memory (RAM)
    *
+   * @sa gf::Paths
    */
   class GF_API SystemInfo {
   public:

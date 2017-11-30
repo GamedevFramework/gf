@@ -33,6 +33,8 @@ inline namespace v1 {
   /**
    * @ingroup core
    * @brief Special paths
+   *
+   * @sa gf::SystemInfo
    */
   struct GF_API Paths {
     /**
