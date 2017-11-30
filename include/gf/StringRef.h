@@ -166,6 +166,19 @@ inline namespace v1 {
       return m_data[index];
     }
 
+    /**
+     * @brief Get a std::string
+     *
+     * @returns A string with the same data
+     */
+    std::string toString() const {
+      if (m_size == 0 || m_data == nullptr) {
+        return "";
+      }
+
+      return std::string(m_data, m_size);
+    }
+
   private:
     const char *m_data;
     std::size_t m_size;
