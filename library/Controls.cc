@@ -20,6 +20,8 @@
  */
 #include <gf/Controls.h>
 
+#include <cassert>
+
 #include <gf/Event.h>
 
 namespace gf {
@@ -154,6 +156,75 @@ inline namespace v1 {
   void CloseControl::processEvent(const Event& event) {
     if (event.type == EventType::Closed) {
       setActive();
+    }
+  }
+
+
+  // konami control
+
+  namespace {
+
+    constexpr int KonamiKeysCount = 10;
+
+    Keycode nthKeyForKonami(int index) {
+      assert(index < KonamiKeysCount);
+
+      switch (index) {
+        case 0:
+        case 1:
+          return Keycode::Up;
+        case 2:
+        case 3:
+          return Keycode::Down;
+        case 4:
+        case 6:
+          return Keycode::Left;
+        case 5:
+        case 7:
+          return Keycode::Right;
+        case 8:
+          return Keycode::B;
+        case 9:
+          return Keycode::A;
+      }
+
+      assert(false);
+      return Keycode::Unknown;
+    }
+
+  }
+
+  KonamiKeyboardControl::KonamiKeyboardControl()
+  : m_index(0)
+  , m_state(Released)
+  {
+
+  }
+
+  void KonamiKeyboardControl::processEvent(const Event& event) {
+    if (m_state == Released && event.type == EventType::KeyPressed) {
+      if (event.key.keycode == nthKeyForKonami(m_index)) {
+        m_state = Pressed;
+      } else {
+        m_index = 0;
+      }
+    }
+
+    if (m_state == Pressed && event.type == EventType::KeyReleased) {
+      m_state = Released;
+
+      if (event.key.keycode == nthKeyForKonami(m_index)) {
+        ++m_index;
+      } else {
+        m_index = 0;
+      }
+    }
+
+    if (m_index == KonamiKeysCount) {
+      setActive();
+      m_index = false;
+    } else {
+      setActive(false);
     }
   }
 

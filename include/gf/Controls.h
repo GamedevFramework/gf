@@ -150,6 +150,26 @@ inline namespace v1 {
     virtual void processEvent(const Event& event) override;
   };
 
+  /**
+   * @ingroup window
+   * @brief The Konami code control for keayboard
+   *
+   * @sa [Konami Code - Wikipedia](https://en.wikipedia.org/wiki/Konami_Code)
+   */
+  class GF_API KonamiKeyboardControl : public Control {
+  public:
+    /**
+     * @brief Construct a Konami control
+     */
+    KonamiKeyboardControl();
+
+    virtual void processEvent(const Event& event) override;
+
+  private:
+    int m_index;
+    enum {  Released, Pressed } m_state;
+  };
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif
