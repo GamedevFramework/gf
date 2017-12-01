@@ -42,6 +42,12 @@ inline namespace v1 {
    * @ingroup window
    * @brief An action that can be triggered by different controls.
    *
+   * An action can be continuous or instantaneous. A continuous action is an
+   * action that is active as long as the user do not desactivate it. An
+   * instantaneous action is an action that is triggered only once when it is
+   * active. By default, the action is instantaneous.
+   *
+   * @sa gf::Control
    */
   class GF_API Action {
   public:
