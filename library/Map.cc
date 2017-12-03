@@ -51,7 +51,7 @@ inline namespace v1 {
     m_cells(pos) = flags;
   }
 
-  void SquareMap::clear(CellFlags flags) {
+  void SquareMap::reset(CellFlags flags) {
     for (auto& cell : m_cells) {
       cell = flags;
     }

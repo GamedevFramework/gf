@@ -163,7 +163,7 @@ inline namespace v1 {
      *
      * @param flags The properties to set
      */
-    void clear(CellFlags flags);
+    void reset(CellFlags flags);
 
     /**
      * @brief Make a cell transparent
