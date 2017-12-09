@@ -29,6 +29,7 @@
 #include <vector>
 
 #include "Flags.h"
+#include "Flip.h"
 #include "Id.h"
 #include "Path.h"
 #include "Portability.h"
@@ -302,23 +303,11 @@ inline namespace v1 {
 
   /**
    * @ingroup game
-   * @brief A flag to indicate how to flip a tile in a cell
-   *
-   * @sa gf::TmxCell
-   */
-  enum class TmxFlip : uint8_t {
-    Horizontally  = 0x01, ///< Flip horizontally
-    Vertically    = 0x02, ///< Flip vertically
-    Diagonally    = 0x04, ///< Flip diagonally
-  };
-
-  /**
-   * @ingroup game
    * @brief A cell in a tile layer
    */
   struct GF_API TmxCell {
-    unsigned gid;               ///< The global id of the tile
-    Flags<TmxFlip> flip = None; ///< The flip properties of the tile
+    unsigned gid;             ///< The global id of the tile
+    Flags<Flip> flip = None;  ///< The flip properties of the tile
   };
 
   /**
@@ -382,7 +371,7 @@ inline namespace v1 {
     std::string name;   ///< The name of the object
     std::string type;   ///< The type of the object
     Vector2u position;  ///< The position of the object
-    double rotation;     ///< The rotation of the object
+    double rotation;    ///< The rotation of the object
     bool visible;       ///< The visibility of the object
   };
 
@@ -408,7 +397,7 @@ inline namespace v1 {
    */
   struct GF_API TmxTileObject : public TmxObject {
     unsigned gid;
-    Flags<TmxFlip> flip;
+    Flags<Flip> flip;
   };
 
   /**
@@ -449,7 +438,7 @@ inline namespace v1 {
     bool kerning;           ///< Is the text using kerning?
 
     /**
-     * @brief An horizontal alignment
+     * @brief A horizontal alignment
      */
     enum class HAlign {
       Left,   ///< A left horizontal alignment

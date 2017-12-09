@@ -586,16 +586,16 @@ inline namespace v1 {
       TmxCell cell;
 
       // Read out the flags
-      if ((gid & FlippedDiagonallyFlag) != 0) {
-        cell.flip.set(TmxFlip::Horizontally);
+      if ((gid & FlippedHorizontallyFlag) != 0) {
+        cell.flip.set(Flip::Horizontally);
       }
 
       if ((gid & FlippedVerticallyFlag) != 0) {
-        cell.flip.set(TmxFlip::Vertically);
+        cell.flip.set(Flip::Vertically);
       }
 
       if ((gid & FlippedDiagonallyFlag) != 0) {
-        cell.flip.set(TmxFlip::Diagonally);
+        cell.flip.set(Flip::Diagonally);
       }
 
       // Clear the flags

@@ -23,6 +23,8 @@
 #include <cassert>
 #include <algorithm>
 
+#include <gf/Log.h>
+
 #include <gf/RenderTarget.h>
 #include <gf/Transform.h>
 #include <gf/VectorOps.h>
@@ -41,11 +43,11 @@ inline namespace v1 {
   , m_tileSize(0, 0)
   , m_margin(0, 0)
   , m_spacing(0, 0)
-  , m_tiles(layerSize, NoTile)
+  , m_tiles(layerSize)
   , m_rect(0, 0, 0, 0)
   , m_vertices(PrimitiveType::Triangles)
   {
-
+    clear();
   }
 
   void TileLayer::setTexture(const Texture& texture) {
@@ -80,19 +82,26 @@ inline namespace v1 {
     return m_blockSize;
   }
 
-  void TileLayer::setTile(Vector2u position, int tile) {
+  void TileLayer::setTile(Vector2u position, int tile, Flags<Flip> flip) {
     assert(m_tiles.isValid(position));
-    m_tiles(position) = tile;
+    m_tiles(position) = { tile, flip };
   }
 
   int TileLayer::getTile(Vector2u position) const {
     assert(m_tiles.isValid(position));
-    return m_tiles(position);
+    return m_tiles(position).tile;
+  }
+
+
+  Flags<Flip> TileLayer::getFlip(Vector2u position) const {
+    assert(m_tiles.isValid(position));
+    return m_tiles(position).flip;
   }
 
   void TileLayer::clear() {
-    for (int& tile : m_tiles) {
-      tile = NoTile;
+    for (auto& cell : m_tiles) {
+      cell.tile = NoTile;
+      cell.flip = None;
     }
   }
 
@@ -164,7 +173,7 @@ inline namespace v1 {
         Vector2u cell(rect.position + local);
 
         assert(m_tiles.isValid(cell));
-        int tile = m_tiles(cell);
+        int tile = m_tiles(cell).tile;
 
         if (tile == NoTile) {
           continue;
@@ -197,6 +206,25 @@ inline namespace v1 {
         vertices[1].texCoords = textureCoords.getTopRight();
         vertices[2].texCoords = textureCoords.getBottomLeft();
         vertices[3].texCoords = textureCoords.getBottomRight();
+
+        auto flip = m_tiles(cell).flip;
+
+        // order of flip matters:
+        // http://docs.mapeditor.org/en/latest/reference/tmx-map-format/#tile-flipping
+
+        if (flip.test(Flip::Diagonally)) {
+          std::swap(vertices[1].texCoords, vertices[2].texCoords);
+        }
+
+        if (flip.test(Flip::Horizontally)) {
+          std::swap(vertices[0].texCoords, vertices[1].texCoords);
+          std::swap(vertices[2].texCoords, vertices[3].texCoords);
+        }
+
+        if (flip.test(Flip::Vertically)) {
+          std::swap(vertices[0].texCoords, vertices[2].texCoords);
+          std::swap(vertices[1].texCoords, vertices[3].texCoords);
+        }
 
         // first triangle
 
