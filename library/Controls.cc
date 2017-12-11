@@ -221,8 +221,8 @@ inline namespace v1 {
     }
 
     if (m_index == KonamiKeysCount) {
-      setActive();
-      m_index = false;
+      setActive(true);
+      m_index = 0;
     } else {
       setActive(false);
     }
