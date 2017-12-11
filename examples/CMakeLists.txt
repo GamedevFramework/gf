@@ -33,7 +33,7 @@ add_gf_example(21_particles)
 add_gf_example(22_midpoint)
 add_gf_example(23_bresenham)
 add_gf_example(24_easings)
-
+add_gf_example(25_activities)
 add_gf_example(26_map)
 add_gf_example(27_console)
 
