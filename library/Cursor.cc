@@ -35,20 +35,19 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-
   Cursor::Cursor()
   : m_cursor(nullptr)
   {
 
   }
 
-  Cursor::Cursor(Cursor&& other)
+  Cursor::Cursor(Cursor&& other) noexcept
   : m_cursor(other.m_cursor)
   {
     other.m_cursor = nullptr;
   }
 
-  Cursor& Cursor::operator=(Cursor&& other) {
+  Cursor& Cursor::operator=(Cursor&& other) noexcept {
     m_cursor = other.m_cursor;
     other.m_cursor = nullptr;
     return *this;
@@ -162,5 +161,3 @@ inline namespace v1 {
 }
 #endif
 }
-
-

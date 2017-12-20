@@ -113,12 +113,12 @@ inline namespace v1 {
     /**
      * @brief Move constructor
      */
-    Cursor(Cursor&& other);
+    Cursor(Cursor&& other) noexcept;
 
     /**
      * @brief Move assignment
      */
-    Cursor& operator=(Cursor&& other);
+    Cursor& operator=(Cursor&& other) noexcept;
 
     /**
      * @brief Destructor

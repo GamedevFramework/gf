@@ -281,7 +281,7 @@ inline namespace v1 {
     };
 
   private:
-    void fillVertexArray(VertexArray& vertices, RectU rect) const;
+    void fillVertexArray(VertexArray& array, RectU rect) const;
     void updateGeometry();
 
   private:

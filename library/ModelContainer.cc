@@ -24,7 +24,6 @@
 
 #include <gf/Model.h>
 
-
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {

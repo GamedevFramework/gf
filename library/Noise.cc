@@ -20,26 +20,14 @@
  */
 #include <gf/Noise.h>
 
-#include <cassert>
-#include <cmath>
-#include <algorithm>
-#include <random>
-
-#include <gf/Math.h>
-#include <gf/Random.h>
-
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
 #endif
 
-  Noise2D::~Noise2D() {
+  Noise2D::~Noise2D() = default;
 
-  }
-
-  Noise3D::~Noise3D() {
-
-  }
+  Noise3D::~Noise3D() = default;
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

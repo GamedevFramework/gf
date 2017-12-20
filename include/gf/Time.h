@@ -84,6 +84,16 @@ inline namespace v1 {
     }
 
     /**
+     * @brief Default copy constructor
+     */
+    Time(const Time&) = default;
+
+    /**
+     * @brief Default copy assignement
+     */
+    Time& operator=(const Time&) = default;
+
+    /**
      * @brief Constructor with a duration
      *
      * @param duration A duration expressed with a `std::chrono` type

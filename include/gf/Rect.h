@@ -147,6 +147,16 @@ inline namespace v1 {
     }
 
     /**
+     * @brief Default copy constructor
+     */
+    Rect(const Rect&) = default;
+
+    /**
+     * @brief Default copy assignment
+     */
+    Rect& operator=(const Rect&) = default;
+
+    /**
      * @brief Get the position of the rectangle
      *
      * It is a synonym for the `position` member

@@ -33,6 +33,7 @@
 
 #include <gf/InputStream.h>
 #include <gf/Log.h>
+#include <gf/Unused.h>
 #include <gf/VectorOps.h>
 
 #include "priv/Debug.h"
@@ -62,17 +63,20 @@ inline namespace v1 {
       switch (error) {
 
         #undef FTERRORS_H_
-        #define FT_ERRORDEF( e, v, s )  case v: return s;
+        #define FT_ERRORDEF(e, v, s)  \
+        case v:                       \
+          return s;
         #include FT_ERRORS_H
 
-        default: return "unknown error";
+        default:
+          break;
       };
 
-      return "";
+      return "unknown error";
     }
 
     unsigned long callbackRead(FT_Stream rec, unsigned long offset, unsigned char* buffer, unsigned long count) {
-      InputStream *stream = static_cast<InputStream *>(rec->descriptor.pointer);
+      InputStream *stream = static_cast<InputStream*>(rec->descriptor.pointer);
       stream->seek(offset);
 
       if (count == 0) {
@@ -82,7 +86,8 @@ inline namespace v1 {
       return stream->read(buffer, count);
     }
 
-    void callbackClose(FT_Stream) {
+    void callbackClose(FT_Stream rec) {
+      gf::unused(rec);
       // nothing to do
     }
 
@@ -94,7 +99,6 @@ inline namespace v1 {
   , m_face(nullptr)
   , m_currentCharacterSize(0)
   {
-
     FT_Library library;
 
     if (auto err = FT_Init_FreeType(&library)) {
@@ -113,7 +117,6 @@ inline namespace v1 {
 
     m_stroker = stroker;
   }
-
 
   Font::~Font() {
     if (m_face != nullptr) {
@@ -134,7 +137,7 @@ inline namespace v1 {
     }
   }
 
-  Font::Font(Font&& other)
+  Font::Font(Font&& other) noexcept
   : m_library(other.m_library)
   , m_stroker(other.m_stroker)
   , m_face(other.m_face)
@@ -144,7 +147,7 @@ inline namespace v1 {
     other.m_library = other.m_stroker = other.m_face = nullptr;
   }
 
-  Font& Font::operator=(Font&& other) {
+  Font& Font::operator=(Font&& other) noexcept {
     std::swap(m_library, other.m_library);
     std::swap(m_stroker, other.m_stroker);
     std::swap(m_face, other.m_face);
@@ -195,7 +198,7 @@ inline namespace v1 {
     std::memset(&args, 0, sizeof(FT_Open_Args));
     args.flags = FT_OPEN_STREAM;
     args.stream = &rec;
-    args.driver = 0;
+    args.driver = nullptr;
 
     FT_Face face = nullptr;
 
@@ -220,7 +223,7 @@ inline namespace v1 {
 
     FT_Face face = nullptr;
 
-    if (auto err = FT_New_Memory_Face(library, static_cast<const FT_Byte *>(data), length, 0, &face)) {
+    if (auto err = FT_New_Memory_Face(library, static_cast<const FT_Byte*>(data), length, 0, &face)) {
       Log::error("Could not create the font face: %s\n", FT_ErrorMessage(err));
       return false;
     }
@@ -229,7 +232,6 @@ inline namespace v1 {
 
     return true;
   }
-
 
   const Glyph& Font::getGlyph(char32_t codepoint, unsigned characterSize, float outlineThickness) {
     auto cacheIt = m_cache.find(characterSize);

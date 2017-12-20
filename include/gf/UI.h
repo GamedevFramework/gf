@@ -440,12 +440,12 @@ inline namespace v1 {
     /**
      * @brief Move constructor
      */
-    UI(UI&& other);
+    UI(UI&& other) noexcept;
 
     /**
      * @brief Move assignment
      */
-    UI& operator=(UI&& other);
+    UI& operator=(UI&& other) noexcept;
 
     /**
      * @brief Update the internal state with an event

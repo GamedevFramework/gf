@@ -25,9 +25,7 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  Activity::~Activity() {
-
-  }
+  Activity::~Activity() = default;
 
   void Activity::restart() {
     // nothing to do by default

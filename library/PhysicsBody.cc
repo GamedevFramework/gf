@@ -138,6 +138,7 @@ inline namespace v1 {
           }
         }
 
+        assert(false);
         break;
       }
 
@@ -156,6 +157,7 @@ inline namespace v1 {
           }
         }
 
+        assert(false);
         break;
       }
     }

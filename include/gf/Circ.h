@@ -101,6 +101,16 @@ inline namespace v1 {
     }
 
     /**
+     * @brief Default copy constructor
+     */
+    Circ(const Circ&) = default;
+
+    /**
+     * @brief Default copy assignment
+     */
+    Circ& operator=(const Circ&) = default;
+
+    /**
      * @brief Get the center of the circle
      *
      * It is a synonym for the `center` member

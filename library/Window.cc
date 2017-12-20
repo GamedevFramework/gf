@@ -86,13 +86,12 @@ inline namespace v1 {
         Log::error("Failed to make the context current: %s\n", SDL_GetError());
       }
 
-      if (!gladLoadGLES2Loader(SDL_GL_GetProcAddress)) {
+      if (gladLoadGLES2Loader(SDL_GL_GetProcAddress) == 0) {
         Log::error("Failed to load GLES2.\n");
       }
 
       return context;
     }
-
   }
 
   Window::Window(StringRef title, Vector2u size, WindowFlags hints)
@@ -105,7 +104,7 @@ inline namespace v1 {
     m_window = SDL_CreateWindow(title.getData(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, size.width, size.height, flags);
     m_context = createContextFromWindow(m_window);
 
-    if (m_context) {
+    if (m_context != nullptr) {
       glCheck(glEnable(GL_BLEND));
       glCheck(glEnable(GL_SCISSOR_TEST));
       glCheck(glClear(GL_COLOR_BUFFER_BIT));
@@ -113,11 +112,11 @@ inline namespace v1 {
   }
 
   Window::~Window() {
-    if (m_context) {
+    if (m_context != nullptr) {
       SDL_GL_DeleteContext(m_context);
     }
 
-    if (m_window) {
+    if (m_window != nullptr) {
       SDL_DestroyWindow(m_window);
     }
   }
@@ -136,7 +135,6 @@ inline namespace v1 {
     SDL_SetWindowTitle(m_window, title.getData());
   }
 
-
   Vector2i Window::getPosition() const {
     assert(m_window);
     Vector2i position;
@@ -148,7 +146,6 @@ inline namespace v1 {
     assert(m_window);
     SDL_SetWindowPosition(m_window, position.x, position.y);
   }
-
 
   Vector2u Window::getSize() const {
     assert(m_window);
@@ -355,7 +352,6 @@ inline namespace v1 {
 
       return modifiers;
     }
-
 
     bool translateEvent(Uint32 windowId, const SDL_Event *in, Event& out) {
       switch (in->type) {

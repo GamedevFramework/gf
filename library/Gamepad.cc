@@ -20,6 +20,7 @@
  */
 #include <gf/Gamepad.h>
 
+#include <cassert>
 #include <cstring>
 
 #include <SDL.h>
@@ -71,6 +72,7 @@ inline namespace v1 {
           return SDL_CONTROLLER_BUTTON_INVALID;
       }
 
+      assert(false);
       return SDL_CONTROLLER_BUTTON_INVALID;
     }
 
@@ -92,6 +94,7 @@ inline namespace v1 {
           return SDL_CONTROLLER_AXIS_INVALID;
       }
 
+      assert(false);
       return SDL_CONTROLLER_AXIS_INVALID;
     }
 
@@ -147,7 +150,6 @@ inline namespace v1 {
 
   } // anonymous namespace
 
-
   GamepadId Gamepad::open(GamepadHwId hwid) {
     return openController(static_cast<int>(hwid));
   }
@@ -196,7 +198,7 @@ inline namespace v1 {
     }
 
     for (int index = 0; index < SDL_NumJoysticks(); ++index) {
-      if (SDL_IsGameController(index)) {
+      if (SDL_IsGameController(index) == SDL_TRUE) {
         openController(index);
       }
     }

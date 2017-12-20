@@ -53,7 +53,7 @@ inline namespace v1 {
     }
   }
 
-  VertexBuffer::VertexBuffer(VertexBuffer&& other)
+  VertexBuffer::VertexBuffer(VertexBuffer&& other) noexcept
   : m_vbo(other.m_vbo)
   , m_ebo(other.m_ebo)
   , m_count(other.m_count)
@@ -62,7 +62,7 @@ inline namespace v1 {
     other.m_vbo = other.m_ebo = 0;
   }
 
-  VertexBuffer& VertexBuffer::operator=(VertexBuffer&& other) {
+  VertexBuffer& VertexBuffer::operator=(VertexBuffer&& other) noexcept {
     std::swap(m_vbo, other.m_vbo);
     std::swap(m_ebo, other.m_ebo);
     std::swap(m_count, other.m_count);

@@ -54,7 +54,7 @@ inline namespace v1 {
     }
   }
 
-  BareTexture::BareTexture(BareTexture&& other)
+  BareTexture::BareTexture(BareTexture&& other) noexcept
   : m_format(other.m_format)
   , m_name(other.m_name)
   , m_size(other.m_size)
@@ -65,7 +65,7 @@ inline namespace v1 {
     other.m_name = 0;
   }
 
-  BareTexture& BareTexture::operator=(BareTexture&& other) {
+  BareTexture& BareTexture::operator=(BareTexture&& other) noexcept {
     std::swap(m_format, other.m_format);
     std::swap(m_name, other.m_name);
     std::swap(m_size, other.m_size);

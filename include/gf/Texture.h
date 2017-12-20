@@ -103,12 +103,12 @@ inline namespace v1 {
     /**
      * @brief Move constructor
      */
-    BareTexture(BareTexture&& other);
+    BareTexture(BareTexture&& other) noexcept;
 
     /**
      * @brief Move assignment
      */
-    BareTexture& operator=(BareTexture&& other);
+    BareTexture& operator=(BareTexture&& other) noexcept;
 
     /**
      * @brief Get the format of the texture
@@ -457,7 +457,7 @@ inline namespace v1 {
      * to pixels if necessary (texture may be padded or flipped).
      *
      * @return An image containing the texture's pixels
-     * 
+     *
      * @sa loadFromImage()
      */
     Image copyToImage() const;

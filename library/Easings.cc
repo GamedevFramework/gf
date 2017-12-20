@@ -27,7 +27,7 @@ inline namespace v1 {
 
   namespace {
 
-    template<Easing Func>
+    template <Easing Func>
     class GenericEasing {
     public:
       static float easeIn(float t) {
@@ -352,7 +352,6 @@ inline namespace v1 {
   float Ease::expoOutIn(float t) {
     return GenericEasing<expo>::easeOutIn(t);
   }
-
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

@@ -63,12 +63,12 @@ inline namespace v1 {
     /**
      * @brief Move constructor
      */
-    Library(Library&&);
+    Library(Library&&) noexcept;
 
     /**
      * @brief Move assignment
      */
-    Library& operator=(Library&&);
+    Library& operator=(Library&&) noexcept;
 
     /**
      * @brief Destructor

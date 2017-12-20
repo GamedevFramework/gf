@@ -25,7 +25,6 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-
 // MSVC does not like extern template
 #ifndef _MSC_VER
   template struct Circ<float>;

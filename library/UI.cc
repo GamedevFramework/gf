@@ -68,8 +68,8 @@ inline namespace v1 {
    * consistent to avoid errors.
    */
 
-#define FLAG_CHECK(GF_VAL, NK_VAL) static_assert(static_cast<uint32_t>(GF_VAL) == NK_VAL, "Problem with " #NK_VAL)
-#define ENUM_CHECK(GF_VAL, NK_VAL) static_assert(static_cast<int>(GF_VAL) == NK_VAL, "Problem with " #NK_VAL)
+#define FLAG_CHECK(GF_VAL, NK_VAL) static_assert(static_cast<uint32_t>(GF_VAL) == (NK_VAL), "Problem with " #NK_VAL)
+#define ENUM_CHECK(GF_VAL, NK_VAL) static_assert(static_cast<int>(GF_VAL) == (NK_VAL), "Problem with " #NK_VAL)
 
   // checks for UIWindow / nk_panel_flags
 
@@ -268,9 +268,9 @@ inline namespace v1 {
     nk_free(&m_impl->ctx);
   }
 
-  UI::UI(UI&&) = default;
+  UI::UI(UI&&) noexcept = default;
 
-  UI& UI::operator=(UI&&) = default;
+  UI& UI::operator=(UI&&) noexcept = default;
 
   void UI::processEvent(const Event& event) {
     setState(State::Input);

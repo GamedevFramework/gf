@@ -106,9 +106,7 @@ inline namespace v1 {
   }
 
 
-  TmxVisitor::~TmxVisitor() {
-
-  }
+  TmxVisitor::~TmxVisitor() = default;
 
   void TmxVisitor::visitTileLayer(const TmxLayers& map, const TmxTileLayer& layer) {
     gf::unused(map, layer);
@@ -128,9 +126,8 @@ inline namespace v1 {
     }
   }
 
-  TmxLayer::~TmxLayer() {
+  TmxLayer::~TmxLayer() = default;
 
-  }
 
   void TmxTileLayer::accept(const TmxLayers& map, TmxVisitor& visitor) const {
     visitor.visitTileLayer(map, *this);
@@ -148,9 +145,7 @@ inline namespace v1 {
     visitor.visitGroupLayer(map, *this);
   }
 
-  TmxObject::~TmxObject() {
-
-  }
+  TmxObject::~TmxObject() = default;
 
 
   const TmxTile *TmxTileset::getTile(unsigned id) const noexcept {

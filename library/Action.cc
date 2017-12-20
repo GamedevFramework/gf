@@ -36,7 +36,7 @@ inline namespace v1 {
   : m_name(std::move(name))
   , m_type(Type::Instantaneous)
   {
-    
+
   }
 
   void Action::setContinuous() {

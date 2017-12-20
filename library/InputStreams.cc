@@ -54,12 +54,12 @@ inline namespace v1 {
   }
 
   FileInputStream::~FileInputStream() {
-    if (m_file) {
+    if (m_file != nullptr) {
       std::fclose(m_file);
     }
   }
 
-  std::size_t FileInputStream::read(void* data, std::size_t size) {
+  std::size_t FileInputStream::read(void *data, std::size_t size) {
     if (m_file == nullptr) {
       return 0;
     }
@@ -88,18 +88,17 @@ inline namespace v1 {
     return m_size;
   }
 
-
   // MemoryInputStream
 
   MemoryInputStream::MemoryInputStream(const void *data, std::size_t size)
-  : m_data(static_cast<const char *>(data))
+  : m_data(static_cast<const char*>(data))
   , m_size(size)
   , m_offset(0)
   {
 
   }
 
-  std::size_t MemoryInputStream::read(void* data, std::size_t size) {
+  std::size_t MemoryInputStream::read(void *data, std::size_t size) {
     if (m_data == nullptr) {
       return 0;
     }

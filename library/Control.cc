@@ -25,8 +25,7 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  Control::~Control() {
-  }
+  Control::~Control() = default;
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

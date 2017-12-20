@@ -27,8 +27,7 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  Model::~Model() {
-  }
+  Model::~Model() = default;
 
   void Model::update(Time time) {
     gf::unused(time);

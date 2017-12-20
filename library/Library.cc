@@ -20,9 +20,9 @@
  */
 #include <gf/Library.h>
 
+#include <atomic>
 #include <cassert>
 #include <cstdio>
-#include <atomic>
 
 #include <SDL.h>
 
@@ -57,14 +57,14 @@ inline namespace v1 {
     }
   }
 
-  Library::Library(Library&& other)
+  Library::Library(Library&& other) noexcept
   {
     gf::unused(other);
 
     loaded.fetch_add(1);
   }
 
-  Library& Library::operator=(Library&& other) {
+  Library& Library::operator=(Library&& other) noexcept {
     gf::unused(other);
 
     loaded.fetch_add(1);
@@ -152,7 +152,7 @@ inline namespace v1 {
     }
 
     assert(false);
-    return std::make_tuple<Version,Version>({ 0, 0, 0 }, { 0, 0, 0 });
+    return std::make_tuple<Version, Version>({ 0, 0, 0 }, { 0, 0, 0 });
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

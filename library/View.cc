@@ -62,9 +62,7 @@ inline namespace v1 {
 
   }
 
-  View::~View() {
-
-  }
+  View::~View() = default;
 
   namespace {
 

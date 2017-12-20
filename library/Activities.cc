@@ -245,7 +245,7 @@ inline namespace v1 {
       m_count++;
     }
 
-    return  (m_repeat > 0 && m_repeat == m_count) ? ActivityStatus::Finished : ActivityStatus::Running;
+    return (m_repeat > 0 && m_repeat == m_count) ? ActivityStatus::Finished : ActivityStatus::Running;
   }
 
   void RepeatActivity::restart() {

@@ -25,9 +25,7 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  Drawable::~Drawable() {
-
-  }
+  Drawable::~Drawable() = default;
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

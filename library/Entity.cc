@@ -27,8 +27,7 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  Entity::~Entity() {
-  }
+  Entity::~Entity() = default;
 
   void Entity::update(Time time) {
     gf::unused(time);

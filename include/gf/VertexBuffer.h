@@ -92,12 +92,12 @@ inline namespace v1 {
     /**
      * @brief Move constructor
      */
-    VertexBuffer(VertexBuffer&& other);
+    VertexBuffer(VertexBuffer&& other) noexcept;
 
     /**
      * @brief Move assignment
      */
-    VertexBuffer& operator=(VertexBuffer&& other);
+    VertexBuffer& operator=(VertexBuffer&& other) noexcept;
 
     /**
      * @brief Load an array of vertices

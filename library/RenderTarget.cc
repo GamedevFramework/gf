@@ -46,9 +46,7 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  RenderTarget::~RenderTarget() {
-
-  }
+  RenderTarget::~RenderTarget() = default;
 
   Region RenderTarget::getCanonicalScissorBox() {
     GLint box[4];

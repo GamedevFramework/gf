@@ -154,12 +154,12 @@ inline namespace v1 {
     /**
      * @brief Move constructor
      */
-    Font(Font&& other);
+    Font(Font&& other) noexcept;
 
     /**
      * @brief Move assignement
 	   */
-    Font& operator=(Font&& other);
+    Font& operator=(Font&& other) noexcept;
 
     /**
      * @brief Load the font from a file
