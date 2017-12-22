@@ -18,6 +18,7 @@
 #include "Shoot.h"
 
 #include <gf/Math.h>
+#include <gf/Memory.h>
 #include <gf/Transform.h>
 #include <gf/Unused.h>
 
@@ -26,11 +27,6 @@
 namespace lux {
 
   namespace {
-
-    template<typename T, typename ... Args>
-      std::unique_ptr<T> makeUnique(Args... args) {
-      return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
-    }
 
     class ConcreteShoot : public Shoot {
     public:
@@ -247,40 +243,40 @@ namespace lux {
   }
 
   std::unique_ptr<Shoot> makeSimpleShoot(Origin origin, ShipClass shipClass, float delay) {
-    return makeUnique<DelayedShoot>(
-      makeUnique<CountedShoot>(
-        makeUnique<SingleShoot>(origin, shipClass)
+    return gf::make<DelayedShoot>(
+      gf::make<CountedShoot>(
+        gf::make<SingleShoot>(origin, shipClass)
         , 1)
       , delay);
   }
 
   std::unique_ptr<Shoot> makeBurstShoot(Origin origin, ShipClass shipClass, float delay, float period, int count) {
-    return makeUnique<DelayedShoot>(
-      makeUnique<PeriodicShoot>(
-        makeUnique<CountedShoot>(
-          makeUnique<SingleShoot>(origin, shipClass)
+    return gf::make<DelayedShoot>(
+      gf::make<PeriodicShoot>(
+        gf::make<CountedShoot>(
+          gf::make<SingleShoot>(origin, shipClass)
           , count)
         , period)
       , delay);
   }
 
   std::unique_ptr<Shoot> makeConeShoot(Origin origin, ShipClass shipClass, float delay) {
-    return makeUnique<DelayedShoot>(
-      makeUnique<CountedShoot>(
-        makeUnique<ConeShoot>(origin, shipClass)
+    return gf::make<DelayedShoot>(
+      gf::make<CountedShoot>(
+        gf::make<ConeShoot>(origin, shipClass)
         , 1)
       , delay);
   }
 
   std::unique_ptr<Shoot> makeContinuousSimpleShoot(Origin origin, ShipClass shipClass, float period) {
-    return makeUnique<PeriodicShoot>(
-      makeUnique<SingleShoot>(origin, shipClass)
+    return gf::make<PeriodicShoot>(
+      gf::make<SingleShoot>(origin, shipClass)
       , period);
   }
 
   std::unique_ptr<Shoot> makeSimplePlayerShoot(Origin origin, ShipClass shipClass, int nbshoot, float shootInterval, float inactivePeriod) {
-    return makeUnique<RegularShoot>(
-      makeUnique<SingleShoot>(origin, shipClass)
+    return gf::make<RegularShoot>(
+      gf::make<SingleShoot>(origin, shipClass)
       , nbshoot, shootInterval, inactivePeriod);
   }
 
