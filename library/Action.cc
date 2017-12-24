@@ -24,6 +24,7 @@
 #include <stdexcept>
 
 #include <gf/Controls.h>
+#include <gf/Memory.h>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -56,37 +57,37 @@ inline namespace v1 {
   }
 
   void Action::addKeycodeKeyControl(Keycode code) {
-    std::unique_ptr<Control> ptr(new KeycodeKeyControl(code));
+    auto ptr = gf::make<KeycodeKeyControl>(code);
     addControl(*ptr);
     m_ownedControls.push_back(std::move(ptr));
   }
 
   void Action::addScancodeKeyControl(Scancode code) {
-    std::unique_ptr<Control> ptr(new ScancodeKeyControl(code));
+    auto ptr = gf::make<ScancodeKeyControl>(code);
     addControl(*ptr);
     m_ownedControls.push_back(std::move(ptr));
   }
 
   void Action::addMouseButtonControl(MouseButton button) {
-    std::unique_ptr<Control> ptr(new MouseButtonControl(button));
+    auto ptr = gf::make<MouseButtonControl>(button);
     addControl(*ptr);
     m_ownedControls.push_back(std::move(ptr));
   }
 
   void Action::addGamepadAxisControl(GamepadId id, GamepadAxis axis, GamepadAxisDirection dir) {
-    std::unique_ptr<Control> ptr(new GamepadAxisControl(id, axis, dir));
+    auto ptr = gf::make<GamepadAxisControl>(id, axis, dir);
     addControl(*ptr);
     m_ownedControls.push_back(std::move(ptr));
   }
 
   void Action::addGamepadButtonControl(GamepadId id, GamepadButton button) {
-    std::unique_ptr<Control> ptr(new GamepadButtonControl(id, button));
+    auto ptr = gf::make<GamepadButtonControl>(id, button);
     addControl(*ptr);
     m_ownedControls.push_back(std::move(ptr));
   }
 
   void Action::addCloseControl() {
-    std::unique_ptr<Control> ptr(new CloseControl);
+    auto ptr = gf::make<CloseControl>();
     addControl(*ptr);
     m_ownedControls.push_back(std::move(ptr));
   }
