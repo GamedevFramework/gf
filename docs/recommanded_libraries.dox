@@ -17,7 +17,7 @@ gf does not provide everything, its main focus is on graphics. Here is a list of
 
 - [SFML Audio](http://www.sfml-dev.org/tutorials/2.3/#audio-module): This part of SFML is independent and can be used without the rest of SFML, it is a simple abstraction above [OpenAL](https://www.openal.org/) (zlib/libpng license).
 - [PortAudio](http://portaudio.com/): This library is a low-level audio I/O library (MIT license).
-- [SoLoud](http://sol.gfxile.net/soloud/index.html): This library if an easy to use audio engine for games (zlib/libpng license).
+- [SoLoud](http://sol.gfxile.net/soloud/index.html): This library is an easy to use audio engine for games (zlib/libpng license).
 - [libsoundio](http://libsound.io/): This library is a a lightweight abstraction over various sound drivers (MIT license).
 
 @section recommanded_libraries_physics Physics

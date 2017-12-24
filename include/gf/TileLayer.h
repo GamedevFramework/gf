@@ -232,6 +232,7 @@ inline namespace v1 {
      *
      * @param position The position of the tile in the tile layer
      * @param tile The number of the tile in the tileset or `gf::TileLayer::NoTile`
+     * @param flip The flip property of the tile
      * @sa getTile()
      */
     void setTile(Vector2u position, int tile, Flags<Flip> flip = None);
