@@ -569,7 +569,7 @@ inline namespace v1 {
     }
   }
 
-  void Console::drawFrame(const RectI& rect, PrintAction action, ConsoleEffect effect, const char *fmt, ...) {
+  void Console::drawFrame(const RectI& rect, PrintAction action, ConsoleEffect effect, const char *title, ...) {
     drawRectangle(rect, action, effect);
 
     int xWest = rect.left;
@@ -585,13 +585,13 @@ inline namespace v1 {
     drawVerticalLine({ xWest, yNorth + 1 }, rect.height - 2, effect);
     drawVerticalLine({ xEast, yNorth + 1 }, rect.height - 2, effect);
 
-    if (fmt == nullptr) {
+    if (title == nullptr) {
       return;
     }
 
     va_list ap;
-    va_start(ap, fmt);
-    auto message = formatString(fmt, ap);
+    va_start(ap, title);
+    auto message = formatString(title, ap);
     va_end(ap);
 
     std::swap(m_background, m_foreground);
