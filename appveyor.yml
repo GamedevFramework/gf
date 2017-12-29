@@ -4,8 +4,10 @@ branches:
    - develop
    - master
 skip_tags: true
-image: Visual Studio 2015
+image: Visual Studio 2017
 clone_folder: C:\projects\GF
+
+cache: c:\Tools\vcpkg\installed\
 
 install:
   # - cmd: git -C C:\Tools\vcpkg pull
@@ -13,9 +15,9 @@ install:
   - cmd: git submodule update --init
 
 environment:
-  BOOST_ROOT: C:\Libraries\boost_1_63_0
-  BOOST_INCLUDEDIR: C:\Libraries\boost_1_63_0\boost\
-  BOOST_LIBRARYDIR: C:\Libraries\boost_1_63_0\lib64-msvc-14.0\
+  BOOST_ROOT: C:\Libraries\boost_1_64_0
+  BOOST_INCLUDEDIR: C:\Libraries\boost_1_64_0\boost\
+  BOOST_LIBRARYDIR: C:\Libraries\boost_1_64_0\lib64-msvc-14.1\
 
 before_build:
   - cmd: cd C:\projects\GF
