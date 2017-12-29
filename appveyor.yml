@@ -17,7 +17,7 @@ install:
 environment:
   BOOST_ROOT: C:\Libraries\boost_1_64_0
   BOOST_INCLUDEDIR: C:\Libraries\boost_1_64_0\boost\
-  BOOST_LIBRARYDIR: C:\Libraries\boost_1_64_0\lib64-msvc-14.1\
+  BOOST_LIBRARYDIR: C:\Libraries\boost_1_64_0\lib64-msvc-14.0\
 
 before_build:
   - cmd: cd C:\projects\GF
