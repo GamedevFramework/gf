@@ -32,6 +32,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 set(SDL2_BUILDING_LIBRARY TRUE)
 find_package(SDL2 REQUIRED)
 
+set(Boost_DEBUG TRUE)
 find_package(Boost REQUIRED COMPONENTS filesystem system)
 find_package(Freetype REQUIRED)
 find_package(ZLIB REQUIRED)
