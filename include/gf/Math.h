@@ -238,7 +238,7 @@ inline namespace v1 {
    * @returns A value between the first and second value
    */
   template<typename T, typename U>
-  inline
+  constexpr
   T lerp(T lhs, T rhs, U t) {
     return (1 - t) * lhs + t * rhs;
   }

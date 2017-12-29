@@ -29,6 +29,7 @@
 #include <type_traits>
 
 #include "Portability.h"
+#include "Types.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -69,6 +70,14 @@ inline namespace v1 {
      * [trivial](http://en.cppreference.com/w/cpp/concept/TrivialType).
      */
     Vector() = default;
+
+    /**
+     * @brief Constructor that zero the vector out
+     */
+    constexpr Vector(ZeroType)
+    {
+      zero();
+    }
 
     /**
      * @brief Constructor that fills the vector with a value.
@@ -242,6 +251,15 @@ inline namespace v1 {
     }
 
     /**
+     * @brief Zero out the vector
+     */
+    constexpr void zero() {
+      for (std::size_t i = 0; i < N; ++i) {
+        data[i] = T{};
+      }
+    }
+
+    /**
      * @brief The internal representation of the vector
      *
      * A vector is represented with an array of `N` values of type `T`. It
@@ -303,6 +321,14 @@ inline namespace v1 {
      * [trivial](http://en.cppreference.com/w/cpp/concept/TrivialType).
      */
     Vector() = default;
+
+    /**
+     * @brief Constructor that zero the vector out
+     */
+    constexpr Vector(ZeroType)
+    {
+      zero();
+    }
 
     /**
      * @brief Constructor that fills the vector with a value.
@@ -462,6 +488,13 @@ inline namespace v1 {
     }
 
     /**
+     * @brief Zero out the vector
+     */
+    constexpr void zero() {
+      data[0] = data[1] = T{};
+    }
+
+    /**
      * An anonymous union to handle the various representations
      */
     union {
@@ -535,6 +568,14 @@ inline namespace v1 {
      * [trivial](http://en.cppreference.com/w/cpp/concept/TrivialType).
      */
     Vector() = default;
+
+    /**
+     * @brief Constructor that zero the vector out
+     */
+    constexpr Vector(ZeroType)
+    {
+      zero();
+    }
 
     /**
      * @brief Constructor that fills the vector with a value.
@@ -709,6 +750,13 @@ inline namespace v1 {
     }
 
     /**
+     * @brief Zero out the vector
+     */
+    constexpr void zero() {
+      data[0] = data[1] = data[2] = T{};
+    }
+
+    /**
      * An anonymous union to handle the various representations
      */
     union {
@@ -773,6 +821,14 @@ inline namespace v1 {
      * [trivial](http://en.cppreference.com/w/cpp/concept/TrivialType).
      */
     Vector() = default;
+
+    /**
+     * @brief Constructor that zero the vector out
+     */
+    constexpr Vector(ZeroType)
+    {
+      zero();
+    }
 
     /**
      * @brief Constructor that fills the vector with a value.
@@ -934,6 +990,13 @@ inline namespace v1 {
      */
     const T *cend() const {
       return &data[4];
+    }
+
+    /**
+     * @brief Zero out the vector
+     */
+    constexpr void zero() {
+      data[0] = data[1] = data[2] = data[3] = T{};
     }
 
     /**

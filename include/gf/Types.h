@@ -60,6 +60,22 @@ inline namespace v1 {
    */
   constexpr AllType All = { };
 
+  /**
+   * @ingroup core
+   * @brief Semantic type to represent "zero"
+   *
+   * @sa gf::Zero
+   */
+  struct GF_API ZeroType { };
+
+  /**
+   * @ingroup core
+   * @brief Constant to represent "zero"
+   *
+   * @sa gf::ZeroType
+   */
+  constexpr ZeroType Zero = { };
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif

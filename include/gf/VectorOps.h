@@ -38,7 +38,7 @@ inline namespace v1 {
    * @brief Equality operator between two vectors
    */
   template<typename T, std::size_t N>
-  inline
+  constexpr
   bool operator==(Vector<T, N> lhs, Vector<T, N> rhs) {
     for (std::size_t i = 0; i < N; ++i) {
       if (lhs.data[i] != rhs.data[i]) {
@@ -54,7 +54,7 @@ inline namespace v1 {
    * @brief Inequality operator between two vectors
    */
   template<typename T, std::size_t N>
-  inline
+  constexpr
   bool operator!=(Vector<T, N> lhs, Vector<T, N> rhs) {
     return !(lhs == rhs);
   }
@@ -64,9 +64,9 @@ inline namespace v1 {
    * @brief Component-wise unary minus
    */
   template<typename T, std::size_t N>
-  inline
+  constexpr
   Vector<T, N> operator-(Vector<T, N> val) {
-    Vector<T, N> out;
+    Vector<T, N> out = gf::Zero;
 
     for (std::size_t i = 0; i < N; ++i) {
       out.data[i] = - val.data[i];
@@ -80,9 +80,9 @@ inline namespace v1 {
    * @brief Component-wise addition
    */
   template<typename T, typename U, std::size_t N>
-  inline
-  Vector<typename std::common_type<T,U>::type, N> operator+(Vector<T, N> lhs, Vector<U, N> rhs) {
-    Vector<typename std::common_type<T,U>::type, N> out;
+  constexpr
+  Vector<std::common_type_t<T,U>, N> operator+(Vector<T, N> lhs, Vector<U, N> rhs) {
+    Vector<std::common_type_t<T,U>, N> out = gf::Zero;
 
     for (std::size_t i = 0; i < N; ++i) {
       out.data[i] = lhs.data[i] + rhs.data[i];
@@ -96,7 +96,7 @@ inline namespace v1 {
    * @brief Component-wise addition and assignment
    */
   template<typename T, typename U, std::size_t N>
-  inline
+  constexpr
   Vector<T, N>& operator+=(Vector<T, N>& lhs, Vector<U, N> rhs) {
     for (std::size_t i = 0; i < N; ++i) {
       lhs.data[i] += rhs.data[i];
@@ -110,9 +110,9 @@ inline namespace v1 {
    * @brief Right scalar addition
    */
   template<typename T, typename U, std::size_t N, typename E = typename std::enable_if<std::is_arithmetic<U>::value, U>::type>
-  inline
-  Vector<typename std::common_type<T,U>::type, N> operator+(Vector<T, N> lhs, U rhs) {
-    Vector<typename std::common_type<T,U>::type, N> out;
+  constexpr
+  Vector<std::common_type_t<T,U>, N> operator+(Vector<T, N> lhs, U rhs) {
+    Vector<std::common_type_t<T,U>, N> out = gf::Zero;
 
     for (std::size_t i = 0; i < N; ++i) {
       out.data[i] = lhs.data[i] + rhs;
@@ -126,7 +126,7 @@ inline namespace v1 {
    * @brief Right scalar addition and assignment
    */
   template<typename T, typename U, std::size_t N>
-  inline
+  constexpr
   Vector<T, N>& operator+=(Vector<T, N>& lhs, U rhs) {
     for (std::size_t i = 0; i < N; ++i) {
       lhs.data[i] += rhs;
@@ -140,9 +140,9 @@ inline namespace v1 {
    * @brief Left scalar addition
    */
   template<typename T, typename U, std::size_t N, typename E = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
-  inline
-  Vector<typename std::common_type<T,U>::type, N> operator+(T lhs, Vector<U, N> rhs) {
-    Vector<typename std::common_type<T,U>::type, N> out;
+  constexpr
+  Vector<std::common_type_t<T,U>, N> operator+(T lhs, Vector<U, N> rhs) {
+    Vector<std::common_type_t<T,U>, N> out = gf::Zero;
 
     for (std::size_t i = 0; i < N; ++i) {
       out.data[i] = lhs + rhs.data[i];
@@ -157,9 +157,9 @@ inline namespace v1 {
    * @brief Component-wise substraction
    */
   template<typename T, typename U, std::size_t N>
-  inline
-  Vector<typename std::common_type<T,U>::type, N> operator-(Vector<T, N> lhs, Vector<U, N> rhs) {
-    Vector<typename std::common_type<T,U>::type, N> out;
+  constexpr
+  Vector<std::common_type_t<T,U>, N> operator-(Vector<T, N> lhs, Vector<U, N> rhs) {
+    Vector<std::common_type_t<T,U>, N> out = gf::Zero;
 
     for (std::size_t i = 0; i < N; ++i) {
       out.data[i] = lhs.data[i] - rhs.data[i];
@@ -173,7 +173,7 @@ inline namespace v1 {
    * @brief Component-wise substraction and assignment
    */
   template<typename T, typename U, std::size_t N>
-  inline
+  constexpr
   Vector<T, N>& operator-=(Vector<T, N>& lhs, Vector<U, N> rhs) {
     for (std::size_t i = 0; i < N; ++i) {
       lhs.data[i] -= rhs.data[i];
@@ -188,9 +188,9 @@ inline namespace v1 {
    * @brief Right scalar substraction
    */
   template<typename T, typename U, std::size_t N, typename E = typename std::enable_if<std::is_arithmetic<U>::value, U>::type>
-  inline
-  Vector<typename std::common_type<T,U>::type, N> operator-(Vector<T, N> lhs, U rhs) {
-    Vector<typename std::common_type<T,U>::type, N> out;
+  constexpr
+  Vector<std::common_type_t<T,U>, N> operator-(Vector<T, N> lhs, U rhs) {
+    Vector<std::common_type_t<T,U>, N> out = gf::Zero;
 
     for (std::size_t i = 0; i < N; ++i) {
       out.data[i] = lhs.data[i] - rhs;
@@ -204,7 +204,7 @@ inline namespace v1 {
    * @brief Right scalar substraction and assignment
    */
   template<typename T, typename U, std::size_t N>
-  inline
+  constexpr
   Vector<T, N>& operator-=(Vector<T, N>& lhs, U rhs) {
     for (std::size_t i = 0; i < N; ++i) {
       lhs.data[i] -= rhs;
@@ -218,9 +218,9 @@ inline namespace v1 {
    * @brief Left scalar substraction
    */
   template<typename T, typename U, std::size_t N, typename E = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
-  inline
-  Vector<typename std::common_type<T,U>::type, N> operator-(T lhs, Vector<U, N> rhs) {
-    Vector<typename std::common_type<T,U>::type, N> out;
+  constexpr
+  Vector<std::common_type_t<T,U>, N> operator-(T lhs, Vector<U, N> rhs) {
+    Vector<std::common_type_t<T,U>, N> out = gf::Zero;
 
     for (std::size_t i = 0; i < N; ++i) {
       out.data[i] = lhs - rhs.data[i];
@@ -235,9 +235,9 @@ inline namespace v1 {
    * @brief Component-wise multiplication
    */
   template<typename T, typename U, std::size_t N>
-  inline
-  Vector<typename std::common_type<T,U>::type, N> operator*(Vector<T, N> lhs, Vector<U, N> rhs) {
-    Vector<typename std::common_type<T,U>::type, N> out;
+  constexpr
+  Vector<std::common_type_t<T,U>, N> operator*(Vector<T, N> lhs, Vector<U, N> rhs) {
+    Vector<std::common_type_t<T,U>, N> out = gf::Zero;
 
     for (std::size_t i = 0; i < N; ++i) {
       out.data[i] = lhs.data[i] * rhs.data[i];
@@ -251,7 +251,7 @@ inline namespace v1 {
    * @brief Component-wise multiplication and assignment
    */
   template<typename T, typename U, std::size_t N>
-  inline
+  constexpr
   Vector<T, N>& operator*=(Vector<T, N>& lhs, Vector<U, N> rhs) {
     for (std::size_t i = 0; i < N; ++i) {
       lhs.data[i] *= rhs.data[i];
@@ -265,9 +265,9 @@ inline namespace v1 {
    * @brief Right scalar multiplication
    */
   template<typename T, typename U, std::size_t N, typename E = typename std::enable_if<std::is_arithmetic<U>::value, U>::type>
-  inline
-  Vector<typename std::common_type<T,U>::type, N> operator*(Vector<T, N> lhs, U rhs) {
-    Vector<typename std::common_type<T,U>::type, N> out;
+  constexpr
+  Vector<std::common_type_t<T,U>, N> operator*(Vector<T, N> lhs, U rhs) {
+    Vector<std::common_type_t<T,U>, N> out = gf::Zero;
 
     for (std::size_t i = 0; i < N; ++i) {
       out.data[i] = lhs.data[i] * rhs;
@@ -281,7 +281,7 @@ inline namespace v1 {
    * @brief Right scalar multiplication and assignment
    */
   template<typename T, typename U, std::size_t N>
-  inline
+  constexpr
   Vector<T, N>& operator*=(Vector<T, N>& lhs, U rhs) {
     for (std::size_t i = 0; i < N; ++i) {
       lhs.data[i] *= rhs;
@@ -295,9 +295,9 @@ inline namespace v1 {
    * @brief Left scalar multiplication
    */
   template<typename T, typename U, std::size_t N, typename E = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
-  inline
-  Vector<typename std::common_type<T,U>::type, N> operator*(T lhs, Vector<U, N> rhs) {
-    Vector<typename std::common_type<T,U>::type, N> out;
+  constexpr
+  Vector<std::common_type_t<T,U>, N> operator*(T lhs, Vector<U, N> rhs) {
+    Vector<std::common_type_t<T,U>, N> out = gf::Zero;
 
     for (std::size_t i = 0; i < N; ++i) {
       out.data[i] = lhs * rhs.data[i];
@@ -311,9 +311,9 @@ inline namespace v1 {
    * @brief Component-wise division
    */
   template<typename T, typename U, std::size_t N>
-  inline
-  Vector<typename std::common_type<T,U>::type, N> operator/(Vector<T, N> lhs, Vector<U, N> rhs) {
-    Vector<typename std::common_type<T,U>::type, N> out;
+  constexpr
+  Vector<std::common_type_t<T,U>, N> operator/(Vector<T, N> lhs, Vector<U, N> rhs) {
+    Vector<std::common_type_t<T,U>, N> out = gf::Zero;
 
     for (std::size_t i = 0; i < N; ++i) {
       out.data[i] = lhs.data[i] / rhs.data[i];
@@ -327,7 +327,7 @@ inline namespace v1 {
    * @brief Component-wise division and assignment
    */
   template<typename T, typename U, std::size_t N>
-  inline
+  constexpr
   Vector<T, N>& operator/=(Vector<T, N>& lhs, Vector<U, N> rhs) {
     for (std::size_t i = 0; i < N; ++i) {
       lhs.data[i] /= rhs.data[i];
@@ -341,9 +341,9 @@ inline namespace v1 {
    * @brief Right scalar division
    */
   template<typename T, typename U, std::size_t N, typename E = typename std::enable_if<std::is_arithmetic<U>::value, U>::type>
-  inline
-  Vector<typename std::common_type<T,U>::type, N> operator/(Vector<T, N> lhs, U rhs) {
-    Vector<typename std::common_type<T,U>::type, N> out;
+  constexpr
+  Vector<std::common_type_t<T,U>, N> operator/(Vector<T, N> lhs, U rhs) {
+    Vector<std::common_type_t<T,U>, N> out = gf::Zero;
 
     for (std::size_t i = 0; i < N; ++i) {
       out.data[i] = lhs.data[i] / rhs;
@@ -357,7 +357,7 @@ inline namespace v1 {
    * @brief Right scalar division and assignment
    */
   template<typename T, typename U, std::size_t N>
-  inline
+  constexpr
   Vector<T, N>& operator/=(Vector<T, N>& lhs, U rhs) {
     for (std::size_t i = 0; i < N; ++i) {
       lhs.data[i] /= rhs;
@@ -371,9 +371,9 @@ inline namespace v1 {
    * @brief Left scalar division
    */
   template<typename T, typename U, std::size_t N, typename E = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
-  inline
-  Vector<typename std::common_type<T,U>::type, N> operator/(T lhs, Vector<U, N> rhs) {
-    Vector<typename std::common_type<T,U>::type, N> out;
+  constexpr
+  Vector<std::common_type_t<T,U>, N> operator/(T lhs, Vector<U, N> rhs) {
+    Vector<std::common_type_t<T,U>, N> out = gf::Zero;
 
     for (std::size_t i = 0; i < N; ++i) {
       out.data[i] = lhs / rhs.data[i];
@@ -387,9 +387,9 @@ inline namespace v1 {
    * @brief Component-wise logical or operator
    */
   template<std::size_t N>
-  inline
+  constexpr
   Vector<bool, N> operator||(Vector<bool, N> lhs, Vector<bool, N> rhs) {
-    Vector<bool, N> out;
+    Vector<bool, N> out = gf::Zero;
 
     for (std::size_t i = 0; i < N; ++i) {
       out.data[i] = lhs.data[i] || rhs.data[i];
@@ -403,9 +403,9 @@ inline namespace v1 {
    * @brief Component-wise logical and operator
    */
   template<std::size_t N>
-  inline
+  constexpr
   Vector<bool, N> operator&&(Vector<bool, N> lhs, Vector<bool, N> rhs) {
-    Vector<bool, N> out;
+    Vector<bool, N> out = gf::Zero;
 
     for (std::size_t i = 0; i < N; ++i) {
       out.data[i] = lhs.data[i] && rhs.data[i];
@@ -427,7 +427,7 @@ inline namespace v1 {
    *
    */
   template<typename T, std::size_t N>
-  inline
+  constexpr
   T dot(Vector<T, N> lhs, Vector<T, N> rhs) {
     T out{0};
 
@@ -443,9 +443,9 @@ inline namespace v1 {
    * @brief Component-wise minimum
    */
   template<typename T, std::size_t N>
-  inline
+  constexpr
   Vector<T, N> min(Vector<T, N> lhs, Vector<T, N> rhs) {
-    Vector<T, N> out;
+    Vector<T, N> out = gf::Zero;
 
     for (std::size_t i = 0; i < N; ++i) {
       out.data[i] = std::min(lhs.data[i], rhs.data[i]);
@@ -459,9 +459,9 @@ inline namespace v1 {
    * @brief Component-wise maximum
    */
   template<typename T, std::size_t N>
-  inline
+  constexpr
   Vector<T, N> max(Vector<T, N> lhs, Vector<T, N> rhs) {
-    Vector<T, N> out;
+    Vector<T, N> out = gf::Zero;
 
     for (std::size_t i = 0; i < N; ++i) {
       out.data[i] = std::max(lhs.data[i], rhs.data[i]);
@@ -491,9 +491,9 @@ inline namespace v1 {
    * @brief Component-wise sign value
    */
   template<typename T, std::size_t N>
-  inline
+  constexpr
   Vector<int, N> sign(Vector<T, N> val) {
-    Vector<int, N> out;
+    Vector<int, N> out = gf::Zero;
 
     for (std::size_t i = 0; i < N; ++i) {
       out.data[i] = gf::sign(val.data[i]);
@@ -507,9 +507,9 @@ inline namespace v1 {
    * @brief Component-wise equality operator
    */
   template<typename T, std::size_t N>
-  inline
+  constexpr
   Vector<bool, N> equals(Vector<T, N> lhs, Vector<T, N> rhs) {
-    Vector<bool, N> out;
+    Vector<bool, N> out = gf::Zero;
 
     for (std::size_t i = 0; i < N; ++i) {
       out.data[i] = (lhs.data[i] == rhs.data[i]);
@@ -523,9 +523,9 @@ inline namespace v1 {
    * @brief Component-wise comparison operator
    */
   template<typename T, std::size_t N>
-  inline
+  constexpr
   Vector<bool, N> lessThan(Vector<T, N> lhs, Vector<T, N> rhs) {
-    Vector<bool, N> out;
+    Vector<bool, N> out = gf::Zero;
 
     for (std::size_t i = 0; i < N; ++i) {
       out.data[i] = (lhs.data[i] < rhs.data[i]);
@@ -539,9 +539,9 @@ inline namespace v1 {
    * @brief Component-wise comparison operator
    */
   template<typename T, std::size_t N>
-  inline
+  constexpr
   Vector<bool, N> greaterThan(Vector<T, N> lhs, Vector<T, N> rhs) {
-    Vector<bool, N> out;
+    Vector<bool, N> out = gf::Zero;
 
     for (std::size_t i = 0; i < N; ++i) {
       out.data[i] = (lhs.data[i] > rhs.data[i]);
@@ -555,9 +555,9 @@ inline namespace v1 {
    * @brief Component-wise selection operator
    */
   template<typename T, std::size_t N>
-  inline
+  constexpr
   Vector<T, N> select(Vector<bool, N> cond, Vector<T, N> lhs, Vector<T, N> rhs) {
-    Vector<T, N> out;
+    Vector<T, N> out = gf::Zero;
 
     for (std::size_t i = 0; i < N; ++i) {
       out.data[i] = (cond.data[i] ? lhs.data[i] : rhs.data[i]);
@@ -574,9 +574,9 @@ inline namespace v1 {
    *
    */
   template<typename T, std::size_t N>
-  inline
+  constexpr
   Vector<T, N> clamp(Vector<T, N> val, Vector<T, N> lo, Vector<T, N> hi) {
-    Vector<T, N> out;
+    Vector<T, N> out = gf::Zero;
 
     for (std::size_t i = 0; i < N; ++i) {
       out.data[i] = clamp(val.data[i], lo.data[i], hi.data[i]);
@@ -592,9 +592,9 @@ inline namespace v1 {
    * Relative to two values.
    */
   template<typename T, std::size_t N>
-  inline
+  constexpr
   Vector<T, N> clamp(Vector<T, N> val, T lo, T hi) {
-    Vector<T, N> out;
+    Vector<T, N> out = gf::Zero;
 
     for (std::size_t i = 0; i < N; ++i) {
       out.data[i] = clamp(val.data[i], lo, hi);
@@ -608,9 +608,9 @@ inline namespace v1 {
    * @brief Component-wise lerp function
    */
   template<typename T, typename U, std::size_t N>
-  inline
+  constexpr
   Vector<T, N> lerp(Vector<T, N> lhs, Vector<T, N> rhs, U t) {
-    Vector<T, N> out;
+    Vector<T, N> out = gf::Zero;
 
     for (std::size_t i = 0; i < N; ++i) {
       out.data[i] = lerp(lhs.data[i], rhs.data[i], t);
@@ -937,7 +937,7 @@ inline namespace v1 {
    * @sa inverseVectorTripleProduct()
    */
   template<typename T>
-  inline
+  constexpr
   Vector<T, 2> vectorTripleProduct(Vector<T, 2> a, Vector<T, 2> b, Vector<T, 2> c) {
     return dot(a, c) * b - dot(a, b) * c;
   }
@@ -957,7 +957,7 @@ inline namespace v1 {
    * @sa vectorTripleProduct()
    */
   template<typename T>
-  inline
+  constexpr
   Vector<T, 2> inverseVectorTripleProduct(Vector<T, 2> a, Vector<T, 2> b, Vector<T, 2> c) {
     return - dot(c, b) * a + dot(c, a) * b;
   }
