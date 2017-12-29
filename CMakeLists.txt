@@ -34,7 +34,7 @@ find_package(SDL2 REQUIRED)
 
 if(MSVC)
   message(STATUS "MSVC_VERSION: ${MSVC_VERSION}")
-  if(MSVC_VERSION == 1910)
+  if(MSVC_VERSION GREATER_EQUAL 1910)
     set(Boost_COMPILER "-vc141")
   endif()
   set(Boost_DEBUG TRUE)
