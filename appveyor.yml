@@ -10,16 +10,16 @@ clone_folder: C:\projects\GF
 cache: c:\Tools\vcpkg\installed\
 
 install:
-  # - cmd: git -C C:\Tools\vcpkg pull
-  - cmd: vcpkg install sdl2:x64-windows freetype:x64-windows zlib:x64-windows
   - cmd: git submodule update --init
 
 environment:
   BOOST_ROOT: C:\Libraries\boost_1_64_0
   BOOST_INCLUDEDIR: C:\Libraries\boost_1_64_0\boost\
-  BOOST_LIBRARYDIR: C:\Libraries\boost_1_64_0\lib64-msvc-14.0\
+  BOOST_LIBRARYDIR: C:\Libraries\boost_1_64_0\lib64-msvc-14.1\
 
 before_build:
+  - cmd: vcpkg install sdl2:x64-windows freetype:x64-windows zlib:x64-windows
+  - cmd: dir C:\Libraries\boost_1_64_0
   - cmd: cd C:\projects\GF
   - cmd: mkdir build
   - cmd: cd build
