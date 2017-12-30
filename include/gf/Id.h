@@ -61,7 +61,14 @@ inline namespace v1 {
    * @param sz The size of the string
    */
   constexpr Id hash(const char *str, std::size_t sz) {
-    return sz == 0 ? 0xcbf29ce484222325 : (str[sz - 1] ^ hash(str, sz - 1)) * 0x100000001b3;
+    Id value = UINT64_C(0xcbf29ce484222325);
+
+    for (std::size_t i = 0; i < sz; ++i) {
+      value ^= str[i];
+      value *= UINT64_C(0x100000001b3);
+    }
+
+    return value;
   }
 
   /**
