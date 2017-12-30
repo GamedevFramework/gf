@@ -5,6 +5,14 @@
 
 In this document, you will learn how to build and install gf so that you are ready for your first project with gf. It is assumed you already have a compiler installed (gcc or clang for Linux; MSVC included in Visual Studio for Windows).
 
+gf needs a conformant C++14 compiler. The minimum version of supported compilers are given in the following table.
+
+| Compiler | Version | Reference                                                                                               |
+|----------|:-------:|---------------------------------------------------------------------------------------------------------|
+| GCC      | 5       | [C++14 Support in GCC](https://gcc.gnu.org/projects/cxx-status.html#cxx14)                              |
+| Clang    | 3.4     | [C++14 implementation status](http://clang.llvm.org/cxx_status.html#cxx14)                              |
+| MSVC     | VS 2017 | [Visual C++ Language Conformance](https://docs.microsoft.com/en-us/cpp/visual-cpp-language-conformance) |
+
 @section dependencies Dependencies
 
 gf needs some external libraries and tools that you must install before compiling gf. Here are some information about these libraries, especially the required minimum version.
@@ -75,7 +83,7 @@ make install # may require root permissions
 
 @section getting_started_with_windows Getting started with Windows
 
-This section assumes you are using at least [Visual Studio Community 2015](https://www.visualstudio.com/vs/community/). You also need [git for Windows](https://git-for-windows.github.io/) and [CMake 3.8 or newer](https://cmake.org/download/). Finally, the working directory where everything will be installed is set to `C:\Local\`. You can choose whatever directory you want.
+This section assumes you are using at least [Visual Studio Community 2017](https://www.visualstudio.com/vs/community/). You also need [git for Windows](https://git-for-windows.github.io/) and [CMake 3.8 or newer](https://cmake.org/download/). Finally, the working directory where everything will be installed is set to `C:\Local\`. You can choose whatever directory you want.
 
 @subsection dependencies_for_windows Dependencies for Windows
 
