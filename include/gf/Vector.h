@@ -75,7 +75,7 @@ inline namespace v1 {
     /**
      * @brief Constructor that zero the vector out
      */
-    constexpr Vector(ZeroType)
+    constexpr Vector(ZeroType) noexcept
     {
       zero();
     }
@@ -93,7 +93,7 @@ inline namespace v1 {
      *
      * @param val The value to fill the vector with
      */
-    explicit Vector(T val)
+    explicit Vector(T val) noexcept
     {
       std::fill_n(data, N, val);
     }
@@ -129,7 +129,7 @@ inline namespace v1 {
      *
      * @param list An initializer list.
      */
-    Vector(std::initializer_list<T> list)
+    Vector(std::initializer_list<T> list) noexcept
     {
       std::copy_n(list.begin(), std::min(list.size(), N), data);
     }
@@ -151,7 +151,7 @@ inline namespace v1 {
      * @param other The vector to copy from
      */
     template<typename U>
-    Vector(const Vector<U, N>& other)
+    Vector(const Vector<U, N>& other) noexcept
     {
       static_assert(std::is_convertible<U,T>::value, "");
       std::transform(data, data + N, other.data, [](U val) { return static_cast<T>(val); });
@@ -255,7 +255,7 @@ inline namespace v1 {
     /**
      * @brief Zero out the vector
      */
-    constexpr void zero() {
+    constexpr void zero() noexcept {
       for (std::size_t i = 0; i < N; ++i) {
         data[i] = T{};
       }
@@ -326,7 +326,7 @@ inline namespace v1 {
     /**
      * @brief Constructor that zero the vector out
      */
-    constexpr Vector(ZeroType)
+    constexpr Vector(ZeroType) noexcept
     {
       zero();
     }
@@ -344,7 +344,7 @@ inline namespace v1 {
      *
      * @param val The value to fill the vector with
      */
-    explicit constexpr Vector(T val)
+    explicit constexpr Vector(T val) noexcept
     : x(val)
     , y(val)
     {
@@ -377,7 +377,7 @@ inline namespace v1 {
      * @param first The first component
      * @param second The second component
      */
-    constexpr Vector(T first, T second)
+    constexpr Vector(T first, T second) noexcept
     : x(first)
     , y(second)
     {
@@ -401,7 +401,7 @@ inline namespace v1 {
      * @param other The vector to copy from
      */
     template<typename U>
-    Vector(const Vector<U, 2>& other)
+    Vector(const Vector<U, 2>& other) noexcept
     : x(other.x)
     , y(other.y)
     {
@@ -499,7 +499,7 @@ inline namespace v1 {
     /**
      * @brief Zero out the vector
      */
-    constexpr void zero() {
+    constexpr void zero() noexcept {
       x = y = T{};
     }
 
@@ -575,7 +575,7 @@ inline namespace v1 {
     /**
      * @brief Constructor that zero the vector out
      */
-    constexpr Vector(ZeroType)
+    constexpr Vector(ZeroType) noexcept
     {
       zero();
     }
@@ -593,7 +593,7 @@ inline namespace v1 {
      *
      * @param val The value to fill the vector with
      */
-    explicit constexpr Vector(T val)
+    explicit constexpr Vector(T val) noexcept
     : x(val)
     , y(val)
     , z(val)
@@ -629,7 +629,7 @@ inline namespace v1 {
      * @param second The second component
      * @param third The third component
      */
-    constexpr Vector(T first, T second, T third)
+    constexpr Vector(T first, T second, T third) noexcept
     : x(first)
     , y(second)
     , z(third)
@@ -668,7 +668,7 @@ inline namespace v1 {
      * @param other The vector to copy from
      */
     template<typename U>
-    Vector(const Vector<U, 3>& other)
+    Vector(const Vector<U, 3>& other) noexcept
     : x(other.x)
     , y(other.y)
     , z(other.z)
@@ -768,9 +768,17 @@ inline namespace v1 {
     /**
      * @brief Zero out the vector
      */
-    constexpr void zero() {
+    constexpr void zero() noexcept {
       x = y = z = T{};
     }
+
+    /**
+     * @brief Swizzle to get the first two coordinates as a 2D vector
+     */
+    constexpr Vector<T, 2> xy() const {
+      return { x, y };
+    }
+
 
     /**
      * An anonymous union to handle the first coordinate
@@ -847,7 +855,7 @@ inline namespace v1 {
     /**
      * @brief Constructor that zero the vector out
      */
-    constexpr Vector(ZeroType)
+    constexpr Vector(ZeroType) noexcept
     {
       zero();
     }
@@ -865,7 +873,7 @@ inline namespace v1 {
      *
      * @param val The value to fill the vector with
      */
-    explicit constexpr Vector(T val)
+    explicit constexpr Vector(T val) noexcept
     : x(val)
     , y(val)
     , z(val)
@@ -904,7 +912,7 @@ inline namespace v1 {
      * @param third The third component
      * @param fourth The fourth component
      */
-    constexpr Vector(T first, T second, T third, T fourth)
+    constexpr Vector(T first, T second, T third, T fourth) noexcept
     : x(first)
     , y(second)
     , z(third)
@@ -930,7 +938,7 @@ inline namespace v1 {
      * @param other The vector to copy from
      */
     template<typename U>
-    Vector(const Vector<U, 4>& other)
+    Vector(const Vector<U, 4>& other) noexcept
     : x(other.x)
     , y(other.y)
     , z(other.z)
@@ -1031,9 +1039,31 @@ inline namespace v1 {
     /**
      * @brief Zero out the vector
      */
-    constexpr void zero() {
+    constexpr void zero() noexcept {
       x = y = z = w = T{};
     }
+
+    /**
+     * @brief Swizzle to get the first two coordinates as a 2D vector
+     */
+    constexpr Vector<T, 2> xy() const {
+      return { x, y };
+    }
+
+    /**
+     * @brief Swizzle to get the first three coordinates as a 3D vector
+     */
+    constexpr Vector<T, 3> xyz() const {
+      return { x, y, z };
+    }
+
+    /**
+     * @brief Swizzle to get the first three coordinates as a RGB color
+     */
+    constexpr Vector<T, 3> rgb() const {
+      return { r, g, b };
+    }
+
 
     /**
      * An anonymous union to handle the first coordinate
