@@ -41,7 +41,7 @@ inline namespace v1 {
   constexpr
   bool operator==(Vector<T, N> lhs, Vector<T, N> rhs) {
     for (std::size_t i = 0; i < N; ++i) {
-      if (lhs.data[i] != rhs.data[i]) {
+      if (lhs[i] != rhs[i]) {
         return false;
       }
     }
@@ -69,7 +69,7 @@ inline namespace v1 {
     Vector<T, N> out = gf::Zero;
 
     for (std::size_t i = 0; i < N; ++i) {
-      out.data[i] = - val.data[i];
+      out[i] = - val[i];
     }
 
     return out;
@@ -85,7 +85,7 @@ inline namespace v1 {
     Vector<typename std::common_type<T,U>::type, N> out = gf::Zero;
 
     for (std::size_t i = 0; i < N; ++i) {
-      out.data[i] = lhs.data[i] + rhs.data[i];
+      out[i] = lhs[i] + rhs[i];
     }
 
     return out;
@@ -99,7 +99,7 @@ inline namespace v1 {
   constexpr
   Vector<T, N>& operator+=(Vector<T, N>& lhs, Vector<U, N> rhs) {
     for (std::size_t i = 0; i < N; ++i) {
-      lhs.data[i] += rhs.data[i];
+      lhs[i] += rhs[i];
     }
 
     return lhs;
@@ -115,7 +115,7 @@ inline namespace v1 {
     Vector<typename std::common_type<T,U>::type, N> out = gf::Zero;
 
     for (std::size_t i = 0; i < N; ++i) {
-      out.data[i] = lhs.data[i] + rhs;
+      out[i] = lhs[i] + rhs;
     }
 
     return out;
@@ -129,7 +129,7 @@ inline namespace v1 {
   constexpr
   Vector<T, N>& operator+=(Vector<T, N>& lhs, U rhs) {
     for (std::size_t i = 0; i < N; ++i) {
-      lhs.data[i] += rhs;
+      lhs[i] += rhs;
     }
 
     return lhs;
@@ -145,7 +145,7 @@ inline namespace v1 {
     Vector<typename std::common_type<T,U>::type, N> out = gf::Zero;
 
     for (std::size_t i = 0; i < N; ++i) {
-      out.data[i] = lhs + rhs.data[i];
+      out[i] = lhs + rhs[i];
     }
 
     return out;
@@ -162,7 +162,7 @@ inline namespace v1 {
     Vector<typename std::common_type<T,U>::type, N> out = gf::Zero;
 
     for (std::size_t i = 0; i < N; ++i) {
-      out.data[i] = lhs.data[i] - rhs.data[i];
+      out[i] = lhs[i] - rhs[i];
     }
 
     return out;
@@ -176,7 +176,7 @@ inline namespace v1 {
   constexpr
   Vector<T, N>& operator-=(Vector<T, N>& lhs, Vector<U, N> rhs) {
     for (std::size_t i = 0; i < N; ++i) {
-      lhs.data[i] -= rhs.data[i];
+      lhs[i] -= rhs[i];
     }
 
     return lhs;
@@ -193,7 +193,7 @@ inline namespace v1 {
     Vector<typename std::common_type<T,U>::type, N> out = gf::Zero;
 
     for (std::size_t i = 0; i < N; ++i) {
-      out.data[i] = lhs.data[i] - rhs;
+      out[i] = lhs[i] - rhs;
     }
 
     return out;
@@ -207,7 +207,7 @@ inline namespace v1 {
   constexpr
   Vector<T, N>& operator-=(Vector<T, N>& lhs, U rhs) {
     for (std::size_t i = 0; i < N; ++i) {
-      lhs.data[i] -= rhs;
+      lhs[i] -= rhs;
     }
 
     return lhs;
@@ -223,7 +223,7 @@ inline namespace v1 {
     Vector<typename std::common_type<T,U>::type, N> out = gf::Zero;
 
     for (std::size_t i = 0; i < N; ++i) {
-      out.data[i] = lhs - rhs.data[i];
+      out[i] = lhs - rhs[i];
     }
 
     return out;
@@ -240,7 +240,7 @@ inline namespace v1 {
     Vector<typename std::common_type<T,U>::type, N> out = gf::Zero;
 
     for (std::size_t i = 0; i < N; ++i) {
-      out.data[i] = lhs.data[i] * rhs.data[i];
+      out[i] = lhs[i] * rhs[i];
     }
 
     return out;
@@ -254,7 +254,7 @@ inline namespace v1 {
   constexpr
   Vector<T, N>& operator*=(Vector<T, N>& lhs, Vector<U, N> rhs) {
     for (std::size_t i = 0; i < N; ++i) {
-      lhs.data[i] *= rhs.data[i];
+      lhs[i] *= rhs[i];
     }
 
     return lhs;
@@ -270,7 +270,7 @@ inline namespace v1 {
     Vector<typename std::common_type<T,U>::type, N> out = gf::Zero;
 
     for (std::size_t i = 0; i < N; ++i) {
-      out.data[i] = lhs.data[i] * rhs;
+      out[i] = lhs[i] * rhs;
     }
 
     return out;
@@ -284,7 +284,7 @@ inline namespace v1 {
   constexpr
   Vector<T, N>& operator*=(Vector<T, N>& lhs, U rhs) {
     for (std::size_t i = 0; i < N; ++i) {
-      lhs.data[i] *= rhs;
+      lhs[i] *= rhs;
     }
 
     return lhs;
@@ -300,7 +300,7 @@ inline namespace v1 {
     Vector<typename std::common_type<T,U>::type, N> out = gf::Zero;
 
     for (std::size_t i = 0; i < N; ++i) {
-      out.data[i] = lhs * rhs.data[i];
+      out[i] = lhs * rhs[i];
     }
 
     return out;
@@ -316,7 +316,7 @@ inline namespace v1 {
     Vector<typename std::common_type<T,U>::type, N> out = gf::Zero;
 
     for (std::size_t i = 0; i < N; ++i) {
-      out.data[i] = lhs.data[i] / rhs.data[i];
+      out[i] = lhs[i] / rhs[i];
     }
 
     return out;
@@ -330,7 +330,7 @@ inline namespace v1 {
   constexpr
   Vector<T, N>& operator/=(Vector<T, N>& lhs, Vector<U, N> rhs) {
     for (std::size_t i = 0; i < N; ++i) {
-      lhs.data[i] /= rhs.data[i];
+      lhs[i] /= rhs[i];
     }
 
     return lhs;
@@ -346,7 +346,7 @@ inline namespace v1 {
     Vector<typename std::common_type<T,U>::type, N> out = gf::Zero;
 
     for (std::size_t i = 0; i < N; ++i) {
-      out.data[i] = lhs.data[i] / rhs;
+      out[i] = lhs[i] / rhs;
     }
 
     return out;
@@ -360,7 +360,7 @@ inline namespace v1 {
   constexpr
   Vector<T, N>& operator/=(Vector<T, N>& lhs, U rhs) {
     for (std::size_t i = 0; i < N; ++i) {
-      lhs.data[i] /= rhs;
+      lhs[i] /= rhs;
     }
 
     return lhs;
@@ -376,7 +376,7 @@ inline namespace v1 {
     Vector<typename std::common_type<T,U>::type, N> out = gf::Zero;
 
     for (std::size_t i = 0; i < N; ++i) {
-      out.data[i] = lhs / rhs.data[i];
+      out[i] = lhs / rhs[i];
     }
 
     return out;
@@ -392,7 +392,7 @@ inline namespace v1 {
     Vector<bool, N> out = gf::Zero;
 
     for (std::size_t i = 0; i < N; ++i) {
-      out.data[i] = lhs.data[i] || rhs.data[i];
+      out[i] = lhs[i] || rhs[i];
     }
 
     return out;
@@ -408,7 +408,7 @@ inline namespace v1 {
     Vector<bool, N> out = gf::Zero;
 
     for (std::size_t i = 0; i < N; ++i) {
-      out.data[i] = lhs.data[i] && rhs.data[i];
+      out[i] = lhs[i] && rhs[i];
     }
 
     return out;
@@ -432,7 +432,7 @@ inline namespace v1 {
     T out{0};
 
     for (std::size_t i = 0; i < N; ++i) {
-      out += lhs.data[i] * rhs.data[i];
+      out += lhs[i] * rhs[i];
     }
 
     return out;
@@ -448,7 +448,7 @@ inline namespace v1 {
     Vector<T, N> out = gf::Zero;
 
     for (std::size_t i = 0; i < N; ++i) {
-      out.data[i] = std::min(lhs.data[i], rhs.data[i]);
+      out[i] = std::min(lhs[i], rhs[i]);
     }
 
     return out;
@@ -464,7 +464,7 @@ inline namespace v1 {
     Vector<T, N> out = gf::Zero;
 
     for (std::size_t i = 0; i < N; ++i) {
-      out.data[i] = std::max(lhs.data[i], rhs.data[i]);
+      out[i] = std::max(lhs[i], rhs[i]);
     }
 
     return out;
@@ -480,7 +480,7 @@ inline namespace v1 {
     Vector<T, N> out;
 
     for (std::size_t i = 0; i < N; ++i) {
-      out.data[i] = std::abs(val.data[i]);
+      out[i] = std::abs(val[i]);
     }
 
     return out;
@@ -496,7 +496,7 @@ inline namespace v1 {
     Vector<int, N> out = gf::Zero;
 
     for (std::size_t i = 0; i < N; ++i) {
-      out.data[i] = gf::sign(val.data[i]);
+      out[i] = gf::sign(val[i]);
     }
 
     return out;
@@ -512,7 +512,7 @@ inline namespace v1 {
     Vector<bool, N> out = gf::Zero;
 
     for (std::size_t i = 0; i < N; ++i) {
-      out.data[i] = (lhs.data[i] == rhs.data[i]);
+      out[i] = (lhs[i] == rhs[i]);
     }
 
     return out;
@@ -528,7 +528,7 @@ inline namespace v1 {
     Vector<bool, N> out = gf::Zero;
 
     for (std::size_t i = 0; i < N; ++i) {
-      out.data[i] = (lhs.data[i] < rhs.data[i]);
+      out[i] = (lhs[i] < rhs[i]);
     }
 
     return out;
@@ -544,7 +544,7 @@ inline namespace v1 {
     Vector<bool, N> out = gf::Zero;
 
     for (std::size_t i = 0; i < N; ++i) {
-      out.data[i] = (lhs.data[i] > rhs.data[i]);
+      out[i] = (lhs[i] > rhs[i]);
     }
 
     return out;
@@ -560,7 +560,7 @@ inline namespace v1 {
     Vector<T, N> out = gf::Zero;
 
     for (std::size_t i = 0; i < N; ++i) {
-      out.data[i] = (cond.data[i] ? lhs.data[i] : rhs.data[i]);
+      out[i] = (cond[i] ? lhs[i] : rhs[i]);
     }
 
     return out;
@@ -579,7 +579,7 @@ inline namespace v1 {
     Vector<T, N> out = gf::Zero;
 
     for (std::size_t i = 0; i < N; ++i) {
-      out.data[i] = clamp(val.data[i], lo.data[i], hi.data[i]);
+      out[i] = clamp(val[i], lo[i], hi[i]);
     }
 
     return out;
@@ -597,7 +597,7 @@ inline namespace v1 {
     Vector<T, N> out = gf::Zero;
 
     for (std::size_t i = 0; i < N; ++i) {
-      out.data[i] = clamp(val.data[i], lo, hi);
+      out[i] = clamp(val[i], lo, hi);
     }
 
     return out;
@@ -613,7 +613,7 @@ inline namespace v1 {
     Vector<T, N> out = gf::Zero;
 
     for (std::size_t i = 0; i < N; ++i) {
-      out.data[i] = lerp(lhs.data[i], rhs.data[i], t);
+      out[i] = lerp(lhs[i], rhs[i], t);
     }
 
     return out;
@@ -642,7 +642,7 @@ inline namespace v1 {
     T out{0};
 
     for (std::size_t i = 0; i < N; ++i) {
-      out += std::abs(vec.data[i]);
+      out += std::abs(vec[i]);
     }
 
     return out;
@@ -668,7 +668,7 @@ inline namespace v1 {
     T out{0};
 
     for (std::size_t i = 0; i < N; ++i) {
-      out += square(vec.data[i]);
+      out += square(vec[i]);
     }
 
     return out;
@@ -731,10 +731,10 @@ inline namespace v1 {
   template<typename T, std::size_t N>
   inline
   T chebyshevLength(Vector<T, N> vec) {
-    T out = std::abs(vec.data[0]);
+    T out = std::abs(vec[0]);
 
     for (std::size_t i = 1; i < N; ++i) {
-      out = std::max(out, std::abs(vec.data[i]));
+      out = std::max(out, std::abs(vec[i]));
     }
 
     return out;

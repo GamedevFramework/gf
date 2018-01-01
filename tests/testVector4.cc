@@ -24,17 +24,13 @@
 
 TEST(Vector4Test, Access) {
   gf::Vector4i vec;
-  vec.data[0] = 42;
-  EXPECT_EQ(42, vec.data[0]);
+  vec[0] = 42;
   EXPECT_EQ(42, vec[0]);
-  vec.data[1] = 69;
-  EXPECT_EQ(69, vec.data[1]);
+  vec[1] = 69;
   EXPECT_EQ(69, vec[1]);
-  vec.data[2] = 23;
-  EXPECT_EQ(23, vec.data[2]);
+  vec[2] = 23;
   EXPECT_EQ(23, vec[2]);
-  vec.data[3] = 17;
-  EXPECT_EQ(17, vec.data[3]);
+  vec[3] = 17;
   EXPECT_EQ(17, vec[3]);
 }
 
@@ -93,26 +89,50 @@ TEST(Vector4Test, CopyCtor) {
   EXPECT_EQ(17, vec[3]);
 }
 
+TEST(Vector4Test, ZeroCtor) {
+  gf::Vector4i vec = gf::Zero;
+  EXPECT_EQ(0, vec[0]);
+  EXPECT_EQ(0, vec[1]);
+  EXPECT_EQ(0, vec[2]);
+  EXPECT_EQ(0, vec[3]);
+}
+
 TEST(Vector4Test, AltFields) {
   gf::Vector4i vec(42, 69, 23, 17);
 
   EXPECT_EQ(42, vec.x);
   EXPECT_EQ(42, vec.r);
-  EXPECT_EQ(42, vec.xy.x);
-  EXPECT_EQ(42, vec.xyz.x);
-  EXPECT_EQ(42, vec.rgb.r);
 
   EXPECT_EQ(69, vec.y);
   EXPECT_EQ(69, vec.g);
-  EXPECT_EQ(69, vec.xy.y);
-  EXPECT_EQ(69, vec.xyz.y);
-  EXPECT_EQ(69, vec.rgb.g);
 
   EXPECT_EQ(23, vec.z);
   EXPECT_EQ(23, vec.b);
-  EXPECT_EQ(23, vec.xyz.z);
-  EXPECT_EQ(23, vec.rgb.b);
 
   EXPECT_EQ(17, vec.w);
   EXPECT_EQ(17, vec.a);
+}
+
+TEST(Vector4Test, RangeFor) {
+  gf::Vector4i vec(1, 2, 3, 4);
+
+  int expected = 1;
+
+  for (int elem : vec) {
+    EXPECT_EQ(expected, elem);
+    ++expected;
+  }
+
+  EXPECT_EQ(expected, 5);
+}
+
+TEST(Vector4Test, Iterator) {
+  gf::Vector4i vec1(1, 2, 3, 4);
+
+  EXPECT_EQ(std::distance(vec1.begin(), vec1.end()), 4);
+
+  const gf::Vector4i vec2(1, 2, 3, 4);
+
+  EXPECT_EQ(std::distance(vec2.begin(), vec2.end()), 4);
+  EXPECT_EQ(std::distance(vec2.cbegin(), vec2.cend()), 4);
 }

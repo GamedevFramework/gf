@@ -58,3 +58,32 @@ TEST(Vector1Test, CopyCtor) {
   gf::Vector<int, 1> vec = original;
   EXPECT_EQ(42, vec[0]);
 }
+
+TEST(Vector1Test, ZeroCtor) {
+  gf::Vector<int, 1> vec = gf::Zero;
+  EXPECT_EQ(0, vec[0]);
+}
+
+TEST(Vector1Test, RangeFor) {
+  gf::Vector<int, 1> vec(1);
+
+  int expected = 1;
+
+  for (int elem : vec) {
+    EXPECT_EQ(expected, elem);
+    ++expected;
+  }
+
+  EXPECT_EQ(expected, 2);
+}
+
+TEST(Vector1Test, Iterator) {
+  gf::Vector<int, 1> vec1(1);
+
+  EXPECT_EQ(std::distance(vec1.begin(), vec1.end()), 1);
+
+  const gf::Vector<int, 1> vec2(1);
+
+  EXPECT_EQ(std::distance(vec2.begin(), vec2.end()), 1);
+  EXPECT_EQ(std::distance(vec2.cbegin(), vec2.cend()), 1);
+}

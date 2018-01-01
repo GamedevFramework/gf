@@ -215,10 +215,10 @@ inline namespace v1 {
 
       case ConsoleEffect::ColorDodge:
         for (std::size_t i = 0; i < 3; ++i) {
-          if (existing.data[i] != 1.0f) {
-            result.data[i] = current.data[i] / (1.0f - existing.data[i]);
+          if (existing[i] != 1.0f) {
+            result[i] = current[i] / (1.0f - existing[i]);
           } else {
-            result.data[i] = 1.0f;
+            result[i] = 1.0f;
           }
         }
 
@@ -226,10 +226,10 @@ inline namespace v1 {
 
       case ConsoleEffect::ColorBurn:
         for (std::size_t i = 0; i < 3; ++i) {
-          if (existing.data[i] != 0.0f) {
-            result.data[i] = (1.0f - current.data[i]) / existing.data[i];
+          if (existing[i] != 0.0f) {
+            result[i] = (1.0f - current[i]) / existing[i];
           } else {
-            result.data[i] = 0.0f;
+            result[i] = 0.0f;
           }
         }
 
@@ -246,10 +246,10 @@ inline namespace v1 {
 
       case ConsoleEffect::Overlay:
         for (std::size_t i = 0; i < 3; ++i) {
-          if (current.data[i] < 0.5f) {
-            result.data[i] = 2 * current.data[i] * existing.data[i];
+          if (current[i] < 0.5f) {
+            result[i] = 2 * current[i] * existing[i];
           } else {
-            result.data[i] = 1.0f - 2 * (1.0f - current.data[i]) * (1.0f - existing.data[i]);
+            result[i] = 1.0f - 2 * (1.0f - current[i]) * (1.0f - existing[i]);
           }
         }
 

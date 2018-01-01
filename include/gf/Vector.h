@@ -26,6 +26,7 @@
 
 #include <algorithm>
 #include <initializer_list>
+#include <iterator>
 #include <type_traits>
 
 #include "Portability.h"
@@ -201,7 +202,7 @@ inline namespace v1 {
      * @return A pointer to the first element.
      */
     T *begin() {
-      return &data[0];
+      return std::begin(data);
     }
 
     /**
@@ -210,7 +211,7 @@ inline namespace v1 {
      * @return An invalid pointer that is the adress after the last element.
      */
     T *end() {
-      return &data[N];
+      return std::end(data);
     }
 
     /**
@@ -219,7 +220,7 @@ inline namespace v1 {
      * @return A pointer on the first const element.
      */
     const T *begin() const {
-      return &data[0];
+      return std::cbegin(data);
     }
 
     /**
@@ -229,15 +230,16 @@ inline namespace v1 {
      * element.
      */
     const T *end() const {
-      return &data[N];
+      return std::cend(data);
     }
+
     /**
      * @brief Iterator.on the first element (const version).
      *
      * @return A pointer on the first const element.
      */
     const T *cbegin() const {
-      return &data[0];
+      return std::cbegin(data);
     }
 
     /**
@@ -247,7 +249,7 @@ inline namespace v1 {
      * element.
      */
     const T *cend() const {
-      return &data[N];
+      return std::end(data);
     }
 
     /**
@@ -276,7 +278,6 @@ inline namespace v1 {
    * This specialization of gf::Vector handles the 2-dimension spaces. It can
    * be accessed with various representations:
    *
-   * - the generic representation with the `data` member
    * - the `(x,y)` representation, used for generic coordinates in the 2D space
    * - the `(u,v)` representation, used for texture coordinates (see [UV mapping](https://en.wikipedia.org/wiki/UV_mapping))
    * - the `(s,t)` representation, used for texture coordinates
@@ -343,8 +344,11 @@ inline namespace v1 {
      *
      * @param val The value to fill the vector with
      */
-    explicit Vector(T val) {
-      std::fill_n(data, 2, val);
+    explicit constexpr Vector(T val)
+    : x(val)
+    , y(val)
+    {
+
     }
 
     /**
@@ -360,19 +364,22 @@ inline namespace v1 {
      *
      * @param array An array with the values of the vector
      */
-    explicit Vector(T *array)
+    explicit constexpr Vector(T *array)
+    : x(array[0])
+    , y(array[1])
     {
-      std::copy_n(array, 2, data);
+
     }
 
     /**
      * @brief Constructor that takes 2 components
      *
-     * @param x The first component
-     * @param y The second component
+     * @param first The first component
+     * @param second The second component
      */
-    constexpr Vector(T x, T y)
-    : data{ x, y }
+    constexpr Vector(T first, T second)
+    : x(first)
+    , y(second)
     {
 
     }
@@ -413,7 +420,8 @@ inline namespace v1 {
      * @return The @f$ i @f$-th coordinate of the vector
      */
     T operator[](std::size_t i) const {
-      return data[i];
+      const T *data[] = { &x, &y };
+      return *data[i];
     }
 
     /**
@@ -428,7 +436,8 @@ inline namespace v1 {
      * @return The @f$ i @f$-th coordinate of the vector
      */
     T& operator[](std::size_t i) {
-      return data[i];
+      T *data[] = { &x, &y };
+      return *data[i];
     }
 
 
@@ -438,7 +447,7 @@ inline namespace v1 {
      * @return A pointer to the first element.
      */
     T *begin() {
-      return &data[0];
+      return &x;
     }
 
     /**
@@ -447,7 +456,7 @@ inline namespace v1 {
      * @return An invalid pointer that is the adress after the last element.
      */
     T *end() {
-      return &data[2];
+      return &x + 2;
     }
 
     /**
@@ -456,7 +465,7 @@ inline namespace v1 {
      * @return A pointer on the first const element.
      */
     const T *begin() const {
-      return &data[0];
+      return &x;
     }
 
     /**
@@ -466,7 +475,7 @@ inline namespace v1 {
      * element.
      */
     const T *end() const {
-      return &data[2];
+      return &x + 2;
     }
     /**
      * @brief Iterator.on the first element (const version).
@@ -474,7 +483,7 @@ inline namespace v1 {
      * @return A pointer on the first const element.
      */
     const T *cbegin() const {
-      return &data[0];
+      return &x;
     }
 
     /**
@@ -484,41 +493,36 @@ inline namespace v1 {
      * element.
      */
     const T *cend() const {
-      return &data[2];
+      return &x + 2;
     }
 
     /**
      * @brief Zero out the vector
      */
     constexpr void zero() {
-      data[0] = data[1] = T{};
+      x = y = T{};
     }
 
     /**
-     * An anonymous union to handle the various representations
+     * An anonymous union to handle the first coordinate
      */
     union {
-      T data[2]; ///< Generic representation
-      struct {
-        T x; ///< First coordinate in the `(x,y)` representation. @sa y
-        T y; ///< Second coordinate in the `(x,y)` representation. @sa x
-      };
-      struct {
-        T u; ///< First coordinate in the `(u,v)` representation. @sa v
-        T v; ///< Second coordinate in the `(u,v)` representation. @sa u
-      };
-      struct {
-        T s; ///< First coordinate in the `(s,t)` representation. @sa t
-        T t; ///< Second coordinate in the `(s,t)` representation. @sa s
-      };
-      struct {
-        T width; ///< First coordinate in the size representation. @sa height
-        T height; ///< Second coordinate in the size representation. @sa width
-      };
-      struct {
-        T col; ///< First coordinate in the indices representation @sa row
-        T row; ///< Second coordinate in the indices representation @sa col
-      };
+      T x; ///< First coordinate in the `(x,y)` representation. @sa y
+      T u; ///< First coordinate in the `(u,v)` representation. @sa v
+      T s; ///< First coordinate in the `(s,t)` representation. @sa t
+      T width; ///< First coordinate in the size representation. @sa height
+      T col; ///< First coordinate in the indices representation @sa row
+    };
+
+    /**
+     * An anonymous union to handle the second coordinate
+     */
+    union {
+      T y; ///< Second coordinate in the `(x,y)` representation. @sa x
+      T v; ///< Second coordinate in the `(u,v)` representation. @sa u
+      T t; ///< Second coordinate in the `(s,t)` representation. @sa s
+      T height; ///< Second coordinate in the size representation. @sa width
+      T row; ///< Second coordinate in the indices representation @sa col
     };
   };
 
@@ -529,7 +533,6 @@ inline namespace v1 {
    * This specialization of gf::Vector handles the 3-dimension spaces. It can
    * be accessed with various representations:
    *
-   * - the generic representation with the `data` member
    * - the `(x,y,z)` representation, used for generic coordinates in the 3D space
    * - the `(r,g,b)` representation, used for RGB colors
    *
@@ -590,8 +593,12 @@ inline namespace v1 {
      *
      * @param val The value to fill the vector with
      */
-    explicit Vector(T val) {
-      std::fill_n(data, 3, val);
+    explicit constexpr Vector(T val)
+    : x(val)
+    , y(val)
+    , z(val)
+    {
+
     }
 
     /**
@@ -607,20 +614,25 @@ inline namespace v1 {
      *
      * @param array An array with the values of the vector
      */
-    explicit Vector(T *array)
+    explicit constexpr Vector(T *array)
+    : x(array[0])
+    , y(array[1])
+    , z(array[2])
     {
-      std::copy_n(array, 3, data);
+
     }
 
     /**
      * @brief Constructor that takes 3 components
      *
-     * @param x The first component
-     * @param y The second component
-     * @param z The third component
+     * @param first The first component
+     * @param second The second component
+     * @param third The third component
      */
-    constexpr Vector(T x, T y, T z)
-    : data{ x, y, z }
+    constexpr Vector(T first, T second, T third)
+    : x(first)
+    , y(second)
+    , z(third)
     {
 
     }
@@ -629,10 +641,12 @@ inline namespace v1 {
      * @brief Constructor that takes a 2D vector and a z component
      *
      * @param xy The first 2 component, x and y
-     * @param z The z component
+     * @param third The z component
      */
-    constexpr Vector(Vector<T, 2> xy, T z)
-    : data{ xy.x, xy.y, z }
+    constexpr Vector(Vector<T, 2> xy, T third)
+    : x(xy.x)
+    , y(xy.y)
+    , z(third)
     {
 
     }
@@ -674,7 +688,8 @@ inline namespace v1 {
      * @return The @f$ i @f$-th coordinate of the vector
      */
     T operator[](std::size_t i) const {
-      return data[i];
+      const T *data[] = { &x, &y, &z };
+      return *data[i];
     }
 
     /**
@@ -689,7 +704,8 @@ inline namespace v1 {
      * @return The @f$ i @f$-th coordinate of the vector
      */
     T& operator[](std::size_t i) {
-      return data[i];
+      T *data[] = { &x, &y, &z };
+      return *data[i];
     }
 
 
@@ -699,7 +715,7 @@ inline namespace v1 {
      * @return A pointer to the first element.
      */
     T *begin() {
-      return &data[0];
+      return &x;
     }
 
     /**
@@ -708,7 +724,7 @@ inline namespace v1 {
      * @return An invalid pointer that is the adress after the last element.
      */
     T *end() {
-      return &data[3];
+      return &x + 3;
     }
 
     /**
@@ -717,7 +733,7 @@ inline namespace v1 {
      * @return A pointer on the first const element.
      */
     const T *begin() const {
-      return &data[0];
+      return &x;
     }
 
     /**
@@ -727,7 +743,7 @@ inline namespace v1 {
      * element.
      */
     const T *end() const {
-      return &data[3];
+      return &x + 3;
     }
 
     /**
@@ -736,7 +752,7 @@ inline namespace v1 {
      * @return A pointer on the first const element.
      */
     const T *cbegin() const {
-      return &data[0];
+      return &x;
     }
 
     /**
@@ -746,33 +762,40 @@ inline namespace v1 {
      * element.
      */
     const T *cend() const {
-      return &data[3];
+      return &x + 3;
     }
 
     /**
      * @brief Zero out the vector
      */
     constexpr void zero() {
-      data[0] = data[1] = data[2] = T{};
+      x = y = z = T{};
     }
 
     /**
-     * An anonymous union to handle the various representations
+     * An anonymous union to handle the first coordinate
      */
     union {
-      T data[3]; ///< Generic representation
-      struct {
-        T x; ///< First coordinate in the `(x,y,z)` representation. @sa y, z
-        T y; ///< Second coordinate in the `(x,y,z)` representation. @sa x, z
-        T z; ///< Third coordinate in the `(x,y,z)` representation. @sa x, y
-      };
-      struct {
-        T r; ///< First coordinate in the `(r,g,b)` representation. @sa g, b
-        T g; ///< Second coordinate in the `(r,g,b)` representation. @sa r, b
-        T b; ///< Third coordinate in the `(r,g,b)` representation. @sa r, g
-      };
-      Vector<T, 2> xy; ///< Swizzle to get the first two coordinates as a 2D vector
+      T x; ///< First coordinate in the `(x,y,z)` representation. @sa y, z
+      T r; ///< First coordinate in the `(r,g,b)` representation. @sa g, b
     };
+
+    /**
+     * An anonymous union to handle the second coordinate
+     */
+    union {
+      T y; ///< Second coordinate in the `(x,y,z)` representation. @sa x, z
+      T g; ///< Second coordinate in the `(r,g,b)` representation. @sa r, b
+    };
+
+    /**
+     * An anonymous union to handle the third coordinate
+     */
+    union {
+      T z; ///< Third coordinate in the `(x,y,z)` representation. @sa x, y
+      T b; ///< Third coordinate in the `(r,g,b)` representation. @sa r, g
+    };
+
   };
 
   /**
@@ -782,7 +805,6 @@ inline namespace v1 {
    * This specialization of gf::Vector handles the 4-dimension spaces. It can
    * be accessed with various representations:
    *
-   * - the generic representation with the `data` member
    * - the `(x,y,z,w)` representation, used for generic coordinates in the 4D space
    * - the `(r,g,b,a)` representation, used for RGBA colors
    *
@@ -843,8 +865,13 @@ inline namespace v1 {
      *
      * @param val The value to fill the vector with
      */
-    explicit Vector(T val) {
-      std::fill_n(data, 4, val);
+    explicit constexpr Vector(T val)
+    : x(val)
+    , y(val)
+    , z(val)
+    , w(val)
+    {
+
     }
 
     /**
@@ -860,21 +887,28 @@ inline namespace v1 {
      *
      * @param array An array with the values of the vector
      */
-    explicit Vector(T *array)
+    explicit constexpr Vector(T *array)
+    : x(array[0])
+    , y(array[1])
+    , z(array[2])
+    , w(array[3])
     {
-      std::copy_n(array, 4, data);
+
     }
 
     /**
      * @brief Constructor that takes 4 components
      *
-     * @param x The first component
-     * @param y The second component
-     * @param z The third component
-     * @param w The fourth component
+     * @param first The first component
+     * @param second The second component
+     * @param third The third component
+     * @param fourth The fourth component
      */
-    constexpr Vector(T x, T y, T z, T w)
-    : data{ x, y, z, w }
+    constexpr Vector(T first, T second, T third, T fourth)
+    : x(first)
+    , y(second)
+    , z(third)
+    , w(fourth)
     {
 
     }
@@ -917,7 +951,8 @@ inline namespace v1 {
      * @return The @f$ i @f$-th coordinate of the vector
      */
     T operator[](std::size_t i) const {
-      return data[i];
+      const T *data[] = { &x, &y, &z, &w };
+      return *data[i];
     }
 
     /**
@@ -932,7 +967,8 @@ inline namespace v1 {
      * @return The @f$ i @f$-th coordinate of the vector
      */
     T& operator[](std::size_t i) {
-      return data[i];
+      T *data[] = { &x, &y, &z, &w };
+      return *data[i];
     }
 
 
@@ -942,7 +978,7 @@ inline namespace v1 {
      * @return A pointer to the first element.
      */
     T *begin() {
-      return &data[0];
+      return &x;
     }
 
     /**
@@ -951,7 +987,7 @@ inline namespace v1 {
      * @return An invalid pointer that is the adress after the last element.
      */
     T *end() {
-      return &data[4];
+      return &x + 4;
     }
 
     /**
@@ -960,7 +996,7 @@ inline namespace v1 {
      * @return A pointer on the first const element.
      */
     const T *begin() const {
-      return &data[0];
+      return &x;
     }
 
     /**
@@ -970,7 +1006,7 @@ inline namespace v1 {
      * element.
      */
     const T *end() const {
-      return &data[4];
+      return &x + 4;
     }
 
     /**
@@ -979,7 +1015,7 @@ inline namespace v1 {
      * @return A pointer on the first const element.
      */
     const T *cbegin() const {
-      return &data[0];
+      return &x;
     }
 
     /**
@@ -989,37 +1025,48 @@ inline namespace v1 {
      * element.
      */
     const T *cend() const {
-      return &data[4];
+      return &x + 4;
     }
 
     /**
      * @brief Zero out the vector
      */
     constexpr void zero() {
-      data[0] = data[1] = data[2] = data[3] = T{};
+      x = y = z = w = T{};
     }
 
     /**
-     * An anonymous union to handle the various representations
+     * An anonymous union to handle the first coordinate
      */
     union {
-      T data[4]; ///< Generic representation
-      struct {
         T x; ///< First coordinate in the `(x,y,z,w)` representation. @sa y, z, w
-        T y; ///< Second coordinate in the `(x,y,z,w)` representation. @sa x, z, w
-        T z; ///< Third coordinate in the `(x,y,z,w)` representation. @sa x, y, w
-        T w; ///< Fourth coordinate in the `(x,y,z,w)` representation. @sa x, y, z
-      };
-      struct {
         T r; ///< First coordinate in the `(r,g,b,a)` representation. @sa g, b, a
-        T g; ///< Second coordinate in the `(r,g,b,a)` representation. @sa r, b, a
-        T b; ///< Third coordinate in the `(r,g,b,a)` representation. @sa r, g, a
-        T a; ///< Fourth coordinate in the `(r,g,b,a)` representation. @sa r, g, b
-      };
-      Vector<T, 2> xy; ///< Swizzle to get the first two coordinates as a 2D vector
-      Vector<T, 3> xyz; ///< Swizzle to get the first three coordinates as a 3D vector
-      Vector<T, 3> rgb; ///< Swizzle to get the first three coordinates as a RGB color
     };
+
+    /**
+     * An anonymous union to handle the second coordinate
+     */
+    union {
+        T y; ///< Second coordinate in the `(x,y,z,w)` representation. @sa x, z, w
+        T g; ///< Second coordinate in the `(r,g,b,a)` representation. @sa r, b, a
+    };
+
+    /**
+     * An anonymous union to handle the third coordinate
+     */
+    union {
+        T z; ///< Third coordinate in the `(x,y,z,w)` representation. @sa x, y, w
+        T b; ///< Third coordinate in the `(r,g,b,a)` representation. @sa r, g, a
+    };
+
+    /**
+     * An anonymous union to handle the fourth coordinate
+     */
+    union {
+        T w; ///< Fourth coordinate in the `(x,y,z,w)` representation. @sa x, y, z
+        T a; ///< Fourth coordinate in the `(r,g,b,a)` representation. @sa r, g, b
+    };
+
   };
 
   /**

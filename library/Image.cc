@@ -87,7 +87,7 @@ inline namespace v1 {
 
     for (unsigned y = 0; y < size.height; ++y) {
       for (unsigned x = 0; x < size.width; ++x) {
-        std::copy_n(color.data, 4, ptr);
+        std::copy_n(color.begin(), 4, ptr);
         ptr += 4;
       }
     }

@@ -24,12 +24,10 @@
 
 TEST(Vector2Test, Access) {
   gf::Vector2i vec;
-  vec.data[0] = 42;
-  EXPECT_EQ(42, vec.data[0]);
+  vec[0] = 42;
   EXPECT_EQ(42, vec[0]);
 
-  vec.data[1] = 69;
-  EXPECT_EQ(69, vec.data[1]);
+  vec[1] = 69;
   EXPECT_EQ(69, vec[1]);
 }
 
@@ -76,6 +74,12 @@ TEST(Vector2Test, CopyCtor) {
   EXPECT_EQ(69, vec[1]);
 }
 
+TEST(Vector2Test, ZeroCtor) {
+  gf::Vector2i vec = gf::Zero;
+  EXPECT_EQ(0, vec[0]);
+  EXPECT_EQ(0, vec[1]);
+}
+
 TEST(Vector2Test, AltFields) {
   gf::Vector2i vec(42, 69);
 
@@ -90,4 +94,28 @@ TEST(Vector2Test, AltFields) {
   EXPECT_EQ(69, vec.t);
   EXPECT_EQ(69, vec.height);
   EXPECT_EQ(69, vec.row);
+}
+
+TEST(Vector2Test, RangeFor) {
+  gf::Vector2i vec(1, 2);
+
+  int expected = 1;
+
+  for (int elem : vec) {
+    EXPECT_EQ(expected, elem);
+    ++expected;
+  }
+
+  EXPECT_EQ(expected, 3);
+}
+
+TEST(Vector2Test, Iterator) {
+  gf::Vector2i vec1(1, 2);
+
+  EXPECT_EQ(std::distance(vec1.begin(), vec1.end()), 2);
+
+  const gf::Vector2i vec2(1, 2);
+
+  EXPECT_EQ(std::distance(vec2.begin(), vec2.end()), 2);
+  EXPECT_EQ(std::distance(vec2.cbegin(), vec2.cend()), 2);
 }
