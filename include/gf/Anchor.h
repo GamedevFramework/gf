@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -17,9 +17,6 @@
  * 2. Altered source versions must be plainly marked as such, and must not be
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
- *
- * Part of this file comes from SFML, with the same license:
- * Copyright (C) 2007-2015 Laurent Gomila (laurent@sfml-dev.org)
  */
 #ifndef GF_ANCHOR_H
 #define GF_ANCHOR_H
