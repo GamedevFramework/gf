@@ -26,7 +26,6 @@
 
 #include <algorithm>
 #include <initializer_list>
-#include <iterator>
 #include <type_traits>
 
 #include "Portability.h"
@@ -153,7 +152,7 @@ inline namespace v1 {
     template<typename U>
     Vector(const Vector<U, N>& other) noexcept
     {
-      static_assert(std::is_convertible<U,T>::value, "");
+      static_assert(std::is_convertible<U,T>::value, "Non-convertible types");
       std::transform(data, data + N, other.data, [](U val) { return static_cast<T>(val); });
     }
 
@@ -202,7 +201,7 @@ inline namespace v1 {
      * @return A pointer to the first element.
      */
     T *begin() {
-      return std::begin(data);
+      return &data[0];
     }
 
     /**
@@ -211,7 +210,7 @@ inline namespace v1 {
      * @return An invalid pointer that is the adress after the last element.
      */
     T *end() {
-      return std::end(data);
+      return &data[N];
     }
 
     /**
@@ -220,7 +219,7 @@ inline namespace v1 {
      * @return A pointer on the first const element.
      */
     const T *begin() const {
-      return std::cbegin(data);
+      return &data[0];
     }
 
     /**
@@ -230,7 +229,7 @@ inline namespace v1 {
      * element.
      */
     const T *end() const {
-      return std::cend(data);
+      return &data[N];
     }
 
     /**
@@ -239,7 +238,7 @@ inline namespace v1 {
      * @return A pointer on the first const element.
      */
     const T *cbegin() const {
-      return std::cbegin(data);
+      return &data[0];
     }
 
     /**
@@ -249,7 +248,7 @@ inline namespace v1 {
      * element.
      */
     const T *cend() const {
-      return std::end(data);
+      return &data[N];
     }
 
     /**
@@ -402,10 +401,10 @@ inline namespace v1 {
      */
     template<typename U>
     Vector(const Vector<U, 2>& other) noexcept
-    : x(other.x)
-    , y(other.y)
+    : x(static_cast<T>(other.x))
+    , y(static_cast<T>(other.y))
     {
-
+      static_assert(std::is_convertible<U,T>::value, "Non-convertible types");
     }
 
     /**
@@ -669,11 +668,11 @@ inline namespace v1 {
      */
     template<typename U>
     Vector(const Vector<U, 3>& other) noexcept
-    : x(other.x)
-    , y(other.y)
-    , z(other.z)
+    : x(static_cast<T>(other.x))
+    , y(static_cast<T>(other.y))
+    , z(static_cast<T>(other.z))
     {
-
+      static_assert(std::is_convertible<U,T>::value, "Non-convertible types");
     }
 
     /**
@@ -939,12 +938,12 @@ inline namespace v1 {
      */
     template<typename U>
     Vector(const Vector<U, 4>& other) noexcept
-    : x(other.x)
-    , y(other.y)
-    , z(other.z)
-    , w(other.w)
+    : x(static_cast<T>(other.x))
+    , y(static_cast<T>(other.y))
+    , z(static_cast<T>(other.z))
+    , w(static_cast<T>(other.w))
     {
-
+      static_assert(std::is_convertible<U,T>::value, "Non-convertible types");
     }
 
     /**
