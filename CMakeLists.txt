@@ -48,6 +48,9 @@ if(MSVC)
   message(STATUS "Using MSVC compiler")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /DNOMINMAX /W4 /utf-8 /std:c++14 /permissive-")
   link_directories(${Boost_LIBRARY_DIRS})
+  # for more information on the last two switches:
+  # - https://blogs.msdn.microsoft.com/vcblog/2016/06/07/standards-version-switches-in-the-compiler/
+  # - https://blogs.msdn.microsoft.com/vcblog/2016/11/16/permissive-switch/
 else()
   message(STATUS "Using GCC or Clang compiler")
   # assume it's a GNU-like compiler (GCC, clang)
