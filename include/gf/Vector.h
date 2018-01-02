@@ -110,7 +110,7 @@ inline namespace v1 {
      *
      * @param array An array with the values of the vector
      */
-    explicit Vector(T *array)
+    explicit Vector(const T *array)
     {
       std::copy_n(array, N, data);
     }
@@ -363,7 +363,7 @@ inline namespace v1 {
      *
      * @param array An array with the values of the vector
      */
-    explicit constexpr Vector(T *array)
+    explicit constexpr Vector(const T *array)
     : x(array[0])
     , y(array[1])
     {
@@ -613,7 +613,7 @@ inline namespace v1 {
      *
      * @param array An array with the values of the vector
      */
-    explicit constexpr Vector(T *array)
+    explicit constexpr Vector(const T *array)
     : x(array[0])
     , y(array[1])
     , z(array[2])
@@ -894,7 +894,7 @@ inline namespace v1 {
      *
      * @param array An array with the values of the vector
      */
-    explicit constexpr Vector(T *array)
+    explicit constexpr Vector(const T *array)
     : x(array[0])
     , y(array[1])
     , z(array[2])

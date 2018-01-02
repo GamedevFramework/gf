@@ -24,9 +24,11 @@
 
 TEST(Vector1Test, Access) {
   gf::Vector<int, 1> vec;
+
   vec.data[0] = 42;
   EXPECT_EQ(42, vec.data[0]);
   EXPECT_EQ(42, vec[0]);
+
   vec[0] = 69;
   EXPECT_EQ(69, vec.data[0]);
   EXPECT_EQ(69, vec[0]);
@@ -43,7 +45,7 @@ TEST(Vector1Test, ValueCtor) {
 }
 
 TEST(Vector1Test, PointerCtor) {
-  int data[1] = { 42 };
+  const int data[1] = { 42 };
   gf::Vector<int, 1> vec(data);
   EXPECT_EQ(42, vec[0]);
 }

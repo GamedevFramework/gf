@@ -284,13 +284,13 @@ inline namespace v1 {
   void Shader::setUniform(StringRef name, const Matrix3f& mat) {
     Guard guard(*this);
     int loc = getUniformLocation(name);
-    glCheck(glUniformMatrix3fv(loc, 1, GL_FALSE, mat.data));
+    glCheck(glUniformMatrix3fv(loc, 1, GL_FALSE, mat.getData()));
   }
 
   void Shader::setUniform(StringRef name, const Matrix4f& mat) {
     Guard guard(*this);
     int loc = getUniformLocation(name);
-    glCheck(glUniformMatrix4fv(loc, 1, GL_FALSE, mat.data));
+    glCheck(glUniformMatrix4fv(loc, 1, GL_FALSE, mat.getData()));
   }
 
   void Shader::setUniform(StringRef name, const BareTexture& tex) {

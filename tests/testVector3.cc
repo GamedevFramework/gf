@@ -24,11 +24,13 @@
 
 TEST(Vector3Test, Access) {
   gf::Vector3i vec;
+
   vec[0] = 42;
-  EXPECT_EQ(42, vec[0]);
   vec[1] = 69;
-  EXPECT_EQ(69, vec[1]);
   vec[2] = 23;
+
+  EXPECT_EQ(42, vec[0]);
+  EXPECT_EQ(69, vec[1]);
   EXPECT_EQ(23, vec[2]);
 }
 
@@ -59,7 +61,7 @@ TEST(Vector3Test, Brace3Ctor) {
 }
 
 TEST(Vector3Test, PointerCtor) {
-  int data[3] = {42, 69, 23};
+  const int data[3] = { 42, 69, 23 };
   gf::Vector3i vec(data);
   EXPECT_EQ(42, vec[0]);
   EXPECT_EQ(69, vec[1]);

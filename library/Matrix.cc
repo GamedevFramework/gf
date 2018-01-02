@@ -32,6 +32,10 @@ inline namespace v1 {
   template struct Matrix<float, 4, 4>;
 #endif
 
+  static_assert(sizeof(Matrix2f) == 2 * 2 * sizeof(float), "Matrix size mismatch");
+  static_assert(sizeof(Matrix3f) == 3 * 3 * sizeof(float), "Matrix size mismatch");
+  static_assert(sizeof(Matrix4f) == 4 * 4 * sizeof(float), "Matrix size mismatch");
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif

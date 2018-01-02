@@ -24,13 +24,15 @@
 
 TEST(Vector4Test, Access) {
   gf::Vector4i vec;
+
   vec[0] = 42;
-  EXPECT_EQ(42, vec[0]);
   vec[1] = 69;
-  EXPECT_EQ(69, vec[1]);
   vec[2] = 23;
-  EXPECT_EQ(23, vec[2]);
   vec[3] = 17;
+
+  EXPECT_EQ(42, vec[0]);
+  EXPECT_EQ(69, vec[1]);
+  EXPECT_EQ(23, vec[2]);
   EXPECT_EQ(17, vec[3]);
 }
 
@@ -64,7 +66,7 @@ TEST(Vector4Test, Brace4Ctor) {
 }
 
 TEST(Vector4Test, PointerCtor) {
-  int data[4] = {42, 69, 23, 17};
+  const int data[4] = { 42, 69, 23, 17 };
   gf::Vector4i vec(data);
   EXPECT_EQ(42, vec[0]);
   EXPECT_EQ(69, vec[1]);

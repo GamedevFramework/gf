@@ -6,6 +6,8 @@ add_executable(gf_tests
   testBufferRef.cc
   testCirc.cc
   testFlags.cc
+  testMatrix.cc
+  testMatrix2.cc
   testRange.cc
   testRect.cc
   testSingleton.cc

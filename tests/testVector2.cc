@@ -25,9 +25,9 @@
 TEST(Vector2Test, Access) {
   gf::Vector2i vec;
   vec[0] = 42;
-  EXPECT_EQ(42, vec[0]);
-
   vec[1] = 69;
+
+  EXPECT_EQ(42, vec[0]);
   EXPECT_EQ(69, vec[1]);
 }
 
@@ -55,7 +55,7 @@ TEST(Vector2Test, Brace2Ctor) {
 }
 
 TEST(Vector2Test, PointerCtor) {
-  int data[2] = { 42, 69 };
+  const int data[2] = { 42, 69 };
   gf::Vector<int, 2> vec(data);
   EXPECT_EQ(42, vec[0]);
   EXPECT_EQ(69, vec[1]);
