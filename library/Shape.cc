@@ -138,10 +138,10 @@ inline namespace v1 {
       Vector2f ratio(0.0f, 0.0f);
 
       if (!m_bounds.isEmpty()) {
-        ratio = (m_vertices[i].position - m_bounds.position) / m_bounds.size;
+        ratio = (m_vertices[i].position - m_bounds.getPosition()) / m_bounds.getSize();
       }
 
-      m_vertices[i].texCoords = m_textureRect.position + m_textureRect.size * ratio;
+      m_vertices[i].texCoords = m_textureRect.getPosition() + m_textureRect.getSize() * ratio;
     }
   }
 

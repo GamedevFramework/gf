@@ -39,10 +39,10 @@ inline namespace v1 {
   }
 
   RectangleShape::RectangleShape(const RectF& rect)
-  : m_size(rect.size)
+  : m_size(rect.getSize())
   {
     updateGeometry();
-    setPosition(rect.position);
+    setPosition(rect.getPosition());
   }
 
   void RectangleShape::setSize(Vector2f size) {
@@ -212,12 +212,12 @@ inline namespace v1 {
   }
 
   RoundedRectangleShape::RoundedRectangleShape(const RectF& rect, float radius, std::size_t cornerPointCount)
-  : m_size(rect.size)
+  : m_size(rect.getSize())
   , m_radius(radius)
   , m_cornerPointCount(cornerPointCount)
   {
     updateGeometry();
-    setPosition(rect.position);
+    setPosition(rect.getPosition());
   }
 
   void RoundedRectangleShape::setSize(Vector2f size) {

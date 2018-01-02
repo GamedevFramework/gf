@@ -379,7 +379,7 @@ inline namespace v1 {
       area.height = m_data.getRows() - area.top;
     }
 
-    Heightmap out(area.size);
+    Heightmap out(area.getSize());
 
     for (int j = 0; j < area.height; ++j) {
       for (int i = 0; i < area.width; ++i) {

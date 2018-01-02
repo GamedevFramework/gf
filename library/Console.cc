@@ -419,7 +419,7 @@ inline namespace v1 {
       }
 
       auto paragraphs = makeParagraphs(message, alignment, paragraphWidth);
-      Vector2i position = rect.position;
+      Vector2i position = rect.getPosition();
 
       for (const auto& paragraph : paragraphs) {
         if (flags.test(PrintOption::CountOnly)) {
@@ -453,7 +453,7 @@ inline namespace v1 {
     } else {
       // single line
       assert(rect.width == 0 && rect.height == 0);
-      Vector2i position = rect.position;
+      Vector2i position = rect.getPosition();
 
       std::u32string unicodeString = computeUnicodeString(message);
       int width = getWordWidth(unicodeString);
@@ -540,7 +540,7 @@ inline namespace v1 {
 
     for (offset.x = 0; offset.x < rect.width; ++offset.x) {
       for (offset.y = 0; offset.y < rect.height; ++offset.y) {
-        auto position = rect.position + offset;
+        auto position = rect.getPosition() + offset;
 
         if (!m_data.isValid(position)) {
           continue;
@@ -600,8 +600,8 @@ inline namespace v1 {
   }
 
   void Console::blit(const RectI& src, Console& con, Vector2i dst, float foregroundAlpha, float backgroundAlpha) const {
-    Vector2i origin = src.position;
-    Vector2i size = src.size;
+    Vector2i origin = src.getPosition();
+    Vector2i size = src.getSize();
     Vector2i target = dst;
 
     // clip source

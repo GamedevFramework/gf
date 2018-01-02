@@ -29,11 +29,6 @@ TEST(RectTest, DefaultCtor) {
   EXPECT_EQ(0, ri.top);
   EXPECT_EQ(0, ri.width);
   EXPECT_EQ(0, ri.height);
-
-  EXPECT_EQ(0, ri.position.x);
-  EXPECT_EQ(0, ri.position.y);
-  EXPECT_EQ(0, ri.size.width);
-  EXPECT_EQ(0, ri.size.height);
 }
 
 TEST(RectTest, ValueCtor) {
@@ -43,11 +38,6 @@ TEST(RectTest, ValueCtor) {
   EXPECT_EQ(5, ri.top);
   EXPECT_EQ(10, ri.width);
   EXPECT_EQ(15, ri.height);
-
-  EXPECT_EQ(0, ri.position.x);
-  EXPECT_EQ(5, ri.position.y);
-  EXPECT_EQ(10, ri.size.width);
-  EXPECT_EQ(15, ri.size.height);
 }
 
 TEST(RectTest, PositionSizeCtor) {
@@ -57,11 +47,6 @@ TEST(RectTest, PositionSizeCtor) {
   EXPECT_EQ(5, ri.top);
   EXPECT_EQ(10, ri.width);
   EXPECT_EQ(15, ri.height);
-
-  EXPECT_EQ(0, ri.position.x);
-  EXPECT_EQ(5, ri.position.y);
-  EXPECT_EQ(10, ri.size.width);
-  EXPECT_EQ(15, ri.size.height);
 }
 
 TEST(RectTest, IsEmpty) {

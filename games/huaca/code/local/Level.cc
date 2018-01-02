@@ -252,7 +252,7 @@ namespace huaca {
       if (gf::collides(wall, heroPosition->bounds, p)) {
         gf::Vector2f delta = p.depth * p.normal;
         heroPosition->position += delta;
-        heroPosition->bounds.position += delta;
+        heroPosition->bounds.setPosition(heroPosition->bounds.getPosition() + delta);
       }
     }
 
@@ -284,7 +284,7 @@ namespace huaca {
         } else {
           gf::Vector2f delta = p.depth * p.normal;
           heroPosition->position += delta;
-          heroPosition->bounds.position += delta;
+          heroPosition->bounds.setPosition(heroPosition->bounds.getPosition() + delta);
         }
       }
     }
@@ -323,7 +323,7 @@ namespace huaca {
             gf::Vector2f newPosition = m_portals[1 - portal.number].bounds.getCenter() - gf::Vector2f(0.0f, BlockSize / 3); // HACK
             gf::Vector2f delta = newPosition - heroPosition->position;
             heroPosition->position += delta;
-            heroPosition->bounds.position += delta;
+            heroPosition->bounds.setPosition(heroPosition->bounds.getPosition() + delta);
             m_isOnPortal = true;
           }
         }

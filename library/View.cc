@@ -170,7 +170,7 @@ inline namespace v1 {
   namespace {
 
     bool isCursorOnView(Vector2i cursor, Vector2u screenSize, const RectF& viewport) {
-      RectF visible(viewport.position * screenSize, viewport.size * screenSize);
+      RectF visible(viewport.getPosition() * screenSize, viewport.getSize() * screenSize);
       return visible.contains(cursor);
     }
 

@@ -118,14 +118,14 @@ inline namespace v1 {
     }
 
     Vector2u textureSize = m_texture->getSize();
-    Vector2f spriteSize = textureSize * m_textureRect.size;
+    Vector2f spriteSize = textureSize * m_textureRect.getSize();
 
     m_vertices[0].position = {  0.0f,            0.0f };
     m_vertices[1].position = { spriteSize.width, 0.0f };
     m_vertices[2].position = {  0.0f,            spriteSize.height };
     m_vertices[3].position = { spriteSize.width, spriteSize.height };
 
-    m_bounds.size = spriteSize;
+    m_bounds.setSize(spriteSize);
   }
 
   void Sprite::updateTexCoords() {

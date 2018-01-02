@@ -139,8 +139,8 @@ inline namespace v1 {
     RectF intersection;
 
     if (local.intersects(layer, intersection)) {
-      rect.position = intersection.position / blockSize + 0.5f;
-      rect.size = intersection.size / blockSize + 0.5f;
+      rect.setPosition(intersection.getPosition() / blockSize + 0.5f);
+      rect.setSize(intersection.getSize() / blockSize + 0.5f);
     }
 
     // build vertex array (if necessary)
@@ -170,7 +170,7 @@ inline namespace v1 {
 
     for (local.y = 0; local.y < rect.height; ++local.y) {
       for (local.x = 0; local.x < rect.width; ++local.x) {
-        Vector2u cell(rect.position + local);
+        Vector2u cell(rect.getPosition() + local);
 
         assert(m_tiles.isValid(cell));
         int tile = m_tiles(cell).tile;

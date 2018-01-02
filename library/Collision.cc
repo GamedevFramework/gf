@@ -66,7 +66,7 @@ inline namespace v1 {
     Vector2f normal = rhs.getCenter() - lhs.getCenter();
 
     Vector2f closest = normal;
-    Vector2f extent = lhs.size / 2;
+    Vector2f extent = lhs.getSize() / 2;
 
     closest = gf::clamp(closest, -extent, extent);
 
@@ -120,7 +120,7 @@ inline namespace v1 {
 
   bool collides(const RectF& lhs, const RectF& rhs, Penetration& p) {
     Vector2f normal = rhs.getCenter() - lhs.getCenter();
-    Vector2f overlap = lhs.size / 2 + rhs.size / 2 - gf::abs(normal);
+    Vector2f overlap = lhs.getSize() / 2 + rhs.getSize() / 2 - gf::abs(normal);
 
     if (overlap.x <= 0) {
       return false;

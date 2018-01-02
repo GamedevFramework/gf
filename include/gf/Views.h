@@ -176,7 +176,7 @@ inline namespace v1 {
      */
     explicit FillView(const RectF& rect)
     : AdaptativeView(rect)
-    , m_localSize(rect.size)
+    , m_localSize(rect.getSize())
     {
 
     }
@@ -239,7 +239,7 @@ inline namespace v1 {
      */
     explicit ExtendView(const RectF& rect)
     : AdaptativeView(rect)
-    , m_localSize(rect.size)
+    , m_localSize(rect.getSize())
     {
 
     }
@@ -304,7 +304,7 @@ inline namespace v1 {
      */
     explicit LockedView(const RectF& rect)
     : AdaptativeView(rect)
-    , m_localSize(rect.size)
+    , m_localSize(rect.getSize())
     , m_localViewport(0.0f, 0.0f, 1.0f, 1.0f)
     {
 

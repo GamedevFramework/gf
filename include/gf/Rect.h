@@ -42,8 +42,7 @@ inline namespace v1 {
    * A rectangle is defined by its top-left corner and its size.
    * It is a very simple class defined for convenience, so
    * its member variables (`left`, `top`, `width` and `height`) are public
-   * and can be accessed directly. You can also access the `position`
-   * and the `size` of the rectangle directly as gf::Vector.
+   * and can be accessed directly.
    *
    * gf::Rect uses the usual rules for its boundaries:
    *
@@ -86,21 +85,10 @@ inline namespace v1 {
    */
   template<typename T>
   struct Rect {
-    /**
-     * An anonymous union to handle the various representations
-     */
-    union {
-      struct {
-        T left; ///< Left coordinate of the rectangle
-        T top; ///< Top coordinate of the rectangle
-        T width; ///< Width of the rectangle
-        T height; ///< Height of the rectangle
-      };
-      struct {
-        Vector<T, 2> position; ///< Position of the rectangle
-        Vector<T, 2> size; ///< Size of the rectangle
-      };
-    };
+    T left; ///< Left coordinate of the rectangle
+    T top; ///< Top coordinate of the rectangle
+    T width; ///< Width of the rectangle
+    T height; ///< Height of the rectangle
 
     /**
      * @brief Default constructor
@@ -137,11 +125,11 @@ inline namespace v1 {
      * Be careful, the last parameter is the size,
      * not the bottom-right corner!
      *
-     * @param rectPosition Position of the top left corner of the rectangle
-     * @param rectSize Size of the rectangle
+     * @param position Position of the top left corner of the rectangle
+     * @param size Size of the rectangle
      */
-    Rect(const Vector<T, 2>& rectPosition, const Vector<T, 2>& rectSize) noexcept
-    : position(rectPosition), size(rectSize)
+    Rect(const Vector<T, 2>& position, const Vector<T, 2>& size) noexcept
+    : left(position.x), top(position.y), width(size.width), height(size.height)
     {
 
     }
@@ -159,25 +147,43 @@ inline namespace v1 {
     /**
      * @brief Get the position of the rectangle
      *
-     * It is a synonym for the `position` member
-     *
      * @return The position of the rectangle
-     * @sa getSize()
+     * @sa setPosition(), getSize()
      */
     constexpr Vector<T, 2> getPosition() const noexcept {
-      return position;
+      return { left, top };
+    }
+
+    /**
+     * @brief Set the position of the rectangle
+     *
+     * @param position The new position of the rectangle
+     * @sa getPosition(), setSize()
+     */
+    constexpr void setPosition(Vector<T, 2> position) noexcept {
+      left = position.x;
+      top = position.y;
     }
 
     /**
      * @brief Get the size of the rectangle
      *
-     * It is a synonym for the `size` member
-     *
      * @return The size of the rectangle
-     * @sa getPosition()
+     * @sa setSize(), getPosition()
      */
     constexpr Vector<T, 2> getSize() const noexcept {
-      return size;
+      return { width, height };
+    }
+
+    /**
+     * @brief Set the size of the rectangle
+     *
+     * @param size The new size of the rectangle
+     * @sa getSize(), setPosition()
+     */
+    constexpr void setSize(Vector<T, 2> size) noexcept {
+      width = size.width;
+      height = size.height;
     }
 
     /**
@@ -372,7 +378,7 @@ inline namespace v1 {
   template<typename T>
   inline
   bool operator==(const Rect<T>& lhs, const Rect<T>& rhs) {
-    return lhs.position == rhs.position && lhs.size == rhs.size;
+    return lhs.left == rhs.left && lhs.top == rhs.top && lhs.width == rhs.width && lhs.height == rhs.height;
   }
 
   /**
@@ -386,7 +392,7 @@ inline namespace v1 {
   template<typename T>
   inline
   bool operator!=(const Rect<T>& lhs, const Rect<T>& rhs) {
-    return lhs.position != rhs.position || lhs.size != rhs.size;
+    return !(lhs == rhs);
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

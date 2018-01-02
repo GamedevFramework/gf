@@ -81,7 +81,7 @@ inline namespace v1 {
     // compute sprite position
 
     Vector2u textureSize = texture.getSize();
-    Vector2f spriteSize = textureSize * textureRect.size;
+    Vector2f spriteSize = textureSize * textureRect.getSize();
 
     vertices[0].position = {  0.0f,            0.0f };
     vertices[1].position = { spriteSize.width, 0.0f };

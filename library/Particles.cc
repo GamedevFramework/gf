@@ -132,7 +132,7 @@ inline namespace v1 {
       return;
     }
 
-    Vector2f size = textureRect.size * m_texture->getSize();
+    Vector2f size = textureRect.getSize() * m_texture->getSize();
     RectF box(position - size / 2, size);
 
     Vertex vertices[4];
