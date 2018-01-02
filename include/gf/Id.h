@@ -64,7 +64,7 @@ inline namespace v1 {
     Id value = UINT64_C(0xcbf29ce484222325);
 
     for (std::size_t i = 0; i < sz; ++i) {
-      value ^= str[i];
+      value ^= static_cast<unsigned char>(str[i]);
       value *= UINT64_C(0x100000001b3);
     }
 
