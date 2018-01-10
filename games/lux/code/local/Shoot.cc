@@ -243,40 +243,40 @@ namespace lux {
   }
 
   std::unique_ptr<Shoot> makeSimpleShoot(Origin origin, ShipClass shipClass, float delay) {
-    return gf::make<DelayedShoot>(
-      gf::make<CountedShoot>(
-        gf::make<SingleShoot>(origin, shipClass)
+    return std::make_unique<DelayedShoot>(
+      std::make_unique<CountedShoot>(
+        std::make_unique<SingleShoot>(origin, shipClass)
         , 1)
       , delay);
   }
 
   std::unique_ptr<Shoot> makeBurstShoot(Origin origin, ShipClass shipClass, float delay, float period, int count) {
-    return gf::make<DelayedShoot>(
-      gf::make<PeriodicShoot>(
-        gf::make<CountedShoot>(
-          gf::make<SingleShoot>(origin, shipClass)
+    return std::make_unique<DelayedShoot>(
+      std::make_unique<PeriodicShoot>(
+        std::make_unique<CountedShoot>(
+          std::make_unique<SingleShoot>(origin, shipClass)
           , count)
         , period)
       , delay);
   }
 
   std::unique_ptr<Shoot> makeConeShoot(Origin origin, ShipClass shipClass, float delay) {
-    return gf::make<DelayedShoot>(
-      gf::make<CountedShoot>(
-        gf::make<ConeShoot>(origin, shipClass)
+    return std::make_unique<DelayedShoot>(
+      std::make_unique<CountedShoot>(
+        std::make_unique<ConeShoot>(origin, shipClass)
         , 1)
       , delay);
   }
 
   std::unique_ptr<Shoot> makeContinuousSimpleShoot(Origin origin, ShipClass shipClass, float period) {
-    return gf::make<PeriodicShoot>(
-      gf::make<SingleShoot>(origin, shipClass)
+    return std::make_unique<PeriodicShoot>(
+      std::make_unique<SingleShoot>(origin, shipClass)
       , period);
   }
 
   std::unique_ptr<Shoot> makeSimplePlayerShoot(Origin origin, ShipClass shipClass, int nbshoot, float shootInterval, float inactivePeriod) {
-    return gf::make<RegularShoot>(
-      gf::make<SingleShoot>(origin, shipClass)
+    return std::make_unique<RegularShoot>(
+      std::make_unique<SingleShoot>(origin, shipClass)
       , nbshoot, shootInterval, inactivePeriod);
   }
 

@@ -31,7 +31,6 @@
 #include <zlib.h>
 
 #include <gf/Log.h>
-#include <gf/Memory.h>
 #include <gf/Unused.h>
 
 #include "vendor/tinyxml2/tinyxml2.h"
@@ -647,7 +646,7 @@ inline namespace v1 {
     std::unique_ptr<TmxTileLayer> parseTmxTileLayer(const XMLElementWrapper elt) {
       assert(elt.is("layer"));
 
-      auto tmx = gf::make<TmxTileLayer>();
+      auto tmx = std::make_unique<TmxTileLayer>();
       parseTmxLayer(elt, *tmx);
 
       elt.parseOneElement("data", [&tmx](const XMLElementWrapper elt) {
@@ -700,7 +699,7 @@ inline namespace v1 {
     std::unique_ptr<TmxImage> parseTmxImage(const XMLElementWrapper elt, const TmxParserCtx& ctx) {
       assert(elt.is("image"));
 
-      auto tmx = gf::make<TmxImage>();
+      auto tmx = std::make_unique<TmxImage>();
 
       tmx->format = elt.getStringAttribute("format", Requirement::Optional);
       tmx->source = ctx.currentPath / elt.getStringAttribute("source");
@@ -720,7 +719,7 @@ inline namespace v1 {
     std::unique_ptr<TmxImageLayer> parseTmxImageLayer(const XMLElementWrapper elt, const TmxParserCtx& ctx) {
       assert(elt.is("imagelayer"));
 
-      auto tmx = gf::make<TmxImageLayer>();
+      auto tmx = std::make_unique<TmxImageLayer>();
       parseTmxLayer(elt, *tmx);
 
       elt.parseOneElement("image", [&tmx, &ctx](const XMLElementWrapper elt) {
@@ -763,7 +762,7 @@ inline namespace v1 {
 
     std::unique_ptr<TmxObject> parseTmxObject(const XMLElementWrapper elt) {
       if (elt.hasChild("polygon")) {
-        auto tmx = gf::make<TmxPolygon>();
+        auto tmx = std::make_unique<TmxPolygon>();
         parseTmxObjectCommon(elt, *tmx);
 
         tmx->kind = TmxObject::Polygon;
@@ -777,7 +776,7 @@ inline namespace v1 {
       }
 
       if (elt.hasChild("polyline")) {
-        auto tmx = gf::make<TmxPolyline>();
+        auto tmx = std::make_unique<TmxPolyline>();
         parseTmxObjectCommon(elt, *tmx);
 
         tmx->kind = TmxObject::Polyline;
@@ -791,7 +790,7 @@ inline namespace v1 {
       }
 
       if (elt.hasChild("text")) {
-        auto tmx = gf::make<TmxText>();
+        auto tmx = std::make_unique<TmxText>();
         parseTmxObjectCommon(elt, *tmx);
 
         tmx->kind = TmxObject::Text;
@@ -845,7 +844,7 @@ inline namespace v1 {
         unsigned gid = elt.getUIntAttribute("gid");
         TmxCell cell = decodeGID(gid);
 
-        auto tmx = gf::make<TmxTileObject>();
+        auto tmx = std::make_unique<TmxTileObject>();
         parseTmxObjectCommon(elt, *tmx);
 
         tmx->kind = TmxObject::Tile;
@@ -856,7 +855,7 @@ inline namespace v1 {
       }
 
       if (elt.hasChild("ellipse")) {
-        auto tmx = gf::make<TmxEllipse>();
+        auto tmx = std::make_unique<TmxEllipse>();
         parseTmxObjectCommon(elt, *tmx);
 
         tmx->kind = TmxObject::Ellipse;
@@ -866,7 +865,7 @@ inline namespace v1 {
         return std::move(tmx);
       }
 
-      auto tmx = gf::make<TmxRectangle>();
+      auto tmx = std::make_unique<TmxRectangle>();
       parseTmxObjectCommon(elt, *tmx);
 
       tmx->kind = TmxObject::Rectangle;
@@ -879,7 +878,7 @@ inline namespace v1 {
     std::unique_ptr<TmxObjectLayer> parseTmxObjectLayer(const XMLElementWrapper elt) {
       assert(elt.is("objectgroup"));
 
-      auto tmx = gf::make<TmxObjectLayer>();
+      auto tmx = std::make_unique<TmxObjectLayer>();
       parseTmxLayer(elt, *tmx);
 
       tmx->color = elt.getColorAttribute("color", Requirement::Optional);
@@ -905,7 +904,7 @@ inline namespace v1 {
     std::unique_ptr<TmxGroupLayer> parseTmxGroupLayer(const XMLElementWrapper elt, const TmxParserCtx& ctx) {
       assert(elt.is("group"));
 
-      auto tmx = gf::make<TmxGroupLayer>();
+      auto tmx = std::make_unique<TmxGroupLayer>();
       parseTmxLayer(elt, *tmx);
 
       elt.parseEachElement([&tmx, &ctx](const XMLElementWrapper elt) {
@@ -941,7 +940,7 @@ inline namespace v1 {
     std::unique_ptr<TmxAnimation> parseTmxAnimation(const XMLElementWrapper elt) {
       assert(elt.is("animation"));
 
-      auto tmx = gf::make<TmxAnimation>();
+      auto tmx = std::make_unique<TmxAnimation>();
 
       elt.parseManyElements("frame", [&tmx](const XMLElementWrapper elt) {
         tmx->frames.push_back(parseTmxFrame(elt));

@@ -21,11 +21,8 @@
 #include <gf/SpaceTree.h>
 
 #include <cassert>
-
 #include <queue>
 #include <stack>
-
-#include <gf/Memory.h>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -72,8 +69,8 @@ inline namespace v1 {
       int height = random.computeUniformInteger(minSize.height, m_area.height - minSize.height);
       m_position = m_area.top + height;
 
-      m_left = gf::make<SpaceTree>(gf::RectI(m_area.left, m_area.top, m_area.width, height));
-      m_right = gf::make<SpaceTree>(gf::RectI(m_area.left, m_position, m_area.width, m_area.height - height));
+      m_left = std::make_unique<SpaceTree>(gf::RectI(m_area.left, m_area.top, m_area.width, height));
+      m_right = std::make_unique<SpaceTree>(gf::RectI(m_area.left, m_position, m_area.width, m_area.height - height));
     } else {
       assert(m_split == Split::Vertical);
 
@@ -86,8 +83,8 @@ inline namespace v1 {
       int width = random.computeUniformInteger(minSize.width, m_area.width - minSize.width);
       m_position = m_area.left + width;
 
-      m_left = gf::make<SpaceTree>(gf::RectI(m_area.left, m_area.top, width, m_area.height));
-      m_right = gf::make<SpaceTree>(gf::RectI(m_position, m_area.top, m_area.width - width, m_area.height));
+      m_left = std::make_unique<SpaceTree>(gf::RectI(m_area.left, m_area.top, width, m_area.height));
+      m_right = std::make_unique<SpaceTree>(gf::RectI(m_position, m_area.top, m_area.width - width, m_area.height));
     }
 
     m_left->m_father = m_right->m_father = this;
