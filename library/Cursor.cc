@@ -24,6 +24,7 @@
 #include <gf/Cursor.h>
 
 #include <cassert>
+#include <utility>
 
 #include <SDL.h>
 
@@ -42,14 +43,13 @@ inline namespace v1 {
   }
 
   Cursor::Cursor(Cursor&& other) noexcept
-  : m_cursor(other.m_cursor)
+  : m_cursor(std::exchange(other.m_cursor, nullptr))
   {
-    other.m_cursor = nullptr;
+
   }
 
   Cursor& Cursor::operator=(Cursor&& other) noexcept {
-    m_cursor = other.m_cursor;
-    other.m_cursor = nullptr;
+    m_cursor = std::exchange(other.m_cursor, nullptr);
     return *this;
   }
 

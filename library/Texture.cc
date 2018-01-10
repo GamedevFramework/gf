@@ -56,13 +56,13 @@ inline namespace v1 {
 
   BareTexture::BareTexture(BareTexture&& other) noexcept
   : m_format(other.m_format)
-  , m_name(other.m_name)
+  , m_name(std::exchange(other.m_name, 0))
   , m_size(other.m_size)
   , m_smooth(other.m_smooth)
   , m_repeated(other.m_repeated)
   , m_mipmap(other.m_mipmap)
   {
-    other.m_name = 0;
+
   }
 
   BareTexture& BareTexture::operator=(BareTexture&& other) noexcept {

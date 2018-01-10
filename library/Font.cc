@@ -138,13 +138,13 @@ inline namespace v1 {
   }
 
   Font::Font(Font&& other) noexcept
-  : m_library(other.m_library)
-  , m_stroker(other.m_stroker)
-  , m_face(other.m_face)
+  : m_library(std::exchange(other.m_library, nullptr))
+  , m_stroker(std::exchange(other.m_stroker, nullptr))
+  , m_face(std::exchange(other.m_face, nullptr))
   , m_currentCharacterSize(other.m_currentCharacterSize)
   , m_cache(std::move(other.m_cache))
   {
-    other.m_library = other.m_stroker = other.m_face = nullptr;
+
   }
 
   Font& Font::operator=(Font&& other) noexcept {

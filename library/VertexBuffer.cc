@@ -54,12 +54,12 @@ inline namespace v1 {
   }
 
   VertexBuffer::VertexBuffer(VertexBuffer&& other) noexcept
-  : m_vbo(other.m_vbo)
-  , m_ebo(other.m_ebo)
+  : m_vbo(std::exchange(other.m_vbo, 0))
+  , m_ebo(std::exchange(other.m_ebo, 0))
   , m_count(other.m_count)
   , m_type(other.m_type)
   {
-    other.m_vbo = other.m_ebo = 0;
+
   }
 
   VertexBuffer& VertexBuffer::operator=(VertexBuffer&& other) noexcept {
