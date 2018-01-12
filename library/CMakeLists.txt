@@ -172,6 +172,12 @@ if (GF_DEBUG)
   )
 endif()
 
+if (GF_SHARED)
+  target_compile_definitions(gf0
+    PUBLIC GF_SHARED
+  )
+endif()
+
 target_compile_definitions(gf0
   PRIVATE
     GF_EXPORT_SYMBOLS

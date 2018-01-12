@@ -17,7 +17,9 @@ option(GF_BUILD_DOCUMENTATION "Build documentation (needs Doxygen)" ON)
 option(GF_BUILD_GAMES "Build games" OFF)
 option(GF_BUILD_TOOLS "Build tools" OFF)
 option(GF_SINGLE_COMPILTATION_UNIT "Build the library in a single file (unity build)" OFF)
-option(BUILD_SHARED_LIBS "Build the library as a shared library" ON)
+option(GF_SHARED "Build the library as a shared library" ON)
+
+set(BUILD_SHARED_LIBS ${GF_SHARED})
 
 include(GNUInstallDirs)
 set(GF_DATADIR ${CMAKE_INSTALL_FULL_DATADIR})
