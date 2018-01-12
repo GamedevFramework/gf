@@ -51,11 +51,11 @@ add_custom_target(gf0_shader_headers ALL DEPENDS ${SHADER_HEADERS})
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h @ONLY)
 
 if (GF_SINGLE_COMPILTATION_UNIT)
-  add_library(gf0 SHARED
+  add_library(gf0
     XUnityBuild.cc
   )
 else()
-  add_library(gf0 SHARED
+  add_library(gf0
     Action.cc
     Activities.cc
     Activity.cc
