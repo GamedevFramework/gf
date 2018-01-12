@@ -661,9 +661,9 @@ inline namespace v1 {
 
   bool UI::colorPicker(Color4f& color) {
     setState(State::Setup);
-    nk_color localColor = nk_rgba_f(color.r, color.g, color.b, color.a);
+    nk_colorf localColor = { color.r, color.g, color.b, color.a };
     int ret = nk_color_pick(&m_impl->ctx, &localColor, NK_RGBA);
-    nk_color_f(&color.r, &color.g, &color.b, &color.a, localColor);
+    color = { localColor.r, localColor.g, localColor.g, localColor.a };
     return ret != 0;
   }
 
