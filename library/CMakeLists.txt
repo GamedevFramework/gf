@@ -4,17 +4,29 @@ add_executable(gfdev_source_file tools/gfdev_source_file.cc)
 
 # process gamecontrollerdb
 
-set(GCDB_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/vendor/gamecontrollerdb/gamecontrollerdb.txt")
-set(GCDB_HEADER "${CMAKE_CURRENT_BINARY_DIR}/generated/gamecontrollerdb.txt.h")
-
-add_custom_command(
-  OUTPUT "${GCDB_HEADER}"
-  COMMAND gfdev_source_file "${GCDB_SOURCE}" "${GCDB_HEADER}" "gamecontrollerdb"
-  COMMENT "Compiling gamecontrollerdb to header"
-  DEPENDS gfdev_source_file "${GCDB_SOURCE}"
+set(GCDB_SOURCES
+  gamecontrollerdb.txt
+  older_releases/gamecontrollerdb_205.txt
+  older_releases/gamecontrollerdb_204.txt
 )
 
-add_custom_target(gf0_gamecontrollerdb ALL DEPENDS ${GCDB_HEADER})
+set(GCDB_HEADERS "")
+
+foreach(GCDB_RELATIVE_SOURCE ${GCDB_SOURCES})
+  set(GCDB_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/vendor/gamecontrollerdb/${GCDB_RELATIVE_SOURCE}")
+  get_filename_component(GCDB_NAME ${GCDB_RELATIVE_SOURCE} NAME)
+  string(REPLACE "." "_" GCDB_VARIABLE ${GCDB_NAME})
+  set(GCDB_HEADER "${CMAKE_CURRENT_BINARY_DIR}/generated/${GCDB_NAME}.h")
+  add_custom_command(
+    OUTPUT "${GCDB_HEADER}"
+    COMMAND gfdev_source_file "${GCDB_SOURCE}" "${GCDB_HEADER}" "gamecontrollerdb"
+    COMMENT "Compiling ${GCDB_NAME} to header"
+    DEPENDS gfdev_source_file "${GCDB_SOURCE}"
+  )
+  list(APPEND GCDB_HEADERS ${GCDB_HEADER})
+endforeach()
+
+add_custom_target(gf0_gamecontrollerdb ALL DEPENDS ${GCDB_HEADERS})
 
 # process shader files
 

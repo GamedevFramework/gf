@@ -27,7 +27,14 @@
 
 #include <gf/Log.h>
 
+// see also data/generated.cc
+#if SDL_VERSION_ATLEAST(2,0,6)
 #include "generated/gamecontrollerdb.txt.h"
+#elseif SDL_VERSION_ATLEAST(2,0,5)
+#include "generated/gamecontrollerdb_205.txt.h"
+#else
+#include "generated/gamecontrollerdb_204.txt.h"
+#endif
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
