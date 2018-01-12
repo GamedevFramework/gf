@@ -112,13 +112,13 @@ inline namespace v1 {
   }
 
   bool PhysicsBody::collidesWith(const PhysicsBody& other, Penetration& p) const {
-    CircF circle = m_geometry.getBoundingCircle();
-    circle.center = gf::transform(m_transform, circle.center);
+    CircF boundingCircle = m_geometry.getBoundingCircle();
+    boundingCircle.center = gf::transform(m_transform, boundingCircle.center);
 
-    CircF otherCircle = other.m_geometry.getBoundingCircle();
-    otherCircle.center = gf::transform(other.m_transform, otherCircle.center);
+    CircF otherBoundingCircle = other.m_geometry.getBoundingCircle();
+    otherBoundingCircle.center = gf::transform(other.m_transform, otherBoundingCircle.center);
 
-    if (!circle.intersects(otherCircle)) {
+    if (!boundingCircle.intersects(otherBoundingCircle)) {
       return false;
     }
 

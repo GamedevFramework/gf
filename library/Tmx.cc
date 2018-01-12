@@ -612,9 +612,9 @@ inline namespace v1 {
             } else if (elt.isEnumAttribute("type", "float")) {
               tmx.addFloatProperty(std::move(name), elt.getDoubleAttribute("value"));
             } else if (elt.isEnumAttribute("type", "bool")) {
-              std::string value = elt.getStringAttribute("value");
-              assert(value == "true" || value == "false");
-              tmx.addBoolProperty(std::move(name), value == "true");
+              std::string trueOrFalse = elt.getStringAttribute("value");
+              assert(trueOrFalse == "true" || trueOrFalse == "false");
+              tmx.addBoolProperty(std::move(name), trueOrFalse == "true");
             } else if (elt.isEnumAttribute("type", "color")) {
               tmx.addColorProperty(std::move(name), elt.getColorAttribute("value"));
             } else if (elt.isEnumAttribute("type", "file")) {
