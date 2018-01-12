@@ -41,7 +41,7 @@ matrix:
           packages:
             - *common_packages
             - clang-5.0
-            - libstdc++6
+            - libstdc++6-dev
       env: CXX_COMPILER=clang++-5.0 C_COMPILER=clang-5.0
 
 branches:
