@@ -41,11 +41,11 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  static std::atomic_int loaded{0};
+  static std::atomic_int g_loaded{0};
 
   Library::Library()
   {
-    if (loaded.fetch_add(1) == 0) { // we are the first
+    if (g_loaded.fetch_add(1) == 0) { // we are the first
       if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) != 0) {
         Log::error("Unable to initialize SDL: '%s'\n", SDL_GetError());
         return;
@@ -61,18 +61,18 @@ inline namespace v1 {
   {
     gf::unused(other);
 
-    loaded.fetch_add(1);
+    g_loaded.fetch_add(1);
   }
 
   Library& Library::operator=(Library&& other) noexcept {
     gf::unused(other);
 
-    loaded.fetch_add(1);
+    g_loaded.fetch_add(1);
     return *this;
   }
 
   Library::~Library() {
-    if (loaded.fetch_sub(1) == 1) { // we are the last
+    if (g_loaded.fetch_sub(1) == 1) { // we are the last
       SDL_Quit();
     }
   }
