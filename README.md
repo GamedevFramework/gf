@@ -104,3 +104,21 @@ You have to install the following dependencies:
 - [CMake](https://cmake.org/) >= 3.0.2
 
 See the [documentation](http://gamedevframework.github.io/latest/build_and_install.html) for more information on how to build and install gf.
+
+## Screenshots
+
+These screenshots are from games and tools included in the repository.
+
+### Games
+
+![gf Pong!](games/gf_pong/gf_pong.png)
+![gf 2048!](games/gf_2048/gf_2048.png)
+![Huaca](games/huaca/huaca.png)
+![Bank Robbery for Dummies](games/bank_robbery_for_dummies/brfd.png)
+![Bygone Islands](games/islands/islands.png)
+![Lux](games/lux/lux.png)
+
+### Tools
+
+![gf Noise](tools/gf_noise/gf_noise.png)
+![gf Dungeons](tools/gf_dungeons/gf_dungeons.png)
