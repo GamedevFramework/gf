@@ -59,6 +59,7 @@
 #include "Entity.h"
 #include "Event.h"
 #include "Flags.h"
+#include "Flip.h"
 #include "Font.h"
 #include "Gamepad.h"
 #include "Geometry.h"
@@ -141,6 +142,7 @@
 #include "ViewContainer.h"
 #include "View.h"
 #include "Views.h"
+#include "Winding.h"
 #include "Window.h"
 
 #endif // GF_ALL_H
