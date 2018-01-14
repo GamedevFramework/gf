@@ -1,5 +1,22 @@
 # ChangeLog for gf
 
+## gf 0.7.0 (14 Jan 2018)
+
+- Core module
+  - Add gf::convexHull()
+  - Rework Vector, Matrix and Rect (to avoid anonymous struct)
+- Window module
+  - Add gf::Keyboard::localize() and gf::Keyboard::unlocalize()
+  - Add gf::KonamiKeyboardControl
+- Graphics module
+  - Add flip support in gf::TileLayer
+- Game module
+  - Add non-const accessors in gf::SpaceTree
+- Tools and games
+- Misc
+  - Minimum C++ version is now C++14
+  - Lots of code cleaning and code improvements
+
 ## gf 0.6.0 (14 Oct 2017)
 
 - Core module
