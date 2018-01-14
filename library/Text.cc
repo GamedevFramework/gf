@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -174,31 +174,35 @@ inline namespace v1 {
     target.draw(m_vertices, states);
   }
 
-  static void addGlyphVertex(VertexArray& array, const Glyph& glyph, const Vector2f& position, const Color4f& color) {
-    Vertex vertices[4];
+  namespace {
 
-    vertices[0].position = position + glyph.bounds.getTopLeft();
-    vertices[1].position = position + glyph.bounds.getTopRight();
-    vertices[2].position = position + glyph.bounds.getBottomLeft();
-    vertices[3].position = position + glyph.bounds.getBottomRight();
+    void addGlyphVertex(VertexArray& array, const Glyph& glyph, const Vector2f& position, const Color4f& color) {
+      Vertex vertices[4];
 
-    vertices[0].color = vertices[1].color = vertices[2].color = vertices[3].color = color;
+      vertices[0].position = position + glyph.bounds.getTopLeft();
+      vertices[1].position = position + glyph.bounds.getTopRight();
+      vertices[2].position = position + glyph.bounds.getBottomLeft();
+      vertices[3].position = position + glyph.bounds.getBottomRight();
 
-    vertices[0].texCoords = glyph.textureRect.getTopLeft();
-    vertices[1].texCoords = glyph.textureRect.getTopRight();
-    vertices[2].texCoords = glyph.textureRect.getBottomLeft();
-    vertices[3].texCoords = glyph.textureRect.getBottomRight();
+      vertices[0].color = vertices[1].color = vertices[2].color = vertices[3].color = color;
 
-    // first triangle
-    array.append(vertices[0]);
-    array.append(vertices[1]);
-    array.append(vertices[2]);
+      vertices[0].texCoords = glyph.textureRect.getTopLeft();
+      vertices[1].texCoords = glyph.textureRect.getTopRight();
+      vertices[2].texCoords = glyph.textureRect.getBottomLeft();
+      vertices[3].texCoords = glyph.textureRect.getBottomRight();
 
-    // second triangle
-    array.append(vertices[2]);
-    array.append(vertices[1]);
-    array.append(vertices[3]);
-  }
+      // first triangle
+      array.append(vertices[0]);
+      array.append(vertices[1]);
+      array.append(vertices[2]);
+
+      // second triangle
+      array.append(vertices[2]);
+      array.append(vertices[1]);
+      array.append(vertices[3]);
+    }
+
+  } // anonymous namespace
 
   void Text::updateGeometry() {
     if (m_font == nullptr || m_characterSize == 0 || m_string.empty()) {

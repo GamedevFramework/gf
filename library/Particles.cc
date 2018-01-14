@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -132,7 +132,7 @@ inline namespace v1 {
       return;
     }
 
-    Vector2f size = textureRect.size * m_texture->getSize();
+    Vector2f size = textureRect.getSize() * m_texture->getSize();
     RectF box(position - size / 2, size);
 
     Vertex vertices[4];

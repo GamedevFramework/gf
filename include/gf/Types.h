@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -59,6 +59,22 @@ inline namespace v1 {
    * @sa gf::AllType, gf::None
    */
   constexpr AllType All = { };
+
+  /**
+   * @ingroup core
+   * @brief Semantic type to represent "zero"
+   *
+   * @sa gf::Zero
+   */
+  struct GF_API ZeroType { };
+
+  /**
+   * @ingroup core
+   * @brief Constant to represent "zero"
+   *
+   * @sa gf::ZeroType
+   */
+  constexpr ZeroType Zero = { };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

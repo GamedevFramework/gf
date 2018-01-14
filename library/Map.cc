@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -51,7 +51,7 @@ inline namespace v1 {
     m_cells(pos) = flags;
   }
 
-  void SquareMap::clear(CellFlags flags) {
+  void SquareMap::reset(CellFlags flags) {
     for (auto& cell : m_cells) {
       cell = flags;
     }
@@ -93,126 +93,130 @@ inline namespace v1 {
     }
   }
 
-  static void postProcessMap(Array2D<CellFlags, int>& cells, Vector2i q0, Vector2i q1, Vector2i step) {
-    int xLo, xHi, yLo, yHi;
-    std::tie(xLo, xHi) = std::minmax(q0.x, q1.x);
-    std::tie(yLo, yHi) = std::minmax(q0.y, q1.y);
+  namespace {
 
-    for (int y = yLo; y <= yHi; ++y) {
-      for (int x = xLo; x <= xHi; ++x) {
-        if (!cells.isValid({ x, y })) {
-          continue;
-        }
+    void postProcessMap(Array2D<CellFlags, int>& cells, Vector2i q0, Vector2i q1, Vector2i step) {
+      int xLo, xHi, yLo, yHi;
+      std::tie(xLo, xHi) = std::minmax(q0.x, q1.x);
+      std::tie(yLo, yHi) = std::minmax(q0.y, q1.y);
 
-        if (!cells({ x, y }).test(CellProperty::Visible) || !cells({ x, y }).test(CellProperty::Transparent)) {
-          continue;
-        }
-
-        int x2 = x + step.x;
-        int y2 = y + step.y;
-
-        if (xLo <= x2 && x2 <= xHi) {
-          gf::Vector2i target = { x2, y };
-
-          if (cells.isValid(target) && !cells(target).test(CellProperty::Transparent)) {
-            cells(target).set(CellProperty::Visible);
+      for (int y = yLo; y <= yHi; ++y) {
+        for (int x = xLo; x <= xHi; ++x) {
+          if (!cells.isValid({ x, y })) {
+            continue;
           }
-        }
 
-        if (yLo <= y2 && y2 <= yHi) {
-          gf::Vector2i target = { x, y2 };
-
-          if (cells.isValid(target) && !cells(target).test(CellProperty::Transparent)) {
-            cells(target).set(CellProperty::Visible);
+          if (!cells({ x, y }).test(CellProperty::Visible) || !cells({ x, y }).test(CellProperty::Transparent)) {
+            continue;
           }
-        }
 
-        if (xLo <= x2 && x2 <= xHi && yLo <= y2 && y2 <= yHi) {
-          gf::Vector2i target = { x2, y2 };
+          int x2 = x + step.x;
+          int y2 = y + step.y;
 
-          if (cells.isValid(target) && !cells(target).test(CellProperty::Transparent)) {
-            cells(target).set(CellProperty::Visible);
+          if (xLo <= x2 && x2 <= xHi) {
+            gf::Vector2i target = { x2, y };
+
+            if (cells.isValid(target) && !cells(target).test(CellProperty::Transparent)) {
+              cells(target).set(CellProperty::Visible);
+            }
+          }
+
+          if (yLo <= y2 && y2 <= yHi) {
+            gf::Vector2i target = { x, y2 };
+
+            if (cells.isValid(target) && !cells(target).test(CellProperty::Transparent)) {
+              cells(target).set(CellProperty::Visible);
+            }
+          }
+
+          if (xLo <= x2 && x2 <= xHi && yLo <= y2 && y2 <= yHi) {
+            gf::Vector2i target = { x2, y2 };
+
+            if (cells.isValid(target) && !cells(target).test(CellProperty::Transparent)) {
+              cells(target).set(CellProperty::Visible);
+            }
           }
         }
       }
     }
-  }
 
-  static void castRay(Array2D<CellFlags, int>& cells, Vector2i p0, Vector2i p1, int maxRadius2, FieldOfVisionLimit limit, CellFlags modification) {
-    Bresenham bresenham(p0, p1);
-    Vector2i curr;
-    bool blocked = false;
+    void castRay(Array2D<CellFlags, int>& cells, Vector2i p0, Vector2i p1, int maxRadius2, FieldOfVisionLimit limit, CellFlags modification) {
+      Bresenham bresenham(p0, p1);
+      Vector2i curr;
+      bool blocked = false;
 
-    while (!bresenham.step(curr)) {
-      if (!cells.isValid(curr)) {
-        return;
-      }
-
-      if (maxRadius2 > 0) {
-        int radius2 = gf::squareDistance(p0, curr);
-
-        if (radius2 > maxRadius2) {
+      while (!bresenham.step(curr)) {
+        if (!cells.isValid(curr)) {
           return;
         }
+
+        if (maxRadius2 > 0) {
+          int radius2 = gf::squareDistance(p0, curr);
+
+          if (radius2 > maxRadius2) {
+            return;
+          }
+        }
+
+        if (!blocked && !cells(curr).test(CellProperty::Transparent)) {
+          blocked = true;
+        } else if (blocked) {
+          return; // wall
+        }
+
+        if (limit == FieldOfVisionLimit::Included || !blocked) {
+          cells(curr) |= modification;
+        }
+      }
+    }
+
+    void computeBasicFov(Array2D<CellFlags, int>& cells, Vector2i pos, int maxRadius, FieldOfVisionLimit limit, CellFlags modification) {
+      RangeI xRange = cells.getColRange();
+      RangeI yRange = cells.getRowRange();
+
+      int maxRadius2 = maxRadius * maxRadius;
+
+      if (maxRadius > 0) {
+        xRange.lo = std::max(xRange.lo, pos.x - maxRadius);
+        xRange.hi = std::min(xRange.hi, pos.x + maxRadius);
+        yRange.lo = std::max(yRange.lo, pos.y - maxRadius);
+        yRange.hi = std::min(yRange.hi, pos.y + maxRadius);
+      } else {
+        maxRadius2 = 0;
       }
 
-      if (!blocked && !cells(curr).test(CellProperty::Transparent)) {
-        blocked = true;
-      } else if (blocked) {
-        return; // wall
+      cells(pos) |= modification;
+
+      for (auto x : xRange) {
+        castRay(cells, pos, { x, yRange.lo }, maxRadius2, limit, modification);
+        castRay(cells, pos, { x, yRange.hi }, maxRadius2, limit, modification);
       }
 
-      if (limit == FieldOfVisionLimit::Included || !blocked) {
-        cells(curr) |= modification;
+      for (auto y : yRange) {
+        castRay(cells, pos, { xRange.lo, y }, maxRadius2, limit, modification);
+        castRay(cells, pos, { xRange.hi, y }, maxRadius2, limit, modification);
+      }
+
+      if (limit == FieldOfVisionLimit::Included) {
+        postProcessMap(cells, pos, { xRange.lo, yRange.lo }, { -1, -1 });
+        postProcessMap(cells, pos, { xRange.hi, yRange.lo }, {  1, -1 });
+        postProcessMap(cells, pos, { xRange.lo, yRange.hi }, { -1,  1 });
+        postProcessMap(cells, pos, { xRange.hi, yRange.hi }, {  1,  1 });
       }
     }
-  }
 
-  static void computeBasicFov(Array2D<CellFlags, int>& cells, Vector2i pos, int maxRadius, FieldOfVisionLimit limit, CellFlags modification) {
-    RangeI xRange = cells.getColRange();
-    RangeI yRange = cells.getRowRange();
+    void computeGenericFieldOfVision(Array2D<CellFlags, int>& cells, Vector2i pos, int maxRadius, FieldOfVisionLimit limit, FieldOfVision algorithm, CellFlags modification) {
+      switch (algorithm) {
+        case FieldOfVision::Basic:
+          computeBasicFov(cells, pos, maxRadius, limit, modification);
+          break;
 
-    int maxRadius2 = maxRadius * maxRadius;
-
-    if (maxRadius > 0) {
-      xRange.lo = std::max(xRange.lo, pos.x - maxRadius);
-      xRange.hi = std::min(xRange.hi, pos.x + maxRadius);
-      yRange.lo = std::max(yRange.lo, pos.y - maxRadius);
-      yRange.hi = std::min(yRange.hi, pos.y + maxRadius);
-    } else {
-      maxRadius2 = 0;
+        default:
+          break;
+      }
     }
 
-    cells(pos) |= modification;
-
-    for (auto x : xRange) {
-      castRay(cells, pos, { x, yRange.lo }, maxRadius2, limit, modification);
-      castRay(cells, pos, { x, yRange.hi }, maxRadius2, limit, modification);
-    }
-
-    for (auto y : yRange) {
-      castRay(cells, pos, { xRange.lo, y }, maxRadius2, limit, modification);
-      castRay(cells, pos, { xRange.hi, y }, maxRadius2, limit, modification);
-    }
-
-    if (limit == FieldOfVisionLimit::Included) {
-      postProcessMap(cells, pos, { xRange.lo, yRange.lo }, { -1, -1 });
-      postProcessMap(cells, pos, { xRange.hi, yRange.lo }, {  1, -1 });
-      postProcessMap(cells, pos, { xRange.lo, yRange.hi }, { -1,  1 });
-      postProcessMap(cells, pos, { xRange.hi, yRange.hi }, {  1,  1 });
-    }
-  }
-
-  static void computeGenericFieldOfVision(Array2D<CellFlags, int>& cells, Vector2i pos, int maxRadius, FieldOfVisionLimit limit, FieldOfVision algorithm, CellFlags modification) {
-    switch (algorithm) {
-      case FieldOfVision::Basic:
-        computeBasicFov(cells, pos, maxRadius, limit, modification);
-        break;
-
-      default:
-        break;
-    }
-  }
+  } // anonymous namespace
 
   void SquareMap::computeFieldOfVision(Vector2i pos, int maxRadius, FieldOfVisionLimit limit, FieldOfVision algorithm) {
     computeGenericFieldOfVision(m_cells, pos, maxRadius, limit, algorithm, CellProperty::Visible | CellProperty::Explored);
@@ -236,12 +240,14 @@ inline namespace v1 {
 
   namespace {
 
+    // Dijkstra
+
     struct DijkstraHeapData {
       Vector2i position;
       float distance;
     };
 
-    static bool operator<(const DijkstraHeapData& lhs, const DijkstraHeapData& rhs) {
+    bool operator<(const DijkstraHeapData& lhs, const DijkstraHeapData& rhs) {
       return lhs.distance > rhs.distance;
     }
 
@@ -252,89 +258,88 @@ inline namespace v1 {
       Vector2i previous;
       DijkstraHeap::handle_type handle;
     };
-  }
 
-  static std::vector<Vector2i> computeDijkstra(const Array2D<CellFlags, int>& cells, Vector2i origin, Vector2i target, float diagonalCost) {
-    DijkstraResultData defaultResult;
-    defaultResult.distance = std::numeric_limits<float>::infinity();
-    defaultResult.previous = { -1, -1 };
+    std::vector<Vector2i> computeDijkstra(const Array2D<CellFlags, int>& cells, Vector2i origin, Vector2i target, float diagonalCost) {
+      DijkstraResultData defaultResult;
+      defaultResult.distance = std::numeric_limits<float>::infinity();
+      defaultResult.previous = { -1, -1 };
 
-    Array2D<DijkstraResultData, int> results(cells.getSize(), defaultResult);
+      Array2D<DijkstraResultData, int> results(cells.getSize(), defaultResult);
 
-    results(origin).distance = 0.0f;
+      results(origin).distance = 0.0f;
 
-    DijkstraHeap heap;
+      DijkstraHeap heap;
 
-    for (auto position : cells.getPositionRange()) {
-      const auto& cell = cells(position);
+      for (auto position : cells.getPositionRange()) {
+        const auto& cell = cells(position);
 
-      if (!cell.test(CellProperty::Walkable)) {
-        continue;
+        if (!cell.test(CellProperty::Walkable)) {
+          continue;
+        }
+
+        DijkstraHeapData data;
+        data.position = position;
+        data.distance = results(position).distance;
+
+        results(position).handle = heap.push(data);
       }
 
-      DijkstraHeapData data;
-      data.position = position;
-      data.distance = results(position).distance;
+      while (!heap.empty()) {
+        DijkstraHeapData data = heap.top();
+        heap.pop();
 
-      results(position).handle = heap.push(data);
+        cells.visit8Neighbors(data.position, [&](Vector2i position, const CellFlags& value) {
+          if (!value.test(CellProperty::Walkable)) {
+            return;
+          }
+
+          bool isDiagonal = (gf::manhattanDistance(data.position, position) == 2);
+
+          if (isDiagonal && diagonalCost == 0) {
+            return;
+          }
+
+          float newDistance = results(data.position).distance + (isDiagonal ? diagonalCost : 1.0f);
+
+          if (newDistance < results(position).distance) {
+            auto& result = results(position);
+            result.distance = newDistance;
+            result.previous = data.position;
+
+            assert((*result.handle).position == position);
+            (*result.handle).distance = newDistance;
+            heap.increase(result.handle);
+          }
+        });
+
+      }
+
+      std::vector<Vector2i> route;
+      Vector2i curr = target;
+
+      while (curr != origin) {
+        assert(curr.x != -1 && curr.y != -1);
+        route.push_back(curr);
+        curr = results(curr).previous;
+      }
+
+      route.push_back(origin);
+      std::reverse(route.begin(), route.end());
+
+      assert(!route.empty());
+
+      return route;
     }
 
-    while (!heap.empty()) {
-      DijkstraHeapData data = heap.top();
-      heap.pop();
 
-      cells.visit8Neighbors(data.position, [&](Vector2i position, const CellFlags& value) {
-        if (!value.test(CellProperty::Walkable)) {
-          return;
-        }
-
-        bool isDiagonal = (gf::manhattanDistance(data.position, position) == 2);
-
-        if (isDiagonal && diagonalCost == 0) {
-          return;
-        }
-
-        float newDistance = results(data.position).distance + (isDiagonal ? diagonalCost : 1.0f);
-
-        if (newDistance < results(position).distance) {
-          auto& result = results(position);
-          result.distance = newDistance;
-          result.previous = data.position;
-
-          assert((*result.handle).position == position);
-          (*result.handle).distance = newDistance;
-          heap.increase(result.handle);
-        }
-      });
-
-    }
-
-    std::vector<Vector2i> route;
-    Vector2i curr = target;
-
-    while (curr != origin) {
-      assert(curr.x != -1 && curr.y != -1);
-      route.push_back(curr);
-      curr = results(curr).previous;
-    }
-
-    route.push_back(origin);
-    std::reverse(route.begin(), route.end());
-
-    assert(!route.empty());
-
-    return route;
-  }
-
-
-  namespace {
+    // AStar
 
     struct AStarHeapData {
       Vector2i position;
       float priority;
     };
 
-    static bool operator<(const AStarHeapData& lhs, const AStarHeapData& rhs) {
+    bool operator<(const AStarHeapData& lhs, const AStarHeapData& rhs) {
       return lhs.priority > rhs.priority;
     }
 
@@ -353,101 +358,101 @@ inline namespace v1 {
       AStarHeap::handle_type handle;
     };
 
-  }
+    std::vector<Vector2i> computeAStar(const Array2D<CellFlags, int>& cells, Vector2i origin, Vector2i target, float diagonalCost) {
+      AStarResultData defaultResult;
+      defaultResult.distance = std::numeric_limits<float>::infinity();
+      defaultResult.previous = { -1, -1 };
+      defaultResult.state = AStarState::None;
 
-  static std::vector<Vector2i> computeAStar(const Array2D<CellFlags, int>& cells, Vector2i origin, Vector2i target, float diagonalCost) {
-    AStarResultData defaultResult;
-    defaultResult.distance = std::numeric_limits<float>::infinity();
-    defaultResult.previous = { -1, -1 };
-    defaultResult.state = AStarState::None;
+      Array2D<AStarResultData, int> results(cells.getSize(), defaultResult);
 
-    Array2D<AStarResultData, int> results(cells.getSize(), defaultResult);
+      results(origin).distance = 0.0f;
+      results(origin).state = AStarState::Open;
 
-    results(origin).distance = 0.0f;
-    results(origin).state = AStarState::Open;
+      AStarHeap heap;
+      results(origin).handle = heap.push({ origin, 0.0f });
 
-    AStarHeap heap;
-    results(origin).handle = heap.push({ origin, 0.0f });
-
-    // see http://theory.stanford.edu/~amitp/GameProgramming/Heuristics.html#heuristics-for-grid-maps
-    auto heuristic = [diagonalCost](Vector2i p0, Vector2i p1) {
-      if (diagonalCost == 0) {
-        return 1.0f * gf::manhattanDistance(p0, p1);
-      }
-
-      Vector2i d = gf::abs(p0 - p1);
-      return 1.0f * (d.x + d.y) + (diagonalCost - 2.0f) * std::min(d.x, d.y);
-    };
-
-    while (!heap.empty()) {
-      AStarHeapData data = heap.top();
-      heap.pop();
-
-      assert(results(data.position).state == AStarState::Open);
-
-      if (data.position == target) {
-        break;
-      }
-
-      results(data.position).state = AStarState::Closed;
-
-      cells.visit8Neighbors(data.position, [&](Vector2i position, const CellFlags& value) {
-        if (!value.test(CellProperty::Walkable)) {
-          return;
+      // see http://theory.stanford.edu/~amitp/GameProgramming/Heuristics.html#heuristics-for-grid-maps
+      auto heuristic = [diagonalCost](Vector2i p0, Vector2i p1) {
+        if (diagonalCost == 0) {
+          return 1.0f * gf::manhattanDistance(p0, p1);
         }
 
-        if (results(position).state == AStarState::Closed) {
-          return;
+        Vector2i d = gf::abs(p0 - p1);
+        return 1.0f * (d.x + d.y) + (diagonalCost - 2.0f) * std::min(d.x, d.y);
+      };
+
+      while (!heap.empty()) {
+        AStarHeapData data = heap.top();
+        heap.pop();
+
+        assert(results(data.position).state == AStarState::Open);
+
+        if (data.position == target) {
+          break;
         }
 
-        bool isDiagonal = (gf::manhattanDistance(data.position, position) == 2);
+        results(data.position).state = AStarState::Closed;
 
-        if (isDiagonal && diagonalCost == 0) {
-          return;
-        }
-
-        float newDistance = results(data.position).distance + (isDiagonal ? diagonalCost : 1.0f);
-
-        if (newDistance < results(position).distance) {
-          auto& result = results(position);
-          result.distance = newDistance;
-          result.previous = data.position;
-
-          float priority = newDistance + heuristic(position, target) * 1.001;
-
-          if (result.state == AStarState::Open) {
-            assert((*result.handle).position == position);
-
-            if ((*result.handle).priority != priority) {
-              (*result.handle).priority = priority;
-              heap.update(result.handle);
-            }
-          } else {
-            assert(result.state == AStarState::None);
-            result.handle = heap.push({ position, priority });
-            result.state = AStarState::Open;
+        cells.visit8Neighbors(data.position, [&](Vector2i position, const CellFlags& value) {
+          if (!value.test(CellProperty::Walkable)) {
+            return;
           }
-        }
-      });
 
+          if (results(position).state == AStarState::Closed) {
+            return;
+          }
+
+          bool isDiagonal = (gf::manhattanDistance(data.position, position) == 2);
+
+          if (isDiagonal && diagonalCost == 0) {
+            return;
+          }
+
+          float newDistance = results(data.position).distance + (isDiagonal ? diagonalCost : 1.0f);
+
+          if (newDistance < results(position).distance) {
+            auto& result = results(position);
+            result.distance = newDistance;
+            result.previous = data.position;
+
+            float priority = newDistance + heuristic(position, target) * 1.001;
+
+            if (result.state == AStarState::Open) {
+              assert((*result.handle).position == position);
+
+              if ((*result.handle).priority != priority) {
+                (*result.handle).priority = priority;
+                heap.update(result.handle);
+              }
+            } else {
+              assert(result.state == AStarState::None);
+              result.handle = heap.push({ position, priority });
+              result.state = AStarState::Open;
+            }
+          }
+        });
+
+      }
+
+      std::vector<Vector2i> route;
+      Vector2i curr = target;
+
+      while (curr != origin) {
+        assert(curr.x != -1 && curr.y != -1);
+        route.push_back(curr);
+        curr = results(curr).previous;
+      }
+
+      route.push_back(origin);
+      std::reverse(route.begin(), route.end());
+
+      assert(!route.empty());
+
+      return route;
     }
 
-    std::vector<Vector2i> route;
-    Vector2i curr = target;
-
-    while (curr != origin) {
-      assert(curr.x != -1 && curr.y != -1);
-      route.push_back(curr);
-      curr = results(curr).previous;
-    }
-
-    route.push_back(origin);
-    std::reverse(route.begin(), route.end());
-
-    assert(!route.empty());
-
-    return route;
-  }
+  } // anonymous namespace
 
 
   std::vector<Vector2i> SquareMap::computeRoute(Vector2i origin, Vector2i target, float diagonalCost, Route algorithm) {

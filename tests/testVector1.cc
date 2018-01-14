@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -24,9 +24,11 @@
 
 TEST(Vector1Test, Access) {
   gf::Vector<int, 1> vec;
+
   vec.data[0] = 42;
   EXPECT_EQ(42, vec.data[0]);
   EXPECT_EQ(42, vec[0]);
+
   vec[0] = 69;
   EXPECT_EQ(69, vec.data[0]);
   EXPECT_EQ(69, vec[0]);
@@ -43,7 +45,7 @@ TEST(Vector1Test, ValueCtor) {
 }
 
 TEST(Vector1Test, PointerCtor) {
-  int data[1] = { 42 };
+  const int data[1] = { 42 };
   gf::Vector<int, 1> vec(data);
   EXPECT_EQ(42, vec[0]);
 }
@@ -57,4 +59,33 @@ TEST(Vector1Test, CopyCtor) {
   gf::Vector<int, 1> original(42);
   gf::Vector<int, 1> vec = original;
   EXPECT_EQ(42, vec[0]);
+}
+
+TEST(Vector1Test, ZeroCtor) {
+  gf::Vector<int, 1> vec = gf::Zero;
+  EXPECT_EQ(0, vec[0]);
+}
+
+TEST(Vector1Test, RangeFor) {
+  gf::Vector<int, 1> vec(1);
+
+  int expected = 1;
+
+  for (int elem : vec) {
+    EXPECT_EQ(expected, elem);
+    ++expected;
+  }
+
+  EXPECT_EQ(expected, 2);
+}
+
+TEST(Vector1Test, Iterator) {
+  gf::Vector<int, 1> vec1(1);
+
+  EXPECT_EQ(std::distance(vec1.begin(), vec1.end()), 1);
+
+  const gf::Vector<int, 1> vec2(1);
+
+  EXPECT_EQ(std::distance(vec2.begin(), vec2.end()), 1);
+  EXPECT_EQ(std::distance(vec2.cbegin(), vec2.cend()), 1);
 }

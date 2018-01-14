@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -36,7 +36,7 @@ inline namespace v1 {
   : m_name(std::move(name))
   , m_type(Type::Instantaneous)
   {
-    
+
   }
 
   void Action::setContinuous() {
@@ -56,37 +56,37 @@ inline namespace v1 {
   }
 
   void Action::addKeycodeKeyControl(Keycode code) {
-    std::unique_ptr<Control> ptr(new KeycodeKeyControl(code));
+    auto ptr = std::make_unique<KeycodeKeyControl>(code);
     addControl(*ptr);
     m_ownedControls.push_back(std::move(ptr));
   }
 
   void Action::addScancodeKeyControl(Scancode code) {
-    std::unique_ptr<Control> ptr(new ScancodeKeyControl(code));
+    auto ptr = std::make_unique<ScancodeKeyControl>(code);
     addControl(*ptr);
     m_ownedControls.push_back(std::move(ptr));
   }
 
   void Action::addMouseButtonControl(MouseButton button) {
-    std::unique_ptr<Control> ptr(new MouseButtonControl(button));
+    auto ptr = std::make_unique<MouseButtonControl>(button);
     addControl(*ptr);
     m_ownedControls.push_back(std::move(ptr));
   }
 
   void Action::addGamepadAxisControl(GamepadId id, GamepadAxis axis, GamepadAxisDirection dir) {
-    std::unique_ptr<Control> ptr(new GamepadAxisControl(id, axis, dir));
+    auto ptr = std::make_unique<GamepadAxisControl>(id, axis, dir);
     addControl(*ptr);
     m_ownedControls.push_back(std::move(ptr));
   }
 
   void Action::addGamepadButtonControl(GamepadId id, GamepadButton button) {
-    std::unique_ptr<Control> ptr(new GamepadButtonControl(id, button));
+    auto ptr = std::make_unique<GamepadButtonControl>(id, button);
     addControl(*ptr);
     m_ownedControls.push_back(std::move(ptr));
   }
 
   void Action::addCloseControl() {
-    std::unique_ptr<Control> ptr(new CloseControl);
+    auto ptr = std::make_unique<CloseControl>();
     addControl(*ptr);
     m_ownedControls.push_back(std::move(ptr));
   }

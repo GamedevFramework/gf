@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -20,6 +20,7 @@
  */
 #include <gf/ColorRamp.h>
 
+#include <cassert>
 #include <utility>
 
 #include <gf/Color.h>
@@ -66,21 +67,15 @@ inline namespace v1 {
       return Color::White;
     }
 
-    Color4f c1, c2;
-    float t1 = 0.0;
-    float t2 = 0.0;
+    auto it = m_map.lower_bound(offset);
+    assert(it != m_map.end());
 
-    // not very optimal
-    for (auto value : m_map) {
-      if (value.first <= offset) {
-        t1 = value.first;
-        c1 = value.second;
-      } else {
-        t2 = value.first;
-        c2 = value.second;
-        break;
-      }
-    }
+    float t2 = it->first;
+    Color4f c2 = it->second;
+
+    --it;
+    float t1 = it->first;
+    Color4f c1 = it->second;
 
     return gf::lerp(c1, c2, (offset - t1) / (t2 - t1));
   }

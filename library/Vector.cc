@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -50,6 +50,30 @@ inline namespace v1 {
   template struct Vector<uint8_t, 3>;
   template struct Vector<uint8_t, 4>;
 #endif
+
+  static_assert(sizeof(Vector2f) == 2 * sizeof(float), "Vector size mismatch");
+  static_assert(sizeof(Vector3f) == 3 * sizeof(float), "Vector size mismatch");
+  static_assert(sizeof(Vector4f) == 4 * sizeof(float), "Vector size mismatch");
+
+  static_assert(sizeof(Vector2d) == 2 * sizeof(double), "Vector size mismatch");
+  static_assert(sizeof(Vector3d) == 3 * sizeof(double), "Vector size mismatch");
+  static_assert(sizeof(Vector4d) == 4 * sizeof(double), "Vector size mismatch");
+
+  static_assert(sizeof(Vector2i) == 2 * sizeof(int), "Vector size mismatch");
+  static_assert(sizeof(Vector3i) == 3 * sizeof(int), "Vector size mismatch");
+  static_assert(sizeof(Vector4i) == 4 * sizeof(int), "Vector size mismatch");
+
+  static_assert(sizeof(Vector2u) == 2 * sizeof(unsigned), "Vector size mismatch");
+  static_assert(sizeof(Vector3u) == 3 * sizeof(unsigned), "Vector size mismatch");
+  static_assert(sizeof(Vector4u) == 4 * sizeof(unsigned), "Vector size mismatch");
+
+  static_assert(sizeof(Vector2b) == 2 * sizeof(bool), "Vector size mismatch");
+  static_assert(sizeof(Vector3b) == 3 * sizeof(bool), "Vector size mismatch");
+  static_assert(sizeof(Vector4b) == 4 * sizeof(bool), "Vector size mismatch");
+
+  static_assert(sizeof(Color3u) == 3 * sizeof(uint8_t), "Vector size mismatch");
+  static_assert(sizeof(Color4u) == 4 * sizeof(uint8_t), "Vector size mismatch");
+
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

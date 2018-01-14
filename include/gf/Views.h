@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -176,7 +176,7 @@ inline namespace v1 {
      */
     explicit FillView(const RectF& rect)
     : AdaptativeView(rect)
-    , m_localSize(rect.size)
+    , m_localSize(rect.getSize())
     {
 
     }
@@ -239,7 +239,7 @@ inline namespace v1 {
      */
     explicit ExtendView(const RectF& rect)
     : AdaptativeView(rect)
-    , m_localSize(rect.size)
+    , m_localSize(rect.getSize())
     {
 
     }
@@ -304,7 +304,7 @@ inline namespace v1 {
      */
     explicit LockedView(const RectF& rect)
     : AdaptativeView(rect)
-    , m_localSize(rect.size)
+    , m_localSize(rect.getSize())
     , m_localViewport(0.0f, 0.0f, 1.0f, 1.0f)
     {
 

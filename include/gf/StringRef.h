@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -164,6 +164,19 @@ inline namespace v1 {
      */
     constexpr char operator[](std::size_t index) const {
       return m_data[index];
+    }
+
+    /**
+     * @brief Get a std::string
+     *
+     * @returns A string with the same data
+     */
+    std::string toString() const {
+      if (m_size == 0 || m_data == nullptr) {
+        return "";
+      }
+
+      return std::string(m_data, m_size);
     }
 
   private:

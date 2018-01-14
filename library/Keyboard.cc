@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -27,7 +27,7 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-#define SCANCODE_CHECK(GF_VAL, SDL_VAL) static_assert(static_cast<SDL_Scancode>(GF_VAL) == SDL_VAL, "Problem with " #SDL_VAL)
+#define SCANCODE_CHECK(GF_VAL, SDL_VAL) static_assert(static_cast<SDL_Scancode>(GF_VAL) == (SDL_VAL), "Problem with " #SDL_VAL)
 
   SCANCODE_CHECK(Scancode::Unknown, SDL_SCANCODE_UNKNOWN);
 
@@ -260,7 +260,7 @@ inline namespace v1 {
 
 #undef SCANCODE_CHECK
 
-#define KEYCODE_CHECK(GF_VAL, SDL_VAL) static_assert(static_cast<SDL_Keycode>(GF_VAL) == SDL_VAL, "Problem with " #SDL_VAL)
+#define KEYCODE_CHECK(GF_VAL, SDL_VAL) static_assert(static_cast<SDL_Keycode>(GF_VAL) == (SDL_VAL), "Problem with " #SDL_VAL)
 
   KEYCODE_CHECK(Keycode::Unknown, SDLK_UNKNOWN);
 
@@ -505,6 +505,14 @@ inline namespace v1 {
 
   Keycode Keyboard::getKeycodeFromName(const char *name) {
     return static_cast<Keycode>(SDL_GetKeyFromName(name));
+  }
+
+  Keycode Keyboard::localize(Scancode scancode) {
+    return static_cast<Keycode>(SDL_GetKeyFromScancode(static_cast<SDL_Scancode>(scancode)));
+  }
+
+  Scancode Keyboard::unlocalize(Keycode keycode) {
+    return static_cast<Scancode>(SDL_GetScancodeFromKey(static_cast<SDL_Keycode>(keycode)));
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

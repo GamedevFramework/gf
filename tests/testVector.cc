@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -38,20 +38,3 @@ TEST(VectorTest, ConversionFloatToInt) {
   EXPECT_EQ(69, vec[1]);
 }
 
-TEST(VectorTest, RangeFor) {
-  gf::Vector4i vec(1, 2, 3, 4);
-
-  int expected = 1;
-
-  for (int elem : vec.data) {
-    EXPECT_EQ(expected, elem);
-    ++expected;
-  }
-
-  expected = 1;
-
-  for (int elem : vec) {
-    EXPECT_EQ(expected, elem);
-    ++expected;
-  }
-}

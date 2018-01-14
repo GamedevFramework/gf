@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -33,7 +33,7 @@ inline namespace v1 {
 
   }
 
-  static const Time MaxElapsed = gf::seconds(0.5f);
+  static constexpr Time MaxElapsed = gf::seconds(0.5f);
 
   void FixedTimestepModel::update(Time time) {
     m_elapsed += time;

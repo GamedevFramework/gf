@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -112,13 +112,13 @@ inline namespace v1 {
   }
 
   bool PhysicsBody::collidesWith(const PhysicsBody& other, Penetration& p) const {
-    CircF circle = m_geometry.getBoundingCircle();
-    circle.center = gf::transform(m_transform, circle.center);
+    CircF boundingCircle = m_geometry.getBoundingCircle();
+    boundingCircle.center = gf::transform(m_transform, boundingCircle.center);
 
-    CircF otherCircle = other.m_geometry.getBoundingCircle();
-    otherCircle.center = gf::transform(other.m_transform, otherCircle.center);
+    CircF otherBoundingCircle = other.m_geometry.getBoundingCircle();
+    otherBoundingCircle.center = gf::transform(other.m_transform, otherBoundingCircle.center);
 
-    if (!circle.intersects(otherCircle)) {
+    if (!boundingCircle.intersects(otherBoundingCircle)) {
       return false;
     }
 
@@ -138,6 +138,7 @@ inline namespace v1 {
           }
         }
 
+        assert(false);
         break;
       }
 
@@ -156,6 +157,7 @@ inline namespace v1 {
           }
         }
 
+        assert(false);
         break;
       }
     }

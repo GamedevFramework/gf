@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -46,9 +46,7 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  RenderTarget::~RenderTarget() {
-
-  }
+  RenderTarget::~RenderTarget() = default;
 
   Region RenderTarget::getCanonicalScissorBox() {
     GLint box[4];
@@ -78,7 +76,11 @@ inline namespace v1 {
   }
 
   void RenderTarget::clear() {
+    Region saved = getCanonicalScissorBox();
+    Vector2i size = getSize();
+    setCanonicalScissorBox({ 0, 0, size.width, size.height });
     glCheck(glClear(GL_COLOR_BUFFER_BIT));
+    setCanonicalScissorBox(saved);
   }
 
   RangeF RenderTarget::getAliasedLineWidthRange() const {
@@ -94,69 +96,73 @@ inline namespace v1 {
   }
 
 
-  static GLenum getEnum(BlendEquation equation) {
-    switch (equation) {
-      case BlendEquation::Add:
-        return GL_FUNC_ADD;
-      case BlendEquation::Substract:
-        return GL_FUNC_SUBTRACT;
-      case BlendEquation::ReverseSubstract:
-        return GL_FUNC_REVERSE_SUBTRACT;
+  namespace {
+
+    GLenum getEnum(BlendEquation equation) {
+      switch (equation) {
+        case BlendEquation::Add:
+          return GL_FUNC_ADD;
+        case BlendEquation::Substract:
+          return GL_FUNC_SUBTRACT;
+        case BlendEquation::ReverseSubstract:
+          return GL_FUNC_REVERSE_SUBTRACT;
+      }
+
+      assert(false);
+      return GL_FUNC_ADD;
     }
 
-    assert(false);
-    return GL_FUNC_ADD;
-  }
+    GLenum getEnum(BlendFactor func) {
+      switch (func) {
+        case BlendFactor::Zero:
+          return GL_ZERO;
+        case BlendFactor::One:
+          return GL_ONE;
+        case BlendFactor::SrcColor:
+          return GL_SRC_COLOR;
+        case BlendFactor::OneMinusSrcColor:
+          return GL_ONE_MINUS_SRC_COLOR;
+        case BlendFactor::DstColor:
+          return GL_DST_COLOR;
+        case BlendFactor::OneMinusDstColor:
+          return GL_ONE_MINUS_DST_COLOR;
+        case BlendFactor::SrcAlpha:
+          return GL_SRC_ALPHA;
+        case BlendFactor::OneMinusSrcAlpha:
+          return GL_ONE_MINUS_SRC_ALPHA;
+        case BlendFactor::DstAlpha:
+          return GL_DST_ALPHA;
+        case BlendFactor::OneMinusDstAlpha:
+          return GL_ONE_MINUS_DST_ALPHA;
+      }
 
-  static GLenum getEnum(BlendFactor func) {
-    switch (func) {
-      case BlendFactor::Zero:
-        return GL_ZERO;
-      case BlendFactor::One:
-        return GL_ONE;
-      case BlendFactor::SrcColor:
-        return GL_SRC_COLOR;
-      case BlendFactor::OneMinusSrcColor:
-        return GL_ONE_MINUS_SRC_COLOR;
-      case BlendFactor::DstColor:
-        return GL_DST_COLOR;
-      case BlendFactor::OneMinusDstColor:
-        return GL_ONE_MINUS_DST_COLOR;
-      case BlendFactor::SrcAlpha:
-        return GL_SRC_ALPHA;
-      case BlendFactor::OneMinusSrcAlpha:
-        return GL_ONE_MINUS_SRC_ALPHA;
-      case BlendFactor::DstAlpha:
-        return GL_DST_ALPHA;
-      case BlendFactor::OneMinusDstAlpha:
-        return GL_ONE_MINUS_DST_ALPHA;
+      assert(false);
+      return GL_ZERO;
     }
 
-    assert(false);
-    return GL_ZERO;
-  }
+    GLenum getEnum(PrimitiveType type) {
+      switch (type) {
+        case PrimitiveType::Points:
+          return GL_POINTS;
+        case PrimitiveType::LineStrip:
+          return GL_LINE_STRIP;
+        case PrimitiveType::LineLoop:
+          return GL_LINE_LOOP;
+        case PrimitiveType::Lines:
+          return GL_LINES;
+        case PrimitiveType::TriangleStrip:
+          return GL_TRIANGLE_STRIP;
+        case PrimitiveType::TriangleFan:
+          return GL_TRIANGLE_FAN;
+        case PrimitiveType::Triangles:
+          return GL_TRIANGLES;
+      }
 
-  GLenum getEnum(PrimitiveType type) {
-    switch (type) {
-      case PrimitiveType::Points:
-        return GL_POINTS;
-      case PrimitiveType::LineStrip:
-        return GL_LINE_STRIP;
-      case PrimitiveType::LineLoop:
-        return GL_LINE_LOOP;
-      case PrimitiveType::Lines:
-        return GL_LINES;
-      case PrimitiveType::TriangleStrip:
-        return GL_TRIANGLE_STRIP;
-      case PrimitiveType::TriangleFan:
-        return GL_TRIANGLE_FAN;
-      case PrimitiveType::Triangles:
-        return GL_TRIANGLES;
+      assert(false);
+      return GL_POINTS;
     }
 
-    assert(false);
-    return GL_POINTS;
-  }
+  } // anonymous namespace
 
   void RenderTarget::draw(const Vertex *vertices, std::size_t count, PrimitiveType type, const RenderStates& states) {
     if (vertices == nullptr || count == 0) {

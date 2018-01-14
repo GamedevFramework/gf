@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -17,9 +17,6 @@
  * 2. Altered source versions must be plainly marked as such, and must not be
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
- *
- * Part of this file comes from SFML, with the same license:
- * Copyright (C) 2007-2015 Laurent Gomila (laurent@sfml-dev.org)
  */
 #ifndef GF_SPACE_TREE_H
 #define GF_SPACE_TREE_H
@@ -130,11 +127,29 @@ inline namespace v1 {
     }
 
     /**
+     * @brief Get the left child
+     *
+     * @returns The left child if it exists or `nullptr`
+     */
+    SpaceTree *getLeftChild() {
+      return m_left.get();
+    }
+
+    /**
      * @brief Get the right child
      *
      * @returns The right child if it exists or `nullptr`
      */
     const SpaceTree *getRightChild() const {
+      return m_right.get();
+    }
+
+    /**
+     * @brief Get the right child
+     *
+     * @returns The right child if it exists or `nullptr`
+     */
+    SpaceTree *getRightChild() {
       return m_right.get();
     }
 
@@ -146,6 +161,17 @@ inline namespace v1 {
      * @returns The father of the node
      */
     const SpaceTree *getFather() const {
+      return m_father;
+    }
+
+    /**
+     * @brief Get the father of the node
+     *
+     * The root of the tree has no father.
+     *
+     * @returns The father of the node
+     */
+    SpaceTree *getFather() {
       return m_father;
     }
 

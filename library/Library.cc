@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -20,9 +20,9 @@
  */
 #include <gf/Library.h>
 
+#include <atomic>
 #include <cassert>
 #include <cstdio>
-#include <atomic>
 
 #include <SDL.h>
 
@@ -41,11 +41,11 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  static std::atomic_int loaded{0};
+  static std::atomic_int g_loaded{0};
 
   Library::Library()
   {
-    if (loaded.fetch_add(1) == 0) { // we are the first
+    if (g_loaded.fetch_add(1) == 0) { // we are the first
       if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) != 0) {
         Log::error("Unable to initialize SDL: '%s'\n", SDL_GetError());
         return;
@@ -57,22 +57,22 @@ inline namespace v1 {
     }
   }
 
-  Library::Library(Library&& other)
+  Library::Library(Library&& other) noexcept
   {
     gf::unused(other);
 
-    loaded.fetch_add(1);
+    g_loaded.fetch_add(1);
   }
 
-  Library& Library::operator=(Library&& other) {
+  Library& Library::operator=(Library&& other) noexcept {
     gf::unused(other);
 
-    loaded.fetch_add(1);
+    g_loaded.fetch_add(1);
     return *this;
   }
 
   Library::~Library() {
-    if (loaded.fetch_sub(1) == 1) { // we are the last
+    if (g_loaded.fetch_sub(1) == 1) { // we are the last
       SDL_Quit();
     }
   }
@@ -85,57 +85,61 @@ inline namespace v1 {
     return version;
   }
 
-  static Library::Version getSDLCompiledVersion() {
-    SDL_version compiled;
-    SDL_VERSION(&compiled);
+  namespace {
 
-    Library::Version version;
-    version.major = compiled.major;
-    version.minor = compiled.minor;
-    version.patch = compiled.patch;
-    return version;
-  }
+    Library::Version getSDLCompiledVersion() {
+      SDL_version compiled;
+      SDL_VERSION(&compiled);
 
-  static Library::Version getSDLLinkedVersion() {
-    SDL_version linked;
-    SDL_GetVersion(&linked);
+      Library::Version version;
+      version.major = compiled.major;
+      version.minor = compiled.minor;
+      version.patch = compiled.patch;
+      return version;
+    }
 
-    Library::Version version;
-    version.major = linked.major;
-    version.minor = linked.minor;
-    version.patch = linked.patch;
-    return version;
-  }
+    Library::Version getSDLLinkedVersion() {
+      SDL_version linked;
+      SDL_GetVersion(&linked);
 
-  static Library::Version getFreeTypeCompiledVersion() {
-    Library::Version version;
-    version.major = FREETYPE_MAJOR;
-    version.minor = FREETYPE_MINOR;
-    version.patch = FREETYPE_PATCH;
-    return version;
-  }
+      Library::Version version;
+      version.major = linked.major;
+      version.minor = linked.minor;
+      version.patch = linked.patch;
+      return version;
+    }
 
-  static Library::Version getFreeTypeLinkedVersion() {
-    FT_Library library;
-    FT_Init_FreeType(&library);
-    FT_Int major, minor, patch;
-    FT_Library_Version(library, &major, &minor, &patch);
-    FT_Done_FreeType(library);
+    Library::Version getFreeTypeCompiledVersion() {
+      Library::Version version;
+      version.major = FREETYPE_MAJOR;
+      version.minor = FREETYPE_MINOR;
+      version.patch = FREETYPE_PATCH;
+      return version;
+    }
 
-    Library::Version version;
-    version.major = major;
-    version.minor = minor;
-    version.patch = patch;
-    return version;
-  }
+    Library::Version getFreeTypeLinkedVersion() {
+      FT_Library library;
+      FT_Init_FreeType(&library);
+      FT_Int major, minor, patch;
+      FT_Library_Version(library, &major, &minor, &patch);
+      FT_Done_FreeType(library);
 
-  static Library::Version getBoostVersion() {
-    Library::Version version;
-    version.major = BOOST_VERSION / 100000;
-    version.minor = BOOST_VERSION / 100 % 1000;
-    version.patch = BOOST_VERSION % 100;
-    return version;
-  }
+      Library::Version version;
+      version.major = major;
+      version.minor = minor;
+      version.patch = patch;
+      return version;
+    }
+
+    Library::Version getBoostVersion() {
+      Library::Version version;
+      version.major = BOOST_VERSION / 100000;
+      version.minor = BOOST_VERSION / 100 % 1000;
+      version.patch = BOOST_VERSION % 100;
+      return version;
+    }
+
+  } // anonymous namespace
 
   std::tuple<Library::Version, Library::Version> Library::getDependencyVersion(Dependency dep) {
     switch (dep) {
@@ -148,7 +152,7 @@ inline namespace v1 {
     }
 
     assert(false);
-    return std::make_tuple<Version,Version>({ 0, 0, 0}, { 0, 0, 0 });
+    return std::make_tuple<Version, Version>({ 0, 0, 0 }, { 0, 0, 0 });
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

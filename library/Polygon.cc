@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -39,6 +39,10 @@ inline namespace v1 {
   : m_points(points.begin(), points.end())
   {
 
+  }
+
+  bool Polygon::isEmpty() const {
+    return m_points.empty();
   }
 
   void Polygon::addPoint(Vector2f point) {
@@ -107,17 +111,21 @@ inline namespace v1 {
     return true;
   }
 
-  // https://en.wikipedia.org/wiki/Shoelace_formula
-  static float getSignedArea(const std::vector<Vector2f>& points) {
-    float area = 0.0f;
+  namespace {
 
-    for (std::size_t i = 0; i < points.size() - 1; ++i) {
-      area += gf::cross(points[i], points[i + 1]);
+    // https://en.wikipedia.org/wiki/Shoelace_formula
+    float getSignedArea(const std::vector<Vector2f>& points) {
+      float area = 0.0f;
+
+      for (std::size_t i = 0; i < points.size() - 1; ++i) {
+        area += gf::cross(points[i], points[i + 1]);
+      }
+
+      area += gf::cross(points.back(), points.front());
+      return area;
     }
 
-    area += gf::cross(points.back(), points.front());
-    return area;
-  }
+  } // namespace
 
   Winding Polygon::getWinding() const {
     return getSignedArea(m_points) > 0 ? Winding::Clockwise : Winding::Counterclockwise;

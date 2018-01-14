@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -83,20 +83,18 @@ int main() {
   triangle[2].position = { -50.0f, -50.0f };
   triangle[2].color = gf::Color::Yellow;
 
-  gf::RectangleShape background(world.size);
-  background.setPosition(world.position);
+  gf::RectangleShape background(world);
   background.setColor(gf::Color::White);
 
-  gf::RectangleShape extendedBackground(extendedWorld.size);
-  extendedBackground.setPosition(extendedWorld.position);
+  gf::RectangleShape extendedBackground(extendedWorld);
   extendedBackground.setColor(gf::Color::Gray());
 
   gf::RectangleShape hud({ 64.0f, 64.0f });
   hud.setPosition({ 10.0f, 10.0f });
   hud.setColor(gf::Color::Red);
 
-  gf::RectangleShape frame(miniViewport.size * ScreenSize);
-  frame.setPosition(miniViewport.position * ScreenSize);
+  gf::RectangleShape frame(miniViewport.getSize() * ScreenSize);
+  frame.setPosition(miniViewport.getPosition() * ScreenSize);
   frame.setColor(gf::Color::Transparent);
   frame.setOutlineColor(gf::Color::Red);
   frame.setOutlineThickness(2.0f);
@@ -190,8 +188,8 @@ int main() {
     // draw hud and frame
 
     gf::RectI viewport = renderer.getViewport(*currentView);
-    frame.setPosition(viewport.position);
-    frame.setSize(viewport.size);
+    frame.setPosition(viewport.getPosition());
+    frame.setSize(viewport.getSize());
 
     renderer.setView(screenView);
     renderer.draw(frame);

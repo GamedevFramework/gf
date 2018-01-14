@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -17,14 +17,10 @@
  * 2. Altered source versions must be plainly marked as such, and must not be
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
- *
- * Part of this file comes from SFML, with the same license:
- * Copyright (C) 2007-2015 Laurent Gomila (laurent@sfml-dev.org)
  */
 #include <gf/SpaceTree.h>
 
 #include <cassert>
-
 #include <queue>
 #include <stack>
 
@@ -73,8 +69,8 @@ inline namespace v1 {
       int height = random.computeUniformInteger(minSize.height, m_area.height - minSize.height);
       m_position = m_area.top + height;
 
-      m_left = std::unique_ptr<SpaceTree>(new SpaceTree({ m_area.left, m_area.top, m_area.width, height }));
-      m_right = std::unique_ptr<SpaceTree>(new SpaceTree({ m_area.left, m_position, m_area.width, m_area.height - height }));
+      m_left = std::make_unique<SpaceTree>(gf::RectI(m_area.left, m_area.top, m_area.width, height));
+      m_right = std::make_unique<SpaceTree>(gf::RectI(m_area.left, m_position, m_area.width, m_area.height - height));
     } else {
       assert(m_split == Split::Vertical);
 
@@ -87,8 +83,8 @@ inline namespace v1 {
       int width = random.computeUniformInteger(minSize.width, m_area.width - minSize.width);
       m_position = m_area.left + width;
 
-      m_left = std::unique_ptr<SpaceTree>(new SpaceTree({ m_area.left, m_area.top, width, m_area.height }));
-      m_right = std::unique_ptr<SpaceTree>(new SpaceTree({ m_position, m_area.top, m_area.width - width, m_area.height }));
+      m_left = std::make_unique<SpaceTree>(gf::RectI(m_area.left, m_area.top, width, m_area.height));
+      m_right = std::make_unique<SpaceTree>(gf::RectI(m_position, m_area.top, m_area.width - width, m_area.height));
     }
 
     m_left->m_father = m_right->m_father = this;

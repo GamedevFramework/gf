@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -42,26 +42,30 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  static void lower(std::string& str) {
-    for (char& c : str) {
-      c = std::tolower(c, std::locale::classic());
+  namespace {
+
+    void lower(std::string& str) {
+      for (char& c : str) {
+        c = std::tolower(c, std::locale::classic());
+      }
     }
-  }
 
-  static int callbackRead(void *user,char *data,int size) {
-    InputStream *stream = static_cast<InputStream *>(user);
-    return static_cast<int>(stream->read(data, size));
-  }
+    int callbackRead(void *user,char *data,int size) {
+      InputStream *stream = static_cast<InputStream *>(user);
+      return static_cast<int>(stream->read(data, size));
+    }
 
-  static void callbackSkip(void *user, int n) {
-    InputStream *stream = static_cast<InputStream *>(user);
-    stream->seek(stream->tell() + n);
-  }
+    void callbackSkip(void *user, int n) {
+      InputStream *stream = static_cast<InputStream *>(user);
+      stream->seek(stream->tell() + n);
+    }
 
-  static int callbackEof(void *user) {
-    InputStream *stream = static_cast<InputStream *>(user);
-    return stream->tell() >= static_cast<long>(stream->getSize());
-  }
+    int callbackEof(void *user) {
+      InputStream *stream = static_cast<InputStream *>(user);
+      return stream->tell() >= static_cast<long>(stream->getSize());
+    }
+
+  } // anonymous namespace
 
   Image::Image()
   : m_size{0, 0}
@@ -83,7 +87,7 @@ inline namespace v1 {
 
     for (unsigned y = 0; y < size.height; ++y) {
       for (unsigned x = 0; x < size.width; ++x) {
-        std::copy_n(color.data, 4, ptr);
+        std::copy_n(color.begin(), 4, ptr);
         ptr += 4;
       }
     }

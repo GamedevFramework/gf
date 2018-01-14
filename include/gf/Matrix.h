@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -26,6 +26,7 @@
 
 #include "Portability.h"
 #include "Vector.h"
+#include "Types.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -82,11 +83,39 @@ inline namespace v1 {
      */
     Matrix() = default;
 
+    constexpr Matrix(ZeroType) noexcept
+    {
+      zero();
+    }
+
     /**
      * @brief Constructor that fills the matrix with a value.
      */
-    explicit Matrix(T val) {
+    explicit Matrix(T val) noexcept
+    {
       std::fill_n(data, ROWS * COLS, val);
+    }
+
+    explicit Matrix(const T *array)
+    {
+      std::copy_n(array, ROWS * COLS, data);
+    }
+
+    T operator()(std::size_t row, std::size_t col) const {
+      return grid[row][col];
+    }
+
+    T& operator()(std::size_t row, std::size_t col) {
+      return grid[row][col];
+    }
+
+    /**
+     * @brief Zero out the matrix
+     */
+    constexpr void zero() noexcept {
+      for (std::size_t i = 0; i < ROWS * COLS; ++i) {
+        data[i] = T{};
+      }
     }
 
     /**
@@ -137,31 +166,89 @@ inline namespace v1 {
      */
     Matrix() = default;
 
-    /**
-     * @brief Constructor that takes all the elements
-     *
-     * @param xx The element in the first row and first column
-     * @param xy The element in the first row and second column
-     * @param yx The element in the second row and first column
-     * @param yy The element in the second row and second column
-     */
-    constexpr Matrix(T xx, T xy, T yx, T yy)
-    : data{xx, xy, yx, yy}
+    constexpr Matrix(ZeroType) noexcept
+    {
+      zero();
+    }
+
+    explicit constexpr Matrix(T val) noexcept
+    : m11(val), m12(val)
+    , m21(val), m22(val)
+    {
+
+    }
+
+    explicit constexpr Matrix(const T *array)
+    : m11(array[0]), m12(array[1])
+    , m21(array[2]), m22(array[3])
     {
 
     }
 
     /**
-     * An anonymous union to handle the various representations
+     * @brief Constructor that takes all the elements
+     *
+     * @param e11 The element in the first row and first column
+     * @param e12 The element in the first row and second column
+     * @param e21 The element in the second row and first column
+     * @param e22 The element in the second row and second column
      */
-    union {
-      T grid[2][2]; ///< Grid representation
-      T data[4]; ///< Array representation
-      struct {
-        T xx, xy;
-        T yx, yy;
+    constexpr Matrix(T e11, T e12, T e21, T e22) noexcept
+    : m11(e11), m12(e12)
+    , m21(e21), m22(e22)
+    {
+
+    }
+
+    const T *getData() const noexcept {
+      return &m11;
+    }
+
+    T *getData() noexcept {
+      return &m11;
+    }
+
+    T operator()(std::size_t row, std::size_t col) const {
+      const T *grid[Rows][Cols] = {
+        { &m11, &m12 },
+        { &m21, &m22 }
       };
+      return *grid[row][col];
+    }
+
+    T& operator()(std::size_t row, std::size_t col) {
+      T *grid[Rows][Cols] = {
+        { &m11, &m12 },
+        { &m21, &m22 }
+      };
+      return *grid[row][col];
+    }
+
+    constexpr void zero() noexcept {
+      m11 = m12 = T{};
+      m21 = m22 = T{};
+    }
+
+    union {
+      T xx;
+      T m11;
     };
+
+    union {
+      T xy;
+      T m12;
+    };
+
+    union {
+      T yx;
+      T m21;
+    };
+
+    union {
+      T yy;
+      T m22;
+    };
+
   };
 
   /**
@@ -203,37 +290,125 @@ inline namespace v1 {
      */
     Matrix() = default;
 
-    /**
-     * @brief Constructor that takes all the elements
-     *
-     * @param xx The element in the first row and first column
-     * @param xy The element in the first row and second column
-     * @param xz The element in the first row and third column
-     * @param yx The element in the second row and first column
-     * @param yy The element in the second row and second column
-     * @param yz The element in the second row and third column
-     * @param zx The element in the third row and first column
-     * @param zy The element in the third row and second column
-     * @param zz The element in the third row and third column
-     */
-    constexpr Matrix(T xx, T xy, T xz, T yx, T yy, T yz, T zx, T zy, T zz)
-    : data{xx, xy, xz, yx, yy, yz, zx, zy, zz}
+    constexpr Matrix(ZeroType) noexcept
+    {
+      zero();
+    }
+
+    explicit constexpr Matrix(T val) noexcept
+    : m11(val), m12(val), m13(val)
+    , m21(val), m22(val), m23(val)
+    , m31(val), m32(val), m33(val)
+    {
+
+    }
+
+    explicit constexpr Matrix(const T *array)
+    : m11(array[0]), m12(array[1]), m13(array[2])
+    , m21(array[3]), m22(array[4]), m23(array[5])
+    , m31(array[6]), m32(array[7]), m33(array[8])
     {
 
     }
 
     /**
-     * An anonymous union to handle the various representations
+     * @brief Constructor that takes all the elements
+     *
+     * @param e11 The element in the first row and first column
+     * @param e12 The element in the first row and second column
+     * @param e13 The element in the first row and third column
+     * @param e21 The element in the second row and first column
+     * @param e22 The element in the second row and second column
+     * @param e23 The element in the second row and third column
+     * @param e31 The element in the third row and first column
+     * @param e32 The element in the third row and second column
+     * @param e33 The element in the third row and third column
      */
-    union {
-      T grid[3][3]; ///< Grid representation
-      T data[9]; ///< Array representation
-      struct {
-        T xx, xy, xz;
-        T yx, yy, yz;
-        T zx, zy, zz;
+    constexpr Matrix(T e11, T e12, T e13, T e21, T e22, T e23, T e31, T e32, T e33) noexcept
+    : m11(e11), m12(e12), m13(e13)
+    , m21(e21), m22(e22), m23(e23)
+    , m31(e31), m32(e32), m33(e33)
+    {
+
+    }
+
+    const T *getData() const noexcept {
+      return &m11;
+    }
+
+    T *getData() noexcept {
+      return &m11;
+    }
+
+    T operator()(std::size_t row, std::size_t col) const {
+      const T *grid[Rows][Cols] = {
+        { &m11, &m12, &m13 },
+        { &m21, &m22, &m23 },
+        { &m31, &m32, &m33 }
       };
+      return *grid[row][col];
+    }
+
+    T& operator()(std::size_t row, std::size_t col) {
+      T *grid[Rows][Cols] = {
+        { &m11, &m12, &m13 },
+        { &m21, &m22, &m23 },
+        { &m31, &m32, &m33 }
+      };
+      return *grid[row][col];
+    }
+
+    constexpr void zero() noexcept {
+      m11 = m12 = m13 = T{};
+      m21 = m22 = m23 = T{};
+      m31 = m32 = m33 = T{};
+    }
+
+    union {
+      T xx;
+      T m11;
     };
+
+    union {
+      T xy;
+      T m12;
+    };
+
+    union {
+      T xz;
+      T m13;
+    };
+
+    union {
+      T yx;
+      T m21;
+    };
+
+    union {
+      T yy;
+      T m22;
+    };
+
+    union {
+      T yz;
+      T m23;
+    };
+
+    union {
+      T zx;
+      T m31;
+    };
+
+    union {
+      T zy;
+      T m32;
+    };
+
+    union {
+      T zz;
+      T m33;
+    };
+
   };
 
   /**
@@ -269,44 +444,177 @@ inline namespace v1 {
     static constexpr std::size_t Cols = 4;
 
     /**
-     * @brief Constructor that takes all the elements
-     *
-     * @param xx The element in the first row and first column
-     * @param xy The element in the first row and second column
-     * @param xz The element in the first row and third column
-     * @param xw The element in the first row and fourth column
-     * @param yx The element in the second row and first column
-     * @param yy The element in the second row and second column
-     * @param yz The element in the second row and third column
-     * @param yw The element in the second row and fourth column
-     * @param zx The element in the third row and first column
-     * @param zy The element in the third row and second column
-     * @param zz The element in the third row and third column
-     * @param zw The element in the third row and fourth column
-     * @param wx The element in the fourth row and first column
-     * @param wy The element in the fourth row and second column
-     * @param wz The element in the fourth row and third column
-     * @param ww The element in the fourth row and fourth column
+     * @brief Default constructor
      */
-    constexpr Matrix(T xx, T xy, T xz, T xw, T yx, T yy, T yz, T yw, T zx, T zy, T zz, T zw, T wx, T wy, T wz, T ww)
-    : data{xx, xy, xz, xw, yx, yy, yz, yw, zx, zy, zz, zw, wx, wy, wz, ww}
+    Matrix() = default;
+
+    constexpr Matrix(ZeroType) noexcept
+    {
+      zero();
+    }
+
+    explicit constexpr Matrix(T val) noexcept
+    : m11(val), m12(val), m13(val), m14(val)
+    , m21(val), m22(val), m23(val), m24(val)
+    , m31(val), m32(val), m33(val), m34(val)
+    , m41(val), m42(val), m43(val), m44(val)
+    {
+
+    }
+
+    explicit constexpr Matrix(const T *array)
+    : m11(array[ 0]), m12(array[ 1]), m13(array[ 2]), m14(array[ 3])
+    , m21(array[ 4]), m22(array[ 5]), m23(array[ 6]), m24(array[ 7])
+    , m31(array[ 8]), m32(array[ 9]), m33(array[10]), m34(array[11])
+    , m41(array[12]), m42(array[13]), m43(array[14]), m44(array[15])
     {
 
     }
 
     /**
-     * An anonymous union to handle the various representations
+     * @brief Constructor that takes all the elements
+     *
+     * @param e11 The element in the first row and first column
+     * @param e12 The element in the first row and second column
+     * @param e13 The element in the first row and third column
+     * @param e14 The element in the first row and fourth column
+     * @param e21 The element in the second row and first column
+     * @param e22 The element in the second row and second column
+     * @param e23 The element in the second row and third column
+     * @param e24 The element in the second row and fourth column
+     * @param e31 The element in the third row and first column
+     * @param e32 The element in the third row and second column
+     * @param e33 The element in the third row and third column
+     * @param e34 The element in the third row and fourth column
+     * @param e41 The element in the fourth row and first column
+     * @param e42 The element in the fourth row and second column
+     * @param e43 The element in the fourth row and third column
+     * @param e44 The element in the fourth row and fourth column
      */
-    union {
-      T grid[4][4]; ///< Grid representation
-      T data[16]; ///< Array representation
-      struct {
-        T xx, xy, xz, xw;
-        T yx, yy, yz, yw;
-        T zx, zy, zz, zw;
-        T wx, wy, wz, ww;
+    constexpr Matrix(T e11, T e12, T e13, T e14, T e21, T e22, T e23, T e24, T e31, T e32, T e33, T e34, T e41, T e42, T e43, T e44) noexcept
+    : m11(e11), m12(e12), m13(e13), m14(e14)
+    , m21(e21), m22(e22), m23(e23), m24(e24)
+    , m31(e31), m32(e32), m33(e33), m34(e34)
+    , m41(e41), m42(e42), m43(e43), m44(e44)
+    {
+
+    }
+
+    const T *getData() const noexcept {
+      return &m11;
+    }
+
+    T *getData() noexcept {
+      return &m11;
+    }
+
+    T operator()(std::size_t row, std::size_t col) const {
+      const T *grid[Rows][Cols] = {
+        { &m11, &m12, &m13, &m14 },
+        { &m21, &m22, &m23, &m24 },
+        { &m31, &m32, &m33, &m34 },
+        { &m41, &m42, &m43, &m44 }
       };
+      return *grid[row][col];
+    }
+
+    T& operator()(std::size_t row, std::size_t col) {
+      T *grid[Rows][Cols] = {
+        { &m11, &m12, &m13, &m14 },
+        { &m21, &m22, &m23, &m24 },
+        { &m31, &m32, &m33, &m34 },
+        { &m41, &m42, &m43, &m44 }
+      };
+      return *grid[row][col];
+    }
+
+    constexpr void zero() noexcept {
+      m11 = m12 = m13 = m14 = T{};
+      m21 = m22 = m23 = m24 = T{};
+      m31 = m32 = m33 = m34 = T{};
+      m41 = m42 = m43 = m44 = T{};
+    }
+
+    union {
+      T xx;
+      T m11;
     };
+
+    union {
+      T xy;
+      T m12;
+    };
+
+    union {
+      T xz;
+      T m13;
+    };
+
+    union {
+      T xw;
+      T m14;
+    };
+
+    union {
+      T yx;
+      T m21;
+    };
+
+    union {
+      T yy;
+      T m22;
+    };
+
+    union {
+      T yz;
+      T m23;
+    };
+
+    union {
+      T yw;
+      T m24;
+    };
+
+    union {
+      T zx;
+      T m31;
+    };
+
+    union {
+      T zy;
+      T m32;
+    };
+
+    union {
+      T zz;
+      T m33;
+    };
+
+    union {
+      T zw;
+      T m34;
+    };
+
+    union {
+      T wx;
+      T m41;
+    };
+
+    union {
+      T wy;
+      T m42;
+    };
+
+    union {
+      T wz;
+      T m43;
+    };
+
+    union {
+      T ww;
+      T m44;
+    };
+
   };
 
   /**
@@ -349,11 +657,11 @@ inline namespace v1 {
    * @brief Equality operator between two matrices
    */
   template<typename T, std::size_t ROWS, std::size_t COLS>
-  inline
+  constexpr
   bool operator==(const Matrix<T, ROWS, COLS>& lhs, const Matrix<T, ROWS, COLS>& rhs) {
     for (std::size_t i = 0; i < ROWS; ++i) {
       for (std::size_t j = 0; j < COLS; ++j) {
-        if (lhs.grid[i][j] != rhs.grid[i][j]) {
+        if (lhs(i,j) != rhs(i,j)) {
           return false;
         }
       }
@@ -367,7 +675,7 @@ inline namespace v1 {
    * @brief Inequality operator between two matrices
    */
   template<typename T, std::size_t ROWS, std::size_t COLS>
-  inline
+  constexpr
   bool operator!=(const Matrix<T, ROWS, COLS>& lhs, const Matrix<T, ROWS, COLS>& rhs) {
     return !(lhs == rhs);
   }
@@ -381,13 +689,13 @@ inline namespace v1 {
    * @brief Component-wise unary minus
    */
   template<typename T, std::size_t ROWS, std::size_t COLS>
-  inline
+  constexpr
   Matrix<T, ROWS, COLS> operator-(const Matrix<T, ROWS, COLS>& val) {
-    Matrix<T, ROWS, COLS> out;
+    Matrix<T, ROWS, COLS> out = gf::Zero;
 
     for (std::size_t i = 0; i < ROWS; ++i) {
       for (std::size_t j = 0; j < COLS; ++j) {
-        out.grid[i][j] = - val.grid[i][j];
+        out(i,j) = - val(i,j);
       }
     }
 
@@ -403,13 +711,13 @@ inline namespace v1 {
    * @brief Component-wise addition
    */
   template<typename T, std::size_t ROWS, std::size_t COLS>
-  inline
+  constexpr
   Matrix<T, ROWS, COLS> operator+(const Matrix<T, ROWS, COLS>& lhs, const Matrix<T, ROWS, COLS>& rhs) {
-    Matrix<T, ROWS, COLS> out;
+    Matrix<T, ROWS, COLS> out = gf::Zero;
 
     for (std::size_t i = 0; i < ROWS; ++i) {
       for (std::size_t j = 0; j < COLS; ++j) {
-        out.grid[i][j] = lhs.grid[i][j] + rhs.grid[i][j];
+        out(i,j) = lhs(i,j) + rhs(i,j);
       }
     }
 
@@ -421,11 +729,11 @@ inline namespace v1 {
    * @brief Component-wise addition and assignment
    */
   template<typename T, std::size_t ROWS, std::size_t COLS>
-  inline
+  constexpr
   Matrix<T, ROWS, COLS>& operator+=(Matrix<T, ROWS, COLS>& lhs, const Matrix<T, ROWS, COLS>& rhs) {
     for (std::size_t i = 0; i < ROWS; ++i) {
       for (std::size_t j = 0; j < COLS; ++j) {
-        lhs.grid[i][j] += rhs.grid[i][j];
+        lhs(i,j) += rhs(i,j);
       }
     }
 
@@ -438,13 +746,13 @@ inline namespace v1 {
    * @brief Component-wise substraction
    */
   template<typename T, std::size_t ROWS, std::size_t COLS>
-  inline
+  constexpr
   Matrix<T, ROWS, COLS> operator-(const Matrix<T, ROWS, COLS>& lhs, const Matrix<T, ROWS, COLS>& rhs) {
-    Matrix<T, ROWS, COLS> out;
+    Matrix<T, ROWS, COLS> out = gf::Zero;
 
     for (std::size_t i = 0; i < ROWS; ++i) {
       for (std::size_t j = 0; j < COLS; ++j) {
-        out.grid[i][j] = lhs.grid[i][j] - rhs.grid[i][j];
+        out(i,j) = lhs(i,j) - rhs(i,j);
       }
     }
 
@@ -456,11 +764,11 @@ inline namespace v1 {
    * @brief Component-wise substraction and assignment
    */
   template<typename T, std::size_t ROWS, std::size_t COLS>
-  inline
+  constexpr
   Matrix<T, ROWS, COLS>& operator-=(Matrix<T, ROWS, COLS>& lhs, const Matrix<T, ROWS, COLS>& rhs) {
     for (std::size_t i = 0; i < ROWS; ++i) {
       for (std::size_t j = 0; j < COLS; ++j) {
-        lhs.grid[i][j] -= rhs.grid[i][j];
+        lhs(i,j) -= rhs(i,j);
       }
     }
 
@@ -476,13 +784,13 @@ inline namespace v1 {
    * @brief Right scalar multiplication
    */
   template<typename T, std::size_t ROWS, std::size_t COLS>
-  inline
+  constexpr
   Matrix<T, ROWS, COLS> operator*(const Matrix<T, ROWS, COLS>& lhs, T rhs) {
-    Matrix<T, ROWS, COLS> out;
+    Matrix<T, ROWS, COLS> out = gf::Zero;
 
     for (std::size_t i = 0; i < ROWS; ++i) {
       for (std::size_t j = 0; j < COLS; ++j) {
-        out.grid[i][j] = lhs.grid[i][j] * rhs;
+        out(i,j) = lhs(i,j) * rhs;
       }
     }
 
@@ -494,11 +802,11 @@ inline namespace v1 {
    * @brief Right scalar multiplication and assignment
    */
   template<typename T, std::size_t ROWS, std::size_t COLS>
-  inline
+  constexpr
   Matrix<T, ROWS, COLS>& operator*=(Matrix<T, ROWS, COLS>& lhs, T rhs) {
     for (std::size_t i = 0; i < ROWS; ++i) {
       for (std::size_t j = 0; j < COLS; ++j) {
-        lhs.grid[i][j] *= rhs;
+        lhs(i,j) *= rhs;
       }
     }
 
@@ -510,13 +818,13 @@ inline namespace v1 {
    * @brief Left scalar multiplication
    */
   template<typename T, std::size_t ROWS, std::size_t COLS>
-  inline
+  constexpr
   Matrix<T, ROWS, COLS> operator*(T lhs, const Matrix<T, ROWS, COLS>& rhs) {
-    Matrix<T, ROWS, COLS> out;
+    Matrix<T, ROWS, COLS> out = gf::Zero;
 
     for (std::size_t i = 0; i < ROWS; ++i) {
       for (std::size_t j = 0; j < COLS; ++j) {
-        out.grid[i][j] = lhs * rhs.grid[i][j];
+        out(i,j) = lhs * rhs(i,j);
       }
     }
 
@@ -528,13 +836,13 @@ inline namespace v1 {
    * @brief Right scalar division
    */
   template<typename T, std::size_t ROWS, std::size_t COLS>
-  inline
+  constexpr
   Matrix<T, ROWS, COLS> operator/(const Matrix<T, ROWS, COLS>& lhs, T rhs) {
-    Matrix<T, ROWS, COLS> out;
+    Matrix<T, ROWS, COLS> out = gf::Zero;
 
     for (std::size_t i = 0; i < ROWS; ++i) {
       for (std::size_t j = 0; j < COLS; ++j) {
-        out.grid[i][j] = lhs.grid[i][j] / rhs;
+        out(i,j) = lhs(i,j) / rhs;
       }
     }
 
@@ -546,11 +854,11 @@ inline namespace v1 {
    * @brief Right scalar division and assignment
    */
   template<typename T, std::size_t ROWS, std::size_t COLS>
-  inline
+  constexpr
   Matrix<T, ROWS, COLS>& operator/=(Matrix<T, ROWS, COLS>& lhs, T rhs) {
     for (std::size_t i = 0; i < ROWS; ++i) {
       for (std::size_t j = 0; j < COLS; ++j) {
-        lhs.grid[i][j] /= rhs;
+        lhs(i,j) /= rhs;
       }
     }
 
@@ -562,18 +870,18 @@ inline namespace v1 {
    * @brief Matrix-vector multiplication
    */
   template<typename T, std::size_t S1, std::size_t S2>
-  inline
+  constexpr
   Vector<T, S1> operator*(const Matrix<T, S1, S2>& lhs, const Vector<T, S2>& rhs) {
-    Vector<T, S1> out;
+    Vector<T, S1> out = gf::Zero;
 
     for (std::size_t i = 0; i < S1; ++i) {
       T val{0};
 
       for (std::size_t j = 0; j < S2; ++j) {
-        val += lhs.grid[i][j] * rhs.data[j];
+        val += lhs(i,j) * rhs[j];
       }
 
-      out.data[i] = val;
+      out[i] = val;
     }
 
     return out;
@@ -584,18 +892,18 @@ inline namespace v1 {
    * @brief Vector-matrix multiplication
    */
   template<typename T, std::size_t S1, std::size_t S2>
-  inline
+  constexpr
   Vector<T, S2> operator*(const Vector<T, S1>& lhs, const Matrix<T, S1, S2>& rhs) {
-    Vector<T, S2> out;
+    Vector<T, S2> out = gf::Zero;
 
     for (std::size_t j = 0; j < S2; ++j) {
       T val{0};
 
       for (std::size_t i = 0; i < S1; ++i) {
-        val += lhs.data[i] * rhs.grid[i][j];
+        val += lhs[i] * rhs(i,j);
       }
 
-      out.data[j] = val;
+      out[j] = val;
     }
 
     return out;
@@ -607,19 +915,19 @@ inline namespace v1 {
    * @brief Matrix-matrix multiplication
    */
   template<typename T, std::size_t S1, std::size_t S2, std::size_t S3>
-  inline
+  constexpr
   Matrix<T, S1, S3> operator*(const Matrix<T, S1, S2>& lhs, const Matrix<T, S2, S3>& rhs) {
-    Matrix<T, S1, S3> out;
+    Matrix<T, S1, S3> out = gf::Zero;
 
     for (std::size_t i = 0; i < S1; ++i) {
       for (std::size_t j = 0; j < S3; ++j) {
         T val{0};
 
         for (std::size_t k = 0; k < S2; ++k) {
-          val += lhs.grid[i][k] * rhs.grid[k][j];
+          val += lhs(i,k) * rhs(k,j);
         }
 
-        out.grid[i][j] = val;
+        out(i,j) = val;
       }
     }
 
@@ -633,7 +941,7 @@ inline namespace v1 {
    * This operation is only available for square matrices.
    */
   template<typename T, std::size_t N>
-  inline
+  constexpr
   Matrix<T, N, N>& operator*=(Matrix<T, N, N>& lhs, const Matrix<T, N, N>& rhs) {
     lhs = lhs * rhs;
     return lhs;
@@ -650,17 +958,17 @@ inline namespace v1 {
    * @sa gf::identityTransform()
    */
   template<typename MatrixType>
-  inline
+  constexpr
   MatrixType identity() {
     static_assert(MatrixType::Rows == MatrixType::Cols, "identity() is only defined for square matrices.");
 
-    MatrixType out;
+    MatrixType out = gf::Zero;
 
     typedef typename MatrixType::value_type value_type;
 
     for (std::size_t i = 0; i < MatrixType::Rows; ++i) {
       for (std::size_t j = 0; j < MatrixType::Cols; ++j) {
-        out.grid[i][j] = (i == j) ? value_type{1} : value_type{0};
+        out(i,j) = (i == j) ? value_type{1} : value_type{0};
       }
     }
 
@@ -672,13 +980,13 @@ inline namespace v1 {
    * @brief Transposition of a matrix
    */
   template<typename T, std::size_t S1, std::size_t S2>
-  inline
+  constexpr
   Matrix<T, S2, S1> transpose(const Matrix<T, S1, S2>& mat) {
-    Matrix<T, S2, S1> out;
+    Matrix<T, S2, S1> out = gf::Zero;
 
     for (std::size_t i = 0; i < S1; ++i) {
       for (std::size_t j = 0; j < S2; ++j) {
-        out.grid[j][i] = mat.grid[i][j];
+        out(j,i) = mat(i,j);
       }
     }
 
@@ -692,9 +1000,9 @@ inline namespace v1 {
    * @brief Inversion of a 2x2 matrix
    */
   template<typename T>
-  inline
+  constexpr
   Matrix<T, 2, 2> invert(const Matrix<T, 2, 2>& mat) {
-    Matrix<T, 2, 2> out;
+    Matrix<T, 2, 2> out = gf::Zero;
 
     out.xx = mat.yy;
     out.xy = - mat.xy;
@@ -711,9 +1019,9 @@ inline namespace v1 {
    * @brief Inversion of a 3x3 matrix
    */
   template<typename T>
-  inline
+  constexpr
   Matrix<T, 3, 3> invert(const Matrix<T, 3, 3>& mat) {
-    Matrix<T, 3, 3> out;
+    Matrix<T, 3, 3> out = gf::Zero;
 
     out.xx = mat.yy * mat.zz - mat.zy * mat.yz;
     out.xy = - (mat.xy * mat.zz - mat.zy * mat.xz);

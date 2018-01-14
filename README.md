@@ -5,7 +5,7 @@
 [![GitHub license](https://img.shields.io/badge/license-zlib-blue.svg?style=flat-square)](https://raw.githubusercontent.com/GamedevFramework/gf/master/LICENSE)
 [![GitHub tag](https://img.shields.io/github/tag/GamedevFramework/gf.svg?style=flat-square)](https://github.com/GamedevFramework/gf/tags)
 
-__Gamedev Framework (gf)__ is a framework to build 2D games in C++11. It is based on [SDL](https://www.libsdl.org/) and [OpenGL ES 2.0](https://www.khronos.org/opengles/2_X/), and presents an API that is very similar to the graphics module of [SFML](http://www.sfml-dev.org/) with additional features. It is _not_ a [game engine](https://en.wikipedia.org/wiki/Game_engine), it is more something like a framework, similar to [libGDX](https://libgdx.badlogicgames.com/) in the Java world.
+__Gamedev Framework (gf)__ is a framework to build 2D games in C++14. It is based on [SDL](https://www.libsdl.org/) and [OpenGL ES 2.0](https://www.khronos.org/opengles/2_X/), and presents an API that is very similar to the graphics module of [SFML](http://www.sfml-dev.org/) with additional features. It is _not_ a [game engine](https://en.wikipedia.org/wiki/Game_engine), it is more something like a framework, similar to [libGDX](https://libgdx.badlogicgames.com/) in the Java world.
 
 Gamedev Framework (gf) is licensed under the terms and conditions of the [zlib/libpng license](https://opensource.org/licenses/Zlib).
 
@@ -104,3 +104,21 @@ You have to install the following dependencies:
 - [CMake](https://cmake.org/) >= 3.0.2
 
 See the [documentation](http://gamedevframework.github.io/latest/build_and_install.html) for more information on how to build and install gf.
+
+## Screenshots
+
+These screenshots are from games and tools included in the repository.
+
+### Games
+
+![gf Pong!](games/gf_pong/gf_pong.png)
+![gf 2048!](games/gf_2048/gf_2048.png)
+![Huaca](games/huaca/huaca.png)
+![Bank Robbery for Dummies](games/bank_robbery_for_dummies/brfd.png)
+![Bygone Islands](games/islands/islands.png)
+![Lux](games/lux/lux.png)
+
+### Tools
+
+![gf Noise](tools/gf_noise/gf_noise.png)
+![gf Dungeons](tools/gf_dungeons/gf_dungeons.png)

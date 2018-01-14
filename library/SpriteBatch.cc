@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -42,9 +42,13 @@ inline namespace v1 {
     m_count = 0;
   }
 
-  static bool areStatesSimilar(const RenderStates& lhs, const RenderStates& rhs) {
-    return lhs.mode == rhs.mode && lhs.transform == rhs.transform && lhs.shader == rhs.shader;
-  }
+  namespace {
+
+    bool areStatesSimilar(const RenderStates& lhs, const RenderStates& rhs) {
+      return lhs.mode == rhs.mode && lhs.transform == rhs.transform && lhs.shader == rhs.shader;
+    }
+
+  } // anonymous namespace
 
   void SpriteBatch::draw(Sprite& sprite, const RenderStates& states) {
     if (!sprite.hasTexture()) {
@@ -77,7 +81,7 @@ inline namespace v1 {
     // compute sprite position
 
     Vector2u textureSize = texture.getSize();
-    Vector2f spriteSize = textureSize * textureRect.size;
+    Vector2f spriteSize = textureSize * textureRect.getSize();
 
     vertices[0].position = {  0.0f,            0.0f };
     vertices[1].position = { spriteSize.width, 0.0f };

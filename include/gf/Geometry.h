@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -25,6 +25,7 @@
 
 #include "ArrayRef.h"
 #include "Heightmap.h"
+#include "Polygon.h"
 #include "Portability.h"
 #include "Random.h"
 #include "Vector.h"
@@ -156,6 +157,19 @@ inline namespace v1 {
    */
   GF_API Heightmap diamondSquare2D(Vector2i size, Random& random, ArrayRef<double> initialValues = nullptr);
 
+
+  /**
+   * @ingroup core
+   * @brief Compute the convex hull of a set of points
+   *
+   * This function uses the [Quickhull algorithm](https://en.wikipedia.org/wiki/Quickhull).
+   *
+   * Complexity: @f$ O(n \log n)@f$ on average, @f$ O(n^2) @f$ on worst case
+   *
+   * @param points The set of points
+   * @returns A (convex) polygon that contains the points
+   */
+  GF_API Polygon convexHull(ArrayRef<Vector2f> points);
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

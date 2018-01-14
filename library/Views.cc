@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -61,7 +61,7 @@ inline namespace v1 {
     const Vector2f worldSize = getSize();
     float worldRatio = worldSize.width / worldSize.height;
 
-    const Vector2f viewportSize = m_localScreenSize * m_localViewport.size;
+    const Vector2f viewportSize = m_localScreenSize * m_localViewport.getSize();
     float screenRatio = viewportSize.width / viewportSize.height;
 
     RectF viewport;
@@ -84,8 +84,8 @@ inline namespace v1 {
       viewport.width = ratio;
     }
 
-    viewport.position = viewport.position * m_localViewport.size + m_localViewport.position;
-    viewport.size *= m_localViewport.size;
+    viewport.setPosition(viewport.getPosition() * m_localViewport.getSize() + m_localViewport.getPosition());
+    viewport.setSize(viewport.getSize() * m_localViewport.getSize());
 
     setViewportNoCallback(viewport);
   }
@@ -112,7 +112,7 @@ inline namespace v1 {
   void FillView::updateView() {
     float worldRatio = m_localSize.width / m_localSize.height;
 
-    const Vector2f viewportSize = m_localScreenSize * getViewport().size;
+    const Vector2f viewportSize = m_localScreenSize * getViewport().getSize();
     float screenRatio = viewportSize.width / viewportSize.height;
 
     Vector2f actualSize = m_localSize;
@@ -151,7 +151,7 @@ inline namespace v1 {
   void ExtendView::updateView() {
     float worldRatio = m_localSize.width / m_localSize.height;
 
-    const Vector2f viewportSize = m_localScreenSize * getViewport().size;
+    const Vector2f viewportSize = m_localScreenSize * getViewport().getSize();
     float screenRatio = viewportSize.width / viewportSize.height;
 
     Vector2f actualSize = m_localSize;
@@ -189,7 +189,7 @@ inline namespace v1 {
   void LockedView::updateView() {
     Vector2f actualSize = m_localSize;
 
-    const Vector2f viewportSize = m_localScreenSize * m_localViewport.size;
+    const Vector2f viewportSize = m_localScreenSize * m_localViewport.getSize();
 
     RectF viewport;
 
@@ -213,8 +213,8 @@ inline namespace v1 {
 
     setSizeNoCallback(actualSize);
 
-    viewport.position = viewport.position * m_localViewport.size + m_localViewport.position;
-    viewport.size *= m_localViewport.size;
+    viewport.setPosition(viewport.getPosition() * m_localViewport.getSize() + m_localViewport.getPosition());
+    viewport.setSize(viewport.getSize() * m_localViewport.getSize());
 
     setViewportNoCallback(viewport);
   }
@@ -235,7 +235,7 @@ inline namespace v1 {
   }
 
   void ScreenView::updateView() {
-    RectF screen({ 0.0f, 0.0f }, m_localScreenSize * getViewport().size);
+    RectF screen({ 0.0f, 0.0f }, m_localScreenSize * getViewport().getSize());
     reset(screen);
   }
 

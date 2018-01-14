@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -20,78 +20,92 @@
  */
 #include <gf/Gamepad.h>
 
+#include <cassert>
 #include <cstring>
 
 #include <SDL.h>
 
 #include <gf/Log.h>
 
+// see also data/generated.cc
+#if SDL_VERSION_ATLEAST(2,0,6)
 #include "generated/gamecontrollerdb.txt.h"
+#elif SDL_VERSION_ATLEAST(2,0,5)
+#include "generated/gamecontrollerdb_205.txt.h"
+#else
+#include "generated/gamecontrollerdb_204.txt.h"
+#endif
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
 #endif
 
-  static SDL_GameControllerButton getButtonFromGamepadButton(GamepadButton button) {
-    switch (button) {
-      case GamepadButton::A:
-        return SDL_CONTROLLER_BUTTON_A;
-      case GamepadButton::B:
-        return SDL_CONTROLLER_BUTTON_B;
-      case GamepadButton::X:
-        return SDL_CONTROLLER_BUTTON_X;
-      case GamepadButton::Y:
-        return SDL_CONTROLLER_BUTTON_Y;
-      case GamepadButton::Back:
-        return SDL_CONTROLLER_BUTTON_BACK;
-      case GamepadButton::Guide:
-        return SDL_CONTROLLER_BUTTON_GUIDE;
-      case GamepadButton::Start:
-        return SDL_CONTROLLER_BUTTON_START;
-      case GamepadButton::LeftStick:
-        return SDL_CONTROLLER_BUTTON_LEFTSTICK;
-      case GamepadButton::RightStick:
-        return SDL_CONTROLLER_BUTTON_RIGHTSTICK;
-      case GamepadButton::LeftBumper:
-        return SDL_CONTROLLER_BUTTON_LEFTSHOULDER;
-      case GamepadButton::RightBumper:
-        return SDL_CONTROLLER_BUTTON_RIGHTSHOULDER;
-      case GamepadButton::DPadUp:
-        return SDL_CONTROLLER_BUTTON_DPAD_UP;
-      case GamepadButton::DPadDown:
-        return SDL_CONTROLLER_BUTTON_DPAD_DOWN;
-      case GamepadButton::DPadLeft:
-        return SDL_CONTROLLER_BUTTON_DPAD_LEFT;
-      case GamepadButton::DPadRight:
-        return SDL_CONTROLLER_BUTTON_DPAD_RIGHT;
-      case GamepadButton::Invalid:
-        return SDL_CONTROLLER_BUTTON_INVALID;
+  namespace {
+
+    SDL_GameControllerButton getButtonFromGamepadButton(GamepadButton button) {
+      switch (button) {
+        case GamepadButton::A:
+          return SDL_CONTROLLER_BUTTON_A;
+        case GamepadButton::B:
+          return SDL_CONTROLLER_BUTTON_B;
+        case GamepadButton::X:
+          return SDL_CONTROLLER_BUTTON_X;
+        case GamepadButton::Y:
+          return SDL_CONTROLLER_BUTTON_Y;
+        case GamepadButton::Back:
+          return SDL_CONTROLLER_BUTTON_BACK;
+        case GamepadButton::Guide:
+          return SDL_CONTROLLER_BUTTON_GUIDE;
+        case GamepadButton::Start:
+          return SDL_CONTROLLER_BUTTON_START;
+        case GamepadButton::LeftStick:
+          return SDL_CONTROLLER_BUTTON_LEFTSTICK;
+        case GamepadButton::RightStick:
+          return SDL_CONTROLLER_BUTTON_RIGHTSTICK;
+        case GamepadButton::LeftBumper:
+          return SDL_CONTROLLER_BUTTON_LEFTSHOULDER;
+        case GamepadButton::RightBumper:
+          return SDL_CONTROLLER_BUTTON_RIGHTSHOULDER;
+        case GamepadButton::DPadUp:
+          return SDL_CONTROLLER_BUTTON_DPAD_UP;
+        case GamepadButton::DPadDown:
+          return SDL_CONTROLLER_BUTTON_DPAD_DOWN;
+        case GamepadButton::DPadLeft:
+          return SDL_CONTROLLER_BUTTON_DPAD_LEFT;
+        case GamepadButton::DPadRight:
+          return SDL_CONTROLLER_BUTTON_DPAD_RIGHT;
+        case GamepadButton::Invalid:
+          return SDL_CONTROLLER_BUTTON_INVALID;
+      }
+
+      assert(false);
+      return SDL_CONTROLLER_BUTTON_INVALID;
     }
 
-    return SDL_CONTROLLER_BUTTON_INVALID;
-  }
+    SDL_GameControllerAxis getAxisFromGamepadAxis(GamepadAxis axis) {
+      switch (axis) {
+        case GamepadAxis::LeftX:
+          return SDL_CONTROLLER_AXIS_LEFTX;
+        case GamepadAxis::LeftY:
+          return SDL_CONTROLLER_AXIS_LEFTY;
+        case GamepadAxis::RightX:
+          return SDL_CONTROLLER_AXIS_RIGHTX;
+        case GamepadAxis::RightY:
+          return SDL_CONTROLLER_AXIS_RIGHTY;
+        case GamepadAxis::TriggerLeft:
+          return SDL_CONTROLLER_AXIS_TRIGGERLEFT;
+        case GamepadAxis::TriggerRight:
+          return SDL_CONTROLLER_AXIS_TRIGGERRIGHT;
+        case GamepadAxis::Invalid:
+          return SDL_CONTROLLER_AXIS_INVALID;
+      }
 
-  static SDL_GameControllerAxis getAxisFromGamepadAxis(GamepadAxis axis) {
-    switch (axis) {
-      case GamepadAxis::LeftX:
-        return SDL_CONTROLLER_AXIS_LEFTX;
-      case GamepadAxis::LeftY:
-        return SDL_CONTROLLER_AXIS_LEFTY;
-      case GamepadAxis::RightX:
-        return SDL_CONTROLLER_AXIS_RIGHTX;
-      case GamepadAxis::RightY:
-        return SDL_CONTROLLER_AXIS_RIGHTY;
-      case GamepadAxis::TriggerLeft:
-        return SDL_CONTROLLER_AXIS_TRIGGERLEFT;
-      case GamepadAxis::TriggerRight:
-        return SDL_CONTROLLER_AXIS_TRIGGERRIGHT;
-      case GamepadAxis::Invalid:
-        return SDL_CONTROLLER_AXIS_INVALID;
+      assert(false);
+      return SDL_CONTROLLER_AXIS_INVALID;
     }
 
-    return SDL_CONTROLLER_AXIS_INVALID;
-  }
+  } // anonymous namespace
 
   const char *Gamepad::getAxisName(GamepadAxis axis) {
     return SDL_GameControllerGetStringForAxis(getAxisFromGamepadAxis(axis));
@@ -101,44 +115,47 @@ inline namespace v1 {
     return SDL_GameControllerGetStringForButton(getButtonFromGamepadButton(button));
   }
 
+  namespace {
 
 #if SDL_VERSION_ATLEAST(2,0,4)
-  static SDL_GameController *getController(GamepadId id) {
-    return SDL_GameControllerFromInstanceID(static_cast<SDL_JoystickID>(id));
-  }
-#else
-  static std::map<GamepadId, SDL_GameController*> g_controllers;
-
-  static SDL_GameController *getController(GamepadId id) {
-    auto it = g_controllers.find(id);
-
-    if (it == g_controllers.end()) {
-      return nullptr;
+    SDL_GameController *getController(GamepadId id) {
+      return SDL_GameControllerFromInstanceID(static_cast<SDL_JoystickID>(id));
     }
+#else
+    std::map<GamepadId, SDL_GameController*> g_controllers;
 
-    return it->second;
-  }
+    SDL_GameController *getController(GamepadId id) {
+      auto it = g_controllers.find(id);
+
+      if (it == g_controllers.end()) {
+        return nullptr;
+      }
+
+      return it->second;
+    }
 #endif
 
-  static GamepadId openController(int index) {
-    SDL_GameController *controller = SDL_GameControllerOpen(index);
+    GamepadId openController(int index) {
+      SDL_GameController *controller = SDL_GameControllerOpen(index);
 
-    if (controller == nullptr) {
-      Log::error("Could not open gamepad %i: %s\n", index, SDL_GetError());
-      return static_cast<GamepadId>(-1);
-    }
+      if (controller == nullptr) {
+        Log::error("Could not open gamepad %i: %s\n", index, SDL_GetError());
+        return static_cast<GamepadId>(-1);
+      }
 
-    SDL_Joystick *joystick = SDL_GameControllerGetJoystick(controller);
-    SDL_JoystickID instanceId = SDL_JoystickInstanceID(joystick);
+      SDL_Joystick *joystick = SDL_GameControllerGetJoystick(controller);
+      SDL_JoystickID instanceId = SDL_JoystickInstanceID(joystick);
 
-    Log::debug("New gamepad (device: %i / instance: %i)\n", index, instanceId);
+      Log::debug("New gamepad (device: %i / instance: %i)\n", index, instanceId);
 
 #if !SDL_VERSION_ATLEAST(2,0,4)
-    g_controllers.insert(std::make_pair(static_cast<GamepadId>(instanceId), controller));
+      g_controllers.insert(std::make_pair(static_cast<GamepadId>(instanceId), controller));
 #endif
 
-    return static_cast<GamepadId>(instanceId);
-  }
+      return static_cast<GamepadId>(instanceId);
+    }
+
+  } // anonymous namespace
 
   GamepadId Gamepad::open(GamepadHwId hwid) {
     return openController(static_cast<int>(hwid));
@@ -188,7 +205,7 @@ inline namespace v1 {
     }
 
     for (int index = 0; index < SDL_NumJoysticks(); ++index) {
-      if (SDL_IsGameController(index)) {
+      if (SDL_IsGameController(index) == SDL_TRUE) {
         openController(index);
       }
     }

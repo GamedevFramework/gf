@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -47,27 +47,31 @@ inline namespace v1 {
     s_level = level;
   }
 
-  static const char *getStringFromLevel(Log::Level level) {
-    switch (level) {
-      case Log::Debug:
-        return "Debug";
+  namespace {
 
-      case Log::Info:
-        return "Info";
+    const char *getStringFromLevel(Log::Level level) {
+      switch (level) {
+        case Log::Debug:
+          return "Debug";
 
-      case Log::Warn:
-        return "Warn";
+        case Log::Info:
+          return "Info";
 
-      case Log::Error:
-        return "Error";
+        case Log::Warn:
+          return "Warn";
 
-      case Log::Fatal:
-        return "Fatal";
+        case Log::Error:
+          return "Error";
+
+        case Log::Fatal:
+          return "Fatal";
+      }
+
+      assert(false);
+      return "?";
     }
 
-    assert(false);
-    return "?";
-  }
+  } // anonymous namespace
 
   void Log::log(Level level, const char *fmt, va_list ap) {
     if (level < s_level) {

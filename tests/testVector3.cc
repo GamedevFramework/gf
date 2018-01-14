@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -24,14 +24,13 @@
 
 TEST(Vector3Test, Access) {
   gf::Vector3i vec;
-  vec.data[0] = 42;
-  EXPECT_EQ(42, vec.data[0]);
+
+  vec[0] = 42;
+  vec[1] = 69;
+  vec[2] = 23;
+
   EXPECT_EQ(42, vec[0]);
-  vec.data[1] = 69;
-  EXPECT_EQ(69, vec.data[1]);
   EXPECT_EQ(69, vec[1]);
-  vec.data[2] = 23;
-  EXPECT_EQ(23, vec.data[2]);
   EXPECT_EQ(23, vec[2]);
 }
 
@@ -62,7 +61,7 @@ TEST(Vector3Test, Brace3Ctor) {
 }
 
 TEST(Vector3Test, PointerCtor) {
-  int data[3] = {42, 69, 23};
+  const int data[3] = { 42, 69, 23 };
   gf::Vector3i vec(data);
   EXPECT_EQ(42, vec[0]);
   EXPECT_EQ(69, vec[1]);
@@ -84,17 +83,47 @@ TEST(Vector3Test, CopyCtor) {
   EXPECT_EQ(23, vec[2]);
 }
 
+
+TEST(Vector3Test, ZeroCtor) {
+  gf::Vector3i vec = gf::Zero;
+  EXPECT_EQ(0, vec[0]);
+  EXPECT_EQ(0, vec[1]);
+  EXPECT_EQ(0, vec[2]);
+}
+
 TEST(Vector3Test, AltFields) {
   gf::Vector3i vec(42, 69, 23);
 
   EXPECT_EQ(42, vec.x);
   EXPECT_EQ(42, vec.r);
-  EXPECT_EQ(42, vec.xy.x);
 
   EXPECT_EQ(69, vec.y);
   EXPECT_EQ(69, vec.g);
-  EXPECT_EQ(69, vec.xy.y);
 
   EXPECT_EQ(23, vec.z);
   EXPECT_EQ(23, vec.b);
+}
+
+TEST(Vector3Test, RangeFor) {
+  gf::Vector3i vec(1, 2, 3);
+
+  int expected = 1;
+
+  for (int elem : vec) {
+    EXPECT_EQ(expected, elem);
+    ++expected;
+  }
+
+  EXPECT_EQ(expected, 4);
+}
+
+TEST(Vector3Test, Iterator) {
+  gf::Vector3i vec1(1, 2, 3);
+
+  EXPECT_EQ(std::distance(vec1.begin(), vec1.end()), 3);
+
+  const gf::Vector3i vec2(1, 2, 3);
+
+  EXPECT_EQ(std::distance(vec2.begin(), vec2.end()), 3);
+  EXPECT_EQ(std::distance(vec2.cbegin(), vec2.cend()), 3);
 }

@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -539,6 +539,30 @@ inline namespace v1 {
      * @sa getKeycodeName()
      */
     static Keycode getKeycodeFromName(const char *name);
+
+    /**
+     * @brief Localize a physical key to a logical one
+     *
+     * @param scancode The scancode to localize
+     * @returns The keycode corresponding to the scancode under the current
+     * keyboard layout used by the operating system, or gf::Keycode::Unknown
+     * when the scancode cannot be mapped to a keycode.
+     *
+     * @sa unlocalize()
+     */
+    static Keycode localize(Scancode scancode);
+
+    /**
+     * @brief Identify the physical key corresponding to a logical one
+     *
+     * @param keycode The keycode to "unlocalize"
+     * @returns The scancode corresponding to the key under the current
+     * keyboard layout used by the operating system, or gf::Scancode::Unknown
+     * when the key cannot be mapped to a scancode.
+     *
+     * @sa localize()
+     */
+    static Scancode unlocalize(Keycode keycode);
 
     /**
      * @brief Deleted constructor

@@ -27,11 +27,6 @@ namespace lux {
 
   namespace {
 
-    template<typename T, typename ... Args>
-      std::unique_ptr<T> makeUnique(Args... args) {
-      return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
-    }
-
     class ConcreteShoot : public Shoot {
     public:
       ConcreteShoot(Origin origin, ShipClass shipClass)
@@ -247,40 +242,40 @@ namespace lux {
   }
 
   std::unique_ptr<Shoot> makeSimpleShoot(Origin origin, ShipClass shipClass, float delay) {
-    return makeUnique<DelayedShoot>(
-      makeUnique<CountedShoot>(
-        makeUnique<SingleShoot>(origin, shipClass)
+    return std::make_unique<DelayedShoot>(
+      std::make_unique<CountedShoot>(
+        std::make_unique<SingleShoot>(origin, shipClass)
         , 1)
       , delay);
   }
 
   std::unique_ptr<Shoot> makeBurstShoot(Origin origin, ShipClass shipClass, float delay, float period, int count) {
-    return makeUnique<DelayedShoot>(
-      makeUnique<PeriodicShoot>(
-        makeUnique<CountedShoot>(
-          makeUnique<SingleShoot>(origin, shipClass)
+    return std::make_unique<DelayedShoot>(
+      std::make_unique<PeriodicShoot>(
+        std::make_unique<CountedShoot>(
+          std::make_unique<SingleShoot>(origin, shipClass)
           , count)
         , period)
       , delay);
   }
 
   std::unique_ptr<Shoot> makeConeShoot(Origin origin, ShipClass shipClass, float delay) {
-    return makeUnique<DelayedShoot>(
-      makeUnique<CountedShoot>(
-        makeUnique<ConeShoot>(origin, shipClass)
+    return std::make_unique<DelayedShoot>(
+      std::make_unique<CountedShoot>(
+        std::make_unique<ConeShoot>(origin, shipClass)
         , 1)
       , delay);
   }
 
   std::unique_ptr<Shoot> makeContinuousSimpleShoot(Origin origin, ShipClass shipClass, float period) {
-    return makeUnique<PeriodicShoot>(
-      makeUnique<SingleShoot>(origin, shipClass)
+    return std::make_unique<PeriodicShoot>(
+      std::make_unique<SingleShoot>(origin, shipClass)
       , period);
   }
 
   std::unique_ptr<Shoot> makeSimplePlayerShoot(Origin origin, ShipClass shipClass, int nbshoot, float shootInterval, float inactivePeriod) {
-    return makeUnique<RegularShoot>(
-      makeUnique<SingleShoot>(origin, shipClass)
+    return std::make_unique<RegularShoot>(
+      std::make_unique<SingleShoot>(origin, shipClass)
       , nbshoot, shootInterval, inactivePeriod);
   }
 

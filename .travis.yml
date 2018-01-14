@@ -14,15 +14,15 @@ addons:
 
 matrix:
   include:
-    - compiler: gcc
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - *common_packages
-            - g++-4.9
-      env: CXX_COMPILER=g++-4.9 C_COMPILER=gcc-4.9
+#    - compiler: gcc
+#      addons:
+#        apt:
+#          sources:
+#            - ubuntu-toolchain-r-test
+#          packages:
+#            - *common_packages
+#            - g++-4.9
+#      env: CXX_COMPILER=g++-4.9 C_COMPILER=gcc-4.9
     - compiler: gcc
       addons:
         apt:
@@ -35,10 +35,14 @@ matrix:
     - compiler: clang
       addons:
         apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-trusty-5.0
           packages:
             - *common_packages
-            - clang
-      env: CXX_COMPILER=clang++ C_COMPILER=clang
+            - clang-5.0
+            - libstdc++-6-dev
+      env: CXX_COMPILER=clang++-5.0 C_COMPILER=clang-5.0
 
 branches:
   only:

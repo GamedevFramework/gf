@@ -33,7 +33,7 @@ add_gf_example(21_particles)
 add_gf_example(22_midpoint)
 add_gf_example(23_bresenham)
 add_gf_example(24_easings)
-
+add_gf_example(25_activities)
 add_gf_example(26_map)
 add_gf_example(27_console)
 
@@ -44,5 +44,6 @@ add_gf_example(32_colorblind)
 add_gf_example(40_ui)
 add_gf_example(41_collisions)
 add_gf_example(42_physics)
+add_gf_example(43_points)
 
 add_gf_example(98_logo)

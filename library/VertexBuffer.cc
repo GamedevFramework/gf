@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -53,16 +53,16 @@ inline namespace v1 {
     }
   }
 
-  VertexBuffer::VertexBuffer(VertexBuffer&& other)
-  : m_vbo(other.m_vbo)
-  , m_ebo(other.m_ebo)
+  VertexBuffer::VertexBuffer(VertexBuffer&& other) noexcept
+  : m_vbo(std::exchange(other.m_vbo, 0))
+  , m_ebo(std::exchange(other.m_ebo, 0))
   , m_count(other.m_count)
   , m_type(other.m_type)
   {
-    other.m_vbo = other.m_ebo = 0;
+
   }
 
-  VertexBuffer& VertexBuffer::operator=(VertexBuffer&& other) {
+  VertexBuffer& VertexBuffer::operator=(VertexBuffer&& other) noexcept {
     std::swap(m_vbo, other.m_vbo);
     std::swap(m_ebo, other.m_ebo);
     std::swap(m_count, other.m_count);

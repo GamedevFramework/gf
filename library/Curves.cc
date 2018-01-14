@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -29,19 +29,22 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  static Vector2f quadraticInterp(Vector2f p0, Vector2f p1, Vector2f p2, float t) {
-    assert(0 <= t && t <= 1);
-    return p0 * (1 - t) * (1 - t) + p1 * 2.0f * (1 - t) * t + p2 * t * t;
-  }
+  namespace {
 
-  static Vector2f cubicInterp(Vector2f p0, Vector2f p1, Vector2f p2, Vector2f p3, float t) {
-    assert(0 <= t && t <= 1);
-    return p0 * (1 - t) * (1 - t) * (1 - t)
-         + p1 * (1 - t) * (1 - t) * t * 3.0f
-         + p2 * (1 - t) * t * t * 3.0f
-         + p3 * t * t * t;
-  }
+    Vector2f quadraticInterp(Vector2f p0, Vector2f p1, Vector2f p2, float t) {
+      assert(0 <= t && t <= 1);
+      return p0 * (1 - t) * (1 - t) + p1 * 2.0f * (1 - t) * t + p2 * t * t;
+    }
 
+    Vector2f cubicInterp(Vector2f p0, Vector2f p1, Vector2f p2, Vector2f p3, float t) {
+      assert(0 <= t && t <= 1);
+      return p0 * (1 - t) * (1 - t) * (1 - t)
+           + p1 * (1 - t) * (1 - t) * t * 3.0f
+           + p2 * (1 - t) * t * t * 3.0f
+           + p3 * t * t * t;
+    }
+
+  } // anonymous namespace
 
   Line::Line(Vector2f p0, Vector2f p1)
   : m_p0(p0)

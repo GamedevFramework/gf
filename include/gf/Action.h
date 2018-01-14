@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -42,6 +42,12 @@ inline namespace v1 {
    * @ingroup window
    * @brief An action that can be triggered by different controls.
    *
+   * An action can be continuous or instantaneous. A continuous action is an
+   * action that is active as long as the user do not desactivate it. An
+   * instantaneous action is an action that is triggered only once when it is
+   * active. By default, the action is instantaneous.
+   *
+   * @sa gf::Control
    */
   class GF_API Action {
   public:

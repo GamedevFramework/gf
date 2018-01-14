@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -379,7 +379,7 @@ inline namespace v1 {
       area.height = m_data.getRows() - area.top;
     }
 
-    Heightmap out(area.size);
+    Heightmap out(area.getSize());
 
     for (int j = 0; j < area.height; ++j) {
       for (int i = 0; i < area.width; ++i) {
@@ -402,13 +402,17 @@ inline namespace v1 {
     return image;
   }
 
-  static double valueWithWaterLevel(double value, double waterLevel) {
-    if (value < waterLevel) {
-      return value / waterLevel * 0.5;
+  namespace {
+
+    double valueWithWaterLevel(double value, double waterLevel) {
+      if (value < waterLevel) {
+        return value / waterLevel * 0.5;
+      }
+
+      return (value - waterLevel) / (1.0 - waterLevel) * 0.5 + 0.5;
     }
 
-    return (value - waterLevel) / (1.0 - waterLevel) * 0.5 + 0.5;
-  }
+  } // anonymous namespace
 
   Image Heightmap::copyToColoredImage(const ColorRamp& ramp, double waterLevel, Render render) const {
     Image image;

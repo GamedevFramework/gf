@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -22,6 +22,8 @@
 #define GF_TILE_LAYER_H
 
 #include "Array2D.h"
+#include "Flags.h"
+#include "Flip.h"
 #include "Portability.h"
 #include "Transformable.h"
 #include "VertexArray.h"
@@ -230,9 +232,10 @@ inline namespace v1 {
      *
      * @param position The position of the tile in the tile layer
      * @param tile The number of the tile in the tileset or `gf::TileLayer::NoTile`
+     * @param flip The flip property of the tile
      * @sa getTile()
      */
-    void setTile(Vector2u position, int tile);
+    void setTile(Vector2u position, int tile, Flags<Flip> flip = None);
 
     /**
      * @brief Get a tile
@@ -242,6 +245,16 @@ inline namespace v1 {
      * @sa setTile()
      */
     int getTile(Vector2u position) const;
+
+
+    /**
+     * @brief Get the flip properties of a tile
+     *
+     * @param position The position of the tile in the tile layer
+     * @return A flag to indicate how the tile is flipped
+     * @sa setTile()
+     */
+    Flags<Flip> getFlip(Vector2u position) const;
 
     /**
      * @brief Remove all the tiles
@@ -263,7 +276,13 @@ inline namespace v1 {
     virtual void draw(RenderTarget& target, RenderStates states) override;
 
   private:
-    void fillVertexArray(VertexArray& vertices, RectU rect) const;
+    struct Cell {
+      int tile;
+      Flags<Flip> flip;
+    };
+
+  private:
+    void fillVertexArray(VertexArray& array, RectU rect) const;
     void updateGeometry();
 
   private:
@@ -275,7 +294,7 @@ inline namespace v1 {
     Vector2u m_margin;
     Vector2u m_spacing;
 
-    Array2D<int> m_tiles;
+    Array2D<Cell> m_tiles;
 
     RectU m_rect;
     VertexArray m_vertices;

@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -54,18 +54,18 @@ inline namespace v1 {
     }
   }
 
-  BareTexture::BareTexture(BareTexture&& other)
+  BareTexture::BareTexture(BareTexture&& other) noexcept
   : m_format(other.m_format)
-  , m_name(other.m_name)
+  , m_name(std::exchange(other.m_name, 0))
   , m_size(other.m_size)
   , m_smooth(other.m_smooth)
   , m_repeated(other.m_repeated)
   , m_mipmap(other.m_mipmap)
   {
-    other.m_name = 0;
+
   }
 
-  BareTexture& BareTexture::operator=(BareTexture&& other) {
+  BareTexture& BareTexture::operator=(BareTexture&& other) noexcept {
     std::swap(m_format, other.m_format);
     std::swap(m_name, other.m_name);
     std::swap(m_size, other.m_size);
@@ -75,37 +75,41 @@ inline namespace v1 {
     return *this;
   }
 
-  static GLenum getEnum(BareTexture::Format format) {
-    switch (format) {
-      case BareTexture::Format::Color:
-        return GL_RGBA;
-      case BareTexture::Format::Alpha:
-        return GL_ALPHA;
+  namespace {
+
+    GLenum getEnum(BareTexture::Format format) {
+      switch (format) {
+        case BareTexture::Format::Color:
+          return GL_RGBA;
+        case BareTexture::Format::Alpha:
+          return GL_ALPHA;
+      }
+
+      assert(false);
+      return 0;
+    };
+
+    int getAlignment(BareTexture::Format format) {
+      switch (format) {
+        case BareTexture::Format::Color:
+          return 4;
+        case BareTexture::Format::Alpha:
+          return 1;
+      }
+
+      assert(false);
+      return 4;
+    };
+
+    GLenum getMinFilter(bool smooth, bool mipmap) {
+      if (mipmap) {
+        return smooth ? GL_LINEAR_MIPMAP_LINEAR : GL_NEAREST_MIPMAP_LINEAR;
+      }
+
+      return smooth ? GL_LINEAR : GL_NEAREST;
     }
 
-    assert(false);
-    return 0;
-  };
-
-  static int getAlignment(BareTexture::Format format) {
-    switch (format) {
-      case BareTexture::Format::Color:
-        return 4;
-      case BareTexture::Format::Alpha:
-        return 1;
-    }
-
-    assert(false);
-    return 4;
-  };
-
-  static GLenum getMinFilter(bool smooth, bool mipmap) {
-    if (mipmap) {
-      return smooth ? GL_LINEAR_MIPMAP_LINEAR : GL_NEAREST_MIPMAP_LINEAR;
-    }
-
-    return smooth ? GL_LINEAR : GL_NEAREST;
-  }
+  } // anonymous namespace
 
   bool BareTexture::create(Vector2u size, const uint8_t *data) {
     if (size.width == 0 || size.height == 0) {

@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -35,10 +35,14 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  static void generatePermutation(Random& random, std::array<uint8_t, 256>& perm) {
-    std::iota(perm.begin(), perm.end(), 0);
-    std::shuffle(perm.begin(), perm.end(), random.getEngine());
-  }
+  namespace {
+
+    void generatePermutation(Random& random, std::array<uint8_t, 256>& perm) {
+      std::iota(perm.begin(), perm.end(), 0);
+      std::shuffle(perm.begin(), perm.end(), random.getEngine());
+    }
+
+  } // anonymous namespace
 
   /*
    * Value
@@ -1245,55 +1249,59 @@ inline namespace v1 {
    * Wavelet
    */
 
-  static std::ptrdiff_t positiveMod(std::ptrdiff_t x, std::ptrdiff_t n) {
-    std::ptrdiff_t r = x % n;
-    return r < 0 ? r + n : r;
-  }
+  namespace {
 
-  static void waveletDownsample(const double *from, double *to, std::ptrdiff_t n, std::ptrdiff_t stride) {
-    static constexpr std::ptrdiff_t DownCoeffsCount = 16;
-    static constexpr double DownCoeffs[2 * DownCoeffsCount] = {
-      0.000334f, -0.001528f,  0.000410f,  0.003545f, -0.000938f, -0.008233f,  0.002172f,  0.019120f,
-     -0.005040f, -0.044412f,  0.011655f,  0.103311f, -0.025936f, -0.243780f,  0.033979f,  0.655340f,
-      0.655340f,  0.033979f, -0.243780f, -0.025936f,  0.103311f,  0.011655f, -0.044412f, -0.005040f,
-      0.019120f,  0.002172f, -0.008233f, -0.000938f,  0.003546f,  0.000410f, -0.001528f,  0.000334f,
-    };
-
-    const double *coeffs = &DownCoeffs[DownCoeffsCount];
-
-    for (std::ptrdiff_t i = 0; i < n/2; ++i) {
-      double value = 0;
-
-      for (std::ptrdiff_t k = 2 * i - DownCoeffsCount; k <=  2 * i - DownCoeffsCount; ++k) {
-        std::ptrdiff_t index = k - 2 * i;
-        assert(-DownCoeffsCount <= index && index < DownCoeffsCount);
-        value += coeffs[index] * from[positiveMod(k, n) * stride];
-      }
-
-      to[i * stride] = value;
+    std::ptrdiff_t positiveMod(std::ptrdiff_t x, std::ptrdiff_t n) {
+      std::ptrdiff_t r = x % n;
+      return r < 0 ? r + n : r;
     }
-  }
 
-  static void waveletUpsample(const double *from, double *to, std::ptrdiff_t n, std::ptrdiff_t stride) {
-    static constexpr std::ptrdiff_t UpCoeffsCount = 2;
-    static constexpr double UpCoeff[2 * UpCoeffsCount] = {
-      0.25, 0.75, 0.75, 0.25
-    };
+    void waveletDownsample(const double *from, double *to, std::ptrdiff_t n, std::ptrdiff_t stride) {
+      static constexpr std::ptrdiff_t DownCoeffsCount = 16;
+      static constexpr double DownCoeffs[2 * DownCoeffsCount] = {
+        0.000334f, -0.001528f,  0.000410f,  0.003545f, -0.000938f, -0.008233f,  0.002172f,  0.019120f,
+      -0.005040f, -0.044412f,  0.011655f,  0.103311f, -0.025936f, -0.243780f,  0.033979f,  0.655340f,
+        0.655340f,  0.033979f, -0.243780f, -0.025936f,  0.103311f,  0.011655f, -0.044412f, -0.005040f,
+        0.019120f,  0.002172f, -0.008233f, -0.000938f,  0.003546f,  0.000410f, -0.001528f,  0.000334f,
+      };
 
-    const double *coeffs = &UpCoeff[UpCoeffsCount];
+      const double *coeffs = &DownCoeffs[DownCoeffsCount];
 
-    for (std::ptrdiff_t i = 0; i < n; ++i) {
-      double value = 0;
+      for (std::ptrdiff_t i = 0; i < n/2; ++i) {
+        double value = 0;
 
-      for (std::ptrdiff_t k = i/2; k <= i/2 + 1; ++k) {
-        std::ptrdiff_t index = i - 2 * k;
-        assert(-UpCoeffsCount <= index && index < UpCoeffsCount);
-        value += coeffs[index] * from[positiveMod(k, n/2) * stride];
+        for (std::ptrdiff_t k = 2 * i - DownCoeffsCount; k <=  2 * i - DownCoeffsCount; ++k) {
+          std::ptrdiff_t index = k - 2 * i;
+          assert(-DownCoeffsCount <= index && index < DownCoeffsCount);
+          value += coeffs[index] * from[positiveMod(k, n) * stride];
+        }
+
+        to[i * stride] = value;
       }
-
-      to[i * stride] = value;
     }
-  }
+
+    void waveletUpsample(const double *from, double *to, std::ptrdiff_t n, std::ptrdiff_t stride) {
+      static constexpr std::ptrdiff_t UpCoeffsCount = 2;
+      static constexpr double UpCoeff[2 * UpCoeffsCount] = {
+        0.25, 0.75, 0.75, 0.25
+      };
+
+      const double *coeffs = &UpCoeff[UpCoeffsCount];
+
+      for (std::ptrdiff_t i = 0; i < n; ++i) {
+        double value = 0;
+
+        for (std::ptrdiff_t k = i/2; k <= i/2 + 1; ++k) {
+          std::ptrdiff_t index = i - 2 * k;
+          assert(-UpCoeffsCount <= index && index < UpCoeffsCount);
+          value += coeffs[index] * from[positiveMod(k, n/2) * stride];
+        }
+
+        to[i * stride] = value;
+      }
+    }
+
+  } // anonymous namespace
 
   WaveletNoise3D::WaveletNoise3D(Random& random, std::ptrdiff_t n)
   : m_n(n + n % 2)

@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -63,76 +63,79 @@ inline namespace v1 {
   }
 
   namespace {
+
     struct ExtendedPenetration {
       Penetration p;
       PhysicsBody *firstPhysicsBody;
       PhysicsBody *secondPhysicsBody;
     };
-  }
 
-  static void resolveCollision(const ExtendedPenetration& data) {
-    Vector2f relativeVelocity = data.secondPhysicsBody->getLinearVelocity() - data.firstPhysicsBody->getLinearVelocity();
-    float velocityAlongNormal = gf::dot(relativeVelocity, data.p.normal);
+    void resolveCollision(const ExtendedPenetration& data) {
+      Vector2f relativeVelocity = data.secondPhysicsBody->getLinearVelocity() - data.firstPhysicsBody->getLinearVelocity();
+      float velocityAlongNormal = gf::dot(relativeVelocity, data.p.normal);
 
-    if (velocityAlongNormal > 0) {
-      return;
+      if (velocityAlongNormal > 0) {
+        return;
+      }
+
+      float firstInverseMass = data.firstPhysicsBody->getInverseMass();
+      float secondInverseMass = data.secondPhysicsBody->getInverseMass();
+      float inverseMassSum = firstInverseMass + secondInverseMass;
+
+      float restitution = std::max(data.firstPhysicsBody->getRestitution(), data.secondPhysicsBody->getRestitution());
+
+      float j = -(1 + restitution) * velocityAlongNormal / inverseMassSum;
+
+      Vector2f impulse = j * data.p.normal;
+      data.firstPhysicsBody->applyLinearImpulse(-impulse);
+      data.secondPhysicsBody->applyLinearImpulse(impulse);
+
+      Vector2f tangent = relativeVelocity - (gf::dot(relativeVelocity, data.p.normal) * data.p.normal);
+      float tangentLength = gf::euclideanLength(tangent);
+
+      if (tangentLength < Epsilon) {
+        return;
+      }
+
+      tangent /= tangentLength;
+
+      float jt = -gf::dot(relativeVelocity, tangent) / inverseMassSum;
+
+      if (std::abs(jt) < gf::Epsilon) {
+        return;
+      }
+
+      float staticFriction = std::sqrt(data.firstPhysicsBody->getStaticFriction() * data.secondPhysicsBody->getStaticFriction());
+      float dynamicFriction = std::sqrt(data.firstPhysicsBody->getDynamicFriction() * data.secondPhysicsBody->getDynamicFriction());
+
+      Vector2f tangentImpulse;
+
+
+      if (std::abs(jt) < j * staticFriction) {
+        tangentImpulse = jt * tangent;
+      } else {
+        tangentImpulse = -j * dynamicFriction * tangent;
+      }
+
+      data.firstPhysicsBody->applyLinearImpulse(-tangentImpulse);
+      data.secondPhysicsBody->applyLinearImpulse(tangentImpulse);
     }
 
-    float firstInverseMass = data.firstPhysicsBody->getInverseMass();
-    float secondInverseMass = data.secondPhysicsBody->getInverseMass();
-    float inverseMassSum = firstInverseMass + secondInverseMass;
 
-    float restitution = std::max(data.firstPhysicsBody->getRestitution(), data.secondPhysicsBody->getRestitution());
+    void correctPosition(const ExtendedPenetration& data) {
+      static constexpr float PenetrationPercentCorrection = 0.4f; // 20% to 80%
+      static constexpr float PenetrationSlop = 0.05f; // 0.01 to 0.1
 
-    float j = -(1 + restitution) * velocityAlongNormal / inverseMassSum;
+      float firstInverseMass = data.firstPhysicsBody->getInverseMass();
+      float secondInverseMass = data.secondPhysicsBody->getInverseMass();
+      float inverseMassSum = firstInverseMass + secondInverseMass;
+      Vector2f correction = (std::max(data.p.depth - PenetrationSlop, 0.0f) / inverseMassSum * PenetrationPercentCorrection) * data.p.normal;
 
-    Vector2f impulse = j * data.p.normal;
-    data.firstPhysicsBody->applyLinearImpulse(-impulse);
-    data.secondPhysicsBody->applyLinearImpulse(impulse);
-
-    Vector2f tangent = relativeVelocity - (gf::dot(relativeVelocity, data.p.normal) * data.p.normal);
-    float tangentLength = gf::euclideanLength(tangent);
-
-    if (tangentLength < Epsilon) {
-      return;
+      data.firstPhysicsBody->move(- firstInverseMass * correction);
+      data.secondPhysicsBody->move(secondInverseMass * correction);
     }
 
-    tangent /= tangentLength;
-
-    float jt = -gf::dot(relativeVelocity, tangent) / inverseMassSum;
-
-    if (std::abs(jt) < gf::Epsilon) {
-      return;
-    }
-
-    float staticFriction = std::sqrt(data.firstPhysicsBody->getStaticFriction() * data.secondPhysicsBody->getStaticFriction());
-    float dynamicFriction = std::sqrt(data.firstPhysicsBody->getDynamicFriction() * data.secondPhysicsBody->getDynamicFriction());
-
-    Vector2f tangentImpulse;
-
-
-    if (std::abs(jt) < j * staticFriction) {
-      tangentImpulse = jt * tangent;
-    } else {
-      tangentImpulse = -j * dynamicFriction * tangent;
-    }
-
-    data.firstPhysicsBody->applyLinearImpulse(-tangentImpulse);
-    data.secondPhysicsBody->applyLinearImpulse(tangentImpulse);
-  }
-
-  static constexpr float PenetrationPercentCorrection = 0.4f; // 20% to 80%
-  static constexpr float PenetrationSlop = 0.05f; // 0.01 to 0.1
-
-  static void correctPosition(const ExtendedPenetration& data) {
-    float firstInverseMass = data.firstPhysicsBody->getInverseMass();
-    float secondInverseMass = data.secondPhysicsBody->getInverseMass();
-    float inverseMassSum = firstInverseMass + secondInverseMass;
-    Vector2f correction = (std::max(data.p.depth - PenetrationSlop, 0.0f) / inverseMassSum * PenetrationPercentCorrection) * data.p.normal;
-
-    data.firstPhysicsBody->move(- firstInverseMass * correction);
-    data.secondPhysicsBody->move(secondInverseMass * correction);
-  }
+  } // anonymous namespace
 
   void PhysicsModel::update(Time time) {
     for (auto body : m_dynamicBodies) {

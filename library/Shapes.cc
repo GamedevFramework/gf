@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -39,10 +39,10 @@ inline namespace v1 {
   }
 
   RectangleShape::RectangleShape(const RectF& rect)
-  : m_size(rect.size)
+  : m_size(rect.getSize())
   {
     updateGeometry();
-    setPosition(rect.position);
+    setPosition(rect.getPosition());
   }
 
   void RectangleShape::setSize(Vector2f size) {
@@ -212,12 +212,12 @@ inline namespace v1 {
   }
 
   RoundedRectangleShape::RoundedRectangleShape(const RectF& rect, float radius, std::size_t cornerPointCount)
-  : m_size(rect.size)
+  : m_size(rect.getSize())
   , m_radius(radius)
   , m_cornerPointCount(cornerPointCount)
   {
     updateGeometry();
-    setPosition(rect.position);
+    setPosition(rect.getPosition());
   }
 
   void RoundedRectangleShape::setSize(Vector2f size) {
@@ -255,23 +255,27 @@ inline namespace v1 {
     return m_cornerPointCount * 4;
   }
 
-  static Vector2f computeCenter(std::size_t quarter, Vector2f size, float radius) {
-    switch (quarter) {
-      case 0:
-        return { radius, radius };
-      case 1:
-        return { size.width - radius, radius };
-      case 2:
-        return { size.width - radius, size.height - radius };
-      case 3:
-        return { radius, size.height - radius };
-      default:
-        assert(false);
-        break;
+  namespace {
+
+    Vector2f computeCenter(std::size_t quarter, Vector2f size, float radius) {
+      switch (quarter) {
+        case 0:
+          return { radius, radius };
+        case 1:
+          return { size.width - radius, radius };
+        case 2:
+          return { size.width - radius, size.height - radius };
+        case 3:
+          return { radius, size.height - radius };
+        default:
+          assert(false);
+          break;
+      }
+
+      return { 0.0f, 0.0f };
     }
 
-    return { 0.0f, 0.0f };
-  }
+  } // anonymous namespace
 
   Vector2f RoundedRectangleShape::getPoint(std::size_t index) const {
     std::size_t quarter = index / m_cornerPointCount;

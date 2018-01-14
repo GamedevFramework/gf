@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -62,12 +62,16 @@ inline namespace v1 {
 
   }
 
-  View::~View() {
+  View::~View() = default;
 
-  }
+  namespace {
 
-  static bool isClamped(float value) {
-    return 0.0f <= value && value <= 1.0f;
+#ifndef NDEBUG
+    bool isClamped(float value) {
+      return 0.0f <= value && value <= 1.0f;
+    }
+#endif
+
   }
 
   void View::setViewport(const RectF& viewport) {
@@ -163,9 +167,13 @@ inline namespace v1 {
 
   }
 
-  static bool isCursorOnView(Vector2i cursor, Vector2u screenSize, const RectF& viewport) {
-    RectF visible(viewport.position * screenSize, viewport.size * screenSize);
-    return visible.contains(cursor);
+  namespace {
+
+    bool isCursorOnView(Vector2i cursor, Vector2u screenSize, const RectF& viewport) {
+      RectF visible(viewport.getPosition() * screenSize, viewport.getSize() * screenSize);
+      return visible.contains(cursor);
+    }
+
   }
 
   void ZoomingViewAdaptor::processEvent(const Event& event) {

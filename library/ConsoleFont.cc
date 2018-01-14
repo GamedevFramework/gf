@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -36,11 +36,39 @@ inline namespace v1 {
   constexpr ConsoleFontFormat PredefinedConsoleFontFormat::Libtcod;
   constexpr ConsoleFontFormat PredefinedConsoleFontFormat::DwarfFortress;
 
+  namespace {
+
+    unsigned computeIndex(Vector2u position, ConsoleFontFormat::Layout layout, Vector2u size) {
+      switch (layout) {
+        case ConsoleFontFormat::InColumn:
+          return position.x * size.height + position.y;
+        case ConsoleFontFormat::InRow:
+          return position.y * size.width + position.x;
+      }
+
+      assert(false);
+      return 0;
+    }
+
+    Vector2u computePosition(uint8_t index, ConsoleFontFormat::Layout layout, Vector2u size) {
+      switch (layout) {
+        case ConsoleFontFormat::InColumn:
+          return { index / size.height, index % size.height };
+        case ConsoleFontFormat::InRow:
+          return { index % size.width, index / size.width };
+      }
+
+      assert(false);
+      return { 0u, 0u };
+    }
+
+  } // anonymous namespace
+
   /*
    * ConsoleFont
    */
 
-  static std::size_t MappingSize = 0x10000;
+  static constexpr std::size_t MappingSize = 0x10000;
 
   ConsoleFont::ConsoleFont()
   : m_mapping(MappingSize, 0x00)
@@ -53,18 +81,6 @@ inline namespace v1 {
 
   ConsoleFont::~ConsoleFont() {
 
-  }
-
-  static unsigned computeIndex(Vector2u position, ConsoleFontFormat::Layout layout, Vector2u size) {
-    switch (layout) {
-      case ConsoleFontFormat::InColumn:
-        return position.x * size.height + position.y;
-      case ConsoleFontFormat::InRow:
-        return position.y * size.width + position.x;
-    }
-
-    assert(false);
-    return 0;
   }
 
   void ConsoleFont::mapCode(char16_t c, Vector2u position) {
@@ -114,18 +130,6 @@ inline namespace v1 {
   void ConsoleFont::clearMapping() {
     std::fill(m_mapping.begin(), m_mapping.end(), 0x00);
     assert(m_mapping.size() == MappingSize);
-  }
-
-  static Vector2u computePosition(uint8_t index, ConsoleFontFormat::Layout layout, Vector2u size) {
-    switch (layout) {
-      case ConsoleFontFormat::InColumn:
-        return { index / size.height, index % size.height };
-      case ConsoleFontFormat::InRow:
-        return { index % size.width, index / size.width };
-    }
-
-    assert(false);
-    return { 0u, 0u };
   }
 
   RectU ConsoleFont::getSubTexture(char16_t c) const {
@@ -326,47 +330,50 @@ inline namespace v1 {
     return true;
   }
 
-  static const char *getTransparencyString(ConsoleFontFormat::Transparency transparency) {
-    switch (transparency) {
-      case ConsoleFontFormat::Alpha:
-        return "alpha";
-      case ConsoleFontFormat::Grayscale:
-        return "grayscale";
-      case ConsoleFontFormat::ColorKey:
-        return "color key";
+  namespace {
+    const char *getTransparencyString(ConsoleFontFormat::Transparency transparency) {
+      switch (transparency) {
+        case ConsoleFontFormat::Alpha:
+          return "alpha";
+        case ConsoleFontFormat::Grayscale:
+          return "grayscale";
+        case ConsoleFontFormat::ColorKey:
+          return "color key";
+      }
+
+      assert(false);
+      return "?";
     }
 
-    assert(false);
-    return "?";
-  }
+    const char *getLayoutString(ConsoleFontFormat::Layout layout) {
+      switch (layout) {
+        case ConsoleFontFormat::InRow:
+          return "in row";
+        case ConsoleFontFormat::InColumn:
+          return "in column";
+      }
 
-  static const char *getLayoutString(ConsoleFontFormat::Layout layout) {
-    switch (layout) {
-      case ConsoleFontFormat::InRow:
-        return "in row";
-      case ConsoleFontFormat::InColumn:
-        return "in column";
+      assert(false);
+      return "?";
     }
 
-    assert(false);
-    return "?";
-  }
+    const char *getMappingString(ConsoleFontFormat::Mapping mapping) {
+      switch (mapping) {
+        case ConsoleFontFormat::CodePage437:
+          return "code page 437";
+        case ConsoleFontFormat::ModifiedCodePage437:
+          return "modified code page 437";
+        case ConsoleFontFormat::Special:
+          return "special";
+        case ConsoleFontFormat::Custom:
+          return "custom";
+      }
 
-  static const char *getMappingString(ConsoleFontFormat::Mapping mapping) {
-    switch (mapping) {
-      case ConsoleFontFormat::CodePage437:
-        return "code page 437";
-      case ConsoleFontFormat::ModifiedCodePage437:
-        return "modified code page 437";
-      case ConsoleFontFormat::Special:
-        return "special";
-      case ConsoleFontFormat::Custom:
-        return "custom";
+      assert(false);
+      return "?";
     }
 
-    assert(false);
-    return "?";
-  }
+  } // anonymous namespace
 
   void ConsoleFont::logFormat(const Path& filename) const {
     Log::info("Console font '%s': %ux%u with characters %ux%u, %s, %s, %s\n", filename.string().c_str(),

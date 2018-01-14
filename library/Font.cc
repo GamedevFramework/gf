@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -33,6 +33,7 @@
 
 #include <gf/InputStream.h>
 #include <gf/Log.h>
+#include <gf/Unused.h>
 #include <gf/VectorOps.h>
 
 #include "priv/Debug.h"
@@ -44,46 +45,53 @@ inline namespace v1 {
 
   static constexpr float Scale = (1 << 6);
 
-  static float convert(FT_Pos value) {
-    return static_cast<float>(value) / Scale;
-  }
+  namespace {
 
-  static uint64_t makeKey(char32_t codepoint, float thickness) {
-    static_assert(sizeof(float) == sizeof(uint32_t), "Float is not 32 bits.");
-    uint32_t hex;
-    std::memcpy(&hex, &thickness, sizeof(float));
-    uint64_t key = codepoint | static_cast<uint64_t>(hex) << 32;
-    return key;
-  }
-
-  static const char *FT_ErrorMessage(FT_Error error) {
-    switch (error) {
-
-      #undef FTERRORS_H_
-      #define FT_ERRORDEF( e, v, s )  case v: return s;
-      #include FT_ERRORS_H
-
-      default: return "unknown error";
-    };
-
-    return "";
-  }
-
-  static unsigned long callbackRead(FT_Stream rec, unsigned long offset, unsigned char* buffer, unsigned long count) {
-    InputStream *stream = static_cast<InputStream *>(rec->descriptor.pointer);
-    stream->seek(offset);
-
-    if (count == 0) {
-      return 0;
+    float convert(FT_Pos value) {
+      return static_cast<float>(value) / Scale;
     }
 
-    return stream->read(buffer, count);
-  }
+    uint64_t makeKey(char32_t codepoint, float thickness) {
+      static_assert(sizeof(float) == sizeof(uint32_t), "Float is not 32 bits.");
+      uint32_t hex;
+      std::memcpy(&hex, &thickness, sizeof(float));
+      uint64_t key = codepoint | static_cast<uint64_t>(hex) << 32;
+      return key;
+    }
 
-  static void callbackClose(FT_Stream) {
-    // nothing to do
-  }
+    const char *FT_ErrorMessage(FT_Error error) {
+      switch (error) {
 
+        #undef FTERRORS_H_
+        #define FT_ERRORDEF(e, v, s)  \
+        case v:                       \
+          return s;
+        #include FT_ERRORS_H
+
+        default:
+          break;
+      };
+
+      return "unknown error";
+    }
+
+    unsigned long callbackRead(FT_Stream rec, unsigned long offset, unsigned char* buffer, unsigned long count) {
+      InputStream *stream = static_cast<InputStream*>(rec->descriptor.pointer);
+      stream->seek(offset);
+
+      if (count == 0) {
+        return 0;
+      }
+
+      return stream->read(buffer, count);
+    }
+
+    void callbackClose(FT_Stream rec) {
+      gf::unused(rec);
+      // nothing to do
+    }
+
+  } // anonymous namespace
 
   Font::Font()
   : m_library(nullptr)
@@ -91,7 +99,6 @@ inline namespace v1 {
   , m_face(nullptr)
   , m_currentCharacterSize(0)
   {
-
     FT_Library library;
 
     if (auto err = FT_Init_FreeType(&library)) {
@@ -110,7 +117,6 @@ inline namespace v1 {
 
     m_stroker = stroker;
   }
-
 
   Font::~Font() {
     if (m_face != nullptr) {
@@ -131,17 +137,17 @@ inline namespace v1 {
     }
   }
 
-  Font::Font(Font&& other)
-  : m_library(other.m_library)
-  , m_stroker(other.m_stroker)
-  , m_face(other.m_face)
+  Font::Font(Font&& other) noexcept
+  : m_library(std::exchange(other.m_library, nullptr))
+  , m_stroker(std::exchange(other.m_stroker, nullptr))
+  , m_face(std::exchange(other.m_face, nullptr))
   , m_currentCharacterSize(other.m_currentCharacterSize)
   , m_cache(std::move(other.m_cache))
   {
-    other.m_library = other.m_stroker = other.m_face = nullptr;
+
   }
 
-  Font& Font::operator=(Font&& other) {
+  Font& Font::operator=(Font&& other) noexcept {
     std::swap(m_library, other.m_library);
     std::swap(m_stroker, other.m_stroker);
     std::swap(m_face, other.m_face);
@@ -192,7 +198,7 @@ inline namespace v1 {
     std::memset(&args, 0, sizeof(FT_Open_Args));
     args.flags = FT_OPEN_STREAM;
     args.stream = &rec;
-    args.driver = 0;
+    args.driver = nullptr;
 
     FT_Face face = nullptr;
 
@@ -217,7 +223,7 @@ inline namespace v1 {
 
     FT_Face face = nullptr;
 
-    if (auto err = FT_New_Memory_Face(library, static_cast<const FT_Byte *>(data), length, 0, &face)) {
+    if (auto err = FT_New_Memory_Face(library, static_cast<const FT_Byte*>(data), length, 0, &face)) {
       Log::error("Could not create the font face: %s\n", FT_ErrorMessage(err));
       return false;
     }
@@ -226,7 +232,6 @@ inline namespace v1 {
 
     return true;
   }
-
 
   const Glyph& Font::getGlyph(char32_t codepoint, unsigned characterSize, float outlineThickness) {
     auto cacheIt = m_cache.find(characterSize);

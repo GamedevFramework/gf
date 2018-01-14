@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -103,12 +103,12 @@ inline namespace v1 {
     /**
      * @brief Move constructor
      */
-    BareTexture(BareTexture&& other);
+    BareTexture(BareTexture&& other) noexcept;
 
     /**
      * @brief Move assignment
      */
-    BareTexture& operator=(BareTexture&& other);
+    BareTexture& operator=(BareTexture&& other) noexcept;
 
     /**
      * @brief Get the format of the texture
@@ -457,7 +457,7 @@ inline namespace v1 {
      * to pixels if necessary (texture may be padded or flipped).
      *
      * @return An image containing the texture's pixels
-     * 
+     *
      * @sa loadFromImage()
      */
     Image copyToImage() const;

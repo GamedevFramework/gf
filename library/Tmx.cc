@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -106,9 +106,7 @@ inline namespace v1 {
   }
 
 
-  TmxVisitor::~TmxVisitor() {
-
-  }
+  TmxVisitor::~TmxVisitor() = default;
 
   void TmxVisitor::visitTileLayer(const TmxLayers& map, const TmxTileLayer& layer) {
     gf::unused(map, layer);
@@ -128,9 +126,8 @@ inline namespace v1 {
     }
   }
 
-  TmxLayer::~TmxLayer() {
+  TmxLayer::~TmxLayer() = default;
 
-  }
 
   void TmxTileLayer::accept(const TmxLayers& map, TmxVisitor& visitor) const {
     visitor.visitTileLayer(map, *this);
@@ -148,9 +145,7 @@ inline namespace v1 {
     visitor.visitGroupLayer(map, *this);
   }
 
-  TmxObject::~TmxObject() {
-
-  }
+  TmxObject::~TmxObject() = default;
 
 
   const TmxTile *TmxTileset::getTile(unsigned id) const noexcept {
@@ -202,11 +197,6 @@ inline namespace v1 {
    */
 
   namespace {
-
-    template<typename T, typename ... Args>
-      std::unique_ptr<T> makeUnique(Args... args) {
-      return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
-    }
 
     enum class Requirement {
       Optional,
@@ -393,12 +383,12 @@ inline namespace v1 {
           return c - 'a' + 10;
         }
 
-        if (!('A' <= c && c <= 'F')) {
-          Log::error("Invalid character: '%c' (%x)\n", c, static_cast<int>(c));
+        if ('A' <= c && c <= 'F') {
+          return c - 'A' + 10;
         }
 
-        assert('A' <= c && c <= 'F');
-        return c - 'A' + 10;
+        Log::error("Invalid character: '%c' (%x)\n", c, static_cast<int>(c));
+        return 0;
       };
 
     };
@@ -586,20 +576,20 @@ inline namespace v1 {
       TmxCell cell;
 
       // Read out the flags
-      if ((gid & FlippedDiagonallyFlag) != 0) {
-        cell.flip.set(TmxFlip::Horizontally);
+      if ((gid & FlippedHorizontallyFlag) != 0) {
+        cell.flip.set(Flip::Horizontally);
       }
 
       if ((gid & FlippedVerticallyFlag) != 0) {
-        cell.flip.set(TmxFlip::Vertically);
+        cell.flip.set(Flip::Vertically);
       }
 
       if ((gid & FlippedDiagonallyFlag) != 0) {
-        cell.flip.set(TmxFlip::Diagonally);
+        cell.flip.set(Flip::Diagonally);
       }
 
       // Clear the flags
-      cell.gid &= ~(FlippedHorizontallyFlag | FlippedVerticallyFlag | FlippedDiagonallyFlag);
+      cell.gid = gid & ~(FlippedHorizontallyFlag | FlippedVerticallyFlag | FlippedDiagonallyFlag);
 
       return cell;
     }
@@ -622,9 +612,9 @@ inline namespace v1 {
             } else if (elt.isEnumAttribute("type", "float")) {
               tmx.addFloatProperty(std::move(name), elt.getDoubleAttribute("value"));
             } else if (elt.isEnumAttribute("type", "bool")) {
-              std::string value = elt.getStringAttribute("value");
-              assert(value == "true" || value == "false");
-              tmx.addBoolProperty(std::move(name), value == "true");
+              std::string trueOrFalse = elt.getStringAttribute("value");
+              assert(trueOrFalse == "true" || trueOrFalse == "false");
+              tmx.addBoolProperty(std::move(name), trueOrFalse == "true");
             } else if (elt.isEnumAttribute("type", "color")) {
               tmx.addColorProperty(std::move(name), elt.getColorAttribute("value"));
             } else if (elt.isEnumAttribute("type", "file")) {
@@ -656,7 +646,7 @@ inline namespace v1 {
     std::unique_ptr<TmxTileLayer> parseTmxTileLayer(const XMLElementWrapper elt) {
       assert(elt.is("layer"));
 
-      auto tmx = makeUnique<TmxTileLayer>();
+      auto tmx = std::make_unique<TmxTileLayer>();
       parseTmxLayer(elt, *tmx);
 
       elt.parseOneElement("data", [&tmx](const XMLElementWrapper elt) {
@@ -709,7 +699,7 @@ inline namespace v1 {
     std::unique_ptr<TmxImage> parseTmxImage(const XMLElementWrapper elt, const TmxParserCtx& ctx) {
       assert(elt.is("image"));
 
-      auto tmx = makeUnique<TmxImage>();
+      auto tmx = std::make_unique<TmxImage>();
 
       tmx->format = elt.getStringAttribute("format", Requirement::Optional);
       tmx->source = ctx.currentPath / elt.getStringAttribute("source");
@@ -729,7 +719,7 @@ inline namespace v1 {
     std::unique_ptr<TmxImageLayer> parseTmxImageLayer(const XMLElementWrapper elt, const TmxParserCtx& ctx) {
       assert(elt.is("imagelayer"));
 
-      auto tmx = makeUnique<TmxImageLayer>();
+      auto tmx = std::make_unique<TmxImageLayer>();
       parseTmxLayer(elt, *tmx);
 
       elt.parseOneElement("image", [&tmx, &ctx](const XMLElementWrapper elt) {
@@ -772,7 +762,7 @@ inline namespace v1 {
 
     std::unique_ptr<TmxObject> parseTmxObject(const XMLElementWrapper elt) {
       if (elt.hasChild("polygon")) {
-        auto tmx = makeUnique<TmxPolygon>();
+        auto tmx = std::make_unique<TmxPolygon>();
         parseTmxObjectCommon(elt, *tmx);
 
         tmx->kind = TmxObject::Polygon;
@@ -786,7 +776,7 @@ inline namespace v1 {
       }
 
       if (elt.hasChild("polyline")) {
-        auto tmx = makeUnique<TmxPolyline>();
+        auto tmx = std::make_unique<TmxPolyline>();
         parseTmxObjectCommon(elt, *tmx);
 
         tmx->kind = TmxObject::Polyline;
@@ -800,7 +790,7 @@ inline namespace v1 {
       }
 
       if (elt.hasChild("text")) {
-        auto tmx = makeUnique<TmxText>();
+        auto tmx = std::make_unique<TmxText>();
         parseTmxObjectCommon(elt, *tmx);
 
         tmx->kind = TmxObject::Text;
@@ -854,7 +844,7 @@ inline namespace v1 {
         unsigned gid = elt.getUIntAttribute("gid");
         TmxCell cell = decodeGID(gid);
 
-        auto tmx = makeUnique<TmxTileObject>();
+        auto tmx = std::make_unique<TmxTileObject>();
         parseTmxObjectCommon(elt, *tmx);
 
         tmx->kind = TmxObject::Tile;
@@ -865,7 +855,7 @@ inline namespace v1 {
       }
 
       if (elt.hasChild("ellipse")) {
-        auto tmx = makeUnique<TmxEllipse>();
+        auto tmx = std::make_unique<TmxEllipse>();
         parseTmxObjectCommon(elt, *tmx);
 
         tmx->kind = TmxObject::Ellipse;
@@ -875,7 +865,7 @@ inline namespace v1 {
         return std::move(tmx);
       }
 
-      auto tmx = makeUnique<TmxRectangle>();
+      auto tmx = std::make_unique<TmxRectangle>();
       parseTmxObjectCommon(elt, *tmx);
 
       tmx->kind = TmxObject::Rectangle;
@@ -888,7 +878,7 @@ inline namespace v1 {
     std::unique_ptr<TmxObjectLayer> parseTmxObjectLayer(const XMLElementWrapper elt) {
       assert(elt.is("objectgroup"));
 
-      auto tmx = makeUnique<TmxObjectLayer>();
+      auto tmx = std::make_unique<TmxObjectLayer>();
       parseTmxLayer(elt, *tmx);
 
       tmx->color = elt.getColorAttribute("color", Requirement::Optional);
@@ -914,7 +904,7 @@ inline namespace v1 {
     std::unique_ptr<TmxGroupLayer> parseTmxGroupLayer(const XMLElementWrapper elt, const TmxParserCtx& ctx) {
       assert(elt.is("group"));
 
-      auto tmx = makeUnique<TmxGroupLayer>();
+      auto tmx = std::make_unique<TmxGroupLayer>();
       parseTmxLayer(elt, *tmx);
 
       elt.parseEachElement([&tmx, &ctx](const XMLElementWrapper elt) {
@@ -950,7 +940,7 @@ inline namespace v1 {
     std::unique_ptr<TmxAnimation> parseTmxAnimation(const XMLElementWrapper elt) {
       assert(elt.is("animation"));
 
-      auto tmx = makeUnique<TmxAnimation>();
+      auto tmx = std::make_unique<TmxAnimation>();
 
       elt.parseManyElements("frame", [&tmx](const XMLElementWrapper elt) {
         tmx->frames.push_back(parseTmxFrame(elt));

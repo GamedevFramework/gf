@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -569,9 +569,9 @@ static void overview(gf::UI& ui) {
       ui.layoutRowEnd();
 
       if (popupActive) {
-        static gf::RectF bounds(20.0f, 100.0f, 220.0f, 90.0f);
+        static gf::RectF popupBounds(20.0f, 100.0f, 220.0f, 90.0f);
 
-        if (ui.popupBegin(gf::UIPopup::Static, "Error", gf::None, bounds)) {
+        if (ui.popupBegin(gf::UIPopup::Static, "Error", gf::None, popupBounds)) {
           ui.layoutRowDynamic(25, 1);
           ui.label("A terrible error has occurred");
 
@@ -607,9 +607,9 @@ static void overview(gf::UI& ui) {
       static gf::UIBrowser browser;
 
       if (fileSelectorActive) {
-        static gf::RectF bounds(20.0f, 100.0f, 500.0f, 500.0f);
+        static gf::RectF fileSelectorBounds(20.0f, 100.0f, 500.0f, 500.0f);
 
-        if (!ui.fileSelector(browser, "Choose a file", bounds)) {
+        if (!ui.fileSelector(browser, "Choose a file", fileSelectorBounds)) {
           fileSelectorActive = false;
         }
 

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0)
 
 project(GF
-  VERSION 0.6.0
+  VERSION 0.7.0
   LANGUAGES CXX C
 )
 
@@ -17,6 +17,9 @@ option(GF_BUILD_DOCUMENTATION "Build documentation (needs Doxygen)" ON)
 option(GF_BUILD_GAMES "Build games" OFF)
 option(GF_BUILD_TOOLS "Build tools" OFF)
 option(GF_SINGLE_COMPILTATION_UNIT "Build the library in a single file (unity build)" OFF)
+option(GF_SHARED "Build the library as a shared library" ON)
+
+set(BUILD_SHARED_LIBS ${GF_SHARED})
 
 include(GNUInstallDirs)
 set(GF_DATADIR ${CMAKE_INSTALL_FULL_DATADIR})
@@ -32,18 +35,29 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 set(SDL2_BUILDING_LIBRARY TRUE)
 find_package(SDL2 REQUIRED)
 
+if(MSVC)
+  message(STATUS "MSVC_VERSION: ${MSVC_VERSION}")
+  if(MSVC_VERSION GREATER_EQUAL 1910)
+    set(Boost_COMPILER "-vc141")
+  endif()
+  set(Boost_DEBUG TRUE)
+endif()
+
 find_package(Boost REQUIRED COMPONENTS filesystem system)
 find_package(Freetype REQUIRED)
 find_package(ZLIB REQUIRED)
 
 if(MSVC)
   message(STATUS "Using MSVC compiler")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /DNOMINMAX /W4 /utf-8")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /DNOMINMAX /W4 /utf-8 /std:c++14 /permissive-")
   link_directories(${Boost_LIBRARY_DIRS})
+  # for more information on the last two switches:
+  # - https://blogs.msdn.microsoft.com/vcblog/2016/06/07/standards-version-switches-in-the-compiler/
+  # - https://blogs.msdn.microsoft.com/vcblog/2016/11/16/permissive-switch/
 else()
   message(STATUS "Using GCC or Clang compiler")
   # assume it's a GNU-like compiler (GCC, clang)
-  set(CMAKE_CXX_FLAGS                 "-Wall -Wextra -std=c++11")
+  set(CMAKE_CXX_FLAGS                 "-Wall -Wextra -std=c++14")
   set(CMAKE_CXX_FLAGS_DEBUG           "-O0 -g")
   set(CMAKE_CXX_FLAGS_MINSIZEREL      "-Os -DNDEBUG")
   set(CMAKE_CXX_FLAGS_RELEASE         "-O3 -DNDEBUG")
@@ -89,8 +103,8 @@ endif()
 
 if(GF_BUILD_GAMES)
   add_subdirectory(games/bank_robbery_for_dummies)
-  add_subdirectory(games/gf_pong)
   add_subdirectory(games/gf_2048)
+  add_subdirectory(games/gf_pong)
   add_subdirectory(games/huaca)
   add_subdirectory(games/islands)
   add_subdirectory(games/lux)

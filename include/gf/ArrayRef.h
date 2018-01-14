@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -146,6 +146,15 @@ inline namespace v1 {
      */
     constexpr std::size_t getSize() const noexcept {
       return m_size;
+    }
+
+    /**
+     * @brief Check if the array is empty
+     *
+     * @returns True if the array has no elements
+     */
+    constexpr bool isEmpty() const noexcept {
+      return m_size == 0;
     }
 
     /**

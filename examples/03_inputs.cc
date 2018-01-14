@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -21,6 +21,8 @@
 #include <cassert>
 #include <iostream>
 
+#include <gf/Action.h>
+#include <gf/Controls.h>
 #include <gf/Event.h>
 #include <gf/Window.h>
 
@@ -74,6 +76,12 @@ int main() {
   gf::Gamepad::initialize();
 
   gf::Window window("03_inputs", { 640, 480 }, ~gf::WindowHints::Resizable);
+
+  gf::KonamiKeyboardControl konami;
+
+  gf::Action easterEgg("Easter egg");
+  easterEgg.addControl(konami);
+  easterEgg.setInstantaneous();
 
   std::cout << "Gamedev Framework (gf) example #03: Inputs\n";
   std::cout << "This example prints all input events\n";
@@ -169,9 +177,19 @@ int main() {
         default:
           break;
       }
+
+      easterEgg.processEvent(event);
+    }
+
+    if (easterEgg.isActive()) {
+      std::cout << "###############\n";
+      std::cout << "# Easter egg! #\n";
+      std::cout << "###############\n";
     }
 
     window.display();
+
+    easterEgg.reset();
   }
 
   return 0;

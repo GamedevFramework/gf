@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -59,6 +59,7 @@
 #include "Entity.h"
 #include "Event.h"
 #include "Flags.h"
+#include "Flip.h"
 #include "Font.h"
 #include "Gamepad.h"
 #include "Geometry.h"
@@ -141,6 +142,7 @@
 #include "ViewContainer.h"
 #include "View.h"
 #include "Views.h"
+#include "Winding.h"
 #include "Window.h"
 
 #endif // GF_ALL_H

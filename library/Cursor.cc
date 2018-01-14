@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -24,6 +24,7 @@
 #include <gf/Cursor.h>
 
 #include <cassert>
+#include <utility>
 
 #include <SDL.h>
 
@@ -35,22 +36,20 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-
   Cursor::Cursor()
   : m_cursor(nullptr)
   {
 
   }
 
-  Cursor::Cursor(Cursor&& other)
-  : m_cursor(other.m_cursor)
+  Cursor::Cursor(Cursor&& other) noexcept
+  : m_cursor(std::exchange(other.m_cursor, nullptr))
   {
-    other.m_cursor = nullptr;
+
   }
 
-  Cursor& Cursor::operator=(Cursor&& other) {
-    m_cursor = other.m_cursor;
-    other.m_cursor = nullptr;
+  Cursor& Cursor::operator=(Cursor&& other) noexcept {
+    m_cursor = std::exchange(other.m_cursor, nullptr);
     return *this;
   }
 
@@ -106,37 +105,41 @@ inline namespace v1 {
     return loadFromPixels(image.getPixelsPtr(), image.getSize(), hotspot);
   }
 
-  static SDL_SystemCursor getSDLSystemCursor(Cursor::Type type) {
-    switch (type) {
-      case Cursor::Arrow:
-        return SDL_SYSTEM_CURSOR_ARROW;
-      case Cursor::ArrowWait:
-        return SDL_SYSTEM_CURSOR_WAITARROW;
-      case Cursor::Wait:
-        return SDL_SYSTEM_CURSOR_WAIT;
-      case Cursor::Text:
-        return SDL_SYSTEM_CURSOR_IBEAM;
-      case Cursor::Hand:
-        return SDL_SYSTEM_CURSOR_HAND;
-      case Cursor::SizeHorizontal:
-        return SDL_SYSTEM_CURSOR_SIZEWE;
-      case Cursor::SizeVertical:
-        return SDL_SYSTEM_CURSOR_SIZENS;
-      case Cursor::SizeTopLeftBottomRight:
-        return SDL_SYSTEM_CURSOR_SIZENWSE;
-      case Cursor::SizeBottomLeftTopRight:
-        return SDL_SYSTEM_CURSOR_SIZENESW;
-      case Cursor::SizeAll:
-        return SDL_SYSTEM_CURSOR_SIZEALL;
-      case Cursor::Cross:
-        return SDL_SYSTEM_CURSOR_CROSSHAIR;
-      case Cursor::NotAllowed:
-        return SDL_SYSTEM_CURSOR_NO;
+  namespace {
+
+    SDL_SystemCursor getSDLSystemCursor(Cursor::Type type) {
+      switch (type) {
+        case Cursor::Arrow:
+          return SDL_SYSTEM_CURSOR_ARROW;
+        case Cursor::ArrowWait:
+          return SDL_SYSTEM_CURSOR_WAITARROW;
+        case Cursor::Wait:
+          return SDL_SYSTEM_CURSOR_WAIT;
+        case Cursor::Text:
+          return SDL_SYSTEM_CURSOR_IBEAM;
+        case Cursor::Hand:
+          return SDL_SYSTEM_CURSOR_HAND;
+        case Cursor::SizeHorizontal:
+          return SDL_SYSTEM_CURSOR_SIZEWE;
+        case Cursor::SizeVertical:
+          return SDL_SYSTEM_CURSOR_SIZENS;
+        case Cursor::SizeTopLeftBottomRight:
+          return SDL_SYSTEM_CURSOR_SIZENWSE;
+        case Cursor::SizeBottomLeftTopRight:
+          return SDL_SYSTEM_CURSOR_SIZENESW;
+        case Cursor::SizeAll:
+          return SDL_SYSTEM_CURSOR_SIZEALL;
+        case Cursor::Cross:
+          return SDL_SYSTEM_CURSOR_CROSSHAIR;
+        case Cursor::NotAllowed:
+          return SDL_SYSTEM_CURSOR_NO;
+      }
+
+      assert(false);
+      return SDL_SYSTEM_CURSOR_ARROW;
     }
 
-    assert(false);
-    return SDL_SYSTEM_CURSOR_ARROW;
-  }
+  } // anonymous namespace
 
   bool Cursor::loadFromSystem(Type type) {
     if (m_cursor != nullptr) {
@@ -158,5 +161,3 @@ inline namespace v1 {
 }
 #endif
 }
-
-

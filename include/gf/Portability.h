@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -21,7 +21,7 @@
 #ifndef GF_PORTABILITY_H
 #define GF_PORTABILITY_H
 
-#ifdef _WIN32
+#if defined(_WIN32) && defined(GF_SHARED)
   #define GF_API_EXPORT __declspec(dllexport)
   #define GF_API_IMPORT __declspec(dllimport)
 #else
@@ -29,7 +29,7 @@
   #define GF_API_IMPORT
 #endif
 
-#if GF_EXPORT_SYMBOLS
+#ifdef GF_EXPORT_SYMBOLS
   #define GF_API GF_API_EXPORT
 #else
   #define GF_API GF_API_IMPORT

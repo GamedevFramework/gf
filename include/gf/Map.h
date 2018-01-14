@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -163,7 +163,7 @@ inline namespace v1 {
      *
      * @param flags The properties to set
      */
-    void clear(CellFlags flags);
+    void reset(CellFlags flags);
 
     /**
      * @brief Make a cell transparent

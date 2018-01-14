@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -39,88 +39,92 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  static std::string loadFile(const Path& filename) {
-    std::ifstream file(filename.string());
+  namespace {
 
-    if (!file) {
-      Log::error("File for shader does not exist: '%s'\n", filename.string().c_str());
-      return "";
+    std::string loadFile(const Path& filename) {
+      std::ifstream file(filename.string());
+
+      if (!file) {
+        Log::error("File for shader does not exist: '%s'\n", filename.string().c_str());
+        return "";
+      }
+
+      std::string content;
+
+      for (std::string line; std::getline(file, line); ) {
+        content.append(line);
+        content.append(1, '\n');
+      }
+
+      Log::debug("Shader loaded from file: '%s'\n", filename.string().c_str());
+
+      return content;
     }
 
-    std::string content;
+    std::string loadStream(InputStream& stream) {
+      std::string content;
 
-    for (std::string line; std::getline(file, line); ) {
-      content.append(line);
-      content.append(1, '\n');
+      std::size_t size = stream.getSize();
+      content.resize(size);
+      stream.seek(0);
+
+      std::size_t read = 0;
+
+      do {
+        read += stream.read(&content[read], size - read);
+      } while (read < size);
+
+      content.push_back('\0');
+      return content;
     }
 
-    Log::debug("Shader loaded from file: '%s'\n", filename.string().c_str());
+    GLuint compileShader(const char *code, Shader::Type type) {
+      GLuint id = 0;
+      const char *typeString = nullptr;
 
-    return content;
-  }
+      // create shader
+      switch (type) {
+        case Shader::Vertex:
+          glCheck(id = glCreateShader(GL_VERTEX_SHADER));
+          typeString = "vertex";
+          break;
 
-  static std::string loadStream(InputStream& stream) {
-    std::string content;
+        case Shader::Fragment:
+          glCheck(id = glCreateShader(GL_FRAGMENT_SHADER));
+          typeString = "fragment";
+          break;
+      }
 
-    std::size_t size = stream.getSize();
-    content.resize(size);
-    stream.seek(0);
+      if (id == 0) {
+        return 0;
+      }
 
-    std::size_t read = 0;
+      // compile
+      const char *source[1] = { code };
+      glCheck(glShaderSource(id, 1, source, nullptr));
+      glCheck(glCompileShader(id));
 
-    do {
-      read += stream.read(&content[read], size - read);
-    } while (read < size);
 
-    content.push_back('\0');
-    return content;
-  }
+      // and check
+      GLint compileStatus = GL_FALSE;
+      glCheck(glGetShaderiv(id, GL_COMPILE_STATUS, &compileStatus));
 
-  static GLuint compileShader(const char *code, Shader::Type type) {
-    GLuint id = 0;
-    const char *typeString = nullptr;
+      if (compileStatus == GL_FALSE) {
+        GLint infoLogLength = 0;
+        glCheck(glGetShaderiv(id, GL_INFO_LOG_LENGTH, &infoLogLength));
 
-    // create shader
-    switch (type) {
-      case Shader::Vertex:
-        glCheck(id = glCreateShader(GL_VERTEX_SHADER));
-        typeString = "vertex";
-        break;
+        assert(infoLogLength > 0);
+        std::unique_ptr<char[]> infoLog(new char[infoLogLength]);
+        glCheck(glGetShaderInfoLog(id, infoLogLength, nullptr, infoLog.get()));
 
-      case Shader::Fragment:
-        glCheck(id = glCreateShader(GL_FRAGMENT_SHADER));
-        typeString = "fragment";
-        break;
+        Log::error("Error while compiling %s shader:\n%s\n", typeString, infoLog.get());
+        return 0;
+      }
+
+      return id;
     }
 
-    if (id == 0) {
-      return 0;
-    }
-
-    // compile
-    const char *source[1] = { code };
-    glCheck(glShaderSource(id, 1, source, nullptr));
-    glCheck(glCompileShader(id));
-
-
-    // and check
-    GLint compileStatus = GL_FALSE;
-    glCheck(glGetShaderiv(id, GL_COMPILE_STATUS, &compileStatus));
-
-    if (compileStatus == GL_FALSE) {
-      GLint infoLogLength = 0;
-      glCheck(glGetShaderiv(id, GL_INFO_LOG_LENGTH, &infoLogLength));
-
-      assert(infoLogLength > 0);
-      std::unique_ptr<char[]> infoLog(new char[infoLogLength]);
-      glCheck(glGetShaderInfoLog(id, infoLogLength, nullptr, infoLog.get()));
-
-      Log::error("Error while compiling %s shader:\n%s\n", typeString, infoLog.get());
-      return 0;
-    }
-
-    return id;
-  }
+  } // anonymous namespace
 
   Shader::Shader()
   : m_program(0)
@@ -280,13 +284,13 @@ inline namespace v1 {
   void Shader::setUniform(StringRef name, const Matrix3f& mat) {
     Guard guard(*this);
     int loc = getUniformLocation(name);
-    glCheck(glUniformMatrix3fv(loc, 1, GL_FALSE, mat.data));
+    glCheck(glUniformMatrix3fv(loc, 1, GL_FALSE, mat.getData()));
   }
 
   void Shader::setUniform(StringRef name, const Matrix4f& mat) {
     Guard guard(*this);
     int loc = getUniformLocation(name);
-    glCheck(glUniformMatrix4fv(loc, 1, GL_FALSE, mat.data));
+    glCheck(glUniformMatrix4fv(loc, 1, GL_FALSE, mat.getData()));
   }
 
   void Shader::setUniform(StringRef name, const BareTexture& tex) {

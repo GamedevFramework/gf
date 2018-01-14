@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -22,7 +22,6 @@
 #define GF_MESSAGE_MANAGER_H
 
 #include <cstdint>
-#include <functional>
 #include <map>
 #include <type_traits>
 #include <vector>
@@ -160,7 +159,9 @@ inline namespace v1 {
      */
     template<typename R, typename T>
     MessageHandlerId registerHandler(Id type, R T::*pm, T *obj) {
-      return registerHandler(type, std::bind(pm, obj, std::placeholders::_1, std::placeholders::_2));
+      return registerHandler(type, [pm, obj](Id id, Message *msg) {
+        return (obj->*pm)(id, msg);
+      });
     }
 
     /**
@@ -193,7 +194,9 @@ inline namespace v1 {
     MessageHandlerId registerHandler(R T::*pm, T *obj) {
       static_assert(std::is_base_of<Message, E>::value, "E must be an Message");
       static_assert(E::type != InvalidId, "E must define its type");
-      return registerHandler(E::type, std::bind(pm, obj, std::placeholders::_1, std::placeholders::_2));
+      return registerHandler(E::type, [pm, obj](Id id, Message *msg) {
+        return (obj->*pm)(id, msg);
+      });
     }
 
     /** @} */

@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -68,8 +68,8 @@ inline namespace v1 {
    * consistent to avoid errors.
    */
 
-#define FLAG_CHECK(GF_VAL, NK_VAL) static_assert(static_cast<uint32_t>(GF_VAL) == NK_VAL, "Problem with " #NK_VAL)
-#define ENUM_CHECK(GF_VAL, NK_VAL) static_assert(static_cast<int>(GF_VAL) == NK_VAL, "Problem with " #NK_VAL)
+#define FLAG_CHECK(GF_VAL, NK_VAL) static_assert(static_cast<uint32_t>(GF_VAL) == (NK_VAL), "Problem with " #NK_VAL)
+#define ENUM_CHECK(GF_VAL, NK_VAL) static_assert(static_cast<int>(GF_VAL) == (NK_VAL), "Problem with " #NK_VAL)
 
   // checks for UIWindow / nk_panel_flags
 
@@ -163,66 +163,70 @@ inline namespace v1 {
 #undef ENUM_CHECK
 #undef FLAG_CHECK
 
-  static float getTextWidth(nk_handle handle, float characterSize, const char *text, int len) {
-    auto font = static_cast<Font *>(handle.ptr);
+  namespace {
 
-    std::string originalText(text, len);
-    std::u32string unicodeText = computeUnicodeString(originalText);
+    float getTextWidth(nk_handle handle, float characterSize, const char *text, int len) {
+      auto font = static_cast<Font *>(handle.ptr);
 
-    float textWidth = 0;
-    char32_t prevCodepoint = '\0';
+      std::string originalText(text, len);
+      std::u32string unicodeText = computeUnicodeString(originalText);
 
-    for (char32_t currCodepoint : unicodeText) {
-      textWidth += font->getKerning(prevCodepoint, currCodepoint, characterSize);
-      prevCodepoint = currCodepoint;
+      float textWidth = 0;
+      char32_t prevCodepoint = '\0';
 
+      for (char32_t currCodepoint : unicodeText) {
+        textWidth += font->getKerning(prevCodepoint, currCodepoint, characterSize);
+        prevCodepoint = currCodepoint;
+
+        const Glyph& glyph = font->getGlyph(currCodepoint, characterSize);
+        textWidth += glyph.advance;
+      }
+
+      return textWidth;
+    }
+
+    void getFontGlyph(nk_handle handle, float characterSize, nk_user_font_glyph *g, nk_rune currCodepoint, nk_rune nextCodepoint) {
+      auto font = static_cast<Font *>(handle.ptr);
+      assert(font);
+
+      float kerning = font->getKerning(currCodepoint, nextCodepoint, characterSize);
       const Glyph& glyph = font->getGlyph(currCodepoint, characterSize);
-      textWidth += glyph.advance;
+
+      g->width = glyph.bounds.width;
+      g->height = glyph.bounds.height;
+      g->xadvance = glyph.advance + kerning; // is it good?
+
+      g->uv[0].x = glyph.textureRect.left;
+      g->uv[0].y = glyph.textureRect.top;
+      g->uv[1].x = glyph.textureRect.left + glyph.textureRect.width;
+      g->uv[1].y = glyph.textureRect.top + glyph.textureRect.height;
+
+      g->offset.x = glyph.bounds.left;
+      g->offset.y = glyph.bounds.top + characterSize; // hacky but works
     }
 
-    return textWidth;
-  }
+    void clipboardPaste(nk_handle usr, struct nk_text_edit *edit) {
+      gf::unused(usr);
 
-  static void getFontGlyph(nk_handle handle, float characterSize, nk_user_font_glyph *g, nk_rune currCodepoint, nk_rune nextCodepoint) {
-    auto font = static_cast<Font *>(handle.ptr);
-    assert(font);
+      auto text = Clipboard::getString();
 
-    float kerning = font->getKerning(currCodepoint, nextCodepoint, characterSize);
-    const Glyph& glyph = font->getGlyph(currCodepoint, characterSize);
-
-    g->width = glyph.bounds.width;
-    g->height = glyph.bounds.height;
-    g->xadvance = glyph.advance + kerning; // is it good?
-
-    g->uv[0].x = glyph.textureRect.left;
-    g->uv[0].y = glyph.textureRect.top;
-    g->uv[1].x = glyph.textureRect.left + glyph.textureRect.width;
-    g->uv[1].y = glyph.textureRect.top + glyph.textureRect.height;
-
-    g->offset.x = glyph.bounds.left;
-    g->offset.y = glyph.bounds.top + characterSize; // hacky but works
-  }
-
-  static void clipboardPaste(nk_handle usr, struct nk_text_edit *edit) {
-    gf::unused(usr);
-
-    auto text = Clipboard::getString();
-
-    if (!text.empty()) {
-      nk_textedit_paste(edit, text.c_str(), text.size());
-    }
-  }
-
-  static void clipboardCopy(nk_handle usr, const char *text, int len) {
-    gf::unused(usr);
-
-    if (len == 0) {
-      return;
+      if (!text.empty()) {
+        nk_textedit_paste(edit, text.c_str(), text.size());
+      }
     }
 
-    std::string str(text, len);
-    Clipboard::setString(str);
-  }
+    void clipboardCopy(nk_handle usr, const char *text, int len) {
+      gf::unused(usr);
+
+      if (len == 0) {
+        return;
+      }
+
+      std::string str(text, len);
+      Clipboard::setString(str);
+    }
+
+  } // anonymous namespace
 
   struct UI::UIImpl {
     State state;
@@ -264,9 +268,9 @@ inline namespace v1 {
     nk_free(&m_impl->ctx);
   }
 
-  UI::UI(UI&&) = default;
+  UI::UI(UI&&) noexcept = default;
 
-  UI& UI::operator=(UI&&) = default;
+  UI& UI::operator=(UI&&) noexcept = default;
 
   void UI::processEvent(const Event& event) {
     setState(State::Input);
@@ -657,9 +661,9 @@ inline namespace v1 {
 
   bool UI::colorPicker(Color4f& color) {
     setState(State::Setup);
-    nk_color localColor = nk_rgba_f(color.r, color.g, color.b, color.a);
+    nk_colorf localColor = { color.r, color.g, color.b, color.a };
     int ret = nk_color_pick(&m_impl->ctx, &localColor, NK_RGBA);
-    nk_color_f(&color.r, &color.g, &color.b, &color.a, localColor);
+    color = { localColor.r, localColor.g, localColor.g, localColor.a };
     return ret != 0;
   }
 

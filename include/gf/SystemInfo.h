@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -41,6 +41,7 @@ inline namespace v1 {
    * - the number of CPU cores
    * - the amount of memory (RAM)
    *
+   * @sa gf::Paths
    */
   class GF_API SystemInfo {
   public:
