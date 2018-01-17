@@ -87,7 +87,7 @@ inline namespace v1 {
 
       assert(false);
       return 0;
-    };
+    }
 
     int getAlignment(BareTexture::Format format) {
       switch (format) {
@@ -99,7 +99,7 @@ inline namespace v1 {
 
       assert(false);
       return 4;
-    };
+    }
 
     GLenum getMinFilter(bool smooth, bool mipmap) {
       if (mipmap) {
