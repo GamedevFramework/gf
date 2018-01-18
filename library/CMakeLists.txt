@@ -162,6 +162,8 @@ else()
     View.cc
     ViewContainer.cc
     Views.cc
+    Widgets.cc
+    WidgetContainer.cc
     Window.cc
     # generated
     data/generated.cc
