@@ -59,6 +59,7 @@ int main() {
   std::printf("Paths:\n");
   std::printf("- Current path: %s\n", gf::Paths::getCurrentPath().string().c_str());
   std::printf("- Base path: %s\n", gf::Paths::getBasePath().string().c_str());
+  std::printf("- Temporary directory: %s\n", gf::Paths::getTemporaryDirectory().string().c_str());
   std::printf("\n");
 
   auto monitors = gf::Monitor::getAvailableMonitors();

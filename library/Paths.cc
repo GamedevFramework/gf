@@ -55,6 +55,14 @@ inline namespace v1 {
     return boost::filesystem::current_path();
   }
 
+  Path Paths::getTemporaryDirectory() {
+    return boost::filesystem::temp_directory_path();
+  }
+
+  Path Paths::getUniquePath() {
+    return boost::filesystem::unique_path();
+  }
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif
