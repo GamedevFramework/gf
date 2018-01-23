@@ -108,6 +108,8 @@ inline namespace v1 {
       default:
         break;
     }
+
+    type = DataType::Nil;
   }
 
   void DataObject::move(DataObject&& other) {

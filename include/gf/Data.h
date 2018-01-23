@@ -42,56 +42,131 @@ namespace gf {
 inline namespace v1 {
 #endif
 
+  /**
+   * @ingroup game
+   * @brief Conversion functions for data objects
+   *
+   * @sa gf::DataObject
+   */
   struct GF_API Data {
+    /**
+     * @brief Deleted constructor
+     */
     Data() = delete;
 
+    /**
+     * @brief Convert a primitive object to a data object
+     *
+     * @param data The data to be converted
+     * @returns A data object
+     */
     template<typename T>
     static DataObject convert(T data) {
       return DataObject(data);
     }
 
+    /**
+     * @brief Convert a string to a data object
+     *
+     * @param data The data to be converted
+     * @returns A data object
+     */
     static DataObject convert(const char *data) {
       return convertString(data, data + std::strlen(data));
     }
 
+    /**
+     * @brief Convert a string to a data object
+     *
+     * @param data The data to be converted
+     * @returns A data object
+     */
     static DataObject convert(const std::string& data) {
       return convertString(data.begin(), data.end());
     }
 
+    /**
+     * @brief Convert a blob to a data object
+     *
+     * @param data The data to be converted
+     * @returns A data object
+     */
     template<std::size_t N>
     static DataObject convert(const uint8_t (&data)[N]) {
       return convertBinary(data, data + N, N);
     }
 
+    /**
+     * @brief Convert a blob to a data object
+     *
+     * @param data The data to be converted
+     * @returns A data object
+     */
     static DataObject convert(const std::vector<uint8_t>& data) {
       return convertBinary(data.begin(), data.end(), data.size());
     }
 
+    /**
+     * @brief Convert a blob to a data object
+     *
+     * @param data The data to be converted
+     * @returns A data object
+     */
     template<std::size_t N>
     static DataObject convert(const std::array<uint8_t,N>& data) {
       return convertBinary(data.begin(), data.end(), data.size());
     }
 
+    /**
+     * @brief Convert an array to a data object
+     *
+     * @param data The data to be converted
+     * @returns A data object
+     */
     template<typename T, std::size_t N>
     static DataObject convert(const T (&data)[N]) {
       return convertArray(data, data + N, N);
     }
 
+    /**
+     * @brief Convert an array to a data object
+     *
+     * @param data The data to be converted
+     * @returns A data object
+     */
     template<typename T>
     static DataObject convert(const std::vector<T>& data) {
       return convertArray(data.begin(), data.end(), data.size());
     }
 
+    /**
+     * @brief Convert an array to a data object
+     *
+     * @param data The data to be converted
+     * @returns A data object
+     */
     template<typename T, std::size_t N>
     static DataObject convert(const std::array<T,N>& data) {
       return convertArray(data.begin(), data.end(), data.size());
     }
 
+    /**
+     * @brief Convert a map to a data object
+     *
+     * @param data The data to be converted
+     * @returns A data object
+     */
     template<typename K, typename V>
     static DataObject convert(const std::map<K,V>& data) {
       return convertMap(data.begin(), data.end(), data.size());
     }
 
+    /**
+     * @brief Convert a map to a data object
+     *
+     * @param data The data to be converted
+     * @returns A data object
+     */
     template<typename K, typename V>
     static DataObject convert(const std::unordered_map<K,V>& data) {
       return convertMap(data.begin(), data.end(), data.size());
