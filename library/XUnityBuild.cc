@@ -49,6 +49,8 @@
 #include "Cursor.cc"
 #include "Curve.cc"
 #include "Curves.cc"
+#include "Data.cc"
+#include "DataObject.cc"
 #include "Direction.cc"
 #include "Drawable.cc"
 #include "Easings.cc"

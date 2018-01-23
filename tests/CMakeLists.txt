@@ -5,6 +5,7 @@ add_executable(gf_tests
   testArrayRef.cc
   testBufferRef.cc
   testCirc.cc
+  testData.cc
   testFlags.cc
   testId.cc
   testMatrix.cc

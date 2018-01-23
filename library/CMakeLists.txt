@@ -91,6 +91,8 @@ else()
     Cursor.cc
     Curve.cc
     Curves.cc
+    Data.cc
+    DataObject.cc
     Direction.cc
     Drawable.cc
     Easings.cc
