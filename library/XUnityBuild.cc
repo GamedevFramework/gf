@@ -32,6 +32,7 @@
 #include "AnimatedSprite.cc"
 #include "Animation.cc"
 #include "AssetManager.cc"
+#include "BinaryFile.cc"
 #include "Blend.cc"
 #include "BufferedGeometry.cc"
 #include "Circ.cc"

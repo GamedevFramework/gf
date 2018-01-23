@@ -74,6 +74,7 @@ else()
     AnimatedSprite.cc
     Animation.cc
     AssetManager.cc
+    BinaryFile.cc
     Blend.cc
     BufferedGeometry.cc
     Circ.cc
