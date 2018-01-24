@@ -141,6 +141,8 @@ else()
     RenderTexture.cc
     RenderWindow.cc
     ResourceManager.cc
+    Serialization.cc
+    SerializationOps.cc
     Shader.cc
     Shape.cc
     Shapes.cc

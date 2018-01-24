@@ -99,6 +99,8 @@
 #include "RenderTexture.cc"
 #include "RenderWindow.cc"
 #include "ResourceManager.cc"
+#include "Serialization.cc"
+#include "SerializationOps.cc"
 #include "Shader.cc"
 #include "Shape.cc"
 #include "Shapes.cc"

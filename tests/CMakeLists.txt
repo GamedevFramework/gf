@@ -12,6 +12,7 @@ add_executable(gf_tests
   testMatrix2.cc
   testRange.cc
   testRect.cc
+  testSerialization.cc
   testSingleton.cc
   testStringRef.cc
   testVector.cc
