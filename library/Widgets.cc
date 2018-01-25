@@ -29,29 +29,6 @@ inline namespace v1 {
 #endif
 
   /**********************/
-  /*       Widget       */
-  /**********************/
-  void Widget::setDisabled() {
-    m_state = WidgetState::Disabled;
-  }
-
-  void Widget::setDefault() {
-    m_state = WidgetState::Default;
-  }
-
-  void Widget::setSelected() {
-    m_state = WidgetState::Selected;
-  }
-
-  void Widget::setCallback(std::function<void()> &callback) {
-    m_handler = callback;
-  }
-
-  void Widget::trigger() {
-    m_handler();
-  }
-
-  /**********************/
   /*     TextWidget     */
   /**********************/
 
