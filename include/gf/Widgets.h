@@ -23,78 +23,12 @@
 
 #include "RenderTarget.h"
 #include "Text.h"
+#include "Widget.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
 #endif
-
-  /**
-   * @ingroup graphics
-   * @brief State of a widget
-   *
-   * @sa gf::Widget
-   */
-  enum class WidgetState {
-    Disabled, ///< The widget is disabled
-    Default, ///< The default widget state
-    Selected, ///< The widget is selected
-  };
-
-  /**
-   * @ingroup widgets
-   * @brief The widgets abstract class
-   */
-  class GF_API Widget {
-  public:
-    /**
-     * @brief Render the widget on the target
-     *
-     * @param target The render target
-     * @param states The render states to use for drawing
-     */
-    virtual void render(RenderTarget &target, const RenderStates &states) = 0;
-
-    /**
-     * @brief Abstract method that returns the global bounds of the widget
-     *
-     * @return the global bounds
-     */
-    virtual RectF getGlobalBounds() = 0;
-
-    /**
-     * @brief Disable the widget.
-     */
-    void setDisabled();
-
-    /**
-     * @brief Set the widget to it's default state
-     */
-    void setDefault();
-
-    /**
-     * @brief Select the widget
-     */
-    void setSelected();
-
-    /**
-     * @brief Set the callback of the widget
-     *
-     * @param callback The function that will be execute when the widget will be triggered.
-     */
-    void setCallback(std::function<void()> &callback);
-
-    /**
-     * @brief Execute the callback function
-     *
-     * @sa setCallback()
-     */
-    void trigger();
-
-  protected:
-    WidgetState m_state;
-    std::function<void()> m_handler;
-  };
 
   /**
    * @ingroup graphics

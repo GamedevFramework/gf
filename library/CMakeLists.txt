@@ -162,6 +162,7 @@ else()
     View.cc
     ViewContainer.cc
     Views.cc
+    Widget.cc
     Widgets.cc
     WidgetContainer.cc
     Window.cc
