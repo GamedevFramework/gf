@@ -28,17 +28,19 @@ inline namespace v1 {
 #endif
 
   WidgetContainer::WidgetContainer()
-    : m_currentWidgetPos(0)
+    : m_currentWidgetPos(0), m_widgetIsSelected(false)
   {
   }
 
   void WidgetContainer::pointTo(Vector2f coords)
   {
+    m_widgetIsSelected = false;
     for(size_t i = 0; i < m_widgets.size(); i++) {
       m_widgets[i]->setDefault();
       if (m_widgets[i]->getGlobalBounds().contains(coords)) {
         m_currentWidgetPos = i;
         m_widgets[i]->setSelected();
+        m_widgetIsSelected = true;
       }
     }
   }
@@ -66,7 +68,7 @@ inline namespace v1 {
   }
 
   void WidgetContainer::triggerAction() {
-    if (m_widgets[m_currentWidgetPos] != nullptr) {
+    if (m_widgets[m_currentWidgetPos] != nullptr && m_widgetIsSelected) {
       m_widgets[m_currentWidgetPos]->trigger();
     }
   }
@@ -75,7 +77,11 @@ inline namespace v1 {
     if (m_widgets[m_currentWidgetPos] != nullptr) {
       m_widgets[m_currentWidgetPos]->setDefault();
     }
-    m_currentWidgetPos++;
+    if (m_widgetIsSelected) {
+      m_currentWidgetPos++;
+    } else {
+      m_widgetIsSelected = true;
+    }
     if (m_currentWidgetPos >= m_widgets.size()) {
       m_currentWidgetPos = 0;
     }
@@ -86,10 +92,14 @@ inline namespace v1 {
     if (m_widgets[m_currentWidgetPos] != nullptr) {
       m_widgets[m_currentWidgetPos]->setDefault();
     }
-    if (m_currentWidgetPos <= 0) {
-      m_currentWidgetPos = m_widgets.size();
+    if (m_widgetIsSelected) {
+      if (m_currentWidgetPos <= 0) {
+        m_currentWidgetPos = m_widgets.size();
+      }
+      m_currentWidgetPos--;
+    } else {
+      m_widgetIsSelected = true;
     }
-    m_currentWidgetPos--;
     m_widgets[m_currentWidgetPos]->setSelected();
   }
 

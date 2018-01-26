@@ -98,6 +98,7 @@ inline namespace v1 {
   private:
     std::vector<Widget*> m_widgets;
     size_t m_currentWidgetPos;
+    bool m_widgetIsSelected;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
