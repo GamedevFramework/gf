@@ -175,7 +175,7 @@ inline namespace v1 {
      * @param i the coordinate number
      * @return The @f$ i @f$-th coordinate of the vector
      */
-    T operator[](std::size_t i) const {
+    constexpr T operator[](std::size_t i) const {
       return data[i];
     }
 
@@ -190,7 +190,7 @@ inline namespace v1 {
      * @param i the coordinate number
      * @return The @f$ i @f$-th coordinate of the vector
      */
-    T& operator[](std::size_t i) {
+    constexpr T& operator[](std::size_t i) {
       return data[i];
     }
 
@@ -418,7 +418,7 @@ inline namespace v1 {
      * @param i the coordinate number
      * @return The @f$ i @f$-th coordinate of the vector
      */
-    T operator[](std::size_t i) const {
+    constexpr T operator[](std::size_t i) const {
       const T *data[] = { &x, &y };
       return *data[i];
     }
@@ -434,7 +434,7 @@ inline namespace v1 {
      * @param i the coordinate number
      * @return The @f$ i @f$-th coordinate of the vector
      */
-    T& operator[](std::size_t i) {
+    constexpr T& operator[](std::size_t i) {
       T *data[] = { &x, &y };
       return *data[i];
     }
@@ -686,7 +686,7 @@ inline namespace v1 {
      * @param i the coordinate number
      * @return The @f$ i @f$-th coordinate of the vector
      */
-    T operator[](std::size_t i) const {
+    constexpr T operator[](std::size_t i) const {
       const T *data[] = { &x, &y, &z };
       return *data[i];
     }
@@ -702,7 +702,7 @@ inline namespace v1 {
      * @param i the coordinate number
      * @return The @f$ i @f$-th coordinate of the vector
      */
-    T& operator[](std::size_t i) {
+    constexpr T& operator[](std::size_t i) {
       T *data[] = { &x, &y, &z };
       return *data[i];
     }
@@ -957,7 +957,7 @@ inline namespace v1 {
      * @param i the coordinate number
      * @return The @f$ i @f$-th coordinate of the vector
      */
-    T operator[](std::size_t i) const {
+    constexpr T operator[](std::size_t i) const {
       const T *data[] = { &x, &y, &z, &w };
       return *data[i];
     }
@@ -973,7 +973,7 @@ inline namespace v1 {
      * @param i the coordinate number
      * @return The @f$ i @f$-th coordinate of the vector
      */
-    T& operator[](std::size_t i) {
+    constexpr T& operator[](std::size_t i) {
       T *data[] = { &x, &y, &z, &w };
       return *data[i];
     }
