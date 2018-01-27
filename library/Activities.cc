@@ -60,7 +60,7 @@ inline namespace v1 {
   RotateToActivity::RotateToActivity(float origin, float target, float& angle, Time duration, Easing easing)
   : m_tween(origin, target, angle, duration, easing)
   {
-    if (origin > target) {
+    if (origin < target) {
       while (target - origin > gf::Pi) {
         target -= 2 * gf::Pi;
       }
