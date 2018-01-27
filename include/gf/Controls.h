@@ -152,7 +152,7 @@ inline namespace v1 {
 
   /**
    * @ingroup window
-   * @brief The Konami code control for keayboard
+   * @brief The Konami code control for keyboard
    *
    * @sa [Konami Code - Wikipedia](https://en.wikipedia.org/wiki/Konami_Code)
    */
