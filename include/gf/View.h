@@ -89,7 +89,7 @@ inline namespace v1 {
    * renderer.draw(someOtherSprite);
    * ~~~
    *
-   * @sa gf::RenderTarget, gf::AdaptiveView
+   * @sa gf::RenderTarget, gf::AdaptativeView
    */
   class GF_API View {
   public:
@@ -168,14 +168,14 @@ inline namespace v1 {
     /**
      * @brief Set the orientation of the view
      *
-     * The default rotation of a view is 0 degree.
+     * The default rotation of a view is 0 radians.
      *
-     * @param rotation New angle, in radians
+     * @param angle New angle, in radians
      *
      * @sa getRotation()
      */
-    void setRotation(float rotation) {
-      m_rotation = rotation;
+    void setRotation(float angle) {
+      m_rotation = angle;
     }
 
     /**
