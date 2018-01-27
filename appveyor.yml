@@ -22,6 +22,7 @@ before_build:
   - cmd: vcpkg remove --outdated
   - cmd: vcpkg install sdl2:x64-windows freetype:x64-windows zlib:x64-windows
   - cmd: dir C:\Libraries\boost_1_65_1\
+  - cmd: dir C:\Libraries\boost_1_65_1\lib64-msvc-14.1\
   - cmd: cd C:\projects\GF
   - cmd: mkdir build
   - cmd: cd build
