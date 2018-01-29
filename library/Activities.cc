@@ -60,19 +60,7 @@ inline namespace v1 {
   RotateToActivity::RotateToActivity(float origin, float target, float& angle, Time duration, Easing easing)
   : m_tween(origin, target, angle, duration, easing)
   {
-    if (origin < target) {
-      while (target - origin > gf::Pi) {
-        target -= 2 * gf::Pi;
-      }
-    } else {
-      while (origin - target > gf::Pi) {
-        target += 2 * gf::Pi;
-      }
-    }
-
-    assert(origin - gf::Pi <= target && target <= origin + gf::Pi);
-
-    m_tween.setTarget(target);
+    normalize();
   }
 
   ActivityStatus RotateToActivity::run(Time time) {
@@ -86,6 +74,16 @@ inline namespace v1 {
 
   void RotateToActivity::restart() {
     m_tween.restart();
+  }
+
+  void RotateToActivity::normalize() {
+    float origin = m_tween.getOrigin();
+    float target = m_tween.getTarget();
+
+    target = origin + std::remainder(target - origin, 2 * gf::Pi);
+    assert(origin - gf::Pi <= target && target <= origin + gf::Pi);
+
+    m_tween.setTarget(origin + diff);
   }
 
   /*

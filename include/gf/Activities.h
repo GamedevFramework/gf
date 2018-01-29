@@ -143,6 +143,7 @@ inline namespace v1 {
      */
     void setOrigin(float origin) {
       m_tween.setOrigin(origin);
+      normalize();
     }
 
     /**
@@ -161,6 +162,7 @@ inline namespace v1 {
      */
     void setTarget(float target) {
       m_tween.setTarget(target);
+      normalize();
     }
 
     /**
@@ -192,6 +194,9 @@ inline namespace v1 {
 
     virtual ActivityStatus run(Time time) override;
     virtual void restart() override;
+
+  private:
+    void normalize();
 
   private:
     Tween<float> m_tween;
