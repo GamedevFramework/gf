@@ -105,6 +105,14 @@ inline namespace v1 {
     }
   }
 
+  RectF TileLayer::getLocalBounds() const {
+    return RectF({ 0.0f, 0.0f }, m_layerSize * m_blockSize);
+  }
+
+  void TileLayer::setAnchor(Anchor anchor) {
+    setOriginFromAnchorAndBounds(anchor, getLocalBounds());
+  }
+
   VertexBuffer TileLayer::commitGeometry() const {
     VertexArray vertices(PrimitiveType::Triangles);
     RectU rect({ 0u, 0u }, m_layerSize);
