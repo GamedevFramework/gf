@@ -422,6 +422,11 @@ inline namespace v1 {
      */
     void addActivity(Activity& activity);
 
+    /**
+     * @brief Remove all the activities
+     */
+    void clear();
+
     virtual ActivityStatus run(Time time) override;
     virtual void restart() override;
 
@@ -481,6 +486,11 @@ inline namespace v1 {
      * @param activity The activity
      */
     void addActivity(Activity& activity);
+
+    /**
+     * @brief Remove all the activities
+     */
+    void clear();
 
     virtual ActivityStatus run(Time time) override;
     virtual void restart() override;

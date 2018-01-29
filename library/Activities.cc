@@ -199,6 +199,10 @@ inline namespace v1 {
     m_activities.push_back(&activity);
   }
 
+  void SequenceActivity::clear() {
+    m_activities.clear();
+  }
+
   ActivityStatus SequenceActivity::run(Time time) {
     if (m_current == m_activities.size()) {
       return ActivityStatus::Finished;
@@ -266,6 +270,10 @@ inline namespace v1 {
 
   void ParallelActivity::addActivity(Activity& activity) {
     m_activities.push_back(&activity);
+  }
+
+  void ParallelActivity::clear() {
+    m_activities.clear();
   }
 
   ActivityStatus ParallelActivity::run(Time time) {
