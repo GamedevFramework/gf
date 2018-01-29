@@ -83,7 +83,7 @@ inline namespace v1 {
     target = origin + std::remainder(target - origin, 2 * gf::Pi);
     assert(origin - gf::Pi <= target && target <= origin + gf::Pi);
 
-    m_tween.setTarget(origin + diff);
+    m_tween.setTarget(target);
   }
 
   /*
