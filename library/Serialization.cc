@@ -939,11 +939,13 @@ inline namespace v1 {
       return false;
     }
 
-    auto data = std::make_unique<char[]>(size);
+    auto data = std::make_unique<char[]>(size + 1);
 
     if (!readString(data.get(), size)) {
       return false;
     }
+
+    data[size] = '\0';
 
     object.type = DataType::String;
     object.string.size = size;
