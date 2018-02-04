@@ -22,6 +22,8 @@
 #include <cstdio>
 #include <cstdlib>
 
+#include <fstream>
+
 #include <rapidjson/document.h>
 #include <rapidjson/error/en.h>
 #include <rapidjson/istreamwrapper.h>
