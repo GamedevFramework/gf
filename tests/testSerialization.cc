@@ -28,6 +28,7 @@
 
 #include <gf/DataObject.h>
 #include <gf/Paths.h>
+#include <gf/VectorOps.h>
 
 #include "gtest/gtest.h"
 
@@ -422,4 +423,16 @@ TEST(SerialTest, MsgPackIndex) {
   EXPECT_EQ(object.map.data[1].key.type, gf::DataType::String);
   EXPECT_EQ(object.map.data[1].value.type, gf::DataType::Unsigned);
 
+}
+
+TEST(SerialTest, Vector) {
+  gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
+
+  gf::Vector4i in1(-1, 2, -3, 4);
+  gf::Vector4i out1;
+
+  {  gf::Serializer ar(filename); ar | in1; }
+  {  gf::Deserializer ar(filename); ar | out1; }
+
+  EXPECT_EQ(in1, out1);
 }

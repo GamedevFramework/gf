@@ -26,6 +26,7 @@
 #include <type_traits>
 
 #include "Math.h"
+#include "SerializationHeaders.h"
 #include "Vector.h"
 
 namespace gf {
@@ -1002,6 +1003,28 @@ inline namespace v1 {
       lhs.z * rhs.x - lhs.x * rhs.z,
       lhs.x * rhs.y - lhs.y * rhs.x
     };
+  }
+
+
+  /**
+   * @relates Vector
+   * @brief Serialize and deserialize a vector
+   *
+   * @param ar The archive
+   * @param vec The vector to serialize
+   * @sa gf::Serialize, gf::Deserialiser
+   */
+  template<typename Archive, typename T, std::size_t N>
+  inline
+  Archive& operator|(Archive& ar, Vector<T,N>& vec) {
+    SerialArrayHeader header{N};
+    ar | header;
+
+    for (uint32_t i = 0; i < header.size; ++i) {
+      ar | vec[i];
+    }
+
+    return ar;
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

@@ -28,6 +28,7 @@
 
 #include <gf/Data.h>
 #include <gf/Log.h>
+#include <gf/SerializationHeaders.h>
 #include <gf/SerializationOps.h>
 
 static gf::Serializer& operator|(gf::Serializer& ar, const rapidjson::Value& value) {
@@ -45,7 +46,7 @@ static gf::Serializer& operator|(gf::Serializer& ar, const rapidjson::Value& val
       break;
 
     case rapidjson::kObjectType:
-      ar.writeMapHeader(value.MemberCount());
+      ar | gf::SerialMapHeader{value.MemberCount()};
 
       for (auto& item : value.GetObject()) {
         ar | item.name | item.value;
@@ -54,7 +55,7 @@ static gf::Serializer& operator|(gf::Serializer& ar, const rapidjson::Value& val
       break;
 
     case rapidjson::kArrayType:
-      ar.writeArrayHeader(value.Size());
+      ar | gf::SerialArrayHeader{value.Size()};
 
       for (auto& item : value.GetArray()) {
         ar | item;

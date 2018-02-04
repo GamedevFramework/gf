@@ -142,6 +142,7 @@ else()
     RenderWindow.cc
     ResourceManager.cc
     Serialization.cc
+    SerializationHeaders.cc
     SerializationOps.cc
     Shader.cc
     Shape.cc
