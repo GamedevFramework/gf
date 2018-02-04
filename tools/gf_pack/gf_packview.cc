@@ -18,6 +18,7 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
+#include <cassert>
 #include <cstdio>
 #include <cstdlib>
 #include <cinttypes>
@@ -28,26 +29,34 @@
 #include <gf/Data.h>
 #include <gf/SerializationOps.h>
 
+#define COLOR_RED     "\x1B[31m"
+#define COLOR_GREEN   "\x1B[32m"
+#define COLOR_YELLOW  "\x1B[33m"
+#define COLOR_BLUE    "\x1B[34m"
+#define COLOR_MAGENTA "\x1B[35m"
+#define COLOR_CYAN    "\x1B[36m"
+#define COLOR_STOP    "\x1B[0m"
+
 struct DataPrinter {
 
   void print(gf::DataObject& object) {
     switch (object.type) {
       case gf::DataType::Array:
-        printIndent();
-        printf("[\n");
+        printf(COLOR_RED "<array>" COLOR_STOP " (%" PRIu32 ") [\n", object.array.size);
         indent++;
-        for (uint32_t i = 0; i < std::min(UINT32_C(10), object.array.size); ++i) {
+        for (uint32_t i = 0; i < object.array.size; ++i) {
+          printIndent();
           print(object.array.data[i]);
           printf("\n");
         }
         indent--;
         printIndent();
-        printf("]\n");
+        printf("]");
         break;
       case gf::DataType::Map:
-        printf("{\n");
+        printf(COLOR_RED "<map>" COLOR_STOP " (%" PRIu32 ") {\n", object.map.size);
         indent++;
-        for (uint32_t i = 0; i < std::min(UINT32_C(10), object.map.size); ++i) {
+        for (uint32_t i = 0; i < object.map.size; ++i) {
           printIndent();
           printSimple(object.map.data[i].key);
           printf(": ");
@@ -56,7 +65,7 @@ struct DataPrinter {
         }
         indent--;
         printIndent();
-        printf("}\n");
+        printf("}");
         break;
       default:
         printSimple(object);
@@ -67,31 +76,31 @@ struct DataPrinter {
   void printSimple(gf::DataObject& object) {
     switch (object.type) {
       case gf::DataType::Nil:
-        std::printf("nil");
+        std::printf(COLOR_RED "<nil>" COLOR_STOP " " COLOR_GREEN "nil" COLOR_STOP);
         break;
       case gf::DataType::Boolean:
-        std::printf("<boolean> %s", object.boolean ? "true" : "false");
+        std::printf(COLOR_RED "<boolean>" COLOR_STOP " " COLOR_GREEN "%s" COLOR_STOP, object.boolean ? "true" : "false");
         break;
       case gf::DataType::Signed:
-        std::printf("<signed> %" PRIi64 " (0x%" PRIX64 ")", object.i64, object.i64);
+        std::printf(COLOR_RED "<signed>" COLOR_STOP " %" PRIi64 " (0x%" PRIX64 ")", object.i64, object.i64);
         break;
       case gf::DataType::Unsigned:
-        std::printf("<unsigned> %" PRIu64 " (0x%" PRIX64 ")", object.u64, object.u64);
+        std::printf(COLOR_RED "<unsigned>" COLOR_STOP " %" PRIu64 " (0x%" PRIX64 ")", object.u64, object.u64);
         break;
       case gf::DataType::Float:
-        std::printf("<float> %f", object.f32);
+        std::printf(COLOR_RED "<float>" COLOR_STOP " %f", object.f32);
         break;
       case gf::DataType::Double:
-        std::printf("<double> %f", object.f64);
+        std::printf(COLOR_RED "<double>" COLOR_STOP " %f", object.f64);
         break;
       case gf::DataType::String: {
         std::ostringstream ss;
         ss << std::quoted(object.string.data);
-        std::printf("<string> %s", ss.str().c_str());
+        std::printf(COLOR_RED "<string>" COLOR_STOP " " COLOR_CYAN "%s" COLOR_STOP, ss.str().c_str());
         break;
       }
       case gf::DataType::Binary:
-        std::printf("<binary>");
+        std::printf(COLOR_RED "<binary>" COLOR_STOP);
 
         for (uint32_t i = 0; i < std::min(UINT32_C(20), object.binary.size); ++i) {
           std::printf(" %.2" PRIX8, object.binary.data[i]);
@@ -99,7 +108,7 @@ struct DataPrinter {
 
         break;
       case gf::DataType::Extension:
-        std::printf("<extension> <%" PRIi8 ">", object.extension.type);
+        std::printf(COLOR_RED "<extension>" COLOR_STOP " <%" PRIi8 ">", object.extension.type);
 
         for (uint32_t i = 0; i < std::min(UINT32_C(20), object.extension.size); ++i) {
           std::printf(" %.2" PRIX8, object.binary.data[i]);
@@ -107,6 +116,7 @@ struct DataPrinter {
 
         break;
       default:
+        assert(false);
         break;
     }
   }
@@ -134,6 +144,7 @@ int main(int argc, char *argv[]) {
 
   DataPrinter printer;
   printer.print(object);
+  printf("\n");
 
   return 0;
 }
