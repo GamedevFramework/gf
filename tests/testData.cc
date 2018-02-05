@@ -125,7 +125,7 @@ TEST(DataTest, Binary) {
   ASSERT_EQ(o2.type, gf::DataType::Binary);
   EXPECT_EQ(o2.binary.size, d2.size());
 
-  std::array<uint8_t, 4> d3 =  { 0xDE, 0xAD, 0xBE, 0xEF };
+  std::array<uint8_t, 4> d3 =  {{ 0xDE, 0xAD, 0xBE, 0xEF }};
   gf::DataObject o3 = gf::Data::convert(d3);
   ASSERT_EQ(o3.type, gf::DataType::Binary);
   EXPECT_EQ(o3.binary.size, d3.size());
@@ -145,7 +145,7 @@ TEST(DataTest, Array) {
   EXPECT_EQ(o2.array.size, d2.size());
   EXPECT_EQ(o2.array.data[0].type, gf::DataType::Signed);
 
-  std::array<int, 2> d3 = { 42, 69 };
+  std::array<int, 2> d3 = {{ 42, 69 }};
   gf::DataObject o3 = gf::Data::convert(d3);
   ASSERT_EQ(o3.type, gf::DataType::Array);
   EXPECT_EQ(o3.array.size, d3.size());
