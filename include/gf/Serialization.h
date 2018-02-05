@@ -125,7 +125,7 @@ inline namespace v1 {
    *
    * You should not use the methods in this class. Prefer using and overloading operator `|`.
    *
-   * @sa gf::Deserializer
+   * @sa gf::Serializer
    */
   class GF_API Deserializer {
   public:

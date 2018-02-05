@@ -32,8 +32,12 @@ inline namespace v1 {
   class Serializer;
   class Deserializer;
 
+  /**
+   * @ingroup game
+   * @brief A header for array serialization
+   */
   struct SerialArrayHeader {
-    uint32_t size;
+    uint32_t size;  ///< The number of elements in the array
   };
 
   /**
@@ -49,8 +53,12 @@ inline namespace v1 {
   GF_API Deserializer& operator|(Deserializer& ar, SerialArrayHeader& header);
 
 
+  /**
+   * @ingroup game
+   * @brief A header for map serialization
+   */
   struct SerialMapHeader {
-    uint32_t size;
+    uint32_t size;  ///< The number of elements in the map
   };
 
   /**
