@@ -15,7 +15,7 @@ install:
 
 before_build:
   - cmd: vcpkg remove --outdated
-  - cmd: vcpkg install sdl2:x64-windows freetype:x64-windows zlib:x64-windows boost:x64-windows
+  - cmd: vcpkg install sdl2:x64-windows freetype:x64-windows zlib:x64-windows boost-algorithm:x64-windows boost-filesystem:x64-windows boost-heap:x64-windows
   - cmd: cd C:\projects\GF
   - cmd: mkdir build
   - cmd: cd build
