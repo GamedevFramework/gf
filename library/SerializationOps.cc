@@ -92,7 +92,7 @@ inline namespace v1 {
 
   Serializer& operator|(Serializer& ar, const char *str) {
     std::size_t len = std::strlen(str);
-    assert(len < UINT32_MAX)
+    assert(len < UINT32_MAX);
     ar.writeString(str, static_cast<uint32_t>(len));
     return ar;
   }
