@@ -277,7 +277,7 @@ inline namespace v1 {
         return 1 - (C2 * gf::square(u - 2.25f * C1) + 0.9375f);
       }
 
-      return 1 - (C2 * gf::square(u - 2.625f * C1) + 0.984375);
+      return 1 - (C2 * gf::square(u - 2.625f * C1) + 0.984375f);
     }
   }
 
@@ -307,7 +307,7 @@ inline namespace v1 {
 
       const float u = t - 1;
 
-      return -std::pow(2, 10 * u) * std::sin((u - C0 / 4) * 2 * Pi / C0);
+      return -std::pow(2.0f, 10 * u) * std::sin((u - C0 / 4) * 2 * Pi / C0);
     }
   }
 
@@ -333,7 +333,7 @@ inline namespace v1 {
 
   namespace {
     inline float expo(float t) {
-      return t == 0.0f ? 0.0f : std::pow(2, 10 * (t - 1));
+      return t == 0.0f ? 0.0f : std::pow(2.0f, 10 * (t - 1));
     }
   }
 
