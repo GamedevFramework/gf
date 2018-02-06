@@ -91,16 +91,20 @@ inline namespace v1 {
   }
 
   Serializer& operator|(Serializer& ar, const char *str) {
-    ar.writeString(str, std::strlen(str));
+    std::size_t len = std::strlen(str);
+    assert(len < UINT32_MAX)
+    ar.writeString(str, static_cast<uint32_t>(len));
     return ar;
   }
 
   Serializer& operator|(Serializer& ar, const std::string& str) {
-    ar.writeString(str.data(), str.size());
+    assert(str.length() < UINT32_MAX);
+    ar.writeString(str.data(), static_cast<uint32_t>(str.length()));
     return ar;
   }
 
   Serializer& operator|(Serializer& ar, const std::vector<uint8_t>& bin) {
+    assert(bin.size() < UINT32_MAX);
     ar.writeBinary(bin.data(), static_cast<uint32_t>(bin.size()));
     return ar;
   }
