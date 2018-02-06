@@ -62,7 +62,14 @@ TEST(SerialTest, Boolean) {
 TEST(SerialTest, Signed8) {
   gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
 
-  int8_t tests[] = { 0, 127, -32, INT8_MIN, INT8_MAX };
+  int8_t tests[] = {
+    0,
+    127,
+    -32,
+    INT8_MIN,
+    INT8_MAX
+  };
+
   int8_t out = -1;
 
   for (auto in : tests) {
@@ -76,7 +83,17 @@ TEST(SerialTest, Signed8) {
 TEST(SerialTest, Signed16) {
   gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
 
-  int16_t tests[] = { 0, 127, -32, INT8_MIN, INT8_MAX, UINT8_MAX, INT16_MIN, INT16_MAX };
+  int16_t tests[] = {
+    0,
+    127,
+    -32,
+    INT8_MIN,
+    INT8_MAX,
+    UINT8_MAX,
+    INT16_MIN,
+    INT16_MAX
+  };
+
   int16_t out = -1;
 
   for (auto in : tests) {
@@ -90,7 +107,20 @@ TEST(SerialTest, Signed16) {
 TEST(SerialTest, Signed32) {
   gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
 
-  int32_t tests[] = { 0, 127, -32, INT8_MIN, INT8_MAX, UINT8_MAX, INT16_MIN, INT16_MAX, UINT16_MAX, INT32_MIN, INT32_MAX };
+  int32_t tests[] = {
+    0,
+    127,
+    -32,
+    INT8_MIN,
+    INT8_MAX,
+    UINT8_MAX,
+    INT16_MIN,
+    INT16_MAX,
+    UINT16_MAX,
+    INT32_MIN,
+    INT32_MAX
+  };
+
   int32_t out = -1;
 
   for (auto in : tests) {
@@ -104,7 +134,23 @@ TEST(SerialTest, Signed32) {
 TEST(SerialTest, Signed64) {
   gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
 
-  int64_t tests[] = { 0, 127, -32, INT8_MIN, INT8_MAX, UINT8_MAX, INT16_MIN, INT16_MAX, UINT16_MAX, INT32_MIN, INT32_MAX, UINT32_MAX, INT64_MIN, INT64_MAX };
+  int64_t tests[] = {
+    0,
+    127,
+    -32,
+    INT8_MIN,
+    INT8_MAX,
+    UINT8_MAX,
+    INT16_MIN,
+    INT16_MAX,
+    UINT16_MAX,
+    INT32_MIN,
+    INT32_MAX,
+    UINT32_MAX,
+    INT64_MIN,
+    INT64_MAX
+  };
+
   int64_t out = -1;
 
   for (auto in : tests) {
@@ -118,7 +164,13 @@ TEST(SerialTest, Signed64) {
 TEST(SerialTest, Unsigned8) {
   gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
 
-  uint8_t tests[] = { 0, 127, INT8_MAX, UINT8_MAX };
+  uint8_t tests[] = {
+    0,
+    127,
+    INT8_MAX,
+    UINT8_MAX
+  };
+
   uint8_t out = -1;
 
   for (auto in : tests) {
@@ -132,7 +184,15 @@ TEST(SerialTest, Unsigned8) {
 TEST(SerialTest, Unsigned16) {
   gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
 
-  uint16_t tests[] = { 0, 127, INT8_MAX, UINT8_MAX, INT16_MAX, UINT16_MAX };
+  uint16_t tests[] = {
+    0,
+    127,
+    INT8_MAX,
+    UINT8_MAX,
+    INT16_MAX,
+    UINT16_MAX
+  };
+
   uint16_t out = -1;
 
   for (auto in : tests) {
@@ -146,7 +206,17 @@ TEST(SerialTest, Unsigned16) {
 TEST(SerialTest, Unsigned32) {
   gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
 
-  uint32_t tests[] = { 0, 127, INT8_MAX, UINT8_MAX, INT16_MAX, UINT16_MAX, INT32_MAX, UINT32_MAX };
+  uint32_t tests[] = {
+    0,
+    127,
+    INT8_MAX,
+    UINT8_MAX,
+    INT16_MAX,
+    UINT16_MAX,
+    INT32_MAX,
+    UINT32_MAX
+  };
+
   uint32_t out = -1;
 
   for (auto in : tests) {
@@ -160,7 +230,19 @@ TEST(SerialTest, Unsigned32) {
 TEST(SerialTest, Unsigned64) {
   gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
 
-  uint64_t tests[] = { 0, 127, INT8_MAX, UINT8_MAX, INT16_MAX, UINT16_MAX, INT32_MAX, UINT32_MAX, INT64_MAX, UINT64_MAX };
+  uint64_t tests[] = {
+    0,
+    127,
+    INT8_MAX,
+    UINT8_MAX,
+    INT16_MAX,
+    UINT16_MAX,
+    INT32_MAX,
+    UINT32_MAX,
+    INT64_MAX,
+    UINT64_MAX
+  };
+
   uint64_t out = -1;
 
   for (auto in : tests) {
@@ -174,7 +256,13 @@ TEST(SerialTest, Unsigned64) {
 TEST(SerialTest, Float) {
   gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
 
-  float tests[] = { 0.0f, std::numeric_limits<float>::min(), std::numeric_limits<float>::max(), std::numeric_limits<float>::infinity() };
+  float tests[] = {
+    0.0f,
+    std::numeric_limits<float>::min(),
+    std::numeric_limits<float>::max(),
+    std::numeric_limits<float>::infinity()
+  };
+
   float out = 1.0f;
 
   for (auto in : tests) {
@@ -189,7 +277,13 @@ TEST(SerialTest, Float) {
 TEST(SerialTest, Double) {
   gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
 
-  double tests[] = { 0.0, std::numeric_limits<double>::min(), std::numeric_limits<double>::max(), std::numeric_limits<double>::infinity() };
+  double tests[] = {
+    0.0,
+    std::numeric_limits<double>::min(),
+    std::numeric_limits<double>::max(),
+    std::numeric_limits<double>::infinity()
+  };
+
   double out = 1.0;
 
   for (auto in : tests) {
@@ -204,7 +298,15 @@ TEST(SerialTest, Double) {
 TEST(SerialTest, String) {
   gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
 
-  std::string tests1[] = { "", "gf", std::string(32, 'a'), std::string(33, 'a'), std::string(UINT8_MAX + 1, 'a'), std::string(UINT16_MAX + 1, 'a') };
+  std::string tests1[] = {
+    "",
+    "gf",
+    std::string(32, 'a'),
+    std::string(33, 'a'),
+    std::string(UINT8_MAX + 1, 'a'),
+    std::string(UINT16_MAX + 1, 'a')
+  };
+
   std::string out1 = "-";
 
   for (auto& in1 : tests1) {
@@ -213,7 +315,13 @@ TEST(SerialTest, String) {
     EXPECT_EQ(in1, out1);
   }
 
-  const char *tests2[] = { "", "gf", "12345678901234567890123456789012", "123456789012345678901234567890123" };
+  const char *tests2[] = {
+    "",
+    "gf",
+    "12345678901234567890123456789012",
+    "123456789012345678901234567890123"
+  };
+
   char out2[256]; // large enough for any strings above
 
   for (auto in2 : tests2) {
@@ -234,7 +342,13 @@ TEST(SerialTest, String) {
 TEST(SerialTest, Binary) {
   gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
 
-  std::vector<uint8_t> tests1[] = { { }, { 0x00, 0xFF }, std::vector<uint8_t>(UINT8_MAX + 1, 0x02), std::vector<uint8_t>(UINT16_MAX + 1, 0x03) };
+  std::vector<uint8_t> tests1[] = {
+    { },
+    { 0x00, 0xFF },
+    std::vector<uint8_t>(UINT8_MAX + 1, 0x02),
+    std::vector<uint8_t>(UINT16_MAX + 1, 0x03)
+  };
+
   std::vector<uint8_t> out1 = { 0x01 };
 
   for (auto& in1 : tests1) {
@@ -243,7 +357,12 @@ TEST(SerialTest, Binary) {
     EXPECT_EQ(in1, out1);
   }
 
-  std::array<uint8_t, 256> tests2[] = { { }, {{ 0x00, 0xFF }}, {{ 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09 }} };
+  std::array<uint8_t, 256> tests2[] = {
+    { },
+    {{ 0x00, 0xFF }},
+    {{ 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09 }}
+  };
+
   std::array<uint8_t, 256> out2;
 
   for (auto& in2 : tests2) {
