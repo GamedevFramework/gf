@@ -171,7 +171,7 @@ TEST(SerialTest, Unsigned8) {
     UINT8_MAX
   };
 
-  uint8_t out = -1;
+  uint8_t out = 1;
 
   for (auto in : tests) {
     {  gf::Serializer ar(filename); ar | in; }
@@ -193,7 +193,7 @@ TEST(SerialTest, Unsigned16) {
     UINT16_MAX
   };
 
-  uint16_t out = -1;
+  uint16_t out = 1;
 
   for (auto in : tests) {
     {  gf::Serializer ar(filename); ar | in; }
@@ -217,7 +217,7 @@ TEST(SerialTest, Unsigned32) {
     UINT32_MAX
   };
 
-  uint32_t out = -1;
+  uint32_t out = 1;
 
   for (auto in : tests) {
     {  gf::Serializer ar(filename); ar | in; }
@@ -243,7 +243,7 @@ TEST(SerialTest, Unsigned64) {
     UINT64_MAX
   };
 
-  uint64_t out = -1;
+  uint64_t out = 1;
 
   for (auto in : tests) {
     {  gf::Serializer ar(filename); ar | in; }
