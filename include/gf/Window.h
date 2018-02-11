@@ -226,6 +226,13 @@ inline namespace v1 {
      */
 
     /**
+     * @brief Check if the window is minimized
+     *
+     * @return True if the window is minimized
+     */
+    bool isMinimized() const;
+
+    /**
      * @brief Minimize the window
      */
     void minimize();
@@ -241,6 +248,13 @@ inline namespace v1 {
      * @brief Maximize the window
      */
     void maximize();
+
+    /**
+     * @brief Check if the window is visible
+     *
+     * @return True if the window is visible
+     */
+    bool isVisible() const;
 
     /**
      * @brief Show a window
@@ -265,6 +279,13 @@ inline namespace v1 {
     void setVisible(bool visible = true);
 
     /**
+     * @brief Check if the window is decorated
+     *
+     * @return True if the window is decorated
+     */
+    bool isDecorated() const;
+
+    /**
      * @brief Show or hide the decoration of the window
      *
      * @param decorated True to show decoration
@@ -280,13 +301,6 @@ inline namespace v1 {
     bool isFocused() const;
 
     /**
-     * @brief Check if the window is minimized
-     *
-     * @return True if the window is minimized
-     */
-    bool isMinimized() const;
-
-    /**
      * @brief Check if the window is resizable
      *
      * @return True if the window is resizable
@@ -294,18 +308,12 @@ inline namespace v1 {
     bool isResizable() const;
 
     /**
-     * @brief Check if the window is visible
+     * @brief Set the window resizable or not
      *
-     * @return True if the window is visible
+     * @param resizable True to make the window resizable, false otherwise
      */
-    bool isVisible() const;
+    void setResizable(bool resizable = true);
 
-    /**
-     * @brief Check if the window is decorated
-     *
-     * @return True if the window is decorated
-     */
-    bool isDecorated() const;
 
     /** @} */
 
