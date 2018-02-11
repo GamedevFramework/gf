@@ -166,6 +166,18 @@ inline namespace v1 {
     static Color4f darker(Color4f color, float percent = 0.5f);
 
     /**
+     * @brief Get an opaque color from 3 RGB floats in @f$ [0, 1] @f$
+     *
+     * @param r The red channel
+     * @param g The green channel
+     * @param b The blue channel
+     * @returns The corresponding color
+     */
+    static Color4f fromRgbF(float r, float g, float b) {
+      return Color4f(r, g, b, 1.0f);
+    }
+
+    /**
      * @brief Get a color from 4 8-bit channels
      *
      * @param r The red channel
