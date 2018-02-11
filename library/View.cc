@@ -64,6 +64,10 @@ inline namespace v1 {
 
   View::~View() = default;
 
+  RectF View::getBounds() const {
+    return RectF(m_center - m_size / 2, m_size);
+  }
+
   namespace {
 
 #ifndef NDEBUG

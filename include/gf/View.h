@@ -121,6 +121,13 @@ inline namespace v1 {
     virtual ~View();
 
     /**
+     * @brief Get the non-rotated bounds
+     *
+     * @returns A rectangle representing the non-rotated bounds of the view
+     */
+    RectF getBounds() const;
+
+    /**
      * @brief Set the center of the view
      *
      * @param center New center
