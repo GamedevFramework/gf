@@ -44,7 +44,7 @@ inline namespace v1 {
    * provide `loadFromFile()` and `loadFromMemory()` functions, which read
    * data from conventional sources. However, if you have data coming from
    * a different source (over a network, embedded, encrypted, compressed,
-   * etc) you can derive your own class from gf::InputStream and load SFML
+   * etc) you can derive your own class from gf::InputStream and load gf
    * resources with their `loadFromStream()` function.
    *
    */
