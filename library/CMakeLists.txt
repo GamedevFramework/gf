@@ -121,6 +121,7 @@ else()
     ModelContainer.cc
     Models.cc
     Monitor.cc
+    Move.cc
     NinePatch.cc
     Noise.cc
     Noises.cc

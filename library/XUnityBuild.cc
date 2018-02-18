@@ -79,6 +79,7 @@
 #include "ModelContainer.cc"
 #include "Models.cc"
 #include "Monitor.cc"
+#include "Move.cc"
 #include "NinePatch.cc"
 #include "Noise.cc"
 #include "Noises.cc"
