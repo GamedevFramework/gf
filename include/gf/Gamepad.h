@@ -22,6 +22,7 @@
 #define GF_GAMEPAD_H
 
 #include <cstdint>
+#include <vector>
 
 #include "Portability.h"
 
@@ -132,7 +133,7 @@ inline namespace v1 {
    * is especially useful for single player game, as you do not have to
    * reconfigure the action in case of gamepad deconnection/reconnection.
    *
-   * @sa gf::Action
+   * @sa gf::Action, gf::GamepadTracker
    */
   constexpr GamepadId AnyGamepad = static_cast<GamepadId>(INT32_C(-1));
 
@@ -228,6 +229,35 @@ inline namespace v1 {
      * @brief Deleted constructor
      */
     Gamepad() = delete;
+  };
+
+
+  struct Event;
+
+  /**
+   * @ingroup window
+   * @brief A tracker for the connection/disconnection of gamepads
+   *
+   * This class calls Gamepad::initialize()
+   *
+   * @sa gf::Gamepad
+   */
+  class GamepadTracker {
+  public:
+    /**
+     * @brief Constructor
+     */
+    GamepadTracker();
+
+    std::size_t getConnectedGamepadCounts() const;
+
+    /**
+     * @brief Process an event
+     */
+    void processEvent(const Event& event);
+
+  private:
+    std::vector<GamepadId> m_ids;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
