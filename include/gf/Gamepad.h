@@ -126,6 +126,18 @@ inline namespace v1 {
 
   /**
    * @ingroup window
+   * @brief A special identifier for all gamepads
+   *
+   * This identifier can be used in controls for specifying any gamepad. This
+   * is especially useful for single player game, as you do not have to
+   * reconfigure the action in case of gamepad deconnection/reconnection.
+   *
+   * @sa gf::Action
+   */
+  constexpr GamepadId AnyGamepad = static_cast<GamepadId>(INT32_C(-1));
+
+  /**
+   * @ingroup window
    * @brief Some gamepad related functions
    */
   class GF_API Gamepad {

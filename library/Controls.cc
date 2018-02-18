@@ -106,13 +106,13 @@ inline namespace v1 {
 
   void GamepadButtonControl::processEvent(const Event& event) {
     if (event.type == EventType::GamepadButtonPressed) {
-      if (event.gamepadButton.id == m_id && event.gamepadButton.button == m_button) {
+      if ((m_id == AnyGamepad || event.gamepadButton.id == m_id) && event.gamepadButton.button == m_button) {
         setActive();
       }
     }
 
     if (event.type == EventType::GamepadButtonReleased) {
-      if (event.gamepadButton.id == m_id && event.gamepadButton.button == m_button) {
+      if ((m_id == AnyGamepad || event.gamepadButton.id == m_id) && event.gamepadButton.button == m_button) {
         setActive(false);
       }
     }
@@ -132,7 +132,7 @@ inline namespace v1 {
 
   void GamepadAxisControl::processEvent(const Event& event) {
     if (event.type == EventType::GamepadAxisMoved) {
-      if (event.gamepadAxis.id == m_id && event.gamepadAxis.axis == m_axis) {
+      if ((m_id == AnyGamepad || event.gamepadAxis.id == m_id) && event.gamepadAxis.axis == m_axis) {
         switch (m_dir) {
           case GamepadAxisDirection::Positive:
             setActive(event.gamepadAxis.value > GamepadAxisThreshold);
