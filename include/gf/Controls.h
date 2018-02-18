@@ -154,6 +154,7 @@ inline namespace v1 {
    * @ingroup window
    * @brief The Konami code control for keyboard
    *
+   * @sa gf::KonamiGamepadControl
    * @sa [Konami Code - Wikipedia](https://en.wikipedia.org/wiki/Konami_Code)
    */
   class GF_API KonamiKeyboardControl : public Control {
@@ -169,6 +170,31 @@ inline namespace v1 {
     int m_index;
     enum {  Released, Pressed } m_state;
   };
+
+  /**
+   * @ingroup window
+   * @brief The Konami code control for gamepad
+   *
+   * @sa gf::KonamiKeyboardControl
+   * @sa [Konami Code - Wikipedia](https://en.wikipedia.org/wiki/Konami_Code)
+   */
+  class GF_API KonamiGamepadControl : public Control {
+  public:
+    /**
+     * @brief Construct a Konami control
+     *
+     * @param id The id of the gamepad
+     */
+    KonamiGamepadControl(GamepadId id);
+
+    virtual void processEvent(const Event& event) override;
+
+  private:
+    GamepadId m_id;
+    int m_index;
+    enum {  Released, Pressed } m_state;
+  };
+
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
