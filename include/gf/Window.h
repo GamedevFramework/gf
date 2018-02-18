@@ -310,6 +310,9 @@ inline namespace v1 {
     /**
      * @brief Set the window resizable or not
      *
+     * @warning This function is only available if you have built gf with
+     * SDL 2.0.5 (event the latest Debian stable has it, but not Travis-CI...)
+     *
      * @param resizable True to make the window resizable, false otherwise
      */
     void setResizable(bool resizable = true);

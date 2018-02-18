@@ -253,7 +253,11 @@ inline namespace v1 {
 
   void Window::setResizable(bool resizable) {
     assert(m_window);
+#if SDL_VERSION_ATLEAST(2,0,5)
     SDL_SetWindowResizable(m_window, resizable ? SDL_TRUE : SDL_FALSE);
+#else
+    Log::error("Window can not be set resizable. You must compile with SDL 2.0.5 at least.\n");
+#endif
   }
 
 
