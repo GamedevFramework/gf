@@ -19,6 +19,7 @@
 #define BI_HERO_H
 
 #include <gf/Entity.h>
+#include <gf/Move.h>
 #include <gf/Texture.h>
 #include <gf/Vector.h>
 
@@ -31,27 +32,27 @@ namespace bi {
     Hero(Steam& steam, const gf::Vector2f postion);
 
     void moveForward() {
-      m_move = Move::Forward;
+      m_move = gf::LinearMove::Forward;
     }
 
     void moveBackward() {
-      m_move = Move::Backward;
+      m_move = gf::LinearMove::Backward;
     }
 
     void moveStop() {
-      m_move = Move::None;
+      m_move = gf::LinearMove::None;
     }
 
     void turnLeft() {
-      m_turn = Turn::Left;
+      m_turn = gf::AngularMove::Left;
     }
 
     void turnRight() {
-      m_turn = Turn::Right;
+      m_turn = gf::AngularMove::Right;
     }
 
     void turnNone() {
-      m_turn = Turn::None;
+      m_turn = gf::AngularMove::None;
     }
 
     void sendInitialPosition() const;
@@ -67,22 +68,10 @@ namespace bi {
     gf::MessageStatus onGameOver(gf::Id id, gf::Message *msg);
 
   private:
-    enum class Move {
-      Forward,
-      Backward,
-      None,
-    };
-
-    enum class Turn {
-      Left,
-      Right,
-      None,
-    };
-
     Steam& m_steam;
 
-    Move m_move;
-    Turn m_turn;
+    gf::LinearMove m_move;
+    gf::AngularMove m_turn;
 
     gf::Vector2f m_position;
     float m_angle;
