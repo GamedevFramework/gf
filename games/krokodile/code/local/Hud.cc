@@ -133,8 +133,10 @@ namespace kkd {
     m_clock.restart();
   }
 
-  gf::MessageStatus Hud::onKrokodileState(gf::Id id, gf::Message *msg) {
-    assert(id == KrokodileState::type);
+  gf::MessageStatus Hud::onKrokodileState(gf::Id type, gf::Message *msg) {
+    assert(type == KrokodileState::type);
+    gf::unused(type);
+
     auto state = static_cast<KrokodileState*>(msg);
 
     m_energyRatio = state->energyRatio;

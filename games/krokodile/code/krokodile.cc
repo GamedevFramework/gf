@@ -80,6 +80,7 @@ int main() {
 
   kkd::gMessageManager().registerHandler<kkd::KrokodileState>([&mainView](gf::Id type, gf::Message *msg) {
     assert(type == kkd::KrokodileState::type);
+    gf::unused(type);
     auto state = static_cast<kkd::KrokodileState*>(msg);
     mainView.setCenter(state->position);
     return gf::MessageStatus::Keep;
@@ -182,7 +183,7 @@ int main() {
 
   kkd::gMessageManager().registerHandler<kkd::EndOfGame>([&isEndOfGame](gf::Id type, gf::Message *msg) {
     assert(type == kkd::EndOfGame::type);
-    gf::unused(msg);
+    gf::unused(type, msg);
     isEndOfGame = true;
     return gf::MessageStatus::Keep;
   });

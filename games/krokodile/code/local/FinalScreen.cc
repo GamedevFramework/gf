@@ -58,18 +58,18 @@ namespace kkd {
     m_clock.restart();
   }
 
-  gf::MessageStatus FinalScreen::onEndOfGame(gf::Id id, gf::Message *msg) {
-    assert(id == EndOfGame::type);
-    gf::unused(msg);
+  gf::MessageStatus FinalScreen::onEndOfGame(gf::Id type, gf::Message *msg) {
+    assert(type == EndOfGame::type);
+    gf::unused(type, msg);
 
     m_time = m_clock.getElapsedTime();
 
     return gf::MessageStatus::Keep;
   }
 
-  gf::MessageStatus FinalScreen::onMergeRealized(gf::Id id, gf::Message *msg) {
-    assert(id == MergeRealized::type);
-    gf::unused(msg);
+  gf::MessageStatus FinalScreen::onMergeRealized(gf::Id type, gf::Message *msg) {
+    assert(type == MergeRealized::type);
+    gf::unused(type, msg);
 
     ++m_merges;
 
