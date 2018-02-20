@@ -95,15 +95,14 @@ namespace kkd {
   }
 
   void KreatureContainer::createKrokodile() {
-    auto kreature = Kreature::krokodile();
-    m_kreatures.push_back(std::move(kreature));
+    m_kreatures.push_back(Kreature::krokodile());
   }
 
   void KreatureContainer::resetKreatures() {
     m_kreatures.clear();
 
     for (int i = 0; i < MaximumPopulation; ++i) {
-      m_kreatures.push_back(std::move(Kreature::randomKreature()));
+      m_kreatures.push_back(Kreature::randomKreature());
     }
   }
 
@@ -127,7 +126,7 @@ namespace kkd {
     // add new kreatures if necessary
 
     while (count < MinimumPopulation) {
-      m_kreatures.push_back(std::move(Kreature::randomKreature()));
+      m_kreatures.push_back(Kreature::randomKreature());
       ++count;
     }
   }

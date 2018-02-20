@@ -577,7 +577,7 @@ namespace kkd {
     kreature->m_head = mergeParts(m_head, other.m_head);
     kreature->m_limbs = mergeParts(m_limbs, other.m_limbs);
     kreature->m_tail = mergeParts(m_tail, other.m_tail);
-    return std::move(kreature);
+    return kreature;
   }
 
   void Kreature::resetActivities() {
@@ -599,7 +599,7 @@ namespace kkd {
     kreature->m_head = computeRandomPart();
     kreature->m_limbs = computeRandomPart();
     kreature->m_tail = computeRandomPart();
-    return std::move(kreature);
+    return kreature;
   }
 
   std::unique_ptr<Kreature> Kreature::krokodile() {
@@ -608,7 +608,7 @@ namespace kkd {
     kreature->m_head = { Krokodile, Green };
     kreature->m_limbs = { Krokodile, Green };
     kreature->m_tail = { Krokodile, Green };
-    return std::move(kreature);
+    return kreature;
   }
 
 }
