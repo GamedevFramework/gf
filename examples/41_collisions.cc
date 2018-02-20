@@ -183,9 +183,9 @@ int main() {
       line.setWidth(0.1f);
       renderer.draw(line);
 
-      gf::CircleShape circle(gf::CircF(center, 0.1f));
-      circle.setColor(gf::Color::Red);
-      renderer.draw(circle);
+      gf::CircleShape point(gf::CircF(center, 0.1f));
+	  point.setColor(gf::Color::Red);
+      renderer.draw(point);
 
       gf::CircleShape triangle(0.3f, 3);
       triangle.setPosition(endPoint);

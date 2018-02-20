@@ -20,6 +20,7 @@
  */
 #include <gf/Serialization.h>
 
+#include <cassert>
 #include <cinttypes>
 #include <memory>
 
@@ -810,6 +811,7 @@ inline namespace v1 {
         return false;
     }
 
+	assert(false);
     return false;
   }
 
