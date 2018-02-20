@@ -26,6 +26,7 @@
 #include "ArrayRef.h"
 #include "BufferRef.h"
 #include "Path.h"
+#include "Portability.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -37,7 +38,7 @@ inline namespace v1 {
    * @brief A binary file that can be read or written
    *
    */
-  class BinaryFile {
+  class GF_API BinaryFile {
   public:
     /**
      * @brief Open mode for the file
