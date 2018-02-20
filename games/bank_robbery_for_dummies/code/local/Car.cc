@@ -37,7 +37,7 @@ namespace brfd {
   static constexpr float CarHeight = 64;
   static constexpr float CarHalfWidth = CarWidth / 2;
   static constexpr float CarHalfHeight = CarHeight / 2;
-  static constexpr float X = 0.8;
+  static constexpr float X = 0.8f;
 
   static constexpr float TilesetWidth = 512;
   static constexpr float TilesetHeight = 192;

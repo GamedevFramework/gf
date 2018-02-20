@@ -92,13 +92,13 @@ int main() {
               break;
 
             case gf::Scancode::PageUp:
-              sprite.scale(0.8);
-              spriteWithMipmap.scale(0.8);
+              sprite.scale(0.8f);
+              spriteWithMipmap.scale(0.8f);
               break;
 
             case gf::Scancode::PageDown:
-              sprite.scale(1.25);
-              spriteWithMipmap.scale(1.25);
+              sprite.scale(1.25f);
+              spriteWithMipmap.scale(1.25f);
               break;
 
             case gf::Scancode::Escape:

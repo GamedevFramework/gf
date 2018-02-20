@@ -41,11 +41,11 @@ public:
   , m_moveWest({ 540.0f, 100.0f }, { 540.0f, 380.0f }, m_position, gf::seconds(1.9f), gf::Ease::backOut)
   , m_moveSouth({ 540.0f, 380.0f }, { 100.0f, 380.0f }, m_position, gf::seconds(2.7f), gf::Ease::elasticOut)
   , m_moveEast({ 100.0f, 380.0f }, { 100.0f, 100.0f }, m_position, gf::seconds(1.9f))
-  , m_facesUp(4, 8, m_faces, gf::seconds(4.6), gf::Ease::circInOut)
-  , m_facesDown(8, 4, m_faces, gf::seconds(4.6), gf::Ease::circInOut)
-  , m_colorToOrange(gf::Color::Azure, gf::Color::Orange, m_color, gf::seconds(4.6))
-  , m_colorToAzure(gf::Color::Orange, gf::Color::Azure, m_color, gf::seconds(4.6))
-  , m_rotationActivity(0, 10 * gf::Pi, m_rotation, gf::seconds(9.2), gf::Ease::bounceInOut)
+  , m_facesUp(4, 8, m_faces, gf::seconds(4.6f), gf::Ease::circInOut)
+  , m_facesDown(8, 4, m_faces, gf::seconds(4.6f), gf::Ease::circInOut)
+  , m_colorToOrange(gf::Color::Azure, gf::Color::Orange, m_color, gf::seconds(4.6f))
+  , m_colorToAzure(gf::Color::Orange, gf::Color::Azure, m_color, gf::seconds(4.6f))
+  , m_rotationActivity(0, 10 * gf::Pi, m_rotation, gf::seconds(9.2f), gf::Ease::bounceInOut)
   , m_repeat(m_parallel)
   {
     m_moveSequence.addActivity(m_moveNorth);

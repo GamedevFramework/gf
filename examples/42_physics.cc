@@ -83,7 +83,7 @@ public:
   : m_geometry(Radius)
   , m_body(m_geometry, gf::PhysicsBody::Dynamic)
   {
-    m_body.setDensity(0.1);
+    m_body.setDensity(0.1f);
     m_body.setPosition(position);
     m_body.applyLinearImpulse(impulse);
   }
