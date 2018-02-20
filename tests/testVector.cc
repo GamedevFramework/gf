@@ -26,15 +26,15 @@ TEST(VectorTest, ConversionIntToFloat) {
   gf::Vector2i vec(42, 69);
   gf::Vector2f copy(vec);
 
-  EXPECT_FLOAT_EQ(42.0f, vec[0]);
-  EXPECT_FLOAT_EQ(69.0f, vec[1]);
+  EXPECT_FLOAT_EQ(42.0f, copy[0]);
+  EXPECT_FLOAT_EQ(69.0f, copy[1]);
 }
 
 TEST(VectorTest, ConversionFloatToInt) {
   gf::Vector2f vec(42.0, 69.0);
   gf::Vector2i copy(vec);
 
-  EXPECT_EQ(42, vec[0]);
-  EXPECT_EQ(69, vec[1]);
+  EXPECT_EQ(42, copy[0]);
+  EXPECT_EQ(69, copy[1]);
 }
 

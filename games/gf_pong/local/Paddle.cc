@@ -69,7 +69,7 @@ gf::MessageStatus Paddle::onBallLocation(gf::Id id, gf::Message *msg) {
 
   if (n.x * loc->velocity.x < 0) {
     if (std::abs(n.x) < Ball::Radius + Width / 2 && std::abs(n.y) < Height / 2) {
-      float angle = 0.7 * n.y / Height * gf::Pi;
+      float angle = 0.7f * n.y / Height * gf::Pi;
 
       if (loc->velocity.x > 0) {
         loc->velocity = gf::unit(gf::Pi - angle) * Ball::Velocity;

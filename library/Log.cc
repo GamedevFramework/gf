@@ -21,6 +21,7 @@
 #include <gf/Log.h>
 
 #include <cassert>
+#include <cinttypes>
 #include <cstdio>
 #include <ctime>
 
@@ -84,12 +85,12 @@ inline namespace v1 {
     std::time_t integerPart = seconds.count();
 
     auto microseconds = std::chrono::duration_cast<std::chrono::microseconds>(epoch) % std::chrono::seconds(1);
-    long fractionalPart = microseconds.count();
+    int64_t fractionalPart = microseconds.count();
 
     static constexpr std::size_t BufferSize = 1024;
     char buffer[BufferSize];
     std::size_t size = std::strftime(buffer, BufferSize, "%F %T", std::localtime(&integerPart));
-    std::snprintf(buffer + size, BufferSize - size, ".%06ld", fractionalPart);
+    std::snprintf(buffer + size, BufferSize - size, ".%06" PRIi64, fractionalPart);
 
     std::fprintf(stderr, "[%s][%s] ", buffer, getStringFromLevel(level));
     std::vfprintf(stderr, fmt, ap);

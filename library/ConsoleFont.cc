@@ -86,7 +86,7 @@ inline namespace v1 {
   void ConsoleFont::mapCode(char16_t c, Vector2u position) {
     unsigned index = computeIndex(position, m_format.layout, m_size);
     assert(index < 0x100);
-    m_mapping[c] = index;
+    m_mapping[c] = static_cast<uint8_t>(index);
   }
 
   void ConsoleFont::mapCodeRange(char16_t c, unsigned count, Vector2u position) {
@@ -94,7 +94,8 @@ inline namespace v1 {
 
     for (unsigned i = 0; i < count; ++i) {
       assert(index < 0x100);
-      m_mapping[c++] = index++;
+	  m_mapping[c++] = static_cast<uint8_t>(index);
+	  ++index;
     }
   }
 
@@ -110,7 +111,7 @@ inline namespace v1 {
       } else {
         char16_t c = static_cast<char16_t>(codepoint);
         assert(index < 0x100);
-        m_mapping[c] = index;
+        m_mapping[c] = static_cast<uint8_t>(index);
       }
 
       index++;
