@@ -94,7 +94,7 @@ int main() {
   widgets.addWidget(quitWidget);
 
   gf::Text rotated("Rotated", font, 25);
-  rotated.setPosition({ 50.0f, 190.0f });
+  rotated.setPosition({ 50.0f, 180.0f });
   rotated.setRotation(gf::Pi / 4);
   rotated.setAnchor(gf::Anchor::TopLeft);
 
@@ -105,6 +105,19 @@ int main() {
   rotatedWidget.setPadding(4.0f);
   rotatedWidget.setCallback([]() { std::cout << "Rotated!\n"; });
   widgets.addWidget(rotatedWidget);
+
+  gf::Text disabledAgain("Disabled again", font, 25);
+  disabledAgain.setPosition({ 50.0f, 290.0f });
+  disabledAgain.setAnchor(gf::Anchor::TopLeft);
+
+  gf::TextButtonWidget disabledAgainWidget(disabledAgain);
+  disabledAgainWidget.setTextOutlineThickness(1.0f);
+  disabledAgainWidget.setBackgroundOutlineThickness(1.0f);
+  disabledAgainWidget.setRadius(2.0f);
+  disabledAgainWidget.setPadding(4.0f);
+  disabledAgainWidget.setDisabled();
+  disabledAgainWidget.setCallback([]() { std::cout << "Disabled again!\n"; });
+  widgets.addWidget(disabledAgainWidget);
 
   gf::Clock clock;
   renderer.clear(gf::Color::White);
