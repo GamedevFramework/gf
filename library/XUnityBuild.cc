@@ -127,6 +127,9 @@
 #include "View.cc"
 #include "ViewContainer.cc"
 #include "Views.cc"
+#include "Widget.cc"
+#include "WidgetContainer.cc"
+#include "Widgets.cc"
 #include "Window.cc"
 
 #include "priv/Debug.cc"

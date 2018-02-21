@@ -18,15 +18,20 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-
-#include <gf/Shapes.h>
-#include <gf/Text.h>
-#include <gf/Widgets.h>
+#include <gf/Widget.h>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
 #endif
+  Widget::Widget()
+  : m_state(WidgetState::Default)
+  , m_callback(nullptr)
+  {
+
+  }
+
+  Widget::~Widget() = default;
 
   void Widget::setDisabled() {
     m_state = WidgetState::Disabled;
@@ -40,12 +45,18 @@ inline namespace v1 {
     m_state = WidgetState::Selected;
   }
 
-  void Widget::setCallback(std::function<void()> &callback) {
-    m_handler = callback;
+  void Widget::setState(WidgetState state) {
+    m_state = state;
   }
 
-  void Widget::trigger() {
-    m_handler();
+  void Widget::setCallback(std::function<void()> callback) {
+    m_callback = std::move(callback);
+  }
+
+  void Widget::triggerCallback() {
+    if (m_callback) {
+      m_callback();
+    }
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

@@ -20,7 +20,11 @@
  */
 #include <gf/WidgetContainer.h>
 
+#include <cassert>
+
 #include <gf/Widgets.h>
+
+#include <gf/Log.h>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -28,19 +32,27 @@ inline namespace v1 {
 #endif
 
   WidgetContainer::WidgetContainer()
-    : m_currentWidgetPos(0), m_widgetIsSelected(false)
+  : m_selectedWidgetIndex(0)
+  , m_widgetIsSelected(false)
   {
+
   }
 
-  void WidgetContainer::pointTo(Vector2f coords)
-  {
+  void WidgetContainer::pointTo(Vector2f coords) {
+    if (m_widgets.empty()) {
+      return;
+    }
+
+    unselectCurrentlySelected();
+
     m_widgetIsSelected = false;
+
     for(size_t i = 0; i < m_widgets.size(); i++) {
-      m_widgets[i]->setDefault();
-      if (m_widgets[i]->getGlobalBounds().contains(coords)) {
-        m_currentWidgetPos = i;
-        m_widgets[i]->setSelected();
+      if (m_widgets[i]->isDefault() && m_widgets[i]->contains(coords)) {
+        m_selectedWidgetIndex = i;
         m_widgetIsSelected = true;
+        m_widgets[i]->setSelected();
+        break; // to avoid multiple selection
       }
     }
   }
@@ -68,39 +80,107 @@ inline namespace v1 {
   }
 
   void WidgetContainer::triggerAction() {
-    if (m_widgets[m_currentWidgetPos] != nullptr && m_widgetIsSelected) {
-      m_widgets[m_currentWidgetPos]->trigger();
+    if (m_widgets.empty()) {
+      return;
+    }
+
+    if (m_widgetIsSelected) {
+      getCurrent().triggerCallback();
     }
   }
 
   void WidgetContainer::selectNextWidget() {
-    if (m_widgets[m_currentWidgetPos] != nullptr) {
-      m_widgets[m_currentWidgetPos]->setDefault();
+    if (m_widgets.empty()) {
+      return;
     }
+
+    unselectCurrentlySelected();
+
+    // select the new one
+
     if (m_widgetIsSelected) {
-      m_currentWidgetPos++;
+      computeNextIndex();
     } else {
       m_widgetIsSelected = true;
     }
-    if (m_currentWidgetPos >= m_widgets.size()) {
-      m_currentWidgetPos = 0;
+
+    std::size_t count = 0;
+    std::size_t maxCount = m_widgets.size();
+
+    while (count < maxCount && !getCurrent().isDefault()) {
+      computeNextIndex();
+      ++count;
     }
-    m_widgets[m_currentWidgetPos]->setSelected();
+
+    if (count == maxCount) {
+      m_widgetIsSelected = false;
+      return;
+    }
+
+    getCurrent().setSelected();
   }
 
   void WidgetContainer::selectPreviousWidget() {
-    if (m_widgets[m_currentWidgetPos] != nullptr) {
-      m_widgets[m_currentWidgetPos]->setDefault();
+    if (m_widgets.empty()) {
+      return;
     }
+
+    unselectCurrentlySelected();
+
+    // select the new one
+
     if (m_widgetIsSelected) {
-      if (m_currentWidgetPos <= 0) {
-        m_currentWidgetPos = m_widgets.size();
-      }
-      m_currentWidgetPos--;
+      computePreviousIndex();
     } else {
       m_widgetIsSelected = true;
     }
-    m_widgets[m_currentWidgetPos]->setSelected();
+
+    std::size_t count = 0;
+    std::size_t maxCount = m_widgets.size();
+
+    while (count < maxCount && !getCurrent().isDefault()) {
+      computePreviousIndex();
+      ++count;
+    }
+
+    if (count == maxCount) {
+      m_widgetIsSelected = false;
+      return;
+    }
+
+    getCurrent().setSelected();
+  }
+
+  void WidgetContainer::unselectCurrentlySelected() {
+    if (m_widgetIsSelected) {
+      assert(getCurrent().isSelected());
+      getCurrent().setDefault();
+    }
+  }
+
+  void WidgetContainer::computePreviousIndex() {
+    if (m_selectedWidgetIndex == 0) {
+      m_selectedWidgetIndex = m_widgets.size();
+    }
+
+    --m_selectedWidgetIndex;
+  }
+
+  void WidgetContainer::computeNextIndex() {
+    ++m_selectedWidgetIndex;
+
+    if (m_selectedWidgetIndex >= m_widgets.size()) {
+      m_selectedWidgetIndex = 0;
+    }
+  }
+
+  Widget& WidgetContainer::getCurrent() {
+    assert(m_widgetIsSelected);
+    assert(m_selectedWidgetIndex < m_widgets.size());
+
+    auto selected = m_widgets[m_selectedWidgetIndex];
+    assert(selected != nullptr);
+    return *selected;
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

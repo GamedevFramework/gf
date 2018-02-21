@@ -21,12 +21,17 @@
 #ifndef GF_WIDGET_H
 #define GF_WIDGET_H
 
-#include "RenderTarget.h"
+#include <functional>
+
+#include "Vector.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
 #endif
+
+  struct RenderStates;
+  class RenderTarget;
 
   /**
    * @ingroup graphics
@@ -36,7 +41,7 @@ inline namespace v1 {
    */
   enum class WidgetState {
     Disabled, ///< The widget is disabled
-    Default, ///< The default widget state
+    Default,  ///< The default widget state
     Selected, ///< The widget is selected
   };
 
@@ -47,6 +52,18 @@ inline namespace v1 {
   class GF_API Widget {
   public:
     /**
+     * @brief Constructor
+     *
+     * The widget is in the default state.
+     */
+    Widget();
+
+    /**
+     * @brief Destructor
+     */
+    virtual ~Widget();
+
+    /**
      * @brief Render the widget on the target
      *
      * @param target The render target
@@ -55,11 +72,12 @@ inline namespace v1 {
     virtual void render(RenderTarget &target, const RenderStates &states) = 0;
 
     /**
-     * @brief Abstract method that returns the global bounds of the widget
+     * @brief Check if the widget contains the coordinates
      *
-     * @return the global bounds
+     * @param coords The coordinates to check
+     * @return True if the coordinates are inside the widget
      */
-    virtual RectF getGlobalBounds() = 0;
+    virtual bool contains(Vector2f coords) = 0;
 
     /**
      * @brief Disable the widget.
@@ -67,9 +85,27 @@ inline namespace v1 {
     void setDisabled();
 
     /**
+     * @brief Check if the widget is disabled
+     *
+     * @returns True if the widget is disabled
+     */
+    bool isDisabled() const noexcept {
+      return m_state == WidgetState::Disabled;
+    }
+
+    /**
      * @brief Set the widget to it's default state
      */
     void setDefault();
+
+    /**
+     * @brief Check if the widget is in default state
+     *
+     * @returns True if the widget is in default state
+     */
+    bool isDefault() const noexcept {
+      return m_state == WidgetState::Default;
+    }
 
     /**
      * @brief Select the widget
@@ -77,22 +113,49 @@ inline namespace v1 {
     void setSelected();
 
     /**
+     * @brief Check if the widget is selected
+     *
+     * @returns True if the widget is selected
+     */
+    bool isSelected() const {
+      return m_state == WidgetState::Selected;
+    }
+
+    /**
+     * @brief Set the state of the widget directly
+     *
+     * @param state The new state
+     * @sa setDisabled(), setDefault(), setSelected()
+     */
+    void setState(WidgetState state);
+
+    /**
+     * @brief Get the state of the widget
+     *
+     * @returns The current state of the widget
+     */
+    WidgetState getState() const noexcept {
+      return m_state;
+    }
+
+    /**
      * @brief Set the callback of the widget
      *
      * @param callback The function that will be execute when the widget will be triggered.
+     * @sa triggerCallback()
      */
-    void setCallback(std::function<void()> &callback);
+    void setCallback(std::function<void()> callback);
 
     /**
      * @brief Execute the callback function
      *
      * @sa setCallback()
      */
-    void trigger();
+    void triggerCallback();
 
-  protected:
+  private:
     WidgetState m_state;
-    std::function<void()> m_handler;
+    std::function<void()> m_callback;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

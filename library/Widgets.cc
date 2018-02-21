@@ -18,10 +18,13 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-
-#include <gf/Shapes.h>
-#include <gf/Text.h>
 #include <gf/Widgets.h>
+
+#include <gf/Color.h>
+#include <gf/Shape.h>
+#include <gf/Text.h>
+
+#include <gf/Log.h>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -33,100 +36,117 @@ inline namespace v1 {
   /**********************/
 
   TextWidget::TextWidget(Text &text)
-    : m_text(text)
-  {}
+  : m_text(text)
+  , m_textOutlineThickness(0)
+  , m_disabledTextColor(Color::Gray())
+  , m_disabledTextOutlineColor(Color::Black)
+  , m_defaultTextColor(Color::Black)
+  , m_defaultTextOutlineColor(Color::White)
+  , m_selectedTextColor(Color::Gray())
+  , m_selectedTextOutlineColor(Color::White)
+  {
+
+  }
 
   void TextWidget::render(RenderTarget &target, const RenderStates &states) {
-    m_text.draw(target, states);
-  }
-
-  RectF TextWidget::getGlobalBounds() {
-    return m_text.getLocalBounds();
-  }
-
-  /**********************/
-  /*  TextButtonWidget  */
-  /**********************/
-
-  TextButtonWidget::TextButtonWidget(Text &text)
-    : TextWidget(text)
-  {
-    m_state = WidgetState::Default;
-
-    m_disabledBackgroundColor = {0.0f, 0.0f, 0.0f, 0.0f};
-    m_defaultBackgroundColor = {0.0f, 0.0f, 0.0f, 0.0f};
-    m_selectedBackgroundColor = {0.0f, 0.0f, 0.0f, 0.0f};
-    m_disabledOutlineColor = {0.0f, 0.0f, 0.0f, 0.0f};
-    m_defaultOutlineColor = {0.0f, 0.0f, 0.0f, 0.0f};
-    m_selectedOutlineColor = {0.0f, 0.0f, 0.0f, 0.0f};
-  }
-
-  void TextButtonWidget::render(RenderTarget &target, const RenderStates &states) {
-    RoundedRectangleShape rectangle;
-    rectangle.setSize(m_text.getLocalBounds().getSize());
-    rectangle.setRadius(m_radius);
-    switch(m_state) {
+    switch(getState()) {
       case WidgetState::Disabled:
-        rectangle.setColor(m_disabledBackgroundColor);
-        rectangle.setOutlineColor(m_disabledOutlineColor);
+        m_text.setColor(m_disabledTextColor);
+        m_text.setOutlineColor(m_disabledTextOutlineColor);
         break;
       case WidgetState::Default:
-        rectangle.setColor(m_defaultBackgroundColor);
-        rectangle.setOutlineColor(m_defaultOutlineColor);
+        m_text.setColor(m_defaultTextColor);
+        m_text.setOutlineColor(m_defaultTextOutlineColor);
         break;
       case WidgetState::Selected:
-        rectangle.setColor(m_selectedBackgroundColor);
-        rectangle.setOutlineColor(m_selectedOutlineColor);
-        break;
-      default:
-        rectangle.setColor({0.0f, 0.0f, 0.0f, 0.0f});
-        rectangle.setOutlineColor({0.0f, 0.0f, 0.0f, 0.0f});
+        m_text.setColor(m_selectedTextColor);
+        m_text.setOutlineColor(m_selectedTextOutlineColor);
         break;
     }
-    rectangle.setOutlineThickness(m_outlineThickness);
-    rectangle.setPosition(m_text.getPosition());
-    rectangle.draw(target, states);
 
+    m_text.setOutlineThickness(m_textOutlineThickness);
     m_text.draw(target, states);
   }
 
-  RectF TextButtonWidget::getGlobalBounds() {
-    RectF bounds;
-    bounds.setPosition(m_text.getPosition());
-    bounds.setSize(m_text.getLocalBounds().getSize());
-    return bounds;
+  bool TextWidget::contains(Vector2f coords) {
+    return false;
   }
 
-  void TextButtonWidget::setRadius(const float radius) {
-    m_radius = radius;
+  void TextWidget::setTextOutlineThickness(float thickness) {
+    m_textOutlineThickness = thickness;
   }
 
-  void TextButtonWidget::setOutlineThickness(const float thickness) {
-    m_outlineThickness = thickness;
+  /**********************/
+  /*  TextShapeWidget  */
+  /**********************/
+
+  TextShapeWidget::TextShapeWidget(Text& text, Shape& shape)
+  : TextWidget(text)
+  , m_shape(shape)
+  , m_shapeOutlineThickness(0)
+  , m_disabledBackgroundColor(Color::Gray())
+  , m_disabledBackgroundOutlineColor(Color::Black)
+  , m_defaultBackgroundColor(Color::White)
+  , m_defaultBackgroundOutlineColor(Color::Black)
+  , m_selectedBackgroundColor(Color::White)
+  , m_selectedBackgroundOutlineColor(Color::Gray())
+  {
+
   }
 
-  void TextButtonWidget::setDisabledBackgroundColor(const Color4f &color) {
+  void TextShapeWidget::render(RenderTarget &target, const RenderStates &states) {
+    switch(getState()) {
+      case WidgetState::Disabled:
+        m_shape.setColor(m_disabledBackgroundColor);
+        m_shape.setOutlineColor(m_disabledBackgroundOutlineColor);
+        break;
+      case WidgetState::Default:
+        m_shape.setColor(m_defaultBackgroundColor);
+        m_shape.setOutlineColor(m_defaultBackgroundOutlineColor);
+        break;
+      case WidgetState::Selected:
+        m_shape.setColor(m_selectedBackgroundColor);
+        m_shape.setOutlineColor(m_selectedBackgroundOutlineColor);
+        break;
+    }
+
+    m_shape.setOutlineThickness(m_shapeOutlineThickness);
+    m_shape.draw(target, states);
+
+    // draw text over background
+    TextWidget::render(target, states);
+  }
+
+  bool TextShapeWidget::contains(Vector2f coords) {
+    return false;
+  }
+
+  void TextShapeWidget::setBackgroundOutlineThickness(float thickness) {
+    m_shapeOutlineThickness = thickness;
+  }
+
+  void TextShapeWidget::setDisabledBackgroundColor(const Color4f &color) {
     m_disabledBackgroundColor = color;
   }
 
-  void TextButtonWidget::setDefaultBackgroundColor(const Color4f &color) {
+  void TextShapeWidget::setDisabledBackgroundOutlineColor(const Color4f &color) {
+    m_disabledBackgroundOutlineColor = color;
+  }
+
+  void TextShapeWidget::setDefaultBackgroundColor(const Color4f &color) {
     m_defaultBackgroundColor = color;
   }
 
-  void TextButtonWidget::setSelectedBackgroundColor(const Color4f &color) {
+  void TextShapeWidget::setDefaultBackgroundOutlineColor(const Color4f &color) {
+    m_defaultBackgroundOutlineColor = color;
+  }
+
+  void TextShapeWidget::setSelectedBackgroundColor(const Color4f &color) {
     m_selectedBackgroundColor = color;
   }
 
-  void TextButtonWidget::setDisabledOutlineColor(const Color4f &color) {
-    m_disabledOutlineColor = color;
-  }
-
-  void TextButtonWidget::setDefaultOutlineColor(const Color4f &color) {
-    m_defaultOutlineColor = color;
-  }
-
-  void TextButtonWidget::setSelectedOutlineColor(const Color4f &color) {
-    m_selectedOutlineColor = color;
+  void TextShapeWidget::setSelectedBackgroundOutlineColor(const Color4f &color) {
+    m_selectedBackgroundOutlineColor = color;
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

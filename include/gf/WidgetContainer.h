@@ -96,8 +96,16 @@ inline namespace v1 {
     void selectPreviousWidget();
 
   private:
+    void unselectCurrentlySelected();
+
+    void computePreviousIndex();
+    void computeNextIndex();
+
+    Widget& getCurrent();
+
+  private:
     std::vector<Widget*> m_widgets;
-    size_t m_currentWidgetPos;
+    std::size_t m_selectedWidgetIndex;
     bool m_widgetIsSelected;
   };
 
