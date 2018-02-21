@@ -163,15 +163,34 @@ inline namespace v1 {
     Color4f m_selectedBackgroundOutlineColor;
   };
 
-  class TextButtonWidget : public TextShapeWidget {
+  /**
+   * @ingroup graphics
+   * @brief A text within a rounded rectangle widget
+   *
+   * @sa gf::Text, gf::RoundedRectangleShape
+   */
+  class GF_API TextButtonWidget : public TextShapeWidget {
   public:
+    /**
+     * @brief Constructor
+     */
     TextButtonWidget(Text& text);
 
+    /**
+     * @brief Set the radius of the corners
+     *
+     * @param radius The new radius
+     */
     void setRadius(float radius) {
       m_radius = radius;
       updateGeometry();
     }
 
+    /**
+     * @brief Set the padding around the text
+     *
+     * @param padding The new padding
+     */
     void setPadding(float padding) {
       m_padding = padding;
       updateGeometry();
