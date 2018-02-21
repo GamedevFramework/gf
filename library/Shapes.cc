@@ -252,6 +252,10 @@ inline namespace v1 {
   }
 
   std::size_t RoundedRectangleShape::getPointCount() const {
+    if (m_radius < gf::Epsilon) {
+      return 4;
+    }
+
     return m_cornerPointCount * 4;
   }
 
@@ -278,8 +282,15 @@ inline namespace v1 {
   } // anonymous namespace
 
   Vector2f RoundedRectangleShape::getPoint(std::size_t index) const {
+    if (m_radius < gf::Epsilon) {
+      assert(index < 4);
+      return computeCenter(index, m_size, 0.0f);
+    }
+
     std::size_t quarter = index / m_cornerPointCount;
     assert(quarter <= 3);
+
+    float radius = std::min({ m_radius, m_size.height / 2, m_size.width / 2 });
 
     /*
      * quarter 0: top left (clockwise)
@@ -288,11 +299,11 @@ inline namespace v1 {
      * quarter 3: bottom left (clockwise)
      */
 
-    Vector2f center = computeCenter(quarter, m_size, m_radius);
+    Vector2f center = computeCenter(quarter, m_size, radius);
 
     std::size_t quarterIndex = index % m_cornerPointCount;
     float angle = Pi2 * static_cast<float>(quarterIndex) / (m_cornerPointCount - 1) + quarter * Pi2 + Pi;
-    Vector2f radial = m_radius * gf::unit(angle);
+    Vector2f radial = radius * gf::unit(angle);
 
     return center + radial;
   }
