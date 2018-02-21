@@ -36,6 +36,7 @@ add_gf_example(24_easings)
 add_gf_example(25_activities)
 add_gf_example(26_map)
 add_gf_example(27_console)
+add_gf_example(28_widgets)
 
 add_gf_example(30_postprocessing)
 add_gf_example(31_pipeline)

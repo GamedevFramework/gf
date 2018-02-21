@@ -31,6 +31,16 @@ namespace gf {
 inline namespace v1 {
 #endif
 
+  namespace {
+
+    template<typename T>
+    bool isInsideBounds(Vector2f coords, const T& shape) {
+      Vector2f local = gf::transform(shape.getInverseTransform(), coords);
+      return shape.getLocalBounds().contains(local);
+    }
+
+  }
+
   /**********************/
   /*     TextWidget     */
   /**********************/
@@ -69,7 +79,7 @@ inline namespace v1 {
   }
 
   bool TextWidget::contains(Vector2f coords) {
-    return false;
+    return isInsideBounds(coords, m_text);
   }
 
   void TextWidget::setTextOutlineThickness(float thickness) {
@@ -118,7 +128,7 @@ inline namespace v1 {
   }
 
   bool TextShapeWidget::contains(Vector2f coords) {
-    return false;
+    return isInsideBounds(coords, m_shape);
   }
 
   void TextShapeWidget::setBackgroundOutlineThickness(float thickness) {
