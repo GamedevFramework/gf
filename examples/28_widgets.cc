@@ -159,6 +159,7 @@ int main() {
           break;
 
         case gf::EventType::MouseButtonPressed:
+          widgets.pointTo(renderer.mapPixelToCoords(event.mouseButton.coords));
           widgets.triggerAction();
           break;
 
