@@ -21,10 +21,8 @@
 #include <gf/Widgets.h>
 
 #include <gf/Color.h>
-#include <gf/Shape.h>
 #include <gf/Text.h>
-
-#include <gf/Log.h>
+#include <gf/VectorOps.h>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -87,7 +85,7 @@ inline namespace v1 {
   }
 
   /**********************/
-  /*  TextShapeWidget  */
+  /*  TextShapeWidget   */
   /**********************/
 
   TextShapeWidget::TextShapeWidget(Text& text, Shape& shape)
@@ -157,6 +155,30 @@ inline namespace v1 {
 
   void TextShapeWidget::setSelectedBackgroundOutlineColor(const Color4f &color) {
     m_selectedBackgroundOutlineColor = color;
+  }
+
+  /**********************/
+  /*  TextButtonWidget  */
+  /**********************/
+
+  TextButtonWidget::TextButtonWidget(Text& text)
+  : TextShapeWidget(text, m_rect)
+  , m_radius(0)
+  , m_padding(0)
+  {
+    updateGeometry();
+  }
+
+  void TextButtonWidget::updateGeometry() {
+    RectF bounds = getText().getLocalBounds().extend(m_padding);
+    m_rect.setSize(bounds.getSize());
+    m_rect.setOrigin(getText().getOrigin() + m_padding);
+
+    Vector2f unrotatedPosition = getText().getPosition() + bounds.getPosition() + m_padding;
+
+    m_rect.setPosition(gf::transform(gf::rotation(getText().getRotation(), getText().getPosition()), unrotatedPosition));
+    m_rect.setRotation(getText().getRotation());
+    m_rect.setRadius(m_radius);
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

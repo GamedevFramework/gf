@@ -81,6 +81,30 @@ int main() {
   disabledWidget.setDisabled();
   widgets.addWidget(disabledWidget);
 
+  gf::Text quit("Quit", font, 25);
+  quit.setPosition({ 50.0f, 140.0f });
+  quit.setAnchor(gf::Anchor::TopLeft);
+
+  gf::TextButtonWidget quitWidget(quit);
+  quitWidget.setTextOutlineThickness(1.0f);
+  quitWidget.setBackgroundOutlineThickness(1.0f);
+  quitWidget.setRadius(2.0f);
+  quitWidget.setPadding(4.0f);
+  quitWidget.setCallback([]() { std::cout << "Quit!\n"; });
+  widgets.addWidget(quitWidget);
+
+  gf::Text rotated("Rotated", font, 25);
+  rotated.setPosition({ 50.0f, 190.0f });
+  rotated.setRotation(gf::Pi / 4);
+  rotated.setAnchor(gf::Anchor::TopLeft);
+
+  gf::TextButtonWidget rotatedWidget(rotated);
+  rotatedWidget.setTextOutlineThickness(1.0f);
+  rotatedWidget.setBackgroundOutlineThickness(1.0f);
+  rotatedWidget.setRadius(2.0f);
+  rotatedWidget.setPadding(4.0f);
+  rotatedWidget.setCallback([]() { std::cout << "Rotated!\n"; });
+  widgets.addWidget(rotatedWidget);
 
   gf::Clock clock;
   renderer.clear(gf::Color::White);
@@ -131,10 +155,7 @@ int main() {
     }
 
     renderer.clear();
-
     widgets.render(renderer);
-//     renderer.draw(text);
-
     renderer.display();
   }
 

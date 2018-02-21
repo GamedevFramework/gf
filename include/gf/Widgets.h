@@ -21,6 +21,7 @@
 #ifndef GF_WIDGETS_H
 #define GF_WIDGETS_H
 
+#include "Shapes.h"
 #include "Vector.h"
 #include "Widget.h"
 
@@ -33,7 +34,6 @@ inline namespace v1 {
   class RenderTarget;
 
   class Text;
-  class Shape;
 
   /**
    * @ingroup graphics
@@ -61,6 +61,11 @@ inline namespace v1 {
      * @param thickness The new value of the outline thickness.
      */
     void setTextOutlineThickness(float thickness);
+
+  protected:
+    Text& getText() {
+      return m_text;
+    }
 
   private:
     Text& m_text;
@@ -144,7 +149,7 @@ inline namespace v1 {
      */
     void setSelectedBackgroundOutlineColor(const Color4f &color);
 
-  protected:
+  private:
     Shape& m_shape;
     float m_shapeOutlineThickness;
 
@@ -156,6 +161,29 @@ inline namespace v1 {
 
     Color4f m_selectedBackgroundColor;
     Color4f m_selectedBackgroundOutlineColor;
+  };
+
+  class TextButtonWidget : public TextShapeWidget {
+  public:
+    TextButtonWidget(Text& text);
+
+    void setRadius(float radius) {
+      m_radius = radius;
+      updateGeometry();
+    }
+
+    void setPadding(float padding) {
+      m_padding = padding;
+      updateGeometry();
+    }
+
+  private:
+    void updateGeometry();
+
+  private:
+    gf::RoundedRectangleShape m_rect;
+    float m_radius;
+    float m_padding;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
