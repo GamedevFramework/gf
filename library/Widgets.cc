@@ -174,10 +174,12 @@ inline namespace v1 {
     m_rect.setSize(bounds.getSize());
     m_rect.setOrigin(getText().getOrigin() + m_padding);
 
-    Vector2f unrotatedPosition = getText().getPosition() + bounds.getPosition() + m_padding;
+    Vector2f position = getText().getPosition();
+    Matrix3f matrix = gf::rotation(getText().getRotation(), position) * gf::scaling(getText().getScale(), position);
 
-    m_rect.setPosition(gf::transform(gf::rotation(getText().getRotation(), getText().getPosition()), unrotatedPosition));
+    m_rect.setPosition(gf::transform(matrix, position + bounds.getPosition() + m_padding));
     m_rect.setRotation(getText().getRotation());
+    m_rect.setScale(getText().getScale());
     m_rect.setRadius(m_radius);
   }
 

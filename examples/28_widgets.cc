@@ -93,21 +93,22 @@ int main() {
   quitWidget.setCallback([]() { std::cout << "Quit!\n"; });
   widgets.addWidget(quitWidget);
 
-  gf::Text rotated("Rotated", font, 25);
-  rotated.setPosition({ 50.0f, 180.0f });
-  rotated.setRotation(gf::Pi / 4);
-  rotated.setAnchor(gf::Anchor::TopLeft);
+  gf::Text transformed("Transformed", font, 25);
+  transformed.setPosition({ 50.0f, 180.0f });
+  transformed.setRotation(gf::Pi / 4);
+  transformed.setAnchor(gf::Anchor::TopLeft);
+  transformed.setScale({ 1.0f , 0.8f });
 
-  gf::TextButtonWidget rotatedWidget(rotated);
-  rotatedWidget.setTextOutlineThickness(1.0f);
-  rotatedWidget.setBackgroundOutlineThickness(1.0f);
-  rotatedWidget.setRadius(2.0f);
-  rotatedWidget.setPadding(4.0f);
-  rotatedWidget.setCallback([]() { std::cout << "Rotated!\n"; });
-  widgets.addWidget(rotatedWidget);
+  gf::TextButtonWidget transformedWidget(transformed);
+  transformedWidget.setTextOutlineThickness(1.0f);
+  transformedWidget.setBackgroundOutlineThickness(1.0f);
+  transformedWidget.setRadius(2.0f);
+  transformedWidget.setPadding(4.0f);
+  transformedWidget.setCallback([]() { std::cout << "Rotated and scaled!\n"; });
+  widgets.addWidget(transformedWidget);
 
   gf::Text disabledAgain("Disabled again", font, 25);
-  disabledAgain.setPosition({ 50.0f, 290.0f });
+  disabledAgain.setPosition({ 50.0f, 320.0f });
   disabledAgain.setAnchor(gf::Anchor::TopLeft);
 
   gf::TextButtonWidget disabledAgainWidget(disabledAgain);
