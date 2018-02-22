@@ -86,7 +86,7 @@ int main() {
 
   gf::Texture texture;
 
-  if (!texture.loadFromFile("18_tilelayer.png")) {
+  if (!texture.loadFromFile("assets/tilelayer.png")) {
     return EXIT_FAILURE;
   }
 

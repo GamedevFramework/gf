@@ -35,9 +35,8 @@ int main() {
   gf::RenderWindow renderer(window);
 
   gf::Texture texture;
-  bool loaded = texture.loadFromFile("13_skeleton.png");
 
-  if (!loaded) {
+  if (!texture.loadFromFile("assets/skeleton.png")) {
     return EXIT_FAILURE;
   }
 

@@ -41,7 +41,7 @@ int main() {
 
   gf::Font font;
 
-  if (!font.loadFromFile("16_DejaVuSans.ttf")) {
+  if (!font.loadFromFile("assets/DejaVuSans.ttf")) {
     return EXIT_FAILURE;
   }
 

@@ -38,7 +38,7 @@ int main() {
 
   gf::Texture texture;
 
-  if (!texture.loadFromFile("12_bomb.png")) {
+  if (!texture.loadFromFile("assets/bomb.png")) {
     return EXIT_FAILURE;
   }
 
@@ -51,7 +51,7 @@ int main() {
 
   gf::Texture textureWithMipmap;
 
-  if (!textureWithMipmap.loadFromFile("12_bomb.png")) {
+  if (!textureWithMipmap.loadFromFile("assets/bomb.png")) {
     return EXIT_FAILURE;
   }
 

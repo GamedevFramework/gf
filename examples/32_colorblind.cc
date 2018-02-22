@@ -47,9 +47,8 @@ int main() {
    */
 
   gf::Texture texture;
-  bool loaded = texture.loadFromFile("32_wesnoth.png");
 
-  if (!loaded) {
+  if (!texture.loadFromFile("assets/wesnoth.png")) {
     return EXIT_FAILURE;
   }
 

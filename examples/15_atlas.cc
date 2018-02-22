@@ -37,12 +37,14 @@ int main() {
   gf::RenderWindow renderer(window);
 
   gf::TextureAtlas atlas;
-  atlas.loadFromFile("15_bricks.xml");
+
+  if (!atlas.loadFromFile("assets/bricks.xml")) {
+    return EXIT_FAILURE;
+  }
 
   gf::Texture texture;
-  bool loaded = texture.loadFromFile(atlas.getTexturePath());
 
-  if (!loaded) {
+  if (!texture.loadFromFile("assets" / atlas.getTexturePath())) {
     return EXIT_FAILURE;
   }
 
