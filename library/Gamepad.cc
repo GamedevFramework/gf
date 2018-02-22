@@ -21,6 +21,7 @@
 #include <gf/Gamepad.h>
 
 #include <cassert>
+#include <cinttypes>
 #include <cstring>
 
 #include <SDL.h>
@@ -226,7 +227,7 @@ inline namespace v1 {
     Gamepad::initialize();
   }
 
-  std::size_t GamepadTracker::getConnectedGamepadCounts() const {
+  std::size_t GamepadTracker::getConnectedGamepadCount() const {
     return m_ids.size();
   }
 

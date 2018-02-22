@@ -242,14 +242,14 @@ inline namespace v1 {
    *
    * @sa gf::Gamepad
    */
-  class GamepadTracker {
+  class GF_API GamepadTracker {
   public:
     /**
      * @brief Constructor
      */
     GamepadTracker();
 
-    std::size_t getConnectedGamepadCounts() const;
+    std::size_t getConnectedGamepadCount() const;
 
     /**
      * @brief Process an event
