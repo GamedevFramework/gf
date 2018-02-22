@@ -93,6 +93,7 @@ inline namespace v1 {
      * @brief Construct a text button widget.
      *
      * @param text The text to bind to the text button.
+     * @param shape The shape for the background of the button
      */
     TextShapeWidget(Text &text, Shape& shape);
 
