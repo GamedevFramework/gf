@@ -120,6 +120,7 @@
 #include "Tmx.cc"
 #include "Transformable.cc"
 #include "Transform.cc"
+#include "Triangulation.cc"
 #include "UI.cc"
 #include "Vector.cc"
 #include "VertexArray.cc"

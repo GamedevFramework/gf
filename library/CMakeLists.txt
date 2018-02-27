@@ -162,6 +162,7 @@ else()
     Tmx.cc
     Transformable.cc
     Transform.cc
+    Triangulation.cc
     UI.cc
     Vector.cc
     VertexArray.cc
