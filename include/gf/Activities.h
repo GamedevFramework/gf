@@ -464,6 +464,32 @@ inline namespace v1 {
     unsigned m_repeat;
   };
 
+
+  /**
+   * @ingroup game
+   * @brief A repeated sequence activity
+   *
+   * This is a convenient combination of gf::SequenceActivity and
+   * gf::RepeatActivity.
+   */
+  class GF_API RepeatedSequenceActivity : public Activity {
+  public:
+    /**
+     * @brief Constructor
+     *
+     * @param repeat The number of time to repeat the activity or 0 for infinite
+     */
+    RepeatedSequenceActivity(unsigned repeat = 0);
+
+    virtual ActivityStatus run(Time time) override;
+    virtual void restart() override;
+
+  private:
+    SequenceActivity m_sequence;
+    RepeatActivity m_repeat;
+  };
+
+
   /**
    * @ingroup game
    * @brief An activity to run several activities in parallel

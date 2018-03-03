@@ -256,6 +256,24 @@ inline namespace v1 {
   }
 
   /*
+   * RepeatedSequenceActivity
+   */
+
+  RepeatedSequenceActivity::RepeatedSequenceActivity(unsigned repeat)
+  : m_repeat(m_sequence, repeat)
+  {
+
+  }
+
+  ActivityStatus RepeatedSequenceActivity::run(Time time) {
+    return m_repeat.run(time);
+  }
+
+  void RepeatedSequenceActivity::restart() {
+    m_repeat.restart();
+  }
+
+  /*
    * ParallelActivity
    */
 
