@@ -143,11 +143,11 @@ inline namespace v1 {
     va_copy(test, ap);
 
     int size = std::vsnprintf(nullptr, 0, fmt, test);
-    assert(size > 0);
+    assert(size >= 0);
 
     ++size; // for '\0'
 
-    std::unique_ptr<char[]> buffer(new char[size]);
+    auto buffer = std::make_unique<char[]>(size);
     std::vsnprintf(buffer.get(), size, fmt, ap);
 
     return std::string(buffer.get());
