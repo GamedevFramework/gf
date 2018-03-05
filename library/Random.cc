@@ -57,6 +57,15 @@ inline namespace v1 {
     return { x, y };
   }
 
+  Vector2i Random::computePosition(const RectI& area) {
+    std::uniform_int_distribution<int> distX(0, area.width);
+    std::uniform_int_distribution<int> distY(0, area.height);
+    int x = area.left + distX(m_engine);
+    int y = area.top + distY(m_engine);
+    return { x, y };
+  }
+
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif

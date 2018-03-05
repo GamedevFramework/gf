@@ -129,6 +129,14 @@ inline namespace v1 {
     Vector2f computePosition(const RectF& area);
 
     /**
+     * @brief Compute a uniform position in a given area
+     *
+     * @param area The area
+     * @returns A value in the area
+     */
+    Vector2i computePosition(const RectI& area);
+
+    /**
      * @brief Get the underlying engine
      *
      * @return A reference to the engine
