@@ -84,6 +84,30 @@ inline namespace v1 {
     m_textOutlineThickness = thickness;
   }
 
+  void TextWidget::setDisabledTextColor(const Color4f &color) {
+    m_disabledTextColor = color;
+  }
+
+  void TextWidget::setDisabledTextOutlineColor(const Color4f &color) {
+    m_disabledTextOutlineColor = color;
+  }
+
+  void TextWidget::setDefaultTextColor(const Color4f &color) {
+    m_defaultTextColor = color;
+  }
+
+  void TextWidget::setDefaultTextOutlineColor(const Color4f &color) {
+    m_defaultTextOutlineColor = color;
+  }
+
+  void TextWidget::setSelectedTextColor(const Color4f &color) {
+    m_selectedTextColor = color;
+  }
+
+  void TextWidget::setSelectedTextOutlineColor(const Color4f &color) {
+    m_selectedTextOutlineColor = color;
+  }
+
   /**********************/
   /*  TextShapeWidget   */
   /**********************/

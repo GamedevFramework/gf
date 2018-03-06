@@ -62,6 +62,48 @@ inline namespace v1 {
      */
     void setTextOutlineThickness(float thickness);
 
+    /**
+     * @brief Set the text's color of the button when disabled.
+     *
+     * @param color The new color to apply
+     */
+    void setDisabledTextColor(const Color4f &color);
+
+    /**
+     * @brief Set the outline's color of the button when disabled.
+     *
+     * @param color The new color to apply
+     */
+    void setDisabledTextOutlineColor(const Color4f &color);
+
+    /**
+     * @brief Set the text's color of the button when it's in a normal state.
+     *
+     * @param color The new color to apply
+     */
+    void setDefaultTextColor(const Color4f &color);
+
+    /**
+     * @brief Set the outline's color of the button when it's in a normal state.
+     *
+     * @param color The new color to apply
+     */
+    void setDefaultTextOutlineColor(const Color4f &color);
+
+    /**
+     * @brief Set the text's color of the button when selected.
+     *
+     * @param color The new color to apply
+     */
+    void setSelectedTextColor(const Color4f &color);
+
+    /**
+     * @brief Set the outline's color of the button when selected.
+     *
+     * @param color The new color to apply
+     */
+    void setSelectedTextOutlineColor(const Color4f &color);
+
   protected:
     Text& getText() {
       return m_text;
