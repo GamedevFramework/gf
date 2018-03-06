@@ -20,6 +20,8 @@
  */
 #include <gf/Widgets.h>
 
+#include <cassert>
+
 #include <gf/Color.h>
 #include <gf/Text.h>
 #include <gf/VectorOps.h>
@@ -32,9 +34,9 @@ inline namespace v1 {
   namespace {
 
     template<typename T>
-    bool isInsideBounds(Vector2f coords, const T& shape) {
-      Vector2f local = gf::transform(shape.getInverseTransform(), coords);
-      return shape.getLocalBounds().contains(local);
+    bool isInsideBounds(Vector2f coords, const T *shape) {
+      Vector2f local = gf::transform(shape->getInverseTransform(), coords);
+      return shape->getLocalBounds().contains(local);
     }
 
   }
@@ -44,7 +46,7 @@ inline namespace v1 {
   /**********************/
 
   TextWidget::TextWidget(Text &text)
-  : m_text(text)
+  : m_text(&text)
   , m_textOutlineThickness(0)
   , m_disabledTextColor(Color::Gray(0.8f))
   , m_disabledTextOutlineColor(Color::Gray())
@@ -59,21 +61,21 @@ inline namespace v1 {
   void TextWidget::render(RenderTarget &target, const RenderStates &states) {
     switch(getState()) {
       case WidgetState::Disabled:
-        m_text.setColor(m_disabledTextColor);
-        m_text.setOutlineColor(m_disabledTextOutlineColor);
+        m_text->setColor(m_disabledTextColor);
+        m_text->setOutlineColor(m_disabledTextOutlineColor);
         break;
       case WidgetState::Default:
-        m_text.setColor(m_defaultTextColor);
-        m_text.setOutlineColor(m_defaultTextOutlineColor);
+        m_text->setColor(m_defaultTextColor);
+        m_text->setOutlineColor(m_defaultTextOutlineColor);
         break;
       case WidgetState::Selected:
-        m_text.setColor(m_selectedTextColor);
-        m_text.setOutlineColor(m_selectedTextOutlineColor);
+        m_text->setColor(m_selectedTextColor);
+        m_text->setOutlineColor(m_selectedTextOutlineColor);
         break;
     }
 
-    m_text.setOutlineThickness(m_textOutlineThickness);
-    m_text.draw(target, states);
+    m_text->setOutlineThickness(m_textOutlineThickness);
+    m_text->draw(target, states);
   }
 
   bool TextWidget::contains(Vector2f coords) {
@@ -114,7 +116,7 @@ inline namespace v1 {
 
   TextShapeWidget::TextShapeWidget(Text& text, Shape& shape)
   : TextWidget(text)
-  , m_shape(shape)
+  , m_shape(&shape)
   , m_shapeOutlineThickness(0)
   , m_disabledBackgroundColor(Color::Gray(0.95f))
   , m_disabledBackgroundOutlineColor(Color::Gray())
@@ -127,23 +129,25 @@ inline namespace v1 {
   }
 
   void TextShapeWidget::render(RenderTarget &target, const RenderStates &states) {
+    assert(m_shape);
+
     switch(getState()) {
       case WidgetState::Disabled:
-        m_shape.setColor(m_disabledBackgroundColor);
-        m_shape.setOutlineColor(m_disabledBackgroundOutlineColor);
+        m_shape->setColor(m_disabledBackgroundColor);
+        m_shape->setOutlineColor(m_disabledBackgroundOutlineColor);
         break;
       case WidgetState::Default:
-        m_shape.setColor(m_defaultBackgroundColor);
-        m_shape.setOutlineColor(m_defaultBackgroundOutlineColor);
+        m_shape->setColor(m_defaultBackgroundColor);
+        m_shape->setOutlineColor(m_defaultBackgroundOutlineColor);
         break;
       case WidgetState::Selected:
-        m_shape.setColor(m_selectedBackgroundColor);
-        m_shape.setOutlineColor(m_selectedBackgroundOutlineColor);
+        m_shape->setColor(m_selectedBackgroundColor);
+        m_shape->setOutlineColor(m_selectedBackgroundOutlineColor);
         break;
     }
 
-    m_shape.setOutlineThickness(m_shapeOutlineThickness);
-    m_shape.draw(target, states);
+    m_shape->setOutlineThickness(m_shapeOutlineThickness);
+    m_shape->draw(target, states);
 
     // draw text over background
     TextWidget::render(target, states);

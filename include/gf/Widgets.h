@@ -34,6 +34,7 @@ inline namespace v1 {
   class RenderTarget;
 
   class Text;
+  class Sprite;
 
   /**
    * @ingroup graphics
@@ -106,11 +107,11 @@ inline namespace v1 {
 
   protected:
     Text& getText() {
-      return m_text;
+      return *m_text;
     }
 
   private:
-    Text& m_text;
+    Text *m_text;
     float m_textOutlineThickness;
 
     Color4f m_disabledTextColor;
@@ -193,7 +194,7 @@ inline namespace v1 {
     void setSelectedBackgroundOutlineColor(const Color4f &color);
 
   private:
-    Shape& m_shape;
+    Shape *m_shape;
     float m_shapeOutlineThickness;
 
     Color4f m_disabledBackgroundColor;
