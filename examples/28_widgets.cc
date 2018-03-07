@@ -30,7 +30,10 @@
 #include <gf/Font.h>
 #include <gf/RenderWindow.h>
 #include <gf/Shapes.h>
+#include <gf/Sprite.h>
 #include <gf/Text.h>
+#include <gf/Texture.h>
+#include <gf/TextureAtlas.h>
 #include <gf/WidgetContainer.h>
 #include <gf/Widgets.h>
 #include <gf/Window.h>
@@ -44,6 +47,20 @@ int main() {
   if (!font.loadFromFile("assets/DejaVuSans.ttf")) {
     return EXIT_FAILURE;
   }
+
+  gf::TextureAtlas atlas;
+
+  if (!atlas.loadFromFile("assets/ui.xml")) {
+    return EXIT_FAILURE;
+  }
+
+  gf::Texture texture;
+
+  if (!texture.loadFromFile("assets/ui.png")) {
+    return EXIT_FAILURE;
+  }
+
+  atlas.setTexture(texture);
 
   std::cout << "Gamedev Framework (gf) example #28: widgets\n";
   std::cout << "This example shows some game widgets.\n";
@@ -119,6 +136,18 @@ int main() {
   disabledAgainWidget.setDisabled();
   disabledAgainWidget.setCallback([]() { std::cout << "Disabled again!\n"; });
   widgets.addWidget(disabledAgainWidget);
+
+  gf::Vector2f spritePosition(300.0f, 50.0f);
+  gf::Sprite defaultSprite(texture, atlas.getTextureRect("grey_button04.png"));
+  defaultSprite.setPosition(spritePosition);
+  gf::Sprite selectedSprite(texture, atlas.getTextureRect("grey_button02.png"));
+  selectedSprite.setPosition(spritePosition);
+  gf::Sprite disabledSprite(texture, atlas.getTextureRect("grey_button00.png"));
+  disabledSprite.setPosition(spritePosition);
+
+  gf::SpriteWidget spriteWidget(defaultSprite, selectedSprite, disabledSprite);
+  spriteWidget.setCallback([]() { std::cout << "Sprite!\n";  });
+  widgets.addWidget(spriteWidget);
 
   gf::Clock clock;
   renderer.clear(gf::Color::White);

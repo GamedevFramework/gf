@@ -249,6 +249,67 @@ inline namespace v1 {
     float m_padding;
   };
 
+  /**
+   * @ingroup graphics
+   * @brief A widget with a set of sprites
+   */
+  class SpriteWidget : public Widget {
+  public:
+    /**
+     * @brief Constructor with a single sprite
+     *
+     * @param sprite The sprite used for disabled, default and selected state
+     */
+    SpriteWidget(Sprite& sprite);
+
+    /**
+     * @brief Constructor with two sprites
+     *
+     * @param defaultSprite The sprite used for disabled and default state
+     * @param selectedSprite The sprite used for selected state
+     */
+    SpriteWidget(Sprite& defaultSprite, Sprite& selectedSprite);
+
+    /**
+     * @brief Constructor with three sprites
+     *
+     * @param defaultSprite The sprite used for default state
+     * @param selectedSprite The sprite used for selected state
+     * @param disabledSprite The sprite used for disabled state
+     */
+    SpriteWidget(Sprite& defaultSprite, Sprite& selectedSprite, Sprite& disabledSprite);
+
+    /**
+     * @brief Set the sprite for disabled state
+     *
+     * @param sprite The sprite used for disabled state
+     */
+    void setDisabledSprite(Sprite& sprite);
+
+    /**
+     * @brief Set the sprite for default state
+     *
+     * @param sprite The sprite used for default state
+     */
+    void setDefaultSprite(Sprite& sprite);
+
+    /**
+     * @brief Set the sprite for selected state
+     *
+     * @param sprite The sprite used for selected state
+     */
+    void setSelectedSprite(Sprite& sprite);
+
+    virtual void render(RenderTarget &target, const RenderStates &states) override;
+
+    virtual bool contains(Vector2f coords) override;
+
+  private:
+    Sprite *m_disabledSprite;
+    Sprite *m_defaultSprite;
+    Sprite *m_selectedSprite;
+  };
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif

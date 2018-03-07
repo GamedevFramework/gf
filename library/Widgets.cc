@@ -23,6 +23,7 @@
 #include <cassert>
 
 #include <gf/Color.h>
+#include <gf/Sprite.h>
 #include <gf/Text.h>
 #include <gf/VectorOps.h>
 
@@ -41,9 +42,9 @@ inline namespace v1 {
 
   }
 
-  /**********************/
-  /*     TextWidget     */
-  /**********************/
+  /*
+   * TextWidget
+   */
 
   TextWidget::TextWidget(Text &text)
   : m_text(&text)
@@ -59,6 +60,8 @@ inline namespace v1 {
   }
 
   void TextWidget::render(RenderTarget &target, const RenderStates &states) {
+    assert(m_text);
+
     switch(getState()) {
       case WidgetState::Disabled:
         m_text->setColor(m_disabledTextColor);
@@ -110,9 +113,9 @@ inline namespace v1 {
     m_selectedTextOutlineColor = color;
   }
 
-  /**********************/
-  /*  TextShapeWidget   */
-  /**********************/
+  /*
+   * TextShapeWidget
+   */
 
   TextShapeWidget::TextShapeWidget(Text& text, Shape& shape)
   : TextWidget(text)
@@ -185,9 +188,9 @@ inline namespace v1 {
     m_selectedBackgroundOutlineColor = color;
   }
 
-  /**********************/
-  /*  TextButtonWidget  */
-  /**********************/
+  /*
+   * TextButtonWidget
+   */
 
   TextButtonWidget::TextButtonWidget(Text& text)
   : TextShapeWidget(text, m_rect)
@@ -209,6 +212,80 @@ inline namespace v1 {
     m_rect.setRotation(getText().getRotation());
     m_rect.setScale(getText().getScale());
     m_rect.setRadius(m_radius);
+  }
+
+  /*
+   * SpriteWidget
+   */
+
+  SpriteWidget::SpriteWidget(Sprite& sprite)
+  : m_disabledSprite(&sprite)
+  , m_defaultSprite(&sprite)
+  , m_selectedSprite(&sprite)
+  {
+
+  }
+
+  SpriteWidget::SpriteWidget(Sprite& defaultSprite, Sprite& selectedSprite)
+  : m_disabledSprite(&defaultSprite)
+  , m_defaultSprite(&defaultSprite)
+  , m_selectedSprite(&selectedSprite)
+  {
+
+  }
+
+  SpriteWidget::SpriteWidget(Sprite& defaultSprite, Sprite& selectedSprite, Sprite& disabledSprite)
+  : m_disabledSprite(&disabledSprite)
+  , m_defaultSprite(&defaultSprite)
+  , m_selectedSprite(&selectedSprite)
+  {
+
+  }
+
+  void SpriteWidget::setDisabledSprite(Sprite& sprite) {
+    m_disabledSprite = &sprite;
+  }
+
+  void SpriteWidget::setDefaultSprite(Sprite& sprite) {
+    m_defaultSprite = &sprite;
+  }
+
+  void SpriteWidget::setSelectedSprite(Sprite& sprite) {
+    m_selectedSprite = &sprite;
+  }
+
+  void SpriteWidget::render(RenderTarget &target, const RenderStates &states) {
+    switch(getState()) {
+      case WidgetState::Disabled:
+        assert(m_disabledSprite);
+        m_disabledSprite->draw(target, states);
+        break;
+      case WidgetState::Default:
+        assert(m_defaultSprite);
+        m_defaultSprite->draw(target, states);
+        break;
+      case WidgetState::Selected:
+        assert(m_selectedSprite);
+        m_selectedSprite->draw(target, states);
+        break;
+    }
+  }
+
+  bool SpriteWidget::contains(Vector2f coords) {
+    switch(getState()) {
+      case WidgetState::Disabled:
+        assert(m_disabledSprite);
+        return isInsideBounds(coords, m_disabledSprite);
+      case WidgetState::Default:
+        assert(m_defaultSprite);
+        return isInsideBounds(coords, m_defaultSprite);
+      case WidgetState::Selected:
+        assert(m_selectedSprite);
+        return isInsideBounds(coords, m_selectedSprite);
+    }
+
+    assert(false);
+    return false;
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
