@@ -135,6 +135,7 @@ else()
     Polyline.cc
     PostProcessing.cc
     Random.cc
+    RandomBinaryTree.cc
     Range.cc
     Rect.cc
     RenderPipeline.cc
@@ -149,7 +150,6 @@ else()
     Shape.cc
     Shapes.cc
     Sleep.cc
-    SpaceTree.cc
     SpriteBatch.cc
     Sprite.cc
     StringUtils.cc
