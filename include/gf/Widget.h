@@ -153,6 +153,14 @@ inline namespace v1 {
      */
     void triggerCallback();
 
+  protected:
+    /**
+     * @brief Function called when the callback is triggered
+     *
+     * This function is called before the callback.
+     */
+    virtual void triggered();
+
   private:
     WidgetState m_state;
     std::function<void()> m_callback;

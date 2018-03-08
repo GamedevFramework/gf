@@ -310,6 +310,70 @@ inline namespace v1 {
     Sprite *m_selectedSprite;
   };
 
+  /**
+   * @ingroup graphics
+   * @brief A choice sprite widget
+   *
+   * A choice widget may be used to represent a checkbox or a radio button.
+   */
+  class ChoiceSpriteWidget : public SpriteWidget {
+  public:
+    /**
+     * @brief Constructor
+     *
+     * @param empty The sprite for representing the empty state
+     * @param chosen The sprite for representing the chosen state
+     */
+    ChoiceSpriteWidget(Sprite& empty, Sprite& chosen);
+
+    /**
+     * @brief Set the state of the widget
+     *
+     * @param chosen The new state of the widget
+     *
+     * @sa isChosen()
+     */
+    void setChosen(bool chosen = true);
+
+    /**
+     * @brief Check if the widget is in the chosen state
+     *
+     * @sa setChosen()
+     */
+    bool isChosen() const noexcept {
+      return m_isChosen;
+    }
+
+    /**
+     * @brief Set the sprite for the empty state
+     *
+     * @param sprite The sprite used for the empty state
+     *
+     * @sa setChosenSprite()
+     */
+    void setEmptySprite(Sprite& sprite);
+
+    /**
+     * @brief Set the sprite for the chosen state
+     *
+     * @param sprite The sprite sued for the chosen state
+     *
+     * @sa setEmptySprite()
+     */
+    void setChosenSprite(Sprite& sprite);
+
+  protected:
+    virtual void triggered() override;
+
+  private:
+    void updateSprites();
+
+  private:
+    Sprite *m_empty;
+    Sprite *m_chosen;
+    bool m_isChosen;
+  };
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif

@@ -142,12 +142,22 @@ int main() {
   defaultSprite.setPosition(spritePosition);
   gf::Sprite selectedSprite(texture, atlas.getTextureRect("grey_button02.png"));
   selectedSprite.setPosition(spritePosition);
-  gf::Sprite disabledSprite(texture, atlas.getTextureRect("grey_button00.png"));
+  gf::Sprite disabledSprite(texture, atlas.getTextureRect("grey_button05.png"));
   disabledSprite.setPosition(spritePosition);
 
   gf::SpriteWidget spriteWidget(defaultSprite, selectedSprite, disabledSprite);
   spriteWidget.setCallback([]() { std::cout << "Sprite!\n";  });
   widgets.addWidget(spriteWidget);
+
+  gf::Vector2f choicePosition(300.0f, 100.0f);
+  gf::Sprite emptySprite(texture, atlas.getTextureRect("grey_box.png"));
+  emptySprite.setPosition(choicePosition);
+  gf::Sprite chosenSprite(texture, atlas.getTextureRect("grey_boxCheckmark.png"));
+  chosenSprite.setPosition(choicePosition);
+
+  gf::ChoiceSpriteWidget choiceWidget(emptySprite, chosenSprite);
+  choiceWidget.setCallback([&choiceWidget]() { std::cout << (choiceWidget.isChosen() ? "Chosen\n" : "Empty\n"); });
+  widgets.addWidget(choiceWidget);
 
   gf::Clock clock;
   renderer.clear(gf::Color::White);

@@ -54,9 +54,15 @@ inline namespace v1 {
   }
 
   void Widget::triggerCallback() {
+    triggered();
+
     if (m_callback) {
       m_callback();
     }
+  }
+
+  void Widget::triggered() {
+    // nothing to do
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

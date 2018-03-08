@@ -288,6 +288,51 @@ inline namespace v1 {
     return false;
   }
 
+  /*
+   *
+   */
+
+  ChoiceSpriteWidget::ChoiceSpriteWidget(Sprite& empty, Sprite& chosen)
+  : SpriteWidget(empty)
+  , m_empty(&empty)
+  , m_chosen(&chosen)
+  , m_isChosen(false)
+  {
+
+  }
+
+  void ChoiceSpriteWidget::setChosen(bool chosen) {
+    if (chosen != m_isChosen) {
+      m_isChosen = chosen;
+      updateSprites();
+    }
+  }
+
+  void ChoiceSpriteWidget::setEmptySprite(Sprite& sprite) {
+    m_empty = &sprite;
+  }
+
+  void ChoiceSpriteWidget::setChosenSprite(Sprite& sprite) {
+    m_chosen = &sprite;
+  }
+
+  void ChoiceSpriteWidget::triggered() {
+    m_isChosen = !m_isChosen;
+    updateSprites();
+  }
+
+  void ChoiceSpriteWidget::updateSprites() {
+    if (!m_isChosen) {
+      setDisabledSprite(*m_empty);
+      setDefaultSprite(*m_empty);
+      setSelectedSprite(*m_empty);
+    } else {
+      setDisabledSprite(*m_chosen);
+      setDefaultSprite(*m_chosen);
+      setSelectedSprite(*m_chosen);
+    }
+  }
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif
