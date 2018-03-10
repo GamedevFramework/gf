@@ -253,7 +253,7 @@ inline namespace v1 {
    * @ingroup graphics
    * @brief A widget with a set of sprites
    */
-  class SpriteWidget : public Widget {
+  class GF_API SpriteWidget : public Widget {
   public:
     /**
      * @brief Constructor with a single sprite
@@ -316,7 +316,7 @@ inline namespace v1 {
    *
    * A choice widget may be used to represent a checkbox or a radio button.
    */
-  class ChoiceSpriteWidget : public SpriteWidget {
+  class GF_API ChoiceSpriteWidget : public SpriteWidget {
   public:
     /**
      * @brief Constructor
