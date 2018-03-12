@@ -157,7 +157,7 @@ inline namespace v1 {
      * The function returns a boolean indicating if the traversal can
      * continue.
      */
-    using Callback = std::function<bool(const Node&)>;
+    using Callback = std::function<bool(const RandomBinaryTree&, const Node&)>;
 
     /**
      * @brief Constructor

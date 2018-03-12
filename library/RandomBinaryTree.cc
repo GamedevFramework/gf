@@ -178,11 +178,11 @@ inline namespace v1 {
     template <Order order>
     bool traverse(const RandomBinaryTree& tree, const RandomBinaryTree::Node& node, RandomBinaryTree::Callback& callback) {
       if (node.isLeaf()) {
-        return callback(node);
+        return callback(tree, node);
       }
 
       if (order == Order::Pre) {
-        if (!callback(node)) {
+        if (!callback(tree, node)) {
           return false;
         }
       }
@@ -192,7 +192,7 @@ inline namespace v1 {
       }
 
       if (order == Order::In) {
-        if (!callback(node)) {
+        if (!callback(tree, node)) {
           return false;
         }
       }
@@ -202,7 +202,7 @@ inline namespace v1 {
       }
 
       if (order == Order::Post) {
-        if (!callback(node)) {
+        if (!callback(tree, node)) {
           return false;
         }
       }
@@ -234,7 +234,7 @@ inline namespace v1 {
 
       const Node& node = m_nodes[current];
 
-      if (!callback(node)) {
+      if (!callback(*this, node)) {
         return false;
       }
 
@@ -285,7 +285,7 @@ inline namespace v1 {
       std::size_t current = stack.top();
       stack.pop();
 
-      if (!callback(m_nodes[current])) {
+      if (!callback(*this, m_nodes[current])) {
         return false;
       }
     }
