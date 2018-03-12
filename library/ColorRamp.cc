@@ -63,8 +63,12 @@ inline namespace v1 {
       return Color::White;
     }
 
-    if (offset < m_min || offset > m_max) {
-      return Color::White;
+    if (offset < m_min) {
+      return m_map.begin()->second;
+    }
+
+    if (offset > m_max) {
+      return m_map.rbegin()->second;
     }
 
     auto it = m_map.lower_bound(offset);

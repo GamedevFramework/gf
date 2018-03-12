@@ -50,14 +50,13 @@ namespace bi {
     gf::MessageStatus onGoldLooted(gf::Id id, gf::Message *msg);
 
   private:
-    struct Point {
-      float elevation;
-      gf::Color4f color;
-    };
-
-    gf::VertexArray m_vertices;
-    gf::Array2D<Point> m_sea;
+    gf::VertexArray m_seaVertices;
+    gf::VertexArray m_landVertices;
+    gf::Array2D<float> m_terrain;
+    gf::Array2D<gf::Color4f> m_sea;
+    gf::Array2D<gf::Color4f> m_land;
     gf::Vector2u m_hero;
+    bool m_heroMoved;
   };
 
 }
