@@ -201,7 +201,7 @@ inline namespace v1 {
   }
 
   void TextButtonWidget::updateGeometry() {
-    RectF bounds = getText().getLocalBounds().extend(m_padding);
+    RectF bounds = getText().getLocalBounds().grow(m_padding);
     m_rect.setSize(bounds.getSize());
     m_rect.setOrigin(getText().getOrigin() + m_padding);
 

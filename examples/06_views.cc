@@ -35,7 +35,7 @@ int main() {
   gf::RenderWindow renderer(window);
 
   gf::RectF world(-100, -100, 200, 200);
-  gf::RectF extendedWorld = world.extend(100);
+  gf::RectF extendedWorld = world.grow(100);
 
   /*
    * views

@@ -139,7 +139,7 @@ inline namespace v1 {
     size.width = size.height = gf::Sqrt2 * std::max(size.width, size.height);
 
     RectF world(center - size / 2, size);
-    RectF local = gf::transform(getInverseTransform(), world).extend(std::max(blockSize.width, blockSize.height));
+    RectF local = gf::transform(getInverseTransform(), world).grow(std::max(blockSize.width, blockSize.height));
 
     RectF layer({ 0.0f, 0.0f }, m_layerSize * blockSize);
 
