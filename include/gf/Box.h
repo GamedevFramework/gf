@@ -56,17 +56,24 @@ inline namespace v1 {
       }
     }
 
-    constexpr Box(Vector<T, N> p0, Vector<T, N> p1)
+    constexpr Box(Vector<T, N> p0, Vector<T, N> p1) noexcept
     {
       for (std::size_t i = 0; i < N; ++i) {
         std::tie(min[i], max[i]) = std::minmax(p0[i], p1[i]);
       }
     }
 
-    constexpr Box(const T (&p0)[N], const T (&p1)[N]) {
+    constexpr Box(const T (&p0)[N], const T (&p1)[N]) noexcept {
       for (std::size_t i = 0; i < N; ++i) {
         std::tie(min[i], max[i]) = std::minmax(p0[i], p1[i]);
       }
+    }
+
+    constexpr explicit Box(Vector<T, N> p) noexcept
+    : min(p)
+    , max(p)
+    {
+
     }
 
     constexpr Vector<T, N> getSize() const noexcept {
@@ -117,26 +124,26 @@ inline namespace v1 {
       return true;
     }
 
-    constexpr void extend(const T (&point)[N]) {
+    constexpr void extend(const T (&point)[N]) noexcept {
       for (std::size_t i = 0; i < N; ++i) {
         std::tie(min[i], max[i]) = std::minmax({ min[i], max[i], point[i] });
       }
     }
 
-    constexpr void extend(Vector<T, N> point) {
+    constexpr void extend(Vector<T, N> point) noexcept {
       for (std::size_t i = 0; i < N; ++i) {
         std::tie(min[i], max[i]) = std::minmax({ min[i], max[i], point[i] });
       }
     }
 
-    constexpr void extend(const Box<T, N>& other) {
+    constexpr void extend(const Box<T, N>& other) noexcept {
       for (std::size_t i = 0; i < N; ++i) {
         min[i] = std::min(min[i], other.min[i]);
         max[i] = std::max(max[i], other.max[i]);
       }
     }
 
-    Box<T, N> getExtended(const Box<T, N>& other) {
+    Box<T, N> getExtended(const Box<T, N>& other) noexcept {
       Box<T, N> res(*this);
       res.extend(other);
       return res;

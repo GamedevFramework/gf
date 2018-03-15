@@ -28,36 +28,40 @@
 #include <boost/container/static_vector.hpp>
 
 #include "Box.h"
-#include "Vector.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
 #endif
 
+  enum class SpatialQuery {
+    Contain,
+    Intersect,
+  };
+
   template<typename T, typename U = float, std::size_t Size = 16>
   class QuadTree {
   public:
     static_assert(Size > 0, "Size can not be 0");
 
-    QuadTree(const Box<U, 2>& box)
-    : m_root(box)
+    QuadTree(const Box<U, 2>& bounds)
+    : m_root(bounds)
     {
 
     }
 
-    bool insert(const T& value, Vector<U, 2> position) {
-      return m_root->insert(value, position);
+    bool insert(const T& value, const Box<U, 2>& bounds) {
+      return m_root->insert(value, bounds);
     }
 
     template<typename Iter>
-    std::size_t query(const Box<T, 2>& box, Iter out) const {
-      return m_root->query(box, out);
+    std::size_t query(const Box<T, 2>& bounds, Iter out, SpatialQuery kind = SpatialQuery::Intersect) const {
+      return m_root->query(bounds, out, kind);
     }
 
-    std::vector<T> query(const Box<T, 2>& box) const {
+    std::vector<T> query(const Box<T, 2>& bounds, SpatialQuery kind = SpatialQuery::Intersect) const {
       std::vector<T> res;
-      m_root->query(box, std::back_inserter(res));
+      m_root->query(bounds, std::back_inserter(res), kind);
       return res;
     }
 
@@ -68,22 +72,22 @@ inline namespace v1 {
   private:
     struct Object {
       T value;
-      Vector<U, 2> position;
+      Box<U, 2> bounds;
     };
 
     class Node {
     public:
-      Node(const Box<U, 2>& box)
-      : m_box(box)
+      Node(const Box<U, 2>& bounds)
+      : m_bounds(bounds)
       , m_children{ nullptr, nullptr, nullptr, nullptr }
       {
-
+        m_data.reserve(Size);
       }
 
       Node(const Node&) = delete;
 
       Node(Node&& other)
-      : m_box(other.m_box)
+      : m_bounds(other.m_bounds)
       , m_data(std::move(other.m_data))
       {
         for (std::size_t i = 0; i < 4; ++i) {
@@ -94,7 +98,7 @@ inline namespace v1 {
       Node& operator=(const Node&) = delete;
 
       Node& operator=(Node&& other) {
-        std::swap(m_box, other.m_box);
+        std::swap(m_bounds, other.m_bounds);
         std::swap(m_data, other.m_data);
         std::swap(m_children, other.m_children);
         return *this;
@@ -110,47 +114,61 @@ inline namespace v1 {
         return m_children[0] == nullptr;
       }
 
-      bool insert(const T& value, Vector<U, 2> position) {
-        if (!m_box.contains(position)) {
+      bool insert(const T& value, Box<U, 2> bounds) {
+        if (!m_bounds.contains(bounds)) {
           return false;
         }
 
-        if (m_data.size() < Size) {
-          m_data.push_back({ value, position });
-          return true;
-        }
+        if (isLeaf()) {
+          if (m_data.size() < Size) {
+            m_data.push_back({ value, bounds });
+            return true;
+          }
 
-        if (!isLeaf() && m_data.size() == Size) {
           subdivide();
         }
 
         for (std::size_t i = 0; i < 4; ++i) {
-          if (m_children[i]->insert(value, position)) {
+          if (m_children[i]->insert(value, bounds)) {
             return true;
           }
         }
 
-        return false;
+        clearChildrenIfEmpty();
+
+        m_data.push_back({ value, bounds });
+        return true;
       }
 
       template<typename Iter>
-      std::size_t query(const Box<T, 2>& box, Iter out) const {
-        if (!m_box.intersects(box)) {
+      std::size_t query(const Box<T, 2>& bounds, Iter out, SpatialQuery kind) const {
+        if (!m_bounds.intersects(bounds)) {
           return 0;
         }
 
         std::size_t found = 0;
 
         for (auto& object : m_data) {
-          if (box.contains(object.position)) {
-            *out++ = object.value;
-            ++found;
+          switch (kind) {
+            case SpatialQuery::Contain:
+              if (bounds.contains(object.bounds)) {
+                *out++ = object.value;
+                ++found;
+              }
+              break;
+
+            case SpatialQuery::Intersect:
+              if (bounds.intersects(object.bounds)) {
+                *out++ = object.value;
+                ++found;
+              }
+              break;
           }
         }
 
         if (!isLeaf()) {
           for (std::size_t i = 0; i < 4; ++i) {
-            found += m_children[i]->query(box, out);
+            found += m_children[i]->query(bounds, out, kind);
           }
         }
 
@@ -168,26 +186,52 @@ inline namespace v1 {
 
     private:
       void subdivide() {
-        auto upperLeft = std::make_unique<Node>(computeBoxQuadrant(m_box, Quadrant::UpperLeft));
-        auto upperRight = std::make_unique<Node>(computeBoxQuadrant(m_box, Quadrant::UpperRight));
-        auto lowerRight = std::make_unique<Node>(computeBoxQuadrant(m_box, Quadrant::LowerRight));
-        auto lowerLeft = std::make_unique<Node>(computeBoxQuadrant(m_box, Quadrant::LowerLeft));
+        auto upperLeft = std::make_unique<Node>(computeBoxQuadrant(m_bounds, Quadrant::UpperLeft));
+        auto upperRight = std::make_unique<Node>(computeBoxQuadrant(m_bounds, Quadrant::UpperRight));
+        auto lowerRight = std::make_unique<Node>(computeBoxQuadrant(m_bounds, Quadrant::LowerRight));
+        auto lowerLeft = std::make_unique<Node>(computeBoxQuadrant(m_bounds, Quadrant::LowerLeft));
 
         m_children[0] = upperLeft.release();
         m_children[1] = upperRight.release();
         m_children[2] = lowerRight.release();
         m_children[3] = lowerLeft.release();
+
+        std::vector<Object> data;
+
+        for (auto& object : m_data) {
+          for (std::size_t i = 0; i < 4; ++i) {
+            if (!m_children[i]->insert(object.value, object.box)) {
+              data.push_back(object);
+            }
+          }
+        }
+
+        std::swap(m_data, data);
+      }
+
+      void clearChildrenIfEmpty() {
+        for (std::size_t i = 0; i < 4; ++i) {
+          if (!m_children[i]->m_data.empty()) {
+            return;
+          }
+        }
+
+        for (std::size_t i = 0; i < 4; ++i) {
+          delete m_children[i];
+        }
       }
 
     private:
-      Box<U, 2> m_box;
-      boost::container::static_vector<Object, Size> m_data;
+      Box<U, 2> m_bounds;
+      std::vector<Object> m_data;
       Node *m_children[4];
     };
 
   private:
     Node m_root;
   };
+
+
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
