@@ -463,7 +463,7 @@ inline namespace v1 {
   private:
     const RenderTarget& m_target;
     View& m_view;
-    gf::Vector2i m_mousePosition;
+    Vector2i m_mousePosition;
 
     enum class State {
       Stationary,
