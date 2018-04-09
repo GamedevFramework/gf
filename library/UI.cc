@@ -264,8 +264,10 @@ inline namespace v1 {
   }
 
   UI::~UI() {
-    nk_buffer_free(&m_impl->cmds);
-    nk_free(&m_impl->ctx);
+    if (m_impl) {
+      nk_buffer_free(&m_impl->cmds);
+      nk_free(&m_impl->ctx);
+    }
   }
 
   UI::UI(UI&&) noexcept = default;
