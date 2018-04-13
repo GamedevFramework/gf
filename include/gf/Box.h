@@ -31,6 +31,7 @@
 
 #include "Portability.h"
 #include "Vector.h"
+#include "VectorOps.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -124,15 +125,64 @@ inline namespace v1 {
       return true;
     }
 
+    Box<T, N> getIntersection(const Box<T, N>& other) const noexcept {
+      Box<T, N> res;
+
+      for (std::size_t i = 0; i < N; ++i) {
+        res.min[i] = std::max(min[i], other.min[i]);
+        res.max[i] = std::min(max[i], other.max[i]);
+      }
+
+      return res;
+    }
+
+    T getIntersectionVolume(const Box<T, N>& other) const noexcept {
+      T res = 1;
+
+      for (std::size_t i = 0; i < N; ++i) {
+        auto axisMin = std::max(min[i], other.min[i]);
+        auto axisMax = std::min(max[i], other.max[i]);
+
+        if (axisMin >= axisMax) {
+          return T();
+        }
+
+        res *= (axisMax - axisMin);
+      }
+
+      return res;
+    }
+
+    T getIntersectionExtentDistance(const Box<T, N>& other) const noexcept {
+      T res = 0;
+
+      for (std::size_t i = 0; i < N; ++i) {
+        auto axisMin = std::max(min[i], other.min[i]);
+        auto axisMax = std::min(max[i], other.max[i]);
+
+        if (axisMin >= axisMax) {
+          return T();
+        }
+
+        res += (axisMax - axisMin);
+      }
+
+      return res;
+    }
+
     constexpr void extend(const T (&point)[N]) noexcept {
       for (std::size_t i = 0; i < N; ++i) {
-        std::tie(min[i], max[i]) = std::minmax({ min[i], max[i], point[i] });
+        T axisMin = min[i];
+        T axisMax = max[i];
+        std::tie(min[i], max[i]) = std::minmax({ axisMin, axisMax, point[i] });
       }
     }
 
     constexpr void extend(Vector<T, N> point) noexcept {
       for (std::size_t i = 0; i < N; ++i) {
-        std::tie(min[i], max[i]) = std::minmax({ min[i], max[i], point[i] });
+        T axisMin = min[i];
+        T axisMax = max[i];
+        std::tie(min[i], max[i]) = std::minmax({ axisMin, axisMax, point[i] });
       }
     }
 
@@ -143,10 +193,40 @@ inline namespace v1 {
       }
     }
 
-    Box<T, N> getExtended(const Box<T, N>& other) noexcept {
+    constexpr Box<T, N> getExtended(const Box<T, N>& other) const noexcept {
       Box<T, N> res(*this);
       res.extend(other);
       return res;
+    }
+
+    constexpr T getVolume() const noexcept {
+      T volume = 1;
+
+      for (std::size_t i = 0; i < N; ++i) {
+        volume *= (max[i] - min[i]);
+      }
+
+      return volume;
+    }
+
+    constexpr T getExtentDistance() const noexcept {
+      T distance = 0;
+
+      for (std::size_t i = 0; i < N; ++i) {
+        distance += (max[i] - min[i]);
+      }
+
+      return distance;
+    }
+
+    constexpr T getMinimumEdge() const noexcept {
+      T minimum = max[0] - min[0];
+
+      for (std::size_t i = 1; i < N; ++i) {
+        minimum = std::min(minimum, max[i] - min[i]);
+      }
+
+      return minimum;
     }
 
     /**
@@ -179,22 +259,51 @@ inline namespace v1 {
   };
 
   template<typename T>
-  constexpr Box<T, 2> computeBoxQuadrant(const Box<T, 2>& box, Quadrant quadrant) {
-    constexpr Vector<T, 2> size = (box.max - box.min) / 2;
+  inline
+  Box<T, 2> computeBoxQuadrant(const Box<T, 2>& box, Quadrant quadrant) {
+    Vector<T, 2> size = (box.max - box.min) / 2;
 
     switch (quadrant) {
       case Quadrant::UpperLeft:
         return Box<T,2>(box.min, box.max - size);
       case Quadrant::UpperRight:
-        return Box<T,2>({ box.min.x + size.w, box.min.y }, { box.max.x, box.max.y - size.h });
+        return Box<T,2>({ box.min.x + size.width, box.min.y }, { box.max.x, box.max.y - size.height });
       case Quadrant::LowerRight:
         return Box<T,2>(box.min + size, box.max);
       case Quadrant::LowerLeft:
-        return Box<T,2>({ box.min.x, box.min.y + size.h }, { box.max.x - size.w, box.max.y });
+        return Box<T,2>({ box.min.x, box.min.y + size.height }, { box.max.x - size.width, box.max.y });
     }
 
     return box;
   }
+
+  template<typename T, std::size_t N>
+  constexpr
+  bool operator==(const Box<T, N>& lhs, const Box<T, N>& rhs) {
+    return lhs.min == rhs.min && lhs.max == rhs.max;
+  }
+
+//   template<typename T, std::size_t N>
+//   constexpr
+//   Box<T, N> extension(const Box<T, N>& lhs, const Box<T, N>& rhs) {
+//     Box<T, N> res(lhs);
+//     res.extend(rhs);
+//     return res;
+//   }
+//
+//   template<typename T, std::size_t N>
+//   constexpr
+//   Box<T, N> operator+(const Box<T, N>& lhs, const Box<T, N>& rhs) {
+//     return extension(lhs, rhs);
+//   }
+//
+//   template<typename T, std::size_t N>
+//   constexpr
+//   Box<T, N>& operator+=(Box<T, N> lhs, const Box<T, N>& rhs) {
+//     lhs.extend(rhs);
+//     return lhs;
+//   }
+
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

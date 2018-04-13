@@ -150,6 +150,7 @@ else()
     Shape.cc
     Shapes.cc
     Sleep.cc
+    Spatial.cc
     SpriteBatch.cc
     Sprite.cc
     StringUtils.cc

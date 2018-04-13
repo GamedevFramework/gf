@@ -108,6 +108,7 @@
 #include "Shape.cc"
 #include "Shapes.cc"
 #include "Sleep.cc"
+#include "Spatial.cc"
 #include "SpriteBatch.cc"
 #include "Sprite.cc"
 #include "StringUtils.cc"

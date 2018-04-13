@@ -14,6 +14,7 @@ add_executable(gf_tests
   testRect.cc
   testSerialization.cc
   testSingleton.cc
+  testSpatial.cc
   testStringRef.cc
   testVector.cc
   testVector1.cc
