@@ -677,29 +677,48 @@ inline namespace v1 {
         return chooseNode(bounds)->chooseSubtree(bounds);
       }
 
-      Node *chooseNode(const Box<U, N>& bounds) {
-        std::vector<std::reference_wrapper<BranchEntry>> covering;
+      Node *searchForCoveringNode(const Box<U, N>& bounds) {
+        Node *bestNodeForVolume = nullptr;
+        U bestVolume = std::numeric_limits<U>::max();
+
+        Node *bestNodeForExtentDistance = nullptr;
+        U bestExtentDistance = std::numeric_limits<U>::max();
 
         for (auto& entry : m_entries) {
           if (entry.bounds.getIntersection(bounds) == bounds) {
-            covering.push_back(entry);
+            U volume = entry.bounds.getVolume();
+
+            if (bestNodeForVolume == nullptr || volume < bestVolume) {
+              bestVolume = volume;
+              bestNodeForVolume = entry.child;
+            }
+
+            U extentDistance = entry.bounds.getExtentDistance();
+
+            if (bestNodeForExtentDistance == nullptr || extentDistance < bestExtentDistance) {
+              bestExtentDistance = extentDistance;
+              bestNodeForExtentDistance = entry.child;
+            }
           }
         }
 
-        if (!covering.empty()) {
-          auto it = std::min_element(covering.begin(), covering.end(), [](const BranchEntry& lhs, const BranchEntry& rhs) {
-            return lhs.bounds.getVolume() < rhs.bounds.getVolume();
-          });
-
-          if (it->get().bounds.getVolume() > 0) {
-            return it->get().child;
+        if (bestNodeForVolume != nullptr) {
+          if (bestVolume > 0) {
+            return bestNodeForVolume;
           }
 
-          it = std::min_element(covering.begin(), covering.end(), [](const BranchEntry& lhs, const BranchEntry& rhs) {
-            return lhs.bounds.getExtentDistance() < rhs.bounds.getExtentDistance();
-          });
+          assert(bestNodeForExtentDistance);
+          return bestNodeForExtentDistance;
+        }
 
-          return it->get().child;
+        return nullptr;
+      }
+
+      Node *chooseNode(const Box<U, N>& bounds) {
+        Node *covering = searchForCoveringNode(bounds);
+
+        if (covering != nullptr) {
+          return covering;
         }
 
         std::sort(m_entries.begin(), m_entries.end(), ExtentDistanceEnlargement(bounds));
