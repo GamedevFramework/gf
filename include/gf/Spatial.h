@@ -44,11 +44,19 @@ namespace gf {
 inline namespace v1 {
 #endif
 
+  /**
+   * @ingroup core
+   * @brief A kind of spatial query
+   */
   enum class SpatialQuery {
-    Contain,
-    Intersect,
+    Contain, ///< Search for all objects that contain the given bounds
+    Intersect, ///< Search for all objects that intersect the given bounds
   };
 
+  /**
+   * @ingroup core
+   * @brief A callback for spatial query
+   */
   template<typename T>
   using SpatialQueryCallback = std::function<void(const T&)>;
 
@@ -63,20 +71,43 @@ inline namespace v1 {
   class QuadTree {
     static_assert(Size > 0, "Size can not be 0");
   public:
+    /**
+     * @brief Constructor
+     *
+     * @param bounds The global bounds for objects in the tree
+     */
     QuadTree(const Box<U, 2>& bounds)
     : m_root(bounds)
     {
 
     }
 
+    /**
+     * @brief Insert an object in the tree
+     *
+     * @param value The object to insert
+     * @param bounds The bounds of the object
+     * @returns True if the object has been inserted
+     */
     bool insert(const T& value, const Box<U, 2>& bounds) {
       return m_root.insert(value, bounds);
     }
 
+    /**
+     * @brief Query objects in the tree
+     *
+     * @param bounds The bounds of the query
+     * @param callback The callback to apply to found objects
+     * @param kind The kind of spatial query
+     * @returns The number of objects found
+     */
     std::size_t query(const Box<U, 2>& bounds, SpatialQueryCallback<T> callback, SpatialQuery kind = SpatialQuery::Intersect) const {
       return m_root.query(bounds, callback, kind);
     }
 
+    /**
+     * @brief Remove all the objects from the tree
+     */
     void clear() {
       m_root.clear();
     }
@@ -244,86 +275,128 @@ inline namespace v1 {
     static_assert(2 <= MinSize, "MinSize must be at least 2");
     static_assert(MinSize <= MaxSize / 2, "MinSize must be less than MaxSize/2");
   public:
-      RStarTree()
-      : m_root(new Leaf)
-      {
-        auto branch = std::make_unique<Branch>();
-      }
+    /**
+     * @brief Constructor
+     */
+    RStarTree()
+    : m_root(new Leaf)
+    {
+      auto branch = std::make_unique<Branch>();
+    }
 
-      RStarTree(const RStarTree&) = delete;
-      RStarTree& operator=(const RStarTree&) = delete;
+    /**
+     * @brief Deleted copy constructor
+     */
+    RStarTree(const RStarTree&) = delete;
 
-      RStarTree(RStarTree&& other) noexcept
-      {
-        m_root = std::exchange(other.m_root, nullptr);
-      }
+    /**
+     * @brief Deleted copy assignement
+     */
+    RStarTree& operator=(const RStarTree&) = delete;
 
-      RStarTree& operator=(RStarTree&& other) noexcept {
-        std::swap(m_root, other.m_root);
-        return *this;
-      }
+    /**
+     * @brief Move constructor
+     */
+    RStarTree(RStarTree&& other) noexcept
+    {
+      m_root = std::exchange(other.m_root, nullptr);
+    }
 
-      ~RStarTree() {
-        delete m_root;
-      }
+    /**
+     * @brief Move assignement
+     */
+    RStarTree& operator=(RStarTree&& other) noexcept {
+      std::swap(m_root, other.m_root);
+      return *this;
+    }
 
-      std::size_t query(const Box<U, N>& bounds, SpatialQueryCallback<T> callback, SpatialQuery kind = SpatialQuery::Intersect) const {
-        return m_root->query(bounds, callback, kind);
-      }
+    /**
+     * @brief Destructor
+     */
+    ~RStarTree() {
+      delete m_root;
+    }
 
-      bool insert(const T& value, const Box<U, N>& bounds) {
-        Leaf *leaf = m_root->chooseSubtree(bounds);
+    /**
+     * @brief Insert an object in the tree
+     *
+     * @param value The object to insert
+     * @param bounds The bounds of the object
+     * @returns True if the object has been inserted
+     */
+    bool insert(const T& value, const Box<U, N>& bounds) {
+      Leaf *leaf = m_root->chooseSubtree(bounds);
 
-        Node *splitted = leaf->tryInsert(value, bounds);
-        Node *current = leaf;
+      Node *splitted = leaf->tryInsert(value, bounds);
+      Node *current = leaf;
 
-        while (splitted != nullptr) {
-          auto splittedBounds = splitted->computeBounds();
-          splitted->updateOriginalBounds(splittedBounds);
+      while (splitted != nullptr) {
+        auto splittedBounds = splitted->computeBounds();
+        splitted->updateOriginalBounds(splittedBounds);
 
-          auto currentBounds = current->computeBounds();
-          current->updateOriginalBounds(currentBounds);
+        auto currentBounds = current->computeBounds();
+        current->updateOriginalBounds(currentBounds);
 
-          if (current == m_root) {
-            auto branch = new Branch;
+        if (current == m_root) {
+          auto branch = new Branch;
 
-            current->setParent(branch);
-            branch->tryInsert(current, currentBounds);
+          current->setParent(branch);
+          branch->tryInsert(current, currentBounds);
 
-            splitted->setParent(branch);
-            branch->tryInsert(splitted, splittedBounds);
+          splitted->setParent(branch);
+          branch->tryInsert(splitted, splittedBounds);
 
-            branch->updateOriginalBounds(branch->computeBounds());
+          branch->updateOriginalBounds(branch->computeBounds());
 
-            m_root = branch;
-            current = m_root;
-            splitted = nullptr;
-          } else {
-            Branch *parent = current->getParent();
-            assert(parent != nullptr);
-
-            parent->updateBoundsForChild(currentBounds, current);
-
-            splitted->setParent(parent);
-            splitted = parent->tryInsert(splitted, splittedBounds);
-
-            current = parent;
-          }
-        }
-
-        while (current != m_root) {
-          auto currentBounds = current->computeBounds();
-
+          m_root = branch;
+          current = m_root;
+          splitted = nullptr;
+        } else {
           Branch *parent = current->getParent();
           assert(parent != nullptr);
 
           parent->updateBoundsForChild(currentBounds, current);
 
+          splitted->setParent(parent);
+          splitted = parent->tryInsert(splitted, splittedBounds);
+
           current = parent;
         }
-
-        return true;
       }
+
+      while (current != m_root) {
+        auto currentBounds = current->computeBounds();
+
+        Branch *parent = current->getParent();
+        assert(parent != nullptr);
+
+        parent->updateBoundsForChild(currentBounds, current);
+
+        current = parent;
+      }
+
+      return true;
+    }
+
+    /**
+     * @brief Query objects in the tree
+     *
+     * @param bounds The bounds of the query
+     * @param callback The callback to apply to found objects
+     * @param kind The kind of spatial query
+     * @returns The number of objects found
+     */
+    std::size_t query(const Box<U, N>& bounds, SpatialQueryCallback<T> callback, SpatialQuery kind = SpatialQuery::Intersect) const {
+      return m_root->query(bounds, callback, kind);
+    }
+
+    /**
+     * @brief Remove all the objects from the tree
+     */
+    void clear() {
+      delete m_root;
+      m_root = new Leaf;
+    }
 
   private:
     static constexpr std::size_t Size = MaxSize + 1;
@@ -660,6 +733,12 @@ inline namespace v1 {
     public:
       using typename Node::SplitOrder;
       using typename Node::SplitResult;
+
+      virtual ~Branch() {
+        for (auto& entry : m_entries) {
+          delete entry.child;
+        }
+      }
 
       virtual std::size_t query(const Box<U, N>& bounds, SpatialQueryCallback<T>& callback, SpatialQuery kind) const override {
         std::size_t found = 0;
