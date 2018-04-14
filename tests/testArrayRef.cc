@@ -22,11 +22,18 @@
 
 #include "gtest/gtest.h"
 
+#include <gf/Unused.h>
+
 TEST(ArrayRefTest, DefaultCtor) {
   gf::ArrayRef<int> ref;
 
   EXPECT_EQ(0u, ref.getSize());
   EXPECT_EQ(nullptr, ref.getData());
+
+  for (auto item : ref) {
+    gf::unused(item);
+    FAIL();
+  }
 }
 
 
@@ -55,6 +62,19 @@ TEST(ArrayRefTest, StdVectorCtor) {
 
   EXPECT_EQ(8u, ref.getSize());
   EXPECT_EQ(&data[0], ref.getData());
+}
+
+TEST(ArrayRefTest, EmptyStdVectorCtor) {
+  std::vector<int> data;
+
+  gf::ArrayRef<int> ref(data);
+
+  EXPECT_EQ(0u, ref.getSize());
+
+  for (auto item : ref) {
+    gf::unused(item);
+    FAIL();
+  }
 }
 
 TEST(ArrayRefTest, StdArrayCtor) {

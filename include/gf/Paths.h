@@ -69,6 +69,19 @@ inline namespace v1 {
      */
     static Path getCurrentPath();
 
+    /**
+     * @brief Get a temporary directory
+     *
+     * @returns A temporary directory
+     */
+    static Path getTemporaryDirectory();
+
+    /**
+     * @brief Get a unique path
+     *
+     * @returns A unique path
+     */
+    static Path getUniquePath();
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

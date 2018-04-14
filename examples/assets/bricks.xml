@@ -1,4 +1,4 @@
-<TextureAtlas imagePath="15_bricks.png">
+<TextureAtlas imagePath="bricks.png">
 	<SubTexture name="brickBlack01.png" x="718" y="500" width="32" height="32"/>
 	<SubTexture name="brickBlack02.png" x="716" y="66" width="64" height="32"/>
 	<SubTexture name="brickBlack03.png" x="0" y="732" width="128" height="32"/>

@@ -25,6 +25,8 @@
 #include <random>
 
 #include "Portability.h"
+#include "Rect.h"
+#include "Vector.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -117,6 +119,22 @@ inline namespace v1 {
       std::bernoulli_distribution dist(p);
       return dist(m_engine);
     }
+
+    /**
+     * @brief Compute a uniform position in a given area
+     *
+     * @param area The area
+     * @returns A value in the area
+     */
+    Vector2f computePosition(const RectF& area);
+
+    /**
+     * @brief Compute a uniform position in a given area
+     *
+     * @param area The area
+     * @returns A value in the area
+     */
+    Vector2i computePosition(const RectI& area);
 
     /**
      * @brief Get the underlying engine

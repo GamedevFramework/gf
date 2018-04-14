@@ -168,8 +168,20 @@ inline namespace v1 {
       return *this;
     }
 
+    /**
+     * @brief A time of zero as a variable
+     *
+     * @returns The zero time
+     * @sa zero()
+     */
     static const Time Zero;
 
+    /**
+     * @brief Get a time of zero
+     *
+     * @returns The zero time
+     * @sa Zero
+     */
     static constexpr Time zero() {
       return Time();
     }

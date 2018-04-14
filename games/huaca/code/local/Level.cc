@@ -263,9 +263,9 @@ namespace huaca {
 
       if (key.bounds.intersects(heroPosition->bounds)) {
         key.isLooted = true;
-        KeyLootedMessage msg;
-        msg.number = key.number;
-        gMessageManager().sendMessage(&msg);
+        KeyLootedMessage otherMessage;
+        otherMessage.number = key.number;
+        gMessageManager().sendMessage(&otherMessage);
 
         m_doors[key.number].keyFound = true;
       }
@@ -299,9 +299,9 @@ namespace huaca {
           rune.isPressed = true;
           m_currentRune++;
 
-          RunePressedMessage msg;
-          msg.number = rune.number;
-          gMessageManager().sendMessage(&msg);
+          RunePressedMessage otherMessage;
+          otherMessage.number = rune.number;
+          gMessageManager().sendMessage(&otherMessage);
 
           if (m_currentRune == RuneCount) {
             m_finished = true;

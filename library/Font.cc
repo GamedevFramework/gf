@@ -435,10 +435,10 @@ inline namespace v1 {
       out.bounds.width = convert(slot->metrics.width);
       out.bounds.height = convert(slot->metrics.height);
     } else {
-      out.bounds.left = bglyph->left;
-      out.bounds.top = - bglyph->top;
-      out.bounds.width = bglyph->bitmap.width;
-      out.bounds.height = bglyph->bitmap.rows;
+      out.bounds.left = static_cast<float>(bglyph->left);
+      out.bounds.top = - static_cast<float>(bglyph->top);
+      out.bounds.width = static_cast<float>(bglyph->bitmap.width);
+      out.bounds.height = static_cast<float>(bglyph->bitmap.rows);
     }
 
     // bitmap

@@ -64,6 +64,10 @@ inline namespace v1 {
 
   View::~View() = default;
 
+  RectF View::getBounds() const {
+    return RectF(m_center - m_size / 2, m_size);
+  }
+
   namespace {
 
 #ifndef NDEBUG
@@ -183,8 +187,8 @@ inline namespace v1 {
     switch (event.type) {
       case gf::EventType::MouseMoved:
         if (m_state == State::Moving) {
-          gf::Vector2f oldPosition = m_target.mapPixelToCoords(m_mousePosition, m_view);
-          gf::Vector2f newPosition = m_target.mapPixelToCoords(event.mouseCursor.coords, m_view);
+          Vector2f oldPosition = m_target.mapPixelToCoords(m_mousePosition, m_view);
+          Vector2f newPosition = m_target.mapPixelToCoords(event.mouseCursor.coords, m_view);
           m_view.move(oldPosition - newPosition);
         }
 

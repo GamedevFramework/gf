@@ -37,7 +37,7 @@ namespace brfd {
   static constexpr float CarHeight = 64;
   static constexpr float CarHalfWidth = CarWidth / 2;
   static constexpr float CarHalfHeight = CarHeight / 2;
-  static constexpr float X = 0.8;
+  static constexpr float X = 0.8f;
 
   static constexpr float TilesetWidth = 512;
   static constexpr float TilesetHeight = 192;
@@ -62,8 +62,8 @@ namespace brfd {
   : gf::Entity(1)
   , m_messages(messages)
   , m_texture(resources.getTexture("cars.png"))
-  , m_move(Move::Cruise)
-  , m_turn(Turn::None)
+  , m_move(gf::LinearMove::None)
+  , m_turn(gf::AngularMove::None)
   , m_velocity(0)
   , m_angle(0)
   , m_geometry(getCarGeometry())
@@ -96,44 +96,13 @@ namespace brfd {
     float absoluteVelocity = gf::euclideanLength(m_body.getLinearVelocity());
     m_velocity =  m_velocity > 0 ? absoluteVelocity : -absoluteVelocity;
 
-    switch (m_move) {
-      case Move::Accelerate:
-        m_velocity += LinearAcceleration * dt;
-        break;
-
-      case Move::Brake:
-        m_velocity -= LinearAcceleration * dt;
-        break;
-
-      case Move::Cruise:
-        break;
-    }
-
+    m_velocity += gf::linearFactor(m_move) * LinearAcceleration * dt;
     m_velocity = gf::clamp(m_velocity, VelocityMin, VelocityMax);
 
     float factor = 0.006f * std::abs(m_velocity) * std::exp(-0.002f * std::abs(m_velocity));
     m_angle = m_body.getAngle();
 
-    switch (m_turn) {
-      case Turn::Left:
-        if (m_velocity >= 0) {
-          m_angle -= dt * AngularSpeed * factor;
-        } else {
-          m_angle += dt * AngularSpeed * factor;
-        }
-        break;
-
-      case Turn::Right:
-        if (m_velocity >= 0) {
-          m_angle += dt * AngularSpeed * factor;
-        } else {
-          m_angle -= dt * AngularSpeed * factor;
-        }
-        break;
-
-      case Turn::None:
-        break;
-    }
+    m_angle += gf::sign(m_velocity) * gf::angularFactor(m_turn) * AngularSpeed * factor * dt;
 
     m_body.setLinearVelocity(gf::unit(m_angle) * m_velocity);
     m_body.setAngle(m_angle);

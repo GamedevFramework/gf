@@ -85,7 +85,7 @@ inline namespace v1 {
      * @brief Constructor with all flags set
      */
     constexpr Flags(AllType)
-    : m_data(~0)
+    : m_data(static_cast<Type>(~0))
     {
 
     }
@@ -189,6 +189,9 @@ inline namespace v1 {
       m_data &= ~static_cast<Type>(flag);
     }
 
+    /**
+     * @brief The underlying type of the enum
+     */
     using Type = typename std::underlying_type<E>::type;
 
     /**

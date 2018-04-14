@@ -60,7 +60,7 @@ inline namespace v1 {
 
   namespace {
 
-    float getXDistance(float width, float dx, Anchor anchor) {
+    float getXDistance(unsigned width, float dx, Anchor anchor) {
       switch (anchor) {
         case Anchor::TopLeft:
         case Anchor::CenterLeft:
@@ -80,7 +80,7 @@ inline namespace v1 {
       return 0.0f;
     }
 
-    float getYDistance(float height, float dy, Anchor anchor) {
+    float getYDistance(unsigned height, float dy, Anchor anchor) {
       switch (anchor) {
         case Anchor::TopLeft:
         case Anchor::TopCenter:

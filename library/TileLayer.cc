@@ -105,6 +105,14 @@ inline namespace v1 {
     }
   }
 
+  RectF TileLayer::getLocalBounds() const {
+    return RectF({ 0.0f, 0.0f }, m_layerSize * m_blockSize);
+  }
+
+  void TileLayer::setAnchor(Anchor anchor) {
+    setOriginFromAnchorAndBounds(anchor, getLocalBounds());
+  }
+
   VertexBuffer TileLayer::commitGeometry() const {
     VertexArray vertices(PrimitiveType::Triangles);
     RectU rect({ 0u, 0u }, m_layerSize);
@@ -131,7 +139,7 @@ inline namespace v1 {
     size.width = size.height = gf::Sqrt2 * std::max(size.width, size.height);
 
     RectF world(center - size / 2, size);
-    RectF local = gf::transform(getInverseTransform(), world).extend(std::max(blockSize.width, blockSize.height));
+    RectF local = gf::transform(getInverseTransform(), world).grow(std::max(blockSize.width, blockSize.height));
 
     RectF layer({ 0.0f, 0.0f }, m_layerSize * blockSize);
 

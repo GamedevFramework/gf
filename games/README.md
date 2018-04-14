@@ -37,6 +37,13 @@ A steampunk pirate tries to recover enough coins to be able to repay your debt. 
 ![Bygone Islands](islands/islands.png)
 
 
+## Krokodile
+
+Mix the species to get a mighty krokodile!
+
+![Krokodile](krokodile/krokodile.png)
+
+
 ## Lux
 
 A classical shoot 'em up.

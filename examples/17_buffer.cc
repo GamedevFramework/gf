@@ -65,7 +65,7 @@ int main() {
 
   gf::Texture texture;
 
-  if (!texture.loadFromFile("12_bomb.png")) {
+  if (!texture.loadFromFile("assets/bomb.png")) {
     return EXIT_FAILURE;
   }
 
@@ -94,7 +94,7 @@ int main() {
 
   gf::Font font;
 
-  if (!font.loadFromFile("16_DejaVuSans.ttf")) {
+  if (!font.loadFromFile("assets/DejaVuSans.ttf")) {
     return EXIT_FAILURE;
   }
 

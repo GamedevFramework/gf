@@ -26,6 +26,7 @@
 #include <type_traits>
 
 #include "Math.h"
+#include "SerializationHeaders.h"
 #include "Vector.h"
 
 namespace gf {
@@ -66,7 +67,7 @@ inline namespace v1 {
   template<typename T, std::size_t N>
   constexpr
   Vector<T, N> operator-(Vector<T, N> val) {
-    Vector<T, N> out = gf::Zero;
+    Vector<T, N> out = { };
 
     for (std::size_t i = 0; i < N; ++i) {
       out[i] = - val[i];
@@ -82,7 +83,7 @@ inline namespace v1 {
   template<typename T, typename U, std::size_t N>
   constexpr
   Vector<std::common_type_t<T,U>, N> operator+(Vector<T, N> lhs, Vector<U, N> rhs) {
-    Vector<std::common_type_t<T,U>, N> out = gf::Zero;
+    Vector<std::common_type_t<T,U>, N> out = { };
 
     for (std::size_t i = 0; i < N; ++i) {
       out[i] = lhs[i] + rhs[i];
@@ -112,7 +113,7 @@ inline namespace v1 {
   template<typename T, typename U, std::size_t N, typename E = typename std::enable_if<std::is_arithmetic<U>::value, U>::type>
   constexpr
   Vector<std::common_type_t<T,U>, N> operator+(Vector<T, N> lhs, U rhs) {
-    Vector<std::common_type_t<T,U>, N> out = gf::Zero;
+    Vector<std::common_type_t<T,U>, N> out = { };
 
     for (std::size_t i = 0; i < N; ++i) {
       out[i] = lhs[i] + rhs;
@@ -142,7 +143,7 @@ inline namespace v1 {
   template<typename T, typename U, std::size_t N, typename E = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
   constexpr
   Vector<std::common_type_t<T,U>, N> operator+(T lhs, Vector<U, N> rhs) {
-    Vector<std::common_type_t<T,U>, N> out = gf::Zero;
+    Vector<std::common_type_t<T,U>, N> out = { };
 
     for (std::size_t i = 0; i < N; ++i) {
       out[i] = lhs + rhs[i];
@@ -159,7 +160,7 @@ inline namespace v1 {
   template<typename T, typename U, std::size_t N>
   constexpr
   Vector<std::common_type_t<T,U>, N> operator-(Vector<T, N> lhs, Vector<U, N> rhs) {
-    Vector<std::common_type_t<T,U>, N> out = gf::Zero;
+    Vector<std::common_type_t<T,U>, N> out = { };
 
     for (std::size_t i = 0; i < N; ++i) {
       out[i] = lhs[i] - rhs[i];
@@ -190,7 +191,7 @@ inline namespace v1 {
   template<typename T, typename U, std::size_t N, typename E = typename std::enable_if<std::is_arithmetic<U>::value, U>::type>
   constexpr
   Vector<std::common_type_t<T,U>, N> operator-(Vector<T, N> lhs, U rhs) {
-    Vector<std::common_type_t<T,U>, N> out = gf::Zero;
+    Vector<std::common_type_t<T,U>, N> out = { };
 
     for (std::size_t i = 0; i < N; ++i) {
       out[i] = lhs[i] - rhs;
@@ -220,7 +221,7 @@ inline namespace v1 {
   template<typename T, typename U, std::size_t N, typename E = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
   constexpr
   Vector<std::common_type_t<T,U>, N> operator-(T lhs, Vector<U, N> rhs) {
-    Vector<std::common_type_t<T,U>, N> out = gf::Zero;
+    Vector<std::common_type_t<T,U>, N> out = { };
 
     for (std::size_t i = 0; i < N; ++i) {
       out[i] = lhs - rhs[i];
@@ -237,7 +238,7 @@ inline namespace v1 {
   template<typename T, typename U, std::size_t N>
   constexpr
   Vector<std::common_type_t<T,U>, N> operator*(Vector<T, N> lhs, Vector<U, N> rhs) {
-    Vector<std::common_type_t<T,U>, N> out = gf::Zero;
+    Vector<std::common_type_t<T,U>, N> out = { };
 
     for (std::size_t i = 0; i < N; ++i) {
       out[i] = lhs[i] * rhs[i];
@@ -267,7 +268,7 @@ inline namespace v1 {
   template<typename T, typename U, std::size_t N, typename E = typename std::enable_if<std::is_arithmetic<U>::value, U>::type>
   constexpr
   Vector<std::common_type_t<T,U>, N> operator*(Vector<T, N> lhs, U rhs) {
-    Vector<std::common_type_t<T,U>, N> out = gf::Zero;
+    Vector<std::common_type_t<T,U>, N> out = { };
 
     for (std::size_t i = 0; i < N; ++i) {
       out[i] = lhs[i] * rhs;
@@ -297,7 +298,7 @@ inline namespace v1 {
   template<typename T, typename U, std::size_t N, typename E = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
   constexpr
   Vector<std::common_type_t<T,U>, N> operator*(T lhs, Vector<U, N> rhs) {
-    Vector<std::common_type_t<T,U>, N> out = gf::Zero;
+    Vector<std::common_type_t<T,U>, N> out = { };
 
     for (std::size_t i = 0; i < N; ++i) {
       out[i] = lhs * rhs[i];
@@ -313,7 +314,7 @@ inline namespace v1 {
   template<typename T, typename U, std::size_t N>
   constexpr
   Vector<std::common_type_t<T,U>, N> operator/(Vector<T, N> lhs, Vector<U, N> rhs) {
-    Vector<std::common_type_t<T,U>, N> out = gf::Zero;
+    Vector<std::common_type_t<T,U>, N> out = { };
 
     for (std::size_t i = 0; i < N; ++i) {
       out[i] = lhs[i] / rhs[i];
@@ -343,7 +344,7 @@ inline namespace v1 {
   template<typename T, typename U, std::size_t N, typename E = typename std::enable_if<std::is_arithmetic<U>::value, U>::type>
   constexpr
   Vector<std::common_type_t<T,U>, N> operator/(Vector<T, N> lhs, U rhs) {
-    Vector<std::common_type_t<T,U>, N> out = gf::Zero;
+    Vector<std::common_type_t<T,U>, N> out = { };
 
     for (std::size_t i = 0; i < N; ++i) {
       out[i] = lhs[i] / rhs;
@@ -373,7 +374,7 @@ inline namespace v1 {
   template<typename T, typename U, std::size_t N, typename E = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
   constexpr
   Vector<std::common_type_t<T,U>, N> operator/(T lhs, Vector<U, N> rhs) {
-    Vector<std::common_type_t<T,U>, N> out = gf::Zero;
+    Vector<std::common_type_t<T,U>, N> out = { };
 
     for (std::size_t i = 0; i < N; ++i) {
       out[i] = lhs / rhs[i];
@@ -389,7 +390,7 @@ inline namespace v1 {
   template<std::size_t N>
   constexpr
   Vector<bool, N> operator||(Vector<bool, N> lhs, Vector<bool, N> rhs) {
-    Vector<bool, N> out = gf::Zero;
+    Vector<bool, N> out = { };
 
     for (std::size_t i = 0; i < N; ++i) {
       out[i] = lhs[i] || rhs[i];
@@ -405,7 +406,7 @@ inline namespace v1 {
   template<std::size_t N>
   constexpr
   Vector<bool, N> operator&&(Vector<bool, N> lhs, Vector<bool, N> rhs) {
-    Vector<bool, N> out = gf::Zero;
+    Vector<bool, N> out = { };
 
     for (std::size_t i = 0; i < N; ++i) {
       out[i] = lhs[i] && rhs[i];
@@ -445,7 +446,7 @@ inline namespace v1 {
   template<typename T, std::size_t N>
   constexpr
   Vector<T, N> min(Vector<T, N> lhs, Vector<T, N> rhs) {
-    Vector<T, N> out = gf::Zero;
+    Vector<T, N> out = { };
 
     for (std::size_t i = 0; i < N; ++i) {
       out[i] = std::min(lhs[i], rhs[i]);
@@ -461,7 +462,7 @@ inline namespace v1 {
   template<typename T, std::size_t N>
   constexpr
   Vector<T, N> max(Vector<T, N> lhs, Vector<T, N> rhs) {
-    Vector<T, N> out = gf::Zero;
+    Vector<T, N> out = { };
 
     for (std::size_t i = 0; i < N; ++i) {
       out[i] = std::max(lhs[i], rhs[i]);
@@ -493,7 +494,7 @@ inline namespace v1 {
   template<typename T, std::size_t N>
   constexpr
   Vector<int, N> sign(Vector<T, N> val) {
-    Vector<int, N> out = gf::Zero;
+    Vector<int, N> out = { };
 
     for (std::size_t i = 0; i < N; ++i) {
       out[i] = gf::sign(val[i]);
@@ -509,7 +510,7 @@ inline namespace v1 {
   template<typename T, std::size_t N>
   constexpr
   Vector<bool, N> equals(Vector<T, N> lhs, Vector<T, N> rhs) {
-    Vector<bool, N> out = gf::Zero;
+    Vector<bool, N> out = { };
 
     for (std::size_t i = 0; i < N; ++i) {
       out[i] = (lhs[i] == rhs[i]);
@@ -525,7 +526,7 @@ inline namespace v1 {
   template<typename T, std::size_t N>
   constexpr
   Vector<bool, N> lessThan(Vector<T, N> lhs, Vector<T, N> rhs) {
-    Vector<bool, N> out = gf::Zero;
+    Vector<bool, N> out = { };
 
     for (std::size_t i = 0; i < N; ++i) {
       out[i] = (lhs[i] < rhs[i]);
@@ -541,7 +542,7 @@ inline namespace v1 {
   template<typename T, std::size_t N>
   constexpr
   Vector<bool, N> greaterThan(Vector<T, N> lhs, Vector<T, N> rhs) {
-    Vector<bool, N> out = gf::Zero;
+    Vector<bool, N> out = { };
 
     for (std::size_t i = 0; i < N; ++i) {
       out[i] = (lhs[i] > rhs[i]);
@@ -557,7 +558,7 @@ inline namespace v1 {
   template<typename T, std::size_t N>
   constexpr
   Vector<T, N> select(Vector<bool, N> cond, Vector<T, N> lhs, Vector<T, N> rhs) {
-    Vector<T, N> out = gf::Zero;
+    Vector<T, N> out = { };
 
     for (std::size_t i = 0; i < N; ++i) {
       out[i] = (cond[i] ? lhs[i] : rhs[i]);
@@ -576,7 +577,7 @@ inline namespace v1 {
   template<typename T, std::size_t N>
   constexpr
   Vector<T, N> clamp(Vector<T, N> val, Vector<T, N> lo, Vector<T, N> hi) {
-    Vector<T, N> out = gf::Zero;
+    Vector<T, N> out = { };
 
     for (std::size_t i = 0; i < N; ++i) {
       out[i] = clamp(val[i], lo[i], hi[i]);
@@ -594,7 +595,7 @@ inline namespace v1 {
   template<typename T, std::size_t N>
   constexpr
   Vector<T, N> clamp(Vector<T, N> val, T lo, T hi) {
-    Vector<T, N> out = gf::Zero;
+    Vector<T, N> out = { };
 
     for (std::size_t i = 0; i < N; ++i) {
       out[i] = clamp(val[i], lo, hi);
@@ -610,7 +611,7 @@ inline namespace v1 {
   template<typename T, typename U, std::size_t N>
   constexpr
   Vector<T, N> lerp(Vector<T, N> lhs, Vector<T, N> rhs, U t) {
-    Vector<T, N> out = gf::Zero;
+    Vector<T, N> out = { };
 
     for (std::size_t i = 0; i < N; ++i) {
       out[i] = lerp(lhs[i], rhs[i], t);
@@ -1002,6 +1003,28 @@ inline namespace v1 {
       lhs.z * rhs.x - lhs.x * rhs.z,
       lhs.x * rhs.y - lhs.y * rhs.x
     };
+  }
+
+
+  /**
+   * @relates Vector
+   * @brief Serialize and deserialize a vector
+   *
+   * @param ar The archive
+   * @param vec The vector to serialize
+   * @sa gf::Serialize, gf::Deserialiser
+   */
+  template<typename Archive, typename T, std::size_t N>
+  inline
+  Archive& operator|(Archive& ar, Vector<T,N>& vec) {
+    SerialArrayHeader header{N};
+    ar | header;
+
+    for (uint32_t i = 0; i < header.size; ++i) {
+      ar | vec[i];
+    }
+
+    return ar;
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

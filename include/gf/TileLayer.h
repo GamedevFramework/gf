@@ -264,6 +264,31 @@ inline namespace v1 {
     /** @} */
 
     /**
+     * @brief Get the local bounding rectangle of the layer
+     *
+     * The returned rectangle is in local coordinates, which means
+     * that it ignores the transformations (translation, rotation,
+     * scale, ...) that are applied to the entity.
+     * In other words, this function returns the bounds of the
+     * entity in the entity's coordinate system.
+     *
+     * @return Local bounding rectangle of the entity
+     */
+    RectF getLocalBounds() const;
+
+    /**
+     * @brief Set the anchor origin of the entity
+     *
+     * Compute the origin of the entity based on the local bounds and
+     * the specified anchor. Internally, this function calls
+     * `Transformable::setOrigin()`.
+     *
+     * @param anchor The anchor of the entity
+     * @sa getLocalBounds(), Transformable::setOrigin()
+     */
+    void setAnchor(Anchor anchor);
+
+    /**
      * @brief Create a buffer with the current geometry
      *
      * The geometry is uploaded in the graphics memory so that it's faster

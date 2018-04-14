@@ -38,7 +38,7 @@ int main() {
 
   gf::Texture texture;
 
-  if (!texture.loadFromFile("12_bomb.png")) {
+  if (!texture.loadFromFile("assets/bomb.png")) {
     return EXIT_FAILURE;
   }
 
@@ -51,7 +51,7 @@ int main() {
 
   gf::Texture textureWithMipmap;
 
-  if (!textureWithMipmap.loadFromFile("12_bomb.png")) {
+  if (!textureWithMipmap.loadFromFile("assets/bomb.png")) {
     return EXIT_FAILURE;
   }
 
@@ -92,13 +92,13 @@ int main() {
               break;
 
             case gf::Scancode::PageUp:
-              sprite.scale(0.8);
-              spriteWithMipmap.scale(0.8);
+              sprite.scale(0.8f);
+              spriteWithMipmap.scale(0.8f);
               break;
 
             case gf::Scancode::PageDown:
-              sprite.scale(1.25);
-              spriteWithMipmap.scale(1.25);
+              sprite.scale(1.25f);
+              spriteWithMipmap.scale(1.25f);
               break;
 
             case gf::Scancode::Escape:

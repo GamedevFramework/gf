@@ -33,9 +33,8 @@ int main() {
   gf::RenderWindow renderer(window);
 
   gf::Font font;
-  bool loaded = font.loadFromFile("16_DejaVuSans.ttf");
 
-  if (!loaded) {
+  if (!font.loadFromFile("assets/DejaVuSans.ttf")) {
     return EXIT_FAILURE;
   }
 

@@ -306,13 +306,13 @@ inline namespace v1 {
     }
 
     /**
-     * @brief Extend the rectangle
+     * @brief Grow the rectangle
      *
-     * @param value The amount to extend
+     * @param value The amount to grow
      * @return A new extended rectangle
      * @sa shrink()
      */
-    constexpr Rect<T> extend(T value) const noexcept {
+    constexpr Rect<T> grow(T value) const noexcept {
       return Rect<T>(left - value, top - value, width + 2 * value, height + 2 * value);
     }
 
@@ -321,7 +321,7 @@ inline namespace v1 {
      *
      * @param value The amount to shrink
      * @return A new shrinked rectangle
-     * @sa extend()
+     * @sa grow()
      */
     constexpr Rect<T> shrink(T value) const noexcept {
       return Rect<T>(left + value, top + value, width - 2 * value, height - 2 * value);

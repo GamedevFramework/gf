@@ -74,6 +74,7 @@ else()
     AnimatedSprite.cc
     Animation.cc
     AssetManager.cc
+    BinaryFile.cc
     Blend.cc
     BufferedGeometry.cc
     Circ.cc
@@ -90,6 +91,8 @@ else()
     Cursor.cc
     Curve.cc
     Curves.cc
+    Data.cc
+    DataObject.cc
     Direction.cc
     Drawable.cc
     Easings.cc
@@ -118,6 +121,7 @@ else()
     ModelContainer.cc
     Models.cc
     Monitor.cc
+    Move.cc
     NinePatch.cc
     Noise.cc
     Noises.cc
@@ -131,6 +135,7 @@ else()
     Polyline.cc
     PostProcessing.cc
     Random.cc
+    RandomBinaryTree.cc
     Range.cc
     Rect.cc
     RenderPipeline.cc
@@ -138,11 +143,14 @@ else()
     RenderTexture.cc
     RenderWindow.cc
     ResourceManager.cc
+    Serialization.cc
+    SerializationHeaders.cc
+    SerializationOps.cc
     Shader.cc
     Shape.cc
     Shapes.cc
     Sleep.cc
-    SpaceTree.cc
+    Spatial.cc
     SpriteBatch.cc
     Sprite.cc
     StringUtils.cc
@@ -155,6 +163,7 @@ else()
     Tmx.cc
     Transformable.cc
     Transform.cc
+    Triangulation.cc
     UI.cc
     Vector.cc
     VertexArray.cc
@@ -162,6 +171,9 @@ else()
     View.cc
     ViewContainer.cc
     Views.cc
+    Widget.cc
+    Widgets.cc
+    WidgetContainer.cc
     Window.cc
     # generated
     data/generated.cc

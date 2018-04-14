@@ -5,13 +5,16 @@ add_executable(gf_tests
   testArrayRef.cc
   testBufferRef.cc
   testCirc.cc
+  testData.cc
   testFlags.cc
   testId.cc
   testMatrix.cc
   testMatrix2.cc
   testRange.cc
   testRect.cc
+  testSerialization.cc
   testSingleton.cc
+  testSpatial.cc
   testStringRef.cc
   testVector.cc
   testVector1.cc

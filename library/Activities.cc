@@ -60,19 +60,7 @@ inline namespace v1 {
   RotateToActivity::RotateToActivity(float origin, float target, float& angle, Time duration, Easing easing)
   : m_tween(origin, target, angle, duration, easing)
   {
-    if (origin > target) {
-      while (target - origin > gf::Pi) {
-        target -= 2 * gf::Pi;
-      }
-    } else {
-      while (origin - target > gf::Pi) {
-        target += 2 * gf::Pi;
-      }
-    }
-
-    assert(origin - gf::Pi <= target && target <= origin + gf::Pi);
-
-    m_tween.setTarget(target);
+    normalize();
   }
 
   ActivityStatus RotateToActivity::run(Time time) {
@@ -86,6 +74,16 @@ inline namespace v1 {
 
   void RotateToActivity::restart() {
     m_tween.restart();
+  }
+
+  void RotateToActivity::normalize() {
+    float origin = m_tween.getOrigin();
+    float target = m_tween.getTarget();
+
+    target = origin + std::remainder(target - origin, 2 * gf::Pi);
+    assert(origin - gf::Pi <= target && target <= origin + gf::Pi);
+
+    m_tween.setTarget(target);
   }
 
   /*
@@ -199,6 +197,10 @@ inline namespace v1 {
     m_activities.push_back(&activity);
   }
 
+  void SequenceActivity::clear() {
+    m_activities.clear();
+  }
+
   ActivityStatus SequenceActivity::run(Time time) {
     if (m_current == m_activities.size()) {
       return ActivityStatus::Finished;
@@ -254,6 +256,24 @@ inline namespace v1 {
   }
 
   /*
+   * RepeatedSequenceActivity
+   */
+
+  RepeatedSequenceActivity::RepeatedSequenceActivity(unsigned repeat)
+  : m_repeat(m_sequence, repeat)
+  {
+
+  }
+
+  ActivityStatus RepeatedSequenceActivity::run(Time time) {
+    return m_repeat.run(time);
+  }
+
+  void RepeatedSequenceActivity::restart() {
+    m_repeat.restart();
+  }
+
+  /*
    * ParallelActivity
    */
 
@@ -266,6 +286,10 @@ inline namespace v1 {
 
   void ParallelActivity::addActivity(Activity& activity) {
     m_activities.push_back(&activity);
+  }
+
+  void ParallelActivity::clear() {
+    m_activities.clear();
   }
 
   ActivityStatus ParallelActivity::run(Time time) {

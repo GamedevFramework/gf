@@ -47,7 +47,7 @@ int main() {
 
   gf::BitmapConsoleFont font;
 
-  if (!font.loadFromFile("27_terminal.png", { gf::ConsoleFontFormat::Grayscale, gf::ConsoleFontFormat::InRow, gf::ConsoleFontFormat::ModifiedCodePage437 })) {
+  if (!font.loadFromFile("assets/terminal.png", { gf::ConsoleFontFormat::Grayscale, gf::ConsoleFontFormat::InRow, gf::ConsoleFontFormat::ModifiedCodePage437 })) {
     return EXIT_FAILURE;
   }
 

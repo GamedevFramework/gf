@@ -79,7 +79,7 @@ namespace huaca {
     position.y += TimerHeight - remaining;
 
     shape.setSize({ TimerWidth, remaining });
-    shape.setRadius(std::min(remaining / 2, TimerCorner));
+    shape.setRadius(TimerCorner);
     shape.setPosition(position);
     shape.setColor(color);
     target.draw(shape, states);

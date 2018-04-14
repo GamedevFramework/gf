@@ -37,7 +37,7 @@ int main() {
 
   gf::Image image;
 
-  if (!image.loadFromFile("02_cursor.png")) {
+  if (!image.loadFromFile("assets/cursor.png")) {
     return EXIT_FAILURE;
   }
 

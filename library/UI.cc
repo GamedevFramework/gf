@@ -175,10 +175,10 @@ inline namespace v1 {
       char32_t prevCodepoint = '\0';
 
       for (char32_t currCodepoint : unicodeText) {
-        textWidth += font->getKerning(prevCodepoint, currCodepoint, characterSize);
+        textWidth += font->getKerning(prevCodepoint, currCodepoint, static_cast<unsigned>(characterSize));
         prevCodepoint = currCodepoint;
 
-        const Glyph& glyph = font->getGlyph(currCodepoint, characterSize);
+        const Glyph& glyph = font->getGlyph(currCodepoint, static_cast<unsigned>(characterSize));
         textWidth += glyph.advance;
       }
 
@@ -189,8 +189,8 @@ inline namespace v1 {
       auto font = static_cast<Font *>(handle.ptr);
       assert(font);
 
-      float kerning = font->getKerning(currCodepoint, nextCodepoint, characterSize);
-      const Glyph& glyph = font->getGlyph(currCodepoint, characterSize);
+      float kerning = font->getKerning(currCodepoint, nextCodepoint, static_cast<unsigned>(characterSize));
+      const Glyph& glyph = font->getGlyph(currCodepoint, static_cast<unsigned>(characterSize));
 
       g->width = glyph.bounds.width;
       g->height = glyph.bounds.height;
@@ -249,7 +249,7 @@ inline namespace v1 {
     auto user = &m_impl->user;
 
     user->userdata.ptr = m_impl->font;
-    user->height = characterSize;
+    user->height = static_cast<float>(characterSize);
     user->width = getTextWidth;
     user->query = getFontGlyph;
     user->texture.ptr = const_cast<void *>(texture);
@@ -264,8 +264,10 @@ inline namespace v1 {
   }
 
   UI::~UI() {
-    nk_buffer_free(&m_impl->cmds);
-    nk_free(&m_impl->ctx);
+    if (m_impl) {
+      nk_buffer_free(&m_impl->cmds);
+      nk_free(&m_impl->ctx);
+    }
   }
 
   UI::UI(UI&&) noexcept = default;
@@ -450,6 +452,18 @@ inline namespace v1 {
     }
 
   }
+
+  void UI::setCharacterSize(unsigned characterSize) {
+    gf::Font& font = *m_impl->font;
+    font.generateTexture(characterSize);
+    auto texture = static_cast<const void *>(font.getTexture(characterSize));
+    assert(texture);
+
+    auto user = &m_impl->user;
+    user->height = static_cast<float>(characterSize);
+    user->texture.ptr = const_cast<void *>(texture);
+  }
+
 
   bool UI::begin(const std::string& title, const RectF& bounds, UIWindowFlags flags) {
     setState(State::Setup);

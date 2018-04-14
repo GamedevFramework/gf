@@ -21,10 +21,12 @@
 #include <gf/Gamepad.h>
 
 #include <cassert>
+#include <cinttypes>
 #include <cstring>
 
 #include <SDL.h>
 
+#include <gf/Event.h>
 #include <gf/Log.h>
 
 // see also data/generated.cc
@@ -196,6 +198,12 @@ inline namespace v1 {
   }
 
   void Gamepad::initialize() {
+    static bool alreadyInitialized = false;
+
+    if (alreadyInitialized) {
+      return;
+    }
+
     int added = SDL_GameControllerAddMappingsFromRW(SDL_RWFromConstMem(gamecontrollerdb, std::strlen(gamecontrollerdb)), 1);
 
     if (added == -1) {
@@ -208,6 +216,42 @@ inline namespace v1 {
       if (SDL_IsGameController(index) == SDL_TRUE) {
         openController(index);
       }
+    }
+
+    alreadyInitialized = true;
+  }
+
+
+  GamepadTracker::GamepadTracker()
+  {
+    Gamepad::initialize();
+  }
+
+  std::size_t GamepadTracker::getConnectedGamepadCount() const {
+    return m_ids.size();
+  }
+
+  void GamepadTracker::processEvent(const Event& event) {
+    switch (event.type) {
+      case EventType::GamepadConnected:
+      {
+        GamepadId id = Gamepad::open(event.gamepadConnection.id);
+        m_ids.push_back(id);
+        Log::info("Gamepad connected: %s [%" PRIi32 "]\n", Gamepad::getName(id), static_cast<int32_t>(id));
+        break;
+      }
+
+      case EventType::GamepadDisconnected:
+      {
+        GamepadId id = event.gamepadDisconnection.id;
+        Log::info("Gamepad disconnected: %s [%" PRIi32 "]\n", Gamepad::getName(id), static_cast<int32_t>(id));
+        m_ids.erase(std::remove(m_ids.begin(), m_ids.end(), id), m_ids.end());
+        Gamepad::close(id);
+        break;
+      }
+
+      default:
+        break;
     }
   }
 

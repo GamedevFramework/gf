@@ -43,8 +43,8 @@ namespace bi {
   Hero::Hero(Steam& steam, const gf::Vector2f postion)
   : gf::Entity(10)
   , m_steam(steam)
-  , m_move(Move::None)
-  , m_turn(Turn::None)
+  , m_move(gf::LinearMove::None)
+  , m_turn(gf::AngularMove::None)
   , m_position(postion)
   , m_angle(0.0f)
   , m_texture(gTextureAtlas().getTexture())
@@ -86,18 +86,7 @@ namespace bi {
     if (!m_isFrozen) {
       // Set the new angle
       float angularVelocity = m_isOnIsland ? HeroAngularVelocity : BoatAngulatVelocity;
-
-      switch (m_turn) {
-      case Turn::Right:
-        m_angle += angularVelocity * dt;
-        break;
-      case Turn::Left:
-        m_angle -= angularVelocity * dt;
-        break;
-      case Turn::None:
-        // Nothing
-        break;
-      }
+      m_angle += gf::angularFactor(m_turn) * angularVelocity * dt;
 
       // Manage the step "animation"
       while (m_timeElapsed > StepTime) {
@@ -107,21 +96,7 @@ namespace bi {
 
       // Set the velocity
       float velocity = m_isOnIsland ? HeroVelocity : BoatVelocity;
-      float distance = 0.0f;
-
-      switch (m_move) {
-      case Move::Forward:
-        distance = velocity * dt;
-        break;
-
-      case Move::Backward:
-        distance = -velocity * dt;
-        break;
-
-      case Move::None:
-        // Nothing
-        break;
-      }
+      float distance = gf::linearFactor(m_move) * velocity * dt;
 
       // Compute the new position
       m_position += gf::unit(m_angle) * distance;
@@ -151,7 +126,7 @@ namespace bi {
       // Render the step
       float angleRendered = m_angle;
 
-      if (!m_isFrozen && m_move != Move::None) {
+      if (!m_isFrozen && m_move != gf::LinearMove::None) {
         if (m_alternateStep) {
           angleRendered += StepAngle;
         } else {

@@ -106,13 +106,13 @@ inline namespace v1 {
 
   void GamepadButtonControl::processEvent(const Event& event) {
     if (event.type == EventType::GamepadButtonPressed) {
-      if (event.gamepadButton.id == m_id && event.gamepadButton.button == m_button) {
+      if ((m_id == AnyGamepad || event.gamepadButton.id == m_id) && event.gamepadButton.button == m_button) {
         setActive();
       }
     }
 
     if (event.type == EventType::GamepadButtonReleased) {
-      if (event.gamepadButton.id == m_id && event.gamepadButton.button == m_button) {
+      if ((m_id == AnyGamepad || event.gamepadButton.id == m_id) && event.gamepadButton.button == m_button) {
         setActive(false);
       }
     }
@@ -132,7 +132,7 @@ inline namespace v1 {
 
   void GamepadAxisControl::processEvent(const Event& event) {
     if (event.type == EventType::GamepadAxisMoved) {
-      if (event.gamepadAxis.id == m_id && event.gamepadAxis.axis == m_axis) {
+      if ((m_id == AnyGamepad || event.gamepadAxis.id == m_id) && event.gamepadAxis.axis == m_axis) {
         switch (m_dir) {
           case GamepadAxisDirection::Positive:
             setActive(event.gamepadAxis.value > GamepadAxisThreshold);
@@ -164,33 +164,20 @@ inline namespace v1 {
 
   namespace {
 
-    constexpr int KonamiKeysCount = 10;
+    constexpr int KonamiCount = 10;
 
-    Keycode nthKeyForKonami(int index) {
-      assert(index < KonamiKeysCount);
-
-      switch (index) {
-        case 0:
-        case 1:
-          return Keycode::Up;
-        case 2:
-        case 3:
-          return Keycode::Down;
-        case 4:
-        case 6:
-          return Keycode::Left;
-        case 5:
-        case 7:
-          return Keycode::Right;
-        case 8:
-          return Keycode::B;
-        case 9:
-          return Keycode::A;
-      }
-
-      assert(false);
-      return Keycode::Unknown;
-    }
+    constexpr Keycode KeyForKonami[KonamiCount] = {
+      Keycode::Up,
+      Keycode::Up,
+      Keycode::Down,
+      Keycode::Down,
+      Keycode::Left,
+      Keycode::Right,
+      Keycode::Left,
+      Keycode::Right,
+      Keycode::B,
+      Keycode::A,
+    };
 
   }
 
@@ -202,25 +189,91 @@ inline namespace v1 {
   }
 
   void KonamiKeyboardControl::processEvent(const Event& event) {
-    if (m_state == Released && event.type == EventType::KeyPressed) {
-      if (event.key.keycode == nthKeyForKonami(m_index)) {
-        m_state = Pressed;
-      } else {
-        m_index = 0;
+    if (m_state == Released) {
+      if (event.type == EventType::KeyPressed) {
+        assert(0 <= m_index && m_index < KonamiCount);
+
+        if (event.key.keycode == KeyForKonami[m_index]) {
+          m_state = Pressed;
+        } else {
+          m_index = 0;
+        }
+      }
+    } else {
+      assert(m_state == Pressed);
+
+      if (event.type == EventType::KeyReleased) {
+        m_state = Released;
+        assert(0 <= m_index && m_index < KonamiCount);
+
+        if (event.key.keycode == KeyForKonami[m_index]) {
+          ++m_index;
+        } else {
+          m_index = 0;
+        }
       }
     }
 
-    if (m_state == Pressed && event.type == EventType::KeyReleased) {
-      m_state = Released;
+    if (m_index == KonamiCount) {
+      setActive(true);
+      m_index = 0;
+    } else {
+      setActive(false);
+    }
+  }
 
-      if (event.key.keycode == nthKeyForKonami(m_index)) {
-        ++m_index;
-      } else {
-        m_index = 0;
+  namespace {
+
+    constexpr GamepadButton ButtonForKonami[KonamiCount] = {
+      GamepadButton::DPadUp,
+      GamepadButton::DPadUp,
+      GamepadButton::DPadDown,
+      GamepadButton::DPadDown,
+      GamepadButton::DPadLeft,
+      GamepadButton::DPadRight,
+      GamepadButton::DPadLeft,
+      GamepadButton::DPadRight,
+      GamepadButton::B,
+      GamepadButton::A,
+    };
+
+  }
+
+  KonamiGamepadControl::KonamiGamepadControl(GamepadId id)
+  : m_id(id)
+  , m_index(0)
+  , m_state(Released)
+  {
+
+  }
+
+  void KonamiGamepadControl::processEvent(const Event& event) {
+    if (m_state == Released) {
+      if (event.type == EventType::GamepadButtonPressed) {
+        assert(0 <= m_index && m_index < KonamiCount);
+
+        if ((m_id == AnyGamepad || event.gamepadButton.id == m_id) && event.gamepadButton.button == ButtonForKonami[m_index]) {
+          m_state = Pressed;
+        } else {
+          m_index = 0;
+        }
+      }
+    } else {
+      assert(m_state == Pressed);
+
+      if (event.type == EventType::GamepadButtonReleased) {
+        m_state = Released;
+        assert(0 <= m_index && m_index < KonamiCount);
+
+        if ((m_id == AnyGamepad || event.gamepadButton.id == m_id) && event.gamepadButton.button == ButtonForKonami[m_index]) {
+          ++m_index;
+        } else {
+          m_index = 0;
+        }
       }
     }
 
-    if (m_index == KonamiKeysCount) {
+    if (m_index == KonamiCount) {
       setActive(true);
       m_index = 0;
     } else {

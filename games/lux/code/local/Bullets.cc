@@ -76,7 +76,7 @@ namespace lux {
     float dt = time.asSeconds();
 
     gf::RectF view(WorldCenter - WorldSize / 2, WorldSize);
-    view.extend(BulletsExtra);
+    view.grow(BulletsExtra);
 
     for (Bullet& bullet : m_bullets) {
       bullet.position += bullet.velocity * dt;

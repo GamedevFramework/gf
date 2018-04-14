@@ -22,6 +22,7 @@
 #include <gf/Entity.h>
 #include <gf/MessageManager.h>
 #include <gf/Model.h>
+#include <gf/Move.h>
 #include <gf/Rect.h>
 #include <gf/PhysicsBody.h>
 #include <gf/PhysicsModel.h>
@@ -41,27 +42,27 @@ namespace brfd {
     void startAt(gf::Vector2f position, float angle);
 
     void accelerate() {
-      m_move = Move::Accelerate;
+      m_move = gf::LinearMove::Forward;
     }
 
     void brake() {
-      m_move = Move::Brake;
+      m_move = gf::LinearMove::Backward;
     }
 
     void cruise() {
-      m_move = Move::Cruise;
+      m_move = gf::LinearMove::None;
     }
 
     void turnLeft() {
-      m_turn = Turn::Left;
+      m_turn = gf::AngularMove::Left;
     }
 
     void turnRight() {
-      m_turn = Turn::Right;
+      m_turn = gf::AngularMove::Right;
     }
 
     void turnNone() {
-      m_turn = Turn::None;
+      m_turn = gf::AngularMove::None;
     }
 
     virtual void update(gf::Time time) override;
@@ -72,20 +73,8 @@ namespace brfd {
     gf::MessageManager& m_messages;
     gf::Texture& m_texture;
 
-    enum class Move {
-      Accelerate,
-      Brake,
-      Cruise,
-    };
-
-    enum class Turn {
-      Left,
-      Right,
-      None,
-    };
-
-    Move m_move;
-    Turn m_turn;
+    gf::LinearMove m_move;
+    gf::AngularMove m_turn;
 
     float m_velocity;
     float m_angle;

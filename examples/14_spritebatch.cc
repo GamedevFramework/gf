@@ -39,9 +39,8 @@ int main() {
   gf::RenderWindow renderer(window);
 
   gf::Texture texture;
-  bool loaded = texture.loadFromFile("14_spritesheet.png");
 
-  if (!loaded) {
+  if (!texture.loadFromFile("assets/spritesheet.png")) {
     return EXIT_FAILURE;
   }
 

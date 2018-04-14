@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0)
 
 project(GF
-  VERSION 0.7.0
+  VERSION 0.8.0
   LANGUAGES CXX C
 )
 
@@ -39,8 +39,10 @@ if(MSVC)
   message(STATUS "MSVC_VERSION: ${MSVC_VERSION}")
   if(MSVC_VERSION GREATER_EQUAL 1910)
     set(Boost_COMPILER "-vc141")
+    set(ENV{Boost_COMPILER} "-vc141")
   endif()
   set(Boost_DEBUG TRUE)
+  message(STATUS "Boost_COMPILER: ${Boost_COMPILER}")
 endif()
 
 find_package(Boost REQUIRED COMPONENTS filesystem system)
@@ -57,7 +59,7 @@ if(MSVC)
 else()
   message(STATUS "Using GCC or Clang compiler")
   # assume it's a GNU-like compiler (GCC, clang)
-  set(CMAKE_CXX_FLAGS                 "-Wall -Wextra -std=c++14")
+  set(CMAKE_CXX_FLAGS                 "-Wall -Wextra -std=c++14 -pedantic")
   set(CMAKE_CXX_FLAGS_DEBUG           "-O0 -g")
   set(CMAKE_CXX_FLAGS_MINSIZEREL      "-Os -DNDEBUG")
   set(CMAKE_CXX_FLAGS_RELEASE         "-O3 -DNDEBUG")
@@ -107,6 +109,7 @@ if(GF_BUILD_GAMES)
   add_subdirectory(games/gf_pong)
   add_subdirectory(games/huaca)
   add_subdirectory(games/islands)
+  add_subdirectory(games/krokodile)
   add_subdirectory(games/lux)
 endif()
 
@@ -114,6 +117,7 @@ if(GF_BUILD_TOOLS)
   add_subdirectory(tools/gf_info)
   add_subdirectory(tools/gf_noise)
   add_subdirectory(tools/gf_dungeons)
+  add_subdirectory(tools/gf_pack)
 
   install(
     DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/data/gf_tools"

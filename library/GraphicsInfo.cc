@@ -57,7 +57,7 @@ inline namespace v1 {
       GLint value;
       glCheck(glGetIntegerv(name, &value));
       return value;
-    };
+    }
 
   } // anonymous namespace
 

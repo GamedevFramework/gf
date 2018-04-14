@@ -13,14 +13,9 @@ cache:
 install:
   - cmd: git submodule update --init
 
-environment:
-  BOOST_ROOT: C:\Libraries\boost_1_65_1
-  BOOST_INCLUDEDIR: C:\Libraries\boost_1_65_1\
-  BOOST_LIBRARYDIR: C:\Libraries\boost_1_65_1\lib64-msvc-14.1\
-
 before_build:
-  - cmd: vcpkg install sdl2:x64-windows freetype:x64-windows zlib:x64-windows
-  - cmd: dir C:\Libraries\boost_1_65_1\
+  - cmd: vcpkg remove --outdated --recurse
+  - cmd: vcpkg install sdl2:x64-windows freetype:x64-windows zlib:x64-windows boost-algorithm:x64-windows boost-filesystem:x64-windows boost-heap:x64-windows
   - cmd: cd C:\projects\GF
   - cmd: mkdir build
   - cmd: cd build

@@ -416,7 +416,7 @@ inline namespace v1 {
             result.distance = newDistance;
             result.previous = data.position;
 
-            float priority = newDistance + heuristic(position, target) * 1.001;
+            float priority = newDistance + heuristic(position, target) * 1.001f;
 
             if (result.state == AStarState::Open) {
               assert((*result.handle).position == position);

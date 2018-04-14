@@ -52,7 +52,7 @@ namespace lux {
   void BonusManager::update(gf::Time time) {
     float dt = time.asSeconds();
     gf::RectF view(WorldCenter - WorldSize / 2, WorldSize);
-    view.extend(BonusExtra);
+    view.grow(BonusExtra);
 
     for (Bonus& bonus : m_bonus) {
       bonus.position += bonus.velocity * dt;

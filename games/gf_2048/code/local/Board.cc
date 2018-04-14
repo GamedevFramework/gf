@@ -20,6 +20,7 @@
  */
 #include "Board.h"
 
+#include <cassert>
 #include <array>
 #include <algorithm>
 
@@ -51,6 +52,7 @@ static bool isOnSide(gf::Vector2u pos, gf::Direction dir) {
       return true;
   }
 
+  assert(false);
   return true;
 }
 
@@ -174,6 +176,7 @@ static gf::Color4f getTileColor(int value) {
       return gf::Color::fromRgba32(0x3C3A32FF);
   }
 
+  assert(false);
   return gf::Color::Black;
 }
 
@@ -195,6 +198,7 @@ static gf::Color4f getTextColor(int value) {
       return gf::Color::fromRgba32(0xF9F6F2FF);
   }
 
+  assert(false);
   return gf::Color::Black;
 }
 
@@ -219,6 +223,7 @@ static unsigned getTextSize(int value) {
       return 30;
   }
 
+  assert(false);
   return 30;
 }
 

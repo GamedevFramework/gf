@@ -182,6 +182,13 @@ inline namespace v1 {
     setFullscreen(!m_isFullscreen);
   }
 
+
+  bool Window::isMinimized() const {
+    assert(m_window);
+    auto flags = SDL_GetWindowFlags(m_window);
+    return (flags & SDL_WINDOW_MINIMIZED) != 0;
+  }
+
   void Window::minimize() {
     assert(m_window);
     SDL_MinimizeWindow(m_window);
@@ -192,9 +199,21 @@ inline namespace v1 {
     SDL_RestoreWindow(m_window);
   }
 
+  bool Window::isMaximized() const {
+    assert(m_window);
+    auto flags = SDL_GetWindowFlags(m_window);
+    return (flags & SDL_WINDOW_MAXIMIZED) != 0;
+  }
+
   void Window::maximize() {
     assert(m_window);
     SDL_MaximizeWindow(m_window);
+  }
+
+  bool Window::isVisible() const {
+    assert(m_window);
+    auto flags = SDL_GetWindowFlags(m_window);
+    return (flags & SDL_WINDOW_SHOWN) != 0;
   }
 
   void Window::show() {
@@ -215,6 +234,12 @@ inline namespace v1 {
     }
   }
 
+  bool Window::isDecorated() const {
+    assert(m_window);
+    auto flags = SDL_GetWindowFlags(m_window);
+    return (flags & SDL_WINDOW_BORDERLESS) == 0;
+  }
+
   void Window::setDecorated(bool decorated) {
     assert(m_window);
     SDL_SetWindowBordered(m_window, decorated ? SDL_TRUE : SDL_FALSE);
@@ -226,29 +251,21 @@ inline namespace v1 {
     return (flags & SDL_WINDOW_INPUT_FOCUS) != 0;
   }
 
-  bool Window::isMinimized() const {
-    assert(m_window);
-    auto flags = SDL_GetWindowFlags(m_window);
-    return (flags & SDL_WINDOW_MINIMIZED) != 0;
-  }
-
-  bool Window::isVisible() const {
-    assert(m_window);
-    auto flags = SDL_GetWindowFlags(m_window);
-    return (flags & SDL_WINDOW_SHOWN) != 0;
-  }
-
   bool Window::isResizable() const {
     assert(m_window);
     auto flags = SDL_GetWindowFlags(m_window);
     return (flags & SDL_WINDOW_RESIZABLE) != 0;
   }
 
-  bool Window::isDecorated() const {
+  void Window::setResizable(bool resizable) {
     assert(m_window);
-    auto flags = SDL_GetWindowFlags(m_window);
-    return (flags & SDL_WINDOW_BORDERLESS) == 0;
+#if SDL_VERSION_ATLEAST(2,0,5)
+    SDL_SetWindowResizable(m_window, resizable ? SDL_TRUE : SDL_FALSE);
+#else
+    Log::error("Window can not be set resizable. You must compile with SDL 2.0.5 at least.\n");
+#endif
   }
+
 
   namespace {
 

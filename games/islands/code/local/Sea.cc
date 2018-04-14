@@ -36,9 +36,13 @@ namespace bi {
   static constexpr unsigned TurretCount = 50;
 
   Sea::Sea()
-  : m_vertices(gf::PrimitiveType::Triangles)
+  : m_seaVertices(gf::PrimitiveType::Triangles)
+  , m_landVertices(gf::PrimitiveType::Triangles)
+  , m_terrain({ Size, Size })
   , m_sea({ Size, Size })
+  , m_land({ Size, Size })
   , m_hero({ 0, 0 })
+  , m_heroMoved(true)
   {
     gMessageManager().registerHandler<HeroPosition>(&Sea::onHeroPosition, this);
     gMessageManager().registerHandler<GoldLooted>(&Sea::onGoldLooted, this);
@@ -58,31 +62,24 @@ namespace bi {
     gf::SimplexNoise2D simplex(gRandom());
     gf::FractalNoise2D fractal(simplex, 1);
 
-    for (auto row : m_sea.getRowRange()) {
-      double y = static_cast<double>(row) / m_sea.getRows() * Scale;
-      for (auto col : m_sea.getColRange()) {
-        double x = static_cast<double>(col) / m_sea.getCols() * Scale;
-        m_sea({ col, row }).elevation = fractal.getValue(x, y);
+    for (auto row : m_terrain.getRowRange()) {
+      double y = static_cast<double>(row) / m_terrain.getRows() * Scale;
+      for (auto col : m_terrain.getColRange()) {
+        double x = static_cast<double>(col) / m_terrain.getCols() * Scale;
+        m_terrain({ col, row }) = fractal.getValue(x, y);
       }
     }
 
     // normalize
 
-    auto comparator = [](const Point& lhs, const Point& rhs) {
-      return lhs.elevation < rhs.elevation;
-    };
-
-    Point minPoint = *std::min_element(m_sea.begin(), m_sea.end(), comparator);
-    float min = minPoint.elevation;
-
-    Point maxPoint = *std::max_element(m_sea.begin(), m_sea.end(), comparator);
-    float max = maxPoint.elevation;
+    float min = *std::min_element(m_terrain.begin(), m_terrain.end());
+    float max = *std::max_element(m_terrain.begin(), m_terrain.end());
 
 
-    for (auto& val : m_sea) {
-      val.elevation = (val.elevation - min) / (max - min);
-      val.elevation = valueWithWaterLevel(val.elevation, SeaLevel);
-      assert(0.0 <= val.elevation && val.elevation <= 1.0);
+    for (auto& elevation : m_terrain) {
+      elevation = (elevation - min) / (max - min);
+      elevation = valueWithWaterLevel(elevation, SeaLevel);
+      assert(0.0 <= elevation && elevation <= 1.0);
     }
 
     // treasures
@@ -97,7 +94,7 @@ namespace bi {
 
         col = static_cast<unsigned>(position.x / TileSize);
         row = static_cast<unsigned>(position.y / TileSize);
-      } while (m_sea({ row, col }).elevation < 0.52f);
+      } while (m_terrain({ row, col }) < 0.52f);
 
       treasures.addTreasure(position);
     }
@@ -114,7 +111,7 @@ namespace bi {
 
         col = static_cast<unsigned>(position.x / TileSize);
         row = static_cast<unsigned>(position.y / TileSize);
-      } while (m_sea({ row, col }).elevation < 0.52f);
+      } while (m_terrain({ row, col }) < 0.52f);
 
       decorationsAbove.addDecoration(position);
     }
@@ -129,7 +126,7 @@ namespace bi {
 
         col = static_cast<unsigned>(position.x / TileSize);
         row = static_cast<unsigned>(position.y / TileSize);
-      } while (m_sea({ row, col }).elevation < 0.52f);
+      } while (m_terrain({ row, col }) < 0.52f);
 
       decorationsBelow.addDecoration(position);
     }
@@ -146,40 +143,38 @@ namespace bi {
 
         col = static_cast<unsigned>(position.x / TileSize);
         row = static_cast<unsigned>(position.y / TileSize);
-      } while (m_sea({ row, col }).elevation < 0.52f);
+      } while (m_terrain({ row, col }) < 0.52f);
 
       turrets.addTurret(position);
     }
 
     // compute colors
 
-    gf::ColorRamp ramp;
-    ramp.addColorStop(0.000f, gf::Color::fromRgba32(  2,  43,  68)); // very dark blue: deep water
-    ramp.addColorStop(0.250f, gf::Color::fromRgba32(  9,  62,  92)); // dark blue: water
-    ramp.addColorStop(0.499f, gf::Color::fromRgba32( 17,  82, 112)); // blue: shallow water
-    ramp.addColorStop(0.500f, gf::Color::fromRgba32( 69, 108, 118)); // light blue: shore
-    ramp.addColorStop(0.501f, gf::Color::fromRgba32(255, 251, 121)); // sand
-    ramp.addColorStop(0.550f, gf::Color::fromRgba32(255, 251, 121)); // sand
-    ramp.addColorStop(0.551f, gf::Color::fromRgba32( 54, 205,  20)); // grass
-    ramp.addColorStop(0.700f, gf::Color::fromRgba32( 54, 205,  20)); // grass
-    ramp.addColorStop(0.701f, gf::Color::fromRgba32( 38, 143,  14)); // grass
+    gf::ColorRamp rampSea;
+    rampSea.addColorStop(0.000f, gf::Color::fromRgba32(  2,  43,  68)); // very dark blue: deep water
+    rampSea.addColorStop(0.250f, gf::Color::fromRgba32(  9,  62,  92)); // dark blue: water
+    rampSea.addColorStop(0.499f, gf::Color::fromRgba32( 17,  82, 112)); // blue: shallow water
+    rampSea.addColorStop(0.500f, gf::Color::fromRgba32( 69, 108, 118)); // light blue: shore
 
-    ramp.addColorStop(1.000f, gf::Color::fromRgba32( 38, 143,  14)); // grass
+    gf::ColorRamp rampLand;
+    rampLand.addColorStop(0.500f, gf::Color::fromRgba32(255, 251, 121)); // sand
+    rampLand.addColorStop(0.550f, gf::Color::fromRgba32(255, 251, 121)); // sand
+    rampLand.addColorStop(0.551f, gf::Color::fromRgba32( 54, 205,  20)); // grass
+    rampLand.addColorStop(0.700f, gf::Color::fromRgba32( 54, 205,  20)); // grass
+    rampLand.addColorStop(0.701f, gf::Color::fromRgba32( 38, 143,  14)); // grass
+    rampLand.addColorStop(1.000f, gf::Color::fromRgba32( 38, 143,  14)); // grass
 
     static constexpr gf::Vector3f Light = { -1, -1, 0 };
 
-    for (auto row : m_sea.getRowRange()) {
-      for (auto col : m_sea.getColRange()) {
-        float elevation = m_sea({ row, col }).elevation;
+    for (auto row : m_terrain.getRowRange()) {
+      for (auto col : m_terrain.getColRange()) {
+        float elevation = m_terrain({ row, col });
         assert(0.0f <= elevation && elevation <= 1.0);
 
-        if (elevation < 0.5f) {
-          m_sea({ row, col }).color = ramp.computeColor(elevation);
-          continue;
-        }
+        m_sea({ row, col }) = rampSea.computeColor(elevation);
 
-        float x = col;
-        float y = row;
+        float x = static_cast<float>(col);
+        float y = static_cast<float>(row);
 
         // compute the normal vector
 
@@ -189,8 +184,8 @@ namespace bi {
         gf::Vector3f p{x, y, elevation};
 
         if (col > 0 && row > 0) {
-          gf::Vector3f pn{x    , y - 1, m_sea({ row - 1, col     }).elevation};
-          gf::Vector3f pw{x - 1, y    , m_sea({ row    , col - 1 }).elevation};
+          gf::Vector3f pn{x    , y - 1, m_terrain({ row - 1, col     })};
+          gf::Vector3f pw{x - 1, y    , m_terrain({ row    , col - 1 })};
 
           gf::Vector3f v3 = cross(p - pw, p - pn);
           assert(v3.z > 0);
@@ -199,9 +194,9 @@ namespace bi {
           count += 1;
         }
 
-        if (col > 0 && row < m_sea.getRows() - 1) {
-          gf::Vector3f pw{x - 1, y    , m_sea({ row    , col - 1 }).elevation};
-          gf::Vector3f ps{x    , y + 1, m_sea({ row + 1, col     }).elevation};
+        if (col > 0 && row < m_terrain.getRows() - 1) {
+          gf::Vector3f pw{x - 1, y    , m_terrain({ row    , col - 1 })};
+          gf::Vector3f ps{x    , y + 1, m_terrain({ row + 1, col     })};
 
           gf::Vector3f v3 = cross(p - ps, p - pw);
           assert(v3.z > 0);
@@ -210,9 +205,9 @@ namespace bi {
           count += 1;
         }
 
-        if (col < m_sea.getCols() - 1 && row > 0) {
-          gf::Vector3f pe{x + 1, y    , m_sea({ row    , col + 1 }).elevation};
-          gf::Vector3f pn{x    , y - 1, m_sea({ row - 1, col     }).elevation};
+        if (col < m_terrain.getCols() - 1 && row > 0) {
+          gf::Vector3f pe{x + 1, y    , m_terrain({ row    , col + 1 })};
+          gf::Vector3f pn{x    , y - 1, m_terrain({ row - 1, col     })};
 
           gf::Vector3f v3 = cross(p - pn, p - pe);
           assert(v3.z > 0);
@@ -221,9 +216,9 @@ namespace bi {
           count += 1;
         }
 
-        if (col < m_sea.getCols() - 1 && row < m_sea.getRows() - 1) {
-          gf::Vector3f pe{x + 1, y    , m_sea({ row    , col + 1 }).elevation};
-          gf::Vector3f ps{x    , y + 1, m_sea({ row + 1, col     }).elevation};
+        if (col < m_terrain.getCols() - 1 && row < m_terrain.getRows() - 1) {
+          gf::Vector3f pe{x + 1, y    , m_terrain({ row    , col + 1 })};
+          gf::Vector3f ps{x    , y + 1, m_terrain({ row + 1, col     })};
 
           gf::Vector3f v3 = cross(p - pe, p - ps);
           assert(v3.z > 0);
@@ -236,16 +231,18 @@ namespace bi {
         float d = gf::dot(Light, normal);
         d = gf::clamp(0.5f + 35 * d, 0.0f, 1.0f);
 
-        gf::Color4f color = ramp.computeColor(elevation);
+        gf::Color4f color = rampLand.computeColor(elevation);
 
         gf::Color4f lo = gf::lerp(color, gf::Color::fromRgba32(0x33, 0x11, 0x33, 0xFF), 0.7);
         gf::Color4f hi = gf::lerp(color, gf::Color::fromRgba32(0xFF, 0xFF, 0xCC, 0xFF), 0.3);
 
         if (d < 0.5f) {
-          m_sea({ row, col }).color = gf::lerp(lo, color, 2 * d);
+          color = gf::lerp(lo, color, 2 * d);
         } else {
-          m_sea({ row, col }).color = gf::lerp(color, hi, 2 * d - 1);
+          color = gf::lerp(color, hi, 2 * d - 1);
         }
+
+        m_land({ row, col }) = color;
       }
     }
   }
@@ -253,12 +250,17 @@ namespace bi {
   void Sea::update(gf::Time time) {
     gf::unused(time);
 
+    if (!m_heroMoved) {
+      return;
+    }
+
     unsigned rowMin = (m_hero.y > DisplayHalfRange) ? (m_hero.y - DisplayHalfRange) : 0;
     unsigned rowMax = (m_hero.y + DisplayHalfRange < Size) ? (m_hero.y + DisplayHalfRange) : Size - 1;
     unsigned colMin = (m_hero.x > DisplayHalfRange) ? (m_hero.x - DisplayHalfRange) : 0;
     unsigned colMax = (m_hero.x + DisplayHalfRange < Size) ? (m_hero.x + DisplayHalfRange) : Size - 1;
 
-    m_vertices.clear();
+    m_seaVertices.clear();
+    m_landVertices.clear();
 
     for (unsigned row = rowMin; row < rowMax; ++row) {
       assert(row < Size - 1);
@@ -273,27 +275,81 @@ namespace bi {
         vertices[2].position = {  col      * TileSize, (row + 1) * TileSize };
         vertices[3].position = { (col + 1) * TileSize, (row + 1) * TileSize };
 
-        vertices[0].color = m_sea({ row,     col     }).color;
-        vertices[1].color = m_sea({ row,     col + 1 }).color;
-        vertices[2].color = m_sea({ row + 1, col     }).color;
-        vertices[3].color = m_sea({ row + 1, col + 1 }).color;
+        // vertices for sea
+
+        vertices[0].color = m_sea({ row,     col     });
+        vertices[1].color = m_sea({ row,     col + 1 });
+        vertices[2].color = m_sea({ row + 1, col     });
+        vertices[3].color = m_sea({ row + 1, col + 1 });
 
         // first triangle
-        m_vertices.append(vertices[0]);
-        m_vertices.append(vertices[1]);
-        m_vertices.append(vertices[2]);
+        m_seaVertices.append(vertices[0]);
+        m_seaVertices.append(vertices[1]);
+        m_seaVertices.append(vertices[2]);
 
         // second triangle
-        m_vertices.append(vertices[2]);
-        m_vertices.append(vertices[1]);
-        m_vertices.append(vertices[3]);
+        m_seaVertices.append(vertices[2]);
+        m_seaVertices.append(vertices[1]);
+        m_seaVertices.append(vertices[3]);
+
+        // vertices for land
+
+        std::array<float, 4> elevations = { m_terrain({ row, col }), m_terrain({ row, col + 1 }), m_terrain({ row + 1, col }), m_terrain({ row + 1, col + 1 }) };
+        auto count = std::count_if(elevations.begin(), elevations.end(), [](float elevation) { return elevation < 0.5f; });
+        assert(0 <= count && count <= 4);
+
+        if (count >= 2) {
+          continue;
+        }
+
+        vertices[0].color = m_land({ row,     col     });
+        vertices[1].color = m_land({ row,     col + 1 });
+        vertices[2].color = m_land({ row + 1, col     });
+        vertices[3].color = m_land({ row + 1, col + 1 });
+
+        if (count == 0) {
+          // first triangle
+          m_landVertices.append(vertices[0]);
+          m_landVertices.append(vertices[1]);
+          m_landVertices.append(vertices[2]);
+
+          // second triangle
+          m_landVertices.append(vertices[2]);
+          m_landVertices.append(vertices[1]);
+          m_landVertices.append(vertices[3]);
+
+          continue;
+        }
+
+        assert(count == 1);
+
+        if (elevations[0] < 0.5f) {
+          m_landVertices.append(vertices[2]);
+          m_landVertices.append(vertices[1]);
+          m_landVertices.append(vertices[3]);
+        } else if (elevations[1] < 0.5f) {
+          m_landVertices.append(vertices[0]);
+          m_landVertices.append(vertices[3]);
+          m_landVertices.append(vertices[2]);
+        } else if (elevations[2] < 0.5f) {
+          m_landVertices.append(vertices[0]);
+          m_landVertices.append(vertices[1]);
+          m_landVertices.append(vertices[3]);
+        } else if (elevations[3] < 0.5f) {
+          m_landVertices.append(vertices[0]);
+          m_landVertices.append(vertices[1]);
+          m_landVertices.append(vertices[2]);
+        }
 
       }
     }
+
+    m_heroMoved = false;
   }
 
   void Sea::render(gf::RenderTarget& target, const gf::RenderStates& states) {
-    target.draw(m_vertices, states);
+    target.draw(m_seaVertices, states);
+    target.draw(m_landVertices, states);
   }
 
   gf::MessageStatus Sea::onHeroPosition(gf::Id id, gf::Message *msg) {
@@ -310,7 +366,11 @@ namespace bi {
     unsigned col = static_cast<unsigned>(hero->position.x / TileSize);
     unsigned row = static_cast<unsigned>(hero->position.y / TileSize);
 
-    hero->isOnIsland = (m_sea({ row, col }).elevation > 0.48f);
+    hero->isOnIsland = (m_terrain({ row, col }) > 0.48f);
+
+    if (m_hero.x != col || m_hero.y != row) {
+      m_heroMoved = true;
+    }
 
     m_hero.x = col;
     m_hero.y = row;
@@ -333,7 +393,7 @@ namespace bi {
 
       col = static_cast<unsigned>(next.x / TileSize);
       row = static_cast<unsigned>(next.y / TileSize);
-    } while (m_sea({ row, col }).elevation < 0.52f);
+    } while (m_terrain({ row, col }) < 0.52f);
 
     loot->next = next;
 

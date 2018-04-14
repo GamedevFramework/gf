@@ -309,23 +309,23 @@ int main() {
   FractalParams fractalParams;
   fractalParams.fractal = Fractal::None;
 
-  fractalParams.f.dimension = 1.0;
+  fractalParams.f.dimension = 1.0f;
 
-  fractalParams.m.dimension = 1.0;
+  fractalParams.m.dimension = 1.0f;
 
-  fractalParams.ht.dimension = 1.0;
-  fractalParams.ht.offset = 1.0;
+  fractalParams.ht.dimension = 1.0f;
+  fractalParams.ht.offset = 1.0f;
 
-  fractalParams.hm.dimension = 0.25;
-  fractalParams.hm.offset = 0.7;
+  fractalParams.hm.dimension = 0.25f;
+  fractalParams.hm.offset = 0.7f;
 
-  fractalParams.rm.dimension = 1.0;
-  fractalParams.rm.offset = 1.0;
-  fractalParams.rm.gain = 2.0;
+  fractalParams.rm.dimension = 1.0f;
+  fractalParams.rm.offset = 1.0f;
+  fractalParams.rm.gain = 2.0f;
 
   fractalParams.octaves = 8;
-  fractalParams.lacunarity = 2.0;
-  fractalParams.persistence = 0.5;
+  fractalParams.lacunarity = 2.0f;
+  fractalParams.persistence = 0.5f;
 
   gf::UICollapse renderingCollapsed = gf::UICollapse::Minimized;
 

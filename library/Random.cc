@@ -49,6 +49,23 @@ inline namespace v1 {
 
   }
 
+  Vector2f Random::computePosition(const RectF& area) {
+    std::uniform_real_distribution<float> distX(0.0f, area.width);
+    std::uniform_real_distribution<float> distY(0.0f, area.height);
+    float x = area.left + distX(m_engine);
+    float y = area.top + distY(m_engine);
+    return { x, y };
+  }
+
+  Vector2i Random::computePosition(const RectI& area) {
+    std::uniform_int_distribution<int> distX(0, area.width);
+    std::uniform_int_distribution<int> distY(0, area.height);
+    int x = area.left + distX(m_engine);
+    int y = area.top + distY(m_engine);
+    return { x, y };
+  }
+
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif

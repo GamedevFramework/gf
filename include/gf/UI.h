@@ -457,6 +457,13 @@ inline namespace v1 {
     void processEvent(const Event& event);
 
     /**
+     * @brief Change the character size
+     *
+     * @param characterSize The new character size
+     */
+    void setCharacterSize(unsigned characterSize);
+
+    /**
      * @name Window
      * @{
      */

@@ -143,6 +143,7 @@ inline namespace v1 {
      */
     void setOrigin(float origin) {
       m_tween.setOrigin(origin);
+      normalize();
     }
 
     /**
@@ -161,6 +162,7 @@ inline namespace v1 {
      */
     void setTarget(float target) {
       m_tween.setTarget(target);
+      normalize();
     }
 
     /**
@@ -192,6 +194,9 @@ inline namespace v1 {
 
     virtual ActivityStatus run(Time time) override;
     virtual void restart() override;
+
+  private:
+    void normalize();
 
   private:
     Tween<float> m_tween;
@@ -422,6 +427,11 @@ inline namespace v1 {
      */
     void addActivity(Activity& activity);
 
+    /**
+     * @brief Remove all the activities
+     */
+    void clear();
+
     virtual ActivityStatus run(Time time) override;
     virtual void restart() override;
 
@@ -454,6 +464,32 @@ inline namespace v1 {
     unsigned m_repeat;
   };
 
+
+  /**
+   * @ingroup game
+   * @brief A repeated sequence activity
+   *
+   * This is a convenient combination of gf::SequenceActivity and
+   * gf::RepeatActivity.
+   */
+  class GF_API RepeatedSequenceActivity : public Activity {
+  public:
+    /**
+     * @brief Constructor
+     *
+     * @param repeat The number of time to repeat the activity or 0 for infinite
+     */
+    RepeatedSequenceActivity(unsigned repeat = 0);
+
+    virtual ActivityStatus run(Time time) override;
+    virtual void restart() override;
+
+  private:
+    SequenceActivity m_sequence;
+    RepeatActivity m_repeat;
+  };
+
+
   /**
    * @ingroup game
    * @brief An activity to run several activities in parallel
@@ -481,6 +517,11 @@ inline namespace v1 {
      * @param activity The activity
      */
     void addActivity(Activity& activity);
+
+    /**
+     * @brief Remove all the activities
+     */
+    void clear();
 
     virtual ActivityStatus run(Time time) override;
     virtual void restart() override;

@@ -99,7 +99,7 @@ inline namespace v1 {
 
     std::vector<Vector2f> ret;
 
-    std::size_t size = 1 << iterations;
+    std::size_t size = static_cast<std::size_t>(1) << iterations;
     std::size_t count = size + 1;
     ret.resize(count);
     ret[0] = p0;

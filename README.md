@@ -116,6 +116,7 @@ These screenshots are from games and tools included in the repository.
 ![Huaca](games/huaca/huaca.png)
 ![Bank Robbery for Dummies](games/bank_robbery_for_dummies/brfd.png)
 ![Bygone Islands](games/islands/islands.png)
+![Krokodile](games/krokodile/krokodile.png)
 ![Lux](games/lux/lux.png)
 
 ### Tools

@@ -29,6 +29,7 @@
 #include <gf/Random.h>
 #include <gf/RenderWindow.h>
 #include <gf/Shapes.h>
+#include <gf/Triangulation.h>
 #include <gf/VectorOps.h>
 #include <gf/Views.h>
 #include <gf/Window.h>
@@ -59,6 +60,9 @@ int main() {
   }
 
   auto hull = gf::convexHull(points);
+  auto delaunay = gf::triangulation(points);
+
+  enum { Hull, Delaunay } mode = Hull;
 
   std::cout << "Gamedev Framework (gf) example #43: Points\n";
   std::cout << "How to use:\n";
@@ -89,6 +93,15 @@ int main() {
               }
 
               hull = gf::convexHull(points);
+              delaunay = gf::triangulation(points);
+              break;
+
+            case gf::Scancode::Return:
+              if (mode == Hull) {
+                mode = Delaunay;
+              } else {
+                mode = Hull;
+              }
               break;
 
             case gf::Scancode::Escape:
@@ -108,7 +121,7 @@ int main() {
 
     renderer.clear();
 
-    if (!hull.isEmpty()) {
+    if (mode == Hull && !hull.isEmpty()) {
       gf::CompoundCurve curve(hull.getPoint(0));
 
       bool first = true;
@@ -126,6 +139,17 @@ int main() {
       curve.setColor(gf::Color::Azure);
       curve.setWidth(2.0f);
       renderer.draw(curve);
+    }
+
+    if (mode == Delaunay && !delaunay.empty()) {
+      for (auto& triangle : delaunay) {
+        for (std::size_t i = 0; i < 3; ++i) {
+          gf::Line line(triangle[i], triangle[(i + 1) % 3]);
+          line.setColor(gf::Color::Azure);
+          line.setWidth(2.0f);
+          renderer.draw(line);
+        }
+      }
     }
 
     for (auto p : points) {
