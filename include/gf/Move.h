@@ -46,7 +46,7 @@ inline namespace v1 {
    * @ingroup core
    * @brief Get the angular factor from the angular move
    *
-   * @return @$ -1 @$, @$ 0 @$ or @$ 1 @$ with respect to the move
+   * @return @f$ -1 @f$, @f$ 0 @f$ or @f$ 1 @f$ with respect to the move
    */
   GF_API float angularFactor(AngularMove move);
 
@@ -68,7 +68,7 @@ inline namespace v1 {
    * @ingroup core
    * @brief Get the linear factor from the linear move
    *
-   * @return @$ -1 @$, @$ 0 @$ or @$ 1 @$ with respect to the move
+   * @return @f$ -1 @f$, @f$ 0 @f$ or @f$ 1 @f$ with respect to the move
    */
   GF_API float linearFactor(LinearMove move);
 
