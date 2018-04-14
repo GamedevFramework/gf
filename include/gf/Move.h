@@ -42,6 +42,12 @@ inline namespace v1 {
     Right,  ///< Move to the right (i.e. clockwise)
   };
 
+  /**
+   * @ingroup core
+   * @brief Get the angular factor from the angular move
+   *
+   * @return @$ -1 @$, @$ 0 @$ or @$ 1 @$ with respect to the move
+   */
   GF_API float angularFactor(AngularMove move);
 
   /**
@@ -58,6 +64,12 @@ inline namespace v1 {
     Backward,   ///< Move backward
   };
 
+  /**
+   * @ingroup core
+   * @brief Get the linear factor from the linear move
+   *
+   * @return @$ -1 @$, @$ 0 @$ or @$ 1 @$ with respect to the move
+   */
   GF_API float linearFactor(LinearMove move);
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
