@@ -1,5 +1,35 @@
 # ChangeLog for gf
 
+## gf 0.8.0 (14 Apr 2018)
+
+- Core module
+  - Add gf::Paths::getTemporaryDirectory() and gf::Paths::getUniquePath()
+  - Add gf::BinaryFile
+  - Add gf::LinearMove and gf::AngularMove
+  - Add gf::triangulation() for computing Delaunay triangulation
+  - Add gf::Random::computePosition()
+  - Transform gf::SpaceTree into gf::RandomBinaryTree
+  - Add gf::Box
+  - Add gf::QuadTree and gf::RStarTree for spatial indexing
+- Window module
+  - Add gf::View::getBounds()
+  - Add gf::GamepadAny for controlling any connected gamepad
+  - Add gf::KonamiGamepadControl
+  - Add gf::GamepadTracker
+  - Add gf::Window::isMaximized()
+- Graphics module
+  - Add gf::TileLayer::getLocalBounds() and gf::TileLayer::setAnchor()
+  - Add gf::Widget and its hierarchy for simple UI in games (thanks @Xeryko)
+  - Add gf::UI::setCharacterSize()
+- Game module
+  - Add {Sequence,Parallel}Activity::clear()
+  - Add gf::Serializer and gf::Deserializer based on MessagePack
+  - Add gf::DataObject to serialize/deserialize any object
+  - Add gf::RepeatedSequenceActivity
+- Tools and games
+  - Add Krokodile
+- Misc
+
 ## gf 0.7.0 (14 Jan 2018)
 
 - Core module
