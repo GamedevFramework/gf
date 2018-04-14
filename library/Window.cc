@@ -199,6 +199,12 @@ inline namespace v1 {
     SDL_RestoreWindow(m_window);
   }
 
+  bool Window::isMaximized() const {
+    assert(m_window);
+    auto flags = SDL_GetWindowFlags(m_window);
+    return (flags & SDL_WINDOW_MAXIMIZED) != 0;
+  }
+
   void Window::maximize() {
     assert(m_window);
     SDL_MaximizeWindow(m_window);

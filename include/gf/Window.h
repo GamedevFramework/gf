@@ -245,6 +245,13 @@ inline namespace v1 {
     void restore();
 
     /**
+     * @brief Check if the window is maximized
+     *
+     * @return True if the window is maximized
+     */
+    bool isMaximized() const;
+
+    /**
      * @brief Maximize the window
      */
     void maximize();
