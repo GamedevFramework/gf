@@ -265,6 +265,7 @@ inline namespace v1 {
    * @ingroup core
    * @brief An implemntation of a R* tree
    *
+   * More precisely, this class implements the [Revised R* tree](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.367.7273&rep=rep1&type=pdf).
    *
    * @sa gf::QuadTree
    * @sa [R* tree - Wikipedia](https://en.wikipedia.org/wiki/R*_tree)
