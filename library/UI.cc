@@ -453,6 +453,18 @@ inline namespace v1 {
 
   }
 
+  void UI::setCharacterSize(unsigned characterSize) {
+    gf::Font& font = *m_impl->font;
+    font.generateTexture(characterSize);
+    auto texture = static_cast<const void *>(font.getTexture(characterSize));
+    assert(texture);
+
+    auto user = &m_impl->user;
+    user->height = static_cast<float>(characterSize);
+    user->texture.ptr = const_cast<void *>(texture);
+  }
+
+
   bool UI::begin(const std::string& title, const RectF& bounds, UIWindowFlags flags) {
     setState(State::Setup);
     return nk_begin(&m_impl->ctx, title.c_str(), { bounds.left, bounds.top, bounds.width, bounds.height }, flags.getValue()) != 0;
