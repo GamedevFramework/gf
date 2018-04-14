@@ -32,15 +32,32 @@ namespace gf {
 inline namespace v1 {
 #endif
 
+  /**
+   * @ingroup core
+   * @brief A reference to an edge (two points)
+   */
   template<typename T>
   class EdgeRef {
   public:
+    /**
+     * @brief Constructor with two points
+     *
+     * The address of the points must not change while the edge is alive.
+     *
+     * @param p0 The first point
+     * @param p1 The second point
+     */
     EdgeRef(const T& p0, const T& p1)
     : m_points{ &p0, &p1 }
     {
 
     }
 
+    /**
+     * @brief Access the points of the edge
+     *
+     * @param index The index of the point (@f$ 0 @f$ or @f$ 1 @f$)
+     */
     const T& operator[](std::size_t index) const {
       return *m_points[index];
     }
@@ -49,19 +66,42 @@ inline namespace v1 {
     const T *m_points[2];
   };
 
+  /**
+   * @ingroup core
+   * @brief A reference to a triangle (three points)
+   */
   template<typename T>
   class TriangleRef {
   public:
+    /**
+     * @brief Constructor with two points
+     *
+     * The address of the points must not change while the triangle is alive.
+     *
+     * @param p0 The first point
+     * @param p1 The second point
+     * @param p2 The third point
+     */
     TriangleRef(T& p0, T& p1, T& p2)
     : m_points{ &p0, &p1, &p2 }
     {
 
     }
 
+    /**
+     * @brief Access the points of the triangle
+     *
+     * @param index The index of the point (@f$ 0 @f$ or @f$ 1 @f$ or @f$ 2 @f$)
+     */
     const T& operator[](std::size_t index) const {
       return *m_points[index];
     }
 
+    /**
+     * @brief Access the points of the triangle
+     *
+     * @param index The index of the point (@f$ 0 @f$ or @f$ 1 @f$ or @f$ 2 @f$)
+     */
     T& operator[](std::size_t index) {
       return *m_points[index];
     }
@@ -70,6 +110,13 @@ inline namespace v1 {
     T *m_points[3];
   };
 
+  /**
+   * @ingroup core
+   * @brief Compute a Delaunay triangulation of a set of points
+   *
+   * @param points The set of points
+   * @returns A set of triangles refering to the original points
+   */
   GF_API std::vector<TriangleRef<const Vector2f>> triangulation(ArrayRef<Vector2f> points);
 
 //   GF_API std::vector<TriangleRef<const Vector2f>> triangulationConstrained(ArrayRef<Vector2f> points, ArrayRef<EdgeRef<Vector2f>> contrainedEdges);
