@@ -842,7 +842,7 @@ inline namespace v1 {
      *
      * @param title The title of the radio button
      * @param active A boolean that indicates if the radio is chosen
-     * @returns True if the radio is pressed
+     * @returns True if the radio is selected
      *
      * @sa radio()
      */
@@ -853,7 +853,7 @@ inline namespace v1 {
      *
      * @param title The title of the radio button
      * @param active A reference to the state of the radio
-     * @returns True if the radio is pressed
+     * @returns True if the radio is selected
      *
      * @sa option()
      */
