@@ -44,6 +44,18 @@ namespace gf {
 inline namespace v1 {
 #endif
 
+  enum class SpatialStructureType {
+    Object,
+    Node,
+  };
+
+  template<typename U, std::size_t N>
+  struct SpatialStructure {
+    Box<U, N> bounds;
+    SpatialStructureType type;
+    int level;
+  };
+
   /**
    * @ingroup core
    * @brief A kind of spatial query
@@ -110,6 +122,13 @@ inline namespace v1 {
      */
     void clear() {
       m_root.clear();
+    }
+
+
+    std::vector<SpatialStructure<U, 2>> getStructure() const {
+      std::vector<SpatialStructure<U, 2>> structures;
+      m_root.appendToStructure(structures, 0);
+      return structures;
     }
 
   private:
@@ -208,6 +227,20 @@ inline namespace v1 {
 
         // no need to explicitly clear children
         m_children = nullptr;
+      }
+
+      void appendToStructure(std::vector<SpatialStructure<T, 2>>& structures, int level) const {
+        structures.push_back({ m_bounds, SpatialStructureType::Node, level });
+
+        for (auto& entry : m_entries) {
+          structures.push_back( { entry.bounds, SpatialStructureType::Object, level });
+        }
+
+        if (m_children) {
+          for (std::size_t i = 0; i < 4; ++i) {
+            m_children[i].appendToStructure(structures, level + 1);
+          }
+        }
       }
 
     private:
@@ -399,6 +432,12 @@ inline namespace v1 {
       m_root = new Leaf;
     }
 
+    std::vector<SpatialStructure<U, N>> getStructure() const {
+      std::vector<SpatialStructure<U, N>> structures;
+      m_root->appendToStructure(structures, 0);
+      return structures;
+    }
+
   private:
     static constexpr std::size_t Size = MaxSize + 1;
 
@@ -447,6 +486,8 @@ inline namespace v1 {
 
       virtual Box<U, N> computeBounds() const = 0;
 
+      virtual void appendToStructure(std::vector<SpatialStructure<U, N>>& structures, int level) const = 0;
+
     protected:
       enum SplitOrder {
         Min,
@@ -480,22 +521,24 @@ inline namespace v1 {
       virtual std::size_t query(const Box<U, N>& bounds, SpatialQueryCallback<T>& callback, SpatialQuery kind) const override {
         std::size_t found = 0;
 
-        for (auto& entry : m_entries) {
-          switch (kind) {
-            case SpatialQuery::Contain:
+        switch (kind) {
+          case SpatialQuery::Contain:
+            for (auto& entry : m_entries) {
               if (bounds.contains(entry.bounds)) {
                 callback(entry.value);
                 ++found;
               }
-              break;
+            }
+            break;
 
-            case SpatialQuery::Intersect:
+          case SpatialQuery::Intersect:
+            for (auto& entry : m_entries) {
               if (bounds.intersects(entry.bounds)) {
                 callback(entry.value);
                 ++found;
               }
-              break;
-          }
+            }
+            break;
         }
 
         return found;
@@ -516,6 +559,12 @@ inline namespace v1 {
         }
 
         return res;
+      }
+
+      virtual void appendToStructure(std::vector<SpatialStructure<U, N>>& structures, int level) const override {
+        for (auto& entry : m_entries) {
+          structures.push_back({ entry.bounds, SpatialStructureType::Object, level });
+        }
       }
 
       Leaf *tryInsert(const T& value, const Box<U, N>& bounds) {
@@ -852,6 +901,13 @@ inline namespace v1 {
         }
 
         return res;
+      }
+
+      virtual void appendToStructure(std::vector<SpatialStructure<U, N>>& structures, int level) const override {
+        for (auto& entry : m_entries) {
+          structures.push_back({ entry.bounds, SpatialStructureType::Node, level });
+          entry.child->appendToStructure(structures, level + 1);
+        }
       }
 
       void updateBoundsForChild(const Box<U, N>& bounds, Node *child) {
