@@ -117,7 +117,7 @@ inline namespace v1 {
 
     constexpr bool intersects(const Box<T, N>& other) const noexcept {
       for (std::size_t i = 0; i < N; ++i) {
-        if (!(min[i] <= other.max[i] && other.min[i] <= max[i])) {
+        if (!(min[i] < other.max[i] && other.min[i] < max[i])) {
           return false;
         }
       }

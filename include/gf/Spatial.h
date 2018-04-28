@@ -229,7 +229,7 @@ inline namespace v1 {
         m_children = nullptr;
       }
 
-      void appendToStructure(std::vector<SpatialStructure<T, 2>>& structures, int level) const {
+      void appendToStructure(std::vector<SpatialStructure<U, 2>>& structures, int level) const {
         structures.push_back({ m_bounds, SpatialStructureType::Node, level });
 
         for (auto& entry : m_entries) {
