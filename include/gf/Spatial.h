@@ -101,8 +101,14 @@ inline namespace v1 {
      * @param bounds The bounds of the object
      * @returns True if the object has been inserted
      */
-    bool insert(const T& value, const Box<U, 2>& bounds) {
-      return m_root.insert(value, bounds);
+    bool insert(T value, const Box<U, 2>& bounds) {
+      Node *node = m_root.chooseNode(bounds);
+
+      if (node == nullptr) {
+        return false;
+      }
+
+      return node->insert(std::move(value), bounds);
     }
 
     /**
@@ -156,35 +162,37 @@ inline namespace v1 {
         return m_children == nullptr;
       }
 
-      bool insert(const T& value, const Box<U, 2>& bounds) {
+      Node *chooseNode(const Box<U, 2>& bounds) {
         if (!m_bounds.contains(bounds)) {
-          return false;
+          return nullptr;
         }
 
         if (isLeaf()) {
           if (m_entries.size() < Size) {
-            m_entries.push_back({ value, bounds });
-            return true;
+            return this;
           }
 
           subdivide();
 
           // try again
           if (m_entries.size() < Size) {
-            m_entries.push_back({ value, bounds });
-            return true;
+            return this;
           }
         }
 
         for (std::size_t i = 0; i < 4; ++i) {
-          if (m_children[i].insert(value, bounds)) {
-            return true;
+          if (m_children[i].chooseNode(bounds) != nullptr) {
+            return &m_children[i];
           }
         }
 
         clearChildrenIfEmpty();
 
-        m_entries.push_back({ value, bounds });
+        return this;
+      }
+
+      bool insert(T&& value, const Box<U, 2>& bounds) {
+        m_entries.push_back({ std::move(value), bounds });
         return true;
       }
 
@@ -258,14 +266,15 @@ inline namespace v1 {
           bool inserted = false;
 
           for (std::size_t i = 0; i < 4; ++i) {
-            if (m_children[i].insert(entry.value, entry.bounds)) {
+            if (m_children[i].m_bounds.contains(entry.bounds)) {
+              m_children[i].m_entries.push_back(std::move(entry));
               inserted = true;
               break;
             }
           }
 
           if (!inserted) {
-            entries.push_back(entry);
+            entries.push_back(std::move(entry));
           }
         }
 
@@ -358,10 +367,10 @@ inline namespace v1 {
      * @param bounds The bounds of the object
      * @returns True if the object has been inserted
      */
-    bool insert(const T& value, const Box<U, N>& bounds) {
+    bool insert(T value, const Box<U, N>& bounds) {
       Leaf *leaf = m_root->chooseSubtree(bounds);
 
-      Node *splitted = leaf->tryInsert(value, bounds);
+      Node *splitted = leaf->tryInsert(std::move(value), bounds);
       Node *current = leaf;
 
       while (splitted != nullptr) {
@@ -567,10 +576,10 @@ inline namespace v1 {
         }
       }
 
-      Leaf *tryInsert(const T& value, const Box<U, N>& bounds) {
+      Leaf *tryInsert(T&& value, const Box<U, N>& bounds) {
         LeafEntry entry;
         entry.bounds = bounds;
-        entry.value = value;
+        entry.value = std::move(value);
         m_entries.push_back(std::move(entry));
 
         if (m_entries.size() < Size) {
