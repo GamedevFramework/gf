@@ -180,7 +180,7 @@ else()
     # priv
     priv/Debug.cc
     # vendor
-    vendor/tinyxml2/tinyxml2.cpp
+    vendor/pugixml/src/pugixml.cpp
     vendor/glad/src/glad.cc
   )
 endif()
