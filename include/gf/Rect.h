@@ -27,6 +27,7 @@
 #include <cstddef>
 #include <algorithm>
 
+#include "Anchor.h"
 #include "Portability.h"
 #include "Vector.h"
 
@@ -198,13 +199,38 @@ inline namespace v1 {
       return width == 0 || height == 0;
     }
 
+    constexpr Vector<T, 2> getPositionFromAnchor(Anchor anchor) const noexcept {
+      switch (anchor) {
+        case Anchor::TopLeft:
+          return { left, top };
+        case Anchor::TopCenter:
+          return { left + width / 2, top };
+        case Anchor::TopRight:
+          return { left + width, top };
+        case Anchor::CenterLeft:
+          return { left, top + height / 2 };
+        case Anchor::Center:
+          return { left + width / 2, top + height / 2 };
+        case Anchor::CenterRight:
+          return { left + width, top + height / 2 };
+        case Anchor::BottomLeft:
+          return { left, top + height };
+        case Anchor::BottomCenter:
+          return { left + width / 2, top + height };
+        case Anchor::BottomRight:
+          return { left + width, top + height };
+      }
+
+      return { left, top };
+    }
+
     /**
      * @brief Get the center of the rectangle
      *
      * @return The center of the rectangle
      */
     constexpr Vector<T, 2> getCenter() const noexcept {
-      return { left + width / 2, top + height / 2 };
+      return getPositionFromAnchor(Anchor::Center);
     }
 
     /**
@@ -213,7 +239,7 @@ inline namespace v1 {
      * @return The top left corner
      */
     constexpr Vector<T, 2> getTopLeft() const noexcept {
-      return { left, top };
+      return getPositionFromAnchor(Anchor::TopLeft);
     }
 
     /**
@@ -222,7 +248,7 @@ inline namespace v1 {
      * @return The top right corner
      */
     constexpr Vector<T, 2> getTopRight() const noexcept {
-      return { left + width, top };
+      return getPositionFromAnchor(Anchor::TopRight);
     }
 
     /**
@@ -231,7 +257,7 @@ inline namespace v1 {
      * @return The bottom left corner
      */
     constexpr Vector<T, 2> getBottomLeft() const noexcept {
-      return { left, top + height };
+      return getPositionFromAnchor(Anchor::BottomLeft);
     }
 
     /**
@@ -240,7 +266,7 @@ inline namespace v1 {
      * @return The bottom right corner
      */
     constexpr Vector<T, 2> getBottomRight() const noexcept {
-      return { left + width, top + height };
+      return getPositionFromAnchor(Anchor::BottomRight);
     }
 
 
