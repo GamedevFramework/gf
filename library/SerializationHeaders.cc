@@ -48,6 +48,18 @@ inline namespace v1 {
     return ar;
   }
 
+  Serializer& operator|(Serializer& ar, SerialUserTypeHeader header)  {
+    ar.writeArrayHeader(header.fields);
+    return ar;
+  }
+
+  Deserializer& operator|(Deserializer& ar, SerialUserTypeHeader& header) {
+    ar.readArrayHeader(header.fields);
+    return ar;
+  }
+
+
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif

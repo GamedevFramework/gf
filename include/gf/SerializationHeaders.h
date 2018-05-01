@@ -73,6 +73,27 @@ inline namespace v1 {
    */
   GF_API Deserializer& operator|(Deserializer& ar, SerialMapHeader& header);
 
+  /**
+   * @ingroup game
+   * @brief A header for type serialization
+   */
+  struct SerialUserTypeHeader {
+    uint32_t fields; ///< The number of fields in the type
+  };
+
+  /**
+   * @relates Serializer
+   * @brief Serialize a type header
+   */
+  GF_API Serializer& operator|(Serializer& ar, SerialUserTypeHeader header);
+
+  /**
+   * @relates Deserializer
+   * @brief Deserialize a type header
+   */
+  GF_API Deserializer& operator|(Deserializer& ar, SerialUserTypeHeader& header);
+
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif
