@@ -253,6 +253,31 @@ TEST(SerialTest, Unsigned64) {
 
 }
 
+TEST(SerialTest, Enum) {
+  gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
+
+  enum class Foo {
+    Bar,
+    Baz,
+    Qux = 42,
+  };
+
+  Foo tests[] = {
+    Foo::Bar,
+    Foo::Baz,
+    Foo::Qux,
+  };
+
+  Foo out;
+
+  for (auto in : tests) {
+    {  gf::Serializer ar(filename); ar | in; }
+    {  gf::Deserializer ar(filename); ar | out; }
+    EXPECT_EQ(in, out);
+  }
+
+}
+
 TEST(SerialTest, Float) {
   gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
 
