@@ -173,7 +173,7 @@ inline namespace v1 {
     ar.writeArrayHeader(static_cast<uint32_t>(N));
 
     for (auto& item : array) {
-      ar | item;
+      ar | const_cast<T&>(item);
     }
 
     return ar;
@@ -189,7 +189,7 @@ inline namespace v1 {
     ar.writeArrayHeader(static_cast<uint32_t>(array.size()));
 
     for (auto& item : array) {
-      ar | item;
+      ar | const_cast<T&>(item);
     }
 
     return ar;
@@ -205,7 +205,7 @@ inline namespace v1 {
     ar.writeArrayHeader(static_cast<uint32_t>(array.size()));
 
     for (auto& item : array) {
-      ar | item;
+      ar | const_cast<T&>(item);
     }
 
     return ar;
@@ -221,7 +221,7 @@ inline namespace v1 {
     ar.writeMapHeader(static_cast<uint32_t>(map.size()));
 
     for (auto& item : map) {
-      ar | item.first | item.second;
+      ar | const_cast<K&>(item.first) | const_cast<V&>(item.second);
     }
 
     return ar;
@@ -237,7 +237,7 @@ inline namespace v1 {
     ar.writeMapHeader(static_cast<uint32_t>(map.size()));
 
     for (auto& item : map) {
-      ar | item.first | item.second;
+      ar | const_cast<K&>(item.first) | const_cast<V&>(item.second);
     }
 
     return ar;
