@@ -463,6 +463,87 @@ TEST(SerialTest, Array) {
 
 }
 
+TEST(SerialTest, Set) {
+  gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
+
+  std::set<std::string> tests1[] = {
+    { },
+    { "First" "Second" },
+    { },
+    { },
+    { },
+    { },
+  };
+
+  for (int32_t i = 0; i < 16; ++i) {
+    tests1[2].emplace(std::to_string(i));
+  }
+
+  for (int32_t i = 0; i < 17; ++i) {
+    tests1[3].emplace(std::to_string(i));
+  }
+
+  for (int32_t i = 0; i < UINT8_MAX + 1; ++i) {
+    tests1[4].emplace(std::to_string(i));
+  }
+
+  std::set<std::string> out1;
+
+  for (auto& in1 : tests1) {
+    {  gf::Serializer ar(filename); ar | in1; }
+    {  gf::Deserializer ar(filename); ar | out1; }
+    EXPECT_EQ(in1, out1);
+  }
+
+  std::set<std::string> out1bis[6];
+
+  {  gf::Serializer ar(filename); ar | tests1; }
+  {  gf::Deserializer ar(filename); ar | out1bis; }
+
+  for (int i = 0; i < 6; ++i) {
+    EXPECT_EQ(tests1[i], out1bis[i]);
+  }
+
+  std::unordered_set<std::string> tests2[] = {
+    { },
+    { "First", "Second" },
+    { },
+    { },
+    { },
+    { },
+  };
+
+  for (int32_t i = 0; i < 16; ++i) {
+    tests2[2].emplace(std::to_string(i));
+  }
+
+  for (int32_t i = 0; i < 17; ++i) {
+    tests2[3].emplace(std::to_string(i));
+  }
+
+  for (int32_t i = 0; i < UINT8_MAX + 1; ++i) {
+    tests2[4].emplace(std::to_string(i));
+  }
+
+  std::unordered_set<std::string> out2;
+
+  for (auto& in2 : tests2) {
+    {  gf::Serializer ar(filename); ar | in2; }
+    {  gf::Deserializer ar(filename); ar | out2; }
+    EXPECT_EQ(in2, out2);
+  }
+
+  std::unordered_set<std::string> out2bis[6];
+
+  {  gf::Serializer ar(filename); ar | tests2; }
+  {  gf::Deserializer ar(filename); ar | out2bis; }
+
+  for (int i = 0; i < 6; ++i) {
+    EXPECT_EQ(tests2[i], out2bis[i]);
+  }
+
+}
+
 TEST(SerialTest, Map) {
   gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
 

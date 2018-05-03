@@ -26,8 +26,10 @@
 
 #include <array>
 #include <map>
+#include <set>
 #include <type_traits>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 
 #include "BufferRef.h"
@@ -205,6 +207,38 @@ inline namespace v1 {
     ar.writeArrayHeader(static_cast<uint32_t>(array.size()));
 
     for (auto& item : array) {
+      ar | const_cast<T&>(item);
+    }
+
+    return ar;
+  }
+
+  /**
+   * @relates Serializer
+   * @brief Serialize a set object
+   */
+  template<typename T>
+  inline
+  Serializer& operator|(Serializer& ar, const std::set<T>& set) {
+    ar.writeArrayHeader(static_cast<uint32_t>(set.size()));
+
+    for (auto& item : set) {
+      ar | const_cast<T&>(item);
+    }
+
+    return ar;
+  }
+
+  /**
+   * @relates Serializer
+   * @brief Serialize a set object
+   */
+  template<typename T>
+  inline
+  Serializer& operator|(Serializer& ar, const std::unordered_set<T>& set) {
+    ar.writeArrayHeader(static_cast<uint32_t>(set.size()));
+
+    for (auto& item : set) {
       ar | const_cast<T&>(item);
     }
 
@@ -419,6 +453,54 @@ inline namespace v1 {
       T item;
       ar | item;
       array.emplace_back(std::move(item));
+    }
+
+    return ar;
+  }
+
+  /**
+   * @relates Deserializer
+   * @brief Deserialize a set object
+   */
+  template<typename T>
+  inline
+  Deserializer& operator|(Deserializer& ar, std::set<T>& set) {
+    uint32_t size;
+
+    if (!ar.readArrayHeader(size)) {
+      return ar;
+    }
+
+    set.clear();
+
+    for (uint32_t i = 0; i < size; ++i) {
+      T item;
+      ar | item;
+      set.emplace(std::move(item));
+    }
+
+    return ar;
+  }
+
+  /**
+   * @relates Deserializer
+   * @brief Deserialize a set object
+   */
+  template<typename T>
+  inline
+  Deserializer& operator|(Deserializer& ar, std::unordered_set<T>& set) {
+    uint32_t size;
+
+    if (!ar.readArrayHeader(size)) {
+      return ar;
+    }
+
+    set.clear();
+
+    for (uint32_t i = 0; i < size; ++i) {
+      T item;
+      ar | item;
+      set.emplace(std::move(item));
     }
 
     return ar;
