@@ -28,7 +28,12 @@
 
 #include <SDL.h>
 
+#ifdef __APPLE__
+#include <OpenGL/gl3.h>
+#include <OpenGL/gl3ext.h>
+#else
 #include <glad/glad.h>
+#endif
 
 #include <gf/Cursor.h>
 #include <gf/Event.h>
@@ -86,9 +91,11 @@ inline namespace v1 {
         Log::error("Failed to make the context current: %s\n", SDL_GetError());
       }
 
+#ifndef __APPLE__
       if (gladLoadGLES2Loader(SDL_GL_GetProcAddress) == 0) {
         Log::error("Failed to load GLES2.\n");
       }
+#endif
 
       return context;
     }
@@ -105,9 +112,19 @@ inline namespace v1 {
     m_context = createContextFromWindow(m_window);
 
     if (m_context != nullptr) {
+      printf("glGetString(GL_VENDOR) is %s\n", glGetString(GL_VENDOR));
+      printf("glGetString(GL_RENDERER) is %s\n", glGetString(GL_RENDERER));
+      printf("glGetString(GL_VERSION) is %s\n", glGetString(GL_VERSION));
+      printf("glGetString(GL_SHADING_LANGUAGE_VERSION) is %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
+
       glCheck(glEnable(GL_BLEND));
       glCheck(glEnable(GL_SCISSOR_TEST));
       glCheck(glClear(GL_COLOR_BUFFER_BIT));
+
+      // create vao
+      unsigned int vao;
+      glGenVertexArrays(1, &vao);
+      glBindVertexArray(vao);
     }
   }
 
