@@ -297,14 +297,6 @@ inline namespace v1 {
     ));
 
     /*
-     * line width
-     */
-
-    if (states.lineWidth > 0) {
-      glCheck(glLineWidth(states.lineWidth));
-    }
-
-    /*
      * prepare data
      */
 
@@ -313,15 +305,9 @@ inline namespace v1 {
     int positionLoc = shader->getAttributeLocation("a_position");
     int colorLoc = shader->getAttributeLocation("a_color");
     int texCoordsLoc = shader->getAttributeLocation("a_texCoords");
-    
-    int vao;
-    glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &vao);
-    assert (vao);
-    //printf("current vao %d\n", vao);
 
     unsigned int vbo;
     glGenBuffers(1, &vbo);
-    assert(vbo);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
     glCheck(glEnableVertexAttribArray(positionLoc));
