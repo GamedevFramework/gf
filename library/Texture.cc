@@ -25,7 +25,13 @@
 
 #include <cassert>
 
+#ifdef __APPLE__
+#include <OpenGL/gl3.h>
+#include <OpenGL/gl3ext.h>
+#else
 #include <glad/glad.h>
+#endif
+
 
 #include <gf/Image.h>
 
@@ -82,7 +88,7 @@ inline namespace v1 {
         case BareTexture::Format::Color:
           return GL_RGBA;
         case BareTexture::Format::Alpha:
-          return GL_ALPHA;
+          return GL_RED;
       }
 
       assert(false);
@@ -189,6 +195,7 @@ inline namespace v1 {
     glCheck(glBindTexture(GL_TEXTURE_2D, m_name));
     glCheck(glTexSubImage2D(GL_TEXTURE_2D, 0, rect.left, rect.top, rect.width, rect.height, getEnum(m_format), GL_UNSIGNED_BYTE, data));
     glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, getMinFilter(m_smooth, m_mipmap)));
+    glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_A, GL_RED));
   }
 
   RectF BareTexture::computeTextureCoords(const RectU& rect) const {

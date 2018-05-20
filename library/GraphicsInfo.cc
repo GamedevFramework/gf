@@ -25,7 +25,12 @@
 #include <boost/algorithm/string/split.hpp>
 #include <boost/algorithm/string/classification.hpp>
 
+#ifdef __APPLE__
+#include <OpenGL/gl3.h>
+#include <OpenGL/gl3ext.h>
+#else
 #include <glad/glad.h>
+#endif
 
 #include <gf/Log.h>
 #include <gf/Unused.h>

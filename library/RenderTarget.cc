@@ -26,7 +26,12 @@
 #include <cassert>
 #include <cstddef>
 
+#ifdef __APPLE__
+#include <OpenGL/gl3.h>
+#include <OpenGL/gl3ext.h>
+#else
 #include <glad/glad.h>
+#endif
 
 #include <gf/Drawable.h>
 #include <gf/Image.h>
@@ -292,14 +297,6 @@ inline namespace v1 {
     ));
 
     /*
-     * line width
-     */
-
-    if (states.lineWidth > 0) {
-      glCheck(glLineWidth(states.lineWidth));
-    }
-
-    /*
      * prepare data
      */
 
@@ -308,6 +305,10 @@ inline namespace v1 {
     int positionLoc = shader->getAttributeLocation("a_position");
     int colorLoc = shader->getAttributeLocation("a_color");
     int texCoordsLoc = shader->getAttributeLocation("a_texCoords");
+
+    unsigned int vbo;
+    glGenBuffers(1, &vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
     glCheck(glEnableVertexAttribArray(positionLoc));
     glCheck(glEnableVertexAttribArray(colorLoc));
