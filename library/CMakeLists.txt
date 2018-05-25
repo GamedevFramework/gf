@@ -190,6 +190,12 @@ add_dependencies(gf0
   gf0_gamecontrollerdb
 )
 
+if (GF_BUILD_WITH_OPENGL3)
+  target_compile_definitions(gf0
+    PRIVATE GF_OPENGL3
+  )
+endif()
+
 if (GF_DEBUG)
   target_compile_definitions(gf0
     PRIVATE GF_DEBUG
