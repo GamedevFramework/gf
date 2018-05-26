@@ -86,9 +86,15 @@ inline namespace v1 {
         Log::error("Failed to make the context current: %s\n", SDL_GetError());
       }
 
+#ifdef GF_OPENGL3
+      if (gladLoadGLLoader(SDL_GL_GetProcAddress) == 0) {
+        Log::error("Failed to load GL3.\n");
+      }
+#else
       if (gladLoadGLES2Loader(SDL_GL_GetProcAddress) == 0) {
         Log::error("Failed to load GLES2.\n");
       }
+#endif
 
       return context;
     }
