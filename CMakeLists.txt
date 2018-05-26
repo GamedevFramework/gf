@@ -22,11 +22,6 @@ option(GF_SHARED "Build the library as a shared library" ON)
 
 set(BUILD_SHARED_LIBS ${GF_SHARED})
 
-if(APPLE)
-  // on macos, always use OpenGL 3.3
-  set(GF_BUILD_WITH_OPENGL3 ON)
-endif()
-
 include(GNUInstallDirs)
 set(GF_DATADIR ${CMAKE_INSTALL_FULL_DATADIR})
 
@@ -38,6 +33,12 @@ find_package(SDL2 REQUIRED)
 find_package(Boost REQUIRED COMPONENTS filesystem system)
 find_package(Freetype REQUIRED)
 find_package(ZLIB REQUIRED)
+
+if(APPLE)
+  # on macos, always use OpenGL 3.3
+  set(GF_BUILD_WITH_OPENGL3 ON)
+  find_package(OpenGL REQUIRED)
+endif()
 
 if(MSVC)
   message(STATUS "Using MSVC compiler")

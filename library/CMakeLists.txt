@@ -226,12 +226,25 @@ target_include_directories(gf0
     ${CMAKE_CURRENT_SOURCE_DIR}/vendor/glad/include
 )
 
+if (APPLE)
+  target_include_directories(gf0
+    PRIVATE
+      ${OPENGL_INCLUDE_DIR}
+  )
+endif()
+
 target_link_libraries(gf0
   ${SDL2_LIBRARY}
   ${Boost_LIBRARIES}
   ${FREETYPE_LIBRARIES}
   ${ZLIB_LIBRARIES}
 )
+
+if (APPLE)
+  target_link_libraries(gf0
+    ${OPENGL_gl_LIBRARY}
+  )
+endif()
 
 # workaround for Travis-CI
 # see: https://bugs.launchpad.net/ubuntu/+source/gcc-5/+bug/1568899
