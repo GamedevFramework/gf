@@ -174,6 +174,7 @@ else()
     Triangulation.cc
     UI.cc
     Vector.cc
+    Vertex.cc
     VertexArray.cc
     VertexBuffer.cc
     View.cc
