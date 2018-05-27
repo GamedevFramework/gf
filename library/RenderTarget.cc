@@ -172,15 +172,6 @@ inline namespace v1 {
     VertexBuffer buffer;
     buffer.load(vertices, count, type);
     draw(buffer, states);
-
-//     VertexBuffer::bind(&buffer);
-//
-//     Locations locations;
-//     drawStart(nullptr, states, locations);
-//     glCheck(glDrawArrays(getEnum(type), 0, count));
-//     drawFinish(locations);
-//
-//     VertexBuffer::bind(nullptr);
   }
 
   void RenderTarget::draw(const Vertex *vertices, const uint16_t *indices, std::size_t count, PrimitiveType type, const RenderStates& states) {
@@ -191,52 +182,6 @@ inline namespace v1 {
     VertexBuffer buffer;
     buffer.load(vertices, indices, count, type);
     draw(buffer, states);
-
-//     VertexBuffer::bind(&buffer);
-//
-//     Locations locations;
-//     drawStart(vertices, states, locations);
-//     static_assert(std::is_same<uint16_t, GLushort>::value, "GLushort is not the same as uint16_t.");
-//     glCheck(glDrawElements(getEnum(type), count, GL_UNSIGNED_SHORT, nullptr));
-//     drawFinish(locations);
-//
-//     VertexBuffer::bind(nullptr);
-  }
-
-  void RenderTarget::draw(const Vertex *vertices, int *first, const std::size_t *count, std::size_t primcount, PrimitiveType type, const RenderStates& states) {
-    if (vertices == nullptr || first == nullptr || count == nullptr || primcount == 0) {
-      return;
-    }
-
-    Locations locations;
-    drawStart(vertices, states, locations);
-
-    // simulate glMultiDrawArrays
-    for (std::size_t i = 0; i < primcount; ++i) {
-      if (count[i] > 0) {
-        glCheck(glDrawArrays(getEnum(type), first[i], count[i]));
-      }
-    }
-
-    drawFinish(locations);
-  }
-
-  void RenderTarget::draw(const Vertex *vertices, const uint16_t **indices, const std::size_t *count, std::size_t primcount, PrimitiveType type, const RenderStates& states) {
-    if (vertices == nullptr || indices == nullptr || count == nullptr || primcount == 0) {
-      return;
-    }
-
-    Locations locations;
-    drawStart(vertices, states, locations);
-
-    // simulate glMultiDrawElements
-    for (std::size_t i = 0; i < primcount; ++i) {
-      if (count[i] > 0) {
-        glCheck(glDrawElements(getEnum(type), count[i], GL_UNSIGNED_SHORT, indices[i]));
-      }
-    }
-
-    drawFinish(locations);
   }
 
   void RenderTarget::draw(const VertexBuffer& buffer, const RenderStates& states) {
@@ -247,7 +192,7 @@ inline namespace v1 {
     VertexBuffer::bind(&buffer);
 
     Locations locations;
-    drawStart(nullptr, states, locations);
+    drawStart(states, locations);
 
     if (buffer.hasElementArrayBuffer()) {
       glCheck(glDrawElements(getEnum(buffer.getPrimitiveType()), buffer.getCount(), GL_UNSIGNED_SHORT, nullptr));
@@ -260,7 +205,7 @@ inline namespace v1 {
     VertexBuffer::bind(nullptr);
   }
 
-  void RenderTarget::drawStart(const Vertex *vertices, const RenderStates& states, Locations& locations) {
+  void RenderTarget::drawStart(const RenderStates& states, Locations& locations) {
     /*
      * texture
      */
@@ -329,9 +274,9 @@ inline namespace v1 {
     glCheck(glEnableVertexAttribArray(colorLoc));
     glCheck(glEnableVertexAttribArray(texCoordsLoc));
 
-    const void *positionPointer = vertices ? &vertices[0].position : reinterpret_cast<const void *>(offsetof(Vertex, position));
-    const void *colorPointer = vertices ? &vertices[0].color : reinterpret_cast<const void *>(offsetof(Vertex, color));
-    const void *texCoordsPointer = vertices ? &vertices[0].texCoords : reinterpret_cast<const void *>(offsetof(Vertex, texCoords));
+    const void *positionPointer = reinterpret_cast<const void *>(offsetof(Vertex, position));
+    const void *colorPointer = reinterpret_cast<const void *>(offsetof(Vertex, color));
+    const void *texCoordsPointer = reinterpret_cast<const void *>(offsetof(Vertex, texCoords));
 
     glCheck(glVertexAttribPointer(positionLoc, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), positionPointer));
     glCheck(glVertexAttribPointer(colorLoc, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), colorPointer));
