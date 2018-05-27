@@ -114,7 +114,7 @@ inline namespace v1 {
     }
 
     uint16_t maxIndex = *std::max_element(indices, indices + count);
-    std::size_t vboSize = maxIndex * sizeof(Vertex);
+    std::size_t vboSize = (maxIndex + 1) * sizeof(Vertex);
 
     glCheck(glGenBuffers(1, &m_vbo));
     glCheck(glBindBuffer(GL_ARRAY_BUFFER, m_vbo));
