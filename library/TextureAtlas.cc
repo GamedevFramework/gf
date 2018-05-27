@@ -43,19 +43,23 @@ inline namespace v1 {
       return false;
     }
 
-    if (std::strcmp(doc.name(), "TextureAtlas") != 0) {
+    pugi::xml_node root = doc.child("TextureAtlas");
+
+    if (!root) {
+      Log::error("Atlas is not in the right format '%s'\n", filename.string().c_str());
       return false;
     }
 
-    Path texturePath = doc.attribute("imagePath").as_string("");
+    Path texturePath = root.attribute("imagePath").as_string("");
 
     if (texturePath.empty()) {
+      Log::error("Image path is not set in '%s'\n", filename.string().c_str());
       return false;
     }
 
     setTexturePath(texturePath);
 
-    for (pugi::xml_node sub : doc.children("SubTexture")) {
+    for (pugi::xml_node sub : root.children("SubTexture")) {
       assert(sub.attribute("name"));
       std::string name = sub.attribute("name").value();
 
