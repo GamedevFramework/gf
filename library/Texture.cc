@@ -82,7 +82,11 @@ inline namespace v1 {
         case BareTexture::Format::Color:
           return GL_RGBA;
         case BareTexture::Format::Alpha:
+#ifdef GF_OPENGL3
+          return GL_RED;
+#else
           return GL_ALPHA;
+#endif
       }
 
       assert(false);
@@ -189,6 +193,12 @@ inline namespace v1 {
     glCheck(glBindTexture(GL_TEXTURE_2D, m_name));
     glCheck(glTexSubImage2D(GL_TEXTURE_2D, 0, rect.left, rect.top, rect.width, rect.height, getEnum(m_format), GL_UNSIGNED_BYTE, data));
     glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, getMinFilter(m_smooth, m_mipmap)));
+
+#ifdef GF_OPENGL3
+    if (m_format == Format::Alpha) {
+      glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_A, GL_RED));
+    }
+#endif
   }
 
   RectF BareTexture::computeTextureCoords(const RectU& rect) const {
