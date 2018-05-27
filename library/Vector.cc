@@ -20,6 +20,8 @@
  */
 #include <gf/Vector.h>
 
+#include <type_traits>
+
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
@@ -74,6 +76,8 @@ inline namespace v1 {
   static_assert(sizeof(Color3u) == 3 * sizeof(uint8_t), "Vector size mismatch");
   static_assert(sizeof(Color4u) == 4 * sizeof(uint8_t), "Vector size mismatch");
 
+
+  static_assert(std::is_trivially_copyable<Vector2f>::value, "Vector2f should be trivially copyable");
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
