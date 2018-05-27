@@ -423,7 +423,24 @@ inline namespace v1 {
     void drawStart(const Vertex *vertices, const RenderStates& states, Locations& locations);
     void drawFinish(const Locations& locations);
 
+    class VAO {
+    public:
+      VAO();
+      ~VAO();
+      VAO(const VAO&) = delete;
+      VAO& operator=(const VAO&) = delete;
+      VAO(VAO&& other);
+      VAO& operator=(VAO&& other);
+
+      void bind();
+      void unbind();
+
+    private:
+      unsigned m_vao;
+    };
+
   private:
+    VAO m_vao;
     View m_view;
     Shader m_defaultShader;
     Shader m_defaultAlphaShader;
