@@ -23,11 +23,10 @@
  */
 #include <gf/RenderWindow.h>
 
-#include <glad/glad.h>
-
 #include <gf/Window.h>
 
 #include "priv/Debug.h"
+#include "priv/OpenGLFwd.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

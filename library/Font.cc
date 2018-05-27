@@ -25,8 +25,6 @@
 
 #include <cstring>
 
-#include <glad/glad.h>
-
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_STROKER_H
@@ -37,6 +35,7 @@
 #include <gf/VectorOps.h>
 
 #include "priv/Debug.h"
+#include "priv/OpenGLFwd.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

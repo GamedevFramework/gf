@@ -28,8 +28,6 @@
 
 #include <SDL.h>
 
-#include <glad/glad.h>
-
 #include <gf/Cursor.h>
 #include <gf/Event.h>
 #include <gf/Gamepad.h>
@@ -40,6 +38,7 @@
 #include <gf/Vector.h>
 
 #include "priv/Debug.h"
+#include "priv/OpenGLFwd.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -86,6 +85,7 @@ inline namespace v1 {
         Log::error("Failed to make the context current: %s\n", SDL_GetError());
       }
 
+#ifndef __APPLE__
 #ifdef GF_OPENGL3
       if (gladLoadGLLoader(SDL_GL_GetProcAddress) == 0) {
         Log::error("Failed to load GL3.\n");
@@ -94,6 +94,7 @@ inline namespace v1 {
       if (gladLoadGLES2Loader(SDL_GL_GetProcAddress) == 0) {
         Log::error("Failed to load GLES2.\n");
       }
+#endif
 #endif
 
       return context;

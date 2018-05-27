@@ -26,8 +26,6 @@
 #include <cassert>
 #include <cstddef>
 
-#include <glad/glad.h>
-
 #include <gf/Drawable.h>
 #include <gf/Image.h>
 #include <gf/Log.h>
@@ -36,6 +34,7 @@
 #include <gf/VertexBuffer.h>
 
 #include "priv/Debug.h"
+#include "priv/OpenGLFwd.h"
 
 #include "generated/default_alpha.frag.h"
 #include "generated/default.frag.h"

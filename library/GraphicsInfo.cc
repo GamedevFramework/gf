@@ -25,12 +25,11 @@
 #include <boost/algorithm/string/split.hpp>
 #include <boost/algorithm/string/classification.hpp>
 
-#include <glad/glad.h>
-
 #include <gf/Log.h>
 #include <gf/Unused.h>
 
 #include "priv/Debug.h"
+#include "priv/OpenGLFwd.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
