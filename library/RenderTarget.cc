@@ -244,8 +244,6 @@ inline namespace v1 {
       return;
     }
 
-    m_vao.bind();
-
     VertexBuffer::bind(&buffer);
 
     Locations locations;
@@ -495,51 +493,6 @@ inline namespace v1 {
 
     m_defaultTexture.loadFromImage(image);
     m_defaultTexture.setRepeated(true);
-  }
-
-
-  RenderTarget::VAO::VAO()
-  {
-#ifdef GF_OPENGL3
-    glCheck(glGenVertexArrays(1, &m_vao));
-    bind();
-#endif
-  }
-
-  RenderTarget::VAO::~VAO() {
-#ifdef GF_OPENGL3
-  if (m_vao != 0) {
-    unbind();
-    glCheck(glDeleteVertexArrays(1, &m_vao));
-  }
-#endif
-  }
-
-  RenderTarget::VAO::VAO(VAO&& other)
-#ifdef GF_OPENGL3
-  : m_vao(std::exchange(other.m_vao, 0))
-#endif
-  {
-
-  }
-
-  auto RenderTarget::VAO::operator=(VAO&& other) -> VAO& {
-#ifdef GF_OPENGL3
-    std::swap(m_vao, other.m_vao);
-#endif
-    return *this;
-  }
-
-  void RenderTarget::VAO::bind() {
-#ifdef GF_OPENGL3
-    glCheck(glBindVertexArray(m_vao));
-#endif
-  }
-
-  void RenderTarget::VAO::unbind() {
-#ifdef GF_OPENGL3
-    glCheck(glBindVertexArray(0));
-#endif
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

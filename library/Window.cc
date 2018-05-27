@@ -105,6 +105,7 @@ inline namespace v1 {
   , m_context(nullptr)
   , m_shouldClose(false)
   , m_isFullscreen(false)
+  , m_vao(0)
   {
     auto flags = getFlagsFromHints(hints);
     m_window = SDL_CreateWindow(title.getData(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, size.width, size.height, flags);
@@ -114,11 +115,18 @@ inline namespace v1 {
       glCheck(glEnable(GL_BLEND));
       glCheck(glEnable(GL_SCISSOR_TEST));
       glCheck(glClear(GL_COLOR_BUFFER_BIT));
+
+#ifdef GF_OPENGL3
+      glCheck(glGenVertexArrays(1, &m_vao));
+      glCheck(glBindVertexArray(m_vao));
+#endif
     }
   }
 
   Window::~Window() {
     if (m_context != nullptr) {
+      glCheck(glBindVertexArray(0));
+      glCheck(glDeleteVertexArrays(1, &m_vao));
       SDL_GL_DeleteContext(m_context);
     }
 
