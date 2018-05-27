@@ -126,8 +126,10 @@ inline namespace v1 {
 
   Window::~Window() {
     if (m_context != nullptr) {
+#ifdef GF_OPENGL3
       glCheck(glBindVertexArray(0));
       glCheck(glDeleteVertexArrays(1, &m_vao));
+#endif
       SDL_GL_DeleteContext(m_context);
     }
 
