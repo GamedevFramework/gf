@@ -124,6 +124,7 @@
 #include "Triangulation.cc"
 #include "UI.cc"
 #include "Vector.cc"
+#include "Vertex.cc"
 #include "VertexArray.cc"
 #include "VertexBuffer.cc"
 #include "View.cc"
@@ -136,5 +137,10 @@
 
 #include "priv/Debug.cc"
 
-#include "vendor/tinyxml2/tinyxml2.cpp"
-#include "vendor/glad/src/glad.cc"
+#include "vendor/pugixml/src/pugixml.cpp"
+
+#ifdef GF_OPENGL3
+#include "vendor/glad/gl33/src/glad.cc"
+#else
+#include "vendor/glad/gles20/src/glad.cc"
+#endif

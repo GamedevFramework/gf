@@ -25,9 +25,8 @@
 
 #include <cassert>
 
-#include <glad/glad.h>
-
 #include "priv/Debug.h"
+#include "priv/OpenGLFwd.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

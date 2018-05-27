@@ -17,43 +17,17 @@
  * 2. Altered source versions must be plainly marked as such, and must not be
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
- *
- * Part of this file comes from SFML, with the same license:
- * Copyright (C) 2007-2015 Laurent Gomila (laurent@sfml-dev.org)
  */
-#include <gf/RenderWindow.h>
+#include <gf/Vertex.h>
 
-#include <gf/Window.h>
-
-#include "priv/Debug.h"
-#include "priv/OpenGLFwd.h"
+#include <type_traits>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
 #endif
 
-  RenderWindow::RenderWindow(Window& window)
-  : m_window(window)
-  {
-    initialize();
-  }
-
-  Vector2u RenderWindow::getSize() const {
-    return m_window.getFramebufferSize();
-  }
-
-  void RenderWindow::setActive() {
-     glCheck(glBindFramebuffer(GL_FRAMEBUFFER, 0));
-  }
-
-  void RenderWindow::display() {
-    m_window.display();
-  }
-
-  Image RenderWindow::capture() const {
-    return captureFramebuffer(0);
-  }
+  static_assert(std::is_trivially_copyable<Vertex>::value, "Vertex should be trivially copyable");
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

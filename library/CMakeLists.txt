@@ -62,6 +62,14 @@ add_custom_target(gf0_shader_headers ALL DEPENDS ${SHADER_HEADERS})
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h @ONLY)
 
+if (GF_BUILD_WITH_OPENGL3)
+  set(GF_GLAD_SRC "vendor/glad/gl33/src/glad.cc")
+  set(GF_GLAD_INCLUDE_DIR "vendor/glad/gl33/include")
+else()
+  set(GF_GLAD_SRC "vendor/glad/gles20/src/glad.cc")
+  set(GF_GLAD_INCLUDE_DIR "vendor/glad/gles20/include")
+endif()
+
 if (GF_SINGLE_COMPILTATION_UNIT)
   add_library(gf0
     XUnityBuild.cc
@@ -166,6 +174,7 @@ else()
     Triangulation.cc
     UI.cc
     Vector.cc
+    Vertex.cc
     VertexArray.cc
     VertexBuffer.cc
     View.cc
@@ -181,7 +190,7 @@ else()
     priv/Debug.cc
     # vendor
     vendor/pugixml/src/pugixml.cpp
-    vendor/glad/src/glad.cc
+    ${GF_GLAD_SRC}
   )
 endif()
 
@@ -189,6 +198,12 @@ add_dependencies(gf0
   gf0_shader_headers
   gf0_gamecontrollerdb
 )
+
+if (GF_BUILD_WITH_OPENGL3)
+  target_compile_definitions(gf0
+    PRIVATE GF_OPENGL3
+  )
+endif()
 
 if (GF_DEBUG)
   target_compile_definitions(gf0
@@ -217,8 +232,17 @@ target_include_directories(gf0
     ${FREETYPE_INCLUDE_DIRS}
     ${ZLIB_INCLUDE_DIRS}
     ${CMAKE_CURRENT_BINARY_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/vendor/glad/include
+    "${CMAKE_CURRENT_SOURCE_DIR}/${GF_GLAD_INCLUDE_DIR}"
 )
+
+
+
+if (APPLE)
+  target_include_directories(gf0
+    PRIVATE
+      ${OPENGL_INCLUDE_DIR}
+  )
+endif()
 
 target_link_libraries(gf0
   ${SDL2_LIBRARY}
@@ -226,6 +250,12 @@ target_link_libraries(gf0
   ${FREETYPE_LIBRARIES}
   ${ZLIB_LIBRARIES}
 )
+
+if (APPLE)
+  target_link_libraries(gf0
+    ${OPENGL_gl_LIBRARY}
+  )
+endif()
 
 # workaround for Travis-CI
 # see: https://bugs.launchpad.net/ubuntu/+source/gcc-5/+bug/1568899

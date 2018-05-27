@@ -28,8 +28,6 @@
 
 #include <SDL.h>
 
-#include <glad/glad.h>
-
 #include <gf/Cursor.h>
 #include <gf/Event.h>
 #include <gf/Gamepad.h>
@@ -40,6 +38,7 @@
 #include <gf/Vector.h>
 
 #include "priv/Debug.h"
+#include "priv/OpenGLFwd.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -86,9 +85,17 @@ inline namespace v1 {
         Log::error("Failed to make the context current: %s\n", SDL_GetError());
       }
 
+#ifndef __APPLE__
+#ifdef GF_OPENGL3
+      if (gladLoadGLLoader(SDL_GL_GetProcAddress) == 0) {
+        Log::error("Failed to load GL3.\n");
+      }
+#else
       if (gladLoadGLES2Loader(SDL_GL_GetProcAddress) == 0) {
         Log::error("Failed to load GLES2.\n");
       }
+#endif
+#endif
 
       return context;
     }
@@ -99,6 +106,7 @@ inline namespace v1 {
   , m_context(nullptr)
   , m_shouldClose(false)
   , m_isFullscreen(false)
+  , m_vao(0)
   {
     auto flags = getFlagsFromHints(hints);
     m_window = SDL_CreateWindow(title.getData(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, size.width, size.height, flags);
@@ -108,11 +116,18 @@ inline namespace v1 {
       glCheck(glEnable(GL_BLEND));
       glCheck(glEnable(GL_SCISSOR_TEST));
       glCheck(glClear(GL_COLOR_BUFFER_BIT));
+
+#ifdef GF_OPENGL3
+      glCheck(glGenVertexArrays(1, &m_vao));
+      glCheck(glBindVertexArray(m_vao));
+#endif
     }
   }
 
   Window::~Window() {
     if (m_context != nullptr) {
+      glCheck(glBindVertexArray(0));
+      glCheck(glDeleteVertexArrays(1, &m_vao));
       SDL_GL_DeleteContext(m_context);
     }
 
