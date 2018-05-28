@@ -22,6 +22,7 @@
 #define GF_DATA_OBJECT_H
 
 #include <cstdint>
+#include <cstddef>
 
 #include "Portability.h"
 
