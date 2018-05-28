@@ -35,6 +35,7 @@
 #include <gf/Log.h>
 #include <gf/Mouse.h>
 #include <gf/Sleep.h>
+#include <gf/Unused.h>
 #include <gf/Vector.h>
 
 #include "priv/Debug.h"
@@ -120,6 +121,8 @@ inline namespace v1 {
 #ifdef GF_OPENGL3
       glCheck(glGenVertexArrays(1, &m_vao));
       glCheck(glBindVertexArray(m_vao));
+#else
+      gf::unused(m_vao);
 #endif
     }
   }
@@ -279,6 +282,7 @@ inline namespace v1 {
 #if SDL_VERSION_ATLEAST(2,0,5)
     SDL_SetWindowResizable(m_window, resizable ? SDL_TRUE : SDL_FALSE);
 #else
+    gf::unused(resizable);
     Log::error("Window can not be set resizable. You must compile with SDL 2.0.5 at least.\n");
 #endif
   }
