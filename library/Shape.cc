@@ -92,13 +92,13 @@ inline namespace v1 {
 
   void Shape::draw(RenderTarget& target, RenderStates states) {
     states.transform *= getTransform();
-    states.texture = m_texture;
 
     if (m_outlineThickness > 0.0f) {
       states.texture = nullptr;
       target.draw(m_outlineVertices, states);
     }
 
+    states.texture = m_texture;
     target.draw(m_vertices, states);
   }
 

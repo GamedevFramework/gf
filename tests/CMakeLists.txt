@@ -40,3 +40,9 @@ add_executable(bug6
 
 target_link_libraries(bug6 gf0)
 
+add_executable(bug23
+  EXCLUDE_FROM_ALL
+  bugs/bug23.cc
+)
+
+target_link_libraries(bug23 gf0)
