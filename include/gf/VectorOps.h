@@ -22,6 +22,7 @@
 #define GF_VECTOR_OPS_H
 
 #include <cmath>
+#include <cstdlib>
 #include <algorithm>
 #include <type_traits>
 
