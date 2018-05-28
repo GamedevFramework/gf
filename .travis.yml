@@ -47,7 +47,7 @@ branches:
     - develop
 
 before_install:
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew update && brew install cmake boost freetype sdl2 zlib ; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew update && brew bundle ; fi
 before_script:
   - mkdir build
   - cd build
