@@ -139,8 +139,10 @@
 
 #include "vendor/pugixml/src/pugixml.cpp"
 
+#ifndef __APPLE__
 #ifdef GF_OPENGL3
 #include "vendor/glad/gl33/src/glad.cc"
 #else
 #include "vendor/glad/gles20/src/glad.cc"
+#endif
 #endif

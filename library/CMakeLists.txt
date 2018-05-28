@@ -62,12 +62,14 @@ add_custom_target(gf0_shader_headers ALL DEPENDS ${SHADER_HEADERS})
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h @ONLY)
 
-if (GF_BUILD_WITH_OPENGL3)
-  set(GF_GLAD_SRC "vendor/glad/gl33/src/glad.cc")
-  set(GF_GLAD_INCLUDE_DIR "vendor/glad/gl33/include")
-else()
-  set(GF_GLAD_SRC "vendor/glad/gles20/src/glad.cc")
-  set(GF_GLAD_INCLUDE_DIR "vendor/glad/gles20/include")
+if (NOT APPLE)
+  if (GF_BUILD_WITH_OPENGL3)
+    set(GF_GLAD_SRC "vendor/glad/gl33/src/glad.cc")
+    set(GF_GLAD_INCLUDE_DIR "vendor/glad/gl33/include")
+  else()
+    set(GF_GLAD_SRC "vendor/glad/gles20/src/glad.cc")
+    set(GF_GLAD_INCLUDE_DIR "vendor/glad/gles20/include")
+  endif()
 endif()
 
 if (GF_SINGLE_COMPILTATION_UNIT)
@@ -232,15 +234,17 @@ target_include_directories(gf0
     ${FREETYPE_INCLUDE_DIRS}
     ${ZLIB_INCLUDE_DIRS}
     ${CMAKE_CURRENT_BINARY_DIR}
-    "${CMAKE_CURRENT_SOURCE_DIR}/${GF_GLAD_INCLUDE_DIR}"
 )
-
-
 
 if (APPLE)
   target_include_directories(gf0
     PRIVATE
       ${OPENGL_INCLUDE_DIR}
+  )
+else()
+  target_include_directories(gf0
+    PRIVATE
+      "${CMAKE_CURRENT_SOURCE_DIR}/${GF_GLAD_INCLUDE_DIR}"
   )
 endif()
 
