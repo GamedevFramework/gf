@@ -698,7 +698,7 @@ inline namespace v1 {
             tmx->valign = TmxText::VAlign::Top;
           } else if (valign == "center") {
             tmx->valign = TmxText::VAlign::Center;
-          } else if (valign == "valign", "right") {
+          } else if (valign == "right") {
             tmx->valign = TmxText::VAlign::Bottom;
           } else {
             Log::error("Wrong valign string: '%s'\n", valign.c_str());
