@@ -32,8 +32,6 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  struct DataObject;
-
   /**
    * @ingroup game
    * @brief A serializer to a binary file
@@ -51,7 +49,7 @@ inline namespace v1 {
      *
      * @param filename The name of the binary file
      */
-    Serializer(const Path& filename);
+    Serializer(const Path& filename, uint16_t version = 0);
 
     /**
      * @brief Write a null object
@@ -235,13 +233,6 @@ inline namespace v1 {
     bool readExtension(uint8_t *data, uint32_t size);
 
 
-    /**
-     * @brief Read a data object
-     *
-     * @returns True if there was no error while reading
-     */
-    bool readDataObject(DataObject& object);
-
   private:
     bool readRawInt8(uint64_t& raw);
     bool readRawInt16(uint64_t& raw);
@@ -251,12 +242,6 @@ inline namespace v1 {
     bool readSize8(uint32_t& size);
     bool readSize16(uint32_t& size);
     bool readSize32(uint32_t& size);
-
-    bool readDataObjectMap(DataObject& object);
-    bool readDataObjectArray(DataObject& object);
-    bool readDataObjectString(DataObject& object);
-    bool readDataObjectBinary(DataObject& object);
-    bool readDataObjectExtension(DataObject& object);
 
   private:
     bool readBigEndian64(uint64_t& data);

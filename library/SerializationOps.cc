@@ -22,7 +22,6 @@
 
 #include <cinttypes>
 
-#include <gf/DataObject.h>
 #include <gf/Log.h>
 
 namespace gf {
@@ -109,65 +108,6 @@ inline namespace v1 {
     return ar;
   }
 
-  Serializer& operator|(Serializer& ar, const DataObject& object) {
-    switch (object.type) {
-      case DataType::Nil:
-        ar.writeNil();
-        break;
-
-      case DataType::Boolean:
-        ar.writeBoolean(object.boolean);
-        break;
-
-      case DataType::Signed:
-        ar.writeSigned(object.i64);
-        break;
-
-      case DataType::Unsigned:
-        ar.writeUnsigned(object.u64);
-        break;
-
-      case DataType::Float:
-        ar.writeFloat(object.f32);
-        break;
-
-      case DataType::Double:
-        ar.writeDouble(object.f64);
-        break;
-
-      case DataType::String:
-        ar.writeString(object.string.data, object.string.size);
-        break;
-
-      case DataType::Binary:
-        ar.writeBinary(object.binary.data, object.binary.size);
-        break;
-
-      case DataType::Array:
-        ar.writeArrayHeader(object.array.size);
-
-        for (auto& item : object.array) {
-          ar | item;
-        }
-
-        break;
-
-      case DataType::Map:
-        ar.writeMapHeader(object.map.size);
-
-        for (auto& item : object.map) {
-          ar | item.key | item.value;
-        }
-
-        break;
-
-      case DataType::Extension:
-        ar.writeExtension(object.extension.type, object.extension.data, object.extension.size);
-        break;
-    }
-
-    return ar;
-  }
 
   /*
    * Deserializer
@@ -374,12 +314,6 @@ inline namespace v1 {
     bin.assign(data.get(), data.get() + size);
     return ar;
   }
-
-  Deserializer& operator|(Deserializer& ar, DataObject& object) {
-    ar.readDataObject(object);
-    return ar;
-  }
-
 
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

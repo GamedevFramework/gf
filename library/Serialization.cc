@@ -24,7 +24,6 @@
 #include <cinttypes>
 #include <memory>
 
-#include <gf/DataObject.h>
 #include <gf/Log.h>
 
 namespace gf {
@@ -98,7 +97,7 @@ inline namespace v1 {
    * Deserializer
    */
 
-  Serializer::Serializer(const Path& filename)
+  Serializer::Serializer(const Path& filename, uint16_t version)
   : m_file(filename, BinaryFile::Mode::Write)
   {
 
@@ -728,94 +727,6 @@ inline namespace v1 {
     return true;
   }
 
-  bool Deserializer::readDataObject(DataObject& object) {
-    if (isEof()) {
-      Log::error("Asking for data object but the file is at the end.\n");
-      return false;
-    }
-
-    uint8_t header = getByte();
-
-    if (header <= MsgPack::PositiveFixIntLast) {
-      object.type = DataType::Unsigned;
-      return readUnsigned(object.u64);
-    }
-
-    if (header >= MsgPack::NegativeFixIntFirst) {
-      object.type = DataType::Signed;
-      return readSigned(object.i64);
-    }
-
-    if (header >= MsgPack::FixMap && header < MsgPack::FixMap + MsgPack::FixMapSizeMax) {
-      return readDataObjectMap(object);
-    }
-
-    if (header >= MsgPack::FixArray && header < MsgPack::FixArray + MsgPack::FixArraySizeMax) {
-      return readDataObjectArray(object);
-    }
-
-    if (header >= MsgPack::FixStr && header < MsgPack::FixStr + MsgPack::FixStrSizeMax) {
-      return readDataObjectString(object);
-    }
-
-    switch (header) {
-      case MsgPack::Nil:
-        object.type = DataType::Nil;
-        return readNil();
-      case MsgPack::False:
-      case MsgPack::True:
-        object.type = DataType::Boolean;
-        return readBoolean(object.boolean);
-      case MsgPack::Bin8:
-      case MsgPack::Bin16:
-      case MsgPack::Bin32:
-        return readDataObjectBinary(object);
-      case MsgPack::Ext8:
-      case MsgPack::Ext16:
-      case MsgPack::Ext32:
-      case MsgPack::FixExt1:
-      case MsgPack::FixExt2:
-      case MsgPack::FixExt4:
-      case MsgPack::FixExt8:
-      case MsgPack::FixExt16:
-        return readDataObjectExtension(object);
-      case MsgPack::Float32:
-        object.type = DataType::Float;
-        return readFloat(object.f32);
-      case MsgPack::Float64:
-        object.type = DataType::Double;
-        return readDouble(object.f64);
-      case MsgPack::UInt8:
-      case MsgPack::UInt16:
-      case MsgPack::UInt32:
-      case MsgPack::UInt64:
-        object.type = DataType::Unsigned;
-        return readUnsigned(object.u64);
-      case MsgPack::Int8:
-      case MsgPack::Int16:
-      case MsgPack::Int32:
-      case MsgPack::Int64:
-        object.type = DataType::Signed;
-        return readSigned(object.i64);
-      case MsgPack::Str8:
-      case MsgPack::Str16:
-      case MsgPack::Str32:
-        return readDataObjectString(object);
-      case MsgPack::Array16:
-      case MsgPack::Array32:
-        return readDataObjectArray(object);
-      case MsgPack::Map16:
-      case MsgPack::Map32:
-        return readDataObjectMap(object);
-      default:
-        return false;
-    }
-
-	assert(false);
-    return false;
-  }
-
-
 
 
   bool Deserializer::readRawInt8(uint64_t& raw) {
@@ -885,113 +796,6 @@ inline namespace v1 {
     }
 
     size = raw;
-    return true;
-  }
-
-  bool Deserializer::readDataObjectMap(DataObject& object) {
-    uint32_t size;
-
-    if (!readMapHeader(size)) {
-      return false;
-    }
-
-    auto data = std::make_unique<DataKeyValue[]>(size);
-
-    for (uint32_t i = 0; i < size; ++i) {
-      if (!readDataObject(data[i].key)) {
-        return false;
-      }
-
-      if (!readDataObject(data[i].value)) {
-        return false;
-      }
-    }
-
-    object.type = DataType::Map;
-    object.map.size = size;
-    object.map.data = data.release();
-    return true;
-  }
-
-  bool Deserializer::readDataObjectArray(DataObject& object) {
-    uint32_t size;
-
-    if (!readArrayHeader(size)) {
-      return false;
-    }
-
-    auto data = std::make_unique<DataObject[]>(size);
-
-    for (uint32_t i = 0; i < size; ++i) {
-      if (!readDataObject(data[i])) {
-        return false;
-      }
-    }
-
-    object.type = DataType::Array;
-    object.array.size = size;
-    object.array.data = data.release();
-    return true;
-  }
-
-  bool Deserializer::readDataObjectString(DataObject& object) {
-    uint32_t size;
-
-    if (!readStringHeader(size)) {
-      return false;
-    }
-
-    auto data = std::make_unique<char[]>(size + 1);
-
-    if (!readString(data.get(), size)) {
-      return false;
-    }
-
-    data[size] = '\0';
-
-    object.type = DataType::String;
-    object.string.size = size;
-    object.string.data = data.release();
-    return true;
-  }
-
-  bool Deserializer::readDataObjectBinary(DataObject& object) {
-    uint32_t size;
-
-    if (!readBinaryHeader(size)) {
-      return false;
-    }
-
-    auto data = std::make_unique<uint8_t[]>(size);
-
-    if (!readBinary(data.get(), size)) {
-      return false;
-    }
-
-    object.type = DataType::Binary;
-    object.binary.size = size;
-    object.binary.data = data.release();
-    return true;
-  }
-
-  bool Deserializer::readDataObjectExtension(DataObject& object) {
-    int8_t type;
-    uint32_t size;
-
-    if (!readExtensionHeader(type, size)) {
-      return false;
-    }
-
-    auto data = std::make_unique<uint8_t[]>(size);
-
-    if (!readExtension(data.get(), size)) {
-      return false;
-    }
-
-    object.type = DataType::Extension;
-    object.extension.size = size;
-    object.extension.type = type;
-    object.extension.data = data.release();
     return true;
   }
 

@@ -26,7 +26,6 @@
 #include <iostream>
 #include <limits>
 
-#include <gf/DataObject.h>
 #include <gf/Paths.h>
 #include <gf/VectorOps.h>
 
@@ -622,31 +621,6 @@ TEST(SerialTest, Map) {
   for (int i = 0; i < 6; ++i) {
     EXPECT_EQ(tests2[i], out2bis[i]);
   }
-
-}
-
-TEST(SerialTest, MsgPackIndex) {
-  gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
-
-  {
-    const uint8_t data[] = {
-      0x82, 0xA7, 'c', 'o', 'm', 'p', 'a', 'c', 't', 0xC3, 0xA6, 's', 'c', 'h', 'e', 'm', 'a', 0x00
-    };
-
-    gf::BinaryFile file(filename, gf::BinaryFile::Mode::Write);
-    file.write(data);
-  }
-
-  gf::DataObject object;
-
-  {  gf::Deserializer ar(filename); ar | object; }
-
-  ASSERT_EQ(object.type, gf::DataType::Map);
-  EXPECT_EQ(object.map.size, UINT32_C(2));
-  EXPECT_EQ(object.map.data[0].key.type, gf::DataType::String);
-  EXPECT_EQ(object.map.data[0].value.type, gf::DataType::Boolean);
-  EXPECT_EQ(object.map.data[1].key.type, gf::DataType::String);
-  EXPECT_EQ(object.map.data[1].value.type, gf::DataType::Unsigned);
 
 }
 

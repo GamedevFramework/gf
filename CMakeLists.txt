@@ -108,7 +108,6 @@ if(GF_BUILD_TOOLS)
   add_subdirectory(tools/gf_info)
   add_subdirectory(tools/gf_noise)
   add_subdirectory(tools/gf_dungeons)
-  add_subdirectory(tools/gf_pack)
 
   install(
     DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/data/gf_tools"

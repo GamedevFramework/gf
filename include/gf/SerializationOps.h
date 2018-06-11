@@ -41,8 +41,6 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  struct DataObject;
-
   /**
    * @relates Serializer
    * @brief Serialize a null object
@@ -276,12 +274,6 @@ inline namespace v1 {
 
     return ar;
   }
-
-  /**
-   * @relates Serializer
-   * @brief Serialize a data object
-   */
-  GF_API Serializer& operator|(Serializer& ar, const DataObject& object);
 
 
 
@@ -559,12 +551,6 @@ inline namespace v1 {
 
     return ar;
   }
-
-  /**
-   * @relates Deserializer
-   * @brief Deserialize a data object
-   */
-  GF_API Deserializer& operator|(Deserializer& ar, DataObject& object);
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
