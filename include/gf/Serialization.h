@@ -25,7 +25,9 @@
 #include <cstdint>
 
 #include "BinaryFile.h"
+#include "BufferRef.h"
 #include "Portability.h"
+#include "StringRef.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -35,8 +37,6 @@ inline namespace v1 {
   /**
    * @ingroup game
    * @brief A serializer to a binary file
-   *
-   * The format used to serialize is [MessagePack](https://msgpack.org/).
    *
    * You should not use the methods in this class. Prefer using and overloading operator `|`.
    *
@@ -52,9 +52,11 @@ inline namespace v1 {
     Serializer(const Path& filename, uint16_t version = 0);
 
     /**
-     * @brief Write a null object
+     * @brief Get the version of the current archive format
      */
-    void writeNil();
+    uint16_t getVersion() const {
+      return m_version;
+    }
 
     /**
      * @brief Write a boolean object
@@ -62,14 +64,49 @@ inline namespace v1 {
     void writeBoolean(bool data);
 
     /**
+     * @brief Write a char
+     */
+    void writeChar(char data);
+
+    /**
      * @brief Write a signed integer object
      */
-    void writeSigned(int64_t data);
+    void writeSigned8(int8_t data);
+
+    /**
+     * @brief Write a signed integer object
+     */
+    void writeSigned16(int16_t data);
+
+    /**
+     * @brief Write a signed integer object
+     */
+    void writeSigned32(int32_t data);
+
+    /**
+     * @brief Write a signed integer object
+     */
+    void writeSigned64(int64_t data);
 
     /**
      * @brief Write an unsigned object
      */
-    void writeUnsigned(uint64_t data);
+    void writeUnsigned8(uint8_t data);
+
+    /**
+     * @brief Write an unsigned object
+     */
+    void writeUnsigned16(uint16_t data);
+
+    /**
+     * @brief Write an unsigned object
+     */
+    void writeUnsigned32(uint32_t data);
+
+    /**
+     * @brief Write an unsigned object
+     */
+    void writeUnsigned64(uint64_t data);
 
     /**
      * @brief Write a single precison float object
@@ -84,42 +121,27 @@ inline namespace v1 {
     /**
      * @brief Write a string object
      */
-    void writeString(const char *data, uint32_t size);
+    void writeString(const char *data, std::size_t size);
 
     /**
-     * @brief Write a binary object
+     * @brief Write a size header
      */
-    void writeBinary(const uint8_t *data, uint32_t size);
-
-    /**
-     * @brief Write an array header
-     */
-    void writeArrayHeader(uint32_t size);
-
-    /**
-     * @brief Write a map header
-     */
-    void writeMapHeader(uint32_t size);
-
-    /**
-     * @brief Write an extension object
-     */
-    void writeExtension(int8_t type, const uint8_t *data, uint32_t size);
+    void writeSizeHeader(std::size_t size);
 
   private:
     void writeBigEndian64(uint64_t data);
     void writeBigEndian32(uint32_t data);
     void writeBigEndian16(uint16_t data);
+    void writeBigEndian8(uint8_t data);
 
   private:
     BinaryFile m_file;
+    uint16_t m_version;
   };
 
   /**
    * @ingroup game
    * @brief A deserializer from a binary file
-   *
-   * The format used to deserialize is [MessagePack](https://msgpack.org/).
    *
    * You should not use the methods in this class. Prefer using and overloading operator `|`.
    *
@@ -135,11 +157,11 @@ inline namespace v1 {
     Deserializer(const Path& filename);
 
     /**
-     * @brief Read a null object
-     *
-     * @returns True if there was no error while reading
+     * @brief Get the version of the current archive format
      */
-    bool readNil();
+    uint16_t getVersion() const {
+      return m_version;
+    }
 
     /**
      * @brief Read a boolean object
@@ -149,18 +171,67 @@ inline namespace v1 {
     bool readBoolean(bool& data);
 
     /**
+     * @brief Read a char
+     *
+     * @returns True if there was no error while reading
+     */
+    bool readChar(char& data);
+
+    /**
      * @brief Read a signed integer object
      *
      * @returns True if there was no error while reading
      */
-    bool readSigned(int64_t& data);
+    bool readSigned8(int8_t& data);
+
+    /**
+     * @brief Read a signed integer object
+     *
+     * @returns True if there was no error while reading
+     */
+    bool readSigned16(int16_t& data);
+
+    /**
+     * @brief Read a signed integer object
+     *
+     * @returns True if there was no error while reading
+     */
+    bool readSigned32(int32_t& data);
+
+    /**
+     * @brief Read a signed integer object
+     *
+     * @returns True if there was no error while reading
+     */
+    bool readSigned64(int64_t& data);
 
     /**
      * @brief Read an unsigned integer object
      *
      * @returns True if there was no error while reading
      */
-    bool readUnsigned(uint64_t& data);
+    bool readUnsigned8(uint8_t& data);
+
+    /**
+     * @brief Read an unsigned integer object
+     *
+     * @returns True if there was no error while reading
+     */
+    bool readUnsigned16(uint16_t& data);
+
+    /**
+     * @brief Read an unsigned integer object
+     *
+     * @returns True if there was no error while reading
+     */
+    bool readUnsigned32(uint32_t& data);
+
+    /**
+     * @brief Read an unsigned integer object
+     *
+     * @returns True if there was no error while reading
+     */
+    bool readUnsigned64(uint64_t& data);
 
     /**
      * @brief Read a single precison float object
@@ -177,84 +248,30 @@ inline namespace v1 {
     bool readDouble(double& data);
 
     /**
-     * @brief Read a string header
-     *
-     * @returns True if there was no error while reading
-     */
-    bool readStringHeader(uint32_t& size);
-
-    /**
      * @brief Read a string body
      *
      * @returns True if there was no error while reading
      */
-    bool readString(char *data, uint32_t size);
+    bool readString(char *data, std::size_t size);
 
     /**
-     * @brief Read a binary header
+     * @brief Read a size header
      *
      * @returns True if there was no error while reading
      */
-    bool readBinaryHeader(uint32_t& size);
-
-    /**
-     * @brief Read a binary body
-     *
-     * @returns True if there was no error while reading
-     */
-    bool readBinary(uint8_t *data, uint32_t size);
-
-    /**
-     * @brief Read an array header
-     *
-     * @returns True if there was no error while reading
-     */
-    bool readArrayHeader(uint32_t& size);
-
-    /**
-     * @brief Read a map header
-     *
-     * @returns True if there was no error while reading
-     */
-    bool readMapHeader(uint32_t& size);
-
-    /**
-     * @brief Read an extension header
-     *
-     * @returns True if there was no error while reading
-     */
-    bool readExtensionHeader(int8_t& type, uint32_t& size);
-
-    /**
-     * @brief Read an extension body
-     *
-     * @returns True if there was no error while reading
-     */
-    bool readExtension(uint8_t *data, uint32_t size);
-
-
-  private:
-    bool readRawInt8(uint64_t& raw);
-    bool readRawInt16(uint64_t& raw);
-    bool readRawInt32(uint64_t& raw);
-    bool readRawInt64(uint64_t& raw);
-
-    bool readSize8(uint32_t& size);
-    bool readSize16(uint32_t& size);
-    bool readSize32(uint32_t& size);
+    bool readSizeHeader(std::size_t& size);
 
   private:
     bool readBigEndian64(uint64_t& data);
     bool readBigEndian32(uint32_t& data);
     bool readBigEndian16(uint16_t& data);
+    bool readBigEndian8(uint8_t& data);
 
     bool isEof() const;
-    uint8_t getByte() const;
-    void nextByte();
 
   private:
     BinaryFile m_file;
-    uint8_t m_next;
+    uint16_t m_version;
     bool m_eof;
   };
 

@@ -100,7 +100,6 @@
 #include "RenderWindow.cc"
 #include "ResourceManager.cc"
 #include "Serialization.cc"
-#include "SerializationHeaders.cc"
 #include "SerializationOps.cc"
 #include "Shader.cc"
 #include "Shape.cc"

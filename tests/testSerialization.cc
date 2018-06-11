@@ -31,11 +31,13 @@
 
 #include "gtest/gtest.h"
 
-TEST(SerialTest, Nil) {
+TEST(SerialTest, Version) {
   gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
 
-  {  gf::Serializer ar(filename); ar | nullptr; }
-  {  gf::Deserializer ar(filename); ar | nullptr; }
+  constexpr uint16_t Version = 42;
+
+  {  gf::Serializer ar(filename, Version); }
+  {  gf::Deserializer ar(filename); EXPECT_EQ(ar.getVersion(), Version); }
 
 }
 

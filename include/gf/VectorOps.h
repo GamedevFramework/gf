@@ -27,7 +27,6 @@
 #include <type_traits>
 
 #include "Math.h"
-#include "SerializationHeaders.h"
 #include "Vector.h"
 
 namespace gf {
@@ -1018,10 +1017,7 @@ inline namespace v1 {
   template<typename Archive, typename T, std::size_t N>
   inline
   Archive& operator|(Archive& ar, Vector<T,N>& vec) {
-    SerialArrayHeader header{N};
-    ar | header;
-
-    for (uint32_t i = 0; i < header.size; ++i) {
+    for (std::size_t i = 0; i < N; ++i) {
       ar | vec[i];
     }
 
