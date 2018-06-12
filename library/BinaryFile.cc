@@ -73,22 +73,27 @@ inline namespace v1 {
   }
 
   std::size_t BinaryFile::write(ArrayRef<uint8_t> buffer) const {
+    assert(m_file);
     return std::fwrite(buffer.getData(), sizeof(uint8_t), buffer.getSize(), m_file);
   }
 
   std::size_t BinaryFile::write(uint8_t byte) const {
+    assert(m_file);
     return std::fwrite(&byte, sizeof(uint8_t), 1, m_file);
   }
 
   std::size_t BinaryFile::read(BufferRef<uint8_t> buffer) const {
+    assert(m_file);
     return std::fread(buffer.getData(), sizeof(uint8_t), buffer.getSize(), m_file);
   }
 
   std::size_t BinaryFile::read(uint8_t& byte) const {
+    assert(m_file);
     return std::fread(&byte, sizeof(uint8_t), 1, m_file);
   }
 
   bool BinaryFile::isEof() const {
+    assert(m_file);
     return std::feof(m_file);
   }
 

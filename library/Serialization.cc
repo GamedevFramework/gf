@@ -47,8 +47,10 @@ inline namespace v1 {
   : m_file(filename, BinaryFile::Mode::Write)
   , m_version(version)
   {
-    m_file.write(Magic);
-    writeBigEndian16(version);
+    if (m_file) {
+      m_file.write(Magic);
+      writeBigEndian16(version);
+    }
   }
 
   void Serializer::writeBoolean(bool data) {
@@ -180,16 +182,20 @@ inline namespace v1 {
   {
     uint8_t magic[2] = { 0u, 0u };
 
-    readBigEndian8(magic[0]);
-    readBigEndian8(magic[1]);
+    if (m_file) {
+      readBigEndian8(magic[0]);
+      readBigEndian8(magic[1]);
 
-    if (magic[0] != Magic[0] || magic[1] != Magic[1]) {
-      Log::error("This file is not a gf archive: '%s'.\n", filename.string().c_str());
+      if (magic[0] != Magic[0] || magic[1] != Magic[1]) {
+        Log::error("This file is not a gf archive: '%s'.\n", filename.string().c_str());
+        m_eof = true;
+        return;
+      }
+
+      readBigEndian16(m_version);
+    } else {
       m_eof = true;
-      return;
     }
-
-    readBigEndian16(m_version);
   }
 
   bool Deserializer::readBoolean(bool& data) {

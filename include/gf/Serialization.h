@@ -52,6 +52,15 @@ inline namespace v1 {
     Serializer(const Path& filename, uint16_t version = 0);
 
     /**
+     * @brief Conversion to boolean
+     *
+     * @returns True if the archive exists and was opened
+     */
+    operator bool() const {
+      return static_cast<bool>(m_file);
+    }
+
+    /**
      * @brief Get the version of the current archive format
      */
     uint16_t getVersion() const {
@@ -155,6 +164,15 @@ inline namespace v1 {
      * @param filename The name of the binary file
      */
     Deserializer(const Path& filename);
+
+    /**
+     * @brief Conversion to boolean
+     *
+     * @returns True if the archive exists and was opened
+     */
+    operator bool() const {
+      return static_cast<bool>(m_file);
+    }
 
     /**
      * @brief Get the version of the current archive format
