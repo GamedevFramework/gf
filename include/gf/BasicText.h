@@ -21,18 +21,15 @@
  * Part of this file comes from SFML, with the same license:
  * Copyright (C) 2007-2015 Laurent Gomila (laurent@sfml-dev.org)
  */
-#ifndef GF_TEXT_H
-#define GF_TEXT_H
+#ifndef GF_BASIC_TEXT_H
+#define GF_BASIC_TEXT_H
 
 #include <string>
 
 #include "Alignment.h"
-#include "BasicText.h"
 #include "Portability.h"
-#include "Transformable.h"
 #include "Vector.h"
 #include "VertexArray.h"
-#include "VertexBuffer.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -40,63 +37,21 @@ inline namespace v1 {
 #endif
 
   class Font;
+  class AlphaTexture;
 
   /**
    * @ingroup graphics
-   * @brief Graphical text that can be drawn to a render target
    *
-   * gf::Text is a drawable class that allows to easily display
-   * some text with custom style and color on a render target.
-   *
-   * It inherits all the functions from gf::Transformable:
-   * position, rotation, scale, origin. It also adds text-specific
-   * properties such as the font to use, the character size, the
-   * global color and the text to display of course.
-   * It also provides convenience functions to calculate the
-   * graphical size of the text.
-   *
-   * gf::Text works in combination with the gf::Font class, which
-   * loads and provides the glyphs (visual characters) of a given font.
-   *
-   * The separation of gf::Font and gf::Text allows more flexibility
-   * and better performances: indeed a gf::Font is a heavy resource,
-   * and any operation on it is slow (often too slow for real-time
-   * applications). On the other side, a gf::Text is a lightweight
-   * object which can combine the glyphs data and metrics of a gf::Font
-   * to display any text on a render target.
-   *
-   * It is important to note that the gf::Text instance doesn't
-   * copy the font that it uses, it only keeps a reference to it.
-   * Thus, a gf::Font must not be destructed while it is
-   * used by a gf::Text (i.e. never write a function that
-   * uses a local gf::Font instance for creating a text).
-   *
-   * Usage example:
-   *
-   * ~~~{.cc}
-   * // Declare and load a font
-   * gf::Font font;
-   * font.loadFromFile("arial.ttf");
-   *
-   * // Create a text
-   * gf::Text text("hello", font);
-   * text.setCharacterSize(30);
-   * text.setColor(gf::Color::Red);
-   *
-   * // Draw it
-   * rendered.draw(text);
-   * ~~~
-   *
-   * @sa gf::Font
+   * @sa gf::Text
    */
-  class GF_API Text : public Transformable {
+  class GF_API BasicText {
   public:
     /**
      * @brief Default constructor
      *
      * Creates an empty text.
      */
-    Text();
+    BasicText();
 
     /**
      * @brief Construct the text from a string, font and size
@@ -105,7 +60,7 @@ inline namespace v1 {
      * @param font Font used to draw the string
      * @param characterSize Base size of characters, in pixels
      */
-    Text(std::string string, Font& font, unsigned characterSize = 30);
+    BasicText(std::string string, Font& font, unsigned characterSize = 30);
 
     /**
      * @brief Set the text's string
@@ -129,7 +84,7 @@ inline namespace v1 {
      * @sa setString()
      */
     const std::string& getString() const {
-      return m_basic.getString();
+      return m_string;
     }
 
     /**
@@ -151,7 +106,7 @@ inline namespace v1 {
      * @sa setCharacterSize()
      */
     unsigned getCharacterSize() const {
-      return m_basic.getCharacterSize();
+      return m_characterSize;
     }
 
     /**
@@ -182,54 +137,10 @@ inline namespace v1 {
      * @sa setFont()
      */
     const Font *getFont() const {
-      return m_basic.getFont();
+      return m_font;
     }
 
-    /**
-     * @brief Set the fill color of the text
-     *
-     * By default, the text's fill color is opaque black.
-     * Setting the fill color to a transparent color with an outline
-     * will cause the outline to be displayed in the fill area of the text.
-     *
-     * @param color New fill color of the text
-     *
-     * @sa getColor()
-     */
-    void setColor(const Color4f& color);
-
-    /**
-     * @brief Get the fill color of the text
-     *
-     * @return Fill color of the text
-     *
-     * @sa setColor()
-     */
-    const Color4f& getColor() const {
-      return m_color;
-    }
-
-    /**
-     * @brief Set the outline color of the text
-     *
-     * By default, the text's outline color is opaque black.
-     *
-     * @param color New outline color of the text
-     *
-     * @sa getOutlineColor()
-     */
-    void setOutlineColor(const Color4f& color);
-
-    /**
-     * @brief Get the outline color of the text
-     *
-     * @return Outline color of the text
-     *
-     * @sa setOutlineColor()
-     */
-    const Color4f& getOutlineColor() const {
-      return m_outlineColor;
-    }
+    const AlphaTexture *getFontTexture();
 
     /**
      * @brief Set the thickness of the text's outline
@@ -250,7 +161,7 @@ inline namespace v1 {
      * @sa setOutlineThickness()
      */
     float getOutlineThickness() {
-      return m_basic.getOutlineThickness();
+      return m_outlineThickness;
     }
 
     /**
@@ -270,7 +181,7 @@ inline namespace v1 {
      * @sa setParagraphWidth()
      */
     float getParagraphWidth() const {
-      return m_basic.getParagraphWidth();
+      return m_paragraphWidth;
     }
 
     /**
@@ -290,7 +201,7 @@ inline namespace v1 {
      * @sa setAlignment()
      */
     Alignment getAlignment() const {
-      return m_basic.getAlignment();
+      return m_align;
     }
 
     /**
@@ -305,54 +216,22 @@ inline namespace v1 {
      * @return Local bounding rectangle of the entity
      */
     RectF getLocalBounds() const {
-      return m_basic.getLocalBounds();
+      return m_bounds;
     }
 
-    /**
-     * @brief Set the anchor origin of the entity
-     *
-     * Compute the origin of the entity based on the local bounds and
-     * the specified anchor. Internally, this function calls
-     * `Transformable::setOrigin()`.
-     *
-     * @param anchor The anchor of the entity
-     * @sa getLocalBounds(), Transformable::setOrigin()
-     */
-    void setAnchor(Anchor anchor);
-
-    /**
-     * @brief Create a buffer with the current geometry
-     *
-     * The geometry is uploaded in the graphics memory so that it's faster
-     * to draw.
-     *
-     * @return A buffer with the current geometry
-     */
-    VertexBuffer commitGeometry() const;
-
-    /**
-     * @brief Create a buffer with the current outline geometry
-     *
-     * The geometry is uploaded in the graphics memory so that it's faster
-     * to draw.
-     *
-     * @return A buffer with the current outline geometry
-     */
-    VertexBuffer commitOutlineGeometry() const;
-
-    virtual void draw(RenderTarget& target, RenderStates states) override;
+    void updateGeometry(VertexArray& vertices, VertexArray& outlineVertices);
 
   private:
-    void updateGeometry();
+    std::string m_string;
+    Font *m_font;
 
-  private:
-    BasicText m_basic;
+    unsigned m_characterSize;
+    float m_outlineThickness;
 
-    Color4f m_color;
-    VertexArray m_vertices;
+    float m_paragraphWidth;
+    Alignment m_align;
 
-    Color4f m_outlineColor;
-    VertexArray m_outlineVertices;
+    RectF m_bounds;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -360,4 +239,4 @@ inline namespace v1 {
 #endif
 }
 
-#endif // GF_TEXT_H
+#endif // GF_BASIC_TEXT_H
