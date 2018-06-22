@@ -31,22 +31,21 @@ inline namespace v1 {
 
   }
 
-  Widget::~Widget() = default;
-
   void Widget::setDisabled() {
-    m_state = WidgetState::Disabled;
+    setState(WidgetState::Disabled);
   }
 
   void Widget::setDefault() {
-    m_state = WidgetState::Default;
+    setState(WidgetState::Default);
   }
 
   void Widget::setSelected() {
-    m_state = WidgetState::Selected;
+    setState(WidgetState::Selected);
   }
 
   void Widget::setState(WidgetState state) {
     m_state = state;
+    onStateChanged();
   }
 
   void Widget::setCallback(std::function<void()> callback) {
@@ -59,6 +58,10 @@ inline namespace v1 {
     if (m_callback) {
       m_callback();
     }
+  }
+
+  void Widget::onStateChanged() {
+    // nothing to do
   }
 
   void Widget::triggered() {

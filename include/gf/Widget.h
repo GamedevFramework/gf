@@ -23,6 +23,7 @@
 
 #include <functional>
 
+#include "Transformable.h"
 #include "Vector.h"
 
 namespace gf {
@@ -49,7 +50,7 @@ inline namespace v1 {
    * @ingroup graphics
    * @brief The widgets abstract class
    */
-  class GF_API Widget {
+  class GF_API Widget : public Transformable {
   public:
     /**
      * @brief Constructor
@@ -57,19 +58,6 @@ inline namespace v1 {
      * The widget is in the default state.
      */
     Widget();
-
-    /**
-     * @brief Destructor
-     */
-    virtual ~Widget();
-
-    /**
-     * @brief Render the widget on the target
-     *
-     * @param target The render target
-     * @param states The render states to use for drawing
-     */
-    virtual void render(RenderTarget &target, const RenderStates &states) = 0;
 
     /**
      * @brief Check if the widget contains the coordinates
@@ -154,6 +142,11 @@ inline namespace v1 {
     void triggerCallback();
 
   protected:
+    /**
+     * @brief Function called when the state changes
+     */
+    virtual void onStateChanged();
+
     /**
      * @brief Function called when the callback is triggered
      *

@@ -21,8 +21,11 @@
 #ifndef GF_WIDGETS_H
 #define GF_WIDGETS_H
 
+#include "BasicSprite.h"
+#include "BasicText.h"
 #include "Shapes.h"
 #include "Vector.h"
+#include "VertexArray.h"
 #include "Widget.h"
 
 namespace gf {
@@ -32,9 +35,6 @@ inline namespace v1 {
 
   struct RenderStates;
   class RenderTarget;
-
-  class Text;
-  class Sprite;
 
   /**
    * @ingroup graphics
@@ -49,10 +49,12 @@ inline namespace v1 {
      * @brief Constructor
      *
      * @param text A text to convert to a widget.
+     * @param font Font used to draw the text
+     * @param characterSize Base size of characters, in pixels
      */
-    TextWidget(Text &text);
+    TextWidget(std::string text, Font& font, unsigned characterSize = 30);
 
-    virtual void render(RenderTarget &target, const RenderStates &states) override;
+    virtual void draw(RenderTarget &target, RenderStates states) override;
 
     virtual bool contains(Vector2f coords) override;
 
@@ -105,14 +107,49 @@ inline namespace v1 {
      */
     void setSelectedTextOutlineColor(const Color4f &color);
 
+
+    /**
+     * @brief Get the local bounding rectangle of the entity
+     *
+     * The returned rectangle is in local coordinates, which means
+     * that it ignores the transformations (translation, rotation,
+     * scale, ...) that are applied to the entity.
+     * In other words, this function returns the bounds of the
+     * entity in the entity's coordinate system.
+     *
+     * @return Local bounding rectangle of the entity
+     */
+    RectF getLocalBounds() const {
+      return m_basic.getLocalBounds();
+    }
+
+    /**
+     * @brief Set the anchor origin of the entity
+     *
+     * Compute the origin of the entity based on the local bounds and
+     * the specified anchor. Internally, this function calls
+     * `Transformable::setOrigin()`.
+     *
+     * @param anchor The anchor of the entity
+     * @sa getLocalBounds(), Transformable::setOrigin()
+     */
+    void setAnchor(Anchor anchor);
+
   protected:
-    Text& getText() {
-      return *m_text;
+    void updateCurrentStateColors();
+    void updateColors(Color4f textColor, Color4f outlineColor);
+    void updateGeometry();
+
+    virtual void onStateChanged() override;
+
+    BasicText& getText() {
+      return m_basic;
     }
 
   private:
-    Text *m_text;
-    float m_textOutlineThickness;
+    BasicText m_basic;
+    VertexArray m_vertices;
+    VertexArray m_outlineVertices;
 
     Color4f m_disabledTextColor;
     Color4f m_disabledTextOutlineColor;
@@ -126,21 +163,22 @@ inline namespace v1 {
 
   /**
    * @ingroup graphics
-   * @brief A text within a representative shape widget
+   * @brief A text within a rounded rectangle widget
    *
-   * @sa gf::Text, gf::Shape
+   * @sa gf::Text, gf::RoundedRectangleShape
    */
-  class GF_API TextShapeWidget : public TextWidget {
+  class GF_API TextButtonWidget : public TextWidget {
   public:
     /**
      * @brief Construct a text button widget.
      *
      * @param text The text to bind to the text button.
-     * @param shape The shape for the background of the button
+     * @param font Font used to draw the text
+     * @param characterSize Base size of characters, in pixels
      */
-    TextShapeWidget(Text &text, Shape& shape);
+    TextButtonWidget(std::string text, Font& font, unsigned characterSize = 30);
 
-    virtual void render(RenderTarget &target, const RenderStates &states) override;
+    virtual void draw(RenderTarget &target, RenderStates states) override;
 
     virtual bool contains(Vector2f coords) override;
 
@@ -193,33 +231,6 @@ inline namespace v1 {
      */
     void setSelectedBackgroundOutlineColor(const Color4f &color);
 
-  private:
-    Shape *m_shape;
-    float m_shapeOutlineThickness;
-
-    Color4f m_disabledBackgroundColor;
-    Color4f m_disabledBackgroundOutlineColor;
-
-    Color4f m_defaultBackgroundColor;
-    Color4f m_defaultBackgroundOutlineColor;
-
-    Color4f m_selectedBackgroundColor;
-    Color4f m_selectedBackgroundOutlineColor;
-  };
-
-  /**
-   * @ingroup graphics
-   * @brief A text within a rounded rectangle widget
-   *
-   * @sa gf::Text, gf::RoundedRectangleShape
-   */
-  class GF_API TextButtonWidget : public TextShapeWidget {
-  public:
-    /**
-     * @brief Constructor
-     */
-    TextButtonWidget(Text& text);
-
     /**
      * @brief Set the radius of the corners
      *
@@ -240,11 +251,25 @@ inline namespace v1 {
       updateGeometry();
     }
 
-  private:
+  protected:
     void updateGeometry();
+
+    virtual void onStateChanged() override;
 
   private:
     gf::RoundedRectangleShape m_rect;
+
+    float m_backgroundOutlineThickness;
+
+    Color4f m_disabledBackgroundColor;
+    Color4f m_disabledBackgroundOutlineColor;
+
+    Color4f m_defaultBackgroundColor;
+    Color4f m_defaultBackgroundOutlineColor;
+
+    Color4f m_selectedBackgroundColor;
+    Color4f m_selectedBackgroundOutlineColor;
+
     float m_radius;
     float m_padding;
   };
@@ -256,58 +281,98 @@ inline namespace v1 {
   class GF_API SpriteWidget : public Widget {
   public:
     /**
-     * @brief Constructor with a single sprite
-     *
-     * @param sprite The sprite used for disabled, default and selected state
+     * @brief Constructor with no texture
      */
-    SpriteWidget(Sprite& sprite);
+    SpriteWidget() = default;
 
     /**
-     * @brief Constructor with two sprites
+     * @brief Constructor with a single texture and three rectangles
      *
-     * @param defaultSprite The sprite used for disabled and default state
-     * @param selectedSprite The sprite used for selected state
+     * @param texture The texture used for the widget
+     * @param defaultRect The rectangle in the texture used for default state
+     * @param selectedRect The rectangle in the texture used for selected state
+     * @param disabledRect The rectangle in the texture used for disabled state
      */
-    SpriteWidget(Sprite& defaultSprite, Sprite& selectedSprite);
+    SpriteWidget(const Texture& texture, const RectF& defaultRect, const RectF& selectedRect, const RectF& disabledRect);
 
     /**
-     * @brief Constructor with three sprites
+     * @brief Constructor with three full textures
      *
-     * @param defaultSprite The sprite used for default state
-     * @param selectedSprite The sprite used for selected state
-     * @param disabledSprite The sprite used for disabled state
+     * @param defaultTexture The texture used for default state
+     * @param selectedTexture The texture used for selected state
+     * @param disabledTexture The texture used for disabled state
      */
-    SpriteWidget(Sprite& defaultSprite, Sprite& selectedSprite, Sprite& disabledSprite);
+    SpriteWidget(const Texture& defaultTexture, const Texture& selectedTexture, const Texture& disabledTexture);
 
-    /**
-     * @brief Set the sprite for disabled state
-     *
-     * @param sprite The sprite used for disabled state
-     */
-    void setDisabledSprite(Sprite& sprite);
-
-    /**
-     * @brief Set the sprite for default state
-     *
-     * @param sprite The sprite used for default state
-     */
-    void setDefaultSprite(Sprite& sprite);
-
-    /**
-     * @brief Set the sprite for selected state
-     *
-     * @param sprite The sprite used for selected state
-     */
-    void setSelectedSprite(Sprite& sprite);
-
-    virtual void render(RenderTarget &target, const RenderStates &states) override;
+    virtual void draw(RenderTarget &target, RenderStates states) override;
 
     virtual bool contains(Vector2f coords) override;
 
+    /**
+     * @brief Set the texture for disabled state
+     *
+     * @param texture The texture used for disabled state
+     * @param textureRect The rectangle in the texture used for disabled state
+     */
+    void setDisabledSprite(const Texture& texture, const RectF& textureRect);
+
+    /**
+     * @brief Set the texture for default state
+     *
+     * @param texture The texture used for default state
+     * @param textureRect The rectangle in the texture used for default state
+     */
+    void setDefaultSprite(const Texture& texture, const RectF& textureRect);
+
+    /**
+     * @brief Set the texture for selected state
+     *
+     * @param texture The texture used for selected state
+     * @param textureRect The rectangle in the texture used for selected state
+     */
+    void setSelectedSprite(const Texture& texture, const RectF& textureRect);
+
+    /**
+     * @brief Get the local bounding rectangle of the entity
+     *
+     * The returned rectangle is in local coordinates, which means
+     * that it ignores the transformations (translation, rotation,
+     * scale, ...) that are applied to the entity.
+     * In other words, this function returns the bounds of the
+     * entity in the entity's coordinate system.
+     *
+     * @return Local bounding rectangle of the entity
+     */
+    RectF getLocalBounds() const {
+      return getSprite().getLocalBounds();
+    }
+
+    /**
+     * @brief Set the anchor origin of the entity
+     *
+     * Compute the origin of the entity based on the local bounds and
+     * the specified anchor. Internally, this function calls
+     * `Transformable::setOrigin()`.
+     *
+     * @param anchor The anchor of the entity
+     * @sa getLocalBounds(), Transformable::setOrigin()
+     */
+    void setAnchor(Anchor anchor);
+
   private:
-    Sprite *m_disabledSprite;
-    Sprite *m_defaultSprite;
-    Sprite *m_selectedSprite;
+    void updateGeometry();
+
+    virtual void onStateChanged() override;
+
+  private:
+    BasicSprite& getSprite();
+    const BasicSprite& getSprite() const;
+
+  private:
+    BasicSprite m_disabledSprite;
+    BasicSprite m_defaultSprite;
+    BasicSprite m_selectedSprite;
+    Vertex m_vertices[4];
   };
 
   /**
@@ -316,15 +381,28 @@ inline namespace v1 {
    *
    * A choice widget may be used to represent a checkbox or a radio button.
    */
-  class GF_API ChoiceSpriteWidget : public SpriteWidget {
+  class GF_API ChoiceSpriteWidget : public Widget {
   public:
     /**
      * @brief Constructor
      *
-     * @param empty The sprite for representing the empty state
-     * @param chosen The sprite for representing the chosen state
+     * @param texture The texture used for the widget
+     * @param emptyRect The rectangle in the texture for the empty state
+     * @param chosenRect The rectangle in the texture for the chosen state
      */
-    ChoiceSpriteWidget(Sprite& empty, Sprite& chosen);
+    ChoiceSpriteWidget(const Texture& texture, const RectF& emptyRect, const RectF& chosenRect);
+
+    /**
+     * @brief Constructor
+     *
+     * @param emptyTexture The texture for the empty state
+     * @param chosenTexture The texture for the chosen state
+     */
+    ChoiceSpriteWidget(const Texture& emptyTexture, const Texture& chosenTexture);
+
+    virtual void draw(RenderTarget &target, RenderStates states) override;
+
+    virtual bool contains(Vector2f coords) override;
 
     /**
      * @brief Set the state of the widget
@@ -347,31 +425,38 @@ inline namespace v1 {
     /**
      * @brief Set the sprite for the empty state
      *
-     * @param sprite The sprite used for the empty state
+     * @param texture The texture used for the empty state
+     * @param textureRect The rectangle in the texture used for the empty state
      *
      * @sa setChosenSprite()
      */
-    void setEmptySprite(Sprite& sprite);
+    void setEmptySprite(const Texture& texture, const RectF& textureRect);
 
     /**
      * @brief Set the sprite for the chosen state
      *
-     * @param sprite The sprite sued for the chosen state
+     * @param texture The texture used for the chosen state
+     * @param textureRect The rectangle in the texture used for the chosen state
      *
      * @sa setEmptySprite()
      */
-    void setChosenSprite(Sprite& sprite);
+    void setChosenSprite(const Texture& texture, const RectF& textureRect);
 
   protected:
     virtual void triggered() override;
 
   private:
-    void updateSprites();
+    void updateGeometry();
 
   private:
-    Sprite *m_empty;
-    Sprite *m_chosen;
+    BasicSprite& getSprite();
+    const BasicSprite& getSprite() const;
+
+  private:
+    BasicSprite m_empty;
+    BasicSprite m_chosen;
     bool m_isChosen;
+    Vertex m_vertices[4];
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
