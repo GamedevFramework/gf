@@ -59,7 +59,7 @@ inline namespace v1 {
 
   void WidgetContainer::render(RenderTarget &target, const RenderStates &states) {
     for (auto widget : m_widgets) {
-      widget->render(target, states);
+      widget->draw(target, states);
     }
   }
 

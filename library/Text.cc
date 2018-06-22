@@ -69,20 +69,16 @@ inline namespace v1 {
   void Text::setColor(const Color4f& color) {
     m_color = color;
 
-    auto count = m_vertices.getVertexCount();
-
-    for (std::size_t i = 0; i < count; ++i) {
-      m_vertices[i].color = color;
+    for (auto& vertex : m_vertices) {
+      vertex.color = color;
     }
   }
 
   void Text::setOutlineColor(const Color4f& color) {
     m_outlineColor = color;
 
-    auto count = m_outlineVertices.getVertexCount();
-
-    for (std::size_t i = 0; i < count; ++i) {
-      m_outlineVertices[i].color = color;
+    for (auto& vertex : m_outlineVertices) {
+      vertex.color = color;
     }
   }
 

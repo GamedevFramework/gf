@@ -143,6 +143,50 @@ inline namespace v1 {
     }
 
     /**
+     * @brief Get an iterator to the first element
+     *
+     * @returns A pointer to the first element
+     *
+     * @sa end()
+     */
+    const Vertex *begin() const {
+      return m_vertices.data();
+    }
+
+    /**
+     * @brief Get an iterator past the last element
+     *
+     * @returns A pointer past the last element
+     *
+     * @sa begin()
+     */
+    const Vertex *end() const {
+      return m_vertices.data() + m_vertices.size();
+    }
+
+    /**
+     * @brief Get an iterator to the first element
+     *
+     * @returns A pointer to the first element
+     *
+     * @sa end()
+     */
+    Vertex *begin() {
+      return m_vertices.data();
+    }
+
+    /**
+     * @brief Get an iterator past the last element
+     *
+     * @returns A pointer past the last element
+     *
+     * @sa begin()
+     */
+    Vertex *end() {
+      return m_vertices.data() + m_vertices.size();
+    }
+
+    /**
      * @brief Check if the vertex array is empty
      *
      * @return True if the vertex array is empty
