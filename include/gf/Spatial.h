@@ -324,7 +324,7 @@ inline namespace v1 {
     RStarTree()
     : m_root(new Leaf)
     {
-      auto branch = std::make_unique<Branch>();
+
     }
 
     /**
@@ -757,11 +757,6 @@ inline namespace v1 {
 
           if (overlapFree && weight == 0) {
             weight = firstBounds[index].getExtentDistance() + secondBounds[Size - index - 1].getExtentDistance() - perimeterMax;
-
-            if (weight > 0) {
-              gf::Log::debug("weight: %f\n", static_cast<double>(weight));
-            }
-
             assert(weight <= 0);
 
             auto value = weight / wf(index);
@@ -1112,11 +1107,6 @@ inline namespace v1 {
 
           if (status.overlapFree && weight == 0) {
             weight = firstBounds[index].getExtentDistance() + secondBounds[Size - index - 1].getExtentDistance() - perimeterMax;
-
-            if (weight > 0) {
-              gf::Log::debug("weight: %f\n", static_cast<double>(weight));
-            }
-
             assert(weight <= 0);
 
             auto value = weight / wf(index);
