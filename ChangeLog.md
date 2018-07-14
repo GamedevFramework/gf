@@ -1,5 +1,25 @@
 # ChangeLog for gf
 
+## gf 0.9.0 (14 Jul 2018)
+
+- Core module
+  - Add conversion to bool for gf::BinaryFile
+  - Add Rect::getPositionFromAnchor()
+- Window module
+- Graphics module
+  - Add BasicSprite and BasicText
+  - Add VertexArray::{begin(),end()}
+  - Rework UI widgets
+- Game module
+  - Add getStructures() in spatial index classes
+  - Rework serialization (do not use MessagePack, remove DataObject)
+  - Add serialization for enums, gf::Time
+  - Add version support in serialization
+- Tools and games
+- Misc
+  - Add support for macos (thanks @sherjilozair)
+  - Add support for OpenGL 3.3
+
 ## gf 0.8.0 (14 Apr 2018)
 
 - Core module
