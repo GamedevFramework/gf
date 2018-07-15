@@ -1,0 +1,5 @@
+brew 'cmake'
+brew 'boost'
+brew 'freetype'
+brew 'sdl2'
+brew 'zlib'

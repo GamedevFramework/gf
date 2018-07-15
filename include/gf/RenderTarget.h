@@ -185,30 +185,6 @@ inline namespace v1 {
     void draw(const Vertex *vertices, const uint16_t *indices, std::size_t count, PrimitiveType type, const RenderStates& states = RenderStates());
 
     /**
-     * @brief Draw primitives defined by an array of vertices
-     *
-     * @param vertices Pointer to the vertices
-     * @param first Array of starting indices
-     * @param count Array of number of vertices
-     * @param primcount Number of elements in `first` and `count`
-     * @param type Type of primitives to draw
-     * @param states Render states to use for drawing
-     */
-    void draw(const Vertex *vertices, int *first, const std::size_t *count, std::size_t primcount, PrimitiveType type, const RenderStates& states = RenderStates());
-
-    /**
-     * @brief Draw primitives defined by an array of vertices and their indices
-     *
-     * @param vertices Pointer to the vertices
-     * @param indices Array of pointers to the indices
-     * @param count Array of number of indices
-     * @param primcount Number of elements in `indices` and `count`
-     * @param type Type of primitives to draw
-     * @param states Render states to use for drawing
-     */
-    void draw(const Vertex *vertices, const uint16_t **indices, const std::size_t *count, std::size_t primcount, PrimitiveType type, const RenderStates& states = RenderStates());
-
-    /**
      * @brief Draw a vertex buffer to the render target
      *
      * @param buffer A vertex buffer containing a geometry
@@ -420,7 +396,7 @@ inline namespace v1 {
       int texCoordsLoc;
     };
 
-    void drawStart(const Vertex *vertices, const RenderStates& states, Locations& locations);
+    void drawStart(const RenderStates& states, Locations& locations);
     void drawFinish(const Locations& locations);
 
   private:

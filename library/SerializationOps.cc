@@ -22,7 +22,6 @@
 
 #include <cinttypes>
 
-#include <gf/DataObject.h>
 #include <gf/Log.h>
 
 namespace gf {
@@ -30,53 +29,53 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  Serializer& operator|(Serializer& ar, std::nullptr_t) {
-    ar.writeNil();
-    return ar;
-  }
-
   Serializer& operator|(Serializer& ar, bool data) {
     ar.writeBoolean(data);
     return ar;
   }
 
+  Serializer& operator|(Serializer& ar, char data) {
+    ar.writeChar(data);
+    return ar;
+  }
+
   Serializer& operator|(Serializer& ar, uint8_t data) {
-    ar.writeUnsigned(data);
+    ar.writeUnsigned8(data);
     return ar;
   }
 
   Serializer& operator|(Serializer& ar, uint16_t data) {
-    ar.writeUnsigned(data);
+    ar.writeUnsigned16(data);
     return ar;
   }
 
   Serializer& operator|(Serializer& ar, uint32_t data) {
-    ar.writeUnsigned(data);
+    ar.writeUnsigned32(data);
     return ar;
   }
 
   Serializer& operator|(Serializer& ar, uint64_t data) {
-    ar.writeUnsigned(data);
+    ar.writeUnsigned64(data);
     return ar;
   }
 
   Serializer& operator|(Serializer& ar, int8_t data) {
-    ar.writeSigned(data);
+    ar.writeSigned8(data);
     return ar;
   }
 
   Serializer& operator|(Serializer& ar, int16_t data) {
-    ar.writeSigned(data);
+    ar.writeSigned16(data);
     return ar;
   }
 
   Serializer& operator|(Serializer& ar, int32_t data) {
-    ar.writeSigned(data);
+    ar.writeSigned32(data);
     return ar;
   }
 
   Serializer& operator|(Serializer& ar, int64_t data) {
-    ar.writeSigned(data);
+    ar.writeSigned64(data);
     return ar;
   }
 
@@ -91,92 +90,19 @@ inline namespace v1 {
   }
 
   Serializer& operator|(Serializer& ar, const char *str) {
-    std::size_t len = std::strlen(str);
-    assert(len < UINT32_MAX);
-    ar.writeString(str, static_cast<uint32_t>(len));
+    ar.writeString(str, std::strlen(str));
     return ar;
   }
 
   Serializer& operator|(Serializer& ar, const std::string& str) {
-    assert(str.length() < UINT32_MAX);
-    ar.writeString(str.data(), static_cast<uint32_t>(str.length()));
+    ar.writeString(str.data(), str.length());
     return ar;
   }
 
-  Serializer& operator|(Serializer& ar, const std::vector<uint8_t>& bin) {
-    assert(bin.size() < UINT32_MAX);
-    ar.writeBinary(bin.data(), static_cast<uint32_t>(bin.size()));
-    return ar;
-  }
-
-  Serializer& operator|(Serializer& ar, const DataObject& object) {
-    switch (object.type) {
-      case DataType::Nil:
-        ar.writeNil();
-        break;
-
-      case DataType::Boolean:
-        ar.writeBoolean(object.boolean);
-        break;
-
-      case DataType::Signed:
-        ar.writeSigned(object.i64);
-        break;
-
-      case DataType::Unsigned:
-        ar.writeUnsigned(object.u64);
-        break;
-
-      case DataType::Float:
-        ar.writeFloat(object.f32);
-        break;
-
-      case DataType::Double:
-        ar.writeDouble(object.f64);
-        break;
-
-      case DataType::String:
-        ar.writeString(object.string.data, object.string.size);
-        break;
-
-      case DataType::Binary:
-        ar.writeBinary(object.binary.data, object.binary.size);
-        break;
-
-      case DataType::Array:
-        ar.writeArrayHeader(object.array.size);
-
-        for (auto& item : object.array) {
-          ar | item;
-        }
-
-        break;
-
-      case DataType::Map:
-        ar.writeMapHeader(object.map.size);
-
-        for (auto& item : object.map) {
-          ar | item.key | item.value;
-        }
-
-        break;
-
-      case DataType::Extension:
-        ar.writeExtension(object.extension.type, object.extension.data, object.extension.size);
-        break;
-    }
-
-    return ar;
-  }
 
   /*
    * Deserializer
    */
-
-  Deserializer& operator|(Deserializer& ar, std::nullptr_t) {
-    ar.readNil();
-    return ar;
-  }
 
   Deserializer& operator|(Deserializer& ar, bool& data) {
     if (!ar.readBoolean(data)) {
@@ -186,109 +112,51 @@ inline namespace v1 {
     return ar;
   }
 
-  Deserializer& operator|(Deserializer& ar, uint8_t& data) {
-    uint64_t raw;
-
-    if (ar.readUnsigned(raw)) {
-      if (raw <= UINT8_MAX) {
-        data = static_cast<uint8_t>(raw);
-      } else {
-        Log::error("Unsigned integer (uint8_t) out of range: %" PRIu64 " (max: %u)\n", raw, UINT8_MAX);
-      }
-    } else {
-      Log::error("Could not read an unsigned integer (uint8_t)...\n");
+  Deserializer& operator|(Deserializer& ar, char& data) {
+    if (!ar.readChar(data)) {
+      Log::error("Could not read a char.\n");
     }
 
+    return ar;
+  }
+
+  Deserializer& operator|(Deserializer& ar, uint8_t& data) {
+    ar.readUnsigned8(data);
     return ar;
   }
 
   Deserializer& operator|(Deserializer& ar, uint16_t& data) {
-    uint64_t raw;
-
-    if (ar.readUnsigned(raw)) {
-      if (raw <= UINT16_MAX) {
-        data = static_cast<uint16_t>(raw);
-      } else {
-        Log::error("Unsigned integer (uint16_t) out of range: %" PRIu64 " (max: %u)\n", raw, UINT16_MAX);
-      }
-    } else {
-      Log::error("Could not read an unsigned integer (uint16_t)...\n");
-    }
-
+    ar.readUnsigned16(data);
     return ar;
   }
 
   Deserializer& operator|(Deserializer& ar, uint32_t& data) {
-    uint64_t raw;
-
-    if (ar.readUnsigned(raw)) {
-      if (raw <= UINT32_MAX) {
-        data = static_cast<uint32_t>(raw);
-      } else {
-        Log::error("Unsigned integer (uint32_t) out of range: %" PRIu64 " (max: %u)\n", raw, UINT32_MAX);
-      }
-    } else {
-      Log::error("Could not read an unsigned integer (uint32_t)...\n");
-    }
-
+    ar.readUnsigned32(data);
     return ar;
   }
 
   Deserializer& operator|(Deserializer& ar, uint64_t& data) {
-    ar.readUnsigned(data);
+    ar.readUnsigned64(data);
     return ar;
   }
 
   Deserializer& operator|(Deserializer& ar, int8_t& data) {
-    int64_t raw;
-
-    if (ar.readSigned(raw)) {
-      if (INT8_MIN <= raw && raw <= INT8_MAX) {
-        data = static_cast<int8_t>(raw);
-      } else {
-        Log::error("Signed integer (int8_t) out of range: %" PRIi64 " (min: %i, max: %i)\n", raw, INT8_MIN, INT8_MAX);
-      }
-    } else {
-      Log::error("Could not read a signed integer (int8_t)...\n");
-    }
-
+    ar.readSigned8(data);
     return ar;
   }
 
   Deserializer& operator|(Deserializer& ar, int16_t& data) {
-    int64_t raw;
-
-    if (ar.readSigned(raw)) {
-      if (INT16_MIN <= raw && raw <= INT16_MAX) {
-        data = static_cast<int16_t>(raw);
-      } else {
-        Log::error("Signed integer (int16_t) out of range: %" PRIi64 " (min: %i, max: %i)\n", raw, INT16_MIN, INT16_MAX);
-      }
-    } else {
-      Log::error("Could not read a signed integer (int16_t)...\n");
-    }
-
+    ar.readSigned16(data);
     return ar;
   }
 
   Deserializer& operator|(Deserializer& ar, int32_t& data) {
-    int64_t raw;
-
-    if (ar.readSigned(raw)) {
-      if (INT32_MIN <= raw && raw <= INT32_MAX) {
-        data = static_cast<int32_t>(raw);
-      } else {
-        Log::error("Signed integer (int32_t) out of range: %" PRIi64 " (min: %i, max: %i)\n", raw, INT32_MIN, INT32_MAX);
-      }
-    } else {
-      Log::error("Could not read a signed integer (int32_t)...\n");
-    }
-
+    ar.readSigned32(data);
     return ar;
   }
 
   Deserializer& operator|(Deserializer& ar, int64_t& data) {
-    ar.readSigned(data);
+    ar.readSigned64(data);
     return ar;
   }
 
@@ -303,9 +171,9 @@ inline namespace v1 {
   }
 
   Deserializer& operator|(Deserializer& ar, BufferRef<char> str) {
-    uint32_t size;
+    std::size_t size;
 
-    if (!ar.readStringHeader(size)) {
+    if (!ar.readSizeHeader(size)) {
       return ar;
     }
 
@@ -322,9 +190,9 @@ inline namespace v1 {
   }
 
   Deserializer& operator|(Deserializer& ar, std::string& str) {
-    uint32_t size;
+    std::size_t size;
 
-    if (!ar.readStringHeader(size)) {
+    if (!ar.readSizeHeader(size)) {
       return ar;
     }
 
@@ -338,49 +206,6 @@ inline namespace v1 {
     str.assign(data.get(), size);
     return ar;
   }
-
-  Deserializer& operator|(Deserializer& ar, BufferRef<uint8_t> bin) {
-    uint32_t size;
-
-    if (!ar.readBinaryHeader(size)) {
-      return ar;
-    }
-
-    if (size != bin.getSize()) {
-      return ar;
-    }
-
-    if (!ar.readBinary(bin.getData(), size)) {
-      return ar;
-    }
-
-    return ar;
-  }
-
-  Deserializer& operator|(Deserializer& ar, std::vector<uint8_t>& bin) {
-    uint32_t size;
-
-    if (!ar.readBinaryHeader(size)) {
-      return ar;
-    }
-
-    auto data = std::make_unique<uint8_t[]>(size);
-
-    if (!ar.readBinary(data.get(), size)) {
-      return ar;
-    }
-
-    bin.clear();
-    bin.assign(data.get(), data.get() + size);
-    return ar;
-  }
-
-  Deserializer& operator|(Deserializer& ar, DataObject& object) {
-    ar.readDataObject(object);
-    return ar;
-  }
-
-
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

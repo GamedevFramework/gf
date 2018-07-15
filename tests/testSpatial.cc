@@ -22,6 +22,7 @@
 
 #include <gf/Log.h>
 #include <gf/Random.h>
+#include <gf/Unused.h>
 
 #include "gtest/gtest.h"
 
@@ -69,6 +70,13 @@ namespace {
   };
 
   template<typename T>
+  struct NullCallback {
+    void operator()(const T& value) {
+      gf::unused(value);
+    }
+  };
+
+  template<typename T>
   struct Callback {
     void operator()(const T& value) {
       set.insert(value);
@@ -110,6 +118,15 @@ namespace {
     return box;
   }
 
+}
+
+TEST(SpatialTest, QuadTreeMoveOnlyType) {
+  gf::QuadTree<std::unique_ptr<std::size_t>, int> qtree(gf::Box2i({ 0, 0 }, { 100, 100 }));
+
+  qtree.insert(std::make_unique<std::size_t>(1), gf::Box2i({ 10, 10 }, { 20, 20 }));
+  std::size_t count = qtree.query(gf::Box2i({ 15, 15 }, { 25, 25 }), NullCallback<std::unique_ptr<std::size_t>>());
+
+  EXPECT_EQ(1u, count);
 }
 
 TEST(SpatialTest, QuadTreeQuery) {
@@ -176,4 +193,13 @@ TEST(SpatialTest, RStarTreeQuery) {
 
   EXPECT_EQ(foundNaiveContain, foundRStarContain);
   EXPECT_EQ(naiveResult.set, rstarResult.set);
+}
+
+TEST(SpatialTest, RStarTreeMoveOnlyType) {
+  gf::RStarTree<std::unique_ptr<std::size_t>, int> rstar;
+
+  rstar.insert(std::make_unique<std::size_t>(1), gf::Box2i({ 10, 10 }, { 20, 20 }));
+  std::size_t count = rstar.query(gf::Box2i({ 15, 15 }, { 25, 25 }), NullCallback<std::unique_ptr<std::size_t>>());
+
+  EXPECT_EQ(1u, count);
 }

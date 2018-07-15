@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0)
 
 project(GF
-  VERSION 0.8.0
+  VERSION 0.9.0
   LANGUAGES CXX C
 )
 
@@ -11,6 +11,7 @@ if(NOT DEFINED CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL "")
 endif()
 
 option(GF_DEBUG "Activate debug build" ON)
+option(GF_BUILD_WITH_OPENGL3 "Build with OpenGL 3.3 instead of OpenGL ES 2.0" OFF)
 option(GF_BUILD_EXAMPLES "Build examples" ON)
 option(GF_BUILD_TESTS "Build tests" ON)
 option(GF_BUILD_DOCUMENTATION "Build documentation (needs Doxygen)" ON)
@@ -24,30 +25,20 @@ set(BUILD_SHARED_LIBS ${GF_SHARED})
 include(GNUInstallDirs)
 set(GF_DATADIR ${CMAKE_INSTALL_FULL_DATADIR})
 
-if(MSVC)
-  message(STATUS "Environment variables:")
-  message(STATUS "- BOOST_INCLUDEDIR: $ENV{BOOST_INCLUDEDIR}")
-  message(STATUS "- BOOST_LIBRARYDIR: $ENV{BOOST_LIBRARYDIR}")
-endif()
-
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 set(SDL2_BUILDING_LIBRARY TRUE)
 find_package(SDL2 REQUIRED)
 
-if(MSVC)
-  message(STATUS "MSVC_VERSION: ${MSVC_VERSION}")
-  if(MSVC_VERSION GREATER_EQUAL 1910)
-    set(Boost_COMPILER "-vc141")
-    set(ENV{Boost_COMPILER} "-vc141")
-  endif()
-  set(Boost_DEBUG TRUE)
-  message(STATUS "Boost_COMPILER: ${Boost_COMPILER}")
-endif()
-
 find_package(Boost REQUIRED COMPONENTS filesystem system)
 find_package(Freetype REQUIRED)
 find_package(ZLIB REQUIRED)
+
+if(APPLE)
+  # on macos, always use OpenGL 3.3
+  set(GF_BUILD_WITH_OPENGL3 ON)
+  find_package(OpenGL REQUIRED)
+endif()
 
 if(MSVC)
   message(STATUS "Using MSVC compiler")
@@ -117,7 +108,6 @@ if(GF_BUILD_TOOLS)
   add_subdirectory(tools/gf_info)
   add_subdirectory(tools/gf_noise)
   add_subdirectory(tools/gf_dungeons)
-  add_subdirectory(tools/gf_pack)
 
   install(
     DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/data/gf_tools"

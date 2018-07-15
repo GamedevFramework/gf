@@ -27,12 +27,11 @@
 #include <fstream>
 #include <memory>
 
-#include <glad/glad.h>
-
 #include <gf/InputStream.h>
 #include <gf/Log.h>
 
 #include "priv/Debug.h"
+#include "priv/OpenGLFwd.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

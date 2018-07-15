@@ -62,6 +62,16 @@ add_custom_target(gf0_shader_headers ALL DEPENDS ${SHADER_HEADERS})
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h @ONLY)
 
+if (NOT APPLE)
+  if (GF_BUILD_WITH_OPENGL3)
+    set(GF_GLAD_SRC "vendor/glad/gl33/src/glad.cc")
+    set(GF_GLAD_INCLUDE_DIR "vendor/glad/gl33/include")
+  else()
+    set(GF_GLAD_SRC "vendor/glad/gles20/src/glad.cc")
+    set(GF_GLAD_INCLUDE_DIR "vendor/glad/gles20/include")
+  endif()
+endif()
+
 if (GF_SINGLE_COMPILTATION_UNIT)
   add_library(gf0
     XUnityBuild.cc
@@ -74,6 +84,8 @@ else()
     AnimatedSprite.cc
     Animation.cc
     AssetManager.cc
+    BasicSprite.cc
+    BasicText.cc
     BinaryFile.cc
     Blend.cc
     BufferedGeometry.cc
@@ -91,8 +103,6 @@ else()
     Cursor.cc
     Curve.cc
     Curves.cc
-    Data.cc
-    DataObject.cc
     Direction.cc
     Drawable.cc
     Easings.cc
@@ -144,7 +154,6 @@ else()
     RenderWindow.cc
     ResourceManager.cc
     Serialization.cc
-    SerializationHeaders.cc
     SerializationOps.cc
     Shader.cc
     Shape.cc
@@ -166,6 +175,7 @@ else()
     Triangulation.cc
     UI.cc
     Vector.cc
+    Vertex.cc
     VertexArray.cc
     VertexBuffer.cc
     View.cc
@@ -180,8 +190,8 @@ else()
     # priv
     priv/Debug.cc
     # vendor
-    vendor/tinyxml2/tinyxml2.cpp
-    vendor/glad/src/glad.cc
+    vendor/pugixml/src/pugixml.cpp
+    ${GF_GLAD_SRC}
   )
 endif()
 
@@ -189,6 +199,12 @@ add_dependencies(gf0
   gf0_shader_headers
   gf0_gamecontrollerdb
 )
+
+if (GF_BUILD_WITH_OPENGL3)
+  target_compile_definitions(gf0
+    PRIVATE GF_OPENGL3
+  )
+endif()
 
 if (GF_DEBUG)
   target_compile_definitions(gf0
@@ -217,8 +233,19 @@ target_include_directories(gf0
     ${FREETYPE_INCLUDE_DIRS}
     ${ZLIB_INCLUDE_DIRS}
     ${CMAKE_CURRENT_BINARY_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/vendor/glad/include
 )
+
+if (APPLE)
+  target_include_directories(gf0
+    PRIVATE
+      ${OPENGL_INCLUDE_DIR}
+  )
+else()
+  target_include_directories(gf0
+    PRIVATE
+      "${CMAKE_CURRENT_SOURCE_DIR}/${GF_GLAD_INCLUDE_DIR}"
+  )
+endif()
 
 target_link_libraries(gf0
   ${SDL2_LIBRARY}
@@ -226,6 +253,12 @@ target_link_libraries(gf0
   ${FREETYPE_LIBRARIES}
   ${ZLIB_LIBRARIES}
 )
+
+if (APPLE)
+  target_link_libraries(gf0
+    ${OPENGL_gl_LIBRARY}
+  )
+endif()
 
 # workaround for Travis-CI
 # see: https://bugs.launchpad.net/ubuntu/+source/gcc-5/+bug/1568899

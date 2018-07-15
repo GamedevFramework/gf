@@ -6,4 +6,5 @@ Julien Bernard
 
 # Contributors
 
-Lilian Franchi
+- Lilian Franchi (@Xeryko), game widgets
+- Sherjil Ozair (@sherjilozair), macos support

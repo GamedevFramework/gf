@@ -489,6 +489,8 @@ inline namespace v1 {
     // framerate limit handling
     Clock m_clock;
     Time m_duration;
+
+    unsigned m_vao;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

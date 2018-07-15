@@ -39,7 +39,7 @@ inline namespace v1 {
    * @brief A post-processing drawable
    *
    * This class is a light-weight object to apply a post-processing effect to
-   * a texture. The texture generally comes froma gf::RenderTexture.
+   * a texture. The texture generally comes from a gf::RenderTexture.
    *
    * @sa gf::RenderTexture
    */

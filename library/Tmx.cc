@@ -33,9 +33,11 @@
 #include <gf/Log.h>
 #include <gf/Unused.h>
 
-#include "vendor/tinyxml2/tinyxml2.h"
+#include "vendor/pugixml/src/pugixml.hpp"
 
 namespace fs = boost::filesystem;
+
+using namespace std::string_literals;
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -198,200 +200,69 @@ inline namespace v1 {
 
   namespace {
 
-    enum class Requirement {
-      Optional,
-      Mandatory,
-    };
-
-    class XMLElementWrapper {
-    public:
-      XMLElementWrapper(const tinyxml2::XMLElement *elt)
-      : m_elt(elt)
-      {
-
+    pugi::xml_attribute required(pugi::xml_attribute attr) {
+      if (!attr) {
+        Log::error("Required attribute is missing: %s\n", attr.name());
       }
 
-      bool is(const char *name) const {
-        return !std::strcmp(m_elt->Name(), name);
+      return attr;
+    }
+
+    uint8_t convertHexChar(char c) {
+      if ('0' <= c && c <= '9') {
+        return c - '0';
       }
 
-      bool hasChild(const char *name) const {
-        return m_elt->FirstChildElement(name) != nullptr;
+      if ('a' <= c && c <= 'f') {
+        return c - 'a' + 10;
       }
 
-      template<typename Func>
-      void parseEachElement(Func func) const {
-        const tinyxml2::XMLElement *child = m_elt->FirstChildElement();
-
-        while (child != nullptr) {
-          func(child);
-          child = child->NextSiblingElement();
-        }
+      if ('A' <= c && c <= 'F') {
+        return c - 'A' + 10;
       }
 
-      template<typename Func>
-      void parseManyElements(const char *name, Func func) const {
-        const tinyxml2::XMLElement *child = m_elt->FirstChildElement(name);
+      Log::error("Invalid character: '%c' (%x)\n", c, static_cast<int>(c));
+      return 0;
+    }
 
-        while (child != nullptr) {
-          func(child);
-          child = child->NextSiblingElement(name);
-        }
+    Color4u computeColor(pugi::xml_attribute attr, Color4u def = Color4u(0x00, 0x00, 0x00, 0xFF)) {
+      if (!attr) {
+        return def;
       }
 
-      template<typename Func>
-      void parseOneElement(const char *name, Func func) const {
-        const tinyxml2::XMLElement *child = m_elt->FirstChildElement(name);
+      const char *value = attr.as_string();
+      auto size = std::strlen(value);
+      assert(size > 0);
 
-        if (child == nullptr) {
-          return;
-        }
-
-        func(child);
-        child = child->NextSiblingElement(name);
-
-        if (child != nullptr) {
-          Log::error("Multiple chidren where a single child was expected for element: %s\n", name);
-        }
+      if (value[0] == '#') {
+        ++value;
+        --size;
       }
 
-      bool hasAttribute(const char *name) const {
-        return m_elt->Attribute(name) != nullptr;
+      Color4u color = def;
+
+      switch (size) {
+        case 6:
+          color.a = 0xFF;
+          color.r = (convertHexChar(value[0]) << 4) + convertHexChar(value[1]);
+          color.g = (convertHexChar(value[2]) << 4) + convertHexChar(value[3]);
+          color.b = (convertHexChar(value[4]) << 4) + convertHexChar(value[5]);
+          break;
+
+        case 8:
+          color.a = (convertHexChar(value[0]) << 4) + convertHexChar(value[1]);
+          color.r = (convertHexChar(value[2]) << 4) + convertHexChar(value[3]);
+          color.g = (convertHexChar(value[4]) << 4) + convertHexChar(value[5]);
+          color.b = (convertHexChar(value[6]) << 4) + convertHexChar(value[7]);
+          break;
+
+        default:
+          Log::error("Unknown color format: %s\n", value);
+          break;
       }
 
-      unsigned getUIntAttribute(const char *name, Requirement req = Requirement::Mandatory, unsigned val = 0) const {
-        int err = m_elt->QueryUnsignedAttribute(name, &val);
-        return handleErrorAndReturn(name, val, err, req);
-      }
-
-      int getIntAttribute(const char *name, Requirement req = Requirement::Mandatory, int val = 0) const {
-        int err = m_elt->QueryIntAttribute(name, &val);
-        return handleErrorAndReturn(name, val, err, req);
-      }
-
-      double getDoubleAttribute(const char *name, Requirement req = Requirement::Mandatory, double val = 0.) const {
-        int err = m_elt->QueryDoubleAttribute(name, &val);
-        return handleErrorAndReturn(name, val, err, req);
-      }
-
-      bool getBoolAttribute(const char *name, Requirement req = Requirement::Mandatory, bool val = false) const {
-        unsigned zeroOrOne = val ? 1 : 0;
-        int err = m_elt->QueryUnsignedAttribute(name, &zeroOrOne);
-        zeroOrOne = handleErrorAndReturn(name, zeroOrOne, err, req);
-        assert(zeroOrOne == 0 || zeroOrOne == 1);
-        return zeroOrOne == 1;
-      }
-
-      std::string getStringAttribute(const char *name, Requirement req = Requirement::Mandatory, const char *val = "") const {
-        const char *attr = m_elt->Attribute(name);
-        int err = tinyxml2::XML_SUCCESS;
-
-        if (!attr) {
-          attr = val;
-          err = tinyxml2::XML_NO_ATTRIBUTE;
-        }
-
-        assert(attr);
-        return handleErrorAndReturn(name, std::string(attr), err, req);
-      }
-
-      Color4u getColorAttribute(const char *name, Requirement req = Requirement::Mandatory, Color4u val = Color4u(0x00, 0x00, 0x00, 0xFF)) const {
-        const char *attr = m_elt->Attribute(name);
-        int err = tinyxml2::XML_SUCCESS;
-
-        if (!attr) {
-          err = tinyxml2::XML_NO_ATTRIBUTE;
-          return handleErrorAndReturn(name, val, err, req);
-        }
-
-        assert(attr);
-
-        auto size = std::strlen(attr);
-        assert(size > 0);
-
-        if (attr[0] == '#') {
-          ++attr;
-          --size;
-        }
-
-        Color4u color = val;
-
-        switch (size) {
-          case 6:
-            color.a = 0xFF;
-            color.r = (convertHexChar(attr[0]) << 4) + convertHexChar(attr[1]);
-            color.g = (convertHexChar(attr[2]) << 4) + convertHexChar(attr[3]);
-            color.b = (convertHexChar(attr[4]) << 4) + convertHexChar(attr[5]);
-            break;
-
-          case 8:
-            color.a = (convertHexChar(attr[0]) << 4) + convertHexChar(attr[1]);
-            color.r = (convertHexChar(attr[2]) << 4) + convertHexChar(attr[3]);
-            color.g = (convertHexChar(attr[4]) << 4) + convertHexChar(attr[5]);
-            color.b = (convertHexChar(attr[6]) << 4) + convertHexChar(attr[7]);
-            break;
-
-          default:
-            Log::error("Unknown color format: %s\n", attr);
-            break;
-        }
-
-        return color;
-      }
-
-      bool isEnumAttribute(const char *name, const char *value) const {
-        return m_elt->Attribute(name, value) != nullptr;
-      }
-
-      std::string getText() const {
-        const char *text = m_elt->GetText();
-        return text ? text : "";
-      }
-
-    private:
-      const tinyxml2::XMLElement * const m_elt;
-
-      template<typename T>
-      static T handleErrorAndReturn(const char *name, T val, int err, Requirement req) {
-        if (err == tinyxml2::XML_SUCCESS) {
-          return val;
-        }
-
-        if (err == tinyxml2::XML_NO_ATTRIBUTE) {
-          if (req == Requirement::Mandatory) {
-            Log::error("Mandatory attribute is missing: %s\n", name);
-          }
-
-          return val;
-        }
-
-        if (err == tinyxml2::XML_WRONG_ATTRIBUTE_TYPE) {
-          Log::error("Wrong attribute type: %s\n", name);
-          return val;
-        }
-
-        Log::error("Unknown error with attribute: %s\n", name);
-        return val;
-      }
-
-      static uint8_t convertHexChar(char c) {
-        if ('0' <= c && c <= '9') {
-          return c - '0';
-        }
-
-        if ('a' <= c && c <= 'f') {
-          return c - 'a' + 10;
-        }
-
-        if ('A' <= c && c <= 'F') {
-          return c - 'A' + 10;
-        }
-
-        Log::error("Invalid character: '%c' (%x)\n", c, static_cast<int>(c));
-        return 0;
-      };
-
-    };
+      return color;
+    }
 
     struct TmxParserCtx {
       Path mapPath;
@@ -520,19 +391,23 @@ inline namespace v1 {
       return uncompressed;
     }
 
-    TmxFormat parseDataFormat(const XMLElementWrapper elt) {
-      assert(elt.is("data"));
+    TmxFormat parseDataFormat(const pugi::xml_node node) {
+      assert(node.name() == "data"s);
 
-      if (elt.isEnumAttribute("encoding", "csv")) {
+      std::string encoding = node.attribute("encoding").as_string();
+
+      if (encoding == "csv") {
         return TmxFormat::Csv;
       }
 
-      if (elt.isEnumAttribute("encoding", "base64")) {
-        if (elt.isEnumAttribute("compression", "zlib")) {
+      if (encoding == "base64") {
+        std::string compression = node.attribute("compression").as_string();
+
+        if (compression == "zlib") {
           return TmxFormat::Base64_Zlib;
         }
 
-        if (elt.isEnumAttribute("compression", "gzip")) {
+        if (compression == "gzip") {
           return TmxFormat::Base64_Gzip;
         }
 
@@ -542,8 +417,8 @@ inline namespace v1 {
       return TmxFormat::Xml;
     }
 
-    std::vector<uint8_t> parseDataBuffer(const XMLElementWrapper elt, TmxFormat format) {
-      assert(elt.is("data"));
+    std::vector<uint8_t> parseDataBuffer(const pugi::xml_node node, TmxFormat format) {
+      assert(node.name() == "data"s);
 
       std::vector<uint8_t> data;
 
@@ -554,12 +429,12 @@ inline namespace v1 {
           break;
 
         case TmxFormat::Base64:
-          data = parseDataBase64(elt.getText());
+          data = parseDataBase64(node.child_value());
           break;
 
         case TmxFormat::Base64_Zlib:
         case TmxFormat::Base64_Gzip:
-          data = parseDataCompressed(parseDataBase64(elt.getText()));
+          data = parseDataCompressed(parseDataBase64(node.child_value()));
           break;
       }
 
@@ -594,84 +469,83 @@ inline namespace v1 {
       return cell;
     }
 
-    TmxProperties parseTmxProperties(const XMLElementWrapper elt) {
+    TmxProperties parseTmxProperties(const pugi::xml_node node) {
       TmxProperties tmx;
 
-      elt.parseOneElement("properties", [&tmx](const XMLElementWrapper elt) {
-        elt.parseManyElements("property", [&tmx](const XMLElementWrapper elt) {
-
-          std::string name = elt.getStringAttribute("name");
+      for (pugi::xml_node properties : node.children("properties")) {
+        for (pugi::xml_node property : properties.children("property")) {
+          std::string name = required(property.attribute("name")).as_string();
           assert(!name.empty());
-          std::string value = elt.getStringAttribute("value");
 
-          if (elt.hasAttribute("type")) {
-            if (elt.isEnumAttribute("type", "string")) {
-              tmx.addStringProperty(std::move(name), elt.getStringAttribute("value"));
-            } else if (elt.isEnumAttribute("type", "int")) {
-              tmx.addIntProperty(std::move(name), elt.getIntAttribute("value"));
-            } else if (elt.isEnumAttribute("type", "float")) {
-              tmx.addFloatProperty(std::move(name), elt.getDoubleAttribute("value"));
-            } else if (elt.isEnumAttribute("type", "bool")) {
-              std::string trueOrFalse = elt.getStringAttribute("value");
-              assert(trueOrFalse == "true" || trueOrFalse == "false");
-              tmx.addBoolProperty(std::move(name), trueOrFalse == "true");
-            } else if (elt.isEnumAttribute("type", "color")) {
-              tmx.addColorProperty(std::move(name), elt.getColorAttribute("value"));
-            } else if (elt.isEnumAttribute("type", "file")) {
-              tmx.addFileProperty(std::move(name), elt.getStringAttribute("value"));
+          if (property.attribute("type")) {
+            std::string type = property.attribute("type").as_string();
+
+            if (type == "string") {
+              tmx.addStringProperty(std::move(name), required(property.attribute("value")).as_string());
+            } else if (type == "int") {
+              tmx.addIntProperty(std::move(name), required(property.attribute("value")).as_int());
+            } else if (type == "float") {
+              tmx.addFloatProperty(std::move(name), required(property.attribute("value")).as_double());
+            } else if (type == "bool") {
+              tmx.addBoolProperty(std::move(name), required(property.attribute("value")).as_bool());
+            } else if (type == "color") {
+              tmx.addColorProperty(std::move(name), computeColor(required(property.attribute("value"))));
+            } else if (type == "file") {
+              tmx.addFileProperty(std::move(name), required(property.attribute("value")).as_string());
             } else {
-              Log::error("Wrong type string: '%s'\n", elt.getStringAttribute("type").c_str());
+              Log::error("Wrong type string: '%s'\n", type.c_str());
             }
           } else {
-            tmx.addStringProperty(std::move(name), std::move(value));
+            tmx.addStringProperty(std::move(name), required(property.attribute("value")).as_string());
           }
-        });
-      });
+        }
+      }
 
       return tmx;
     }
 
 
-    void parseTmxLayer(const XMLElementWrapper elt, TmxLayer& tmx) {
-      tmx.properties = parseTmxProperties(elt);
+    void parseTmxLayer(const pugi::xml_node node, TmxLayer& tmx) {
+      tmx.properties = parseTmxProperties(node);
 
-      tmx.name = elt.getStringAttribute("name");
-      tmx.opacity = elt.getDoubleAttribute("opacity", Requirement::Optional, 1.0);
-      tmx.visible = elt.getBoolAttribute("visible", Requirement::Optional, true);
-      tmx.offset.x = elt.getIntAttribute("offsetx", Requirement::Optional, 0);
-      tmx.offset.y = elt.getIntAttribute("offsety", Requirement::Optional, 0);
+      tmx.name = required(node.attribute("name")).as_string();
+      tmx.opacity = node.attribute("opacity").as_double(1.0);
+      tmx.visible = node.attribute("visible").as_bool(true);
+      tmx.offset.x = node.attribute("offsetx").as_int(0);
+      tmx.offset.y = node.attribute("offsety").as_int(0);
     }
 
 
-    std::unique_ptr<TmxTileLayer> parseTmxTileLayer(const XMLElementWrapper elt) {
-      assert(elt.is("layer"));
+    std::unique_ptr<TmxTileLayer> parseTmxTileLayer(const pugi::xml_node node) {
+      assert(node.name() == "layer"s);
 
       auto tmx = std::make_unique<TmxTileLayer>();
-      parseTmxLayer(elt, *tmx);
+      parseTmxLayer(node, *tmx);
 
-      elt.parseOneElement("data", [&tmx](const XMLElementWrapper elt) {
-        auto format = parseDataFormat(elt);
+      for (pugi::xml_node data : node.children("data")) {
+        auto format = parseDataFormat(data);
 
         switch (format) {
           case TmxFormat::Base64:
           case TmxFormat::Base64_Zlib:
           case TmxFormat::Base64_Gzip:
           {
-            std::vector<uint8_t> data = parseDataBuffer(elt, format);
+            std::vector<uint8_t> buffer = parseDataBuffer(data, format);
 
-            const std::size_t size = data.size();
+            const std::size_t size = buffer.size();
             assert(size % 4 == 0);
 
             for (std::size_t i = 0; i < size; i += 4) {
-              unsigned gid = data[i] | (data[i + 1] << 8) | (data[i + 2] << 16) | (data[i + 3] << 24);
+              unsigned gid = buffer[i] | (buffer[i + 1] << 8) | (buffer[i + 2] << 16) | (buffer[i + 3] << 24);
               tmx->cells.push_back(decodeGID(gid));
             }
+
             break;
           }
 
           case TmxFormat::Csv:
           {
-            const std::string csv = elt.getText();
+            const std::string csv = data.child_value();
             std::vector<std::string> items;
             boost::algorithm::split(items, csv, boost::algorithm::is_any_of(","));
 
@@ -684,47 +558,43 @@ inline namespace v1 {
           }
 
           case TmxFormat::Xml:
-            elt.parseManyElements("tile", [&tmx](const XMLElementWrapper elt) {
-              unsigned gid = elt.getUIntAttribute("gid");
+            for (pugi::xml_node tile : data.children("tile")) {
+              unsigned gid = required(tile.attribute("gid")).as_uint();
               tmx->cells.push_back(decodeGID(gid));
-            });
+            };
 
             break;
         }
-      });
+      }
 
       return tmx;
     }
 
-    std::unique_ptr<TmxImage> parseTmxImage(const XMLElementWrapper elt, const TmxParserCtx& ctx) {
-      assert(elt.is("image"));
+    std::unique_ptr<TmxImage> parseTmxImage(const pugi::xml_node node, const TmxParserCtx& ctx) {
+      assert(node.name() == "image"s);
 
       auto tmx = std::make_unique<TmxImage>();
 
-      tmx->format = elt.getStringAttribute("format", Requirement::Optional);
-      tmx->source = ctx.currentPath / elt.getStringAttribute("source");
-      tmx->transparent = elt.getColorAttribute("trans", Requirement::Optional);
-      tmx->size.width = elt.getUIntAttribute("width", Requirement::Optional);
-      tmx->size.height = elt.getUIntAttribute("height", Requirement::Optional);
+      tmx->format = node.attribute("format").as_string();
+      tmx->source = ctx.currentPath / required(node.attribute("source")).as_string();
+      tmx->transparent = computeColor(node.attribute("trans"));
+      tmx->size.width = node.attribute("width").as_uint();
+      tmx->size.height = node.attribute("height").as_uint();
 
-#if 0
-      elt.parseOneElement("data", [](const XMLElementWrapper elt) {
-        assert(false && "Not implemented"); // TODO
-      });
-#endif
+      // TODO: handle "data"
 
       return tmx;
     }
 
-    std::unique_ptr<TmxImageLayer> parseTmxImageLayer(const XMLElementWrapper elt, const TmxParserCtx& ctx) {
-      assert(elt.is("imagelayer"));
+    std::unique_ptr<TmxImageLayer> parseTmxImageLayer(const pugi::xml_node node, const TmxParserCtx& ctx) {
+      assert(node.name() == "imagelayer"s);
 
       auto tmx = std::make_unique<TmxImageLayer>();
-      parseTmxLayer(elt, *tmx);
+      parseTmxLayer(node, *tmx);
 
-      elt.parseOneElement("image", [&tmx, &ctx](const XMLElementWrapper elt) {
-        tmx->image = parseTmxImage(elt, ctx);
-      });
+      for (pugi::xml_node image : node.children("image")) {
+        tmx->image = parseTmxImage(image, ctx);
+      }
 
       return tmx;
     }
@@ -748,104 +618,104 @@ inline namespace v1 {
       return ret;
     }
 
-    void parseTmxObjectCommon(const XMLElementWrapper elt, TmxObject& tmx) {
-      tmx.properties = parseTmxProperties(elt);
+    void parseTmxObjectCommon(const pugi::xml_node node, TmxObject& tmx) {
+      tmx.properties = parseTmxProperties(node);
 
-      tmx.id = elt.getUIntAttribute("id", Requirement::Optional);
-      tmx.name = elt.getStringAttribute("name", Requirement::Optional);
-      tmx.type = elt.getStringAttribute("type", Requirement::Optional);
-      tmx.position.x = elt.getUIntAttribute("x");
-      tmx.position.y = elt.getUIntAttribute("y");
-      tmx.rotation = elt.getDoubleAttribute("rotation", Requirement::Optional);
-      tmx.visible = elt.getBoolAttribute("visible", Requirement::Optional, true);
+      tmx.id = node.attribute("id").as_uint();
+      tmx.name = node.attribute("name").as_string();
+      tmx.type = node.attribute("type").as_string();
+      tmx.position.x = required(node.attribute("x")).as_uint();
+      tmx.position.y = required(node.attribute("y")).as_uint();
+      tmx.rotation = node.attribute("rotation").as_double();
+      tmx.visible = node.attribute("visible").as_bool(true);
     }
 
-    std::unique_ptr<TmxObject> parseTmxObject(const XMLElementWrapper elt) {
-      if (elt.hasChild("polygon")) {
+    std::unique_ptr<TmxObject> parseTmxObject(const pugi::xml_node node) {
+      if (node.child("polygon")) {
         auto tmx = std::make_unique<TmxPolygon>();
-        parseTmxObjectCommon(elt, *tmx);
+        parseTmxObjectCommon(node, *tmx);
 
         tmx->kind = TmxObject::Polygon;
 
-        elt.parseOneElement("polygon", [&tmx](const XMLElementWrapper elt) {
-          std::string points = elt.getStringAttribute("points");
-          tmx->points = parsePoints(points);
-        });
+        std::string points = required(node.child("polygon").attribute("points")).as_string();
+        tmx->points = parsePoints(points);
 
         return std::move(tmx);
       }
 
-      if (elt.hasChild("polyline")) {
+      if (node.child("polyline")) {
         auto tmx = std::make_unique<TmxPolyline>();
-        parseTmxObjectCommon(elt, *tmx);
+        parseTmxObjectCommon(node, *tmx);
 
         tmx->kind = TmxObject::Polyline;
 
-        elt.parseOneElement("polyline", [&tmx](const XMLElementWrapper elt) {
-          std::string points = elt.getStringAttribute("points");
-          tmx->points = parsePoints(points);
-        });
+        std::string points = required(node.child("polyline").attribute("points")).as_string();
+        tmx->points = parsePoints(points);
 
         return std::move(tmx);
       }
 
-      if (elt.hasChild("text")) {
+      if (node.child("text")) {
         auto tmx = std::make_unique<TmxText>();
-        parseTmxObjectCommon(elt, *tmx);
+        parseTmxObjectCommon(node, *tmx);
 
         tmx->kind = TmxObject::Text;
 
-        elt.parseOneElement("text", [&tmx](const XMLElementWrapper elt) {
-          tmx->fontFamily = elt.getStringAttribute("fontfamily", Requirement::Optional, "sans-serif");
-          tmx->sizeInPixels = elt.getUIntAttribute("pixelsize", Requirement::Optional, 16);
-          tmx->wrap = elt.getBoolAttribute("wrap", Requirement::Optional, false);
-          tmx->color = elt.getColorAttribute("color", Requirement::Optional, { 0x00, 0x00, 0x00, 0xFF });
-          tmx->bold = elt.getBoolAttribute("bold", Requirement::Optional, false);
-          tmx->italic = elt.getBoolAttribute("italic", Requirement::Optional, false);
-          tmx->underline = elt.getBoolAttribute("underline", Requirement::Optional, false);
-          tmx->strikeout = elt.getBoolAttribute("strikeout", Requirement::Optional, false);
-          tmx->kerning = elt.getBoolAttribute("kerning", Requirement::Optional, true);
+        pugi::xml_node text = node.child("text");
 
-          tmx->halign = TmxText::HAlign::Left;
+        tmx->fontFamily = text.attribute("fontfamily").as_string("sans-serif");
+        tmx->sizeInPixels = text.attribute("pixelsize").as_uint(16);
+        tmx->wrap = text.attribute("wrap").as_bool(false);
+        tmx->color = computeColor(text.attribute("color"), { 0x00, 0x00, 0x00, 0xFF });
+        tmx->bold = text.attribute("bold").as_bool(false);
+        tmx->italic = text.attribute("italic").as_bool(false);
+        tmx->underline = text.attribute("underline").as_bool(false);
+        tmx->strikeout = text.attribute("strikeout").as_bool(false);
+        tmx->kerning = text.attribute("kerning").as_bool(true);
 
-          if (elt.hasAttribute("halign")) {
-            if (elt.isEnumAttribute("halign", "left")) {
-              tmx->halign = TmxText::HAlign::Left;
-            } else if (elt.isEnumAttribute("halign", "center")) {
-              tmx->halign = TmxText::HAlign::Center;
-            } else if (elt.isEnumAttribute("halign", "right")) {
-              tmx->halign = TmxText::HAlign::Right;
-            } else {
-              Log::error("Wrong halign string: '%s'\n", elt.getStringAttribute("halign").c_str());
-            }
+        tmx->halign = TmxText::HAlign::Left;
+
+        if (text.attribute("halign")) {
+          std::string halign = text.attribute("halign").as_string();
+
+          if (halign == "left") {
+            tmx->halign = TmxText::HAlign::Left;
+          } else if (halign == "center") {
+            tmx->halign = TmxText::HAlign::Center;
+          } else if (halign == "right") {
+            tmx->halign = TmxText::HAlign::Right;
+          } else {
+            Log::error("Wrong halign string: '%s'\n", halign.c_str());
           }
+        }
 
-          tmx->valign = TmxText::VAlign::Top;
+        tmx->valign = TmxText::VAlign::Top;
 
-          if (elt.hasAttribute("valign")) {
-            if (elt.isEnumAttribute("valign", "left")) {
-              tmx->valign = TmxText::VAlign::Top;
-            } else if (elt.isEnumAttribute("valign", "center")) {
-              tmx->valign = TmxText::VAlign::Center;
-            } else if (elt.isEnumAttribute("valign", "right")) {
-              tmx->valign = TmxText::VAlign::Bottom;
-            } else {
-              Log::error("Wrong valign string: '%s'\n", elt.getStringAttribute("valign").c_str());
-            }
+        if (text.attribute("valign")) {
+          std::string valign = text.attribute("valign").as_string();
+
+          if (valign == "left") {
+            tmx->valign = TmxText::VAlign::Top;
+          } else if (valign == "center") {
+            tmx->valign = TmxText::VAlign::Center;
+          } else if (valign == "right") {
+            tmx->valign = TmxText::VAlign::Bottom;
+          } else {
+            Log::error("Wrong valign string: '%s'\n", valign.c_str());
           }
+        }
 
-          tmx->text = elt.getText();
-        });
+        tmx->text = text.child_value();
 
         return std::move(tmx);
       }
 
-      if (elt.hasAttribute("gid")) {
-        unsigned gid = elt.getUIntAttribute("gid");
+      if (node.attribute("gid")) {
+        unsigned gid = node.attribute("gid").as_uint();
         TmxCell cell = decodeGID(gid);
 
         auto tmx = std::make_unique<TmxTileObject>();
-        parseTmxObjectCommon(elt, *tmx);
+        parseTmxObjectCommon(node, *tmx);
 
         tmx->kind = TmxObject::Tile;
         tmx->gid = cell.gid;
@@ -854,70 +724,74 @@ inline namespace v1 {
         return std::move(tmx);
       }
 
-      if (elt.hasChild("ellipse")) {
+      if (node.child("ellipse")) {
         auto tmx = std::make_unique<TmxEllipse>();
-        parseTmxObjectCommon(elt, *tmx);
+        parseTmxObjectCommon(node, *tmx);
 
         tmx->kind = TmxObject::Ellipse;
-        tmx->size.width = elt.getIntAttribute("width");
-        tmx->size.height = elt.getIntAttribute("height");
+        tmx->size.width = required(node.attribute("width")).as_int();
+        tmx->size.height = required(node.attribute("height")).as_int();
 
         return std::move(tmx);
       }
 
       auto tmx = std::make_unique<TmxRectangle>();
-      parseTmxObjectCommon(elt, *tmx);
+      parseTmxObjectCommon(node, *tmx);
 
       tmx->kind = TmxObject::Rectangle;
-      tmx->size.width = elt.getIntAttribute("width");
-      tmx->size.height = elt.getIntAttribute("height");
+      tmx->size.width = required(node.attribute("width")).as_int();
+      tmx->size.height = required(node.attribute("height")).as_int();
 
       return std::move(tmx);
     }
 
-    std::unique_ptr<TmxObjectLayer> parseTmxObjectLayer(const XMLElementWrapper elt) {
-      assert(elt.is("objectgroup"));
+    std::unique_ptr<TmxObjectLayer> parseTmxObjectLayer(const pugi::xml_node node) {
+      assert(node.name() == "objectgroup"s);
 
       auto tmx = std::make_unique<TmxObjectLayer>();
-      parseTmxLayer(elt, *tmx);
+      parseTmxLayer(node, *tmx);
 
-      tmx->color = elt.getColorAttribute("color", Requirement::Optional);
+      tmx->color = computeColor(node.attribute("color"));
       tmx->drawOrder = TmxDrawOrder::TopDown;
 
-      if (elt.hasAttribute("draworder")) {
-        if (elt.isEnumAttribute("draworder", "topdown")) {
+      if (node.attribute("draworder")) {
+        std::string drawOrder = node.attribute("draworder").as_string();
+
+        if (drawOrder == "topdown") {
           tmx->drawOrder = TmxDrawOrder::TopDown;
-        } else if (elt.isEnumAttribute("draworder", "index")) {
+        } else if (drawOrder == "index") {
           tmx->drawOrder = TmxDrawOrder::Index;
         } else {
-          Log::error("Wrong draw order string: '%s'\n", elt.getStringAttribute("draworder").c_str());
+          Log::error("Wrong draw order string: '%s'\n", drawOrder.c_str());
         }
       }
 
-      elt.parseManyElements("object", [&tmx](const XMLElementWrapper elt) {
-        tmx->objects.push_back(parseTmxObject(elt));
-      });
+      for (pugi::xml_node object : node.children("object")) {
+        tmx->objects.push_back(parseTmxObject(object));
+      }
 
       return tmx;
     }
 
-    std::unique_ptr<TmxGroupLayer> parseTmxGroupLayer(const XMLElementWrapper elt, const TmxParserCtx& ctx) {
-      assert(elt.is("group"));
+    std::unique_ptr<TmxGroupLayer> parseTmxGroupLayer(const pugi::xml_node node, const TmxParserCtx& ctx) {
+      assert(node.name() == "group"s);
 
       auto tmx = std::make_unique<TmxGroupLayer>();
-      parseTmxLayer(elt, *tmx);
+      parseTmxLayer(node, *tmx);
 
-      elt.parseEachElement([&tmx, &ctx](const XMLElementWrapper elt) {
-        if (elt.is("layer")) {
-          tmx->layers.push_back(parseTmxTileLayer(elt));
-        } else if (elt.is("objectgroup")) {
-          tmx->layers.push_back(parseTmxObjectLayer(elt));
-        } else if (elt.is("imagelayer")) {
-          tmx->layers.push_back(parseTmxImageLayer(elt, ctx));
-        } else if (elt.is("group")) {
-          tmx->layers.push_back(parseTmxGroupLayer(elt, ctx));
+      for (pugi::xml_node layer : node.children()) {
+        std::string name = layer.name();
+
+        if (name == "layer") {
+          tmx->layers.push_back(parseTmxTileLayer(layer));
+        } else if (name == "objectgroup") {
+          tmx->layers.push_back(parseTmxObjectLayer(layer));
+        } else if (name == "imagelayer") {
+          tmx->layers.push_back(parseTmxImageLayer(layer, ctx));
+        } else if (name == "group") {
+          tmx->layers.push_back(parseTmxGroupLayer(layer, ctx));
         }
-      });
+      };
 
       return tmx;
     }
@@ -926,43 +800,43 @@ inline namespace v1 {
      * Tilesets
      */
 
-    TmxFrame parseTmxFrame(const XMLElementWrapper elt) {
-      assert(elt.is("frame"));
+    TmxFrame parseTmxFrame(const pugi::xml_node node) {
+      assert(node.name() == "frame"s);
 
       TmxFrame tmx;
 
-      tmx.tileId = elt.getUIntAttribute("tileId");
-      tmx.duration = gf::milliseconds(elt.getUIntAttribute("duration"));
+      tmx.tileId = required(node.attribute("tileId")).as_uint();
+      tmx.duration = gf::milliseconds(required(node.attribute("duration")).as_uint());
 
       return tmx;
     }
 
-    std::unique_ptr<TmxAnimation> parseTmxAnimation(const XMLElementWrapper elt) {
-      assert(elt.is("animation"));
+    std::unique_ptr<TmxAnimation> parseTmxAnimation(const pugi::xml_node node) {
+      assert(node.name() == "animation"s);
 
       auto tmx = std::make_unique<TmxAnimation>();
 
-      elt.parseManyElements("frame", [&tmx](const XMLElementWrapper elt) {
-        tmx->frames.push_back(parseTmxFrame(elt));
-      });
+      for (pugi::xml_node frame : node.children("frame")) {
+        tmx->frames.push_back(parseTmxFrame(frame));
+      }
 
       return tmx;
     }
 
-    TmxTile parseTmxTile(const XMLElementWrapper elt, TmxParserCtx& ctx) {
-      assert(elt.is("tile"));
+    TmxTile parseTmxTile(const pugi::xml_node node, TmxParserCtx& ctx) {
+      assert(node.name() == "tile"s);
 
       TmxTile tmx;
 
-      tmx.properties = parseTmxProperties(elt);
-      tmx.id = elt.getUIntAttribute("id");
-      tmx.type = elt.getStringAttribute("type", Requirement::Optional);
+      tmx.properties = parseTmxProperties(node);
+      tmx.id = required(node.attribute("id")).as_uint();
+      tmx.type = node.attribute("type").as_string();
 
       static constexpr unsigned Invalid = static_cast<unsigned>(-1);
 
       tmx.terrain = { { Invalid, Invalid, Invalid, Invalid } };
 
-      std::string terrain = elt.getStringAttribute("terrain", Requirement::Optional);
+      std::string terrain = node.attribute("terrain").as_string();
 
       if (!terrain.empty()) {
         std::vector<std::string> items;
@@ -976,121 +850,125 @@ inline namespace v1 {
         }
       }
 
-      tmx.probability = elt.getUIntAttribute("probability", Requirement::Optional, 100u);
+      tmx.probability = node.attribute("probability").as_uint(100u);
 
       tmx.image = nullptr;
-      elt.parseOneElement("image", [&tmx, &ctx](const XMLElementWrapper elt) {
-        tmx.image = parseTmxImage(elt, ctx);
-      });
+      pugi::xml_node image = node.child("image");
+
+      if (image) {
+        tmx.image = parseTmxImage(image, ctx);
+      }
 
       tmx.objects = nullptr;
+      pugi::xml_node objects = node.child("objectgroup");
 
-      elt.parseOneElement("objectgroup", [&tmx](const XMLElementWrapper elt) {
-        tmx.objects = parseTmxObjectLayer(elt);
-      });
+      if (objects) {
+        tmx.objects = parseTmxObjectLayer(objects);
+      }
 
       tmx.animation = nullptr;
+      pugi::xml_node animation = node.child("objectgroup");
 
-      elt.parseOneElement("animation", [&tmx](const XMLElementWrapper elt) {
-        tmx.animation = parseTmxAnimation(elt);
-      });
+      if (animation) {
+        tmx.animation = parseTmxAnimation(animation);
+      }
 
       return tmx;
     }
 
-    TmxTerrain parseTmxTerrain(const XMLElementWrapper elt) {
-      assert(elt.is("terrain"));
+    TmxTerrain parseTmxTerrain(const pugi::xml_node node) {
+      assert(node.name() == "terrain"s);
 
       TmxTerrain tmx;
 
-      tmx.properties = parseTmxProperties(elt);
+      tmx.properties = parseTmxProperties(node);
 
-      tmx.name = elt.getStringAttribute("name");
-      tmx.tile = elt.getUIntAttribute("tile");
+      tmx.name = required(node.attribute("name")).as_string();
+      tmx.tile = required(node.attribute("tile")).as_uint();
 
       return tmx;
     }
 
-    void parseTmxTilesetFromElement(const XMLElementWrapper elt, TmxTileset& tmx, TmxParserCtx& ctx) {
-      assert(elt.is("tileset"));
+    void parseTmxTilesetFromElement(const pugi::xml_node node, TmxTileset& tmx, TmxParserCtx& ctx) {
+      assert(node.name() == "tileset"s);
 
-      tmx.name = elt.getStringAttribute("name", Requirement::Optional);
+      tmx.name = node.attribute("name").as_string();
 
-      tmx.tileSize.width = elt.getUIntAttribute("tilewidth", Requirement::Optional);
-      tmx.tileSize.height = elt.getUIntAttribute("tileheight", Requirement::Optional);
+      tmx.tileSize.width = node.attribute("tilewidth").as_uint();
+      tmx.tileSize.height = node.attribute("tileheight").as_uint();
 
-      tmx.spacing = elt.getUIntAttribute("spacing", Requirement::Optional);
-      tmx.margin = elt.getUIntAttribute("margin", Requirement::Optional);
+      tmx.spacing = node.attribute("spacing").as_uint();
+      tmx.margin = node.attribute("margin").as_uint();
 
-      tmx.tileCount = elt.getUIntAttribute("tilecount", Requirement::Optional);
-      tmx.columnCount = elt.getUIntAttribute("columns", Requirement::Optional);
+      tmx.tileCount = node.attribute("tilecount").as_uint();
+      tmx.columnCount = node.attribute("columns").as_uint();
 
       tmx.offset = { 0, 0 };
-      elt.parseOneElement("tileoffset", [&tmx](const XMLElementWrapper elt) {
-        tmx.offset.x = elt.getIntAttribute("x");
-        tmx.offset.y = elt.getIntAttribute("y");
-      });
+      pugi::xml_node offset = node.child("tileoffset");
+
+      if (offset) {
+        tmx.offset.x = offset.attribute("x").as_int();
+        tmx.offset.y = offset.attribute("y").as_int();
+      }
 
       tmx.image = nullptr;
-      elt.parseOneElement("image", [&tmx, &ctx](const XMLElementWrapper elt) {
-        tmx.image = parseTmxImage(elt, ctx);
-      });
+      pugi::xml_node image = node.child("tileoffset");
 
-      elt.parseOneElement("terraintypes", [&tmx](const XMLElementWrapper elt) {
-        elt.parseManyElements("terrain", [&tmx](const XMLElementWrapper elt) {
-          tmx.terrains.push_back(parseTmxTerrain(elt));
-        });
-      });
+      if (image) {
+        tmx.image = parseTmxImage(image, ctx);
+      }
 
+      pugi::xml_node terrains = node.child("terraintypes");
 
-      elt.parseManyElements("tile", [&tmx, &ctx](const XMLElementWrapper elt) {
-        tmx.tiles.push_back(parseTmxTile(elt, ctx));
-      });
+      if (terrains) {
+        for (pugi::xml_node terrain : terrains.children("terrain")) {
+          tmx.terrains.push_back(parseTmxTerrain(terrain));
+        }
+      }
+
+      for (pugi::xml_node tile : node.children("tile")) {
+        tmx.tiles.push_back(parseTmxTile(tile, ctx));
+      }
     }
 
     void parseTmxTilesetFromFile(const Path& source, TmxTileset& tmx, TmxParserCtx& ctx) {
       Path tilesetPath = ctx.currentPath / source;
 
-      tinyxml2::XMLDocument doc;
-      int err = doc.LoadFile(tilesetPath.string().c_str());
+      pugi::xml_document doc;
+      pugi::xml_parse_result result = doc.load_file(tilesetPath.string().c_str());
 
-      if (doc.Error()) {
-        Log::error("Unable to load a TSX file: '%s'\n", tilesetPath.string().c_str());;
-        assert(err != tinyxml2::XML_SUCCESS);
+      if (!result) {
+        Log::error("Could not load TSX file '%s': %s\n", tilesetPath.string().c_str(), result.description());
         return;
       }
 
-      assert(err == tinyxml2::XML_SUCCESS);
-
       ctx.currentPath = tilesetPath.parent_path();
 
-      const tinyxml2::XMLElement *elt = doc.RootElement();
-
-      if (elt->Attribute("firstgid")) {
+      if (doc.attribute("firstgid")) {
         Log::warning("Attribute 'firstgid' present in a TSX file: '%s'\n", tilesetPath.string().c_str());
       }
 
-      if (elt->Attribute("source")) {
+      if (doc.attribute("source")) {
         Log::warning("Attribute 'source' present in a TSX file: '%s'\n", tilesetPath.string().c_str());
       }
 
-      parseTmxTilesetFromElement(elt, tmx, ctx);
+      parseTmxTilesetFromElement(doc, tmx, ctx);
       ctx.currentPath = ctx.mapPath.parent_path();
     }
 
-    TmxTileset parseTmxTileset(const XMLElementWrapper elt, TmxParserCtx& ctx) {
+    TmxTileset parseTmxTileset(const pugi::xml_node node, TmxParserCtx& ctx) {
       TmxTileset tmx;
 
-      tmx.properties = parseTmxProperties(elt);
+      tmx.properties = parseTmxProperties(node);
 
-      tmx.firstGid = elt.getUIntAttribute("firstgid");
+      tmx.firstGid = required(node.attribute("firstgid")).as_uint();
 
-      Path source = elt.getStringAttribute("source", Requirement::Optional);
+      Path source = node.attribute("source").as_string();
 
       if (!source.empty()) {
         parseTmxTilesetFromFile(source, tmx, ctx);
       } else {
-        parseTmxTilesetFromElement(elt, tmx, ctx);
+        parseTmxTilesetFromElement(node, tmx, ctx);
       }
 
       return tmx;
@@ -1100,95 +978,104 @@ inline namespace v1 {
      * Map
      */
 
-    bool parseTmxLayers(const XMLElementWrapper elt, TmxLayers& tmx, TmxParserCtx& ctx) {
-      assert(elt.is("map"));
+    bool parseTmxLayers(const pugi::xml_node node, TmxLayers& tmx, TmxParserCtx& ctx) {
+      assert(node.name() == "map"s);
 
-      tmx.properties = parseTmxProperties(elt);
+      tmx.properties = parseTmxProperties(node);
 
-      tmx.version =  elt.getStringAttribute("version", Requirement::Optional, "1.0");
-      tmx.tiledVersion = elt.getStringAttribute("tiledversion", Requirement::Optional, "1.0");
+      tmx.version =  node.attribute("version").as_string("1.0");
+      tmx.tiledVersion = node.attribute("tiledversion").as_string("1.0");
 
       tmx.orientation = TmxOrientation::Unknown;
+      std::string orientation = required(node.attribute("orientation")).as_string();
 
-      if (elt.isEnumAttribute("orientation", "orthogonal")) {
+      if (orientation == "orthogonal") {
         tmx.orientation = TmxOrientation::Orthogonal;
-      } else if (elt.isEnumAttribute("orientation", "isometric")) {
+      } else if (orientation == "isometric") {
         tmx.orientation = TmxOrientation::Isometric;
-      } else if (elt.isEnumAttribute("orientation", "staggered")) {
+      } else if (orientation == "staggered") {
         tmx.orientation = TmxOrientation::Staggered;
-      } else if (elt.isEnumAttribute("orientation", "hexagonal")) {
+      } else if (orientation == "hexagonal") {
         tmx.orientation = TmxOrientation::Hexagonal;
       } else {
-        Log::error("Wrong orientation string: '%s'\n", elt.getStringAttribute("orientation").c_str());
+        Log::error("Wrong orientation string: '%s'\n", orientation.c_str());
       }
 
       tmx.renderOrder = TmxRenderOrder::RightDown; // default value
 
-      if (elt.hasAttribute("renderorder")) {
-        if (elt.isEnumAttribute("renderorder", "right-down")) {
+      if (node.attribute("renderorder")) {
+        std::string renderOrder = node.attribute("renderorder").as_string();
+
+        if (renderOrder == "right-down") {
           tmx.renderOrder = TmxRenderOrder::RightDown;
-        } else if (elt.isEnumAttribute("renderorder", "right-up")) {
+        } else if (renderOrder == "right-up") {
           tmx.renderOrder = TmxRenderOrder::RightUp;
-        } else if (elt.isEnumAttribute("renderorder", "left-down")) {
+        } else if (renderOrder == "left-down") {
           tmx.renderOrder = TmxRenderOrder::LeftDown;
-        } else if (elt.isEnumAttribute("renderorder", "left-up")) {
+        } else if (renderOrder == "left-up") {
           tmx.renderOrder = TmxRenderOrder::LeftUp;
         } else {
-          Log::error("Wrong render order string: '%s'\n", elt.getStringAttribute("renderorder").c_str());
+          Log::error("Wrong render order string: '%s'\n", renderOrder.c_str());
         }
       }
 
-      tmx.mapSize.width = elt.getUIntAttribute("width");
-      tmx.mapSize.height = elt.getUIntAttribute("height");
+      tmx.mapSize.width = required(node.attribute("width")).as_uint();
+      tmx.mapSize.height = required(node.attribute("height")).as_uint();
 
-      tmx.tileSize.width = elt.getUIntAttribute("tilewidth");
-      tmx.tileSize.height = elt.getUIntAttribute("tileheight");
+      tmx.tileSize.width = required(node.attribute("tilewidth")).as_uint();
+      tmx.tileSize.height = required(node.attribute("tileheight")).as_uint();
 
-      tmx.hexSideLength = elt.getUIntAttribute("hexsidelength", Requirement::Optional);
+      tmx.hexSideLength = node.attribute("hexsidelength").as_uint(0u);
 
       tmx.staggerAxis = TmxStaggerAxis::Y;
 
-      if (elt.hasAttribute("staggeraxis")) {
-        if (elt.isEnumAttribute("staggeraxis", "x")) {
+      if (node.attribute("staggeraxis")) {
+        std::string staggerAxis = node.attribute("staggeraxis").as_string();
+
+        if (staggerAxis == "x") {
           tmx.staggerAxis = TmxStaggerAxis::X;
-        } else if (elt.isEnumAttribute("staggeraxis", "y")) {
+        } else if (staggerAxis == "y") {
           tmx.staggerAxis = TmxStaggerAxis::Y;
         } else {
-          Log::error("Wrong stagger axis string: '%s'\n", elt.getStringAttribute("staggeraxis").c_str());
+          Log::error("Wrong stagger axis string: '%s'\n", staggerAxis.c_str());
         }
       }
 
       tmx.staggerIndex = TmxStaggerIndex::Odd;
 
-      if (elt.hasAttribute("staggerindex")) {
-        if (elt.isEnumAttribute("staggerindex", "odd")) {
+      if (node.attribute("staggerindex")) {
+        std::string staggerIndex = node.attribute("staggerindex").as_string();
+
+        if (staggerIndex == "odd") {
           tmx.staggerIndex = TmxStaggerIndex::Odd;
-        } else if (elt.isEnumAttribute("staggerindex", "even")) {
+        } else if (staggerIndex == "even") {
           tmx.staggerIndex = TmxStaggerIndex::Even;
         } else {
-          Log::error("Wrong stagger index string: '%s'\n", elt.getStringAttribute("staggerindex").c_str());
+          Log::error("Wrong stagger index string: '%s'\n", staggerIndex.c_str());
         }
       }
 
-      tmx.backgroundColor = elt.getColorAttribute("backgroundcolor", Requirement::Optional, Color4u(0xFF, 0xFF, 0xFF, 0xFF));
+      tmx.backgroundColor = computeColor(node.attribute("backgroundcolor"), Color4u(0xFF, 0xFF, 0xFF, 0xFF));
 
-      tmx.nextObjectId = elt.getUIntAttribute("nextobjectid", Requirement::Optional);
+      tmx.nextObjectId = node.attribute("nextobjectid").as_uint(0u);
 
-      elt.parseManyElements("tileset", [&tmx, &ctx](const XMLElementWrapper elt) {
-        tmx.tilesets.push_back(parseTmxTileset(elt, ctx));
-      });
+      for (pugi::xml_node tileset : node.children("tileset")) {
+        tmx.tilesets.push_back(parseTmxTileset(tileset, ctx));
+      }
 
-      elt.parseEachElement([&tmx, &ctx](const XMLElementWrapper elt) {
-        if (elt.is("layer")) {
-          tmx.layers.push_back(parseTmxTileLayer(elt));
-        } else if (elt.is("objectgroup")) {
-          tmx.layers.push_back(parseTmxObjectLayer(elt));
-        } else if (elt.is("imagelayer")) {
-          tmx.layers.push_back(parseTmxImageLayer(elt, ctx));
-        } else if (elt.is("group")) {
-          tmx.layers.push_back(parseTmxGroupLayer(elt, ctx));
+      for (pugi::xml_node layer : node.children()) {
+        std::string name = layer.name();
+
+        if (name == "layer") {
+          tmx.layers.push_back(parseTmxTileLayer(layer));
+        } else if (name == "objectgroup") {
+          tmx.layers.push_back(parseTmxObjectLayer(layer));
+        } else if (name == "imagelayer") {
+          tmx.layers.push_back(parseTmxImageLayer(layer, ctx));
+        } else if (name == "group") {
+          tmx.layers.push_back(parseTmxGroupLayer(layer, ctx));
         }
-      });
+      };
 
       return true;
     }
@@ -1201,21 +1088,19 @@ inline namespace v1 {
       return false;
     }
 
-    tinyxml2::XMLDocument doc;
-    int err = doc.LoadFile(filename.string().c_str());
+    pugi::xml_document doc;
+    pugi::xml_parse_result result = doc.load_file(filename.string().c_str());
 
-    if (doc.Error() || err != tinyxml2::XML_SUCCESS) {
-      Log::error("Could not load TMX file: '%s'\n", filename.string().c_str());
+    if (!result) {
+      Log::error("Could not load TMX file '%s': %s\n", filename.string().c_str(), result.description());
       return false;
     }
-
-    assert(err == tinyxml2::XML_SUCCESS);
 
     TmxParserCtx ctx;
     ctx.mapPath = filename;
     ctx.currentPath = filename.parent_path();
 
-    return parseTmxLayers(doc.RootElement(), *this, ctx);
+    return parseTmxLayers(doc, *this, ctx);
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

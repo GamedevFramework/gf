@@ -18,14 +18,16 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#include <gf/Data.h>
+#include <gf/Vertex.h>
+
+#include <type_traits>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
 #endif
 
-
+  static_assert(std::is_trivially_copyable<Vertex>::value, "Vertex should be trivially copyable");
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

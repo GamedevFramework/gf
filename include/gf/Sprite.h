@@ -24,6 +24,7 @@
 #ifndef GF_SPRITE_H
 #define GF_SPRITE_H
 
+#include "BasicSprite.h"
 #include "Transformable.h"
 #include "Portability.h"
 #include "Vertex.h"
@@ -143,7 +144,7 @@ inline namespace v1 {
      * @sa setTexture()
      */
     const Texture& getTexture() const {
-      return *m_texture;
+      return m_basic.getTexture();
     }
 
     /**
@@ -154,7 +155,7 @@ inline namespace v1 {
      * @sa setTexture(), getTexture()
      */
     bool hasTexture() const {
-      return m_texture != nullptr;
+      return m_basic.hasTexture();
     }
 
     /**
@@ -191,7 +192,7 @@ inline namespace v1 {
      * @sa setTextureRect()
      */
     const RectF& getTextureRect() const {
-      return m_textureRect;
+      return m_basic.getTextureRect();
     }
 
     /**
@@ -257,14 +258,8 @@ inline namespace v1 {
     virtual void draw(RenderTarget& target, RenderStates states) override;
 
   private:
-    void updatePositions();
-    void updateTexCoords();
-
-  private:
-    const Texture *m_texture;
-    RectF m_textureRect;
+    BasicSprite m_basic;
     Vertex m_vertices[4];
-    RectF m_bounds;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

@@ -44,6 +44,18 @@ namespace gf {
 inline namespace v1 {
 #endif
 
+  enum class SpatialStructureType {
+    Object,
+    Node,
+  };
+
+  template<typename U, std::size_t N>
+  struct SpatialStructure {
+    Box<U, N> bounds;
+    SpatialStructureType type;
+    int level;
+  };
+
   /**
    * @ingroup core
    * @brief A kind of spatial query
@@ -89,8 +101,14 @@ inline namespace v1 {
      * @param bounds The bounds of the object
      * @returns True if the object has been inserted
      */
-    bool insert(const T& value, const Box<U, 2>& bounds) {
-      return m_root.insert(value, bounds);
+    bool insert(T value, const Box<U, 2>& bounds) {
+      Node *node = m_root.chooseNode(bounds);
+
+      if (node == nullptr) {
+        return false;
+      }
+
+      return node->insert(std::move(value), bounds);
     }
 
     /**
@@ -110,6 +128,13 @@ inline namespace v1 {
      */
     void clear() {
       m_root.clear();
+    }
+
+
+    std::vector<SpatialStructure<U, 2>> getStructure() const {
+      std::vector<SpatialStructure<U, 2>> structures;
+      m_root.appendToStructure(structures, 0);
+      return structures;
     }
 
   private:
@@ -137,35 +162,37 @@ inline namespace v1 {
         return m_children == nullptr;
       }
 
-      bool insert(const T& value, const Box<U, 2>& bounds) {
+      Node *chooseNode(const Box<U, 2>& bounds) {
         if (!m_bounds.contains(bounds)) {
-          return false;
+          return nullptr;
         }
 
         if (isLeaf()) {
           if (m_entries.size() < Size) {
-            m_entries.push_back({ value, bounds });
-            return true;
+            return this;
           }
 
           subdivide();
 
           // try again
           if (m_entries.size() < Size) {
-            m_entries.push_back({ value, bounds });
-            return true;
+            return this;
           }
         }
 
         for (std::size_t i = 0; i < 4; ++i) {
-          if (m_children[i].insert(value, bounds)) {
-            return true;
+          if (m_children[i].chooseNode(bounds) != nullptr) {
+            return &m_children[i];
           }
         }
 
         clearChildrenIfEmpty();
 
-        m_entries.push_back({ value, bounds });
+        return this;
+      }
+
+      bool insert(T&& value, const Box<U, 2>& bounds) {
+        m_entries.push_back({ std::move(value), bounds });
         return true;
       }
 
@@ -210,6 +237,20 @@ inline namespace v1 {
         m_children = nullptr;
       }
 
+      void appendToStructure(std::vector<SpatialStructure<U, 2>>& structures, int level) const {
+        structures.push_back({ m_bounds, SpatialStructureType::Node, level });
+
+        for (auto& entry : m_entries) {
+          structures.push_back( { entry.bounds, SpatialStructureType::Object, level });
+        }
+
+        if (m_children) {
+          for (std::size_t i = 0; i < 4; ++i) {
+            m_children[i].appendToStructure(structures, level + 1);
+          }
+        }
+      }
+
     private:
       void subdivide() {
         m_children = std::make_unique<Node[]>(4);
@@ -225,14 +266,15 @@ inline namespace v1 {
           bool inserted = false;
 
           for (std::size_t i = 0; i < 4; ++i) {
-            if (m_children[i].insert(entry.value, entry.bounds)) {
+            if (m_children[i].m_bounds.contains(entry.bounds)) {
+              m_children[i].m_entries.push_back(std::move(entry));
               inserted = true;
               break;
             }
           }
 
           if (!inserted) {
-            entries.push_back(entry);
+            entries.push_back(std::move(entry));
           }
         }
 
@@ -282,7 +324,7 @@ inline namespace v1 {
     RStarTree()
     : m_root(new Leaf)
     {
-      auto branch = std::make_unique<Branch>();
+
     }
 
     /**
@@ -325,10 +367,10 @@ inline namespace v1 {
      * @param bounds The bounds of the object
      * @returns True if the object has been inserted
      */
-    bool insert(const T& value, const Box<U, N>& bounds) {
+    bool insert(T value, const Box<U, N>& bounds) {
       Leaf *leaf = m_root->chooseSubtree(bounds);
 
-      Node *splitted = leaf->tryInsert(value, bounds);
+      Node *splitted = leaf->tryInsert(std::move(value), bounds);
       Node *current = leaf;
 
       while (splitted != nullptr) {
@@ -399,6 +441,12 @@ inline namespace v1 {
       m_root = new Leaf;
     }
 
+    std::vector<SpatialStructure<U, N>> getStructure() const {
+      std::vector<SpatialStructure<U, N>> structures;
+      m_root->appendToStructure(structures, 0);
+      return structures;
+    }
+
   private:
     static constexpr std::size_t Size = MaxSize + 1;
 
@@ -447,6 +495,8 @@ inline namespace v1 {
 
       virtual Box<U, N> computeBounds() const = 0;
 
+      virtual void appendToStructure(std::vector<SpatialStructure<U, N>>& structures, int level) const = 0;
+
     protected:
       enum SplitOrder {
         Min,
@@ -480,22 +530,24 @@ inline namespace v1 {
       virtual std::size_t query(const Box<U, N>& bounds, SpatialQueryCallback<T>& callback, SpatialQuery kind) const override {
         std::size_t found = 0;
 
-        for (auto& entry : m_entries) {
-          switch (kind) {
-            case SpatialQuery::Contain:
+        switch (kind) {
+          case SpatialQuery::Contain:
+            for (auto& entry : m_entries) {
               if (bounds.contains(entry.bounds)) {
                 callback(entry.value);
                 ++found;
               }
-              break;
+            }
+            break;
 
-            case SpatialQuery::Intersect:
+          case SpatialQuery::Intersect:
+            for (auto& entry : m_entries) {
               if (bounds.intersects(entry.bounds)) {
                 callback(entry.value);
                 ++found;
               }
-              break;
-          }
+            }
+            break;
         }
 
         return found;
@@ -518,10 +570,16 @@ inline namespace v1 {
         return res;
       }
 
-      Leaf *tryInsert(const T& value, const Box<U, N>& bounds) {
+      virtual void appendToStructure(std::vector<SpatialStructure<U, N>>& structures, int level) const override {
+        for (auto& entry : m_entries) {
+          structures.push_back({ entry.bounds, SpatialStructureType::Object, level });
+        }
+      }
+
+      Leaf *tryInsert(T&& value, const Box<U, N>& bounds) {
         LeafEntry entry;
         entry.bounds = bounds;
-        entry.value = value;
+        entry.value = std::move(value);
         m_entries.push_back(std::move(entry));
 
         if (m_entries.size() < Size) {
@@ -699,11 +757,6 @@ inline namespace v1 {
 
           if (overlapFree && weight == 0) {
             weight = firstBounds[index].getExtentDistance() + secondBounds[Size - index - 1].getExtentDistance() - perimeterMax;
-
-            if (weight > 0) {
-              gf::Log::debug("weight: %f\n", static_cast<double>(weight));
-            }
-
             assert(weight <= 0);
 
             auto value = weight / wf(index);
@@ -852,6 +905,13 @@ inline namespace v1 {
         }
 
         return res;
+      }
+
+      virtual void appendToStructure(std::vector<SpatialStructure<U, N>>& structures, int level) const override {
+        for (auto& entry : m_entries) {
+          structures.push_back({ entry.bounds, SpatialStructureType::Node, level });
+          entry.child->appendToStructure(structures, level + 1);
+        }
       }
 
       void updateBoundsForChild(const Box<U, N>& bounds, Node *child) {
@@ -1047,11 +1107,6 @@ inline namespace v1 {
 
           if (status.overlapFree && weight == 0) {
             weight = firstBounds[index].getExtentDistance() + secondBounds[Size - index - 1].getExtentDistance() - perimeterMax;
-
-            if (weight > 0) {
-              gf::Log::debug("weight: %f\n", static_cast<double>(weight));
-            }
-
             assert(weight <= 0);
 
             auto value = weight / wf(index);

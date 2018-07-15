@@ -1,9 +1,6 @@
 [submodule "library/vendor/gamecontrollerdb"]
 	path = library/vendor/gamecontrollerdb
 	url = https://github.com/gabomdq/SDL_GameControllerDB.git
-[submodule "library/vendor/tinyxml2"]
-	path = library/vendor/tinyxml2
-	url = https://github.com/leethomason/tinyxml2.git
 [submodule "library/vendor/stb"]
 	path = library/vendor/stb
 	url = https://github.com/nothings/stb.git
@@ -13,6 +10,6 @@
 [submodule "library/vendor/nuklear"]
 	path = library/vendor/nuklear
 	url = https://github.com/vurtun/nuklear.git
-[submodule "tools/gf_pack/vendor/rapidjson"]
-	path = tools/gf_pack/vendor/rapidjson
-	url = https://github.com/Tencent/rapidjson.git
+[submodule "library/vendor/pugixml"]
+	path = library/vendor/pugixml
+	url = https://github.com/zeux/pugixml.git

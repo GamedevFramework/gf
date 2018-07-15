@@ -26,17 +26,18 @@
 #include <iostream>
 #include <limits>
 
-#include <gf/DataObject.h>
 #include <gf/Paths.h>
 #include <gf/VectorOps.h>
 
 #include "gtest/gtest.h"
 
-TEST(SerialTest, Nil) {
+TEST(SerialTest, Version) {
   gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
 
-  {  gf::Serializer ar(filename); ar | nullptr; }
-  {  gf::Deserializer ar(filename); ar | nullptr; }
+  constexpr uint16_t Version = 42;
+
+  {  gf::Serializer ar(filename, Version); }
+  {  gf::Deserializer ar(filename); EXPECT_EQ(ar.getVersion(), Version); }
 
 }
 
@@ -253,6 +254,31 @@ TEST(SerialTest, Unsigned64) {
 
 }
 
+TEST(SerialTest, Enum) {
+  gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
+
+  enum class Foo {
+    Bar,
+    Baz,
+    Qux = 42,
+  };
+
+  Foo tests[] = {
+    Foo::Bar,
+    Foo::Baz,
+    Foo::Qux,
+  };
+
+  Foo out;
+
+  for (auto in : tests) {
+    {  gf::Serializer ar(filename); ar | in; }
+    {  gf::Deserializer ar(filename); ar | out; }
+    EXPECT_EQ(in, out);
+  }
+
+}
+
 TEST(SerialTest, Float) {
   gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
 
@@ -438,6 +464,87 @@ TEST(SerialTest, Array) {
 
 }
 
+TEST(SerialTest, Set) {
+  gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
+
+  std::set<std::string> tests1[] = {
+    { },
+    { "First" "Second" },
+    { },
+    { },
+    { },
+    { },
+  };
+
+  for (int32_t i = 0; i < 16; ++i) {
+    tests1[2].emplace(std::to_string(i));
+  }
+
+  for (int32_t i = 0; i < 17; ++i) {
+    tests1[3].emplace(std::to_string(i));
+  }
+
+  for (int32_t i = 0; i < UINT8_MAX + 1; ++i) {
+    tests1[4].emplace(std::to_string(i));
+  }
+
+  std::set<std::string> out1;
+
+  for (auto& in1 : tests1) {
+    {  gf::Serializer ar(filename); ar | in1; }
+    {  gf::Deserializer ar(filename); ar | out1; }
+    EXPECT_EQ(in1, out1);
+  }
+
+  std::set<std::string> out1bis[6];
+
+  {  gf::Serializer ar(filename); ar | tests1; }
+  {  gf::Deserializer ar(filename); ar | out1bis; }
+
+  for (int i = 0; i < 6; ++i) {
+    EXPECT_EQ(tests1[i], out1bis[i]);
+  }
+
+  std::unordered_set<std::string> tests2[] = {
+    { },
+    { "First", "Second" },
+    { },
+    { },
+    { },
+    { },
+  };
+
+  for (int32_t i = 0; i < 16; ++i) {
+    tests2[2].emplace(std::to_string(i));
+  }
+
+  for (int32_t i = 0; i < 17; ++i) {
+    tests2[3].emplace(std::to_string(i));
+  }
+
+  for (int32_t i = 0; i < UINT8_MAX + 1; ++i) {
+    tests2[4].emplace(std::to_string(i));
+  }
+
+  std::unordered_set<std::string> out2;
+
+  for (auto& in2 : tests2) {
+    {  gf::Serializer ar(filename); ar | in2; }
+    {  gf::Deserializer ar(filename); ar | out2; }
+    EXPECT_EQ(in2, out2);
+  }
+
+  std::unordered_set<std::string> out2bis[6];
+
+  {  gf::Serializer ar(filename); ar | tests2; }
+  {  gf::Deserializer ar(filename); ar | out2bis; }
+
+  for (int i = 0; i < 6; ++i) {
+    EXPECT_EQ(tests2[i], out2bis[i]);
+  }
+
+}
+
 TEST(SerialTest, Map) {
   gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
 
@@ -516,31 +623,6 @@ TEST(SerialTest, Map) {
   for (int i = 0; i < 6; ++i) {
     EXPECT_EQ(tests2[i], out2bis[i]);
   }
-
-}
-
-TEST(SerialTest, MsgPackIndex) {
-  gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
-
-  {
-    const uint8_t data[] = {
-      0x82, 0xA7, 'c', 'o', 'm', 'p', 'a', 'c', 't', 0xC3, 0xA6, 's', 'c', 'h', 'e', 'm', 'a', 0x00
-    };
-
-    gf::BinaryFile file(filename, gf::BinaryFile::Mode::Write);
-    file.write(data);
-  }
-
-  gf::DataObject object;
-
-  {  gf::Deserializer ar(filename); ar | object; }
-
-  ASSERT_EQ(object.type, gf::DataType::Map);
-  EXPECT_EQ(object.map.size, UINT32_C(2));
-  EXPECT_EQ(object.map.data[0].key.type, gf::DataType::String);
-  EXPECT_EQ(object.map.data[0].value.type, gf::DataType::Boolean);
-  EXPECT_EQ(object.map.data[1].key.type, gf::DataType::String);
-  EXPECT_EQ(object.map.data[1].value.type, gf::DataType::Unsigned);
 
 }
 

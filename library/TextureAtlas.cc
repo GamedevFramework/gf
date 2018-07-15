@@ -27,7 +27,7 @@
 #include <gf/ResourceManager.h>
 #include <gf/Texture.h>
 
-#include "vendor/tinyxml2/tinyxml2.h"
+#include "vendor/pugixml/src/pugixml.hpp"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -35,58 +35,46 @@ inline namespace v1 {
 #endif
 
   bool TextureAtlas::loadFromFile(const Path& filename) {
-    tinyxml2::XMLDocument doc;
-    int err = doc.LoadFile(filename.string().c_str());
+    pugi::xml_document doc;
+    pugi::xml_parse_result result = doc.load_file(filename.string().c_str());
 
-    if (doc.Error() || err != tinyxml2::XML_SUCCESS) {
-      Log::error("Could not load atlas texture: '%s'\n", filename.string().c_str());
+    if (!result) {
+      Log::error("Could not load atlas texture '%s': %s\n", filename.string().c_str(), result.description());
       return false;
     }
 
-    assert(err == tinyxml2::XML_SUCCESS);
+    pugi::xml_node root = doc.child("TextureAtlas");
 
-    const tinyxml2::XMLElement *root = doc.RootElement();
-
-    if (std::strcmp(root->Name(), "TextureAtlas") != 0) {
+    if (!root) {
+      Log::error("Atlas is not in the right format '%s'\n", filename.string().c_str());
       return false;
     }
 
-    Path texturePath = root->Attribute("imagePath");
+    Path texturePath = root.attribute("imagePath").as_string("");
 
     if (texturePath.empty()) {
+      Log::error("Image path is not set in '%s'\n", filename.string().c_str());
       return false;
     }
 
     setTexturePath(texturePath);
 
-    const tinyxml2::XMLElement *child = root->FirstChildElement();
-
-    while (child != nullptr) {
-      if (std::strcmp(child->Name(), "SubTexture") != 0) {
-        m_rects.clear();
-        return false;
-      }
-
-      std::string name = child->Attribute("name");
-      assert(!name.empty());
+    for (pugi::xml_node sub : root.children("SubTexture")) {
+      assert(sub.attribute("name"));
+      std::string name = sub.attribute("name").value();
 
       RectU rect;
 
-      err = child->QueryUnsignedAttribute("x", &rect.left);
-      assert(err == tinyxml2::XML_SUCCESS);
+      assert(sub.attribute("x"));
+      rect.left = sub.attribute("x").as_uint();
+      assert(sub.attribute("y"));
+      rect.top = sub.attribute("y").as_uint();
+      assert(sub.attribute("width"));
+      rect.width = sub.attribute("width").as_uint();
+      assert(sub.attribute("height"));
+      rect.height = sub.attribute("height").as_uint();
 
-      err = child->QueryUnsignedAttribute("y", &rect.top);
-      assert(err == tinyxml2::XML_SUCCESS);
-
-      err = child->QueryUnsignedAttribute("width", &rect.width);
-      assert(err == tinyxml2::XML_SUCCESS);
-
-      err = child->QueryUnsignedAttribute("height", &rect.height);
-      assert(err == tinyxml2::XML_SUCCESS);
-
-      addSubTexture(name, rect);
-
-      child = child->NextSiblingElement();
+      addSubTexture(std::move(name), rect);
     }
 
     return true;

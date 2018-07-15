@@ -32,6 +32,8 @@
 #include "AnimatedSprite.cc"
 #include "Animation.cc"
 #include "AssetManager.cc"
+#include "BasicSprite.cc"
+#include "BasicText.cc"
 #include "BinaryFile.cc"
 #include "Blend.cc"
 #include "BufferedGeometry.cc"
@@ -49,8 +51,6 @@
 #include "Cursor.cc"
 #include "Curve.cc"
 #include "Curves.cc"
-#include "Data.cc"
-#include "DataObject.cc"
 #include "Direction.cc"
 #include "Drawable.cc"
 #include "Easings.cc"
@@ -102,7 +102,6 @@
 #include "RenderWindow.cc"
 #include "ResourceManager.cc"
 #include "Serialization.cc"
-#include "SerializationHeaders.cc"
 #include "SerializationOps.cc"
 #include "Shader.cc"
 #include "Shape.cc"
@@ -126,6 +125,7 @@
 #include "Vector.cc"
 #include "VertexArray.cc"
 #include "VertexBuffer.cc"
+#include "Vertex.cc"
 #include "View.cc"
 #include "ViewContainer.cc"
 #include "Views.cc"
@@ -136,5 +136,12 @@
 
 #include "priv/Debug.cc"
 
-#include "vendor/tinyxml2/tinyxml2.cpp"
-#include "vendor/glad/src/glad.cc"
+#include "vendor/pugixml/src/pugixml.cpp"
+
+#ifndef __APPLE__
+#ifdef GF_OPENGL3
+#include "vendor/glad/gl33/src/glad.cc"
+#else
+#include "vendor/glad/gles20/src/glad.cc"
+#endif
+#endif

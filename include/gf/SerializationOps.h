@@ -26,7 +26,10 @@
 
 #include <array>
 #include <map>
+#include <set>
+#include <type_traits>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 
 #include "BufferRef.h"
@@ -38,19 +41,17 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  struct DataObject;
-
-  /**
-   * @relates Serializer
-   * @brief Serialize a null object
-   */
-  GF_API Serializer& operator|(Serializer& ar, std::nullptr_t);
-
   /**
    * @relates Serializer
    * @brief Serialize a boolean object
    */
   GF_API Serializer& operator|(Serializer& ar, bool data);
+
+  /**
+   * @relates Serializer
+   * @brief Serialize a char object
+   */
+  GF_API Serializer& operator|(Serializer& ar, char data);
 
   /**
    * @relates Serializer
@@ -102,6 +103,16 @@ inline namespace v1 {
 
   /**
    * @relates Serializer
+   * @brief Serialize an enum object
+   */
+  template<typename T, typename E = typename std::enable_if<std::is_enum<T>::value, T>::type>
+  GF_API Serializer& operator|(Serializer& ar, T data) {
+    using U = typename std::underlying_type<T>::type;
+    return ar | static_cast<U>(data);
+  }
+
+  /**
+   * @relates Serializer
    * @brief Serialize a single precision float object
    */
   GF_API Serializer& operator|(Serializer& ar, float data);
@@ -126,43 +137,15 @@ inline namespace v1 {
 
   /**
    * @relates Serializer
-   * @brief Serialize a binary object
-   */
-  template<std::size_t N>
-  inline
-  Serializer& operator|(Serializer& ar, const uint8_t (&bin)[N]) {
-    ar.writeBinary(bin, static_cast<uint32_t>(N));
-    return ar;
-  }
-
-  /**
-   * @relates Serializer
-   * @brief Serialize a binary object
-   */
-  GF_API Serializer& operator|(Serializer& ar, const std::vector<uint8_t>& bin);
-
-  /**
-   * @relates Serializer
-   * @brief Serialize a binary object
-   */
-  template<std::size_t N>
-  inline
-  Serializer& operator|(Serializer& ar, const std::array<uint8_t, N>& bin) {
-    ar.writeBinary(bin.data(), static_cast<uint32_t>(bin.size()));
-    return ar;
-  }
-
-  /**
-   * @relates Serializer
    * @brief Serialize an array object
    */
   template<typename T, std::size_t N>
   inline
   Serializer& operator|(Serializer& ar, const T (&array)[N]) {
-    ar.writeArrayHeader(static_cast<uint32_t>(N));
+    ar.writeSizeHeader(N);
 
     for (auto& item : array) {
-      ar | item;
+      ar | const_cast<T&>(item);
     }
 
     return ar;
@@ -175,10 +158,10 @@ inline namespace v1 {
   template<typename T>
   inline
   Serializer& operator|(Serializer& ar, const std::vector<T>& array) {
-    ar.writeArrayHeader(static_cast<uint32_t>(array.size()));
+    ar.writeSizeHeader(array.size());
 
     for (auto& item : array) {
-      ar | item;
+      ar | const_cast<T&>(item);
     }
 
     return ar;
@@ -191,10 +174,42 @@ inline namespace v1 {
   template<typename T, std::size_t N>
   inline
   Serializer& operator|(Serializer& ar, const std::array<T, N>& array) {
-    ar.writeArrayHeader(static_cast<uint32_t>(array.size()));
+    ar.writeSizeHeader(array.size());
 
     for (auto& item : array) {
-      ar | item;
+      ar | const_cast<T&>(item);
+    }
+
+    return ar;
+  }
+
+  /**
+   * @relates Serializer
+   * @brief Serialize a set object
+   */
+  template<typename T>
+  inline
+  Serializer& operator|(Serializer& ar, const std::set<T>& set) {
+    ar.writeSizeHeader(set.size());
+
+    for (auto& item : set) {
+      ar | const_cast<T&>(item);
+    }
+
+    return ar;
+  }
+
+  /**
+   * @relates Serializer
+   * @brief Serialize a set object
+   */
+  template<typename T>
+  inline
+  Serializer& operator|(Serializer& ar, const std::unordered_set<T>& set) {
+    ar.writeSizeHeader(set.size());
+
+    for (auto& item : set) {
+      ar | const_cast<T&>(item);
     }
 
     return ar;
@@ -207,10 +222,10 @@ inline namespace v1 {
   template<typename K, typename V>
   inline
   Serializer& operator|(Serializer& ar, const std::map<K, V>& map) {
-    ar.writeMapHeader(static_cast<uint32_t>(map.size()));
+    ar.writeSizeHeader(map.size());
 
     for (auto& item : map) {
-      ar | item.first | item.second;
+      ar | const_cast<K&>(item.first) | const_cast<V&>(item.second);
     }
 
     return ar;
@@ -223,34 +238,28 @@ inline namespace v1 {
   template<typename K, typename V>
   inline
   Serializer& operator|(Serializer& ar, const std::unordered_map<K, V>& map) {
-    ar.writeMapHeader(static_cast<uint32_t>(map.size()));
+    ar.writeSizeHeader(map.size());
 
     for (auto& item : map) {
-      ar | item.first | item.second;
+      ar | const_cast<K&>(item.first) | const_cast<V&>(item.second);
     }
 
     return ar;
   }
 
-  /**
-   * @relates Serializer
-   * @brief Serialize a data object
-   */
-  GF_API Serializer& operator|(Serializer& ar, const DataObject& object);
 
-
-
-  /**
-   * @relates Deserializer
-   * @brief Deserialize a null object
-   */
-  GF_API Deserializer& operator|(Deserializer& ar, std::nullptr_t);
 
   /**
    * @relates Deserializer
    * @brief Deserialize a bool object
    */
   GF_API Deserializer& operator|(Deserializer& ar, bool& data);
+
+  /**
+   * @relates Deserializer
+   * @brief Deserialize a char object
+   */
+  GF_API Deserializer& operator|(Deserializer& ar, char& data);
 
   /**
    * @relates Deserializer
@@ -300,6 +309,15 @@ inline namespace v1 {
    */
   GF_API Deserializer& operator|(Deserializer& ar, int64_t& data);
 
+  template<typename T, typename E = typename std::enable_if<std::is_enum<T>::value, T>::type>
+  GF_API Deserializer& operator|(Deserializer& ar, T& data) {
+    using U = typename std::underlying_type<T>::type;
+    U underlying;
+    ar | underlying;
+    data = static_cast<T>(underlying);
+    return ar;
+  }
+
   /**
    * @relates Deserializer
    * @brief Deserialize a single precision float object
@@ -326,26 +344,14 @@ inline namespace v1 {
 
   /**
    * @relates Deserializer
-   * @brief Deserialize a binary object
-   */
-  GF_API Deserializer& operator|(Deserializer& ar, BufferRef<uint8_t> bin);
-
-  /**
-   * @relates Deserializer
-   * @brief Deserialize a binary object
-   */
-  GF_API Deserializer& operator|(Deserializer& ar, std::vector<uint8_t>& bin);
-
-  /**
-   * @relates Deserializer
    * @brief Deserialize an array object
    */
   template<typename T>
   inline
   Deserializer& operator|(Deserializer& ar, BufferRef<T> array) {
-    uint32_t size;
+    std::size_t size;
 
-    if (!ar.readArrayHeader(size)) {
+    if (!ar.readSizeHeader(size)) {
       return ar;
     }
 
@@ -387,18 +393,66 @@ inline namespace v1 {
   template<typename T>
   inline
   Deserializer& operator|(Deserializer& ar, std::vector<T>& array) {
-    uint32_t size;
+    std::size_t size;
 
-    if (!ar.readArrayHeader(size)) {
+    if (!ar.readSizeHeader(size)) {
       return ar;
     }
 
     array.clear();
 
-    for (uint32_t i = 0; i < size; ++i) {
+    for (std::size_t i = 0; i < size; ++i) {
       T item;
       ar | item;
       array.emplace_back(std::move(item));
+    }
+
+    return ar;
+  }
+
+  /**
+   * @relates Deserializer
+   * @brief Deserialize a set object
+   */
+  template<typename T>
+  inline
+  Deserializer& operator|(Deserializer& ar, std::set<T>& set) {
+    std::size_t size;
+
+    if (!ar.readSizeHeader(size)) {
+      return ar;
+    }
+
+    set.clear();
+
+    for (std::size_t i = 0; i < size; ++i) {
+      T item;
+      ar | item;
+      set.emplace(std::move(item));
+    }
+
+    return ar;
+  }
+
+  /**
+   * @relates Deserializer
+   * @brief Deserialize a set object
+   */
+  template<typename T>
+  inline
+  Deserializer& operator|(Deserializer& ar, std::unordered_set<T>& set) {
+    std::size_t size;
+
+    if (!ar.readSizeHeader(size)) {
+      return ar;
+    }
+
+    set.clear();
+
+    for (std::size_t i = 0; i < size; ++i) {
+      T item;
+      ar | item;
+      set.emplace(std::move(item));
     }
 
     return ar;
@@ -411,15 +465,15 @@ inline namespace v1 {
   template<typename K, typename V>
   inline
   Deserializer& operator|(Deserializer& ar, std::map<K,V>& map) {
-    uint32_t size;
+    std::size_t size;
 
-    if (!ar.readMapHeader(size)) {
+    if (!ar.readSizeHeader(size)) {
       return ar;
     }
 
     map.clear();
 
-    for (uint32_t i = 0; i < size; ++i) {
+    for (std::size_t i = 0; i < size; ++i) {
       K key;
       ar | key;
       V value;
@@ -438,15 +492,15 @@ inline namespace v1 {
   template<typename K, typename V>
   inline
   Deserializer& operator|(Deserializer& ar, std::unordered_map<K,V>& map) {
-    uint32_t size;
+    std::size_t size;
 
-    if (!ar.readMapHeader(size)) {
+    if (!ar.readSizeHeader(size)) {
       return ar;
     }
 
     map.clear();
 
-    for (uint32_t i = 0; i < size; ++i) {
+    for (std::size_t i = 0; i < size; ++i) {
       K key;
       ar | key;
       V value;
@@ -457,12 +511,6 @@ inline namespace v1 {
 
     return ar;
   }
-
-  /**
-   * @relates Deserializer
-   * @brief Deserialize a data object
-   */
-  GF_API Deserializer& operator|(Deserializer& ar, DataObject& object);
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

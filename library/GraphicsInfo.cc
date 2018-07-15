@@ -25,12 +25,11 @@
 #include <boost/algorithm/string/split.hpp>
 #include <boost/algorithm/string/classification.hpp>
 
-#include <glad/glad.h>
-
 #include <gf/Log.h>
 #include <gf/Unused.h>
 
 #include "priv/Debug.h"
+#include "priv/OpenGLFwd.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -40,7 +39,7 @@ inline namespace v1 {
   namespace {
 
     std::string getString(GLenum name) {
-      const GLubyte* str = glGetString(name);
+      const GLubyte *str = glGetString(name);
 
       GLenum code = glGetError();
 
@@ -78,10 +77,41 @@ inline namespace v1 {
   }
 
   std::vector<std::string> GraphicsInfo::getExtensions() {
-    std::string extensions = getString(GL_EXTENSIONS);
     std::vector<std::string> ret;
+#ifdef GF_OPENGL3
+    int count = getInteger(GL_NUM_EXTENSIONS);
+
+    for (int i = 0; i < count; ++i) {
+      const GLubyte *str = glGetStringi(GL_EXTENSIONS, i);
+      std::string extension = reinterpret_cast<const char *>(str);
+
+      GLenum code = glGetError();
+
+      if (code != GL_NO_ERROR) {
+        switch (code) {
+          case GL_INVALID_ENUM:
+            Log::error("Error in OpenGL call to glGetStringi: GL_INVALID_ENUM\n");
+            break;
+
+          case GL_INVALID_VALUE:
+            Log::error("Error in OpenGL call to glGetStringi: GL_INVALID_VALUE\n");
+            break;
+
+          default:
+            assert(false);
+            break;
+        }
+
+        continue;
+      }
+
+      ret.push_back(std::move(extension));
+    }
+#else
+    std::string extensions = getString(GL_EXTENSIONS);
     boost::algorithm::split(ret, extensions, boost::is_any_of(" \n"), boost::algorithm::token_compress_on);
     ret.erase(std::remove_if(ret.begin(), ret.end(), [](const std::string& ext) { return ext.empty(); }), ret.end());
+#endif
     return ret;
   }
 

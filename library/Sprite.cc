@@ -33,49 +33,34 @@ inline namespace v1 {
 #endif
 
   Sprite::Sprite()
-  : m_texture(nullptr)
-  , m_textureRect(0, 0, 1, 1)
-  , m_bounds(0, 0, 0, 0)
   {
-    updateTexCoords();
+    m_basic.updateGeometry(m_vertices);
   }
 
   Sprite::Sprite(const Texture& texture)
-  : m_texture(&texture)
-  , m_textureRect(0, 0, 1, 1)
-  , m_bounds(0, 0, 0, 0)
+  : m_basic(texture)
   {
-    updateTexCoords();
-    updatePositions();
+    m_basic.updateGeometry(m_vertices);
   }
 
   Sprite::Sprite(const Texture& texture, const RectF& textureRect)
-  : m_texture(&texture)
-  , m_textureRect(textureRect)
-  , m_bounds(0, 0, 0, 0)
+  : m_basic(texture, textureRect)
   {
-    updateTexCoords();
-    updatePositions();
+    m_basic.updateGeometry(m_vertices);
   }
 
   void Sprite::setTexture(const Texture& texture, bool resetRect) {
-    m_texture = &texture;
-    updatePositions();
-
-    if (resetRect) {
-      m_textureRect = { 0.0f, 0.0f, 1.0f, 1.0f };
-      updateTexCoords();
-    }
+    m_basic.setTexture(texture, resetRect);
+    m_basic.updateGeometry(m_vertices);
   }
 
   void Sprite::unsetTexture() {
-    m_texture = nullptr;
+    m_basic.unsetTexture();
   }
 
   void Sprite::setTextureRect(const RectF& rect) {
-    m_textureRect = rect;
-    updateTexCoords();
-    updatePositions();
+    m_basic.setTextureRect(rect);
+    m_basic.updateGeometry(m_vertices);
   }
 
   void Sprite::setColor(const Color4f& color) {
@@ -89,11 +74,11 @@ inline namespace v1 {
   }
 
   RectF Sprite::getLocalBounds() const {
-    return m_bounds;
+    return m_basic.getLocalBounds();
   }
 
   void Sprite::setAnchor(Anchor anchor) {
-    setOriginFromAnchorAndBounds(anchor, m_bounds);
+    setOriginFromAnchorAndBounds(anchor, getLocalBounds());
   }
 
   VertexBuffer Sprite::commitGeometry() const {
@@ -103,36 +88,13 @@ inline namespace v1 {
   }
 
   void Sprite::draw(RenderTarget& target, RenderStates states) {
-    if (m_texture == nullptr) {
+    if (!m_basic.hasTexture()) {
       return;
     }
 
     states.transform *= getTransform();
-    states.texture = m_texture;
+    states.texture = &m_basic.getTexture();
     target.draw(m_vertices, 4, PrimitiveType::TriangleStrip, states);
-  }
-
-  void Sprite::updatePositions() {
-    if (m_texture == nullptr) {
-      return;
-    }
-
-    Vector2u textureSize = m_texture->getSize();
-    Vector2f spriteSize = textureSize * m_textureRect.getSize();
-
-    m_vertices[0].position = {  0.0f,            0.0f };
-    m_vertices[1].position = { spriteSize.width, 0.0f };
-    m_vertices[2].position = {  0.0f,            spriteSize.height };
-    m_vertices[3].position = { spriteSize.width, spriteSize.height };
-
-    m_bounds.setSize(spriteSize);
-  }
-
-  void Sprite::updateTexCoords() {
-    m_vertices[0].texCoords = m_textureRect.getTopLeft();
-    m_vertices[1].texCoords = m_textureRect.getTopRight();
-    m_vertices[2].texCoords = m_textureRect.getBottomLeft();
-    m_vertices[3].texCoords = m_textureRect.getBottomRight();
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

@@ -22,12 +22,12 @@
 
 #include <algorithm>
 
-#include <glad/glad.h>
 
 #include <gf/Log.h>
 #include <gf/Vertex.h>
 
 #include "priv/Debug.h"
+#include "priv/OpenGLFwd.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -114,7 +114,7 @@ inline namespace v1 {
     }
 
     uint16_t maxIndex = *std::max_element(indices, indices + count);
-    std::size_t vboSize = maxIndex * sizeof(Vertex);
+    std::size_t vboSize = (maxIndex + 1) * sizeof(Vertex);
 
     glCheck(glGenBuffers(1, &m_vbo));
     glCheck(glBindBuffer(GL_ARRAY_BUFFER, m_vbo));

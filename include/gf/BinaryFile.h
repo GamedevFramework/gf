@@ -85,6 +85,15 @@ inline namespace v1 {
     ~BinaryFile();
 
     /**
+     * @brief Conversion to boolean
+     *
+     * @returns True if the file exists and was opened
+     */
+    operator bool() const {
+      return m_file != nullptr;
+    }
+
+    /**
      * @brief Write a buffer in the file
      *
      * @param buffer The buffer to write in the file

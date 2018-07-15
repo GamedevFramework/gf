@@ -18,37 +18,19 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#include <gf/SerializationHeaders.h>
-
-#include <gf/Serialization.h>
+#ifndef GF_SERIALIZATION_FWD_H
+#define GF_SERIALIZATION_FWD_H
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
 #endif
-
-  Serializer& operator|(Serializer& ar, SerialArrayHeader header)  {
-    ar.writeArrayHeader(header.size);
-    return ar;
-  }
-
-  Deserializer& operator|(Deserializer& ar, SerialArrayHeader& header) {
-    ar.readArrayHeader(header.size);
-    return ar;
-  }
-
-
-  Serializer& operator|(Serializer& ar, SerialMapHeader header) {
-    ar.writeMapHeader(header.size);
-    return ar;
-  }
-
-  Deserializer& operator|(Deserializer& ar, SerialMapHeader& header) {
-    ar.readMapHeader(header.size);
-    return ar;
-  }
+  class Serializer;
+  class Deserializer;
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif
 }
+
+#endif // GF_SERIALIZATION_FWD_H

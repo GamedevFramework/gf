@@ -27,6 +27,7 @@
 #include <string>
 
 #include "Alignment.h"
+#include "BasicText.h"
 #include "Portability.h"
 #include "Transformable.h"
 #include "Vector.h"
@@ -128,7 +129,7 @@ inline namespace v1 {
      * @sa setString()
      */
     const std::string& getString() const {
-      return m_string;
+      return m_basic.getString();
     }
 
     /**
@@ -150,7 +151,7 @@ inline namespace v1 {
      * @sa setCharacterSize()
      */
     unsigned getCharacterSize() const {
-      return m_characterSize;
+      return m_basic.getCharacterSize();
     }
 
     /**
@@ -181,7 +182,7 @@ inline namespace v1 {
      * @sa setFont()
      */
     const Font *getFont() const {
-      return m_font;
+      return m_basic.getFont();
     }
 
     /**
@@ -249,7 +250,7 @@ inline namespace v1 {
      * @sa setOutlineThickness()
      */
     float getOutlineThickness() {
-      return m_outlineThickness;
+      return m_basic.getOutlineThickness();
     }
 
     /**
@@ -269,7 +270,7 @@ inline namespace v1 {
      * @sa setParagraphWidth()
      */
     float getParagraphWidth() const {
-      return m_paragraphWidth;
+      return m_basic.getParagraphWidth();
     }
 
     /**
@@ -289,7 +290,7 @@ inline namespace v1 {
      * @sa setAlignment()
      */
     Alignment getAlignment() const {
-      return m_align;
+      return m_basic.getAlignment();
     }
 
     /**
@@ -304,7 +305,7 @@ inline namespace v1 {
      * @return Local bounding rectangle of the entity
      */
     RectF getLocalBounds() const {
-      return m_bounds;
+      return m_basic.getLocalBounds();
     }
 
     /**
@@ -345,34 +346,13 @@ inline namespace v1 {
     void updateGeometry();
 
   private:
-    struct Line {
-      std::vector<std::u32string> words;
-      float indent = 0.0f;
-      float spacing = 0.0f;
-    };
+    BasicText m_basic;
 
-    struct Paragraph {
-      std::vector<Line> lines;
-    };
-
-    float getWordWidth(const std::u32string& word);
-
-    std::vector<Paragraph> makeParagraphs(const std::string& str, float spaceWidth);
-
-  private:
-    std::string m_string;
-    Font *m_font;
-    unsigned m_characterSize;
     Color4f m_color;
     VertexArray m_vertices;
-    RectF m_bounds;
 
     Color4f m_outlineColor;
-    float m_outlineThickness;
     VertexArray m_outlineVertices;
-
-    float m_paragraphWidth;
-    Alignment m_align;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

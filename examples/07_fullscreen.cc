@@ -67,9 +67,7 @@ int main() {
   extendedBackground.setColor(gf::Color::Gray());
 
   std::cout << "Gamedev Framework (gf) example #07: Fullscreen\n";
-  std::cout << "The scene is composed of:\n";
-  std::cout << "\t- a white square with a triangle, and a grey background outside the white square;\n";
-  std::cout << "\t- a red square that should stay at the top left of the window (like a HUD)\n";
+  std::cout << "The scene is composed of a white square with a triangle, and a grey background outside the white square;\n";
   std::cout << "How to use:\n";
   std::cout << "\tF: Change between fullscreen/windowed\n";
 

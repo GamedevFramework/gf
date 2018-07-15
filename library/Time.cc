@@ -25,12 +25,25 @@
 
 #include <type_traits>
 
+#include <gf/SerializationOps.h>
+
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
 #endif
 
   const Time Time::Zero = Time();
+
+  Serializer& operator|(Serializer& ar, Time time) {
+    return ar | time.asMicroseconds();
+  }
+
+  Deserializer& operator|(Deserializer& ar, Time& time) {
+    int64_t amount;
+    ar | amount;
+    time = gf::microseconds(amount);
+    return ar;
+  }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

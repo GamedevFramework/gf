@@ -29,6 +29,7 @@
 #include <ratio>
 
 #include "Portability.h"
+#include "SerializationFwd.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -364,6 +365,18 @@ inline namespace v1 {
   Time operator-=(Time& rhs, Time lhs) {
     return rhs.subTo(lhs);
   }
+
+  /**
+   * @relates Serializer
+   * @brief Serialize a time
+   */
+  GF_API Serializer& operator|(Serializer& ar, Time time);
+
+  /**
+   * @relates Deserializer
+   * @brief Deserialize a time
+   */
+  GF_API Deserializer& operator|(Deserializer& ar, Time& time);
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

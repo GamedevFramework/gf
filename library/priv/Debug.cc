@@ -20,9 +20,9 @@
  */
 #include "Debug.h"
 
-#include <glad/glad.h>
-
 #include <gf/Log.h>
+
+#include "OpenGLFwd.h"
 
 namespace gf {
   namespace priv {
