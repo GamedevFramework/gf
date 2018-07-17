@@ -22,6 +22,7 @@
 #define ARRAY2D_H
 
 #include <cassert>
+#include <algorithm>
 #include <type_traits>
 #include <utility>
 #include <vector>
@@ -31,6 +32,7 @@
 #include "Math.h"
 #include "Portability.h"
 #include "Range.h"
+#include "SerializationFwd.h"
 #include "Vector.h"
 
 namespace gf {
@@ -663,6 +665,58 @@ inline namespace v1 {
     Vector<I, 2> m_size;
     std::vector<T> m_data;
   };
+
+  /**
+   * @relates Array2D
+   * @brief Equality operator for 2D array
+   */
+  template<typename T, typename I>
+  bool operator==(const Array2D<T,I>& lhs, const Array2D<T,I>& rhs) {
+    auto lhsSize = lhs.getSize();
+    auto rhsSize = rhs.getSize();
+
+    if (lhsSize.width != rhsSize.width || lhsSize.height != rhsSize.height) {
+      return false;
+    }
+
+    return std::equal(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+  }
+
+  /**
+   * @relates Serializer
+   * @brief Serialize a 2D array
+   */
+  template<typename T, typename I>
+  Serializer& operator|(Serializer& ar, const Array2D<T,I>& array) {
+    auto size = array.getSize();
+    ar | size.width | size.height;
+
+    for (auto& item : array) {
+      ar | item;
+    }
+
+    return ar;
+  }
+
+  /**
+   * @relates Deserializer
+   * @brief Deserialize a 2D array
+   */
+  template<typename T, typename I>
+  Deserializer& operator|(Deserializer& ar, Array2D<T,I>& array) {
+    Vector<I, 2> size;
+    ar | size.width | size.height;
+
+    Array2D<T,I> tmp(size);
+
+    for (auto& item : tmp) {
+      ar | item;
+    }
+
+    array = std::move(tmp);
+    return ar;
+  }
+
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
