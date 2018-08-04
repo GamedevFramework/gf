@@ -85,6 +85,7 @@
 #include "Noises.cc"
 #include "Orientation.cc"
 #include "Particles.cc"
+#include "Path.cc"
 #include "Paths.cc"
 #include "PhysicsBody.cc"
 #include "PhysicsGeometry.cc"

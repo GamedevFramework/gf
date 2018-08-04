@@ -27,6 +27,7 @@
 #include <limits>
 
 #include <gf/Array2D.h>
+#include <gf/Path.h>
 #include <gf/Paths.h>
 #include <gf/VectorOps.h>
 
@@ -651,6 +652,18 @@ TEST(SerialTest, Array2D) {
   in1({ 2, 1 }) = 6;
 
   gf::Array2D<int> out1;
+
+  {  gf::Serializer ar(filename); ar | in1; }
+  {  gf::Deserializer ar(filename); ar | out1; }
+
+  EXPECT_EQ(in1, out1);
+}
+
+TEST(SerialTest, Path) {
+  gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
+
+  gf::Path in1 = filename;
+  gf::Path out1;
 
   {  gf::Serializer ar(filename); ar | in1; }
   {  gf::Deserializer ar(filename); ar | out1; }

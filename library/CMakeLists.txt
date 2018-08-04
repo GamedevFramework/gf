@@ -138,6 +138,7 @@ else()
     Orientation.cc
     Particles.cc
     Paths.cc
+    Path.cc
     PhysicsBody.cc
     PhysicsGeometry.cc
     PhysicsModel.cc
