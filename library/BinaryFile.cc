@@ -97,6 +97,12 @@ inline namespace v1 {
     return std::feof(m_file);
   }
 
+  void BinaryFile::close() {
+    assert(m_file);
+    std::fclose(m_file);
+    m_file = nullptr;
+  }
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif

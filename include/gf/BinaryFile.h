@@ -132,6 +132,14 @@ inline namespace v1 {
      */
     bool isEof() const;
 
+
+    /**
+     * @brief Close the file.
+     *
+     * No operation should be called after the call to this function, except conversion to bool.
+     */
+    void close();
+
   private:
     std::FILE *m_file;
   };

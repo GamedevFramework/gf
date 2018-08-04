@@ -189,6 +189,7 @@ inline namespace v1 {
       if (magic[0] != Magic[0] || magic[1] != Magic[1]) {
         Log::error("This file is not a gf archive: '%s'.\n", filename.string().c_str());
         m_eof = true;
+        m_file.close();
         return;
       }
 
