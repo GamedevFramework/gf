@@ -694,11 +694,11 @@ inline namespace v1 {
         if (text.attribute("valign")) {
           std::string valign = text.attribute("valign").as_string();
 
-          if (valign == "left") {
+          if (valign == "top") {
             tmx->valign = TmxText::VAlign::Top;
           } else if (valign == "center") {
             tmx->valign = TmxText::VAlign::Center;
-          } else if (valign == "right") {
+          } else if (valign == "bottom") {
             tmx->valign = TmxText::VAlign::Bottom;
           } else {
             Log::error("Wrong valign string: '%s'\n", valign.c_str());
