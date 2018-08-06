@@ -22,6 +22,9 @@
 
 #include <cassert>
 
+#include <gf/SerializationOps.h>
+#include <gf/VectorOps.h>
+
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
@@ -79,6 +82,39 @@ inline namespace v1 {
     assert(m_type == Loop);
     return m_points.front();
   }
+
+  Serializer& operator|(Serializer& ar, const Polyline& polyline) {
+    ar | polyline.getType();
+
+    uint64_t size = polyline.getPointCount();
+    ar | size;
+
+    for (uint64_t i = 0; i < size; ++i) {
+      Vector2f point = polyline.getPoint(i);
+      ar | point;
+    }
+
+    return ar;
+  }
+
+  Deserializer& operator|(Deserializer& ar, Polyline& polyline) {
+    Polyline::Type type;
+    ar | type;
+
+    polyline = Polyline(type);
+
+    uint64_t size;
+    ar | size;
+
+    for (uint64_t i = 0; i < size; ++i) {
+      Vector2f point;
+      ar | point;
+      polyline.addPoint(point);
+    }
+
+    return ar;
+  }
+
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
