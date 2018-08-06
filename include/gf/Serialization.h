@@ -48,6 +48,7 @@ inline namespace v1 {
      * @brief Constructor
      *
      * @param filename The name of the binary file
+     * @param version The version of the user format
      */
     Serializer(const Path& filename, uint16_t version = 0);
 
