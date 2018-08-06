@@ -1,0 +1,34 @@
+/**
+
+@page id String identifiers
+
+@tableofcontents
+
+@section id_intro Introduction
+
+A gf::Id represents an identifier that has been computed from a string. Technically, it's a message digest from the [Fowler–Noll–Vo 1a](https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function) hash function.
+
+@section id_howto How to get an id from a string?
+
+There are two ways to get an id from a string. The first one is to call gf::hash with the string. You can use a C string or a `std::string` or anything that can be converted to a gf::StringRef.
+
+@snippet snippets/doc_id.cc hash
+
+The second one is to use the user-defined literal  `_id`. First, you have to include a `using namespace` directive in order to be able to use this user-defined literal.
+
+@snippet snippets/doc_id.cc using
+
+Then, you can use the user-defined literal on literal strings.
+
+@snippet snippets/doc_id.cc udl
+
+The main advantage is that the id is computed at compile-time.
+
+@snippet snippets/doc_id.cc comptime
+
+So, you can even use this property to compute a switch statement on a string.
+
+@snippet snippets/doc_id.cc switch
+
+
+*/
