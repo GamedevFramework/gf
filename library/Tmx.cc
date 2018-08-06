@@ -599,8 +599,8 @@ inline namespace v1 {
       return tmx;
     }
 
-    std::vector<Vector2i> parsePoints(const std::string& points) {
-      std::vector<Vector2i> ret;
+    std::vector<Vector2f> parsePoints(const std::string& points) {
+      std::vector<Vector2f> ret;
 
       std::vector<std::string> items;
       boost::algorithm::split(items, points, boost::algorithm::is_any_of(" "));
@@ -610,8 +610,8 @@ inline namespace v1 {
         boost::algorithm::split(coords, item, boost::algorithm::is_any_of(","));
 
         assert(coords.size() == 2);
-        int x = std::stoi(coords[0]);
-        int y = std::stoi(coords[1]);
+        float x = std::stof(coords[0]);
+        float y = std::stof(coords[1]);
         ret.push_back({ x, y });
       }
 
@@ -624,8 +624,8 @@ inline namespace v1 {
       tmx.id = node.attribute("id").as_uint();
       tmx.name = node.attribute("name").as_string();
       tmx.type = node.attribute("type").as_string();
-      tmx.position.x = required(node.attribute("x")).as_uint();
-      tmx.position.y = required(node.attribute("y")).as_uint();
+      tmx.position.x = required(node.attribute("x")).as_float();
+      tmx.position.y = required(node.attribute("y")).as_float();
       tmx.rotation = node.attribute("rotation").as_double();
       tmx.visible = node.attribute("visible").as_bool(true);
     }
@@ -729,8 +729,8 @@ inline namespace v1 {
         parseTmxObjectCommon(node, *tmx);
 
         tmx->kind = TmxObject::Ellipse;
-        tmx->size.width = required(node.attribute("width")).as_int();
-        tmx->size.height = required(node.attribute("height")).as_int();
+        tmx->size.width = required(node.attribute("width")).as_float();
+        tmx->size.height = required(node.attribute("height")).as_float();
 
         return std::move(tmx);
       }
@@ -739,8 +739,8 @@ inline namespace v1 {
       parseTmxObjectCommon(node, *tmx);
 
       tmx->kind = TmxObject::Rectangle;
-      tmx->size.width = required(node.attribute("width")).as_int();
-      tmx->size.height = required(node.attribute("height")).as_int();
+      tmx->size.width = required(node.attribute("width")).as_float();
+      tmx->size.height = required(node.attribute("height")).as_float();
 
       return std::move(tmx);
     }
