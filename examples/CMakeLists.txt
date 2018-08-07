@@ -46,5 +46,6 @@ add_gf_example(40_ui)
 add_gf_example(41_collisions)
 add_gf_example(42_physics)
 add_gf_example(43_points)
+add_gf_example(44_tmx)
 
 add_gf_example(98_logo)
