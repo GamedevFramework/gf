@@ -912,7 +912,7 @@ inline namespace v1 {
       }
 
       tmx.image = nullptr;
-      pugi::xml_node image = node.child("tileoffset");
+      pugi::xml_node image = node.child("image");
 
       if (image) {
         tmx.image = parseTmxImage(image, ctx);
@@ -1100,7 +1100,7 @@ inline namespace v1 {
     ctx.mapPath = filename;
     ctx.currentPath = filename.parent_path();
 
-    return parseTmxLayers(doc, *this, ctx);
+    return parseTmxLayers(doc.child("map"), *this, ctx);
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
