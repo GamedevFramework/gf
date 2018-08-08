@@ -200,9 +200,11 @@ inline namespace v1 {
 
   namespace {
 
-    pugi::xml_attribute required(pugi::xml_attribute attr) {
+    pugi::xml_attribute required_attribute(pugi::xml_node node, const char *name) {
+      pugi::xml_attribute attr = node.attribute(name);
+
       if (!attr) {
-        Log::error("Required attribute is missing: %s\n", attr.name());
+        Log::error("Required attribute for node '%s' is missing: %s\n", node.path().c_str(), name);
       }
 
       return attr;
@@ -474,29 +476,29 @@ inline namespace v1 {
 
       for (pugi::xml_node properties : node.children("properties")) {
         for (pugi::xml_node property : properties.children("property")) {
-          std::string name = required(property.attribute("name")).as_string();
+          std::string name = required_attribute(property, "name").as_string();
           assert(!name.empty());
 
           if (property.attribute("type")) {
             std::string type = property.attribute("type").as_string();
 
             if (type == "string") {
-              tmx.addStringProperty(std::move(name), required(property.attribute("value")).as_string());
+              tmx.addStringProperty(std::move(name), required_attribute(property, "value").as_string());
             } else if (type == "int") {
-              tmx.addIntProperty(std::move(name), required(property.attribute("value")).as_int());
+              tmx.addIntProperty(std::move(name), required_attribute(property, "value").as_int());
             } else if (type == "float") {
-              tmx.addFloatProperty(std::move(name), required(property.attribute("value")).as_double());
+              tmx.addFloatProperty(std::move(name), required_attribute(property, "value").as_double());
             } else if (type == "bool") {
-              tmx.addBoolProperty(std::move(name), required(property.attribute("value")).as_bool());
+              tmx.addBoolProperty(std::move(name), required_attribute(property, "value").as_bool());
             } else if (type == "color") {
-              tmx.addColorProperty(std::move(name), computeColor(required(property.attribute("value"))));
+              tmx.addColorProperty(std::move(name), computeColor(required_attribute(property, "value")));
             } else if (type == "file") {
-              tmx.addFileProperty(std::move(name), required(property.attribute("value")).as_string());
+              tmx.addFileProperty(std::move(name), required_attribute(property, "value").as_string());
             } else {
               Log::error("Wrong type string: '%s'\n", type.c_str());
             }
           } else {
-            tmx.addStringProperty(std::move(name), required(property.attribute("value")).as_string());
+            tmx.addStringProperty(std::move(name), required_attribute(property, "value").as_string());
           }
         }
       }
@@ -508,7 +510,7 @@ inline namespace v1 {
     void parseTmxLayer(const pugi::xml_node node, TmxLayer& tmx) {
       tmx.properties = parseTmxProperties(node);
 
-      tmx.name = required(node.attribute("name")).as_string();
+      tmx.name = required_attribute(node, "name").as_string();
       tmx.opacity = node.attribute("opacity").as_double(1.0);
       tmx.visible = node.attribute("visible").as_bool(true);
       tmx.offset.x = node.attribute("offsetx").as_int(0);
@@ -559,7 +561,7 @@ inline namespace v1 {
 
           case TmxFormat::Xml:
             for (pugi::xml_node tile : data.children("tile")) {
-              unsigned gid = required(tile.attribute("gid")).as_uint();
+              unsigned gid = required_attribute(tile, "gid").as_uint();
               tmx->cells.push_back(decodeGID(gid));
             };
 
@@ -576,7 +578,7 @@ inline namespace v1 {
       auto tmx = std::make_unique<TmxImage>();
 
       tmx->format = node.attribute("format").as_string();
-      tmx->source = ctx.currentPath / required(node.attribute("source")).as_string();
+      tmx->source = ctx.currentPath / required_attribute(node, "source").as_string();
       tmx->transparent = computeColor(node.attribute("trans"));
       tmx->size.width = node.attribute("width").as_uint();
       tmx->size.height = node.attribute("height").as_uint();
@@ -624,8 +626,8 @@ inline namespace v1 {
       tmx.id = node.attribute("id").as_uint();
       tmx.name = node.attribute("name").as_string();
       tmx.type = node.attribute("type").as_string();
-      tmx.position.x = required(node.attribute("x")).as_float();
-      tmx.position.y = required(node.attribute("y")).as_float();
+      tmx.position.x = required_attribute(node, "x").as_float();
+      tmx.position.y = required_attribute(node, "y").as_float();
       tmx.rotation = node.attribute("rotation").as_double();
       tmx.visible = node.attribute("visible").as_bool(true);
     }
@@ -637,7 +639,7 @@ inline namespace v1 {
 
         tmx->kind = TmxObject::Polygon;
 
-        std::string points = required(node.child("polygon").attribute("points")).as_string();
+        std::string points = required_attribute(node.child("polygon"), "points").as_string();
         tmx->points = parsePoints(points);
 
         return std::move(tmx);
@@ -649,7 +651,7 @@ inline namespace v1 {
 
         tmx->kind = TmxObject::Polyline;
 
-        std::string points = required(node.child("polyline").attribute("points")).as_string();
+        std::string points = required_attribute(node.child("polyline"), "points").as_string();
         tmx->points = parsePoints(points);
 
         return std::move(tmx);
@@ -729,8 +731,8 @@ inline namespace v1 {
         parseTmxObjectCommon(node, *tmx);
 
         tmx->kind = TmxObject::Ellipse;
-        tmx->size.width = required(node.attribute("width")).as_float();
-        tmx->size.height = required(node.attribute("height")).as_float();
+        tmx->size.width = node.attribute("width").as_float();
+        tmx->size.height = node.attribute("height").as_float();
 
         return std::move(tmx);
       }
@@ -739,8 +741,8 @@ inline namespace v1 {
       parseTmxObjectCommon(node, *tmx);
 
       tmx->kind = TmxObject::Rectangle;
-      tmx->size.width = required(node.attribute("width")).as_float();
-      tmx->size.height = required(node.attribute("height")).as_float();
+      tmx->size.width = required_attribute(node, "width").as_float();
+      tmx->size.height = required_attribute(node, "height").as_float();
 
       return std::move(tmx);
     }
@@ -805,8 +807,8 @@ inline namespace v1 {
 
       TmxFrame tmx;
 
-      tmx.tileId = required(node.attribute("tileId")).as_uint();
-      tmx.duration = gf::milliseconds(required(node.attribute("duration")).as_uint());
+      tmx.tileId = required_attribute(node, "tileId").as_uint();
+      tmx.duration = gf::milliseconds(required_attribute(node, "duration").as_uint());
 
       return tmx;
     }
@@ -829,7 +831,7 @@ inline namespace v1 {
       TmxTile tmx;
 
       tmx.properties = parseTmxProperties(node);
-      tmx.id = required(node.attribute("id")).as_uint();
+      tmx.id = required_attribute(node, "id").as_uint();
       tmx.type = node.attribute("type").as_string();
 
       static constexpr unsigned Invalid = static_cast<unsigned>(-1);
@@ -883,8 +885,8 @@ inline namespace v1 {
 
       tmx.properties = parseTmxProperties(node);
 
-      tmx.name = required(node.attribute("name")).as_string();
-      tmx.tile = required(node.attribute("tile")).as_uint();
+      tmx.name = required_attribute(node, "name").as_string();
+      tmx.tile = required_attribute(node, "tile").as_uint();
 
       return tmx;
     }
@@ -961,7 +963,7 @@ inline namespace v1 {
 
       tmx.properties = parseTmxProperties(node);
 
-      tmx.firstGid = required(node.attribute("firstgid")).as_uint();
+      tmx.firstGid = required_attribute(node, "firstgid").as_uint();
 
       Path source = node.attribute("source").as_string();
 
@@ -987,7 +989,7 @@ inline namespace v1 {
       tmx.tiledVersion = node.attribute("tiledversion").as_string("1.0");
 
       tmx.orientation = TmxOrientation::Unknown;
-      std::string orientation = required(node.attribute("orientation")).as_string();
+      std::string orientation = required_attribute(node, "orientation").as_string();
 
       if (orientation == "orthogonal") {
         tmx.orientation = TmxOrientation::Orthogonal;
@@ -1019,11 +1021,11 @@ inline namespace v1 {
         }
       }
 
-      tmx.mapSize.width = required(node.attribute("width")).as_uint();
-      tmx.mapSize.height = required(node.attribute("height")).as_uint();
+      tmx.mapSize.width = required_attribute(node, "width").as_uint();
+      tmx.mapSize.height = required_attribute(node, "height").as_uint();
 
-      tmx.tileSize.width = required(node.attribute("tilewidth")).as_uint();
-      tmx.tileSize.height = required(node.attribute("tileheight")).as_uint();
+      tmx.tileSize.width = required_attribute(node, "tilewidth").as_uint();
+      tmx.tileSize.height = required_attribute(node, "tileheight").as_uint();
 
       tmx.hexSideLength = node.attribute("hexsidelength").as_uint(0u);
 
