@@ -20,6 +20,10 @@ option(GF_BUILD_TOOLS "Build tools" OFF)
 option(GF_SINGLE_COMPILTATION_UNIT "Build the library in a single file (unity build)" OFF)
 option(GF_SHARED "Build the library as a shared library" ON)
 
+if(UNIX)
+  option(GF_DEV_ENABLE_ASAN "Enable Address Sanitizer" OFF)
+endif()
+
 set(BUILD_SHARED_LIBS ${GF_SHARED})
 
 include(GNUInstallDirs)
@@ -55,6 +59,12 @@ else()
   set(CMAKE_CXX_FLAGS_MINSIZEREL      "-Os -DNDEBUG")
   set(CMAKE_CXX_FLAGS_RELEASE         "-O3 -DNDEBUG")
   set(CMAKE_CXX_FLAGS_RELWITHDEBINFO  "-O2 -g")
+endif()
+
+if(UNIX)
+  if(GF_DEV_ENABLE_ASAN)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address")
+  endif()
 endif()
 
 add_subdirectory(library)
