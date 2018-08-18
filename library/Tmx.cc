@@ -623,7 +623,7 @@ inline namespace v1 {
     void parseTmxObjectCommon(const pugi::xml_node node, TmxObject& tmx) {
       tmx.properties = parseTmxProperties(node);
 
-      tmx.id = node.attribute("id").as_uint();
+      tmx.id = node.attribute("id").as_int();
       tmx.name = node.attribute("name").as_string();
       tmx.type = node.attribute("type").as_string();
       tmx.position.x = required_attribute(node, "x").as_float();

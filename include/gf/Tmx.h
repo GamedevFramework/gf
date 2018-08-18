@@ -367,7 +367,7 @@ inline namespace v1 {
 
     TmxProperties properties; ///< The properties of the object
 
-    Id id;              ///< The id of the object
+    int id;             ///< The id of the object
     std::string name;   ///< The name of the object
     std::string type;   ///< The type of the object
     Vector2f position;  ///< The position of the object
