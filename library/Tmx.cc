@@ -944,17 +944,19 @@ inline namespace v1 {
         return;
       }
 
+      pugi::xml_node tileset = doc.child("tileset");
+
       ctx.currentPath = tilesetPath.parent_path();
 
-      if (doc.attribute("firstgid")) {
+      if (tileset.attribute("firstgid")) {
         Log::warning("Attribute 'firstgid' present in a TSX file: '%s'\n", tilesetPath.string().c_str());
       }
 
-      if (doc.attribute("source")) {
+      if (tileset.attribute("source")) {
         Log::warning("Attribute 'source' present in a TSX file: '%s'\n", tilesetPath.string().c_str());
       }
 
-      parseTmxTilesetFromElement(doc, tmx, ctx);
+      parseTmxTilesetFromElement(tileset, tmx, ctx);
       ctx.currentPath = ctx.mapPath.parent_path();
     }
 
