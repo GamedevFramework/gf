@@ -25,6 +25,7 @@
 
 #include <iostream>
 #include <limits>
+#include <numeric>
 
 #include <gf/Array2D.h>
 #include <gf/Path.h>
@@ -667,6 +668,20 @@ TEST(SerialTest, Path) {
 
   {  gf::Serializer ar(filename); ar | in1; }
   {  gf::Deserializer ar(filename); ar | out1; }
+
+  EXPECT_EQ(in1, out1);
+}
+
+TEST(SerialTest, Compressed) {
+  gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
+
+  std::vector<int32_t> in1(10 * 1024);
+  std::iota(in1.begin(), in1.end(), 1);
+
+  std::vector<int32_t> out1;
+
+  {  gf::Serializer ar(filename, gf::BinaryFormat::Compressed); ar | in1; }
+  {  gf::Deserializer ar(filename, gf::BinaryFormat::Compressed); ar | out1; }
 
   EXPECT_EQ(in1, out1);
 }

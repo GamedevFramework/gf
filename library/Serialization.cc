@@ -43,8 +43,8 @@ inline namespace v1 {
    * Serializer
    */
 
-  Serializer::Serializer(const Path& filename, uint16_t version)
-  : m_file(filename, BinaryFile::Mode::Write)
+  Serializer::Serializer(const Path& filename, uint16_t version, BinaryFormat format)
+  : m_file(filename, BinaryFile::Mode::Write, format)
   , m_version(version)
   {
     if (m_file) {
@@ -175,8 +175,8 @@ inline namespace v1 {
    * Deserializer
    */
 
-  Deserializer::Deserializer(const Path& filename)
-  : m_file(filename, BinaryFile::Mode::Read)
+  Deserializer::Deserializer(const Path& filename, BinaryFormat format)
+  : m_file(filename, BinaryFile::Mode::Read, format)
   , m_version(0)
   , m_eof(false)
   {

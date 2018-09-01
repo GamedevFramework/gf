@@ -44,13 +44,51 @@ inline namespace v1 {
    */
   class GF_API Serializer {
   public:
+
+    /**
+     * @brief Constructor
+     *
+     * @param filename The name of the binary file
+     * @param format The format of the binary archive
+     */
+    Serializer(const Path& filename)
+    : Serializer(filename, 0, BinaryFormat::Plain)
+    {
+
+    }
+
+    /**
+     * @brief Constructor
+     *
+     * @param filename The name of the binary file
+     * @param format The format of the binary archive
+     */
+    Serializer(const Path& filename, BinaryFormat format)
+    : Serializer(filename, 0, format)
+    {
+
+    }
+
     /**
      * @brief Constructor
      *
      * @param filename The name of the binary file
      * @param version The version of the user format
      */
-    Serializer(const Path& filename, uint16_t version = 0);
+    Serializer(const Path& filename, uint16_t version)
+    : Serializer(filename, version, BinaryFormat::Plain)
+    {
+
+    }
+
+    /**
+     * @brief Constructor
+     *
+     * @param filename The name of the binary file
+     * @param version The version of the user format
+     * @param format The format of the binary archive
+     */
+    Serializer(const Path& filename, uint16_t version, BinaryFormat format);
 
     /**
      * @brief Conversion to boolean
@@ -164,7 +202,7 @@ inline namespace v1 {
      *
      * @param filename The name of the binary file
      */
-    Deserializer(const Path& filename);
+    Deserializer(const Path& filename, BinaryFormat format = BinaryFormat::Plain);
 
     /**
      * @brief Conversion to boolean
