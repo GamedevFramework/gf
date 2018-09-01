@@ -23,6 +23,7 @@
 #include <cassert>
 
 #include <gf/Log.h>
+#include <gf/Unused.h>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -30,7 +31,6 @@ inline namespace v1 {
 #endif
 
   namespace {
-
     const char *getModeString(BinaryFile::Mode mode) {
       switch (mode) {
         case BinaryFile::Mode::Read:
@@ -47,54 +47,205 @@ inline namespace v1 {
 
   }
 
-  BinaryFile::BinaryFile(const Path& filename, Mode mode)
+  BinaryFile::BinaryFile(const Path& filename, Mode mode, BinaryFormat format)
   : m_file(std::fopen(filename.string().c_str(), getModeString(mode)))
+  , m_mode(mode)
+  , m_format(format)
+  , m_start(0)
+  , m_stop(0)
+  , m_eof(false)
   {
     if (m_file == nullptr) {
-      Log::error("Could not open file '%s'\n", filename.string().c_str());
+      Log::error("Could not open file '%s'\n", filename.string().c_str()); // throw?
+      return;
+    }
+
+    if (m_format == BinaryFormat::Compressed) {
+      m_stream.zalloc = nullptr;
+      m_stream.zfree = nullptr;
+
+      switch (m_mode) {
+        case Mode::Read: {
+          int err = inflateInit(&m_stream);
+          assert(err == Z_OK); // throw?
+          gf::unused(err);
+          break;
+        }
+        case Mode::Write:
+        case Mode::Append: {
+          int err = deflateInit(&m_stream, Z_DEFAULT_COMPRESSION);
+          assert(err == Z_OK); // throw?
+          gf::unused(err);
+          break;
+        }
+      }
+
     }
   }
 
   BinaryFile::BinaryFile(BinaryFile&& other)
   : m_file(std::exchange(other.m_file, nullptr))
+  , m_mode(other.m_mode)
+  , m_format(other.m_format)
+  , m_stream(other.m_stream)
+  , m_start(other.m_start)
+  , m_stop(other.m_stop)
+  , m_eof(other.m_eof)
   {
-
+    std::memcpy(m_buffer, other.m_buffer, BufferSize);
   }
 
   BinaryFile& BinaryFile::operator=(BinaryFile&& other) {
     std::swap(m_file, other.m_file);
+    std::swap(m_mode, other.m_mode);
+    std::swap(m_format, other.m_format);
+    std::swap(m_stream, other.m_stream);
+    std::swap(m_buffer, other.m_buffer);
+    std::swap(m_start, other.m_start);
+    std::swap(m_stop, other.m_stop);
+    std::swap(m_eof, other.m_eof);
     return *this;
   }
 
   BinaryFile::~BinaryFile() {
     if (m_file != nullptr) {
+      if (m_format == BinaryFormat::Compressed) {
+        switch (m_mode) {
+          case Mode::Read: {
+            int err = inflateEnd(&m_stream);
+            assert(err == Z_OK);
+            break;
+          }
+          case Mode::Write:
+          case Mode::Append: {
+            m_stream.next_in = nullptr;
+            m_stream.avail_in = 0;
+            m_stream.next_out = m_buffer;
+            m_stream.avail_out = BufferSize;
+
+            int err;
+
+            do {
+              err = deflate(&m_stream, Z_FINISH);
+              assert(err == Z_OK || err == Z_STREAM_END);
+              uInt written = BufferSize - m_stream.avail_out;
+
+              if (written > 0) {
+                std::size_t flushed = std::fwrite(m_buffer, sizeof(Bytef), written, m_file);
+                assert(flushed == written);
+
+                m_stream.next_out = m_buffer;
+                m_stream.avail_out = BufferSize;
+              }
+            } while (err != Z_STREAM_END);
+
+            err = deflateEnd(&m_stream);
+            assert(err == Z_OK);
+            break;
+          }
+
+        }
+      }
+
       std::fclose(m_file);
     }
   }
 
-  std::size_t BinaryFile::write(ArrayRef<uint8_t> buffer) const {
-    assert(m_file);
-    return std::fwrite(buffer.getData(), sizeof(uint8_t), buffer.getSize(), m_file);
+  std::size_t BinaryFile::write(ArrayRef<uint8_t> buffer) {
+    assert(m_file && (m_mode == Mode::Write || m_mode == Mode::Append));
+
+    if (m_format == BinaryFormat::Plain) {
+      return std::fwrite(buffer.getData(), sizeof(uint8_t), buffer.getSize(), m_file);
+    }
+
+    m_stream.next_out = m_buffer;
+    m_stream.avail_out = BufferSize;
+    m_stream.next_in = buffer.getData();
+    m_stream.avail_in = buffer.getSize();
+
+    do {
+      int err = deflate(&m_stream, Z_NO_FLUSH);
+      assert(err == Z_OK);
+      uInt written = BufferSize - m_stream.avail_out;
+
+      if (written > 0) {
+        std::size_t flushed = std::fwrite(m_buffer, sizeof(Bytef), written, m_file);
+        assert(flushed == written);
+
+        m_stream.next_out = m_buffer;
+        m_stream.avail_out = BufferSize;
+      } else {
+        assert(m_stream.avail_in == 0);
+      }
+    } while (m_stream.avail_in > 0);
+
+    return buffer.getSize();
   }
 
-  std::size_t BinaryFile::write(uint8_t byte) const {
-    assert(m_file);
-    return std::fwrite(&byte, sizeof(uint8_t), 1, m_file);
+  std::size_t BinaryFile::write(uint8_t byte) {
+    return write(ArrayRef<uint8_t>(&byte, 1));
   }
 
-  std::size_t BinaryFile::read(BufferRef<uint8_t> buffer) const {
-    assert(m_file);
-    return std::fread(buffer.getData(), sizeof(uint8_t), buffer.getSize(), m_file);
+  std::size_t BinaryFile::read(BufferRef<uint8_t> buffer) {
+    assert(m_file && m_mode == Mode::Read);
+
+    if (m_format == BinaryFormat::Plain) {
+      return std::fread(buffer.getData(), sizeof(uint8_t), buffer.getSize(), m_file);
+    }
+
+    m_stream.next_out = buffer.getData();
+    m_stream.avail_out = buffer.getSize();
+
+    uInt remaining = m_stop - m_start;
+
+    if (remaining > 0) {
+      m_stream.next_in = m_buffer + m_start;
+      m_stream.avail_in = remaining;
+      int err = inflate(&m_stream, Z_NO_FLUSH);
+      assert(err == Z_OK || err == Z_STREAM_END);
+      m_start += remaining - m_stream.avail_in;
+    }
+
+    while (m_stream.avail_out > 0) {
+      if (m_start == m_stop) {
+        m_start = 0;
+        m_stop = std::fread(m_buffer, sizeof(uint8_t), BufferSize, m_file);
+      }
+
+      remaining = m_stop - m_start;
+
+      m_stream.next_in = m_buffer + m_start;
+      m_stream.avail_in = remaining;
+      int err = inflate(&m_stream, Z_NO_FLUSH);
+
+      if (err != Z_OK && err != Z_STREAM_END) {
+        Log::debug("Error while calling inflate: %d '%s'\n", err, m_stream.msg);
+      }
+
+      if (err == Z_STREAM_END) {
+        m_eof = true;
+        return buffer.getSize() - m_stream.avail_out;
+      }
+
+      assert(err == Z_OK || err == Z_STREAM_END);
+      m_start += remaining - m_stream.avail_in;
+    }
+
+    return buffer.getSize();
   }
 
-  std::size_t BinaryFile::read(uint8_t& byte) const {
-    assert(m_file);
-    return std::fread(&byte, sizeof(uint8_t), 1, m_file);
+  std::size_t BinaryFile::read(uint8_t& byte) {
+    return read(BufferRef<uint8_t>(&byte, 1));
   }
 
-  bool BinaryFile::isEof() const {
+  bool BinaryFile::isEof() {
     assert(m_file);
-    return std::feof(m_file);
+
+    if (m_format == BinaryFormat::Plain) {
+      return std::feof(m_file);
+    }
+
+    return m_eof;
   }
 
   void BinaryFile::close() {

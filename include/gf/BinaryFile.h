@@ -23,6 +23,8 @@
 
 #include <cstdio>
 
+#include <zlib.h>
+
 #include "ArrayRef.h"
 #include "BufferRef.h"
 #include "Path.h"
@@ -32,6 +34,14 @@ namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
 #endif
+
+  /**
+   *
+   */
+  enum class BinaryFormat {
+    Plain,
+    Compressed,
+  };
 
   /**
    * @ingroup core
@@ -55,7 +65,7 @@ inline namespace v1 {
      * @param filename The filename of the binary file
      * @param mode The open mode
      */
-    BinaryFile(const Path& filename, Mode mode);
+    BinaryFile(const Path& filename, Mode mode, BinaryFormat format = BinaryFormat::Plain);
 
     /**
      * @brief Deleted copy constructor
@@ -99,7 +109,7 @@ inline namespace v1 {
      * @param buffer The buffer to write in the file
      * @returns The number of bytes written in the file
      */
-    std::size_t write(ArrayRef<uint8_t> buffer) const;
+    std::size_t write(ArrayRef<uint8_t> buffer);
 
     /**
      * @brief Write a single byte in the file
@@ -107,7 +117,7 @@ inline namespace v1 {
      * @param byte The byte to write in the file
      * @returns The number of bytes written in the file
      */
-    std::size_t write(uint8_t byte) const;
+    std::size_t write(uint8_t byte);
 
     /**
      * @brief Read from the file into a buffer
@@ -115,7 +125,7 @@ inline namespace v1 {
      * @param buffer The buffer to read from the file
      * @returns The number of bytes read from the file
      */
-    std::size_t read(BufferRef<uint8_t> buffer) const;
+    std::size_t read(BufferRef<uint8_t> buffer);
 
     /**
      * @brief Read a single byte from the file
@@ -123,14 +133,14 @@ inline namespace v1 {
      * @param byte The byte to read from the file
      * @returns The number of bytes read from the file
      */
-    std::size_t read(uint8_t& byte) const;
+    std::size_t read(uint8_t& byte);
 
     /**
      * @brief Tell if the file is at the end
      *
      * @returns True if the file reached the end
      */
-    bool isEof() const;
+    bool isEof();
 
 
     /**
@@ -141,7 +151,16 @@ inline namespace v1 {
     void close();
 
   private:
+    static constexpr uInt BufferSize = 256;
+
     std::FILE *m_file;
+    Mode m_mode;
+    BinaryFormat m_format;
+    z_stream m_stream;
+    Bytef m_buffer[BufferSize];
+    uInt m_start;
+    uInt m_stop;
+    bool m_eof;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

@@ -229,10 +229,10 @@ target_include_directories(gf0
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
     ${Boost_INCLUDE_DIRS}
+    ${ZLIB_INCLUDE_DIRS}
   PRIVATE
     ${SDL2_INCLUDE_DIR}
     ${FREETYPE_INCLUDE_DIRS}
-    ${ZLIB_INCLUDE_DIRS}
     ${CMAKE_CURRENT_BINARY_DIR}
 )
 
