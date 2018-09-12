@@ -183,8 +183,7 @@ inline namespace v1 {
     uint8_t magic[2] = { 0u, 0u };
 
     if (m_file) {
-      readBigEndian8(magic[0]);
-      readBigEndian8(magic[1]);
+      m_file.read(magic);
 
       if (magic[0] != Magic[0] || magic[1] != Magic[1]) {
         Log::error("This file is not a gf archive: '%s'.\n", filename.string().c_str());

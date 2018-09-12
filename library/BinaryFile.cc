@@ -196,29 +196,19 @@ inline namespace v1 {
     m_stream.next_out = buffer.getData();
     m_stream.avail_out = buffer.getSize();
 
-    uInt remaining = m_stop - m_start;
-
-    if (remaining > 0) {
-      m_stream.next_in = m_buffer + m_start;
-      m_stream.avail_in = remaining;
-      int err = inflate(&m_stream, Z_NO_FLUSH);
-      assert(err == Z_OK || err == Z_STREAM_END);
-      m_start += remaining - m_stream.avail_in;
-    }
-
-    while (m_stream.avail_out > 0) {
+    do {
       if (m_start == m_stop) {
         m_start = 0;
         m_stop = std::fread(m_buffer, sizeof(uint8_t), BufferSize, m_file);
       }
 
-      remaining = m_stop - m_start;
+      uInt remaining = m_stop - m_start;
 
       m_stream.next_in = m_buffer + m_start;
       m_stream.avail_in = remaining;
       int err = inflate(&m_stream, Z_NO_FLUSH);
 
-      if (err != Z_OK && err != Z_STREAM_END) {
+      if (err != Z_OK && err != Z_STREAM_END && err != Z_BUF_ERROR) {
         Log::debug("Error while calling inflate: %d '%s'\n", err, m_stream.msg);
       }
 
@@ -227,9 +217,9 @@ inline namespace v1 {
         return buffer.getSize() - m_stream.avail_out;
       }
 
-      assert(err == Z_OK || err == Z_STREAM_END);
+      assert(err == Z_OK || err == Z_STREAM_END || err == Z_BUF_ERROR);
       m_start += remaining - m_stream.avail_in;
-    }
+    } while (m_stream.avail_out > 0);
 
     return buffer.getSize();
   }
