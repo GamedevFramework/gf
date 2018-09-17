@@ -2,8 +2,11 @@
 
 Gamedev Framework (gf) is very open to contributions. There are many ways to
 contribute, not just with code. The contributions are handled with the github
-[issues of the project](https://github.com/GamedevFramework/gf/issues). Here
-is what you can do.
+[issues of the project](https://github.com/GamedevFramework/gf/issues).
+
+Please note that this project is released with a
+[Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in this
+project you agree to abide by its terms.
 
 ## Report bugs
 
@@ -63,4 +66,3 @@ simple enough for most people.
 
 Once you have contributed enough and know the code quite well, you can be part
 of the development team. You just have to ask.
-
