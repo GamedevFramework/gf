@@ -24,9 +24,9 @@
 #include <cstddef>
 #include <cstdint>
 
-#include "BinaryFile.h"
 #include "BufferRef.h"
 #include "Portability.h"
+#include "Stream.h"
 #include "StringRef.h"
 
 namespace gf {
@@ -48,56 +48,9 @@ inline namespace v1 {
     /**
      * @brief Constructor
      *
-     * @param filename The name of the binary file
-     * @param format The format of the binary archive
+     * @param stream The output stream
      */
-    Serializer(const Path& filename)
-    : Serializer(filename, 0, BinaryFormat::Plain)
-    {
-
-    }
-
-    /**
-     * @brief Constructor
-     *
-     * @param filename The name of the binary file
-     * @param format The format of the binary archive
-     */
-    Serializer(const Path& filename, BinaryFormat format)
-    : Serializer(filename, 0, format)
-    {
-
-    }
-
-    /**
-     * @brief Constructor
-     *
-     * @param filename The name of the binary file
-     * @param version The version of the user format
-     */
-    Serializer(const Path& filename, uint16_t version)
-    : Serializer(filename, version, BinaryFormat::Plain)
-    {
-
-    }
-
-    /**
-     * @brief Constructor
-     *
-     * @param filename The name of the binary file
-     * @param version The version of the user format
-     * @param format The format of the binary archive
-     */
-    Serializer(const Path& filename, uint16_t version, BinaryFormat format);
-
-    /**
-     * @brief Conversion to boolean
-     *
-     * @returns True if the archive exists and was opened
-     */
-    operator bool() const {
-      return static_cast<bool>(m_file);
-    }
+    Serializer(OutputStream& stream, uint16_t version = 0);
 
     /**
      * @brief Get the version of the current archive format
@@ -183,9 +136,10 @@ inline namespace v1 {
     void writeBigEndian8(uint8_t data);
 
   private:
-    BinaryFile m_file;
+    OutputStream *m_stream;
     uint16_t m_version;
   };
+
 
   /**
    * @ingroup game
@@ -200,18 +154,18 @@ inline namespace v1 {
     /**
      * @brief Constructor
      *
-     * @param filename The name of the binary file
+     * @param stream The input stream
      */
-    Deserializer(const Path& filename, BinaryFormat format = BinaryFormat::Plain);
+    Deserializer(InputStream& stream);
 
-    /**
-     * @brief Conversion to boolean
-     *
-     * @returns True if the archive exists and was opened
-     */
-    operator bool() const {
-      return static_cast<bool>(m_file);
-    }
+//     /**
+//      * @brief Conversion to boolean
+//      *
+//      * @returns True if the archive exists and was opened
+//      */
+//     operator bool() const {
+//       return static_cast<bool>(m_file);
+//     }
 
     /**
      * @brief Get the version of the current archive format
@@ -327,7 +281,7 @@ inline namespace v1 {
     bool isEof() const;
 
   private:
-    BinaryFile m_file;
+    InputStream *m_stream;
     uint16_t m_version;
     bool m_eof;
   };

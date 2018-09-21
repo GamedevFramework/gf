@@ -65,7 +65,7 @@ inline namespace v1 {
       return 0;
     }
 
-    return std::fread(buffer.getData(), 1, buffer.getSize(), m_file);
+    return std::fread(buffer.getData(), sizeof(uint8_t), buffer.getSize(), m_file);
   }
 
   void FileInputStream::seek(std::ptrdiff_t position) {
@@ -280,6 +280,8 @@ inline namespace v1 {
   CompressedOutputStream::CompressedOutputStream(OutputStream& compressed)
   : m_compressed(&compressed)
   {
+    m_stream.zalloc = nullptr;
+    m_stream.zfree = nullptr;
     int err = deflateInit(&m_stream, Z_DEFAULT_COMPRESSION);
     assert(err == Z_OK); // throw?
     gf::unused(err);

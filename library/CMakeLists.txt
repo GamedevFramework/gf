@@ -86,7 +86,6 @@ else()
     AssetManager.cc
     BasicSprite.cc
     BasicText.cc
-    BinaryFile.cc
     Blend.cc
     BufferedGeometry.cc
     Circ.cc
@@ -117,8 +116,6 @@ else()
     Grid.cc
     Heightmap.cc
     Image.cc
-    InputStream.cc
-    InputStreams.cc
     Keyboard.cc
     Library.cc
     Log.cc
@@ -163,6 +160,8 @@ else()
     Spatial.cc
     SpriteBatch.cc
     Sprite.cc
+    Stream.cc
+    Streams.cc
     StringUtils.cc
     SystemInfo.cc
     Text.cc

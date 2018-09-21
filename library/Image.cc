@@ -29,7 +29,7 @@
 #include <string>
 
 #include <gf/Log.h>
-#include <gf/InputStream.h>
+#include <gf/Stream.h>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "vendor/stb/stb_image.h"
@@ -52,17 +52,17 @@ inline namespace v1 {
 
     int callbackRead(void *user,char *data,int size) {
       InputStream *stream = static_cast<InputStream *>(user);
-      return static_cast<int>(stream->read(data, size));
+      return static_cast<int>(stream->read(BufferRef<uint8_t>(reinterpret_cast<uint8_t*>(data), size)));
     }
 
     void callbackSkip(void *user, int n) {
       InputStream *stream = static_cast<InputStream *>(user);
-      stream->seek(stream->tell() + n);
+      stream->skip(n);
     }
 
     int callbackEof(void *user) {
       InputStream *stream = static_cast<InputStream *>(user);
-      return stream->tell() >= static_cast<long>(stream->getSize());
+      return stream->isFinished();
     }
 
   } // anonymous namespace

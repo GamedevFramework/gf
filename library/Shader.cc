@@ -27,7 +27,7 @@
 #include <fstream>
 #include <memory>
 
-#include <gf/InputStream.h>
+#include <gf/Stream.h>
 #include <gf/Log.h>
 
 #include "priv/Debug.h"
@@ -63,17 +63,14 @@ inline namespace v1 {
     std::string loadStream(InputStream& stream) {
       std::string content;
 
-      std::size_t size = stream.getSize();
-      content.resize(size);
-      stream.seek(0);
+      static constexpr std::size_t BufferSize = 1024;
+      char buffer[BufferSize];
 
-      std::size_t read = 0;
+      while (!stream.isFinished()) {
+        std::size_t size = stream.read(BufferRef<uint8_t>(reinterpret_cast<uint8_t*>(buffer), BufferSize));
+        content.insert(content.end(), buffer, buffer + size);
+      }
 
-      do {
-        read += stream.read(&content[read], size - read);
-      } while (read < size);
-
-      content.push_back('\0');
       return content;
     }
 

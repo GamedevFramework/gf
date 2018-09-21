@@ -29,7 +29,7 @@
 #include FT_FREETYPE_H
 #include FT_STROKER_H
 
-#include <gf/InputStream.h>
+#include <gf/Stream.h>
 #include <gf/Log.h>
 #include <gf/Unused.h>
 #include <gf/VectorOps.h>
@@ -82,7 +82,7 @@ inline namespace v1 {
         return 0;
       }
 
-      return stream->read(buffer, count);
+      return stream->read(BufferRef<uint8_t>(buffer, count));
     }
 
     void callbackClose(FT_Stream rec) {
@@ -187,7 +187,7 @@ inline namespace v1 {
     FT_StreamRec rec;
     std::memset(&rec, 0, sizeof(FT_StreamRec));
     rec.base = nullptr;
-    rec.size = stream.getSize();
+    rec.size = 0x7FFFFFFF; // unknown size
     rec.pos = 0;
     rec.descriptor.pointer = &stream;
     rec.read = callbackRead;
