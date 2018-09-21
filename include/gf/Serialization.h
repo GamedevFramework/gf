@@ -283,7 +283,6 @@ inline namespace v1 {
   private:
     InputStream *m_stream;
     uint16_t m_version;
-    bool m_eof;
   };
 
 
