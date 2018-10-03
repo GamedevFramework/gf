@@ -158,15 +158,17 @@ inline namespace v1 {
     return buffer;
   }
 
-  void NinePatch::draw(RenderTarget& target, RenderStates states) {
+  void NinePatch::draw(RenderTarget& target, const RenderStates& states) {
     if (m_texture == nullptr) {
       return;
     }
 
-    states.transform *= getTransform();
-    states.texture = m_texture;
+    RenderStates localStates = states;
 
-    target.draw(m_vertices, gIndices, 24, PrimitiveType::TriangleStrip, states);
+    localStates.transform *= getTransform();
+    localStates.texture = m_texture;
+
+    target.draw(m_vertices, gIndices, 24, PrimitiveType::TriangleStrip, localStates);
   }
 
   void NinePatch::updatePositions() {

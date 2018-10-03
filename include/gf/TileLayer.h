@@ -298,7 +298,7 @@ inline namespace v1 {
      */
     VertexBuffer commitGeometry() const;
 
-    virtual void draw(RenderTarget& target, RenderStates states) override;
+    virtual void draw(RenderTarget& target, const RenderStates& states) override;
 
   private:
     struct Cell {

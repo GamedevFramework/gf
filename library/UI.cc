@@ -1147,7 +1147,7 @@ inline namespace v1 {
     }
   }
 
-  void UI::draw(RenderTarget &target, RenderStates states) {
+  void UI::draw(RenderTarget &target, const RenderStates& states) {
     setState(State::Draw);
 
     auto ctx = &m_impl->ctx;
@@ -1191,14 +1191,16 @@ inline namespace v1 {
 
     Region box = target.getCanonicalScissorBox();
 
+    RenderStates localStates = states;
+
     for (auto command = nk__draw_begin(ctx, cmds); command != nullptr; command = nk__draw_next(command, cmds, ctx)) {
       if (!command->elem_count) {
         continue;
       }
 
-      states.texture = static_cast<const BareTexture*>(command->texture.ptr);
+      localStates.texture = static_cast<const BareTexture*>(command->texture.ptr);
       target.setScissorBox(RectI(command->clip_rect.x, command->clip_rect.y, command->clip_rect.w, command->clip_rect.h));
-      target.draw(vertices, indices, command->elem_count, PrimitiveType::Triangles, states);
+      target.draw(vertices, indices, command->elem_count, PrimitiveType::Triangles, localStates);
 
       indices += command->elem_count;
     }

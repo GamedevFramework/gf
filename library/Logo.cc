@@ -683,7 +683,7 @@ inline namespace v1 {
     setOriginFromAnchorAndBounds(anchor, getLocalBounds());
   }
 
-  void Logo::draw(RenderTarget& target, RenderStates states) {
+  void Logo::draw(RenderTarget& target, const RenderStates& states) {
     Vertex vertices[4];
 
     vertices[0].position = Vector2f(0.0f,        0.0f        );
@@ -696,9 +696,10 @@ inline namespace v1 {
     vertices[2].texCoords = { 0.0f, 1.0f };
     vertices[3].texCoords = { 1.0f, 1.0f };
 
-    states.transform *= getTransform();
-    states.texture = &m_texture;
-    target.draw(vertices, 4, PrimitiveType::TriangleStrip, states);
+    RenderStates localStates = states;
+    localStates.transform *= getTransform();
+    localStates.texture = &m_texture;
+    target.draw(vertices, 4, PrimitiveType::TriangleStrip, localStates);
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

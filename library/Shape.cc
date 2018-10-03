@@ -90,16 +90,18 @@ inline namespace v1 {
     setOriginFromAnchorAndBounds(anchor, m_bounds);
   }
 
-  void Shape::draw(RenderTarget& target, RenderStates states) {
-    states.transform *= getTransform();
+  void Shape::draw(RenderTarget& target, const RenderStates& states) {
+    RenderStates localStates = states;
+
+    localStates.transform *= getTransform();
 
     if (m_outlineThickness > 0.0f) {
-      states.texture = nullptr;
-      target.draw(m_outlineVertices, states);
+      localStates.texture = nullptr;
+      target.draw(m_outlineVertices, localStates);
     }
 
-    states.texture = m_texture;
-    target.draw(m_vertices, states);
+    localStates.texture = m_texture;
+    target.draw(m_vertices, localStates);
   }
 
   void Shape::updateGeometry() {

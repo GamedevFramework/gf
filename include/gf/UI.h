@@ -1414,7 +1414,7 @@ inline namespace v1 {
      * @}
      */
 
-    virtual void draw(RenderTarget &target, RenderStates states) override;
+    virtual void draw(RenderTarget &target, const RenderStates& states) override;
 
   private:
     enum class State {

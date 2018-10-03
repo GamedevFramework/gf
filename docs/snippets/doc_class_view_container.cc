@@ -29,7 +29,7 @@
 
 class DummyDrawable : public gf::Drawable {
 public:
-  virtual void draw(gf::RenderTarget& target, gf::RenderStates states) override {
+  virtual void draw(gf::RenderTarget& target, const gf::RenderStates& states) override {
     (void) target;
     (void) states;
   }

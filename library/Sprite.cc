@@ -87,14 +87,16 @@ inline namespace v1 {
     return buffer;
   }
 
-  void Sprite::draw(RenderTarget& target, RenderStates states) {
+  void Sprite::draw(RenderTarget& target, const RenderStates& states) {
     if (!m_basic.hasTexture()) {
       return;
     }
 
-    states.transform *= getTransform();
-    states.texture = &m_basic.getTexture();
-    target.draw(m_vertices, 4, PrimitiveType::TriangleStrip, states);
+    RenderStates localStates = states;
+
+    localStates.transform *= getTransform();
+    localStates.texture = &m_basic.getTexture();
+    target.draw(m_vertices, 4, PrimitiveType::TriangleStrip, localStates);
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

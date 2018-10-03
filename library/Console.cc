@@ -680,7 +680,7 @@ inline namespace v1 {
 
   }
 
-  void Console::draw(RenderTarget& target, RenderStates states) {
+  void Console::draw(RenderTarget& target, const RenderStates& states) {
     if (m_font == nullptr) {
       return;
     }
@@ -749,11 +749,13 @@ inline namespace v1 {
       foregroundVertices.append(vertices[3]);
     }
 
-    states.transform *= getTransform();
-    target.draw(backgroundVertices, states);
+    RenderStates localStates = states;
 
-    states.texture = m_font->getTexture();
-    target.draw(foregroundVertices, states);
+    localStates.transform *= getTransform();
+    target.draw(backgroundVertices, localStates);
+
+    localStates.texture = m_font->getTexture();
+    target.draw(foregroundVertices, localStates);
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

@@ -662,7 +662,7 @@ inline namespace v1 {
      */
     void blit(const RectI& src, Console& con, Vector2i dst, float foregroundAlpha = 1.0f, float backgroundAlpha = 1.0f) const;
 
-    virtual void draw(RenderTarget& target, RenderStates states) override;
+    virtual void draw(RenderTarget& target, const RenderStates& states) override;
 
   private:
     Color4f computeColor(ConsoleEffect effect, const Color4f& existing, const Color4f& current);

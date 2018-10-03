@@ -54,7 +54,7 @@ inline namespace v1 {
      */
     TextWidget(std::string text, Font& font, unsigned characterSize = 30);
 
-    virtual void draw(RenderTarget &target, RenderStates states) override;
+    virtual void draw(RenderTarget &target, const RenderStates& states) override;
 
     virtual bool contains(Vector2f coords) override;
 
@@ -178,7 +178,7 @@ inline namespace v1 {
      */
     TextButtonWidget(std::string text, Font& font, unsigned characterSize = 30);
 
-    virtual void draw(RenderTarget &target, RenderStates states) override;
+    virtual void draw(RenderTarget &target, const RenderStates& states) override;
 
     virtual bool contains(Vector2f coords) override;
 
@@ -304,7 +304,7 @@ inline namespace v1 {
      */
     SpriteWidget(const Texture& defaultTexture, const Texture& selectedTexture, const Texture& disabledTexture);
 
-    virtual void draw(RenderTarget &target, RenderStates states) override;
+    virtual void draw(RenderTarget &target, const RenderStates& states) override;
 
     virtual bool contains(Vector2f coords) override;
 
@@ -400,7 +400,7 @@ inline namespace v1 {
      */
     ChoiceSpriteWidget(const Texture& emptyTexture, const Texture& chosenTexture);
 
-    virtual void draw(RenderTarget &target, RenderStates states) override;
+    virtual void draw(RenderTarget &target, const RenderStates& states) override;
 
     virtual bool contains(Vector2f coords) override;
 

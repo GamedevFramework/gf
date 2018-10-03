@@ -123,7 +123,7 @@ inline namespace v1 {
     return buffer;
   }
 
-  void TileLayer::draw(RenderTarget& target, RenderStates states) {
+  void TileLayer::draw(RenderTarget& target, const RenderStates& states) {
     if (m_texture == nullptr) {
       return;
     }
@@ -161,10 +161,12 @@ inline namespace v1 {
 
     // call draw
 
-    states.transform *= getTransform();
-    states.texture = m_texture;
+    RenderStates localStates = states;
 
-    target.draw(m_vertices, states);
+    localStates.transform *= getTransform();
+    localStates.texture = m_texture;
+
+    target.draw(m_vertices, localStates);
   }
 
 

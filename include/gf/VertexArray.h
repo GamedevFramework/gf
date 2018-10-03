@@ -278,7 +278,7 @@ inline namespace v1 {
      */
     RectF getBounds() const;
 
-    virtual void draw(RenderTarget& target, RenderStates states) override;
+    virtual void draw(RenderTarget& target, const RenderStates& states) override;
 
   private:
     PrimitiveType m_type;

@@ -53,7 +53,7 @@ inline namespace v1 {
      */
     void addPoint(Vector2f position, Color4f color);
 
-    virtual void draw(RenderTarget& target, RenderStates states) override;
+    virtual void draw(RenderTarget& target, const RenderStates& states) override;
 
   private:
     VertexArray m_vertices;
@@ -107,7 +107,7 @@ inline namespace v1 {
      */
     void addRectangle(const RectF& rect, Color4f color);
 
-    virtual void draw(RenderTarget& target, RenderStates states) override;
+    virtual void draw(RenderTarget& target, const RenderStates& states) override;
 
   private:
     VertexArray m_vertices;
@@ -149,7 +149,7 @@ inline namespace v1 {
      */
     void addSprite(Vector2f position, const RectF& textureRect, Color4f color = Color::White);
 
-    virtual void draw(RenderTarget& target, RenderStates states) override;
+    virtual void draw(RenderTarget& target, const RenderStates& states) override;
 
   private:
     const Texture *m_texture;

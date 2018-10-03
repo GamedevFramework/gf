@@ -42,9 +42,10 @@ inline namespace v1 {
     m_vertices.append(vertex);
   }
 
-  void PointParticles::draw(RenderTarget& target, RenderStates states) {
-    states.transform *= getTransform();
-    target.draw(m_vertices, states);
+  void PointParticles::draw(RenderTarget& target, const RenderStates& states) {
+    RenderStates localStates = states;
+    localStates.transform *= getTransform();
+    target.draw(m_vertices, localStates);
   }
 
   ShapeParticles::ShapeParticles()
@@ -104,9 +105,10 @@ inline namespace v1 {
     m_vertices.append(vertices[3]);
   }
 
-  void ShapeParticles::draw(RenderTarget& target, RenderStates states) {
-    states.transform *= getTransform();
-    target.draw(m_vertices, states);
+  void ShapeParticles::draw(RenderTarget& target, const RenderStates& states) {
+    RenderStates localStates = states;
+    localStates.transform *= getTransform();
+    target.draw(m_vertices, localStates);
   }
 
   SpriteParticles::SpriteParticles()
@@ -158,14 +160,16 @@ inline namespace v1 {
     m_vertices.append(vertices[3]);
   }
 
-  void SpriteParticles::draw(RenderTarget& target, RenderStates states) {
+  void SpriteParticles::draw(RenderTarget& target, const RenderStates& states) {
     if (m_texture == nullptr) {
       return;
     }
 
-    states.transform *= getTransform();
-    states.texture = m_texture;
-    target.draw(m_vertices, states);
+    RenderStates localStates = states;
+
+    localStates.transform *= getTransform();
+    localStates.texture = m_texture;
+    target.draw(m_vertices, localStates);
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
