@@ -397,7 +397,7 @@ inline namespace v1 {
 
   Image RenderTarget::captureFramebuffer(unsigned name) const {
     auto size = getSize();
-    std::vector<uint8_t> pixels(size.width * size.height * 4);
+    std::vector<uint8_t> pixels(static_cast<std::size_t>(size.width) * static_cast<std::size_t>(size.height) * 4);
 
     GLint boundFrameBuffer;
     glCheck(glGetIntegerv(GL_FRAMEBUFFER_BINDING, &boundFrameBuffer));

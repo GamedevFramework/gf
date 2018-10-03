@@ -169,7 +169,7 @@ inline namespace v1 {
 
 
   void TileLayer::fillVertexArray(VertexArray& array, RectU rect) const {
-    array.reserve(rect.height * rect.width * 6);
+    array.reserve(static_cast<std::size_t>(rect.height) * static_cast<std::size_t>(rect.width) * 6);
 
     Vector2u tilesetSize = (m_texture->getSize() - 2 * m_margin + m_spacing) / (m_tileSize + m_spacing);
     Vector2u blockSize = getBlockSize();

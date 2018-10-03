@@ -442,7 +442,7 @@ inline namespace v1 {
 
     // bitmap
 
-    std::vector<uint8_t> paddedBuffer(rect.width * rect.height, 0);
+    std::vector<uint8_t> paddedBuffer(static_cast<std::size_t>(rect.width) * static_cast<std::size_t>(rect.height), 0);
     const uint8_t *sourceBuffer = bglyph->bitmap.buffer;
 
     for (unsigned y = Padding; y < rect.height - Padding; ++y) {

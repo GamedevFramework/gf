@@ -82,7 +82,7 @@ inline namespace v1 {
      */
     Array2D(Vector<I, 2> size)
     : m_size(size)
-    , m_data(size.width * size.height)
+    , m_data(static_cast<std::size_t>(size.width) * static_cast<std::size_t>(size.height))
     {
 
     }
@@ -95,7 +95,7 @@ inline namespace v1 {
      */
     Array2D(Vector<I, 2> size, const T& value)
     : m_size(size)
-    , m_data(size.width * size.height, value)
+    , m_data(static_cast<std::size_t>(size.width) * static_cast<std::size_t>(size.height), value)
     {
 
     }

@@ -81,7 +81,7 @@ inline namespace v1 {
     }
 
     m_size = size;
-    m_pixels.resize(4 * size.width * size.height);
+    m_pixels.resize(static_cast<std::size_t>(size.width) * static_cast<std::size_t>(size.height) * 4);
 
     uint8_t *ptr = m_pixels.data();
 
@@ -101,9 +101,9 @@ inline namespace v1 {
     }
 
     m_size = size;
-    m_pixels.resize(4 * size.width * size.height);
+    m_pixels.resize(static_cast<std::size_t>(size.width) * static_cast<std::size_t>(size.height) * 4);
 
-    std::copy_n(pixels, 4 * size.width * size.height, m_pixels.data());
+    std::copy_n(pixels, m_pixels.size(), m_pixels.data());
   }
 
   void Image::createRGB(Vector2u size, const uint8_t* pixels) {
@@ -114,7 +114,7 @@ inline namespace v1 {
     }
 
     m_size = size;
-    m_pixels.resize(4 * size.width * size.height);
+    m_pixels.resize(static_cast<std::size_t>(size.width) * static_cast<std::size_t>(size.height) * 4);
 
     uint8_t *ptr = m_pixels.data();
 

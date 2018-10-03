@@ -688,10 +688,10 @@ inline namespace v1 {
     auto consoleSize = m_data.getSize();
 
     VertexArray backgroundVertices(PrimitiveType::Triangles);
-    backgroundVertices.reserve(consoleSize.width * consoleSize.height * 6);
+    backgroundVertices.reserve(static_cast<std::size_t>(consoleSize.width) * static_cast<std::size_t>(consoleSize.height) * 6);
 
     VertexArray foregroundVertices(PrimitiveType::Triangles);
-    foregroundVertices.reserve(consoleSize.width * consoleSize.height * 6);
+    foregroundVertices.reserve(static_cast<std::size_t>(consoleSize.width) * static_cast<std::size_t>(consoleSize.height) * 6);
 
     Color4f color;
     auto characterSize = m_font->getCharacterSize();

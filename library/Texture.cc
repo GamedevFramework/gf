@@ -271,7 +271,7 @@ inline namespace v1 {
     }
 
     auto size = getSize();
-    std::vector<uint8_t> pixels(size.width * size.height * 4);
+    std::vector<uint8_t> pixels(static_cast<std::size_t>(size.width) * static_cast<std::size_t>(size.height) * 4);
 
     GLuint frameBuffer = 0;
     glCheck(glGenFramebuffers(1, &frameBuffer));
