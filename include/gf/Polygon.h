@@ -24,6 +24,7 @@
 #include <vector>
 
 #include "ArrayRef.h"
+#include "Math.h"
 #include "Matrix.h"
 #include "Portability.h"
 #include "Vector.h"
@@ -179,6 +180,13 @@ inline namespace v1 {
      * @param mat The transformation matrix
      */
     void applyTransform(const Matrix3f& mat);
+
+    /**
+     * @brief Simplify the polygon
+     *
+     * @param distance The maximum authorized distance between the original points and the simplified points
+     */
+    void simplify(float distance = Epsilon);
 
   private:
     std::vector<Vector2f> m_points;

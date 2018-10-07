@@ -22,6 +22,7 @@
 
 #include <cassert>
 
+#include <gf/Geometry.h>
 #include <gf/SerializationOps.h>
 #include <gf/VectorOps.h>
 
@@ -82,6 +83,11 @@ inline namespace v1 {
     assert(m_type == Loop);
     return m_points.front();
   }
+
+  void Polyline::simplify(float distance) {
+    m_points = gf::simplifyPoints(m_points, distance);
+  }
+
 
   Serializer& operator|(Serializer& ar, const Polyline& polyline) {
     ar | polyline.getType();

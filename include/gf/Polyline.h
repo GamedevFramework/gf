@@ -24,6 +24,7 @@
 #include <vector>
 
 #include "ArrayRef.h"
+#include "Math.h"
 #include "Matrix.h"
 #include "Portability.h"
 #include "SerializationFwd.h"
@@ -208,6 +209,13 @@ inline namespace v1 {
     bool isChain() const {
       return m_type == Chain;
     }
+
+    /**
+     * @brief Simplify the polyline
+     *
+     * @param distance The maximum authorized distance between the original points and the simplified points
+     */
+    void simplify(float distance = Epsilon);
 
   private:
     std::vector<Vector2f> m_points;
