@@ -58,7 +58,7 @@ inline namespace v1 {
      *
      * @sa Action::isActive()
      */
-    bool isActive() {
+    bool isActive() const {
       return m_active;
     }
 
