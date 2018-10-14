@@ -238,7 +238,7 @@ inline namespace v1 {
      */
     VertexBuffer commitOutlineGeometry() const;
 
-    virtual void draw(RenderTarget& target, RenderStates states);
+    virtual void draw(RenderTarget& target, const RenderStates& states) override;
 
   protected:
     /**

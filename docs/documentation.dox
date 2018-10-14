@@ -14,6 +14,7 @@
   1. Core classes
     - @ref math
     - @ref vectors_matrices_transforms
+    - @ref id
     - @ref singletons
     - @ref pcg
   2. Window classes

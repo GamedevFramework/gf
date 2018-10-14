@@ -294,7 +294,7 @@ namespace bi {
 
         // vertices for land
 
-        std::array<float, 4> elevations = { m_terrain({ row, col }), m_terrain({ row, col + 1 }), m_terrain({ row + 1, col }), m_terrain({ row + 1, col + 1 }) };
+        std::array<float, 4> elevations = {{ m_terrain({ row, col }), m_terrain({ row, col + 1 }), m_terrain({ row + 1, col }), m_terrain({ row + 1, col + 1 }) }};
         auto count = std::count_if(elevations.begin(), elevations.end(), [](float elevation) { return elevation < 0.5f; });
         assert(0 <= count && count <= 4);
 

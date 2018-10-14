@@ -21,6 +21,7 @@
 #include <gf/SerializationOps.h>
 
 #include <cinttypes>
+#include <memory>
 
 #include <gf/Log.h>
 

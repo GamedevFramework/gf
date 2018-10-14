@@ -207,7 +207,7 @@ inline namespace v1 {
      *
      * @sa Control::isActive()
      */
-    bool isActive();
+    bool isActive() const;
 
     /**
      * @brief Reset the state of the action.

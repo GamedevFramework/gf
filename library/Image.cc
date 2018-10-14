@@ -29,7 +29,7 @@
 #include <string>
 
 #include <gf/Log.h>
-#include <gf/InputStream.h>
+#include <gf/Stream.h>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "vendor/stb/stb_image.h"
@@ -52,17 +52,17 @@ inline namespace v1 {
 
     int callbackRead(void *user,char *data,int size) {
       InputStream *stream = static_cast<InputStream *>(user);
-      return static_cast<int>(stream->read(data, size));
+      return static_cast<int>(stream->read(BufferRef<uint8_t>(reinterpret_cast<uint8_t*>(data), size)));
     }
 
     void callbackSkip(void *user, int n) {
       InputStream *stream = static_cast<InputStream *>(user);
-      stream->seek(stream->tell() + n);
+      stream->skip(n);
     }
 
     int callbackEof(void *user) {
       InputStream *stream = static_cast<InputStream *>(user);
-      return stream->tell() >= static_cast<long>(stream->getSize());
+      return stream->isFinished();
     }
 
   } // anonymous namespace
@@ -81,7 +81,7 @@ inline namespace v1 {
     }
 
     m_size = size;
-    m_pixels.resize(4 * size.width * size.height);
+    m_pixels.resize(static_cast<std::size_t>(size.width) * static_cast<std::size_t>(size.height) * 4);
 
     uint8_t *ptr = m_pixels.data();
 
@@ -101,9 +101,9 @@ inline namespace v1 {
     }
 
     m_size = size;
-    m_pixels.resize(4 * size.width * size.height);
+    m_pixels.resize(static_cast<std::size_t>(size.width) * static_cast<std::size_t>(size.height) * 4);
 
-    std::copy_n(pixels, 4 * size.width * size.height, m_pixels.data());
+    std::copy_n(pixels, m_pixels.size(), m_pixels.data());
   }
 
   void Image::createRGB(Vector2u size, const uint8_t* pixels) {
@@ -114,7 +114,7 @@ inline namespace v1 {
     }
 
     m_size = size;
-    m_pixels.resize(4 * size.width * size.height);
+    m_pixels.resize(static_cast<std::size_t>(size.width) * static_cast<std::size_t>(size.height) * 4);
 
     uint8_t *ptr = m_pixels.data();
 

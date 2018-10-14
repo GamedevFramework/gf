@@ -77,6 +77,10 @@ inline namespace v1 {
     float t2 = it->first;
     Color4f c2 = it->second;
 
+    if (it == m_map.begin()) {
+      return c2;
+    }
+
     --it;
     float t1 = it->first;
     Color4f c1 = it->second;

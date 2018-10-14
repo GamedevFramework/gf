@@ -101,7 +101,7 @@ inline namespace v1 {
     }
   }
 
-  bool Action::isActive() {
+  bool Action::isActive() const {
     for (auto control : m_controls) {
       if (control->isActive()) {
         return true;

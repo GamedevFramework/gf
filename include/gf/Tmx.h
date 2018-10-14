@@ -367,10 +367,10 @@ inline namespace v1 {
 
     TmxProperties properties; ///< The properties of the object
 
-    Id id;              ///< The id of the object
+    int id;             ///< The id of the object
     std::string name;   ///< The name of the object
     std::string type;   ///< The type of the object
-    Vector2u position;  ///< The position of the object
+    Vector2f position;  ///< The position of the object
     double rotation;    ///< The rotation of the object
     bool visible;       ///< The visibility of the object
   };
@@ -380,7 +380,7 @@ inline namespace v1 {
    * @brief A rectangle object
    */
   struct GF_API TmxRectangle : public TmxObject {
-    Vector2u size;  ///< The size of the rectangle
+    Vector2f size;  ///< The size of the rectangle
   };
 
   /**
@@ -388,7 +388,7 @@ inline namespace v1 {
    * @brief An ellipse object
    */
   struct GF_API TmxEllipse : public TmxObject {
-    Vector2u size;  ///< The size of the ellipse
+    Vector2f size;  ///< The size of the ellipse
   };
 
   /**
@@ -407,7 +407,7 @@ inline namespace v1 {
    * A polyline is an open set of lines
    */
   struct GF_API TmxPolyline : public TmxObject {
-    std::vector<Vector2i> points; ///< The points of the polyline
+    std::vector<Vector2f> points; ///< The points of the polyline
   };
 
   /**
@@ -417,7 +417,7 @@ inline namespace v1 {
    * A polygon is a closed set of lines
    */
   struct GF_API TmxPolygon : public TmxObject {
-    std::vector<Vector2i> points; ///< The points of the polygon
+    std::vector<Vector2f> points; ///< The points of the polygon
   };
 
   /**

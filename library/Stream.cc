@@ -18,46 +18,18 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#ifndef GF_PATH_H
-#define GF_PATH_H
-
-#include <boost/filesystem.hpp>
-#include <boost/functional/hash.hpp>
-
-#include "Portability.h"
-#include "SerializationFwd.h"
+#include <gf/Stream.h>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
 #endif
 
-  /**
-   * @ingroup core
-   * @brief A path in the filesystem
-   *
-   * gf::Path is a simple typedef for `boost::filesystem::path`.
-   * [Boost.Filesystem](http://www.boost.org/doc/libs/release/libs/filesystem/)
-   * will eventually be part of the C++17 standard. So, in the future, gf::Path
-   * will be a typedef for `std::path`.
-   */
-  using Path = boost::filesystem::path;
+  InputStream::~InputStream() = default;
 
-  /**
-   * @relates Serializer
-   * @brief Serialize a path
-   */
-  GF_API Serializer& operator|(Serializer& ar, const Path& path);
-
-  /**
-   * @relates Deserializer
-   * @brief Deserialize a path
-   */
-  GF_API Deserializer& operator|(Deserializer& ar, Path& path);
+  OutputStream::~OutputStream() = default;
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif
 }
-
-#endif // GF_PATH_H

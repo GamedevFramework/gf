@@ -188,7 +188,7 @@ inline namespace v1 {
      */
     void setAnchor(Anchor anchor);
 
-    virtual void draw(RenderTarget& target, RenderStates states) override;
+    virtual void draw(RenderTarget& target, const RenderStates& states) override;
 
   private:
     const VertexBuffer *m_buffer;

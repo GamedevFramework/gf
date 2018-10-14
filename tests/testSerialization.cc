@@ -25,44 +25,88 @@
 
 #include <iostream>
 #include <limits>
+#include <numeric>
 
+#include <gf/Array2D.h>
+#include <gf/Path.h>
 #include <gf/Paths.h>
+#include <gf/Streams.h>
 #include <gf/VectorOps.h>
 
 #include "gtest/gtest.h"
+
+namespace {
+
+  template<typename T>
+  void saveAndLoad(T& in, T& out) {
+    gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
+
+    {
+      gf::FileOutputStream stream(filename);
+      gf::Serializer ar(stream);
+      ar | in;
+    }
+
+    {
+      gf::FileInputStream stream(filename);
+      gf::Deserializer ar(stream);
+      ar | out;
+    }
+  }
+
+  template<std::size_t N>
+  void saveAndLoadString(const char *in, char (&out)[N]) {
+    gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
+
+    {
+      gf::FileOutputStream stream(filename);
+      gf::Serializer ar(stream);
+      ar | in;
+    }
+
+    {
+      gf::FileInputStream stream(filename);
+      gf::Deserializer ar(stream);
+      ar | out;
+    }
+  }
+
+}
+
 
 TEST(SerialTest, Version) {
   gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
 
   constexpr uint16_t Version = 42;
 
-  {  gf::Serializer ar(filename, Version); }
-  {  gf::Deserializer ar(filename); EXPECT_EQ(ar.getVersion(), Version); }
+  {
+    gf::FileOutputStream stream(filename);
+    gf::Serializer ar(stream, Version);
+  }
+  {
+    gf::FileInputStream stream(filename);
+    gf::Deserializer ar(stream);
+    EXPECT_EQ(ar.getVersion(), Version);
+  }
 
 }
 
 TEST(SerialTest, Boolean) {
-  gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
-
   bool in, out;
 
   in = true;
   out = false;
-  {  gf::Serializer ar(filename); ar | in; }
-  {  gf::Deserializer ar(filename); ar | out; }
+  saveAndLoad(in, out);
   EXPECT_EQ(in, out);
 
   in = false;
   out = true;
-  {  gf::Serializer ar(filename); ar | in; }
-  {  gf::Deserializer ar(filename); ar | out; }
+  saveAndLoad(in, out);
   EXPECT_EQ(in, out);
 
 }
 
 TEST(SerialTest, Signed8) {
-  gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
-
   int8_t tests[] = {
     0,
     127,
@@ -74,16 +118,13 @@ TEST(SerialTest, Signed8) {
   int8_t out = -1;
 
   for (auto in : tests) {
-    {  gf::Serializer ar(filename); ar | in; }
-    {  gf::Deserializer ar(filename); ar | out; }
+    saveAndLoad(in, out);
     EXPECT_EQ(in, out);
   }
 
 }
 
 TEST(SerialTest, Signed16) {
-  gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
-
   int16_t tests[] = {
     0,
     127,
@@ -98,16 +139,13 @@ TEST(SerialTest, Signed16) {
   int16_t out = -1;
 
   for (auto in : tests) {
-    {  gf::Serializer ar(filename); ar | in; }
-    {  gf::Deserializer ar(filename); ar | out; }
+    saveAndLoad(in, out);
     EXPECT_EQ(in, out);
   }
 
 }
 
 TEST(SerialTest, Signed32) {
-  gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
-
   int32_t tests[] = {
     0,
     127,
@@ -125,16 +163,13 @@ TEST(SerialTest, Signed32) {
   int32_t out = -1;
 
   for (auto in : tests) {
-    {  gf::Serializer ar(filename); ar | in; }
-    {  gf::Deserializer ar(filename); ar | out; }
+    saveAndLoad(in, out);
     EXPECT_EQ(in, out);
   }
 
 }
 
 TEST(SerialTest, Signed64) {
-  gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
-
   int64_t tests[] = {
     0,
     127,
@@ -155,16 +190,13 @@ TEST(SerialTest, Signed64) {
   int64_t out = -1;
 
   for (auto in : tests) {
-    {  gf::Serializer ar(filename); ar | in; }
-    {  gf::Deserializer ar(filename); ar | out; }
+    saveAndLoad(in, out);
     EXPECT_EQ(in, out);
   }
 
 }
 
 TEST(SerialTest, Unsigned8) {
-  gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
-
   uint8_t tests[] = {
     0,
     127,
@@ -175,16 +207,13 @@ TEST(SerialTest, Unsigned8) {
   uint8_t out = 1;
 
   for (auto in : tests) {
-    {  gf::Serializer ar(filename); ar | in; }
-    {  gf::Deserializer ar(filename); ar | out; }
+    saveAndLoad(in, out);
     EXPECT_EQ(in, out);
   }
 
 }
 
 TEST(SerialTest, Unsigned16) {
-  gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
-
   uint16_t tests[] = {
     0,
     127,
@@ -197,16 +226,13 @@ TEST(SerialTest, Unsigned16) {
   uint16_t out = 1;
 
   for (auto in : tests) {
-    {  gf::Serializer ar(filename); ar | in; }
-    {  gf::Deserializer ar(filename); ar | out; }
+    saveAndLoad(in, out);
     EXPECT_EQ(in, out);
   }
 
 }
 
 TEST(SerialTest, Unsigned32) {
-  gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
-
   uint32_t tests[] = {
     0,
     127,
@@ -221,16 +247,13 @@ TEST(SerialTest, Unsigned32) {
   uint32_t out = 1;
 
   for (auto in : tests) {
-    {  gf::Serializer ar(filename); ar | in; }
-    {  gf::Deserializer ar(filename); ar | out; }
+    saveAndLoad(in, out);
     EXPECT_EQ(in, out);
   }
 
 }
 
 TEST(SerialTest, Unsigned64) {
-  gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
-
   uint64_t tests[] = {
     0,
     127,
@@ -247,16 +270,13 @@ TEST(SerialTest, Unsigned64) {
   uint64_t out = 1;
 
   for (auto in : tests) {
-    {  gf::Serializer ar(filename); ar | in; }
-    {  gf::Deserializer ar(filename); ar | out; }
+    saveAndLoad(in, out);
     EXPECT_EQ(in, out);
   }
 
 }
 
 TEST(SerialTest, Enum) {
-  gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
-
   enum class Foo {
     Bar,
     Baz,
@@ -272,16 +292,13 @@ TEST(SerialTest, Enum) {
   Foo out;
 
   for (auto in : tests) {
-    {  gf::Serializer ar(filename); ar | in; }
-    {  gf::Deserializer ar(filename); ar | out; }
+    saveAndLoad(in, out);
     EXPECT_EQ(in, out);
   }
 
 }
 
 TEST(SerialTest, Float) {
-  gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
-
   float tests[] = {
     0.0f,
     std::numeric_limits<float>::min(),
@@ -292,8 +309,7 @@ TEST(SerialTest, Float) {
   float out = 1.0f;
 
   for (auto in : tests) {
-    {  gf::Serializer ar(filename); ar | in; }
-    {  gf::Deserializer ar(filename); ar | out; }
+    saveAndLoad(in, out);
     EXPECT_FLOAT_EQ(in, out);
     EXPECT_EQ(in, out);
   }
@@ -301,8 +317,6 @@ TEST(SerialTest, Float) {
 }
 
 TEST(SerialTest, Double) {
-  gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
-
   double tests[] = {
     0.0,
     std::numeric_limits<double>::min(),
@@ -313,8 +327,7 @@ TEST(SerialTest, Double) {
   double out = 1.0;
 
   for (auto in : tests) {
-    {  gf::Serializer ar(filename); ar | in; }
-    {  gf::Deserializer ar(filename); ar | out; }
+    saveAndLoad(in, out);
     EXPECT_DOUBLE_EQ(in, out);
     EXPECT_EQ(in, out);
   }
@@ -322,8 +335,6 @@ TEST(SerialTest, Double) {
 }
 
 TEST(SerialTest, String) {
-  gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
-
   std::string tests1[] = {
     "",
     "gf",
@@ -336,8 +347,7 @@ TEST(SerialTest, String) {
   std::string out1 = "-";
 
   for (auto& in1 : tests1) {
-    {  gf::Serializer ar(filename); ar | in1; }
-    {  gf::Deserializer ar(filename); ar | out1; }
+    saveAndLoad(in1, out1);
     EXPECT_EQ(in1, out1);
   }
 
@@ -351,23 +361,19 @@ TEST(SerialTest, String) {
   char out2[256]; // large enough for any strings above
 
   for (auto in2 : tests2) {
-    {  gf::Serializer ar(filename); ar | in2; }
-    {  gf::Deserializer ar(filename); ar | out2; }
+    saveAndLoadString(in2, out2);
     EXPECT_TRUE(std::strcmp(in2, out2) == 0);
   }
 
   const char in3[] = "unique";
   char out3[256]; // large enough for any strings above
 
-  {  gf::Serializer ar(filename); ar | in3; }
-  {  gf::Deserializer ar(filename); ar | out3; }
+  saveAndLoadString(in3, out3);
   EXPECT_TRUE(std::strcmp(in3, out3) == 0);
 
 }
 
 TEST(SerialTest, Binary) {
-  gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
-
   std::vector<uint8_t> tests1[] = {
     { },
     { 0x00, 0xFF },
@@ -378,8 +384,7 @@ TEST(SerialTest, Binary) {
   std::vector<uint8_t> out1 = { 0x01 };
 
   for (auto& in1 : tests1) {
-    {  gf::Serializer ar(filename); ar | in1; }
-    {  gf::Deserializer ar(filename); ar | out1; }
+    saveAndLoad(in1, out1);
     EXPECT_EQ(in1, out1);
   }
 
@@ -392,16 +397,14 @@ TEST(SerialTest, Binary) {
   std::array<uint8_t, 256> out2;
 
   for (auto& in2 : tests2) {
-    {  gf::Serializer ar(filename); ar | in2; }
-    {  gf::Deserializer ar(filename); ar | out2; }
+    saveAndLoad(in2, out2);
     EXPECT_EQ(in2, out2);
   }
 
   uint8_t in3[] = { 0x01, 0x02, 0x03, 0x04 };
   uint8_t out3[4]; // same size as in3
 
-  {  gf::Serializer ar(filename); ar | in3; }
-  {  gf::Deserializer ar(filename); ar | out3; }
+  saveAndLoad(in3, out3);
 
   for (int i = 0; i < 4; ++i) {
     EXPECT_EQ(in3[i], out3[i]);
@@ -410,8 +413,6 @@ TEST(SerialTest, Binary) {
 }
 
 TEST(SerialTest, Array) {
-  gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
-
   std::vector<int32_t> tests1[] = {
     {  },
     { 0, 2, INT16_MIN, INT16_MAX, INT32_MIN, INT32_MAX },
@@ -424,15 +425,13 @@ TEST(SerialTest, Array) {
   std::vector<int32_t> out1;
 
   for (auto& in1 : tests1) {
-    {  gf::Serializer ar(filename); ar | in1; }
-    {  gf::Deserializer ar(filename); ar | out1; }
+    saveAndLoad(in1, out1);
     EXPECT_EQ(in1, out1);
   }
 
   std::vector<int32_t> out1bis[6];
 
-  {  gf::Serializer ar(filename); ar | tests1; }
-  {  gf::Deserializer ar(filename); ar | out1bis; }
+  saveAndLoad(tests1, out1bis);
 
   for (int i = 0; i < 6; ++i) {
     EXPECT_EQ(tests1[i], out1bis[i]);
@@ -447,16 +446,14 @@ TEST(SerialTest, Array) {
   std::array<int32_t, 256> out2;
 
   for (auto& in2 : tests2) {
-    {  gf::Serializer ar(filename); ar | in2; }
-    {  gf::Deserializer ar(filename); ar | out2; }
+    saveAndLoad(in2, out2);
     EXPECT_EQ(in2, out2);
   }
 
   int32_t in3[] = { 1, 2, 3, 4 };
   int32_t out3[4]; // same size as in3
 
-  {  gf::Serializer ar(filename); ar | in3; }
-  {  gf::Deserializer ar(filename); ar | out3; }
+  saveAndLoad(in3, out3);
 
   for (int i = 0; i < 4; ++i) {
     EXPECT_EQ(in3[i], out3[i]);
@@ -465,8 +462,6 @@ TEST(SerialTest, Array) {
 }
 
 TEST(SerialTest, Set) {
-  gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
-
   std::set<std::string> tests1[] = {
     { },
     { "First" "Second" },
@@ -491,15 +486,13 @@ TEST(SerialTest, Set) {
   std::set<std::string> out1;
 
   for (auto& in1 : tests1) {
-    {  gf::Serializer ar(filename); ar | in1; }
-    {  gf::Deserializer ar(filename); ar | out1; }
+    saveAndLoad(in1, out1);
     EXPECT_EQ(in1, out1);
   }
 
   std::set<std::string> out1bis[6];
 
-  {  gf::Serializer ar(filename); ar | tests1; }
-  {  gf::Deserializer ar(filename); ar | out1bis; }
+  saveAndLoad(tests1, out1bis);
 
   for (int i = 0; i < 6; ++i) {
     EXPECT_EQ(tests1[i], out1bis[i]);
@@ -529,15 +522,13 @@ TEST(SerialTest, Set) {
   std::unordered_set<std::string> out2;
 
   for (auto& in2 : tests2) {
-    {  gf::Serializer ar(filename); ar | in2; }
-    {  gf::Deserializer ar(filename); ar | out2; }
+    saveAndLoad(in2, out2);
     EXPECT_EQ(in2, out2);
   }
 
   std::unordered_set<std::string> out2bis[6];
 
-  {  gf::Serializer ar(filename); ar | tests2; }
-  {  gf::Deserializer ar(filename); ar | out2bis; }
+  saveAndLoad(tests2, out2bis);
 
   for (int i = 0; i < 6; ++i) {
     EXPECT_EQ(tests2[i], out2bis[i]);
@@ -546,8 +537,6 @@ TEST(SerialTest, Set) {
 }
 
 TEST(SerialTest, Map) {
-  gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
-
   std::map<std::string, int32_t> tests1[] = {
     { },
     { { "First", 1 }, { "Second", 2 } },
@@ -572,15 +561,13 @@ TEST(SerialTest, Map) {
   std::map<std::string, int32_t> out1;
 
   for (auto& in1 : tests1) {
-    {  gf::Serializer ar(filename); ar | in1; }
-    {  gf::Deserializer ar(filename); ar | out1; }
+    saveAndLoad(in1, out1);
     EXPECT_EQ(in1, out1);
   }
 
   std::map<std::string, int32_t> out1bis[6];
 
-  {  gf::Serializer ar(filename); ar | tests1; }
-  {  gf::Deserializer ar(filename); ar | out1bis; }
+  saveAndLoad(tests1, out1bis);
 
   for (int i = 0; i < 6; ++i) {
     EXPECT_EQ(tests1[i], out1bis[i]);
@@ -610,15 +597,13 @@ TEST(SerialTest, Map) {
   std::unordered_map<std::string, int32_t> out2;
 
   for (auto& in2 : tests2) {
-    {  gf::Serializer ar(filename); ar | in2; }
-    {  gf::Deserializer ar(filename); ar | out2; }
+    saveAndLoad(in2, out2);
     EXPECT_EQ(in2, out2);
   }
 
   std::unordered_map<std::string, int32_t> out2bis[6];
 
-  {  gf::Serializer ar(filename); ar | tests2; }
-  {  gf::Deserializer ar(filename); ar | out2bis; }
+  saveAndLoad(tests2, out2bis);
 
   for (int i = 0; i < 6; ++i) {
     EXPECT_EQ(tests2[i], out2bis[i]);
@@ -627,13 +612,62 @@ TEST(SerialTest, Map) {
 }
 
 TEST(SerialTest, Vector) {
-  gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
-
   gf::Vector4i in1(-1, 2, -3, 4);
   gf::Vector4i out1;
 
-  {  gf::Serializer ar(filename); ar | in1; }
-  {  gf::Deserializer ar(filename); ar | out1; }
+  saveAndLoad(in1, out1);
+
+  EXPECT_EQ(in1, out1);
+}
+
+TEST(SerialTest, Array2D) {
+  gf::Array2D<int> in1({ 3, 2 });
+  in1({ 0, 0 }) = 1;
+  in1({ 0, 1 }) = 2;
+  in1({ 1, 0 }) = 3;
+  in1({ 1, 1 }) = 4;
+  in1({ 2, 0 }) = 5;
+  in1({ 2, 1 }) = 6;
+
+  gf::Array2D<int> out1;
+
+  saveAndLoad(in1, out1);
+
+  EXPECT_EQ(in1, out1);
+}
+
+TEST(SerialTest, Path) {
+  gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
+
+  gf::Path in1 = filename;
+  gf::Path out1;
+
+  saveAndLoad(in1, out1);
+
+  EXPECT_EQ(in1, out1);
+}
+
+TEST(SerialTest, Compressed) {
+  gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
+
+  std::vector<int32_t> in1(10 * 1024);
+  std::iota(in1.begin(), in1.end(), 1);
+
+  std::vector<int32_t> out1;
+
+  {
+    gf::FileOutputStream stream(filename);
+    gf::CompressedOutputStream compressed(stream);
+    gf::Serializer ar(compressed);
+    ar | in1;
+  }
+
+  {
+    gf::FileInputStream stream(filename);
+    gf::CompressedInputStream compressed(stream);
+    gf::Deserializer ar(compressed);
+    ar | out1;
+  }
 
   EXPECT_EQ(in1, out1);
 }

@@ -424,7 +424,7 @@ inline namespace v1 {
 
     logFormat(filename);
 
-    std::vector<uint8_t> pixels(imageSize.width * imageSize.height, 0x00);
+    std::vector<uint8_t> pixels(static_cast<std::size_t>(imageSize.width) * static_cast<std::size_t>(imageSize.height), 0x00);
     std::size_t index = 0;
 
     switch (format.transparency) {

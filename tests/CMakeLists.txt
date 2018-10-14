@@ -45,3 +45,10 @@ add_executable(bug23
 )
 
 target_link_libraries(bug23 gf0)
+
+add_executable(bug28
+  EXCLUDE_FROM_ALL
+  bugs/bug28.cc
+)
+
+target_link_libraries(bug28 gf0)

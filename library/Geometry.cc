@@ -400,6 +400,45 @@ inline namespace v1 {
     return Polygon(out);
   }
 
+
+  namespace {
+
+    float distanceOfPointToLine(gf::Vector2f point, gf::Vector2f l1, gf::Vector2f l2) {
+      return std::abs(cross(l1 - l2, point - l1)) / euclideanDistance(l1, l2);
+    }
+
+    void simplifyPointsRecursive(ArrayRef<Vector2f> points, float distance, std::vector<Vector2f>& result) {
+      float maxDistance = 0.0f;
+      std::size_t maxIndex = 0;
+
+      std::size_t last = points.getSize() - 1;
+
+      for (std::size_t i = 1; i < last; ++i) {
+        float currentDistance = distanceOfPointToLine(points[i], points[0], points[last]);
+
+        if (currentDistance > maxDistance) {
+          maxDistance = currentDistance;
+          maxIndex = i;
+        }
+      }
+
+      if (maxDistance > distance) {
+        simplifyPointsRecursive(ArrayRef<Vector2f>(points.begin(), maxIndex + 1), distance, result);
+        result.push_back(points[maxIndex]);
+        simplifyPointsRecursive(ArrayRef<Vector2f>(points.begin() + maxIndex, points.getSize() - maxIndex), distance, result);
+      }
+    }
+
+  } // anonymous namespace
+
+  std::vector<Vector2f> simplifyPoints(ArrayRef<Vector2f> points, float distance) {
+    std::vector<Vector2f> result;
+    result.push_back(points[0]);
+    simplifyPointsRecursive(points, distance, result);
+    result.push_back(points[points.getSize() - 1]);
+    return result;
+  }
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif

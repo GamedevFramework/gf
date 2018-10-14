@@ -25,6 +25,7 @@
 #include <algorithm>
 #include <numeric>
 
+#include <gf/Geometry.h>
 #include <gf/Transform.h>
 #include <gf/VectorOps.h>
 
@@ -139,6 +140,10 @@ inline namespace v1 {
     for (auto& point : m_points) {
       point = gf::transform(mat, point);
     }
+  }
+
+  void Polygon::simplify(float distance) {
+    m_points = gf::simplifyPoints(m_points, distance);
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

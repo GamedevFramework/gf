@@ -71,10 +71,11 @@ inline namespace v1 {
     return buffer;
   }
 
-  void SquareGrid::draw(RenderTarget& target, RenderStates states) {
-    states.transform *= getTransform();
-    states.lineWidth = m_lineWidth;
-    target.draw(m_vertices, states);
+  void SquareGrid::draw(RenderTarget& target, const RenderStates& states) {
+    RenderStates localStates = states;
+    localStates.transform *= getTransform();
+    localStates.lineWidth = m_lineWidth;
+    target.draw(m_vertices, localStates);
   }
 
   void SquareGrid::updateGeometry() {

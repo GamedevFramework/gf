@@ -63,19 +63,21 @@ inline namespace v1 {
     updateGeometry();
   }
 
-  void TextWidget::draw(RenderTarget &target, RenderStates states) {
+  void TextWidget::draw(RenderTarget &target, const RenderStates& states) {
     if (m_basic.getFont() == nullptr || m_basic.getCharacterSize() == 0) {
       return;
     }
 
-    states.transform *= getTransform();
-    states.texture = m_basic.getFontTexture();
+    RenderStates localStates = states;
+
+    localStates.transform *= getTransform();
+    localStates.texture = m_basic.getFontTexture();
 
     if (m_basic.getOutlineThickness() > 0) {
-      target.draw(m_outlineVertices, states);
+      target.draw(m_outlineVertices, localStates);
     }
 
-    target.draw(m_vertices, states);
+    target.draw(m_vertices, localStates);
   }
 
   bool TextWidget::contains(Vector2f coords) {
@@ -191,7 +193,7 @@ inline namespace v1 {
     updateGeometry();
   }
 
-  void TextButtonWidget::draw(RenderTarget &target, RenderStates states) {
+  void TextButtonWidget::draw(RenderTarget &target, const RenderStates& states) {
     m_rect.draw(target, states);
 
     // draw text over background
@@ -286,16 +288,18 @@ inline namespace v1 {
     updateGeometry();
   }
 
-  void SpriteWidget::draw(RenderTarget &target, RenderStates states) {
+  void SpriteWidget::draw(RenderTarget &target, const RenderStates& states) {
     const BasicSprite& sprite = getSprite();
 
     if (!sprite.hasTexture()) {
       return;
     }
 
-    states.transform *= getTransform();
-    states.texture = &sprite.getTexture();
-    target.draw(m_vertices, 4, PrimitiveType::TriangleStrip, states);
+    RenderStates localStates = states;
+
+    localStates.transform *= getTransform();
+    localStates.texture = &sprite.getTexture();
+    target.draw(m_vertices, 4, PrimitiveType::TriangleStrip, localStates);
   }
 
   bool SpriteWidget::contains(Vector2f coords) {
@@ -389,16 +393,18 @@ inline namespace v1 {
     updateGeometry();
   }
 
-  void ChoiceSpriteWidget::draw(RenderTarget &target, RenderStates states) {
+  void ChoiceSpriteWidget::draw(RenderTarget &target, const RenderStates& states) {
     const BasicSprite& sprite = getSprite();
 
     if (!sprite.hasTexture()) {
       return;
     }
 
-    states.transform *= getTransform();
-    states.texture = &sprite.getTexture();
-    target.draw(m_vertices, 4, PrimitiveType::TriangleStrip, states);
+    RenderStates localStates = states;
+
+    localStates.transform *= getTransform();
+    localStates.texture = &sprite.getTexture();
+    target.draw(m_vertices, 4, PrimitiveType::TriangleStrip, localStates);
   }
 
   bool ChoiceSpriteWidget::contains(Vector2f coords) {

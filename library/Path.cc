@@ -18,14 +18,26 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#include <gf/InputStream.h>
+#include <gf/Path.h>
+
+#include <gf/SerializationOps.h>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
 #endif
 
-  InputStream::~InputStream() = default;
+  Serializer& operator|(Serializer& ar, const Path& path) {
+    std::string str = path.string();
+    return ar | str;
+  }
+
+  Deserializer& operator|(Deserializer& ar, Path& path) {
+    std::string str;
+    ar | str;
+    path = str;
+    return ar;
+  }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

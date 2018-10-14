@@ -680,7 +680,7 @@ inline namespace v1 {
 
   }
 
-  void Console::draw(RenderTarget& target, RenderStates states) {
+  void Console::draw(RenderTarget& target, const RenderStates& states) {
     if (m_font == nullptr) {
       return;
     }
@@ -688,10 +688,10 @@ inline namespace v1 {
     auto consoleSize = m_data.getSize();
 
     VertexArray backgroundVertices(PrimitiveType::Triangles);
-    backgroundVertices.reserve(consoleSize.width * consoleSize.height * 6);
+    backgroundVertices.reserve(static_cast<std::size_t>(consoleSize.width) * static_cast<std::size_t>(consoleSize.height) * 6);
 
     VertexArray foregroundVertices(PrimitiveType::Triangles);
-    foregroundVertices.reserve(consoleSize.width * consoleSize.height * 6);
+    foregroundVertices.reserve(static_cast<std::size_t>(consoleSize.width) * static_cast<std::size_t>(consoleSize.height) * 6);
 
     Color4f color;
     auto characterSize = m_font->getCharacterSize();
@@ -749,11 +749,13 @@ inline namespace v1 {
       foregroundVertices.append(vertices[3]);
     }
 
-    states.transform *= getTransform();
-    target.draw(backgroundVertices, states);
+    RenderStates localStates = states;
 
-    states.texture = m_font->getTexture();
-    target.draw(foregroundVertices, states);
+    localStates.transform *= getTransform();
+    target.draw(backgroundVertices, localStates);
+
+    localStates.texture = m_font->getTexture();
+    target.draw(foregroundVertices, localStates);
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

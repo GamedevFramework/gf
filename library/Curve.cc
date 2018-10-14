@@ -103,18 +103,20 @@ inline namespace v1 {
     return buffer;
   }
 
-  void Curve::draw(RenderTarget& target, RenderStates states) {
-    states.transform *= getTransform();
+  void Curve::draw(RenderTarget& target, const RenderStates& states) {
+    RenderStates localStates = states;
+
+    localStates.transform *= getTransform();
 
     if (m_type == Type::Simple) {
-      states.lineWidth = m_width;
+      localStates.lineWidth = m_width;
     }
 
     if (m_type == Type::Outlined && m_outlineThickness > 0.0f) {
-      target.draw(m_outlineVertices, states);
+      target.draw(m_outlineVertices, localStates);
     }
 
-    target.draw(m_vertices, states);
+    target.draw(m_vertices, localStates);
   }
 
   void Curve::setClosed(bool closed) {

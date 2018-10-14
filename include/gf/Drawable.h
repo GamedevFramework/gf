@@ -93,7 +93,7 @@ inline namespace v1 {
      * @param target Render target to draw to
      * @param states Current render states
      */
-    virtual void draw(RenderTarget& target, RenderStates states) = 0;
+    virtual void draw(RenderTarget& target, const RenderStates& states) = 0;
 
   };
 

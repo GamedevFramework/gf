@@ -48,14 +48,16 @@ inline namespace v1 {
     updateTexCoords();
   }
 
-  void PostProcessing::draw(RenderTarget& target, RenderStates states) {
+  void PostProcessing::draw(RenderTarget& target, const RenderStates& states) {
     if (m_texture == nullptr) {
       return;
     }
 
-    states.shader = m_effect;
-    states.texture = m_texture;
-    target.draw(m_vertices, 4, PrimitiveType::TriangleStrip, states);
+    RenderStates localStates = states;
+
+    localStates.shader = m_effect;
+    localStates.texture = m_texture;
+    target.draw(m_vertices, 4, PrimitiveType::TriangleStrip, localStates);
   }
 
   void PostProcessing::updatePositions() {

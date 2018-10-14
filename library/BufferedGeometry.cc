@@ -60,16 +60,18 @@ inline namespace v1 {
     setOriginFromAnchorAndBounds(anchor, m_bounds);
   }
 
-  void BufferedGeometry::draw(RenderTarget& target, RenderStates states) {
-    states.texture = m_texture;
-    states.transform *= getTransform();
+  void BufferedGeometry::draw(RenderTarget& target, const RenderStates& states) {
+    RenderStates localStates = states;
+
+    localStates.texture = m_texture;
+    localStates.transform *= getTransform();
 
     if (m_outlineBuffer != nullptr) {
-      target.draw(*m_outlineBuffer, states);
+      target.draw(*m_outlineBuffer, localStates);
     }
 
     if (m_buffer != nullptr) {
-      target.draw(*m_buffer, states);
+      target.draw(*m_buffer, localStates);
     }
   }
 

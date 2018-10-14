@@ -47,7 +47,7 @@ inline namespace v1 {
     return RectF(min, max - min);
   }
 
-  void VertexArray::draw(RenderTarget& target, RenderStates states) {
+  void VertexArray::draw(RenderTarget& target, const RenderStates& states) {
     if (!m_vertices.empty()) {
       target.draw(m_vertices.data(), m_vertices.size(), m_type, states);
     }

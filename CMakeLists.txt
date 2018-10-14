@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0)
 
 project(GF
-  VERSION 0.9.0
+  VERSION 0.10.0
   LANGUAGES CXX C
 )
 
@@ -19,6 +19,10 @@ option(GF_BUILD_GAMES "Build games" OFF)
 option(GF_BUILD_TOOLS "Build tools" OFF)
 option(GF_SINGLE_COMPILTATION_UNIT "Build the library in a single file (unity build)" OFF)
 option(GF_SHARED "Build the library as a shared library" ON)
+
+if(UNIX)
+  option(GF_DEV_ENABLE_ASAN "Enable Address Sanitizer" OFF)
+endif()
 
 set(BUILD_SHARED_LIBS ${GF_SHARED})
 
@@ -57,6 +61,12 @@ else()
   set(CMAKE_CXX_FLAGS_RELWITHDEBINFO  "-O2 -g")
 endif()
 
+if(UNIX)
+  if(GF_DEV_ENABLE_ASAN)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address")
+  endif()
+endif()
+
 add_subdirectory(library)
 
 if(GF_BUILD_EXAMPLES)
@@ -75,12 +85,7 @@ install(
 install(
   DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/examples"
   DESTINATION "${CMAKE_INSTALL_DOCDIR}"
-  FILES_MATCHING
-  PATTERN "*.cc"
-  PATTERN "*.png"
-  PATTERN "*.ttf"
-  PATTERN "*.xml"
-  PATTERN "CREDITS"
+  PATTERN "CMakeLists.txt" EXCLUDE
 )
 
 if (GF_BUILD_DOCUMENTATION)

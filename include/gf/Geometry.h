@@ -171,6 +171,19 @@ inline namespace v1 {
    */
   GF_API Polygon convexHull(ArrayRef<Vector2f> points);
 
+
+  /**
+   * @ingroup core
+   * @brief Simplify a sequence of points
+   *
+   * This function uses the [Douglas–Peucker algorithm](https://en.wikipedia.org/wiki/Ramer%E2%80%93Douglas%E2%80%93Peucker_algorithm).
+   *
+   * @param points The sequence of points
+   * @param distance The maximum authorized distance between the original points and the simplified points
+   * @returns A new simplified sequence of points
+   */
+  GF_API std::vector<Vector2f> simplifyPoints(ArrayRef<Vector2f> points, float distance = Epsilon);
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif

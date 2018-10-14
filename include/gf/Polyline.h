@@ -24,8 +24,10 @@
 #include <vector>
 
 #include "ArrayRef.h"
+#include "Math.h"
 #include "Matrix.h"
 #include "Portability.h"
+#include "SerializationFwd.h"
 #include "Vector.h"
 
 namespace gf {
@@ -178,6 +180,15 @@ inline namespace v1 {
     }
 
     /**
+     * @brief Get the type of the polyline
+     *
+     * @returns The type of the polyline
+     */
+    Type getType() const {
+      return m_type;
+    }
+
+    /**
      * @brief Check is the polyline is a loop
      *
      * @returns True if the polyline is a loop
@@ -199,10 +210,29 @@ inline namespace v1 {
       return m_type == Chain;
     }
 
+    /**
+     * @brief Simplify the polyline
+     *
+     * @param distance The maximum authorized distance between the original points and the simplified points
+     */
+    void simplify(float distance = Epsilon);
+
   private:
     std::vector<Vector2f> m_points;
     Type m_type;
   };
+
+  /**
+   * @relates Serializer
+   * @brief Serialize a polyline
+   */
+  GF_API Serializer& operator|(Serializer& ar, const Polyline& polyline);
+
+  /**
+   * @relates Deserializer
+   * @brief Deserialize a polyline
+   */
+  GF_API Deserializer& operator|(Deserializer& ar, Polyline& polyline);
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

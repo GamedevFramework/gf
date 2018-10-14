@@ -421,6 +421,20 @@ inline namespace v1 {
     return !(lhs == rhs);
   }
 
+  /**
+   * @relates Rect
+   * @brief Serialize a rectangle
+   *
+   * @param ar The archive
+   * @param rect The rectangle to serialize
+   * @sa gf::Serialize, gf::Deserialiser
+   */
+  template<typename Archive, typename T>
+  Archive& operator|(Archive& ar, Rect<T>& rect) {
+    return ar | rect.left | rect.top | rect.width | rect.height;
+  }
+
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif

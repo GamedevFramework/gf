@@ -113,19 +113,21 @@ inline namespace v1 {
     return buffer;
   }
 
-  void Text::draw(RenderTarget& target, RenderStates states) {
+  void Text::draw(RenderTarget& target, const RenderStates& states) {
     if (m_basic.getFont() == nullptr || m_basic.getCharacterSize() == 0) {
       return;
     }
 
-    states.transform *= getTransform();
-    states.texture = m_basic.getFontTexture();
+    RenderStates localStates = states;
+
+    localStates.transform *= getTransform();
+    localStates.texture = m_basic.getFontTexture();
 
     if (m_basic.getOutlineThickness() > 0) {
-      target.draw(m_outlineVertices, states);
+      target.draw(m_outlineVertices, localStates);
     }
 
-    target.draw(m_vertices, states);
+    target.draw(m_vertices, localStates);
   }
 
   void Text::updateGeometry() {

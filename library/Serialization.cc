@@ -43,14 +43,12 @@ inline namespace v1 {
    * Serializer
    */
 
-  Serializer::Serializer(const Path& filename, uint16_t version)
-  : m_file(filename, BinaryFile::Mode::Write)
+  Serializer::Serializer(OutputStream& stream, uint16_t version)
+  : m_stream(&stream)
   , m_version(version)
   {
-    if (m_file) {
-      m_file.write(Magic);
-      writeBigEndian16(version);
-    }
+    m_stream->write(Magic);
+    writeBigEndian16(version);
   }
 
   void Serializer::writeBoolean(bool data) {
@@ -121,7 +119,7 @@ inline namespace v1 {
     writeSizeHeader(size);
 
     if (size > 0) {
-      m_file.write(ArrayRef<uint8_t>(reinterpret_cast<const uint8_t *>(data), size));
+      m_stream->write(ArrayRef<uint8_t>(reinterpret_cast<const uint8_t *>(data), size));
     }
   }
 
@@ -140,7 +138,7 @@ inline namespace v1 {
       buf[Size - i - 1] = static_cast<uint8_t>(data >> (8 * i));
     }
 
-    m_file.write(buf);
+    m_stream->write(buf);
   }
 
   void Serializer::writeBigEndian32(uint32_t data) {
@@ -152,7 +150,7 @@ inline namespace v1 {
       buf[Size - i - 1] = static_cast<uint8_t>(data >> (8 * i));
     }
 
-    m_file.write(buf);
+    m_stream->write(buf);
   }
 
   void Serializer::writeBigEndian16(uint16_t data) {
@@ -164,38 +162,30 @@ inline namespace v1 {
       buf[Size - i - 1] = static_cast<uint8_t>(data >> (8 * i));
     }
 
-    m_file.write(buf);
+    m_stream->write(buf);
   }
 
   void Serializer::writeBigEndian8(uint8_t data) {
-    m_file.write(data);
+    m_stream->write(data);
   }
 
   /*
    * Deserializer
    */
 
-  Deserializer::Deserializer(const Path& filename)
-  : m_file(filename, BinaryFile::Mode::Read)
+  Deserializer::Deserializer(InputStream& stream)
+  : m_stream(&stream)
   , m_version(0)
-  , m_eof(false)
   {
     uint8_t magic[2] = { 0u, 0u };
+    m_stream->read(magic);
 
-    if (m_file) {
-      readBigEndian8(magic[0]);
-      readBigEndian8(magic[1]);
-
-      if (magic[0] != Magic[0] || magic[1] != Magic[1]) {
-        Log::error("This file is not a gf archive: '%s'.\n", filename.string().c_str());
-        m_eof = true;
-        return;
-      }
-
-      readBigEndian16(m_version);
-    } else {
-      m_eof = true;
+    if (magic[0] != Magic[0] || magic[1] != Magic[1]) {
+      Log::error("The stream is not a gf archive.\n"); // throw?
+      return;
     }
+
+    readBigEndian16(m_version);
   }
 
   bool Deserializer::readBoolean(bool& data) {
@@ -352,9 +342,8 @@ inline namespace v1 {
   }
 
   bool Deserializer::readString(char *data, std::size_t size) {
-    if (m_file.read(BufferRef<uint8_t>(reinterpret_cast<uint8_t*>(data), size)) != size) {
+    if (m_stream->read(BufferRef<uint8_t>(reinterpret_cast<uint8_t*>(data), size)) != size) {
       Log::error("Asking for a string but the file is at the end.\n");
-      m_eof = true;
       return false;
     }
 
@@ -376,8 +365,7 @@ inline namespace v1 {
     static constexpr std::size_t Size = sizeof(data);
 
     uint8_t buf[Size];
-    if (m_file.read(buf) != Size) {
-      m_eof = true;
+    if (m_stream->read(buf) != Size) {
       return false;
     }
 
@@ -396,8 +384,7 @@ inline namespace v1 {
     static constexpr std::size_t Size = sizeof(data);
 
     uint8_t buf[Size];
-    if (m_file.read(buf) != Size) {
-      m_eof = true;
+    if (m_stream->read(buf) != Size) {
       return false;
     }
 
@@ -416,8 +403,7 @@ inline namespace v1 {
     static constexpr std::size_t Size = sizeof(data);
 
     uint8_t buf[Size];
-    if (m_file.read(buf) != Size) {
-      m_eof = true;
+    if (m_stream->read(buf) != Size) {
       return false;
     }
 
@@ -433,18 +419,11 @@ inline namespace v1 {
   }
 
   bool Deserializer::readBigEndian8(uint8_t& data) {
-    if (m_file.isEof()) {
-      m_eof = true;
-      return false;
-    }
-
-    auto size = m_file.read(data);
-    m_eof = (size != 1);
-    return !m_eof;
+    return m_stream->read(data) == 1;
   }
 
   bool Deserializer::isEof() const {
-    return m_eof;
+    return m_stream->isFinished();
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

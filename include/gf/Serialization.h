@@ -24,9 +24,9 @@
 #include <cstddef>
 #include <cstdint>
 
-#include "BinaryFile.h"
 #include "BufferRef.h"
 #include "Portability.h"
+#include "Stream.h"
 #include "StringRef.h"
 
 namespace gf {
@@ -44,21 +44,13 @@ inline namespace v1 {
    */
   class GF_API Serializer {
   public:
+
     /**
      * @brief Constructor
      *
-     * @param filename The name of the binary file
+     * @param stream The output stream
      */
-    Serializer(const Path& filename, uint16_t version = 0);
-
-    /**
-     * @brief Conversion to boolean
-     *
-     * @returns True if the archive exists and was opened
-     */
-    operator bool() const {
-      return static_cast<bool>(m_file);
-    }
+    Serializer(OutputStream& stream, uint16_t version = 0);
 
     /**
      * @brief Get the version of the current archive format
@@ -144,9 +136,10 @@ inline namespace v1 {
     void writeBigEndian8(uint8_t data);
 
   private:
-    BinaryFile m_file;
+    OutputStream *m_stream;
     uint16_t m_version;
   };
+
 
   /**
    * @ingroup game
@@ -161,18 +154,18 @@ inline namespace v1 {
     /**
      * @brief Constructor
      *
-     * @param filename The name of the binary file
+     * @param stream The input stream
      */
-    Deserializer(const Path& filename);
+    Deserializer(InputStream& stream);
 
-    /**
-     * @brief Conversion to boolean
-     *
-     * @returns True if the archive exists and was opened
-     */
-    operator bool() const {
-      return static_cast<bool>(m_file);
-    }
+//     /**
+//      * @brief Conversion to boolean
+//      *
+//      * @returns True if the archive exists and was opened
+//      */
+//     operator bool() const {
+//       return static_cast<bool>(m_file);
+//     }
 
     /**
      * @brief Get the version of the current archive format
@@ -288,9 +281,8 @@ inline namespace v1 {
     bool isEof() const;
 
   private:
-    BinaryFile m_file;
+    InputStream *m_stream;
     uint16_t m_version;
-    bool m_eof;
   };
 
 

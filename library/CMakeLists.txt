@@ -86,7 +86,6 @@ else()
     AssetManager.cc
     BasicSprite.cc
     BasicText.cc
-    BinaryFile.cc
     Blend.cc
     BufferedGeometry.cc
     Circ.cc
@@ -117,8 +116,6 @@ else()
     Grid.cc
     Heightmap.cc
     Image.cc
-    InputStream.cc
-    InputStreams.cc
     Keyboard.cc
     Library.cc
     Log.cc
@@ -138,6 +135,7 @@ else()
     Orientation.cc
     Particles.cc
     Paths.cc
+    Path.cc
     PhysicsBody.cc
     PhysicsGeometry.cc
     PhysicsModel.cc
@@ -162,6 +160,8 @@ else()
     Spatial.cc
     SpriteBatch.cc
     Sprite.cc
+    Stream.cc
+    Streams.cc
     StringUtils.cc
     SystemInfo.cc
     Text.cc
@@ -228,10 +228,10 @@ target_include_directories(gf0
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
     ${Boost_INCLUDE_DIRS}
+    ${ZLIB_INCLUDE_DIRS}
   PRIVATE
     ${SDL2_INCLUDE_DIR}
     ${FREETYPE_INCLUDE_DIRS}
-    ${ZLIB_INCLUDE_DIRS}
     ${CMAKE_CURRENT_BINARY_DIR}
 )
 
