@@ -1,5 +1,22 @@
 # ChangeLog for gf
 
+## gf 0.10.0 (14 Oct 2018)
+
+- Core module
+  - Add serialization for gf::Polyline, gf::Path, gf::Rect, gf::Array2D
+  - Rework InputStream, add OutputStream, remove BinaryFile
+  - Add compressed stream handling (zlib)
+  - Add {Polygon,Polyline}::simplify() thanks to Douglas-Peucker algorithm
+- Window module
+- Graphics module
+  - RenderStates is now passed by reference in Drawable::draw()
+- Game module
+  - Improve TMX support (bug fixes)
+- Tools and games
+- Misc
+  - Add an option to enable ASan
+  - Add a code of conduct
+
 ## gf 0.9.0 (14 Jul 2018)
 
 - Core module
