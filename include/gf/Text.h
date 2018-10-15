@@ -254,6 +254,60 @@ inline namespace v1 {
     }
 
     /**
+     * @brief Set the line spacing factor
+     *
+     * The default spacing between lines is defined by the font.
+     * This method enables you to set a factor for the spacing
+     * between lines. By default the line spacing factor is 1.
+     *
+     * @param spacingFactor New line spacing factor
+     *
+     * @see getLineSpacing()
+     *
+     */
+    void setLineSpacing(float spacingFactor);
+
+     /**
+     * @brief Get the size of the line spacing factor
+     *
+     * @return The size of the line spacing factor
+     *
+     * @see setLineSpacing
+     */
+    float getLineSpacing() const {
+      return m_basic.getLineSpacing();
+    }
+
+    /**
+     * @brief Set the letter spacing factor
+     *
+     * The default spacing between letters is defined by the font.
+     * This factor doesn't directly apply to the existing
+     * spacing between each character, it rather adds a fixed
+     * space between them which is calculated from the font
+     * metrics and the character size.
+     * Note that factors below 1 (including negative numbers) bring
+     * characters closer to each other.
+     * By default the letter spacing factor is 1.
+     *
+     * @param spacingFactor New letter spacing factor
+     *
+     * @see getLetterSpacing()
+     */
+    void setLetterSpacing(float spacingFactor);
+
+     /**
+     * @brief Get the size of the letter spacing factor
+     *
+     * @returns The size of the letter spacing factor
+     *
+     * @see setLetterSpacing()
+     */
+    float getLetterSpacing() const {
+      return m_basic.getLetterSpacing();
+    }
+
+    /**
      * @brief Set the paragraph width for aligned text
      *
      * By default, the paragraph width is 0.
