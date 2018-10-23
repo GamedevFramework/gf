@@ -27,6 +27,7 @@
 #include "Math.h"
 #include "Matrix.h"
 #include "Portability.h"
+#include "SerializationFwd.h"
 #include "Vector.h"
 #include "Winding.h"
 
@@ -191,6 +192,18 @@ inline namespace v1 {
   private:
     std::vector<Vector2f> m_points;
   };
+
+  /**
+   * @relates Serializer
+   * @brief Serialize a polygon
+   */
+  GF_API Serializer& operator|(Serializer& ar, const Polygon& polygon);
+
+  /**
+   * @relates Deserializer
+   * @brief Deserialize a polygon
+   */
+  GF_API Deserializer& operator|(Deserializer& ar, Polygon& polygon);
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

@@ -26,6 +26,7 @@
 #include <numeric>
 
 #include <gf/Geometry.h>
+#include <gf/SerializationOps.h>
 #include <gf/Transform.h>
 #include <gf/VectorOps.h>
 
@@ -144,6 +145,34 @@ inline namespace v1 {
 
   void Polygon::simplify(float distance) {
     m_points = gf::simplifyPoints(m_points, distance);
+  }
+
+
+  Serializer& operator|(Serializer& ar, const Polygon& polygon) {
+    uint64_t size = polygon.getPointCount();
+    ar | size;
+
+    for (uint64_t i = 0; i < size; ++i) {
+      Vector2f point = polygon.getPoint(i);
+      ar | point;
+    }
+
+    return ar;
+  }
+
+  Deserializer& operator|(Deserializer& ar, Polygon& polygon) {
+    polygon = Polygon();
+
+    uint64_t size;
+    ar | size;
+
+    for (uint64_t i = 0; i < size; ++i) {
+      Vector2f point;
+      ar | point;
+      polygon.addPoint(point);
+    }
+
+    return ar;
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
