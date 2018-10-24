@@ -150,6 +150,8 @@ inline namespace v1 {
      * This function should return true, otherwise you may have problems in
      * other functions which assume that the polygon is convex.
      *
+     * This function does not handle self-intersecting polygons (yet).
+     *
      * @returns True if the polygon is convex
      */
     bool isConvex() const;
