@@ -726,6 +726,15 @@ inline namespace v1 {
         return std::move(tmx);
       }
 
+      if (node.child("point")) {
+        auto tmx = std::make_unique<TmxPoint>();
+        parseTmxObjectCommon(node, *tmx);
+
+        tmx->kind = TmxObject::Point;
+
+        return std::move(tmx);
+      }
+
       if (node.child("ellipse")) {
         auto tmx = std::make_unique<TmxEllipse>();
         parseTmxObjectCommon(node, *tmx);

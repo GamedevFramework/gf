@@ -361,6 +361,7 @@ inline namespace v1 {
       Polygon,    ///< A polygon object
       Tile,       ///< A tile object
       Text,       ///< A text object
+      Point,      ///< A point object
     };
 
     Kind kind;  ///< The kind of the object
@@ -458,6 +459,13 @@ inline namespace v1 {
     };
 
     VAlign valign;  ///< The vertical alignment of the text
+  };
+
+  /**
+   * @ingroup game
+   * @brief A point object
+   */
+  struct GF_API TmxPoint : public TmxObject {
   };
 
   /**
