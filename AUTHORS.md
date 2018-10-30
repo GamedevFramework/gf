@@ -1,4 +1,4 @@
-# Developpers
+# Developers
 
 Julien Bernard
   julien dot bernard at univ dash fcomte dot fr
