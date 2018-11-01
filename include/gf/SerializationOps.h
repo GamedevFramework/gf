@@ -106,7 +106,8 @@ inline namespace v1 {
    * @brief Serialize an enum object
    */
   template<typename T, typename E = typename std::enable_if<std::is_enum<T>::value, T>::type>
-  GF_API Serializer& operator|(Serializer& ar, T data) {
+  inline
+  Serializer& operator|(Serializer& ar, T data) {
     using U = typename std::underlying_type<T>::type;
     return ar | static_cast<U>(data);
   }
@@ -310,7 +311,8 @@ inline namespace v1 {
   GF_API Deserializer& operator|(Deserializer& ar, int64_t& data);
 
   template<typename T, typename E = typename std::enable_if<std::is_enum<T>::value, T>::type>
-  GF_API Deserializer& operator|(Deserializer& ar, T& data) {
+  inline
+  Deserializer& operator|(Deserializer& ar, T& data) {
     using U = typename std::underlying_type<T>::type;
     U underlying;
     ar | underlying;
