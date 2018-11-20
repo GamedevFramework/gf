@@ -155,6 +155,7 @@ inline namespace v1 {
      * is thrown.
      *
      * @param path The path to the file
+     * @param mode The open mode of the file
      */
     FileOutputStream(const Path& path, Mode mode = Mode::Write);
 
@@ -186,7 +187,7 @@ inline namespace v1 {
      * This class does not own the memory. The user must keep the memory
      * available when the stream is active.
      *
-     * @param buffer The destination buffer
+     * @param memory The destination buffer
      */
     explicit MemoryOutputStream(BufferRef<uint8_t> memory);
 

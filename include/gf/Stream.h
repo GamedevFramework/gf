@@ -159,16 +159,16 @@ inline namespace v1 {
      *
      * @param buffer The buffer to copy to the stream
      *
-     * @return The number of bytes actually writtent
+     * @return The number of bytes actually written
      */
     virtual std::size_t write(ArrayRef<uint8_t> buffer) = 0;
 
     /**
      * @brief Write a single byte to the stream
      *
-     * @param buffer The byte to copy to the stream
+     * @param byte The byte to copy to the stream
      *
-     * @return The number of bytes actually writtent
+     * @return The number of bytes actually written
      */
     std::size_t write(uint8_t byte) {
       return write(ArrayRef<uint8_t>(&byte, 1));
