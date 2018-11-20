@@ -130,7 +130,7 @@ inline namespace v1 {
    * This class allows users to define their own stream output sinks to
    * which Gamedev Framework can save resources.
    *
-   * @sa gf::OutputStream
+   * @sa gf::InputStream
    */
   class GF_API OutputStream {
   public:
@@ -174,6 +174,15 @@ inline namespace v1 {
       return write(ArrayRef<uint8_t>(&byte, 1));
     }
 
+    /**
+     * @brief Get the number of bytes already written
+     *
+     * This function returns the number of bytes actually written i.e. it does
+     * not take into account possible bytes that have not been flushed yet.
+     *
+     * @return The number of written bytes
+     */
+    virtual std::size_t getWrittenBytesCount() const = 0;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

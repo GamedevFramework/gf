@@ -167,8 +167,11 @@ inline namespace v1 {
 
     virtual std::size_t write(ArrayRef<uint8_t> buffer) override;
 
+    virtual std::size_t getWrittenBytesCount() const override;
+
   private:
     std::FILE *m_file;
+    std::size_t m_written;
   };
 
   /**
@@ -189,6 +192,7 @@ inline namespace v1 {
 
     virtual std::size_t write(ArrayRef<uint8_t> buffer) override;
 
+    virtual std::size_t getWrittenBytesCount() const override;
   private:
     BufferRef<uint8_t> m_memory;
     std::size_t m_offset;
@@ -215,6 +219,7 @@ inline namespace v1 {
 
     virtual std::size_t write(ArrayRef<uint8_t> buffer) override;
 
+    virtual std::size_t getWrittenBytesCount() const override;
   private:
     static constexpr uInt BufferSize = 256;
 
