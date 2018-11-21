@@ -71,6 +71,15 @@ inline namespace v1 {
     virtual ~Entity();
 
     /**
+     * @brief Set the priority of the entity
+     *
+     * @param priority The new priority
+     */
+    void setPriority(int priority) {
+      m_priority = priority;
+    }
+
+    /**
      * @brief Get the priority of the entity
      *
      * @return The priority
