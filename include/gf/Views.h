@@ -102,6 +102,7 @@ inline namespace v1 {
      */
     FitView()
     : AdaptativeView()
+    , m_localScreenSize(0, 0)
     , m_localViewport(0.0f, 0.0f, 1.0f, 1.0f)
     {
 
@@ -114,6 +115,7 @@ inline namespace v1 {
      */
     explicit FitView(const RectF& rect)
     : AdaptativeView(rect)
+    , m_localScreenSize(0, 0)
     , m_localViewport(0.0f, 0.0f, 1.0f, 1.0f)
     {
 
@@ -127,6 +129,7 @@ inline namespace v1 {
      */
     FitView(Vector2f center, Vector2f size)
     : AdaptativeView(center, size)
+    , m_localScreenSize(0, 0)
     , m_localViewport(0.0f, 0.0f, 1.0f, 1.0f)
     {
 
@@ -165,6 +168,8 @@ inline namespace v1 {
      */
     FillView()
     : AdaptativeView()
+    , m_localSize(1000.0f, 1000.0f)
+    , m_localScreenSize(0, 0)
     {
 
     }
@@ -177,6 +182,7 @@ inline namespace v1 {
     explicit FillView(const RectF& rect)
     : AdaptativeView(rect)
     , m_localSize(rect.getSize())
+    , m_localScreenSize(0, 0)
     {
 
     }
@@ -190,6 +196,7 @@ inline namespace v1 {
     FillView(Vector2f center, Vector2f size)
     : AdaptativeView(center, size)
     , m_localSize(size)
+    , m_localScreenSize(0, 0)
     {
 
     }
@@ -228,6 +235,8 @@ inline namespace v1 {
      */
     ExtendView()
     : AdaptativeView()
+    , m_localSize(1000.0f, 1000.0f)
+    , m_localScreenSize(0, 0)
     {
 
     }
@@ -240,6 +249,7 @@ inline namespace v1 {
     explicit ExtendView(const RectF& rect)
     : AdaptativeView(rect)
     , m_localSize(rect.getSize())
+    , m_localScreenSize(0, 0)
     {
 
     }
@@ -253,6 +263,7 @@ inline namespace v1 {
     ExtendView(Vector2f center, Vector2f size)
     : AdaptativeView(center, size)
     , m_localSize(size)
+    , m_localScreenSize(0, 0)
     {
 
     }
@@ -292,6 +303,8 @@ inline namespace v1 {
      */
     LockedView()
     : AdaptativeView()
+    , m_localSize(0.0f, 0.0f)
+    , m_localScreenSize(0, 0)
     , m_localViewport(0.0f, 0.0f, 1.0f, 1.0f)
     {
 
@@ -355,6 +368,16 @@ inline namespace v1 {
    */
   class GF_API ScreenView : public AdaptativeView {
   public:
+    /**
+     * @brief Default constructor
+     */
+    ScreenView()
+    : AdaptativeView()
+    , m_localScreenSize(0, 0)
+    {
+
+    }
+
     virtual void onScreenSizeChange(Vector2u screenSize) override;
     virtual void onViewportChange(const RectF& viewport) override;
 
