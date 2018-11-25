@@ -89,6 +89,7 @@ inline namespace v1 {
   namespace literals {
 
     /**
+     * @ingroup core
      * @brief User defined operator for creating compile time ids from strings
      *
      * To use it, you have to use the `gf::literals` namespace:

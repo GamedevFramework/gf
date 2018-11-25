@@ -102,6 +102,7 @@ else()
     Cursor.cc
     Curve.cc
     Curves.cc
+    Dice.cc
     Direction.cc
     Drawable.cc
     Easings.cc

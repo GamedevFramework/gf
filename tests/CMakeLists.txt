@@ -6,6 +6,7 @@ add_executable(gf_tests
   testBox.cc
   testBufferRef.cc
   testCirc.cc
+  testDice.cc
   testFlags.cc
   testId.cc
   testMatrix.cc
