@@ -73,123 +73,130 @@ if (NOT APPLE)
 endif()
 
 if (GF_SINGLE_COMPILTATION_UNIT)
+  add_library(gfcore0
+    core/XUnityBuild.cc
+  )
+
   add_library(gf0
-    XUnityBuild.cc
+    graphics/XUnityBuild.cc
   )
 else()
+  add_library(gfcore0
+    core/Activities.cc
+    core/Activity.cc
+    core/AssetManager.cc
+    core/Circ.cc
+    core/Clock.cc
+    core/Collision.cc
+    core/Color.cc
+    core/ColorRamp.cc
+    core/Dice.cc
+    core/Direction.cc
+    core/Easings.cc
+    core/Flags.cc
+    core/Geometry.cc
+    core/Heightmap.cc
+    core/Image.cc
+    core/Log.cc
+    core/Map.cc
+    core/Math.cc
+    core/Matrix.cc
+    core/MessageManager.cc
+    core/Model.cc
+    core/ModelContainer.cc
+    core/Models.cc
+    core/Move.cc
+    core/Noise.cc
+    core/Noises.cc
+    core/Orientation.cc
+    core/Path.cc
+    core/PhysicsBody.cc
+    core/PhysicsGeometry.cc
+    core/PhysicsModel.cc
+    core/Polygon.cc
+    core/Polyline.cc
+    core/RandomBinaryTree.cc
+    core/Random.cc
+    core/Range.cc
+    core/Rect.cc
+    core/Serialization.cc
+    core/SerializationOps.cc
+    core/Sleep.cc
+    core/Spatial.cc
+    core/Stream.cc
+    core/Streams.cc
+    core/StringUtils.cc
+    core/Time.cc
+    core/Transform.cc
+    core/Triangulation.cc
+    core/Vector.cc
+  )
+
   add_library(gf0
-    Action.cc
-    Activities.cc
-    Activity.cc
-    AnimatedSprite.cc
-    Animation.cc
-    AssetManager.cc
-    BasicSprite.cc
-    BasicText.cc
-    Blend.cc
-    BufferedGeometry.cc
-    Circ.cc
-    Clipboard.cc
-    Clock.cc
-    Collision.cc
-    Color.cc
-    ColorRamp.cc
-    Console.cc
-    ConsoleFont.cc
-    Control.cc
-    Controls.cc
-    Coordinates.cc
-    Cursor.cc
-    Curve.cc
-    Curves.cc
-    Dice.cc
-    Direction.cc
-    Drawable.cc
-    Easings.cc
-    Effects.cc
-    Entity.cc
-    EntityContainer.cc
-    Flags.cc
-    Font.cc
-    Gamepad.cc
-    Geometry.cc
-    GraphicsInfo.cc
-    Grid.cc
-    Heightmap.cc
-    Image.cc
-    Keyboard.cc
-    Library.cc
-    Log.cc
-    Logo.cc
-    Map.cc
-    Math.cc
-    Matrix.cc
-    MessageManager.cc
-    Model.cc
-    ModelContainer.cc
-    Models.cc
-    Monitor.cc
-    Move.cc
-    NinePatch.cc
-    Noise.cc
-    Noises.cc
-    Orientation.cc
-    Particles.cc
-    Paths.cc
-    Path.cc
-    PhysicsBody.cc
-    PhysicsGeometry.cc
-    PhysicsModel.cc
-    Polygon.cc
-    Polyline.cc
-    PostProcessing.cc
-    Random.cc
-    RandomBinaryTree.cc
-    Range.cc
-    Rect.cc
-    RenderPipeline.cc
-    RenderTarget.cc
-    RenderTexture.cc
-    RenderWindow.cc
-    ResourceManager.cc
-    Serialization.cc
-    SerializationOps.cc
-    Shader.cc
-    Shape.cc
-    Shapes.cc
-    Sleep.cc
-    Spatial.cc
-    SpriteBatch.cc
-    Sprite.cc
-    Stream.cc
-    Streams.cc
-    StringUtils.cc
-    SystemInfo.cc
-    Text.cc
-    TextureAtlas.cc
-    Texture.cc
-    TileLayer.cc
-    Time.cc
-    Tmx.cc
-    Transformable.cc
-    Transform.cc
-    Triangulation.cc
-    UI.cc
-    Vector.cc
-    Vertex.cc
-    VertexArray.cc
-    VertexBuffer.cc
-    View.cc
-    ViewContainer.cc
-    Views.cc
-    Widget.cc
-    Widgets.cc
-    WidgetContainer.cc
-    Window.cc
+    graphics/Action.cc
+    graphics/AnimatedSprite.cc
+    graphics/Animation.cc
+    graphics/BasicSprite.cc
+    graphics/BasicText.cc
+    graphics/Blend.cc
+    graphics/BufferedGeometry.cc
+    graphics/Clipboard.cc
+    graphics/Console.cc
+    graphics/ConsoleFont.cc
+    graphics/Control.cc
+    graphics/Controls.cc
+    graphics/Coordinates.cc
+    graphics/Cursor.cc
+    graphics/Curve.cc
+    graphics/Curves.cc
+    graphics/Drawable.cc
+    graphics/Effects.cc
+    graphics/Entity.cc
+    graphics/EntityContainer.cc
+    graphics/Font.cc
+    graphics/Gamepad.cc
+    graphics/GraphicsInfo.cc
+    graphics/Grid.cc
+    graphics/Keyboard.cc
+    graphics/Library.cc
+    graphics/Logo.cc
+    graphics/Monitor.cc
+    graphics/NinePatch.cc
+    graphics/Particles.cc
+    graphics/Paths.cc
+    graphics/PostProcessing.cc
+    graphics/RenderPipeline.cc
+    graphics/RenderTarget.cc
+    graphics/RenderTexture.cc
+    graphics/RenderWindow.cc
+    graphics/ResourceManager.cc
+    graphics/Shader.cc
+    graphics/Shape.cc
+    graphics/Shapes.cc
+    graphics/SpriteBatch.cc
+    graphics/Sprite.cc
+    graphics/SystemInfo.cc
+    graphics/Text.cc
+    graphics/TextureAtlas.cc
+    graphics/Texture.cc
+    graphics/TileLayer.cc
+    graphics/Tmx.cc
+    graphics/Transformable.cc
+    graphics/UI.cc
+    graphics/VertexArray.cc
+    graphics/VertexBuffer.cc
+    graphics/Vertex.cc
+    graphics/View.cc
+    graphics/ViewContainer.cc
+    graphics/Views.cc
+    graphics/Widget.cc
+    graphics/WidgetContainer.cc
+    graphics/Widgets.cc
+    graphics/Window.cc
     # generated
     data/generated.cc
     # priv
-    priv/Debug.cc
+    graphics/priv/Debug.cc
     # vendor
     vendor/pugixml/src/pugixml.cpp
     ${GF_GLAD_SRC}
@@ -208,16 +215,30 @@ if (GF_BUILD_WITH_OPENGL3)
 endif()
 
 if (GF_DEBUG)
+  target_compile_definitions(gfcore0
+    PRIVATE GF_DEBUG
+  )
+
   target_compile_definitions(gf0
     PRIVATE GF_DEBUG
   )
 endif()
 
 if (GF_SHARED)
+  target_compile_definitions(gfcore0
+    PUBLIC GF_SHARED
+  )
+
   target_compile_definitions(gf0
     PUBLIC GF_SHARED
   )
 endif()
+
+target_compile_definitions(gfcore0
+  PRIVATE
+    GF_EXPORT_SYMBOLS
+    ZLIB_CONST
+)
 
 target_compile_definitions(gf0
   PRIVATE
@@ -225,15 +246,26 @@ target_compile_definitions(gf0
     ZLIB_CONST
 )
 
-target_include_directories(gf0
+target_include_directories(gfcore0
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
     ${Boost_INCLUDE_DIRS}
     ${ZLIB_INCLUDE_DIRS}
   PRIVATE
+    ${CMAKE_CURRENT_BINARY_DIR}
+    "${CMAKE_CURRENT_SOURCE_DIR}/vendor/stb"
+)
+
+target_include_directories(gf0
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
+    ${ZLIB_INCLUDE_DIRS}
+  PRIVATE
     ${SDL2_INCLUDE_DIR}
     ${FREETYPE_INCLUDE_DIRS}
     ${CMAKE_CURRENT_BINARY_DIR}
+    "${CMAKE_CURRENT_SOURCE_DIR}/vendor/pugixml/src"
+    "${CMAKE_CURRENT_SOURCE_DIR}/vendor/nuklear"
 )
 
 if (APPLE)
@@ -248,11 +280,16 @@ else()
   )
 endif()
 
+target_link_libraries(gfcore0
+  ${Boost_LIBRARIES}
+  ${ZLIB_LIBRARIES}
+)
+
 target_link_libraries(gf0
   ${SDL2_LIBRARY}
-  ${Boost_LIBRARIES}
   ${FREETYPE_LIBRARIES}
   ${ZLIB_LIBRARIES}
+  gfcore0
 )
 
 if (APPLE)
@@ -270,6 +307,12 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   )
 endif()
 
+set_target_properties(gfcore0
+  PROPERTIES
+  VERSION ${PROJECT_VERSION}
+  SOVERSION ${PROJECT_VERSION_MAJOR}
+)
+
 set_target_properties(gf0
   PROPERTIES
   VERSION ${PROJECT_VERSION}
@@ -277,7 +320,7 @@ set_target_properties(gf0
 )
 
 install(
-  TARGETS gf0
+  TARGETS gfcore0 gf0
   EXPORT gfConfig
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -286,11 +329,11 @@ install(
 
 if(WIN32 AND BUILD_SHARED_LIBS)
   install(
-    TARGETS gf0
+    TARGETS gfcore0 gf0
     RUNTIME DESTINATION "${CMAKE_INSTALL_DOCDIR}/examples"
   )
   install(
-    TARGETS gf0
+    TARGETS gfcore0  gf0
     RUNTIME DESTINATION games
   )
 endif()

@@ -27,7 +27,7 @@
 #include <gf/ResourceManager.h>
 #include <gf/Texture.h>
 
-#include "vendor/pugixml/src/pugixml.hpp"
+#include <pugixml.hpp>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

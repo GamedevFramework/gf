@@ -33,7 +33,7 @@
 #include <gf/Log.h>
 #include <gf/Unused.h>
 
-#include "vendor/pugixml/src/pugixml.hpp"
+#include <pugixml.hpp>
 
 namespace fs = boost::filesystem;
 
