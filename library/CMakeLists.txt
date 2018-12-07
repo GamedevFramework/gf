@@ -1,6 +1,6 @@
 file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/generated")
 
-add_executable(gfdev_source_file tools/gfdev_source_file.cc)
+add_executable(gfdev_source_file graphics/tools/gfdev_source_file.cc)
 
 # process gamecontrollerdb
 
@@ -31,12 +31,12 @@ add_custom_target(gf0_gamecontrollerdb ALL DEPENDS ${GCDB_HEADERS})
 # process shader files
 
 set(SHADER_SOURCES
-  data/shaders/color_matrix.frag
-  data/shaders/default_alpha.frag
-  data/shaders/default.frag
-  data/shaders/default.vert
-  data/shaders/edge.frag
-  data/shaders/fxaa.frag
+  graphics/data/shaders/color_matrix.frag
+  graphics/data/shaders/default_alpha.frag
+  graphics/data/shaders/default.frag
+  graphics/data/shaders/default.vert
+  graphics/data/shaders/edge.frag
+  graphics/data/shaders/fxaa.frag
 #   data/shaders/simple_fxaa.frag
 )
 
@@ -110,9 +110,6 @@ else()
     core/Noises.cc
     core/Orientation.cc
     core/Path.cc
-    core/PhysicsBody.cc
-    core/PhysicsGeometry.cc
-    core/PhysicsModel.cc
     core/Polygon.cc
     core/Polyline.cc
     core/RandomBinaryTree.cc
@@ -164,6 +161,9 @@ else()
     graphics/NinePatch.cc
     graphics/Particles.cc
     graphics/Paths.cc
+    graphics/PhysicsBody.cc
+    graphics/PhysicsGeometry.cc
+    graphics/PhysicsModel.cc
     graphics/PostProcessing.cc
     graphics/RenderPipeline.cc
     graphics/RenderTarget.cc
@@ -194,7 +194,7 @@ else()
     graphics/Widgets.cc
     graphics/Window.cc
     # generated
-    data/generated.cc
+    graphics/data/generated.cc
     # priv
     graphics/priv/Debug.cc
     # vendor
@@ -264,6 +264,7 @@ target_include_directories(gf0
     ${SDL2_INCLUDE_DIR}
     ${FREETYPE_INCLUDE_DIRS}
     ${CMAKE_CURRENT_BINARY_DIR}
+    "${CMAKE_CURRENT_SOURCE_DIR}"
     "${CMAKE_CURRENT_SOURCE_DIR}/vendor/pugixml/src"
     "${CMAKE_CURRENT_SOURCE_DIR}/vendor/nuklear"
 )

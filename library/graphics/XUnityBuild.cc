@@ -57,6 +57,9 @@
 #include "NinePatch.cc"
 #include "Particles.cc"
 #include "Paths.cc"
+#include "PhysicsBody.cc"
+#include "PhysicsGeometry.cc"
+#include "PhysicsModel.cc"
 #include "PostProcessing.cc"
 #include "RenderPipeline.cc"
 #include "RenderTarget.cc"
@@ -89,7 +92,7 @@
 
 #include "priv/Debug.cc"
 
-#include "vendor/pugixml/src/pugixml.cpp"
+#include <pugixml.cpp>
 
 #ifndef __APPLE__
 #ifdef GF_OPENGL3
