@@ -43,10 +43,6 @@ inline namespace v1 {
   template<typename T>
   class GF_API Queue {
   public:
-    Queue(Queue&&) = default;
-    Queue& operator=(Queue&&) = default;
-
-
     /**
      * @brief Poll a value from the queue, if possible
      *
