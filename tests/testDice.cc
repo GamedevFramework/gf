@@ -26,6 +26,14 @@
 
 using namespace gf::literals;
 
+TEST(DiceTest, Ctor) {
+  gf::Dice d1(3, 2, 4);
+
+  EXPECT_EQ(d1.getFaces(), 3);
+  EXPECT_EQ(d1.getCount(), 2);
+  EXPECT_EQ(d1.getModifier(), 4);
+}
+
 TEST(DiceTest, Faces) {
   gf::Dice d1 = "d3"_dice;
 
@@ -80,4 +88,60 @@ TEST(DiceTest, Roll) {
     ASSERT_GE(x, 6);
     ASSERT_LE(x, 10);
   }
+}
+
+TEST(DiceTest, D4) {
+  constexpr gf::Dice d1 = 2_d4;
+
+  EXPECT_EQ(d1.getFaces(), 4);
+  EXPECT_EQ(d1.getCount(), 2);
+  EXPECT_EQ(d1.getModifier(), 0);
+}
+
+TEST(DiceTest, D6) {
+  constexpr gf::Dice d1 = 2_d6;
+
+  EXPECT_EQ(d1.getFaces(), 6);
+  EXPECT_EQ(d1.getCount(), 2);
+  EXPECT_EQ(d1.getModifier(), 0);
+}
+
+TEST(DiceTest, D8) {
+  constexpr gf::Dice d1 = 2_d8;
+
+  EXPECT_EQ(d1.getFaces(), 8);
+  EXPECT_EQ(d1.getCount(), 2);
+  EXPECT_EQ(d1.getModifier(), 0);
+}
+
+TEST(DiceTest, D10) {
+  constexpr gf::Dice d1 = 2_d10;
+
+  EXPECT_EQ(d1.getFaces(), 10);
+  EXPECT_EQ(d1.getCount(), 2);
+  EXPECT_EQ(d1.getModifier(), 0);
+}
+
+TEST(DiceTest, D12) {
+  constexpr gf::Dice d1 = 2_d12;
+
+  EXPECT_EQ(d1.getFaces(), 12);
+  EXPECT_EQ(d1.getCount(), 2);
+  EXPECT_EQ(d1.getModifier(), 0);
+}
+
+TEST(DiceTest, D20) {
+  constexpr gf::Dice d1 = 2_d20;
+
+  EXPECT_EQ(d1.getFaces(), 20);
+  EXPECT_EQ(d1.getCount(), 2);
+  EXPECT_EQ(d1.getModifier(), 0);
+}
+
+TEST(DiceTest, D100) {
+  constexpr gf::Dice d1 = 2_d100;
+
+  EXPECT_EQ(d1.getFaces(), 100);
+  EXPECT_EQ(d1.getCount(), 2);
+  EXPECT_EQ(d1.getModifier(), 0);
 }

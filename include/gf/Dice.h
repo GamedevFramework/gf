@@ -167,7 +167,76 @@ inline namespace v1 {
       return gf::Dice(StringRef(str, sz));
     }
 
-  }
+    /**
+     * @relates gf::Dice
+     * @brief User defined operator for creating some d4
+     *
+     * @sa [Dice notation - Wikipedia](https://en.wikipedia.org/wiki/Dice_notation)
+     */
+    constexpr gf::Dice operator"" _d4(unsigned long long int count) {
+      return gf::Dice(4, count);
+    }
+
+    /**
+     * @relates gf::Dice
+     * @brief User defined operator for creating some d6
+     *
+     * @sa [Dice notation - Wikipedia](https://en.wikipedia.org/wiki/Dice_notation)
+     */
+    constexpr gf::Dice operator"" _d6(unsigned long long int count) {
+      return gf::Dice(6, count);
+    }
+
+    /**
+     * @relates gf::Dice
+     * @brief User defined operator for creating some d6
+     *
+     * @sa [Dice notation - Wikipedia](https://en.wikipedia.org/wiki/Dice_notation)
+     */
+    constexpr gf::Dice operator"" _d8(unsigned long long int count) {
+      return gf::Dice(8, count);
+    }
+
+    /**
+     * @relates gf::Dice
+     * @brief User defined operator for creating some d10
+     *
+     * @sa [Dice notation - Wikipedia](https://en.wikipedia.org/wiki/Dice_notation)
+     */
+    constexpr gf::Dice operator"" _d10(unsigned long long int count) {
+      return gf::Dice(10, count);
+    }
+
+    /**
+     * @relates gf::Dice
+     * @brief User defined operator for creating some d12
+     *
+     * @sa [Dice notation - Wikipedia](https://en.wikipedia.org/wiki/Dice_notation)
+     */
+    constexpr gf::Dice operator"" _d12(unsigned long long int count) {
+      return gf::Dice(12, count);
+    }
+
+     /**
+     * @relates gf::Dice
+     * @brief User defined operator for creating some d20
+     *
+     * @sa [Dice notation - Wikipedia](https://en.wikipedia.org/wiki/Dice_notation)
+     */
+    constexpr gf::Dice operator"" _d20(unsigned long long int count) {
+      return gf::Dice(20, count);
+    }
+
+    /**
+     * @relates gf::Dice
+     * @brief User defined operator for creating some d100
+     *
+     * @sa [Dice notation - Wikipedia](https://en.wikipedia.org/wiki/Dice_notation)
+     */
+    constexpr gf::Dice operator"" _d100(unsigned long long int count) {
+      return gf::Dice(100, count);
+    }
+ }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
