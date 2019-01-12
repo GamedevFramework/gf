@@ -29,7 +29,7 @@ inline namespace v1 {
 #endif
 
   void ViewContainer::addView(AdaptativeView& view) {
-    m_views.push_back(&view);
+    m_views.push_back(view);
   }
 
   void ViewContainer::processEvent(const Event& event) {
@@ -41,8 +41,8 @@ inline namespace v1 {
   }
 
   void ViewContainer::onScreenSizeChange(Vector2u screenSize) {
-    for (auto view : m_views) {
-      view->onScreenSizeChange(screenSize);
+    for (AdaptativeView& view : m_views) {
+      view.onScreenSizeChange(screenSize);
     }
   }
 

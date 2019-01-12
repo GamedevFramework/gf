@@ -20,6 +20,7 @@
  */
 #include <gf/EntityContainer.h>
 
+#include <cassert>
 #include <algorithm>
 
 #include <gf/Entity.h>
@@ -31,32 +32,34 @@ inline namespace v1 {
 
   void EntityContainer::update(Time time) {
     // erase-remove idiom
-    m_entities.erase(std::remove_if(m_entities.begin(), m_entities.end(), [](const Entity *e) {
-      return !e->isAlive();
+    m_entities.erase(std::remove_if(m_entities.begin(), m_entities.end(), [](const Entity& e) {
+      return !e.isAlive();
     }), m_entities.end());
 
-    std::sort(m_entities.begin(), m_entities.end(), [](const Entity * e1, const Entity * e2) {
-      return e1->getPriority() < e2->getPriority();
+    std::sort(m_entities.begin(), m_entities.end(), [](const Entity& e1, const Entity& e2) {
+      return e1.getPriority() < e2.getPriority();
     });
 
-    for (auto entity : m_entities) {
-      entity->update(time);
+    for (Entity& entity : m_entities) {
+      entity.update(time);
     }
   }
 
   void EntityContainer::render(RenderTarget& target, const RenderStates& states) {
-    for (auto entity : m_entities) {
-      entity->render(target, states);
+    for (Entity& entity : m_entities) {
+      entity.render(target, states);
     }
   }
 
   void EntityContainer::addEntity(Entity& entity) {
-    m_entities.push_back(&entity);
+    m_entities.push_back(entity);
   }
 
   Entity *EntityContainer::removeEntity(Entity *entity) {
+    assert(entity);
+
     // erase-remove idiom
-    auto it = std::remove(m_entities.begin(), m_entities.end(), entity);
+    auto it = std::remove(m_entities.begin(), m_entities.end(), *entity);
 
     if (it != m_entities.end()) {
       m_entities.erase(it, m_entities.end());

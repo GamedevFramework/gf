@@ -25,6 +25,7 @@
 #include <vector>
 
 #include "Portability.h"
+#include "Ref.h"
 #include "RenderStates.h"
 #include "Time.h"
 
@@ -140,7 +141,7 @@ inline namespace v1 {
     /** @} */
 
   private:
-    std::vector<Entity *> m_entities;
+    std::vector<Ref<Entity>> m_entities;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

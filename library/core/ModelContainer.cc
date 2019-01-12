@@ -30,18 +30,18 @@ inline namespace v1 {
 #endif
 
   void ModelContainer::update(Time time) {
-    for (auto model : m_models) {
-      model->update(time);
+    for (Model& model : m_models) {
+      model.update(time);
     }
   }
 
   void ModelContainer::addModel(Model& model) {
-    m_models.push_back(&model);
+    m_models.push_back(model);
   }
 
   Model *ModelContainer::removeModel(Model *model) {
     // erase-remove idiom
-    auto it = std::remove(m_models.begin(), m_models.end(), model);
+    auto it = std::remove(m_models.begin(), m_models.end(), *model);
 
     if (it != m_models.end()) {
       m_models.erase(it, m_models.end());

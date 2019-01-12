@@ -194,7 +194,7 @@ inline namespace v1 {
   }
 
   void SequenceActivity::addActivity(Activity& activity) {
-    m_activities.push_back(&activity);
+    m_activities.push_back(activity);
   }
 
   void SequenceActivity::clear() {
@@ -206,7 +206,8 @@ inline namespace v1 {
       return ActivityStatus::Finished;
     }
 
-    auto status = m_activities[m_current]->run(time);
+    Activity& currentActivity = m_activities[m_current];
+    auto status = currentActivity.run(time);
 
     if (status == ActivityStatus::Finished) {
       m_current++;
@@ -218,8 +219,8 @@ inline namespace v1 {
   void SequenceActivity::restart() {
     m_current = 0;
 
-    for (auto activity : m_activities) {
-      activity->restart();
+    for (Activity& activity : m_activities) {
+      activity.restart();
     }
   }
 
@@ -285,7 +286,7 @@ inline namespace v1 {
   }
 
   void ParallelActivity::addActivity(Activity& activity) {
-    m_activities.push_back(&activity);
+    m_activities.push_back(activity);
   }
 
   void ParallelActivity::clear() {
@@ -299,8 +300,8 @@ inline namespace v1 {
 
     std::size_t finished = 0;
 
-    for (auto activity : m_activities) {
-      auto status = activity->run(time);
+    for (Activity& activity : m_activities) {
+      auto status = activity.run(time);
 
       if (status == ActivityStatus::Finished) {
         finished++;
@@ -327,8 +328,8 @@ inline namespace v1 {
   void ParallelActivity::restart() {
     m_status = ActivityStatus::Running;
 
-    for (auto activity : m_activities) {
-      activity->restart();
+    for (Activity& activity : m_activities) {
+      activity.restart();
     }
   }
 

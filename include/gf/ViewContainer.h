@@ -24,6 +24,7 @@
 #include <vector>
 
 #include "Portability.h"
+#include "Ref.h"
 #include "Vector.h"
 
 namespace gf {
@@ -83,7 +84,7 @@ inline namespace v1 {
     void setInitialScreenSize(Vector2u screenSize);
 
   private:
-    std::vector<AdaptativeView*> m_views;
+    std::vector<Ref<AdaptativeView>> m_views;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "Model.h"
+#include "Ref.h"
 #include "Vector.h"
 
 namespace gf {
@@ -69,8 +70,8 @@ inline namespace v1 {
 
   private:
     Vector2f m_gravity;
-    std::vector<PhysicsBody*> m_staticBodies;
-    std::vector<PhysicsBody*> m_dynamicBodies;
+    std::vector<Ref<PhysicsBody>> m_staticBodies;
+    std::vector<Ref<PhysicsBody>> m_dynamicBodies;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

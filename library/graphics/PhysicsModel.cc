@@ -42,19 +42,19 @@ inline namespace v1 {
     switch (body.getType()) {
       case PhysicsBody::Static:
         body.updateTransform();
-        m_staticBodies.push_back(&body);
+        m_staticBodies.push_back(body);
         break;
 
       case PhysicsBody::Dynamic:
         body.updateTransform();
-        m_dynamicBodies.push_back(&body);
+        m_dynamicBodies.push_back(body);
         break;
     }
   }
 
   void PhysicsModel::removeBody(PhysicsBody& body) {
-    m_dynamicBodies.erase(std::remove(m_dynamicBodies.begin(), m_dynamicBodies.end(), &body), m_dynamicBodies.end());
-    m_staticBodies.erase(std::remove(m_staticBodies.begin(), m_staticBodies.end(), &body), m_staticBodies.end());
+    m_dynamicBodies.erase(std::remove(m_dynamicBodies.begin(), m_dynamicBodies.end(), body), m_dynamicBodies.end());
+    m_staticBodies.erase(std::remove(m_staticBodies.begin(), m_staticBodies.end(), body), m_staticBodies.end());
   }
 
   void PhysicsModel::clear() {
@@ -138,41 +138,41 @@ inline namespace v1 {
   } // anonymous namespace
 
   void PhysicsModel::update(Time time) {
-    for (auto body : m_dynamicBodies) {
-      body->applyForce(m_gravity);
+    for (PhysicsBody& body : m_dynamicBodies) {
+      body.applyForce(m_gravity);
     }
 
     float dt = time.asSeconds();
 
-    for (auto body : m_dynamicBodies) {
-      body->step(dt);
-      body->updateTransform();
+    for (PhysicsBody& body : m_dynamicBodies) {
+      body.step(dt);
+      body.updateTransform();
     }
 
     ExtendedPenetration data;
     std::vector<ExtendedPenetration> penetrations;
 
-    for (auto body : m_dynamicBodies) {
-      data.firstPhysicsBody = body;
+    for (PhysicsBody& body : m_dynamicBodies) {
+      data.firstPhysicsBody = &body;
 
-      for (auto otherBody : m_dynamicBodies) {
-        if (body == otherBody) {
+      for (PhysicsBody& otherBody : m_dynamicBodies) {
+        if (&body == &otherBody) {
           continue;
         }
 
-        if (body < otherBody) {
+        if (&body < &otherBody) {
           continue;
         }
 
-        if (body->collidesWith(*otherBody, data.p)) {
-          data.secondPhysicsBody = otherBody;
+        if (body.collidesWith(otherBody, data.p)) {
+          data.secondPhysicsBody = &otherBody;
           penetrations.push_back(data);
         }
       }
 
-      for (auto otherBody : m_staticBodies) {
-        if (body->collidesWith(*otherBody, data.p)) {
-          data.secondPhysicsBody = otherBody;
+      for (PhysicsBody& otherBody : m_staticBodies) {
+        if (body.collidesWith(otherBody, data.p)) {
+          data.secondPhysicsBody = &otherBody;
           penetrations.push_back(data);
         }
       }
