@@ -1,5 +1,23 @@
 # ChangeLog for gf
 
+## gf 0.11.0 (14 Jan 2018)
+
+- Core module
+  - Add serialization for gf::Circ and gf::Polygon
+  - Add OutputStream::getWrittenBytesCount()
+  - Add Entity::setPriority()
+  - Add gf::Dice
+  - Add Queue::wait()
+  - Add gf::Ref
+- Window module
+- Graphics module
+  - Add line spacing and letter spacing in {Basic,}Text
+- Game module
+  - Add point support in TMX
+- Tools and games
+- Misc
+  - Separate gfcore and gf libraries
+
 ## gf 0.10.0 (14 Oct 2018)
 
 - Core module
