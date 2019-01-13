@@ -68,7 +68,7 @@ inline namespace v1 {
      */
     void wait(T& value) {
       std::unique_lock<std::mutex> lock(m_mutex);
-      m_condition.wait(lock, [this]() { return !m_queue.empty() });
+      m_condition.wait(lock, [this]() { return !m_queue.empty(); });
       value = m_queue.front();
       m_queue.pop_front();
     }
