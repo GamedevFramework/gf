@@ -62,6 +62,18 @@ inline namespace v1 {
     }
 
     /**
+     * @brief Wait for a value from the queue
+     *
+     * @param value A reference for the result
+     */
+    void wait(T& value) {
+      std::unique_lock<std::mutex> lock(m_mutex);
+      m_condition.wait(lock, [this]() { return !m_queue.empty(); });
+      value = m_queue.front();
+      m_queue.pop_front();
+    }
+
+    /**
      * @brief Push a value on the queue
      *
      * @param value The value to push on the queue
@@ -69,6 +81,18 @@ inline namespace v1 {
     void push(const T& value) {
       std::unique_lock<std::mutex> lock(m_mutex);
       m_queue.push_back(value);
+      m_condition.notify_one();
+    }
+
+    /**
+     * @brief Push a value on the queue
+     *
+     * @param value The value to push on the queue
+     */
+    void push(T&& value) {
+      std::unique_lock<std::mutex> lock(m_mutex);
+      m_queue.push_back(std::move(value));
+      m_condition.notify_one();
     }
 
     /**
@@ -81,6 +105,7 @@ inline namespace v1 {
 
   private:
     std::mutex m_mutex;
+    std::condition_variable m_condition;
     std::deque<T> m_queue;
   };
 

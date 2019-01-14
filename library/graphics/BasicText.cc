@@ -40,6 +40,8 @@ inline namespace v1 {
   , m_font(nullptr)
   , m_characterSize(0)
   , m_outlineThickness(0.0f)
+  , m_lineSpacingFactor(1.0f)
+  , m_letterSpacingFactor(1.0f)
   , m_paragraphWidth(0.0f)
   , m_align(Alignment::None)
   , m_bounds(0.0f, 0.0f, 0.0f, 0.0f)
@@ -52,6 +54,8 @@ inline namespace v1 {
   , m_font(&font)
   , m_characterSize(characterSize)
   , m_outlineThickness(0.0f)
+  , m_lineSpacingFactor(1.0f)
+  , m_letterSpacingFactor(1.0f)
   , m_paragraphWidth(0.0f)
   , m_align(Alignment::None)
   , m_bounds(0.0f, 0.0f, 0.0f, 0.0f)
@@ -82,6 +86,14 @@ inline namespace v1 {
 
   void BasicText::setOutlineThickness(float thickness) {
     m_outlineThickness = thickness;
+  }
+
+  void BasicText::setLineSpacing(float spacingFactor) {
+    m_lineSpacingFactor = spacingFactor;
+  }
+
+  void BasicText::setLetterSpacing(float spacingFactor) {
+    m_letterSpacingFactor = spacingFactor;
   }
 
   void BasicText::setParagraphWidth(float paragraphWidth) {
@@ -265,7 +277,9 @@ inline namespace v1 {
     m_bounds = RectF();
 
     float spaceWidth = m_font->getGlyph(' ', m_characterSize).advance;
-    float lineHeight = m_font->getLineSpacing(m_characterSize);
+    float additionalSpace = (spaceWidth / 3) * (m_letterSpacingFactor - 1.0f); // same as SFML even if weird
+    spaceWidth += additionalSpace;
+    float lineHeight = m_font->getLineSpacing(m_characterSize) * m_lineSpacingFactor;
 
     std::vector<Paragraph> paragraphs = makeParagraphs(m_string, spaceWidth, m_paragraphWidth, m_align, m_characterSize, *m_font);
 
@@ -310,7 +324,7 @@ inline namespace v1 {
               max = gf::max(max, position + glyph.bounds.getBottomRight());
             }
 
-            position.x += glyph.advance;
+            position.x += glyph.advance + additionalSpace;
           }
 
           position.x += line.spacing;

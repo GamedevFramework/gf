@@ -56,7 +56,7 @@
 // #define NK_STRTOD std::strtod
 
 #define NK_IMPLEMENTATION
-#include "vendor/nuklear/nuklear.h"
+#include <nuklear.h>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

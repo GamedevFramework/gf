@@ -49,6 +49,7 @@ inline namespace v1 {
      * @brief Constructor
      *
      * @param stream The output stream
+     * @param version The version of the archive format
      */
     Serializer(OutputStream& stream, uint16_t version = 0);
 
@@ -157,15 +158,6 @@ inline namespace v1 {
      * @param stream The input stream
      */
     Deserializer(InputStream& stream);
-
-//     /**
-//      * @brief Conversion to boolean
-//      *
-//      * @returns True if the archive exists and was opened
-//      */
-//     operator bool() const {
-//       return static_cast<bool>(m_file);
-//     }
 
     /**
      * @brief Get the version of the current archive format

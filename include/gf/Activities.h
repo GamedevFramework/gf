@@ -26,6 +26,7 @@
 
 #include "Activity.h"
 #include "Portability.h"
+#include "Ref.h"
 #include "Tween.h"
 #include "Vector.h"
 
@@ -437,7 +438,7 @@ inline namespace v1 {
 
   private:
     std::size_t m_current;
-    std::vector<Activity*> m_activities;
+    std::vector<Ref<Activity>> m_activities;
   };
 
 
@@ -529,7 +530,7 @@ inline namespace v1 {
   private:
     Finish m_finish;
     ActivityStatus m_status;
-    std::vector<Activity*> m_activities;
+    std::vector<Ref<Activity>> m_activities;
   };
 
 

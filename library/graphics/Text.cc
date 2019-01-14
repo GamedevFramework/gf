@@ -87,6 +87,16 @@ inline namespace v1 {
     updateGeometry();
   }
 
+  void Text::setLineSpacing(float spacingFactor) {
+    m_basic.setLineSpacing(spacingFactor);
+    updateGeometry();
+  }
+
+  void Text::setLetterSpacing(float spacingFactor) {
+    m_basic.setLetterSpacing(spacingFactor);
+    updateGeometry();
+  }
+
   void Text::setParagraphWidth(float paragraphWidth) {
     m_basic.setParagraphWidth(paragraphWidth);
     updateGeometry();

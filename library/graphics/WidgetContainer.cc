@@ -48,28 +48,29 @@ inline namespace v1 {
     m_widgetIsSelected = false;
 
     for(size_t i = 0; i < m_widgets.size(); i++) {
-      if (m_widgets[i]->isDefault() && m_widgets[i]->contains(coords)) {
+      Widget& currentWidget = m_widgets[i];
+      if (currentWidget.isDefault() && currentWidget.contains(coords)) {
         m_selectedWidgetIndex = i;
         m_widgetIsSelected = true;
-        m_widgets[i]->setSelected();
+        currentWidget.setSelected();
         break; // to avoid multiple selection
       }
     }
   }
 
   void WidgetContainer::render(RenderTarget &target, const RenderStates &states) {
-    for (auto widget : m_widgets) {
-      widget->draw(target, states);
+    for (Widget& widget : m_widgets) {
+      widget.draw(target, states);
     }
   }
 
   void WidgetContainer::addWidget(Widget& widget) {
-    m_widgets.push_back(&widget);
+    m_widgets.push_back(widget);
   }
 
   Widget *WidgetContainer::removeWidget(Widget *widget) {
     // erase-remove idiom
-    auto it = std::remove(m_widgets.begin(), m_widgets.end(), widget);
+    auto it = std::remove(m_widgets.begin(), m_widgets.end(), *widget);
 
     if (it != m_widgets.end()) {
       m_widgets.erase(it, m_widgets.end());
@@ -177,10 +178,7 @@ inline namespace v1 {
   Widget& WidgetContainer::getCurrent() {
     assert(m_widgetIsSelected);
     assert(m_selectedWidgetIndex < m_widgets.size());
-
-    auto selected = m_widgets[m_selectedWidgetIndex];
-    assert(selected != nullptr);
-    return *selected;
+    return m_widgets[m_selectedWidgetIndex];
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

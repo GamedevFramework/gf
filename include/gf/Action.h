@@ -30,6 +30,7 @@
 #include "Keyboard.h"
 #include "Mouse.h"
 #include "Portability.h"
+#include "Ref.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -228,7 +229,7 @@ inline namespace v1 {
     std::string m_name;
     Type m_type;
     std::vector<std::unique_ptr<Control>> m_ownedControls;
-    std::vector<Control *> m_controls;
+    std::vector<Ref<Control>> m_controls;
   };
 
   /**
@@ -288,7 +289,7 @@ inline namespace v1 {
     void reset();
 
   private:
-    std::vector<Action*> m_actions;
+    std::vector<Ref<Action>> m_actions;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

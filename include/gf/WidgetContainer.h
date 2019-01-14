@@ -23,6 +23,7 @@
 
 #include <vector>
 
+#include "Ref.h"
 #include "RenderStates.h"
 
 namespace gf {
@@ -55,7 +56,7 @@ inline namespace v1 {
      * @param states The render states to use for drawing
      * @sa gf::Entity::render()
      */
-    void render(RenderTarget &target, const RenderStates &states = RenderStates());
+    void render(RenderTarget &target, const RenderStates& states = RenderStates());
 
     /**
      * @brief Check if the given coords are hover a widget and set it selected if so.
@@ -104,7 +105,7 @@ inline namespace v1 {
     Widget& getCurrent();
 
   private:
-    std::vector<Widget*> m_widgets;
+    std::vector<Ref<Widget>> m_widgets;
     std::size_t m_selectedWidgetIndex;
     bool m_widgetIsSelected;
   };

@@ -76,7 +76,7 @@ inline namespace v1 {
   }
 
   void RenderPipeline::addEffect(Effect& effect) {
-    m_effects.push_back(&effect);
+    m_effects.push_back(effect);
   }
 
   void RenderPipeline::clearEffects() {
@@ -113,9 +113,9 @@ inline namespace v1 {
 
     // process the effects
 
-    for (auto effect : m_effects) {
+    for (Effect& effect : m_effects) {
       postProcessing.setTexture(m_buffers[m_current].texture);
-      postProcessing.setEffect(*effect);
+      postProcessing.setEffect(effect);
 
       m_current = 1 - m_current;
       glCheck(glBindFramebuffer(GL_FRAMEBUFFER, m_buffers[m_current].name));

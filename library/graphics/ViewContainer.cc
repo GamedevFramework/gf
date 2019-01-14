@@ -18,52 +18,36 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#include <gf/EntityContainer.h>
+#include <gf/ViewContainer.h>
 
-#include <algorithm>
-
-#include <gf/Entity.h>
+#include <gf/Event.h>
+#include <gf/View.h>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
 #endif
 
-  void EntityContainer::update(Time time) {
-    // erase-remove idiom
-    m_entities.erase(std::remove_if(m_entities.begin(), m_entities.end(), [](const Entity *e) {
-      return !e->isAlive();
-    }), m_entities.end());
+  void ViewContainer::addView(AdaptativeView& view) {
+    m_views.push_back(view);
+  }
 
-    std::sort(m_entities.begin(), m_entities.end(), [](const Entity * e1, const Entity * e2) {
-      return e1->getPriority() < e2->getPriority();
-    });
+  void ViewContainer::processEvent(const Event& event) {
+    if (event.type != EventType::Resized) {
+      return;
+    }
 
-    for (auto entity : m_entities) {
-      entity->update(time);
+    onScreenSizeChange(event.size);
+  }
+
+  void ViewContainer::onScreenSizeChange(Vector2u screenSize) {
+    for (AdaptativeView& view : m_views) {
+      view.onScreenSizeChange(screenSize);
     }
   }
 
-  void EntityContainer::render(RenderTarget& target, const RenderStates& states) {
-    for (auto entity : m_entities) {
-      entity->render(target, states);
-    }
-  }
-
-  void EntityContainer::addEntity(Entity& entity) {
-    m_entities.push_back(&entity);
-  }
-
-  Entity *EntityContainer::removeEntity(Entity *entity) {
-    // erase-remove idiom
-    auto it = std::remove(m_entities.begin(), m_entities.end(), entity);
-
-    if (it != m_entities.end()) {
-      m_entities.erase(it, m_entities.end());
-      return entity;
-    }
-
-    return nullptr;
+  void ViewContainer::setInitialScreenSize(Vector2u screenSize) {
+    onScreenSizeChange(screenSize);
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

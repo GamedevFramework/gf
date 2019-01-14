@@ -27,6 +27,7 @@
 #include "Math.h"
 #include "Matrix.h"
 #include "Portability.h"
+#include "SerializationFwd.h"
 #include "Vector.h"
 #include "Winding.h"
 
@@ -149,6 +150,8 @@ inline namespace v1 {
      * This function should return true, otherwise you may have problems in
      * other functions which assume that the polygon is convex.
      *
+     * This function does not handle self-intersecting polygons (yet).
+     *
      * @returns True if the polygon is convex
      */
     bool isConvex() const;
@@ -191,6 +194,18 @@ inline namespace v1 {
   private:
     std::vector<Vector2f> m_points;
   };
+
+  /**
+   * @relates Serializer
+   * @brief Serialize a polygon
+   */
+  GF_API Serializer& operator|(Serializer& ar, const Polygon& polygon);
+
+  /**
+   * @relates Deserializer
+   * @brief Deserialize a polygon
+   */
+  GF_API Deserializer& operator|(Deserializer& ar, Polygon& polygon);
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

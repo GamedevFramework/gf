@@ -18,34 +18,52 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#include <gf/ModelContainer.h>
+#include <gf/EntityContainer.h>
 
+#include <cassert>
 #include <algorithm>
 
-#include <gf/Model.h>
+#include <gf/Entity.h>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
 #endif
 
-  void ModelContainer::update(Time time) {
-    for (auto model : m_models) {
-      model->update(time);
+  void EntityContainer::update(Time time) {
+    // erase-remove idiom
+    m_entities.erase(std::remove_if(m_entities.begin(), m_entities.end(), [](const Entity& e) {
+      return !e.isAlive();
+    }), m_entities.end());
+
+    std::sort(m_entities.begin(), m_entities.end(), [](const Entity& e1, const Entity& e2) {
+      return e1.getPriority() < e2.getPriority();
+    });
+
+    for (Entity& entity : m_entities) {
+      entity.update(time);
     }
   }
 
-  void ModelContainer::addModel(Model& model) {
-    m_models.push_back(&model);
+  void EntityContainer::render(RenderTarget& target, const RenderStates& states) {
+    for (Entity& entity : m_entities) {
+      entity.render(target, states);
+    }
   }
 
-  Model *ModelContainer::removeModel(Model *model) {
-    // erase-remove idiom
-    auto it = std::remove(m_models.begin(), m_models.end(), model);
+  void EntityContainer::addEntity(Entity& entity) {
+    m_entities.push_back(entity);
+  }
 
-    if (it != m_models.end()) {
-      m_models.erase(it, m_models.end());
-      return model;
+  Entity *EntityContainer::removeEntity(Entity *entity) {
+    assert(entity);
+
+    // erase-remove idiom
+    auto it = std::remove(m_entities.begin(), m_entities.end(), *entity);
+
+    if (it != m_entities.end()) {
+      m_entities.erase(it, m_entities.end());
+      return entity;
     }
 
     return nullptr;

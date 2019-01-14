@@ -24,6 +24,7 @@
 #include <vector>
 
 #include "Portability.h"
+#include "Ref.h"
 #include "Time.h"
 
 namespace gf {
@@ -81,7 +82,7 @@ inline namespace v1 {
     Model *removeModel(Model *model);
 
   private:
-    std::vector<Model *> m_models;
+    std::vector<Ref<Model>> m_models;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

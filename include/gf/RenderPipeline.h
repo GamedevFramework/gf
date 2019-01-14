@@ -26,6 +26,7 @@
 #include "Effects.h"
 #include "Portability.h"
 #include "RenderTarget.h"
+#include "Ref.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -143,7 +144,7 @@ inline namespace v1 {
     int m_current;
 
     DefaultEffect m_defaultEffect;
-    std::vector<Effect*> m_effects;
+    std::vector<Ref<Effect>> m_effects;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

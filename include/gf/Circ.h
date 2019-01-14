@@ -273,6 +273,19 @@ inline namespace v1 {
     return lhs.center != rhs.center || lhs.radius != rhs.radius;
   }
 
+  /**
+   * @relates Circ
+   * @brief Serialize a circle
+   *
+   * @param ar The archive
+   * @param circ The circle to serialize
+   * @sa gf::Serialize, gf::Deserialiser
+   */
+  template<typename Archive, typename T>
+  Archive& operator|(Archive& ar, Circ<T>& circ) {
+    return ar | circ.center | circ.radius;
+  }
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif

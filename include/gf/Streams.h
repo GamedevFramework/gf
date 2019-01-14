@@ -155,6 +155,7 @@ inline namespace v1 {
      * is thrown.
      *
      * @param path The path to the file
+     * @param mode The open mode of the file
      */
     FileOutputStream(const Path& path, Mode mode = Mode::Write);
 
@@ -167,8 +168,11 @@ inline namespace v1 {
 
     virtual std::size_t write(ArrayRef<uint8_t> buffer) override;
 
+    virtual std::size_t getWrittenBytesCount() const override;
+
   private:
     std::FILE *m_file;
+    std::size_t m_written;
   };
 
   /**
@@ -183,12 +187,13 @@ inline namespace v1 {
      * This class does not own the memory. The user must keep the memory
      * available when the stream is active.
      *
-     * @param buffer The destination buffer
+     * @param memory The destination buffer
      */
     explicit MemoryOutputStream(BufferRef<uint8_t> memory);
 
     virtual std::size_t write(ArrayRef<uint8_t> buffer) override;
 
+    virtual std::size_t getWrittenBytesCount() const override;
   private:
     BufferRef<uint8_t> m_memory;
     std::size_t m_offset;
@@ -215,6 +220,7 @@ inline namespace v1 {
 
     virtual std::size_t write(ArrayRef<uint8_t> buffer) override;
 
+    virtual std::size_t getWrittenBytesCount() const override;
   private:
     static constexpr uInt BufferSize = 256;
 

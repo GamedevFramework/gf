@@ -33,7 +33,7 @@
 #include <gf/Log.h>
 #include <gf/Unused.h>
 
-#include "vendor/pugixml/src/pugixml.hpp"
+#include <pugixml.hpp>
 
 namespace fs = boost::filesystem;
 
@@ -722,6 +722,15 @@ inline namespace v1 {
         tmx->kind = TmxObject::Tile;
         tmx->gid = cell.gid;
         tmx->flip = cell.flip;
+
+        return std::move(tmx);
+      }
+
+      if (node.child("point")) {
+        auto tmx = std::make_unique<TmxPoint>();
+        parseTmxObjectCommon(node, *tmx);
+
+        tmx->kind = TmxObject::Point;
 
         return std::move(tmx);
       }

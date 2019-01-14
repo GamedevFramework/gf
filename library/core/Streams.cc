@@ -228,6 +228,7 @@ inline namespace v1 {
 
   FileOutputStream::FileOutputStream(const Path& path, Mode mode)
   : m_file(nullptr)
+  , m_written(0)
   {
     m_file = std::fopen(path.string().c_str(), getModeString(mode));
 
@@ -251,7 +252,13 @@ inline namespace v1 {
       return 0;
     }
 
+    m_written += buffer.getSize();
+
     return std::fwrite(buffer.getData(), sizeof(uint8_t), buffer.getSize(), m_file);
+  }
+
+  std::size_t FileOutputStream::getWrittenBytesCount() const {
+    return m_written;
   }
 
   /*
@@ -271,6 +278,10 @@ inline namespace v1 {
     std::memcpy(m_memory.getData() + m_offset, buffer.getData(), size);
     m_offset += size;
     return size;
+  }
+
+  std::size_t MemoryOutputStream::getWrittenBytesCount() const {
+    return m_offset;
   }
 
   /*
@@ -338,6 +349,9 @@ inline namespace v1 {
     return buffer.getSize();
   }
 
+  std::size_t CompressedOutputStream::getWrittenBytesCount() const {
+    return m_compressed->getWrittenBytesCount();
+  }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

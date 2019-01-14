@@ -18,36 +18,21 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#include <gf/ViewContainer.h>
-
-#include <gf/Event.h>
-#include <gf/View.h>
+#include <gf/Dice.h>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
 #endif
 
-  void ViewContainer::addView(AdaptativeView& view) {
-    m_views.push_back(&view);
-  }
+  int Dice::roll(gf::Random& random) const {
+    int result = m_modifier;
 
-  void ViewContainer::processEvent(const Event& event) {
-    if (event.type != EventType::Resized) {
-      return;
+    for (int i = 0; i < m_count; ++i) {
+      result += random.computeUniformInteger(1, m_faces);
     }
 
-    onScreenSizeChange(event.size);
-  }
-
-  void ViewContainer::onScreenSizeChange(Vector2u screenSize) {
-    for (auto view : m_views) {
-      view->onScreenSizeChange(screenSize);
-    }
-  }
-
-  void ViewContainer::setInitialScreenSize(Vector2u screenSize) {
-    onScreenSizeChange(screenSize);
+    return result;
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
