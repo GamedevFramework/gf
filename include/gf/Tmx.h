@@ -55,7 +55,7 @@ inline namespace v1 {
 
   /**
    * @ingroup game
-   * @brief Stagger index of the hexagonal map.
+   * @brief Stagger index of the staggered or hexagonal map.
    */
   enum class TmxStaggerIndex {
     Odd,  ///< A odd stagger index
@@ -64,7 +64,7 @@ inline namespace v1 {
 
   /**
    * @ingroup game
-   * @brief Stagger axis of the hexagonal map.
+   * @brief Stagger axis of the staggered or hexagonal map.
    */
   enum class TmxStaggerAxis {
     X,  ///< The x stagger axis
@@ -312,10 +312,21 @@ inline namespace v1 {
 
   /**
    * @ingroup game
+   * @brief A chunk in a tile layer (for infinite maps)
+   */
+  struct GF_API TmxChunk {
+    Vector2i position;
+    Vector2i size;
+    std::vector<TmxCell> cells;
+  };
+
+  /**
+   * @ingroup game
    * @brief A layer with tiles in cells
    */
   struct GF_API TmxTileLayer : public TmxLayer {
     std::vector<TmxCell> cells; ///< The cells of the layer
+    std::vector<TmxChunk> chunks; ///< The chunks of the layer
 
     virtual void accept(const TmxLayers& map, TmxVisitor& visitor) const override;
   };
@@ -614,6 +625,7 @@ inline namespace v1 {
     TmxOrientation orientation; ///< The orientation of the map
     TmxRenderOrder renderOrder; ///< The render order of the map
 
+    bool infinite;              ///< Is the map infinite?
     Vector2u mapSize;           ///< The size of the map
     Vector2u tileSize;          ///< The size of the tiles
 

@@ -517,6 +517,52 @@ inline namespace v1 {
       tmx.offset.y = node.attribute("offsety").as_int(0);
     }
 
+    std::vector<TmxCell> parseCells(const pugi::xml_node node, TmxFormat format) {
+      std::vector<TmxCell> cells;
+
+      switch (format) {
+        case TmxFormat::Base64:
+        case TmxFormat::Base64_Zlib:
+        case TmxFormat::Base64_Gzip:
+        {
+          std::vector<uint8_t> buffer = parseDataBuffer(node, format);
+
+          const std::size_t size = buffer.size();
+          assert(size % 4 == 0);
+
+          for (std::size_t i = 0; i < size; i += 4) {
+            unsigned gid = buffer[i] | (buffer[i + 1] << 8) | (buffer[i + 2] << 16) | (buffer[i + 3] << 24);
+            cells.push_back(decodeGID(gid));
+          }
+
+          break;
+        }
+
+        case TmxFormat::Csv:
+        {
+          const std::string csv = node.child_value();
+          std::vector<std::string> items;
+          boost::algorithm::split(items, csv, boost::algorithm::is_any_of(","));
+
+          for (auto item : items) {
+            unsigned gid = std::stoul(item);
+            cells.push_back(decodeGID(gid));
+          }
+
+          break;
+        }
+
+        case TmxFormat::Xml:
+          for (pugi::xml_node tile : node.children("tile")) {
+            unsigned gid = required_attribute(tile, "gid").as_uint();
+            cells.push_back(decodeGID(gid));
+          };
+
+          break;
+      }
+
+      return cells;
+    }
 
     std::unique_ptr<TmxTileLayer> parseTmxTileLayer(const pugi::xml_node node) {
       assert(node.name() == "layer"s);
@@ -526,46 +572,20 @@ inline namespace v1 {
 
       for (pugi::xml_node data : node.children("data")) {
         auto format = parseDataFormat(data);
+        auto range = data.children("chunk");
 
-        switch (format) {
-          case TmxFormat::Base64:
-          case TmxFormat::Base64_Zlib:
-          case TmxFormat::Base64_Gzip:
-          {
-            std::vector<uint8_t> buffer = parseDataBuffer(data, format);
-
-            const std::size_t size = buffer.size();
-            assert(size % 4 == 0);
-
-            for (std::size_t i = 0; i < size; i += 4) {
-              unsigned gid = buffer[i] | (buffer[i + 1] << 8) | (buffer[i + 2] << 16) | (buffer[i + 3] << 24);
-              tmx->cells.push_back(decodeGID(gid));
-            }
-
-            break;
+        if (std::distance(range.begin(), range.end()) > 0) {
+          for (pugi::xml_node chunk : range) {
+            TmxChunk ck;
+            ck.position.x = required_attribute(node, "x").as_int();
+            ck.position.y = required_attribute(node, "y").as_int();
+            ck.size.width = required_attribute(node, "width").as_int();
+            ck.size.height = required_attribute(node, "height").as_int();
+            ck.cells = parseCells(chunk, format);
+            tmx->chunks.push_back(std::move(ck));
           }
-
-          case TmxFormat::Csv:
-          {
-            const std::string csv = data.child_value();
-            std::vector<std::string> items;
-            boost::algorithm::split(items, csv, boost::algorithm::is_any_of(","));
-
-            for (auto item : items) {
-              unsigned gid = std::stoul(item);
-              tmx->cells.push_back(decodeGID(gid));
-            }
-
-            break;
-          }
-
-          case TmxFormat::Xml:
-            for (pugi::xml_node tile : data.children("tile")) {
-              unsigned gid = required_attribute(tile, "gid").as_uint();
-              tmx->cells.push_back(decodeGID(gid));
-            };
-
-            break;
+        } else {
+          tmx->cells = parseCells(data, format);
         }
       }
 
@@ -1032,6 +1052,7 @@ inline namespace v1 {
         }
       }
 
+      tmx.infinite = node.attribute("invisible").as_bool(false);
       tmx.mapSize.width = required_attribute(node, "width").as_uint();
       tmx.mapSize.height = required_attribute(node, "height").as_uint();
 
