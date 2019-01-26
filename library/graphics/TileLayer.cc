@@ -184,6 +184,8 @@ inline namespace v1 {
     Vector2u tilesetSize = (m_texture->getSize() - 2 * m_margin + m_spacing) / (m_tileSize + m_spacing);
     Vector2u blockSize = getBlockSize();
 
+//     gf::Log::info("block: %u,%u | tile: %u,%u\n", blockSize.x, blockSize.y, m_tileSize.x, m_tileSize.y);
+
     Vector2u local;
 
     for (local.y = 0; local.y < rect.height; ++local.y) {
@@ -211,12 +213,10 @@ inline namespace v1 {
 
           if (cell.y % 2 == 0) {
             gf::Vector2f pos = cell * blockSize;
-            pos -= (m_tileSize - blockSize) / 2;
             pos.y /= 2;
             position.setPosition(pos);
           } else {
             gf::Vector2f pos = cell * blockSize;
-            pos -= (m_tileSize - blockSize) / 2;
             pos.y /= 2;
             pos.x += blockSize.x / 2;
             position.setPosition(pos);
