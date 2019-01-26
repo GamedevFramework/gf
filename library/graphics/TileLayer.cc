@@ -133,6 +133,10 @@ inline namespace v1 {
 
     gf::Vector2u blockSize = getBlockSize();
 
+    if (m_type == Staggered) {
+      blockSize.y /= 2;
+    }
+
     // compute the viewable part of the layer
 
     const View& view = target.getView();
@@ -143,7 +147,6 @@ inline namespace v1 {
 
     RectF world(center - size / 2, size);
     RectF local = gf::transform(getInverseTransform(), world).grow(std::max(blockSize.width, blockSize.height));
-    local.height *= 2;
 
     RectF layer({ 0.0f, 0.0f }, m_layerSize * blockSize);
 
