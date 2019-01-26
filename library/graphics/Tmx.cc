@@ -1061,29 +1061,29 @@ inline namespace v1 {
 
       tmx.hexSideLength = node.attribute("hexsidelength").as_uint(0u);
 
-      tmx.staggerAxis = TmxStaggerAxis::Y;
+      tmx.staggerAxis = StaggerAxis::Y;
 
       if (node.attribute("staggeraxis")) {
         std::string staggerAxis = node.attribute("staggeraxis").as_string();
 
         if (staggerAxis == "x") {
-          tmx.staggerAxis = TmxStaggerAxis::X;
+          tmx.staggerAxis = StaggerAxis::X;
         } else if (staggerAxis == "y") {
-          tmx.staggerAxis = TmxStaggerAxis::Y;
+          tmx.staggerAxis = StaggerAxis::Y;
         } else {
           Log::error("Wrong stagger axis string: '%s'\n", staggerAxis.c_str());
         }
       }
 
-      tmx.staggerIndex = TmxStaggerIndex::Odd;
+      tmx.staggerIndex = StaggerIndex::Odd;
 
       if (node.attribute("staggerindex")) {
         std::string staggerIndex = node.attribute("staggerindex").as_string();
 
         if (staggerIndex == "odd") {
-          tmx.staggerIndex = TmxStaggerIndex::Odd;
+          tmx.staggerIndex = StaggerIndex::Odd;
         } else if (staggerIndex == "even") {
-          tmx.staggerIndex = TmxStaggerIndex::Even;
+          tmx.staggerIndex = StaggerIndex::Even;
         } else {
           Log::error("Wrong stagger index string: '%s'\n", staggerIndex.c_str());
         }

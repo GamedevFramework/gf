@@ -34,6 +34,7 @@
 #include "Path.h"
 #include "Portability.h"
 #include "Rect.h"
+#include "Stagger.h"
 #include "Time.h"
 #include "Vector.h"
 
@@ -51,24 +52,6 @@ inline namespace v1 {
     Isometric,  ///< An isometric orientation
     Staggered,  ///< A staggered orientation
     Hexagonal,  ///< A hexagonal orientation
-  };
-
-  /**
-   * @ingroup game
-   * @brief Stagger index of the staggered or hexagonal map.
-   */
-  enum class TmxStaggerIndex {
-    Odd,  ///< A odd stagger index
-    Even, ///< An even stagger index
-  };
-
-  /**
-   * @ingroup game
-   * @brief Stagger axis of the staggered or hexagonal map.
-   */
-  enum class TmxStaggerAxis {
-    X,  ///< The x stagger axis
-    Y,  ///< The y stagger axis
   };
 
   /**
@@ -630,8 +613,8 @@ inline namespace v1 {
     Vector2u tileSize;          ///< The size of the tiles
 
     unsigned hexSideLength;     ///< The length of the side for hexagonal map
-    TmxStaggerAxis staggerAxis; ///< The stagger axis for hexagonal map
-    TmxStaggerIndex staggerIndex; ///< The stagger index for hexagonal map
+    StaggerAxis staggerAxis;    ///< The stagger axis for hexagonal map
+    StaggerIndex staggerIndex;  ///< The stagger index for hexagonal map
 
     Color4u backgroundColor;    ///< The background color
 

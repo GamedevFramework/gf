@@ -25,6 +25,7 @@
 #include "Flags.h"
 #include "Flip.h"
 #include "Portability.h"
+#include "Stagger.h"
 #include "Transformable.h"
 #include "VertexArray.h"
 #include "VertexBuffer.h"
@@ -67,11 +68,19 @@ inline namespace v1 {
     static constexpr int NoTile = -1;
 
     /**
+     * @brief The type of tile layer
+     */
+    enum Type {
+      Orthogonal, ///< An orthogonal tile layer
+      Staggered,  ///< A staggered tile layer
+    };
+
+    /**
      * @brief Constructor
      *
      * @param layerSize the size of the layer, in number of tiles
      */
-    TileLayer(Vector2u layerSize);
+    TileLayer(Vector2u layerSize, Type type = Orthogonal);
 
     /**
      * @name Tileset parameters
@@ -311,6 +320,10 @@ inline namespace v1 {
     void updateGeometry();
 
   private:
+    Type m_type;
+    StaggerIndex m_staggerIndex;
+    StaggerAxis m_staggerAxis;
+
     Vector2u m_layerSize;
     Vector2u m_blockSize;
 

@@ -36,8 +36,11 @@ inline namespace v1 {
 
   constexpr int TileLayer::NoTile;
 
-  TileLayer::TileLayer(Vector2u layerSize)
-  : m_layerSize(layerSize)
+  TileLayer::TileLayer(Vector2u layerSize, Type type)
+  : m_type(type)
+  , m_staggerIndex(StaggerIndex::Odd)
+  , m_staggerAxis(StaggerAxis::Y)
+  , m_layerSize(layerSize)
   , m_blockSize(0, 0)
   , m_texture(nullptr)
   , m_tileSize(0, 0)
@@ -140,6 +143,7 @@ inline namespace v1 {
 
     RectF world(center - size / 2, size);
     RectF local = gf::transform(getInverseTransform(), world).grow(std::max(blockSize.width, blockSize.height));
+    local.height *= 2;
 
     RectF layer({ 0.0f, 0.0f }, m_layerSize * blockSize);
 
@@ -193,7 +197,27 @@ inline namespace v1 {
 
         // position
 
-        RectF position(cell * blockSize, blockSize);
+        RectF position({ 0.0f, 0.0f }, { 0.0f, 0.0f });
+        position.setSize(m_tileSize);
+
+        if (m_type == Orthogonal) {
+          position.setPosition(cell * blockSize);
+        } else {
+          assert(m_type == Staggered);
+
+          if (cell.y % 2 == 0) {
+            gf::Vector2f pos = cell * blockSize;
+            pos -= (m_tileSize - blockSize) / 2;
+            pos.y /= 2;
+            position.setPosition(pos);
+          } else {
+            gf::Vector2f pos = cell * blockSize;
+            pos -= (m_tileSize - blockSize) / 2;
+            pos.y /= 2;
+            pos.x += blockSize.x / 2;
+            position.setPosition(pos);
+          }
+        }
 
         // texture coords
 

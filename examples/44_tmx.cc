@@ -36,6 +36,20 @@
 #include <gf/ViewContainer.h>
 #include <gf/Window.h>
 
+gf::TileLayer::Type getTypeFromOrientation(gf::TmxOrientation orientation) {
+  switch (orientation) {
+    case gf::TmxOrientation::Orthogonal:
+      return gf::TileLayer::Orthogonal;
+    case gf::TmxOrientation::Staggered:
+      return gf::TileLayer::Staggered;
+    default:
+      break;
+  }
+
+  assert(false);
+  return gf::TileLayer::Orthogonal;
+}
+
 struct LayersMaker : public gf::TmxVisitor {
 
   virtual void visitTileLayer(const gf::TmxLayers& map, const gf::TmxTileLayer& layer) override {
@@ -45,8 +59,8 @@ struct LayersMaker : public gf::TmxVisitor {
 
     std::cout << "Parsing layer '" << layer.name << "'\n";
 
-    gf::TileLayer tiles(map.mapSize);
-    tiles.setTileSize(map.tileSize);
+    gf::TileLayer tiles(map.mapSize, getTypeFromOrientation(map.orientation));
+    tiles.setBlockSize(map.tileSize);
 
     unsigned k = 0;
 
@@ -60,8 +74,9 @@ struct LayersMaker : public gf::TmxVisitor {
       if (gid != 0) {
         auto tileset = map.getTileSetFromGID(gid);
         assert(tileset);
-        gid = gid - tileset->firstGid;
+        tiles.setTileSize(tileset->tileSize);
 
+        gid = gid - tileset->firstGid;
         tiles.setTile({ i, j }, gid, cell.flip);
 
         if (!tiles.hasTexture()) {
@@ -118,25 +133,45 @@ int main() {
 
   gf::ZoomingViewAdaptor adaptor(renderer, view);
 
-  gf::TmxLayers layers;
+  // orthogonal layers
 
-  if (!layers.loadFromFile("assets/outdoor.tmx")) {
+  gf::TmxLayers orthogonalLayers;
+
+  if (!orthogonalLayers.loadFromFile("assets/outdoor.tmx")) {
     return EXIT_FAILURE;
   }
 
-  LayersMaker maker;
-  maker.resources.addSearchDir(gf::Paths::getBasePath());
-  maker.resources.addSearchDir(gf::Paths::getCurrentPath());
-  layers.visitLayers(maker);
+  LayersMaker orthogonalMaker;
+  orthogonalMaker.resources.addSearchDir(gf::Paths::getBasePath());
+  orthogonalMaker.resources.addSearchDir(gf::Paths::getCurrentPath());
+  orthogonalLayers.visitLayers(orthogonalMaker);
 
-  std::cout << "Number of layers: " << maker.layers.size() << "\n";
+  std::cout << "Number of layers: " << orthogonalMaker.layers.size() << "\n";
+
+  // stagerred layers
+
+  gf::TmxLayers staggeredLayers;
+
+  if (!staggeredLayers.loadFromFile("assets/isometric_staggered_grass_and_water.tmx")) {
+    return EXIT_FAILURE;
+  }
+
+  LayersMaker staggeredMaker;
+  staggeredMaker.resources.addSearchDir(gf::Paths::getBasePath());
+  staggeredMaker.resources.addSearchDir(gf::Paths::getCurrentPath());
+  staggeredLayers.visitLayers(staggeredMaker);
+
+  //
 
   std::cout << "Gamedev Framework (gf) example #44: TMX loading\n";
   std::cout << "This example shows a TMX file with two tile layers.\n";
   std::cout << "How to use:\n";
+  std::cout << "\tReturn: Display next map\n";
   std::cout << "\tMouse: Scroll to zoom, press to move\n";
 
   renderer.clear(gf::Color::White);
+
+  gf::TileLayer::Type type = gf::TileLayer::Orthogonal;
 
   while (window.isOpen()) {
     gf::Event event;
@@ -149,6 +184,13 @@ int main() {
 
         case gf::EventType::KeyPressed:
           switch (event.key.scancode) {
+            case gf::Scancode::Return:
+              if (type == gf::TileLayer::Orthogonal) {
+                type = gf::TileLayer::Staggered;
+              } else {
+                type = gf::TileLayer::Orthogonal;
+              }
+              break;
 
             case gf::Scancode::Escape:
               window.close();
@@ -170,8 +212,18 @@ int main() {
     renderer.setView(view);
     renderer.clear();
 
-    for (auto& layer : maker.layers) {
-      renderer.draw(layer);
+    switch (type) {
+      case gf::TileLayer::Orthogonal:
+        for (auto& layer : orthogonalMaker.layers) {
+          renderer.draw(layer);
+        }
+        break;
+
+      case gf::TileLayer::Staggered:
+        for (auto& layer : staggeredMaker.layers) {
+          renderer.draw(layer);
+        }
+        break;
     }
 
     renderer.display();
