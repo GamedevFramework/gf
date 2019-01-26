@@ -214,11 +214,13 @@ inline namespace v1 {
           if (cell.y % 2 == 0) {
             gf::Vector2f pos = cell * blockSize;
             pos.y /= 2;
+            pos -= (m_tileSize - blockSize);
             position.setPosition(pos);
           } else {
             gf::Vector2f pos = cell * blockSize;
             pos.y /= 2;
             pos.x += blockSize.x / 2;
+            pos -= (m_tileSize - blockSize);
             position.setPosition(pos);
           }
         }
