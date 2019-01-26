@@ -21,6 +21,8 @@
 #ifndef GF_STAGGER_H
 #define GF_STAGGER_H
 
+#include <gf/Vector.h>
+
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
@@ -30,7 +32,7 @@ inline namespace v1 {
    * @ingroup game
    * @brief Stagger index in a staggered or hexagonal map.
    *
-   * @sa gf::StaggerAxis
+   * @sa gf::StaggerAxis, gf::StaggerConverter
    */
   enum class StaggerIndex {
     Odd,  ///< A odd stagger index
@@ -41,11 +43,38 @@ inline namespace v1 {
    * @ingroup game
    * @brief Stagger axis in a staggered or hexagonal map.
    *
-   * @sa gf::StaggerIndex
+   * @sa gf::StaggerIndex, gf::StaggerConverter
    */
   enum class StaggerAxis {
     X,  ///< The x stagger axis
     Y,  ///< The y stagger axis
+  };
+
+  /**
+   * @ingroup game
+   * @brief A helper for computing coordinates in a staggered map
+   */
+  class StaggerHelper {
+  public:
+    StaggerHelper(StaggerAxis axis, StaggerIndex index)
+    : m_axis(axis)
+    , m_index(index)
+    {
+
+    }
+
+    /**
+     * @brief Compute the center of the tile
+     *
+     * @param coords The coordinates of the tile in the map
+     * @param size The size of the tile in the map
+     * @returns The position of the center
+     */
+    Vector2f computeCenter(Vector2i coords, Vector2f size) const;
+
+  private:
+    StaggerAxis m_axis;
+    StaggerIndex m_index;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

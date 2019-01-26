@@ -175,6 +175,7 @@ else()
     graphics/Shapes.cc
     graphics/SpriteBatch.cc
     graphics/Sprite.cc
+    graphics/Stagger.cc
     graphics/SystemInfo.cc
     graphics/Text.cc
     graphics/TextureAtlas.cc

@@ -71,6 +71,7 @@
 #include "Shapes.cc"
 #include "SpriteBatch.cc"
 #include "Sprite.cc"
+#include "Stagger.cc"
 #include "SystemInfo.cc"
 #include "Text.cc"
 #include "TextureAtlas.cc"
