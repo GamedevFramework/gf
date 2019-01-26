@@ -83,6 +83,15 @@ inline namespace v1 {
     TileLayer(Vector2u layerSize, Type type = Orthogonal);
 
     /**
+     * @brief Get the size of the layer
+     *
+     * @returns The size of the layer, in number of tiles
+     */
+    Vector2u getMapSize() const {
+      return m_tiles.getSize();
+    }
+
+    /**
      * @name Tileset parameters
      * @{
      */
