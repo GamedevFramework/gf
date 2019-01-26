@@ -156,6 +156,7 @@ inline namespace v1 {
     if (local.intersects(layer, intersection)) {
       rect.setPosition(intersection.getPosition() / blockSize + 0.5f);
       rect.setSize(intersection.getSize() / blockSize + 0.5f);
+      rect.shrink(1);
     }
 
     // build vertex array (if necessary)
