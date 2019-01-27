@@ -156,7 +156,8 @@ inline namespace v1 {
     if (local.intersects(layer, intersection)) {
       rect.setPosition(intersection.getPosition() / blockSize + 0.5f);
       rect.setSize(intersection.getSize() / blockSize + 0.5f);
-      rect.shrink(1);
+
+      rect.intersects(gf::RectU({ 0u, 0u }, m_layerSize - 1), rect);
     }
 
     // build vertex array (if necessary)
