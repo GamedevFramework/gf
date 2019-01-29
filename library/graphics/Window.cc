@@ -593,7 +593,7 @@ inline namespace v1 {
 
   void Window::setFramerateLimit(unsigned int limit) {
     if (limit == 0) {
-      m_duration = Time::Zero;
+      m_duration = Time::zero();
     } else {
       m_duration = seconds(1.0f / limit);
     }
@@ -605,7 +605,7 @@ inline namespace v1 {
 
     // handle framerate limit
 
-    if (m_duration == Time::Zero) {
+    if (m_duration == Time::zero()) {
       return;
     }
 
