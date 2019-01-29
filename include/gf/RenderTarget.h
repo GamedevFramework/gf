@@ -391,9 +391,7 @@ inline namespace v1 {
     void initializeTexture();
 
     struct Locations {
-      int positionLoc;
-      int colorLoc;
-      int texCoordsLoc;
+      int data[3];
     };
 
     void drawStart(const RenderStates& states, Locations& locations);

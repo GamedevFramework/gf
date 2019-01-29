@@ -310,9 +310,9 @@ inline namespace v1 {
     GLint loc;
     glCheck(loc = glGetUniformLocation(static_cast<GLuint>(m_program), name.getData()));
 
-    if (loc == -1) {
-      Log::warning("Uniform not found: '%s'\n", name.getData());
-    }
+//     if (loc == -1) {
+//       Log::warning("Uniform not found: '%s'\n", name.getData());
+//     }
 
     return loc;
   }
@@ -321,9 +321,9 @@ inline namespace v1 {
     GLint loc;
     glCheck(loc = glGetAttribLocation(static_cast<GLuint>(m_program), name.getData()));
 
-    if (loc == -1) {
-      Log::warning("Attribute not found: '%s'\n", name.getData());
-    }
+//     if (loc == -1) {
+//       Log::warning("Attribute not found: '%s'\n", name.getData());
+//     }
 
     return loc;
   }
