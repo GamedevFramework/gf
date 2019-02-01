@@ -94,8 +94,8 @@ inline namespace v1 {
 
     for (unsigned i = 0; i < count; ++i) {
       assert(index < 0x100);
-	  m_mapping[c++] = static_cast<uint8_t>(index);
-	  ++index;
+      m_mapping[c++] = static_cast<uint8_t>(index);
+      ++index;
     }
   }
 
