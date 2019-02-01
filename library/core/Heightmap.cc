@@ -329,15 +329,17 @@ inline namespace v1 {
         double altitudeDifferenceMax = 0.0;
         Vector2i positionMax = position;
 
-        const double altitudeHere = m_data(position);
+        const double altitude = m_data(position);
 
-        m_data.visit8Neighbors(position, [altitudeHere, &altitudeDifferenceMax, &positionMax](Vector2i positionThere, double altitudeThere) {
-          double altitudeDifference = altitudeHere - altitudeThere;
+        for (auto positionThere : m_data.get8NeighborsRange(position)) {
+          double altitudeThere = m_data(positionThere);
+
+          double altitudeDifference = altitude - altitudeThere;
           if (altitudeDifference > altitudeDifferenceMax) {
             altitudeDifferenceMax = altitudeDifference;
             positionMax = positionThere;
           }
-        });
+        }
 
         if (0 < altitudeDifferenceMax && altitudeDifferenceMax <= talus) {
           material(position) -= fraction * altitudeDifferenceMax;

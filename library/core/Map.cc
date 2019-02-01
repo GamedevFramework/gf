@@ -288,15 +288,19 @@ inline namespace v1 {
         DijkstraHeapData data = heap.top();
         heap.pop();
 
-        cells.visit8Neighbors(data.position, [&](Vector2i position, const CellFlags& value) {
+        for (auto position : cells.get8NeighborsRange(data.position)) {
+          assert(position != data.position);
+
+          const CellFlags& value = cells(position);
+
           if (!value.test(CellProperty::Walkable)) {
-            return;
+            continue;
           }
 
           bool isDiagonal = (gf::manhattanDistance(data.position, position) == 2);
 
           if (isDiagonal && diagonalCost == 0) {
-            return;
+            continue;
           }
 
           float newDistance = results(data.position).distance + (isDiagonal ? diagonalCost : 1.0f);
@@ -310,8 +314,7 @@ inline namespace v1 {
             (*result.handle).distance = newDistance;
             heap.increase(result.handle);
           }
-        });
-
+        }
       }
 
       std::vector<Vector2i> route;
@@ -394,19 +397,23 @@ inline namespace v1 {
 
         results(data.position).state = AStarState::Closed;
 
-        cells.visit8Neighbors(data.position, [&](Vector2i position, const CellFlags& value) {
+        for (auto position : cells.get8NeighborsRange(data.position)) {
+          assert(position != data.position);
+
+          const CellFlags& value = cells(position);
+
           if (!value.test(CellProperty::Walkable)) {
-            return;
+            continue;
           }
 
           if (results(position).state == AStarState::Closed) {
-            return;
+            continue;
           }
 
           bool isDiagonal = (gf::manhattanDistance(data.position, position) == 2);
 
           if (isDiagonal && diagonalCost == 0) {
-            return;
+            continue;
           }
 
           float newDistance = results(data.position).distance + (isDiagonal ? diagonalCost : 1.0f);
@@ -431,8 +438,7 @@ inline namespace v1 {
               result.state = AStarState::Open;
             }
           }
-        });
-
+        }
       }
 
       std::vector<Vector2i> route;

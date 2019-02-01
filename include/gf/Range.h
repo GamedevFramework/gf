@@ -417,6 +417,152 @@ inline namespace v1 {
     lhs.swap(rhs);
   }
 
+
+  /**
+   * @ingroup core
+   * @brief A 2D range
+   *
+   * gf::NeighborSquareRange represents a range accross a 2D area around an origin (not included).
+   */
+  template<typename T>
+  struct NeighborSquareRange {
+    Range<T> first;   ///< The range in the first dimension
+    Range<T> second;  ///< The range in the second dimension
+    Vector<T, 2> origin;
+
+    /**
+     * @brief An iterator for a 2D range
+     */
+    struct Iterator {
+      using difference_type = std::ptrdiff_t;
+      using value_type = Vector<T, 2>;
+      using pointer = value_type;
+      using reference = value_type;
+      using iterator_category = std::forward_iterator_tag;
+
+      Range<T> range;
+      Vector<T, 2> position;
+      Vector<T, 2> origin;
+
+      /**
+       * @brief Constructor
+       *
+       * @param iteratorRange The range in the first dimension
+       * @param iteratorPosition The current position in 2D
+       * @param iteratorOrigin The position of the origin
+       */
+      constexpr Iterator(Range<T> iteratorRange, Vector<T, 2> iteratorPosition, Vector<T, 2> iteratorOrigin) noexcept
+      : range(iteratorRange)
+      , position(iteratorPosition)
+      , origin(iteratorOrigin)
+      {
+
+      }
+
+      /**
+       * @brief Swap the iterator with another iterator
+       */
+      void swap(Iterator& other) {
+        using std::swap;
+        swap(range, other.range);
+        swap(position, other.position);
+        swap(origin, other.origin);
+      }
+
+      /**
+       * @brief Dereference operator
+       *
+       * @returns The position
+       */
+      reference operator*() noexcept {
+        return position;
+      }
+
+      /**
+       * @brief Pointer operator
+       *
+       * @returns The position
+       */
+      pointer operator->() noexcept {
+        return position;
+      }
+
+      /**
+       * @brief Increment operator (prefix)
+       *
+       * @returns The iterator
+       */
+      Iterator& operator++() noexcept {
+        step();
+        return *this;
+      }
+
+      /**
+       * @brief Increment operator (postfix)
+       *
+       * @returns The iterator
+       */
+      Iterator operator++(int) noexcept {
+        Iterator copy = *this;
+        step();
+        return copy;
+      }
+
+      /**
+       * @brief Inequality operator
+       *
+       * @param other Another iterator
+       * @return True if the iterator are different
+       */
+      constexpr bool operator!=(const Iterator& other) const noexcept {
+        return position.x != other.position.x || position.y != other.position.y;
+      }
+
+      /**
+       * @brief Equality operator
+       *
+       * @param other Another iterator
+       * @return True if the iterator are the same
+       */
+      constexpr bool operator==(const Iterator& other) const noexcept {
+        return position.x == other.position.x && position.y == other.position.y;
+      }
+
+    private:
+      void step() {
+        do {
+          ++position.x;
+
+          if (position.x >= range.hi) {
+            position.x = range.lo;
+            ++position.y;
+          }
+        } while (position.x == origin.x && position.y == origin.y);
+      }
+    };
+
+    /**
+     * @brief Get a begin iterator
+     *
+     * @return A begin iterator
+     * @sa end()
+     */
+    constexpr Iterator begin() const noexcept {
+      return Iterator(first, { first.lo, second.lo }, origin);
+    }
+
+    /**
+     * @brief Get a end iterator
+     *
+     * @return A end iterator
+     * @sa begin()
+     */
+    constexpr Iterator end() const noexcept {
+      return Iterator(first, { first.lo, second.hi }, origin);
+    }
+
+  };
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif

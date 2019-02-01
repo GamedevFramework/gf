@@ -478,6 +478,15 @@ inline namespace v1 {
       visitNeighborsSquare(pos, func, 2);
     }
 
+
+    NeighborSquareRange<I> get8NeighborsRange(Vector<I, 2> pos) const {
+      return getNeighborSquareRange(pos, 1);
+    }
+
+    NeighborSquareRange<I> get24NeighborsRange(Vector<I, 2> pos) const {
+      return getNeighborSquareRange(pos, 2);
+    }
+
     /** @} */
 
     /**
@@ -570,6 +579,17 @@ inline namespace v1 {
 
     const T& get(Vector<I, 2> pos) const {
       return m_data[pos.row * m_size.col + pos.col];
+    }
+
+    NeighborSquareRange<I> getNeighborSquareRange(Vector<I, 2> pos, I n) const {
+      assert(isValid(pos));
+
+      auto colMin = pos.col - std::min(pos.col, n);
+      auto colMax = pos.col + std::min(m_size.col - pos.col - 1, n);
+      auto rowMin = pos.row - std::min(pos.row, n);
+      auto rowMax = pos.row + std::min(m_size.row - pos.row - 1, n);
+
+      return NeighborSquareRange<I>{ Range<I>{ colMin, colMax + 1 }, Range<I>{ rowMin, rowMax + 1 }, pos };
     }
 
     template<typename Func>
