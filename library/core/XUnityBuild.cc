@@ -26,6 +26,7 @@
 
 #include "Activities.cc"
 #include "Activity.cc"
+#include "Array2D.cc"
 #include "AssetManager.cc"
 #include "Circ.cc"
 #include "Clock.cc"

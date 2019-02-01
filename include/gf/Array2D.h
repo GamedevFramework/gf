@@ -42,6 +42,206 @@ inline namespace v1 {
 
   /**
    * @ingroup core
+   * @brief A two-dimensional array with no data
+   *
+   * You probably want to use gf::Array2D
+   *
+   * @sa gf::Array2D
+   */
+  template<typename I>
+  class Array2DBase {
+  public:
+    /**
+     * @brief Default constructor
+     *
+     * Creates an empty array.
+     */
+    Array2DBase()
+    : m_size(0, 0)
+    {
+
+    }
+
+    /**
+     * @brief Constructor with a size
+     *
+     * @param size The size of the array
+     */
+    Array2DBase(Vector<I, 2> size)
+    : m_size(size)
+    {
+
+    }
+
+    /**
+     * @brief Default copy constructor
+     */
+    Array2DBase(const Array2DBase&) = default;
+
+    /**
+     * @brief Default copy assignment
+     */
+    Array2DBase& operator=(const Array2DBase&) = default;
+
+    /**
+     * @brief Default move constructor
+     */
+    Array2DBase(Array2DBase&&) = default;
+
+    /**
+     * @brief Default move assignement
+     */
+    Array2DBase& operator=(Array2DBase&&) = default;
+
+    /**
+     * @brief Swap with another array
+     *
+     * @param other An other array
+     */
+    void swap(Array2DBase& other) {
+      std::swap(m_size, other.m_size);
+    }
+
+    /**
+     * @name Size and position
+     * @{
+     */
+
+    /**
+     * @brief Get the size of the array
+     *
+     * @return The size of the array
+     */
+    constexpr Vector<I, 2> getSize() const noexcept {
+      return m_size;
+    }
+
+    /**
+     * @brief Get the number of columns
+     *
+     * @return The number of columns
+     */
+    constexpr I getCols() const noexcept {
+      return m_size.col;
+    }
+
+    /**
+     * @brief Get the number of rows
+     *
+     * @return The number of rows
+     */
+    constexpr I getRows() const noexcept {
+      return m_size.row;
+    }
+
+    /**
+     * @brief Check if a position is valid
+     *
+     * A valid position is a position inside the array
+     *
+     * @return True if the position is valid
+     */
+    constexpr bool isValid(Vector<I, 2> pos) const noexcept {
+      return pos.col < m_size.col && pos.row < m_size.row && (std::is_unsigned<I>::value || (0 <= pos.col && 0 <= pos.row));
+    }
+
+    /**
+     * @brief Transform a 1D position into a 2D position
+     *
+     * @param index A 1D position
+     * @return The corresponding 2D position
+     */
+    constexpr Vector<I, 2> toPosition(std::size_t index) const noexcept {
+      return { static_cast<I>(index % m_size.col), static_cast<I>(index / m_size.col) };
+    }
+
+    /**
+     * @brief Transform a 2D position into a 1D position
+     *
+     * @param pos A 2D position
+     * @return The corresponding 1D position
+     */
+    constexpr std::size_t toIndex(Vector<I, 2> pos) const noexcept {
+      return pos.row * m_size.col + pos.col;
+    }
+
+    /** @} */
+
+    /**
+     * @name Ranges
+     * @{
+     */
+
+    /**
+     * @brief Get the 1D index range of the array
+     *
+     * @return A range with all the 1D index in the array
+     */
+    constexpr RangeZ getIndexRange() const noexcept {
+      return { 0, static_cast<std::size_t>(m_size.col) * static_cast<std::size_t>(m_size.row) };
+    }
+
+    /**
+     * @brief Get the row range
+     *
+     * @return A range with all the rows
+     */
+    constexpr Range<I> getRowRange() const noexcept {
+      return { 0, m_size.row };
+    }
+
+    /**
+     * @brief Get the column range
+     *
+     * @return A range with all the columns
+     */
+    constexpr Range<I> getColRange() const noexcept {
+      return { 0, m_size.col };
+    }
+
+    /**
+     * @brief Get the position range
+     *
+     * @return A range for iterating among the positions
+     */
+    constexpr PositionRange<I> getPositionRange() const noexcept {
+      return { getColRange(), getRowRange() };
+    }
+
+    NeighborSquareRange<I> get8NeighborsRange(Vector<I, 2> pos) const {
+      return getNeighborSquareRange(pos, 1);
+    }
+
+    NeighborSquareRange<I> get24NeighborsRange(Vector<I, 2> pos) const {
+      return getNeighborSquareRange(pos, 2);
+    }
+
+    /** @} */
+
+  private:
+    NeighborSquareRange<I> getNeighborSquareRange(Vector<I, 2> pos, I n) const {
+      assert(isValid(pos));
+
+      auto colMin = pos.col - std::min(pos.col, n);
+      auto colMax = pos.col + std::min(m_size.col - pos.col - 1, n);
+      auto rowMin = pos.row - std::min(pos.row, n);
+      auto rowMax = pos.row + std::min(m_size.row - pos.row - 1, n);
+
+      return NeighborSquareRange<I>{ Range<I>{ colMin, colMax + 1 }, Range<I>{ rowMin, rowMax + 1 }, pos };
+    }
+
+  private:
+    Vector<I, 2> m_size;
+  };
+
+// MSVC does not like extern template
+#ifndef _MSC_VER
+  extern template struct Array2DBase<unsigned>;
+  extern template struct Array2DBase<int>;
+#endif
+
+  /**
+   * @ingroup core
    * @brief A two-dimensional array
    *
    * gf::Array represents a two-dimensional array, organized in row-major order.
@@ -62,7 +262,7 @@ inline namespace v1 {
    * @sa gf::Matrix
    */
   template<typename T, typename I = unsigned>
-  class Array2D {
+  class Array2D : public Array2DBase<I> {
   public:
     /**
      * @brief Default constructor
@@ -70,7 +270,7 @@ inline namespace v1 {
      * Creates an empty array.
      */
     Array2D()
-    : m_size(0, 0)
+    : Array2DBase<I>()
     {
 
     }
@@ -81,7 +281,7 @@ inline namespace v1 {
      * @param size The size of the array
      */
     Array2D(Vector<I, 2> size)
-    : m_size(size)
+    : Array2DBase<I>(size)
     , m_data(static_cast<std::size_t>(size.width) * static_cast<std::size_t>(size.height))
     {
 
@@ -94,7 +294,7 @@ inline namespace v1 {
      * @param value The initial value in the array
      */
     Array2D(Vector<I, 2> size, const T& value)
-    : m_size(size)
+    : Array2DBase<I>(size)
     , m_data(static_cast<std::size_t>(size.width) * static_cast<std::size_t>(size.height), value)
     {
 
@@ -126,9 +326,22 @@ inline namespace v1 {
      * @param other An other array
      */
     void swap(Array2D& other) {
+      Array2DBase<I>::swap(other);
       std::swap(m_data, other.m_data);
-      std::swap(m_size, other.m_size);
     }
+
+    using Array2DBase<I>::getSize;
+    using Array2DBase<I>::getCols;
+    using Array2DBase<I>::getRows;
+    using Array2DBase<I>::isValid;
+    using Array2DBase<I>::toPosition;
+    using Array2DBase<I>::toIndex;
+    using Array2DBase<I>::getIndexRange;
+    using Array2DBase<I>::getRowRange;
+    using Array2DBase<I>::getColRange;
+    using Array2DBase<I>::getPositionRange;
+    using Array2DBase<I>::get8NeighborsRange;
+    using Array2DBase<I>::get24NeighborsRange;
 
     /**
      * @name Raw data access
@@ -157,33 +370,6 @@ inline namespace v1 {
     }
 
     /**
-     * @brief Get the size of the array
-     *
-     * @return The size of the array
-     */
-    constexpr Vector<I, 2> getSize() const noexcept {
-      return m_size;
-    }
-
-    /**
-     * @brief Get the number of columns
-     *
-     * @return The number of columns
-     */
-    constexpr I getCols() const noexcept {
-      return m_size.col;
-    }
-
-    /**
-     * @brief Get the number of rows
-     *
-     * @return The number of rows
-     */
-    constexpr I getRows() const noexcept {
-      return m_size.row;
-    }
-
-    /**
      * @brief Check if the array is empty
      *
      * An empty array is an array with @f$ 0 @f$ elements, i.e. either the
@@ -193,17 +379,6 @@ inline namespace v1 {
      */
     constexpr bool isEmpty() const noexcept {
       return m_data.empty();
-    }
-
-    /**
-     * @brief Check if a position is valid
-     *
-     * A valid position is a position inside the array
-     *
-     * @return True if the position is valid
-     */
-    constexpr bool isValid(Vector<I, 2> pos) const noexcept {
-      return pos.col < m_size.col && pos.row < m_size.row && (std::is_unsigned<I>::value || (0 <= pos.col && 0 <= pos.row));
     }
 
     /** @} */
@@ -249,16 +424,6 @@ inline namespace v1 {
      */
     const T& operator()(std::size_t index) const {
       return m_data[index];
-    }
-
-    /**
-     * @brief Transform a 1D position into a 2D position
-     *
-     * @param pos A 1D position
-     * @return The corresponding 2D position
-     */
-    constexpr Vector<I, 2> toPosition(std::size_t pos) const noexcept {
-      return { pos % m_size.col, pos / m_size.col };
     }
 
     /** @} */
@@ -478,19 +643,10 @@ inline namespace v1 {
       visitNeighborsSquare(pos, func, 2);
     }
 
-
-    NeighborSquareRange<I> get8NeighborsRange(Vector<I, 2> pos) const {
-      return getNeighborSquareRange(pos, 1);
-    }
-
-    NeighborSquareRange<I> get24NeighborsRange(Vector<I, 2> pos) const {
-      return getNeighborSquareRange(pos, 2);
-    }
-
     /** @} */
 
     /**
-     * @name Iterators and ranges
+     * @name Iterators
      * @{
      */
 
@@ -534,72 +690,26 @@ inline namespace v1 {
       return m_data.data() + m_data.size();
     }
 
-    /**
-     * @brief Get the 1D index range of the array
-     *
-     * @return A range with all the 1D index in the array
-     */
-    constexpr RangeZ getIndexRange() const noexcept {
-      return { 0, m_size.col * m_size.row };
-    }
-
-    /**
-     * @brief Get the row range
-     *
-     * @return A range with all the rows
-     */
-    constexpr Range<I> getRowRange() const noexcept {
-      return { 0, m_size.row };
-    }
-
-    /**
-     * @brief Get the column range
-     *
-     * @return A range with all the columns
-     */
-    constexpr Range<I> getColRange() const noexcept {
-      return { 0, m_size.col };
-    }
-
-    /**
-     * @brief Get the position range
-     *
-     * @return A range for iterating among the positions
-     */
-    constexpr PositionRange<I> getPositionRange() const noexcept {
-      return { getColRange(), getRowRange() };
-    }
-
     /** @} */
 
   private:
     T& get(Vector<I, 2> pos) {
-      return m_data[pos.row * m_size.col + pos.col];
+      return m_data[toIndex(pos)];
     }
 
     const T& get(Vector<I, 2> pos) const {
-      return m_data[pos.row * m_size.col + pos.col];
-    }
-
-    NeighborSquareRange<I> getNeighborSquareRange(Vector<I, 2> pos, I n) const {
-      assert(isValid(pos));
-
-      auto colMin = pos.col - std::min(pos.col, n);
-      auto colMax = pos.col + std::min(m_size.col - pos.col - 1, n);
-      auto rowMin = pos.row - std::min(pos.row, n);
-      auto rowMax = pos.row + std::min(m_size.row - pos.row - 1, n);
-
-      return NeighborSquareRange<I>{ Range<I>{ colMin, colMax + 1 }, Range<I>{ rowMin, rowMax + 1 }, pos };
+      return m_data[toIndex(pos)];
     }
 
     template<typename Func>
     void visitNeighborsSquare(Vector<I, 2> pos, Func func, I n) const {
       assert(isValid(pos));
+      auto size = getSize();
 
       auto colMin = pos.col - std::min(pos.col, n);
-      auto colMax = pos.col + std::min(m_size.col - pos.col - 1, n);
+      auto colMax = pos.col + std::min(size.col - pos.col - 1, n);
       auto rowMin = pos.row - std::min(pos.row, n);
-      auto rowMax = pos.row + std::min(m_size.row - pos.row - 1, n);
+      auto rowMax = pos.row + std::min(size.row - pos.row - 1, n);
 
       for (auto row = rowMin; row <= rowMax; ++row) {
         for (auto col = colMin; col <= colMax; ++col) {
@@ -615,11 +725,12 @@ inline namespace v1 {
     template<typename Func>
     void visitNeighborsSquare(Vector<I, 2> pos, Func func, I n) {
       assert(isValid(pos));
+      auto size = getSize();
 
       auto colMin = pos.col - std::min(pos.col, n);
-      auto colMax = pos.col + std::min(m_size.col - pos.col - 1, n);
+      auto colMax = pos.col + std::min(size.col - pos.col - 1, n);
       auto rowMin = pos.row - std::min(pos.row, n);
-      auto rowMax = pos.row + std::min(m_size.row - pos.row - 1, n);
+      auto rowMax = pos.row + std::min(size.row - pos.row - 1, n);
 
       for (auto row = rowMin; row <= rowMax; ++row) {
         for (auto col = colMin; col <= colMax; ++col) {
@@ -636,11 +747,12 @@ inline namespace v1 {
     template<typename Func>
     void visitNeighborsDiamond(Vector<I, 2> pos, Func func, I n) const {
       assert(isValid(pos));
+      auto size = getSize();
 
       auto colMin = pos.col - std::min(pos.col, n);
-      auto colMax = pos.col + std::min(m_size.col - pos.col - 1, n);
+      auto colMax = pos.col + std::min(size.col - pos.col - 1, n);
       auto rowMin = pos.row - std::min(pos.row, n);
-      auto rowMax = pos.row + std::min(m_size.row - pos.row - 1, n);
+      auto rowMax = pos.row + std::min(size.row - pos.row - 1, n);
 
       for (auto row = rowMin; row <= rowMax; ++row) {
         for (auto col = colMin; col <= colMax; ++col) {
@@ -660,11 +772,12 @@ inline namespace v1 {
     template<typename Func>
     void visitNeighborsDiamond(Vector<I, 2> pos, Func func, I n) {
       assert(isValid(pos));
+      auto size = getSize();
 
       auto colMin = pos.col - std::min(pos.col, n);
-      auto colMax = pos.col + std::min(m_size.col - pos.col - 1, n);
+      auto colMax = pos.col + std::min(size.col - pos.col - 1, n);
       auto rowMin = pos.row - std::min(pos.row, n);
-      auto rowMax = pos.row + std::min(m_size.row - pos.row - 1, n);
+      auto rowMax = pos.row + std::min(size.row - pos.row - 1, n);
 
       for (auto row = rowMin; row <= rowMax; ++row) {
         for (auto col = colMin; col <= colMax; ++col) {
@@ -682,7 +795,6 @@ inline namespace v1 {
     }
 
   private:
-    Vector<I, 2> m_size;
     std::vector<T> m_data;
   };
 

@@ -84,6 +84,7 @@ else()
   add_library(gfcore0
     core/Activities.cc
     core/Activity.cc
+    core/Array2D.cc
     core/AssetManager.cc
     core/Circ.cc
     core/Clock.cc
