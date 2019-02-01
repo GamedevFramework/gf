@@ -1338,6 +1338,17 @@ inline namespace v1 {
   template<typename T>
   using Distance3 = Distance<T, 3>;
 
+
+  /**
+   * @relates Vector
+   * @brief Swap two vectors
+   */
+  template<typename T, std::size_t N>
+  inline
+  void swap(Vector<T,N>& lhs, Vector<T,N>& rhs) {
+    std::swap_ranges(lhs.begin(), lhs.end(), rhs.begin());
+  }
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif
