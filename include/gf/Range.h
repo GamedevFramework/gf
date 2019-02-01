@@ -47,7 +47,13 @@ inline namespace v1 {
      * @ingroup core
      * @brief A range iterator
      */
-    struct Iterator : public std::iterator<std::input_iterator_tag, T> {
+    struct Iterator {
+      using difference_type = std::ptrdiff_t;
+      using value_type = T;
+      using pointer = value_type;
+      using reference = value_type;
+      using iterator_category = std::bidirectional_iterator_tag;
+
       T index; ///< The index in the range
 
       /**
@@ -62,11 +68,28 @@ inline namespace v1 {
       }
 
       /**
+       * @brief Swap the iterator with another iterator
+       */
+      void swap(Iterator& other) {
+        using std::swap;
+        swap(index, other.index);
+      }
+
+      /**
        * @brief Dereference operator
        *
        * @return The index
        */
-      T operator*() noexcept {
+      reference operator*() noexcept {
+        return index;
+      }
+
+      /**
+       * @brief Pointer operator
+       *
+       * @return The index
+       */
+      pointer operator->() noexcept {
         return index;
       }
 
@@ -88,6 +111,27 @@ inline namespace v1 {
       Iterator operator++(int) noexcept {
         Iterator copy = *this;
         ++index;
+        return copy;
+      }
+
+      /**
+       * @brief Decrement operator (prefix)
+       *
+       * @return The iterator
+       */
+      Iterator& operator--() noexcept {
+        --index;
+        return *this;
+      }
+
+      /**
+       * @brief Decrement operator (postfix)
+       *
+       * @return The iterator
+       */
+      Iterator operator--(int) noexcept {
+        Iterator copy = *this;
+        --index;
         return copy;
       }
 
@@ -175,6 +219,16 @@ inline namespace v1 {
   };
 
   /**
+   * @relates Range::Iterator
+   * @brief Swap two range iterators
+   */
+  template<typename T>
+  inline
+  void swap(typename Range<T>::Iterator& lhs, typename Range<T>::Iterator& rhs) {
+    lhs.swap(rhs);
+  }
+
+  /**
    * @ingroup core
    * @brief A float range
    *
@@ -229,7 +283,13 @@ inline namespace v1 {
     /**
      * @brief An iterator for a 2D range
      */
-    struct Iterator : public std::iterator<std::input_iterator_tag, T> {
+    struct Iterator {
+      using difference_type = std::ptrdiff_t;
+      using value_type = Vector<T, 2>;
+      using pointer = value_type;
+      using reference = value_type;
+      using iterator_category = std::forward_iterator_tag;
+
       Range<T> range;
       Vector<T, 2> position;
 
@@ -247,18 +307,36 @@ inline namespace v1 {
       }
 
       /**
+       * @brief Swap the iterator with another iterator
+       */
+      void swap(Iterator& other) {
+        using std::swap;
+        swap(range, other.range);
+        swap(position, other.position);
+      }
+
+      /**
        * @brief Dereference operator
        *
-       * @return The position
+       * @returns The position
        */
-      Vector<T, 2> operator*() noexcept {
+      reference operator*() noexcept {
+        return position;
+      }
+
+      /**
+       * @brief Pointer operator
+       *
+       * @returns The position
+       */
+      pointer operator->() noexcept {
         return position;
       }
 
       /**
        * @brief Increment operator (prefix)
        *
-       * @return The iterator
+       * @returns The iterator
        */
       Iterator& operator++() noexcept {
         step();
@@ -268,7 +346,7 @@ inline namespace v1 {
       /**
        * @brief Increment operator (postfix)
        *
-       * @return The iterator
+       * @returns The iterator
        */
       Iterator operator++(int) noexcept {
         Iterator copy = *this;
@@ -329,6 +407,15 @@ inline namespace v1 {
 
   };
 
+  /**
+   * @relates PositionRange::Iterator
+   * @brief Swap two range iterators
+   */
+  template<typename T>
+  inline
+  void swap(typename PositionRange<T>::Iterator& lhs, typename PositionRange<T>::Iterator& rhs) {
+    lhs.swap(rhs);
+  }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
