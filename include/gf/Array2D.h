@@ -49,14 +49,14 @@ inline namespace v1 {
    * @sa gf::Array2D
    */
   template<typename I>
-  class Array2DBase {
+  class Index2D {
   public:
     /**
      * @brief Default constructor
      *
      * Creates an empty array.
      */
-    Array2DBase()
+    Index2D()
     : m_size(0, 0)
     {
 
@@ -67,7 +67,7 @@ inline namespace v1 {
      *
      * @param size The size of the array
      */
-    Array2DBase(Vector<I, 2> size)
+    Index2D(Vector<I, 2> size)
     : m_size(size)
     {
 
@@ -76,29 +76,29 @@ inline namespace v1 {
     /**
      * @brief Default copy constructor
      */
-    Array2DBase(const Array2DBase&) = default;
+    Index2D(const Index2D&) = default;
 
     /**
      * @brief Default copy assignment
      */
-    Array2DBase& operator=(const Array2DBase&) = default;
+    Index2D& operator=(const Index2D&) = default;
 
     /**
      * @brief Default move constructor
      */
-    Array2DBase(Array2DBase&&) = default;
+    Index2D(Index2D&&) = default;
 
     /**
      * @brief Default move assignement
      */
-    Array2DBase& operator=(Array2DBase&&) = default;
+    Index2D& operator=(Index2D&&) = default;
 
     /**
      * @brief Swap with another array
      *
      * @param other An other array
      */
-    void swap(Array2DBase& other) {
+    void swap(Index2D& other) {
       std::swap(m_size, other.m_size);
     }
 
@@ -216,6 +216,14 @@ inline namespace v1 {
       return getNeighborSquareRange(pos, 2);
     }
 
+    NeighborDiamondRange<I> get4NeighborsRange(Vector<I, 2> pos) const {
+      return getNeighborDiamondRange(pos, 1);
+    }
+
+    NeighborDiamondRange<I> get12NeighborsRange(Vector<I, 2> pos) const {
+      return getNeighborDiamondRange(pos, 2);
+    }
+
     /** @} */
 
   private:
@@ -230,14 +238,25 @@ inline namespace v1 {
       return NeighborSquareRange<I>{ Range<I>{ colMin, colMax + 1 }, Range<I>{ rowMin, rowMax + 1 }, pos };
     }
 
+    NeighborDiamondRange<I> getNeighborDiamondRange(Vector<I, 2> pos, I n) const {
+      assert(isValid(pos));
+
+      auto colMin = pos.col - std::min(pos.col, n);
+      auto colMax = pos.col + std::min(m_size.col - pos.col - 1, n);
+      auto rowMin = pos.row - std::min(pos.row, n);
+      auto rowMax = pos.row + std::min(m_size.row - pos.row - 1, n);
+
+      return NeighborDiamondRange<I>{ Range<I>{ colMin, colMax + 1 }, Range<I>{ rowMin, rowMax + 1 }, pos, n };
+    }
+
   private:
     Vector<I, 2> m_size;
   };
 
 // MSVC does not like extern template
 #ifndef _MSC_VER
-  extern template struct Array2DBase<unsigned>;
-  extern template struct Array2DBase<int>;
+  extern template struct Index2D<unsigned>;
+  extern template struct Index2D<int>;
 #endif
 
   /**
@@ -262,7 +281,7 @@ inline namespace v1 {
    * @sa gf::Matrix
    */
   template<typename T, typename I = unsigned>
-  class Array2D : public Array2DBase<I> {
+  class Array2D : public Index2D<I> {
   public:
     /**
      * @brief Default constructor
@@ -270,7 +289,7 @@ inline namespace v1 {
      * Creates an empty array.
      */
     Array2D()
-    : Array2DBase<I>()
+    : Index2D<I>()
     {
 
     }
@@ -281,7 +300,7 @@ inline namespace v1 {
      * @param size The size of the array
      */
     Array2D(Vector<I, 2> size)
-    : Array2DBase<I>(size)
+    : Index2D<I>(size)
     , m_data(static_cast<std::size_t>(size.width) * static_cast<std::size_t>(size.height))
     {
 
@@ -294,7 +313,7 @@ inline namespace v1 {
      * @param value The initial value in the array
      */
     Array2D(Vector<I, 2> size, const T& value)
-    : Array2DBase<I>(size)
+    : Index2D<I>(size)
     , m_data(static_cast<std::size_t>(size.width) * static_cast<std::size_t>(size.height), value)
     {
 
@@ -326,22 +345,22 @@ inline namespace v1 {
      * @param other An other array
      */
     void swap(Array2D& other) {
-      Array2DBase<I>::swap(other);
+      Index2D<I>::swap(other);
       std::swap(m_data, other.m_data);
     }
 
-    using Array2DBase<I>::getSize;
-    using Array2DBase<I>::getCols;
-    using Array2DBase<I>::getRows;
-    using Array2DBase<I>::isValid;
-    using Array2DBase<I>::toPosition;
-    using Array2DBase<I>::toIndex;
-    using Array2DBase<I>::getIndexRange;
-    using Array2DBase<I>::getRowRange;
-    using Array2DBase<I>::getColRange;
-    using Array2DBase<I>::getPositionRange;
-    using Array2DBase<I>::get8NeighborsRange;
-    using Array2DBase<I>::get24NeighborsRange;
+    using Index2D<I>::getSize;
+    using Index2D<I>::getCols;
+    using Index2D<I>::getRows;
+    using Index2D<I>::isValid;
+    using Index2D<I>::toPosition;
+    using Index2D<I>::toIndex;
+    using Index2D<I>::getIndexRange;
+    using Index2D<I>::getRowRange;
+    using Index2D<I>::getColRange;
+    using Index2D<I>::getPositionRange;
+    using Index2D<I>::get8NeighborsRange;
+    using Index2D<I>::get24NeighborsRange;
 
     /**
      * @name Raw data access

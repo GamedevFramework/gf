@@ -1345,7 +1345,7 @@ inline namespace v1 {
    */
   template<typename T, std::size_t N>
   inline
-  void swap(Vector<T,N>& lhs, Vector<T,N>& rhs) {
+  void swap(Vector<T,N>& lhs, Vector<T,N>& rhs) noexcept {
     std::swap_ranges(lhs.begin(), lhs.end(), rhs.begin());
   }
 

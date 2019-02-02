@@ -152,17 +152,17 @@ inline namespace v1 {
   }
 
   double Heightmap::getSlope(Vector2i position) const {
-    const double altitudeHere = m_data(position);
+    const double altitude = m_data(position);
     double altitudeDifferenceMax = 0.0;
 
-    m_data.visit4Neighbors(position, [altitudeHere, &altitudeDifferenceMax](Vector2i positionThere, double altitudeThere) {
-      gf::unused(positionThere);
-      double altitudeDifference = std::abs(altitudeHere - altitudeThere);
+    for (auto positionThere : m_data.get4NeighborsRange(position)) {
+      double altitudeThere = m_data(positionThere);
+      double altitudeDifference = std::abs(altitude - altitudeThere);
 
       if (altitudeDifference > altitudeDifferenceMax) {
         altitudeDifferenceMax = altitudeDifference;
       }
-    });
+    }
 
     return altitudeDifferenceMax;
   }
