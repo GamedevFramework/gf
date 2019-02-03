@@ -208,26 +208,50 @@ inline namespace v1 {
       return { getColRange(), getRowRange() };
     }
 
-    NeighborSquareRange<I> get8NeighborsRange(Vector<I, 2> pos) const {
+    /**
+     * @brief Get a range for 8 neighbors (at most)
+     *
+     * @param pos The base position
+     * @return A range over neighbors (position not included)
+     */
+    NeighborSquareRange<I> get8NeighborsRange(Vector<I, 2> pos) const noexcept {
       return getNeighborSquareRange(pos, 1);
     }
 
-    NeighborSquareRange<I> get24NeighborsRange(Vector<I, 2> pos) const {
+    /**
+     * @brief Get a range for 24 neighbors (at most)
+     *
+     * @param pos The base position
+     * @return A range over neighbors (position not included)
+     */
+    NeighborSquareRange<I> get24NeighborsRange(Vector<I, 2> pos) const noexcept {
       return getNeighborSquareRange(pos, 2);
     }
 
-    NeighborDiamondRange<I> get4NeighborsRange(Vector<I, 2> pos) const {
+    /**
+     * @brief Get a range for 4 neighbors (at most)
+     *
+     * @param pos The base position
+     * @return A range over neighbors (position not included)
+     */
+    NeighborDiamondRange<I> get4NeighborsRange(Vector<I, 2> pos) const noexcept {
       return getNeighborDiamondRange(pos, 1);
     }
 
-    NeighborDiamondRange<I> get12NeighborsRange(Vector<I, 2> pos) const {
+    /**
+     * @brief Get a range for 12 neighbors (at most)
+     *
+     * @param pos The base position
+     * @return A range over neighbors (position not included)
+     */
+    NeighborDiamondRange<I> get12NeighborsRange(Vector<I, 2> pos) const noexcept {
       return getNeighborDiamondRange(pos, 2);
     }
 
     /** @} */
 
   private:
-    NeighborSquareRange<I> getNeighborSquareRange(Vector<I, 2> pos, I n) const {
+    NeighborSquareRange<I> getNeighborSquareRange(Vector<I, 2> pos, I n) const noexcept {
       assert(isValid(pos));
 
       auto colMin = pos.col - std::min(pos.col, n);
@@ -238,7 +262,7 @@ inline namespace v1 {
       return NeighborSquareRange<I>{ Range<I>{ colMin, colMax + 1 }, Range<I>{ rowMin, rowMax + 1 }, pos };
     }
 
-    NeighborDiamondRange<I> getNeighborDiamondRange(Vector<I, 2> pos, I n) const {
+    NeighborDiamondRange<I> getNeighborDiamondRange(Vector<I, 2> pos, I n) const noexcept {
       assert(isValid(pos));
 
       auto colMin = pos.col - std::min(pos.col, n);
@@ -447,222 +471,6 @@ inline namespace v1 {
 
     /** @} */
 
-    /**
-     * @name Visitors
-     * @{
-     */
-
-    /**
-     * @brief Visit the 4 neighbors of a given position
-     *
-     * This function calls a callback function for every neighbor in the
-     * vertical and horizontal direction. The function checks if the neighbor
-     * actually exists.
-     *
-     * The callback function has the following prototype:
-     *
-     * ~~~{.cc}
-     * void callback(Vector<I, 2> pos, T value);
-     * // pos is the position of the neighbor
-     * // value is the value of the neighbor
-     * ~~~
-     *
-     * The callback function can be a simple function but also a
-     * [lambda expression](http://en.cppreference.com/w/cpp/language/lambda).
-     *
-     * @param pos The position
-     * @param func A callback function
-     */
-    template<typename Func>
-    void visit4Neighbors(Vector<I, 2> pos, Func func) {
-      visitNeighborsDiamond(pos, func, 1);
-    }
-
-    /**
-     * @brief Visit the 4 neighbors of a given position
-     *
-     * This function calls a callback function for every neighbor in the
-     * vertical and horizontal direction. The function checks if the neighbor
-     * actually exists.
-     *
-     * The callback function has the following prototype:
-     *
-     * ~~~{.cc}
-     * void callback(Vector<I, 2> pos, T value);
-     * // pos is the position of the neighbor
-     * // value is the value of the neighbor
-     * ~~~
-     *
-     * The callback function can be a simple function but also a
-     * [lambda expression](http://en.cppreference.com/w/cpp/language/lambda).
-     *
-     * @param pos The position
-     * @param func A callback function
-     */
-    template<typename Func>
-    void visit4Neighbors(Vector<I, 2> pos, Func func) const {
-      visitNeighborsDiamond(pos, func, 1);
-    }
-
-    /**
-     * @brief Visit the 12 neighbors of a given position
-     *
-     * This function calls a callback function for every neighbor in the
-     * vertical and horizontal direction. The function checks if the neighbor
-     * actually exists.
-     *
-     * The callback function has the following prototype:
-     *
-     * ~~~{.cc}
-     * void callback(Vector<I, 2> pos, T value);
-     * // pos is the position of the neighbor
-     * // value is the value of the neighbor
-     * ~~~
-     *
-     * The callback function can be a simple function but also a
-     * [lambda expression](http://en.cppreference.com/w/cpp/language/lambda).
-     *
-     * @param pos The position
-     * @param func A callback function
-     */
-    template<typename Func>
-    void visit12Neighbors(Vector<I, 2> pos, Func func) {
-      visitNeighborsDiamond(pos, func, 2);
-    }
-
-    /**
-     * @brief Visit the 12 neighbors of a given position
-     *
-     * This function calls a callback function for every neighbor in the
-     * vertical and horizontal direction. The function checks if the neighbor
-     * actually exists.
-     *
-     * The callback function has the following prototype:
-     *
-     * ~~~{.cc}
-     * void callback(Vector<I, 2> pos, T value);
-     * // pos is the position of the neighbor
-     * // value is the value of the neighbor
-     * ~~~
-     *
-     * The callback function can be a simple function but also a
-     * [lambda expression](http://en.cppreference.com/w/cpp/language/lambda).
-     *
-     * @param pos The position
-     * @param func A callback function
-     */
-    template<typename Func>
-    void visit12Neighbors(Vector<I, 2> pos, Func func) const {
-      visitNeighborsDiamond(pos, func, 2);
-    }
-
-    /**
-     * @brief Visit the 8 neighbors of a given position
-     *
-     * This function calls a callback function for every neighbor in the
-     * vertical, horizontal and diagonal direction. The function checks if the
-     * neighbor actually exists.
-     *
-     * The callback function has the following prototype:
-     *
-     * ~~~{.cc}
-     * void callback(Vector<I, 2> pos, T value);
-     * // pos is the position of the neighbor
-     * // value is the value of the neighbor
-     * ~~~
-     *
-     * The callback function can be a simple function but also a
-     * [lambda expression](http://en.cppreference.com/w/cpp/language/lambda).
-     *
-     * @param pos The position
-     * @param func A callback function
-     */
-    template<typename Func>
-    void visit8Neighbors(Vector<I, 2> pos, Func func) {
-      visitNeighborsSquare(pos, func, 1);
-    }
-
-    /**
-     * @brief Visit the 8 neighbors of a given position
-     *
-     * This function calls a callback function for every neighbor in the
-     * vertical, horizontal and diagonal direction. The function checks if the
-     * neighbor actually exists.
-     *
-     * The callback function has the following prototype:
-     *
-     * ~~~{.cc}
-     * void callback(Vector<I, 2> pos, T value);
-     * // pos is the position of the neighbor
-     * // value is the value of the neighbor
-     * ~~~
-     *
-     * The callback function can be a simple function but also a
-     * [lambda expression](http://en.cppreference.com/w/cpp/language/lambda).
-     *
-     * @param pos The position
-     * @param func A callback function
-     */
-
-
-    template<typename Func>
-    void visit8Neighbors(Vector<I, 2> pos, Func func) const {
-      visitNeighborsSquare(pos, func, 1);
-    }
-
-    /**
-     * @brief Visit the 24 neighbors of a given position
-     *
-     * This function calls a callback function for every neighbor in the
-     * vertical, horizontal and diagonal direction. The function checks if the
-     * neighbor actually exists.
-     *
-     * The callback function has the following prototype:
-     *
-     * ~~~{.cc}
-     * void callback(Vector<I, 2> pos, T value);
-     * // pos is the position of the neighbor
-     * // value is the value of the neighbor
-     * ~~~
-     *
-     * The callback function can be a simple function but also a
-     * [lambda expression](http://en.cppreference.com/w/cpp/language/lambda).
-     *
-     * @param pos The position
-     * @param func A callback function
-     */
-    template<typename Func>
-    void visit24Neighbors(Vector<I, 2> pos, Func func) {
-      visitNeighborsSquare(pos, func, 2);
-    }
-
-    /**
-     * @brief Visit the 24 neighbors of a given position
-     *
-     * This function calls a callback function for every neighbor in the
-     * vertical, horizontal and diagonal direction. The function checks if the
-     * neighbor actually exists.
-     *
-     * The callback function has the following prototype:
-     *
-     * ~~~{.cc}
-     * void callback(Vector<I, 2> pos, T value);
-     * // pos is the position of the neighbor
-     * // value is the value of the neighbor
-     * ~~~
-     *
-     * The callback function can be a simple function but also a
-     * [lambda expression](http://en.cppreference.com/w/cpp/language/lambda).
-     *
-     * @param pos The position
-     * @param func A callback function
-     */
-    template<typename Func>
-    void visit24Neighbors(Vector<I, 2> pos, Func func) const {
-      visitNeighborsSquare(pos, func, 2);
-    }
-
-    /** @} */
 
     /**
      * @name Iterators
@@ -718,99 +526,6 @@ inline namespace v1 {
 
     const T& get(Vector<I, 2> pos) const {
       return m_data[toIndex(pos)];
-    }
-
-    template<typename Func>
-    void visitNeighborsSquare(Vector<I, 2> pos, Func func, I n) const {
-      assert(isValid(pos));
-      auto size = getSize();
-
-      auto colMin = pos.col - std::min(pos.col, n);
-      auto colMax = pos.col + std::min(size.col - pos.col - 1, n);
-      auto rowMin = pos.row - std::min(pos.row, n);
-      auto rowMax = pos.row + std::min(size.row - pos.row - 1, n);
-
-      for (auto row = rowMin; row <= rowMax; ++row) {
-        for (auto col = colMin; col <= colMax; ++col) {
-          if (col == pos.col && row == pos.row) { // avoid to include VectorOps.h
-            continue;
-          }
-
-          func({ col, row }, get({ col, row }));
-        }
-      }
-    }
-
-    template<typename Func>
-    void visitNeighborsSquare(Vector<I, 2> pos, Func func, I n) {
-      assert(isValid(pos));
-      auto size = getSize();
-
-      auto colMin = pos.col - std::min(pos.col, n);
-      auto colMax = pos.col + std::min(size.col - pos.col - 1, n);
-      auto rowMin = pos.row - std::min(pos.row, n);
-      auto rowMax = pos.row + std::min(size.row - pos.row - 1, n);
-
-      for (auto row = rowMin; row <= rowMax; ++row) {
-        for (auto col = colMin; col <= colMax; ++col) {
-          if (col == pos.col && row == pos.row) { // avoid to include VectorOps.h
-            continue;
-          }
-
-          func({ col, row }, get({ col, row }));
-        }
-      }
-    }
-
-
-    template<typename Func>
-    void visitNeighborsDiamond(Vector<I, 2> pos, Func func, I n) const {
-      assert(isValid(pos));
-      auto size = getSize();
-
-      auto colMin = pos.col - std::min(pos.col, n);
-      auto colMax = pos.col + std::min(size.col - pos.col - 1, n);
-      auto rowMin = pos.row - std::min(pos.row, n);
-      auto rowMax = pos.row + std::min(size.row - pos.row - 1, n);
-
-      for (auto row = rowMin; row <= rowMax; ++row) {
-        for (auto col = colMin; col <= colMax; ++col) {
-          if (col == pos.col && row == pos.row) { // avoid to include VectorOps.h
-            continue;
-          }
-
-          if (gf::absdiff(col, pos.col) + gf::absdiff(row, pos.row) > n) {
-            continue;
-          }
-
-          func({ col, row }, get({ col, row }));
-        }
-      }
-    }
-
-    template<typename Func>
-    void visitNeighborsDiamond(Vector<I, 2> pos, Func func, I n) {
-      assert(isValid(pos));
-      auto size = getSize();
-
-      auto colMin = pos.col - std::min(pos.col, n);
-      auto colMax = pos.col + std::min(size.col - pos.col - 1, n);
-      auto rowMin = pos.row - std::min(pos.row, n);
-      auto rowMax = pos.row + std::min(size.row - pos.row - 1, n);
-
-      for (auto row = rowMin; row <= rowMax; ++row) {
-        for (auto col = colMin; col <= colMax; ++col) {
-          if (col == pos.col && row == pos.row) { // avoid to include VectorOps.h
-            continue;
-          }
-
-          if (gf::absdiff(col, pos.col) + gf::absdiff(row, pos.row) > n) {
-            continue;
-          }
-
-          func({ col, row }, get({ col, row }));
-        }
-      }
     }
 
   private:
