@@ -27,8 +27,8 @@ inline namespace v1 {
 
 // MSVC does not like extern template
 #ifndef _MSC_VER
-  template struct Index2D<unsigned>;
-  template struct Index2D<int>;
+  template class Index2D<unsigned>;
+  template class Index2D<int>;
 #endif
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

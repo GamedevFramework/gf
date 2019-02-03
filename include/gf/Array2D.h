@@ -255,8 +255,8 @@ inline namespace v1 {
 
 // MSVC does not like extern template
 #ifndef _MSC_VER
-  extern template struct Index2D<unsigned>;
-  extern template struct Index2D<int>;
+  extern template class Index2D<unsigned>;
+  extern template class Index2D<int>;
 #endif
 
   /**
