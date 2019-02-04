@@ -167,14 +167,10 @@ inline namespace v1 {
 
     float getTextWidth(nk_handle handle, float characterSize, const char *text, int len) {
       auto font = static_cast<Font *>(handle.ptr);
-
-      std::string originalText(text, len);
-      std::u32string unicodeText = computeUnicodeString(originalText);
-
       float textWidth = 0;
       char32_t prevCodepoint = '\0';
 
-      for (char32_t currCodepoint : unicodeText) {
+      for (char32_t currCodepoint : gf::codepoints(StringRef(text, len))) {
         textWidth += font->getKerning(prevCodepoint, currCodepoint, static_cast<unsigned>(characterSize));
         prevCodepoint = currCodepoint;
 

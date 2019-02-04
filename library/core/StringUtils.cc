@@ -89,37 +89,9 @@ inline namespace v1 {
   }
 
   std::u32string computeUnicodeString(StringRef str) {
-    static constexpr uint8_t Utf8Table[4][2] = {
-      { 0x7F, 0x00 },
-      { 0x1F, 0xC0 },
-      { 0x0F, 0xE0 },
-      { 0x07, 0xF0 }
-    };
-
     std::u32string out;
 
-    for (std::size_t k = 0; k < str.getSize(); ++k) {
-      uint8_t c = str[k];
-      char32_t codepoint = 0;
-
-      for (std::size_t i = 0; i < 4; ++i) {
-        if ((c & ~Utf8Table[i][0]) == Utf8Table[i][1]) {
-          codepoint = c & Utf8Table[i][0];
-
-          for (std::size_t j = 0; j < i; ++j) {
-            ++k;
-
-            assert(k < str.getSize());
-            c = str[k];
-
-            assert((c & ~0x3F) == 0x80);
-            codepoint = (codepoint << 6) + (c & 0x3F);
-          }
-
-          break;
-        }
-      }
-
+    for (char32_t codepoint : codepoints(str)) {
       out.push_back(codepoint);
     }
 
@@ -162,11 +134,29 @@ inline namespace v1 {
     return out;
   }
 
+  std::vector<StringRef> splitInParagraphs(StringRef str) {
+    std::vector<StringRef> out;
+    boost::algorithm::split(out, str, boost::is_any_of("\n"), boost::algorithm::token_compress_on);
+    out.erase(std::remove_if(out.begin(), out.end(), [](StringRef s) {
+      return s.isEmpty();
+    }), out.end());
+    return out;
+  }
+
   std::vector<std::u32string> splitInWords(const std::u32string& str) {
     std::vector<std::u32string> out;
     boost::algorithm::split(out, str, boost::is_any_of(U" \t"), boost::algorithm::token_compress_on);
     out.erase(std::remove_if(out.begin(), out.end(), [](const std::u32string& s) {
       return s.empty();
+    }), out.end());
+    return out;
+  }
+
+  std::vector<StringRef> splitInWords(StringRef str) {
+    std::vector<StringRef> out;
+    boost::algorithm::split(out, str, boost::is_any_of(U" \t"), boost::algorithm::token_compress_on);
+    out.erase(std::remove_if(out.begin(), out.end(), [](StringRef s) {
+      return s.isEmpty();
     }), out.end());
     return out;
   }

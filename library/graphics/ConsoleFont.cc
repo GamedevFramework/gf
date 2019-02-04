@@ -102,9 +102,7 @@ inline namespace v1 {
   void ConsoleFont::mapString(StringRef str, Vector2u position) {
     unsigned index = computeIndex(position, m_format.layout, m_size);
 
-    auto unicodeString = computeUnicodeString(str);
-
-    for (auto codepoint : unicodeString) {
+    for (auto codepoint : gf::codepoints(str)) {
       if (codepoint >= 0x10000) {
         std::uint_least32_t value = static_cast<std::uint_least32_t>(codepoint);
         Log::error("Can not map a codepoint outside the Basic Multilingual Plane (BMP): U+%" PRIXLEAST32, value);
