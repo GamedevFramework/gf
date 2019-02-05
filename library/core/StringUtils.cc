@@ -88,16 +88,6 @@ inline namespace v1 {
     return result;
   }
 
-  std::u32string computeUnicodeString(StringRef str) {
-    std::u32string out;
-
-    for (char32_t codepoint : codepoints(str)) {
-      out.push_back(codepoint);
-    }
-
-    return out;
-  }
-
   std::string formatString(const char *fmt, ...) {
     va_list ap;
     va_start(ap, fmt);
@@ -125,29 +115,11 @@ inline namespace v1 {
     return std::string(buffer.get());
   }
 
-  std::vector<std::u32string> splitInParagraphs(const std::u32string& str) {
-    std::vector<std::u32string> out;
-    boost::algorithm::split(out, str, boost::is_any_of(U"\n"), boost::algorithm::token_compress_on);
-    out.erase(std::remove_if(out.begin(), out.end(), [](const std::u32string& s) {
-      return s.empty();
-    }), out.end());
-    return out;
-  }
-
   std::vector<StringRef> splitInParagraphs(StringRef str) {
     std::vector<StringRef> out;
     boost::algorithm::split(out, str, boost::is_any_of("\n"), boost::algorithm::token_compress_on);
     out.erase(std::remove_if(out.begin(), out.end(), [](StringRef s) {
       return s.isEmpty();
-    }), out.end());
-    return out;
-  }
-
-  std::vector<std::u32string> splitInWords(const std::u32string& str) {
-    std::vector<std::u32string> out;
-    boost::algorithm::split(out, str, boost::is_any_of(U" \t"), boost::algorithm::token_compress_on);
-    out.erase(std::remove_if(out.begin(), out.end(), [](const std::u32string& s) {
-      return s.empty();
     }), out.end());
     return out;
   }

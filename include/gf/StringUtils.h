@@ -49,15 +49,6 @@ inline namespace v1 {
 
   /**
    * @ingroup core
-   * @brief Compute a UTF-32 string from a UTF-8 string
-   *
-   * @param str A UTF-8 string
-   * @returns The corresponding UTF-32 string
-   */
-  GF_API std::u32string computeUnicodeString(StringRef str);
-
-  /**
-   * @ingroup core
    * @brief Format a string like printf
    *
    * @param fmt The [format string](http://en.cppreference.com/w/cpp/io/c/fprintf)
@@ -73,18 +64,6 @@ inline namespace v1 {
    */
   GF_API std::string formatString(const char *fmt, va_list ap);
 
-
-  /**
-   * @ingroup core
-   * @brief Split a string in multiples paragraphs
-   *
-   * The paragraphs are separated by '\n'.
-   *
-   * @param str The input string
-   * @returns A vector of strings containing the paragraphs
-   */
-  GF_API std::vector<std::u32string> splitInParagraphs(const std::u32string& str);
-
   /**
    * @ingroup core
    * @brief Split a string in multiples paragraphs
@@ -95,17 +74,6 @@ inline namespace v1 {
    * @returns A vector of strings containing the paragraphs
    */
   GF_API std::vector<StringRef> splitInParagraphs(StringRef str);
-
-  /**
-   * @ingroup core
-   * @brief Split a string in multiples words
-   *
-   * The words are separated by ' ' (space) or '\t' (tabulation).
-   *
-   * @param str The input string
-   * @returns A vector of strings containing the words
-   */
-  GF_API std::vector<std::u32string> splitInWords(const std::u32string& str);
 
   /**
    * @ingroup core
