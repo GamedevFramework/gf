@@ -31,7 +31,7 @@ inline namespace v1 {
    * @brief A simple way to avoid warnings about unused variables
    */
   template <typename... Args>
-  inline
+  constexpr
   void unused(Args&&...) {
 
   }
