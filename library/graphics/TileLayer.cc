@@ -205,12 +205,13 @@ inline namespace v1 {
         // position
 
         RectF position({ 0.0f, 0.0f }, { 0.0f, 0.0f });
-        position.setSize(m_tileSize);
 
         if (m_type == Orthogonal) {
+          position.setSize(blockSize);
           position.setPosition(cell * blockSize);
         } else {
           assert(m_type == Staggered);
+          position.setSize(m_tileSize);
 
           if (cell.y % 2 == 0) {
             gf::Vector2f pos = cell * blockSize;
