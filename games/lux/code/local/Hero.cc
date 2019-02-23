@@ -43,7 +43,7 @@ namespace lux {
   : gf::Entity(2)
   , m_score(0)
   , m_healthPercent(1.0f)
-  , m_font(resources.getFont("jupiter.ttf"))
+  , m_font(resources.getFont("SulphurPoint-Regular.otf"))
   {
 
   }
