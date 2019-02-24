@@ -1,0 +1,6 @@
+#ifndef HOME_CONFIG_H
+#define HOME_CONFIG_H
+
+#define HOME_DATA_DIR "@HOME_DATA_DIR@"
+
+#endif // HOME_CONFIG_H
