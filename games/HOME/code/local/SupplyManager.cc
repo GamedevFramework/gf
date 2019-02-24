@@ -22,7 +22,6 @@
 #include <gf/Shapes.h>
 #include <gf/VectorOps.h>
 
-#include "Constants.h"
 #include "Messages.h"
 #include "Singletons.h"
 
@@ -37,6 +36,8 @@ namespace home {
 
   static constexpr float SupplyDistance = 64.0f;
   static constexpr float SupplyMiningVolume = 75.0f;
+
+  static constexpr gf::Vector2i TileSize = { 128, 128 };
 
   SupplyManager::SupplyManager()
   : gf::Entity(10)
