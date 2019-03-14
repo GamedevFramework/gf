@@ -77,7 +77,7 @@ inline namespace v1 {
   static_assert(sizeof(Color4u) == 4 * sizeof(uint8_t), "Vector size mismatch");
 
 
-  static_assert(std::is_trivially_copyable<Vector2f>::value, "Vector2f should be trivially copyable");
+  static_assert(std::is_trivial<Vector2f>::value, "Vector2f should be trivial");
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
