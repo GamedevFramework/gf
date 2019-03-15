@@ -89,7 +89,7 @@ inline namespace v1 {
       return true;
     }
 
-    return std::feof(m_file);
+    return std::feof(m_file) != 0;
   }
 
   // MemoryInputStream

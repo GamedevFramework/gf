@@ -224,7 +224,7 @@ inline namespace v1 {
   }
 
   void BareTexture::bind(const BareTexture *texture) {
-    if (texture && texture->m_name != 0) {
+    if (texture != nullptr && texture->m_name != 0) {
       glCheck(glBindTexture(GL_TEXTURE_2D, texture->m_name));
     } else {
       glCheck(glBindTexture(GL_TEXTURE_2D, 0));

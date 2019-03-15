@@ -171,8 +171,8 @@ inline namespace v1 {
     return { r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f };
   }
 
-  Color4f Color::fromRgba32(uint32_t c) {
-    return fromRgba32(static_cast<uint8_t>(c >> 24), static_cast<uint8_t>(c >> 16), static_cast<uint8_t>(c >> 8), static_cast<uint8_t>(c));
+  Color4f Color::fromRgba32(uint32_t color) {
+    return fromRgba32(static_cast<uint8_t>(color >> 24), static_cast<uint8_t>(color >> 16), static_cast<uint8_t>(color >> 8), static_cast<uint8_t>(color));
   }
 
   Color4f Color::fromRgba32(Color4u color) {

@@ -37,6 +37,56 @@ inline namespace v1 {
 
     constexpr uint8_t Magic[2] = { 'g', 'f' };
 
+
+    template<bool IsSigned>
+    struct CharWriter;
+
+    template<>
+    struct CharWriter<true> {
+      static void write(Serializer& serializer, char data) {
+        serializer.writeSigned8(data);
+      }
+    };
+
+    template<>
+    struct CharWriter<false> {
+      static void write(Serializer& serializer, char data) {
+        serializer.writeUnsigned8(data);
+      }
+    };
+
+
+    template<bool IsSigned>
+    struct CharReader;
+
+    template<>
+    struct CharReader<true> {
+      static bool read(Deserializer& deserializer, char& data) {
+        int8_t x;
+
+        if (deserializer.readSigned8(x)) {
+          data = x;
+          return true;
+        }
+
+        return false;
+      }
+    };
+
+    template<>
+    struct CharReader<false> {
+      static bool read(Deserializer& deserializer, char& data) {
+        uint8_t x;
+
+        if (deserializer.readUnsigned8(x)) {
+          data = x;
+          return true;
+        }
+
+        return false;
+      }
+    };
+
   }
 
   /*
@@ -52,15 +102,12 @@ inline namespace v1 {
   }
 
   void Serializer::writeBoolean(bool data) {
-    writeUnsigned8(data);
+    writeUnsigned8(static_cast<uint8_t>(data));
   }
 
   void Serializer::writeChar(char data) {
-    if (std::numeric_limits<char>::is_signed) {
-      writeSigned8(data);
-    } else {
-      writeUnsigned8(data);
-    }
+    CharWriter<std::numeric_limits<char>::is_signed> writer;
+    writer.write(*this, data);
   }
 
   void Serializer::writeSigned8(int8_t data) {
@@ -201,19 +248,8 @@ inline namespace v1 {
   }
 
   bool Deserializer::readChar(char& data) {
-    bool res;
-
-    if (std::numeric_limits<char>::is_signed) {
-      int8_t x;
-      res = readSigned8(x);
-      data = x;
-    } else {
-      uint8_t x;
-      res = readUnsigned8(x);
-      data = x;
-    }
-
-    return res;
+    CharReader<std::numeric_limits<char>::is_signed> reader;
+    return reader.read(*this, data);
   }
 
   bool Deserializer::readSigned8(int8_t& data) {

@@ -62,7 +62,7 @@ inline namespace v1 {
 
     int callbackEof(void *user) {
       InputStream *stream = static_cast<InputStream *>(user);
-      return stream->isFinished();
+      return static_cast<int>(stream->isFinished());
     }
 
   } // anonymous namespace

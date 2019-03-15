@@ -183,7 +183,7 @@ inline namespace v1 {
   }
 
   bool Shader::compile(const char *vertexShaderCode, const char *fragmentShaderCode) {
-    assert(vertexShaderCode || fragmentShaderCode);
+    assert(vertexShaderCode != nullptr || fragmentShaderCode != nullptr);
 
     if (m_program != 0) {
       glCheck(glDeleteProgram(m_program));
@@ -191,13 +191,13 @@ inline namespace v1 {
 
     glCheck(m_program = glCreateProgram());
 
-    if (vertexShaderCode) {
+    if (vertexShaderCode != nullptr) {
       GLuint id = compileShader(vertexShaderCode, Vertex);
       glCheck(glAttachShader(m_program, id));
       glCheck(glDeleteShader(id)); // the shader is still here because it is attached to the program
     }
 
-    if (fragmentShaderCode) {
+    if (fragmentShaderCode != nullptr) {
       GLuint id = compileShader(fragmentShaderCode, Fragment);
       glCheck(glAttachShader(m_program, id));
       glCheck(glDeleteShader(id)); // the shader is still here because it is attached to the program
@@ -329,7 +329,7 @@ inline namespace v1 {
   }
 
   void Shader::bind(const Shader *shader) {
-    if (shader && shader->m_program != 0) {
+    if (shader != nullptr && shader->m_program != 0) {
       glCheck(glUseProgram(static_cast<GLuint>(shader->m_program)));
 
       // bind textures

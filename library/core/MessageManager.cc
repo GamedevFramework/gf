@@ -57,7 +57,7 @@ inline namespace v1 {
     }
   }
 
-  void MessageManager::sendMessage(Id type, Message *event) {
+  void MessageManager::sendMessage(Id type, Message *message) {
     auto it = m_handlers.find(type);
 
     if (it == m_handlers.end()) {
@@ -67,7 +67,7 @@ inline namespace v1 {
     std::vector<Handler> kept;
 
     for (auto& handler : it->second) {
-      if (handler.handler(type, event) == MessageStatus::Keep) {
+      if (handler.handler(type, message) == MessageStatus::Keep) {
         kept.push_back(handler);
       }
     }

@@ -309,7 +309,7 @@ inline namespace v1 {
       case EventType::KeyPressed:
       case EventType::KeyReleased:
       {
-        int down = event.type == EventType::KeyPressed;
+        int down = static_cast<int>(event.type == EventType::KeyPressed);
 
         switch (event.key.keycode) {
           case Keycode::LeftShift:
@@ -634,7 +634,7 @@ inline namespace v1 {
 
   bool UI::option(StringRef title, bool active) {
     setState(State::Setup);
-    return nk_option_text(&m_impl->ctx, title.getData(), title.getSize(), active) != 0;
+    return nk_option_text(&m_impl->ctx, title.getData(), title.getSize(), static_cast<int>(active)) != 0;
   }
 
   bool UI::radio(StringRef title, bool& active) {
@@ -666,7 +666,7 @@ inline namespace v1 {
   bool UI::progress(std::size_t& current, std::size_t max, UIProgress modifyable) {
     static_assert(std::is_same<std::size_t, nk_size>::value, "nk_size is not std::size_t");
     setState(State::Setup);
-    return nk_progress(&m_impl->ctx, &current, max, static_cast<bool>(modifyable)) != 0;
+    return nk_progress(&m_impl->ctx, &current, max, static_cast<int>(modifyable)) != 0;
   }
 
   bool UI::colorPicker(Color4f& color) {
@@ -993,7 +993,7 @@ inline namespace v1 {
 
   bool UI::isWidgetHovered() {
     setState(State::Setup);
-    return nk_widget_is_hovered(&m_impl->ctx);
+    return nk_widget_is_hovered(&m_impl->ctx) != 0;
   }
 
   void UI::spacing(int cols) {
@@ -1190,7 +1190,7 @@ inline namespace v1 {
     RenderStates localStates = states;
 
     for (auto command = nk__draw_begin(ctx, cmds); command != nullptr; command = nk__draw_next(command, cmds, ctx)) {
-      if (!command->elem_count) {
+      if (command->elem_count == 0) {
         continue;
       }
 

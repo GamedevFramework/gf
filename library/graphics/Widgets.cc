@@ -448,17 +448,17 @@ inline namespace v1 {
   BasicSprite& ChoiceSpriteWidget::getSprite() {
     if (isChosen()) {
       return m_chosen;
-    } else {
-      return m_empty;
     }
+
+    return m_empty;
   }
 
   const BasicSprite& ChoiceSpriteWidget::getSprite() const {
     if (isChosen()) {
       return m_chosen;
-    } else {
-      return m_empty;
     }
+
+    return m_empty;
   }
 
 

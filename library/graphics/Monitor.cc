@@ -40,7 +40,7 @@ inline namespace v1 {
 
       const char *message = SDL_GetError();
 
-      if (*message) {
+      if (message != nullptr && *message != '\0') {
         Log::error("SDL error: %s\n", message);
         SDL_ClearError();
       }

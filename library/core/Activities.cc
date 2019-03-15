@@ -34,8 +34,8 @@ inline namespace v1 {
    * ValueActivity
    */
 
-  ValueActivity::ValueActivity(float from, float target, float& value, Time duration, Easing easing)
-  : m_tween(from, target, value, duration, easing)
+  ValueActivity::ValueActivity(float origin, float target, float& value, Time duration, Easing easing)
+  : m_tween(origin, target, value, duration, easing)
   {
 
   }
