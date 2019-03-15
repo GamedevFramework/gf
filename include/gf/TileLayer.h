@@ -78,7 +78,8 @@ inline namespace v1 {
     /**
      * @brief Constructor
      *
-     * @param layerSize the size of the layer, in number of tiles
+     * @param layerSize The size of the layer, in number of tiles
+     * @param type The type of the layer
      */
     TileLayer(Vector2u layerSize, Type type = Orthogonal);
 

@@ -68,7 +68,7 @@ inline namespace v1 {
    * @ingroup core
    * @brief Split a string in multiples paragraphs
    *
-   * The paragraphs are separated by '\n'.
+   * The paragraphs are separated by '\\n'.
    *
    * @param str The input string
    * @returns A vector of strings containing the paragraphs
@@ -79,7 +79,7 @@ inline namespace v1 {
    * @ingroup core
    * @brief Split a string in multiples words
    *
-   * The words are separated by ' ' (space) or '\t' (tabulation).
+   * The words are separated by ' ' (space) or '\\t' (tabulation).
    *
    * @param str The input string
    * @returns A vector of strings containing the words
