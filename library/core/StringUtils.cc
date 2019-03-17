@@ -115,6 +115,32 @@ inline namespace v1 {
     return std::string(buffer.get());
   }
 
+  std::string escapeString(StringRef str) {
+    std::string out;
+
+    for (auto c : str) {
+      switch (c) {
+        case '\n':
+          out.append("\\n");
+          break;
+        case '\t':
+          out.append("\\t");
+          break;
+        case '\"':
+          out.append("\\\"");
+          break;
+        case '\\':
+          out.append("\\\\");
+          break;
+        default:
+          out.push_back(c);
+          break;
+      }
+    }
+
+    return out;
+  }
+
   std::vector<StringRef> splitInParagraphs(StringRef str) {
     std::vector<StringRef> out;
     boost::algorithm::split(out, str, boost::is_any_of("\n"), boost::algorithm::token_compress_on);

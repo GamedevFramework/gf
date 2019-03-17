@@ -66,6 +66,19 @@ inline namespace v1 {
 
   /**
    * @ingroup core
+   * @brief Escape a string
+   *
+   * This function replaces characters with their escaped equivalent. For
+   * example, a '\\n' character is replaced with "\\\\n". This function can be
+   * used to display strings.
+   *
+   * @param str The input string
+   * @returns An escaped string
+   */
+  GF_API std::string escapeString(StringRef str);
+
+  /**
+   * @ingroup core
    * @brief Split a string in multiples paragraphs
    *
    * The paragraphs are separated by '\\n'.
