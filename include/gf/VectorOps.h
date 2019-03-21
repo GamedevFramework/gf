@@ -883,6 +883,58 @@ inline namespace v1 {
 
   /**
    * @relates Vector
+   * @brief Project the vector on the x axis
+   *
+   * @param vec A vector
+   * @returns The projection of the vector on the x axis
+   */
+  template<typename T>
+  constexpr
+  Vector<T, 2> projx(Vector<T, 2> vec) {
+    return { vec.x, T(0) };
+  }
+
+  /**
+   * @relates Vector
+   * @brief Project the vector on the y axis
+   *
+   * @param vec A vector
+   * @returns The projection of the vector on the y axis
+   */
+  template<typename T>
+  constexpr
+  Vector<T, 2> projy(Vector<T, 2> vec) {
+    return { T(0), vec.y };
+  }
+
+  /**
+   * @relates Vector
+   * @brief Create a vector in the x direction
+   *
+   * @param length The length of the vector
+   * @returns A vector in the x direction
+   */
+  template<typename T>
+  constexpr
+  Vector<T, 2> dirx(T length) {
+    return { length, T(0) };
+  }
+
+  /**
+   * @relates Vector
+   * @brief Create a vector in the y direction
+   *
+   * @param length The length of the vector
+   * @returns A vector in the y direction
+   */
+  template<typename T>
+  constexpr
+  Vector<T, 2> diry(T length) {
+    return { T(0), length };
+  }
+
+  /**
+   * @relates Vector
    * @brief Unit vector in a specified direction
    *
    * @param angle The angle of the direction
