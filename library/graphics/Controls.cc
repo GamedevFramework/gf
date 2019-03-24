@@ -124,6 +124,7 @@ inline namespace v1 {
   : m_id(id)
   , m_axis(axis)
   , m_dir(dir)
+  , m_repeated(false)
   {
 
   }
@@ -135,10 +136,28 @@ inline namespace v1 {
       if ((m_id == AnyGamepad || event.gamepadAxis.id == m_id) && event.gamepadAxis.axis == m_axis) {
         switch (m_dir) {
           case GamepadAxisDirection::Positive:
-            setActive(event.gamepadAxis.value > GamepadAxisThreshold);
+            if (event.gamepadAxis.value > GamepadAxisThreshold) {
+              if (!m_repeated) {
+                setActive();
+              };
+
+              m_repeated = true;
+            } else {
+              setActive(false);
+              m_repeated = false;
+            }
             break;
           case GamepadAxisDirection::Negative:
-            setActive(event.gamepadAxis.value < -GamepadAxisThreshold);
+            if (event.gamepadAxis.value < -GamepadAxisThreshold) {
+              if (!m_repeated) {
+                setActive();
+              }
+
+              m_repeated = true;
+            } else {
+              setActive(false);
+              m_repeated = false;
+            }
             break;
         }
       }

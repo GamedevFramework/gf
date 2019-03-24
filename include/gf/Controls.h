@@ -133,6 +133,7 @@ inline namespace v1 {
     GamepadId m_id;
     GamepadAxis m_axis;
     GamepadAxisDirection m_dir;
+    bool m_repeated;
   };
 
   /**
