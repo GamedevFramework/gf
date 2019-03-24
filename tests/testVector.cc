@@ -38,3 +38,17 @@ TEST(VectorTest, ConversionFloatToInt) {
   EXPECT_EQ(69, copy[1]);
 }
 
+TEST(VectorTest, UniversalFactory) {
+  auto vec1 = gf::vec(1, 2);
+  static_assert(std::is_same<decltype(vec1), gf::Vector<int, 2>>::value, "");
+
+  EXPECT_EQ(vec1.x, 1);
+  EXPECT_EQ(vec1.y, 2);
+
+  auto vec2 = gf::vec(1, 2.0f, 3);
+  static_assert(std::is_same<decltype(vec2), gf::Vector<float, 3>>::value, "");
+
+  EXPECT_FLOAT_EQ(vec2.x, 1.0f);
+  EXPECT_FLOAT_EQ(vec2.y, 2.0f);
+  EXPECT_FLOAT_EQ(vec2.z, 3.0f);
+}

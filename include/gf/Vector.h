@@ -1349,6 +1349,20 @@ inline namespace v1 {
     std::swap_ranges(lhs.begin(), lhs.end(), rhs.begin());
   }
 
+  /**
+   * @relates Vector
+   * @brief Universal vector factory
+   *
+   * @param values The values for the vector
+   * @returns A vector with a deduced type and initialized with the values provided
+   */
+  template<typename ... Types>
+  constexpr
+  auto vec(Types... values) -> Vector<std::common_type_t<Types...>, sizeof...(Types)> {
+    static_assert(sizeof...(Types) > 0, "Vectors must have at least one coordinate");
+    return { static_cast<std::common_type_t<Types...>>(values)... };
+  }
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif
