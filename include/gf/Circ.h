@@ -49,6 +49,7 @@ inline namespace v1 {
    * - gf::CircU with `unsigned` as `T`
    * - gf::CircZ with `std::size_t` as `T`
    * - gf::CircF with `float` as `T`
+   * - gf::CircD with `double` as `T`
    *
    * So that you don't have to care about the temlate syntax.
    *
@@ -216,6 +217,14 @@ inline namespace v1 {
 
   /**
    * @ingroup core
+   * @brief A `double` circle
+   *
+   * @sa gf::Circ
+   */
+  using CircD = Circ<double>;
+
+  /**
+   * @ingroup core
    * @brief A `int` circle
    *
    * @sa gf::Circ
@@ -241,6 +250,7 @@ inline namespace v1 {
 // MSVC does not like extern template
 #ifndef _MSC_VER
   extern template struct Circ<float>;
+  extern template struct Circ<double>;
   extern template struct Circ<int>;
   extern template struct Circ<unsigned>;
 #endif

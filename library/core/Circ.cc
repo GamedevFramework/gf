@@ -28,6 +28,7 @@ inline namespace v1 {
 // MSVC does not like extern template
 #ifndef _MSC_VER
   template struct Circ<float>;
+  template struct Circ<double>;
   template struct Circ<int>;
   template struct Circ<unsigned>;
 #endif
