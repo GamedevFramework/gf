@@ -355,7 +355,12 @@ endif()
 install(
   EXPORT gfcoreTargets
   NAMESPACE gf::
-  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/gf"
+  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/gfcore"
+)
+
+install(
+  FILES gfcoreConfig.cmake
+  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/gfcore"
 )
 
 install(
@@ -365,6 +370,6 @@ install(
 )
 
 install(
-  FILES gfcoreConfig.cmake gfConfig.cmake
+  FILES gfConfig.cmake
   DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/gf"
 )

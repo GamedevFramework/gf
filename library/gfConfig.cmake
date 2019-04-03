@@ -3,8 +3,6 @@ include(CMakeFindDependencyMacro)
 
 find_dependency(SDL2)
 find_dependency(Freetype)
-
-set(gfcore_DIR ${GF_CMAKE_DIR})
 find_dependency(gfcore)
 
 if(NOT TARGET gf::gf0)
