@@ -143,7 +143,7 @@ inline namespace v1 {
   } // anonymous namespace
 
   Color4f Color::lighter(Color4f color, float percent) {
-    assert(0.0f <= percent && percent <= 1.0);
+    assert(0.0f <= percent && percent <= 1.0f);
     Hsv hsv = convertRgbToHsv(color);
     hsv.v += hsv.v * percent;
 
@@ -161,7 +161,7 @@ inline namespace v1 {
   }
 
   Color4f Color::darker(Color4f color, float percent) {
-    assert(0.0f <= percent && percent <= 1.0);
+    assert(0.0f <= percent && percent <= 1.0f);
     Hsv hsv = convertRgbToHsv(color);
     hsv.v -= hsv.v * percent;
     return convertHsvToRgb(hsv);
