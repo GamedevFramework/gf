@@ -323,6 +323,8 @@ namespace home {
       b2World& m_world;
     };
 
+    constexpr int PhysicsMaker::Land;
+    constexpr int PhysicsMaker::Void;
 
   }
 
