@@ -261,7 +261,6 @@ target_include_directories(gfcore0
 target_include_directories(gf0
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
-    ${ZLIB_INCLUDE_DIRS}
   PRIVATE
     ${SDL2_INCLUDE_DIR}
     ${FREETYPE_INCLUDE_DIRS}
@@ -291,7 +290,6 @@ target_link_libraries(gfcore0
 target_link_libraries(gf0
   ${SDL2_LIBRARY}
   ${FREETYPE_LIBRARIES}
-  ${ZLIB_LIBRARIES}
   gfcore0
 )
 
@@ -322,9 +320,22 @@ set_target_properties(gf0
   SOVERSION ${PROJECT_VERSION_MAJOR}
 )
 
+if(NOT GF_SHARED)
+  set_property(TARGET gfcore0 PROPERTY POSITION_INDEPENDENT_CODE ON)
+  set_property(TARGET gf0 PROPERTY POSITION_INDEPENDENT_CODE ON)
+endif()
+
 install(
-  TARGETS gfcore0 gf0
-  EXPORT gfConfig
+  TARGETS gfcore0
+  EXPORT gfcoreTargets
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
+
+install(
+  TARGETS gf0
+  EXPORT gfTargets
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
@@ -342,7 +353,18 @@ if(WIN32 AND BUILD_SHARED_LIBS)
 endif()
 
 install(
-  EXPORT gfConfig
+  EXPORT gfcoreTargets
   NAMESPACE gf::
+  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/gf"
+)
+
+install(
+  EXPORT gfTargets
+  NAMESPACE gf::
+  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/gf"
+)
+
+install(
+  FILES gfcoreConfig.cmake gfConfig.cmake
   DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/gf"
 )
