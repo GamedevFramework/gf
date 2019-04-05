@@ -30,6 +30,9 @@ inline namespace v1 {
   template struct Matrix<float, 2, 2>;
   template struct Matrix<float, 3, 3>;
   template struct Matrix<float, 4, 4>;
+  template struct Matrix<double, 2, 2>;
+  template struct Matrix<double, 3, 3>;
+  template struct Matrix<double, 4, 4>;
 #endif
 
   static_assert(sizeof(Matrix2f) == 2 * 2 * sizeof(float), "Matrix size mismatch");

@@ -364,6 +364,14 @@ inline namespace v1 {
 
   /**
    * @ingroup core
+   * @brief A `double` rectangle
+   *
+   * @sa gf::Rect
+   */
+  using RectD = Rect<double>;
+
+  /**
+   * @ingroup core
    * @brief A `int` rectangle
    *
    * @sa gf::Rect
@@ -388,9 +396,10 @@ inline namespace v1 {
 
 // MSVC does not like extern template
 #ifndef _MSC_VER
-  extern template struct Rect<float>;
-  extern template struct Rect<int>;
-  extern template struct Rect<unsigned>;
+  extern template struct GF_API Rect<float>;
+  extern template struct GF_API Rect<double>;
+  extern template struct GF_API Rect<int>;
+  extern template struct GF_API Rect<unsigned>;
 #endif
 
   /**

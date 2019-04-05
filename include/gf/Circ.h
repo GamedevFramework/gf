@@ -249,10 +249,10 @@ inline namespace v1 {
 
 // MSVC does not like extern template
 #ifndef _MSC_VER
-  extern template struct Circ<float>;
-  extern template struct Circ<double>;
-  extern template struct Circ<int>;
-  extern template struct Circ<unsigned>;
+  extern template struct GF_API Circ<float>;
+  extern template struct GF_API Circ<double>;
+  extern template struct GF_API Circ<int>;
+  extern template struct GF_API Circ<unsigned>;
 #endif
 
   /**

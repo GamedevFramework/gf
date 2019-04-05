@@ -279,8 +279,8 @@ inline namespace v1 {
 
 // MSVC does not like extern template
 #ifndef _MSC_VER
-  extern template class Index2D<unsigned>;
-  extern template class Index2D<int>;
+  extern template class GF_API Index2D<unsigned>;
+  extern template class GF_API Index2D<int>;
 #endif
 
   /**
