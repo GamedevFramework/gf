@@ -510,7 +510,7 @@ inline namespace v1 {
     void parseTmxLayer(const pugi::xml_node node, TmxLayer& tmx) {
       tmx.properties = parseTmxProperties(node);
 
-      tmx.name = required_attribute(node, "name").as_string();
+      tmx.name = node.attribute("name").as_string();
       tmx.opacity = node.attribute("opacity").as_double(1.0);
       tmx.visible = node.attribute("visible").as_bool(true);
       tmx.offset.x = node.attribute("offsetx").as_int(0);
@@ -898,7 +898,7 @@ inline namespace v1 {
       }
 
       tmx.animation = nullptr;
-      pugi::xml_node animation = node.child("objectgroup");
+      pugi::xml_node animation = node.child("animation");
 
       if (animation != nullptr) {
         tmx.animation = parseTmxAnimation(animation);
