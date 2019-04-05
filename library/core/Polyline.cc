@@ -45,11 +45,19 @@ inline namespace v1 {
   }
 
   const Vector2f *Polyline::begin() const {
-    return &m_points[0];
+    return m_points.data();
   }
 
   const Vector2f *Polyline::end() const {
-    return &m_points[0] + m_points.size();
+    return m_points.data() + m_points.size();
+  }
+
+  Vector2f *Polyline::begin() {
+    return m_points.data();
+  }
+
+  Vector2f *Polyline::end() {
+    return m_points.data() + m_points.size();
   }
 
   bool Polyline::hasPrevPoint(std::size_t i) const {
