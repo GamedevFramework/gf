@@ -3,6 +3,8 @@
 [![Travis](https://img.shields.io/travis/GamedevFramework/gf.svg?style=flat-square)](https://travis-ci.org/GamedevFramework/gf)
 [![AppVeyor](https://img.shields.io/appveyor/ci/jube/gf.svg?style=flat-square)](https://ci.appveyor.com/project/jube/gf)
 [![Language grade: C/C++](https://img.shields.io/lgtm/grade/cpp/g/GamedevFramework/gf.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/GamedevFramework/gf/context:cpp)
+[![CodeFactor](https://www.codefactor.io/repository/github/gamedevframework/gf/badge)](https://www.codefactor.io/repository/github/gamedevframework/gf)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/991cd949d3d74b3a9052be89d7b42541)](https://www.codacy.com/app/jube/gf?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=GamedevFramework/gf&amp;utm_campaign=Badge_Grade)
 [![GitHub license](https://img.shields.io/badge/license-zlib-blue.svg?style=flat-square)](https://raw.githubusercontent.com/GamedevFramework/gf/master/LICENSE)
 [![GitHub tag](https://img.shields.io/github/tag/GamedevFramework/gf.svg?style=flat-square)](https://github.com/GamedevFramework/gf/tags)
 
