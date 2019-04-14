@@ -1,6 +1,29 @@
 # ChangeLog for gf
 
-## gf 0.11.0 (14 Jan 2018)
+## gf 0.12.0 (14 Apr 2019)
+
+- Core (gfcore)
+  - Add gf::StaggerHelper
+  - Split Array2D in Array2D and Index2D
+  - Add iterators in Index2D to replace visitors of Array2D
+  - Change splitIn* to use StringRef instead of std::u32string
+  - Add gf::orientation()
+  - Add gf::escapeString()
+  - Add gf::projx() and gf::projy()
+  - Add gf::dirx() and gf::diry()
+  - Add gf::vec()
+  - Add CircD
+  - Fix bugs in TMX parsing
+- Graphics (gf)
+  - Support staggered map in gf::TileLayer
+  - Fix behaviour in GamepadAxisControl
+- Tools and games
+  - Add H.O.M.E.
+- Misc
+  - Improve GF_API
+  - Separate gfConfig and gfcoreConfig
+
+## gf 0.11.0 (14 Jan 2019)
 
 - Core module
   - Add serialization for gf::Circ and gf::Polygon
