@@ -127,6 +127,7 @@
 #include "Spatial.h"
 #include "SpriteBatch.h"
 #include "Sprite.h"
+#include "Stagger.h"
 #include "Stream.h"
 #include "Streams.h"
 #include "StringRef.h"
