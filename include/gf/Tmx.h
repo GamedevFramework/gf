@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2018 Julien Bernard
+ * Copyright (C) 2016-2019 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -34,6 +34,7 @@
 #include "Path.h"
 #include "Portability.h"
 #include "Rect.h"
+#include "Stagger.h"
 #include "Time.h"
 #include "Vector.h"
 
@@ -51,24 +52,6 @@ inline namespace v1 {
     Isometric,  ///< An isometric orientation
     Staggered,  ///< A staggered orientation
     Hexagonal,  ///< A hexagonal orientation
-  };
-
-  /**
-   * @ingroup game
-   * @brief Stagger index of the hexagonal map.
-   */
-  enum class TmxStaggerIndex {
-    Odd,  ///< A odd stagger index
-    Even, ///< An even stagger index
-  };
-
-  /**
-   * @ingroup game
-   * @brief Stagger axis of the hexagonal map.
-   */
-  enum class TmxStaggerAxis {
-    X,  ///< The x stagger axis
-    Y,  ///< The y stagger axis
   };
 
   /**
@@ -312,10 +295,21 @@ inline namespace v1 {
 
   /**
    * @ingroup game
+   * @brief A chunk in a tile layer (for infinite maps)
+   */
+  struct GF_API TmxChunk {
+    Vector2i position;
+    Vector2i size;
+    std::vector<TmxCell> cells;
+  };
+
+  /**
+   * @ingroup game
    * @brief A layer with tiles in cells
    */
   struct GF_API TmxTileLayer : public TmxLayer {
     std::vector<TmxCell> cells; ///< The cells of the layer
+    std::vector<TmxChunk> chunks; ///< The chunks of the layer
 
     virtual void accept(const TmxLayers& map, TmxVisitor& visitor) const override;
   };
@@ -614,12 +608,13 @@ inline namespace v1 {
     TmxOrientation orientation; ///< The orientation of the map
     TmxRenderOrder renderOrder; ///< The render order of the map
 
+    bool infinite;              ///< Is the map infinite?
     Vector2u mapSize;           ///< The size of the map
     Vector2u tileSize;          ///< The size of the tiles
 
     unsigned hexSideLength;     ///< The length of the side for hexagonal map
-    TmxStaggerAxis staggerAxis; ///< The stagger axis for hexagonal map
-    TmxStaggerIndex staggerIndex; ///< The stagger index for hexagonal map
+    StaggerAxis staggerAxis;    ///< The stagger axis for hexagonal map
+    StaggerIndex staggerIndex;  ///< The stagger index for hexagonal map
 
     Color4u backgroundColor;    ///< The background color
 

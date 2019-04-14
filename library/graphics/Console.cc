@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2018 Julien Bernard
+ * Copyright (C) 2016-2019 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -50,7 +50,7 @@ inline namespace v1 {
   namespace {
 
     struct ConsoleLine {
-      std::vector<std::u32string> words;
+      std::vector<StringRef> words;
       int indent;
     };
 
@@ -75,10 +75,10 @@ inline namespace v1 {
       return false;
     }
 
-    int getWordWidth(const std::u32string& word) {
+    int getWordWidth(StringRef word) {
       int width = 0;
 
-      for (const auto& c : word) {
+      for (char32_t c : gf::codepoints(word)) {
         if (!isColorControl(c)) {
           ++width;
         }
@@ -90,11 +90,10 @@ inline namespace v1 {
     // adaptation of the algorithm in gf::Text
 
     std::vector<ConsoleParagraph> makeParagraphs(const std::string& message, ConsoleAlignment alignment, int paragraphWidth) {
-      auto unicodeString = computeUnicodeString(message);
-      auto paragraphs = splitInParagraphs(unicodeString);
+      auto paragraphs = splitInParagraphs(message);
       std::vector<ConsoleParagraph> out;
 
-      for (const auto& simpleParagraph : paragraphs) {
+      for (auto simpleParagraph : paragraphs) {
         auto words = splitInWords(simpleParagraph);
 
         ConsoleParagraph paragraph;
@@ -102,7 +101,7 @@ inline namespace v1 {
         ConsoleLine currentLine;
         int currentWidth = 0;
 
-        for (const auto& word : words) {
+        for (auto word : words) {
           int wordWidth = getWordWidth(word);
 
           if (!currentLine.words.empty() && currentWidth + 1 + wordWidth > paragraphWidth) {
@@ -324,10 +323,10 @@ inline namespace v1 {
     m_data(position) = { foreground, background, c };
   }
 
-  int Console::putWord(Vector2i position, ConsoleEffect effect, const std::u32string& message, const Color4f& foreground, const Color4f& background) {
+  int Console::putWord(Vector2i position, ConsoleEffect effect, StringRef message, const Color4f& foreground, const Color4f& background) {
     int width = 0;
 
-    for (auto c : message) {
+    for (auto c : gf::codepoints(message)) {
       switch (c) {
         case ConsoleColorControl1:
           m_foreground = m_controls[0].fg;
@@ -434,7 +433,7 @@ inline namespace v1 {
             localPosition.x += line.indent;
             auto wordCount = line.words.size();
 
-            for (const auto& word : line.words) {
+            for (auto word : line.words) {
               localPosition.x += putWord(localPosition, effect, word, currentForeground, currentBackground);
               wordCount--;
 
@@ -455,8 +454,7 @@ inline namespace v1 {
       assert(rect.width == 0 && rect.height == 0);
       Vector2i position = rect.getPosition();
 
-      std::u32string unicodeString = computeUnicodeString(message);
-      int width = getWordWidth(unicodeString);
+      int width = getWordWidth(message);
 
       switch (alignment) {
         case ConsoleAlignment::Left:
@@ -471,7 +469,7 @@ inline namespace v1 {
           break;
       }
 
-      putWord(position, effect, unicodeString, currentForeground, currentBackground);
+      putWord(position, effect, message, currentForeground, currentBackground);
       lineCount = 1;
     }
 

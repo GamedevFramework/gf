@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2018 Julien Bernard
+ * Copyright (C) 2016-2019 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -78,12 +78,25 @@ inline namespace v1 {
    * @ingroup core
    * @brief Get an angle from a orientation
    *
-   * North is at angle 0 and angle grows clockwise.
+   * East is at angle 0 and angle grows clockwise.
    *
    * @param orientation The orientation
-   * @returns an angle (in radians) representing the orientation
+   * @returns An angle (in radians) representing the orientation
+   * @sa gf::orientation()
    */
   GF_API float angle(Orientation orientation);
+
+  /**
+   * @ingroup core
+   * @brief Get an orientation from an angle
+   *
+   * East is at angle 0 and angle grows clockwise.
+   *
+   * @param angle The angle
+   * @returns An orientation for the angle
+   * @sa gf::angle()
+   */
+  GF_API Orientation orientation(float angle);
 
   /**
    * @ingroup core

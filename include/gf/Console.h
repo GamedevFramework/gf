@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2018 Julien Bernard
+ * Copyright (C) 2016-2019 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -667,7 +667,7 @@ inline namespace v1 {
   private:
     Color4f computeColor(ConsoleEffect effect, const Color4f& existing, const Color4f& current);
 
-    int putWord(Vector2i position, ConsoleEffect effect, const std::u32string& message, const Color4f& foreground, const Color4f& background);
+    int putWord(Vector2i position, ConsoleEffect effect, StringRef message, const Color4f& foreground, const Color4f& background);
 
     enum class PrintOption {
       Split     = 0x01,

@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2018 Julien Bernard
+ * Copyright (C) 2016-2019 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -88,44 +88,6 @@ inline namespace v1 {
     return result;
   }
 
-  std::u32string computeUnicodeString(StringRef str) {
-    static constexpr uint8_t Utf8Table[4][2] = {
-      { 0x7F, 0x00 },
-      { 0x1F, 0xC0 },
-      { 0x0F, 0xE0 },
-      { 0x07, 0xF0 }
-    };
-
-    std::u32string out;
-
-    for (std::size_t k = 0; k < str.getSize(); ++k) {
-      uint8_t c = str[k];
-      char32_t codepoint = 0;
-
-      for (std::size_t i = 0; i < 4; ++i) {
-        if ((c & ~Utf8Table[i][0]) == Utf8Table[i][1]) {
-          codepoint = c & Utf8Table[i][0];
-
-          for (std::size_t j = 0; j < i; ++j) {
-            ++k;
-
-            assert(k < str.getSize());
-            c = str[k];
-
-            assert((c & ~0x3F) == 0x80);
-            codepoint = (codepoint << 6) + (c & 0x3F);
-          }
-
-          break;
-        }
-      }
-
-      out.push_back(codepoint);
-    }
-
-    return out;
-  }
-
   std::string formatString(const char *fmt, ...) {
     va_list ap;
     va_start(ap, fmt);
@@ -153,20 +115,46 @@ inline namespace v1 {
     return std::string(buffer.get());
   }
 
-  std::vector<std::u32string> splitInParagraphs(const std::u32string& str) {
-    std::vector<std::u32string> out;
-    boost::algorithm::split(out, str, boost::is_any_of(U"\n"), boost::algorithm::token_compress_on);
-    out.erase(std::remove_if(out.begin(), out.end(), [](const std::u32string& s) {
-      return s.empty();
+  std::string escapeString(StringRef str) {
+    std::string out;
+
+    for (auto c : str) {
+      switch (c) {
+        case '\n':
+          out.append("\\n");
+          break;
+        case '\t':
+          out.append("\\t");
+          break;
+        case '\"':
+          out.append("\\\"");
+          break;
+        case '\\':
+          out.append("\\\\");
+          break;
+        default:
+          out.push_back(c);
+          break;
+      }
+    }
+
+    return out;
+  }
+
+  std::vector<StringRef> splitInParagraphs(StringRef str) {
+    std::vector<StringRef> out;
+    boost::algorithm::split(out, str, boost::is_any_of("\n"), boost::algorithm::token_compress_on);
+    out.erase(std::remove_if(out.begin(), out.end(), [](StringRef s) {
+      return s.isEmpty();
     }), out.end());
     return out;
   }
 
-  std::vector<std::u32string> splitInWords(const std::u32string& str) {
-    std::vector<std::u32string> out;
+  std::vector<StringRef> splitInWords(StringRef str) {
+    std::vector<StringRef> out;
     boost::algorithm::split(out, str, boost::is_any_of(U" \t"), boost::algorithm::token_compress_on);
-    out.erase(std::remove_if(out.begin(), out.end(), [](const std::u32string& s) {
-      return s.empty();
+    out.erase(std::remove_if(out.begin(), out.end(), [](StringRef s) {
+      return s.isEmpty();
     }), out.end());
     return out;
   }

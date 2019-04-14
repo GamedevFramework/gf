@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2018 Julien Bernard
+ * Copyright (C) 2016-2019 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -127,6 +127,7 @@
 #include "Spatial.h"
 #include "SpriteBatch.h"
 #include "Sprite.h"
+#include "Stagger.h"
 #include "Stream.h"
 #include "Streams.h"
 #include "StringRef.h"

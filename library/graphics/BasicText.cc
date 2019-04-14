@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2018 Julien Bernard
+ * Copyright (C) 2016-2019 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -107,7 +107,7 @@ inline namespace v1 {
   namespace {
 
     struct ParagraphLine {
-      std::vector<std::u32string> words;
+      std::vector<StringRef> words;
       float indent = 0.0f;
       float spacing = 0.0f;
     };
@@ -116,14 +116,14 @@ inline namespace v1 {
       std::vector<ParagraphLine> lines;
     };
 
-    float getWordWidth(const std::u32string& word, unsigned characterSize, Font& font) {
+    float getWordWidth(StringRef word, unsigned characterSize, Font& font) {
       assert(characterSize > 0);
-      assert(!word.empty());
+      assert(!word.isEmpty());
 
       float width = 0.0f;
       char32_t prevCodepoint = '\0';
 
-      for (char32_t currCodepoint : word) {
+      for (char32_t currCodepoint : gf::codepoints(word)) {
         width += font.getKerning(prevCodepoint, currCodepoint, characterSize);
         prevCodepoint = currCodepoint;
 
@@ -135,12 +135,11 @@ inline namespace v1 {
     }
 
     std::vector<Paragraph> makeParagraphs(const std::string& str, float spaceWidth, float paragraphWidth, Alignment align, unsigned characterSize, Font& font) {
-      std::u32string unicodeString = computeUnicodeString(str);
-      std::vector<std::u32string> paragraphs = splitInParagraphs(unicodeString);
+      std::vector<StringRef> paragraphs = splitInParagraphs(str);
       std::vector<Paragraph> out;
 
-      for (const auto& simpleParagraph : paragraphs) {
-        std::vector<std::u32string> words = splitInWords(simpleParagraph);
+      for (auto simpleParagraph : paragraphs) {
+        std::vector<StringRef> words = splitInWords(simpleParagraph);
 
         Paragraph paragraph;
 
@@ -154,7 +153,7 @@ inline namespace v1 {
           ParagraphLine currentLine;
           float currentWidth = 0.0f;
 
-          for (const auto& word : words) {
+          for (auto word : words) {
             float wordWith = getWordWidth(word, characterSize, font);
 
             if (!currentLine.words.empty() && currentWidth + spaceWidth + wordWith > paragraphWidth) {
@@ -288,20 +287,20 @@ inline namespace v1 {
     Vector2f min(std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
     Vector2f max(0.0f, 0.0f);
 
-    for (auto& paragraph : paragraphs) {
+    for (auto paragraph : paragraphs) {
 //       std::printf("Paragraph with %zu lines\n", paragraph.lines.size());
 
-      for (auto& line : paragraph.lines) {
+      for (const auto& line : paragraph.lines) {
 //         std::printf("\tLine with %zu words\n", line.words.size());
 //         std::printf("\t\tindent: %f\n", line.indent);
 //         std::printf("\t\tspacing: %f (%f)\n", line.spacing, spaceWidth);
 
         position.x = line.indent;
 
-        for (auto& word : line.words) {
+        for (auto word : line.words) {
           char32_t prevCodepoint = '\0';
 
-          for (char32_t currCodepoint : word) {
+          for (char32_t currCodepoint : gf::codepoints(word)) {
 
             position.x += m_font->getKerning(prevCodepoint, currCodepoint, m_characterSize);
             prevCodepoint = currCodepoint;

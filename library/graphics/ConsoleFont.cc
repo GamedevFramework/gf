@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2018 Julien Bernard
+ * Copyright (C) 2016-2019 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -94,17 +94,15 @@ inline namespace v1 {
 
     for (unsigned i = 0; i < count; ++i) {
       assert(index < 0x100);
-	  m_mapping[c++] = static_cast<uint8_t>(index);
-	  ++index;
+      m_mapping[c++] = static_cast<uint8_t>(index);
+      ++index;
     }
   }
 
   void ConsoleFont::mapString(StringRef str, Vector2u position) {
     unsigned index = computeIndex(position, m_format.layout, m_size);
 
-    auto unicodeString = computeUnicodeString(str);
-
-    for (auto codepoint : unicodeString) {
+    for (auto codepoint : gf::codepoints(str)) {
       if (codepoint >= 0x10000) {
         std::uint_least32_t value = static_cast<std::uint_least32_t>(codepoint);
         Log::error("Can not map a codepoint outside the Basic Multilingual Plane (BMP): U+%" PRIXLEAST32, value);

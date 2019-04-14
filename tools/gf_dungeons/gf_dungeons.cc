@@ -193,29 +193,26 @@ namespace {
             int count = 0;
 
             switch (mode) {
-              case Mode::Diamond4:
-                m_dungeon.visit4Neighbors(pos, [&count](gf::Vector2u neighbor, State state) {
-                  gf::unused(neighbor);
-                  count += number(state);
-                });
+              case Mode::Diamond4: {
+                for (auto neighbor : m_dungeon.get4NeighborsRange(pos)) {
+                  count += number(m_dungeon(neighbor));
+                }
                 break;
+              }
               case Mode::Square8:
-                m_dungeon.visit8Neighbors(pos, [&count](gf::Vector2u neighbor, State state) {
-                  gf::unused(neighbor);
-                  count += number(state);
-                });
+                for (auto neighbor : m_dungeon.get8NeighborsRange(pos)) {
+                  count += number(m_dungeon(neighbor));
+                }
                 break;
               case Mode::Diamond12:
-                m_dungeon.visit12Neighbors(pos, [&count](gf::Vector2u neighbor, State state) {
-                  gf::unused(neighbor);
-                  count += number(state);
-                });
+                for (auto neighbor : m_dungeon.get12NeighborsRange(pos)) {
+                  count += number(m_dungeon(neighbor));
+                }
                 break;
               case Mode::Square24:
-                m_dungeon.visit24Neighbors(pos, [&count](gf::Vector2u neighbor, State state) {
-                  gf::unused(neighbor);
-                  count += number(state);
-                });
+                for (auto neighbor : m_dungeon.get24NeighborsRange(pos)) {
+                  count += number(m_dungeon(neighbor));
+                }
                 break;
             }
 

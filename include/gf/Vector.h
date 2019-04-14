@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2018 Julien Bernard
+ * Copyright (C) 2016-2019 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -1276,28 +1276,28 @@ inline namespace v1 {
 
 // MSVC does not like extern template
 #ifndef _MSC_VER
-  extern template struct Vector<float, 2>;
-  extern template struct Vector<float, 3>;
-  extern template struct Vector<float, 4>;
+  extern template struct GF_API Vector<float, 2>;
+  extern template struct GF_API Vector<float, 3>;
+  extern template struct GF_API Vector<float, 4>;
 
-  extern template struct Vector<double, 2>;
-  extern template struct Vector<double, 3>;
-  extern template struct Vector<double, 4>;
+  extern template struct GF_API Vector<double, 2>;
+  extern template struct GF_API Vector<double, 3>;
+  extern template struct GF_API Vector<double, 4>;
 
-  extern template struct Vector<int, 2>;
-  extern template struct Vector<int, 3>;
-  extern template struct Vector<int, 4>;
+  extern template struct GF_API Vector<int, 2>;
+  extern template struct GF_API Vector<int, 3>;
+  extern template struct GF_API Vector<int, 4>;
 
-  extern template struct Vector<unsigned, 2>;
-  extern template struct Vector<unsigned, 3>;
-  extern template struct Vector<unsigned, 4>;
+  extern template struct GF_API Vector<unsigned, 2>;
+  extern template struct GF_API Vector<unsigned, 3>;
+  extern template struct GF_API Vector<unsigned, 4>;
 
-  extern template struct Vector<bool, 2>;
-  extern template struct Vector<bool, 3>;
-  extern template struct Vector<bool, 4>;
+  extern template struct GF_API Vector<bool, 2>;
+  extern template struct GF_API Vector<bool, 3>;
+  extern template struct GF_API Vector<bool, 4>;
 
-  extern template struct Vector<uint8_t, 3>;
-  extern template struct Vector<uint8_t, 4>;
+  extern template struct GF_API Vector<uint8_t, 3>;
+  extern template struct GF_API Vector<uint8_t, 4>;
 #endif
 
   /**
@@ -1337,6 +1337,31 @@ inline namespace v1 {
    */
   template<typename T>
   using Distance3 = Distance<T, 3>;
+
+
+  /**
+   * @relates Vector
+   * @brief Swap two vectors
+   */
+  template<typename T, std::size_t N>
+  inline
+  void swap(Vector<T,N>& lhs, Vector<T,N>& rhs) noexcept {
+    std::swap_ranges(lhs.begin(), lhs.end(), rhs.begin());
+  }
+
+  /**
+   * @relates Vector
+   * @brief Universal vector factory
+   *
+   * @param values The values for the vector
+   * @returns A vector with a deduced type and initialized with the values provided
+   */
+  template<typename ... Types>
+  constexpr
+  auto vec(Types... values) -> Vector<std::common_type_t<Types...>, sizeof...(Types)> {
+    static_assert(sizeof...(Types) > 0, "Vectors must have at least one coordinate");
+    return { static_cast<std::common_type_t<Types...>>(values)... };
+  }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

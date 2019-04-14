@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2018 Julien Bernard
+ * Copyright (C) 2016-2019 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -45,11 +45,19 @@ inline namespace v1 {
   }
 
   const Vector2f *Polyline::begin() const {
-    return &m_points[0];
+    return m_points.data();
   }
 
   const Vector2f *Polyline::end() const {
-    return &m_points[0] + m_points.size();
+    return m_points.data() + m_points.size();
+  }
+
+  Vector2f *Polyline::begin() {
+    return m_points.data();
+  }
+
+  Vector2f *Polyline::end() {
+    return m_points.data() + m_points.size();
   }
 
   bool Polyline::hasPrevPoint(std::size_t i) const {

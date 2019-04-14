@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2018 Julien Bernard
+ * Copyright (C) 2016-2019 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -143,7 +143,7 @@ inline namespace v1 {
   } // anonymous namespace
 
   Color4f Color::lighter(Color4f color, float percent) {
-    assert(0.0f <= percent && percent <= 1.0);
+    assert(0.0f <= percent && percent <= 1.0f);
     Hsv hsv = convertRgbToHsv(color);
     hsv.v += hsv.v * percent;
 
@@ -161,7 +161,7 @@ inline namespace v1 {
   }
 
   Color4f Color::darker(Color4f color, float percent) {
-    assert(0.0f <= percent && percent <= 1.0);
+    assert(0.0f <= percent && percent <= 1.0f);
     Hsv hsv = convertRgbToHsv(color);
     hsv.v -= hsv.v * percent;
     return convertHsvToRgb(hsv);
@@ -171,8 +171,8 @@ inline namespace v1 {
     return { r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f };
   }
 
-  Color4f Color::fromRgba32(uint32_t c) {
-    return fromRgba32(static_cast<uint8_t>(c >> 24), static_cast<uint8_t>(c >> 16), static_cast<uint8_t>(c >> 8), static_cast<uint8_t>(c));
+  Color4f Color::fromRgba32(uint32_t color) {
+    return fromRgba32(static_cast<uint8_t>(color >> 24), static_cast<uint8_t>(color >> 16), static_cast<uint8_t>(color >> 8), static_cast<uint8_t>(color));
   }
 
   Color4f Color::fromRgba32(Color4u color) {

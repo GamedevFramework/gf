@@ -311,7 +311,7 @@ namespace lux {
   , m_currentPlayer(1)
   , m_currentWave(0)
   , m_currentShip(0)
-  , m_font(resources.getFont("jupiter.ttf"))
+  , m_font(resources.getFont("SulphurPoint-Regular.otf"))
   , m_win(true)
   , m_updateScore(true)
   , m_highScores({{0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}})

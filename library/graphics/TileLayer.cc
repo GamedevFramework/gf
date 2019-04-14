@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2018 Julien Bernard
+ * Copyright (C) 2016-2019 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -36,8 +36,11 @@ inline namespace v1 {
 
   constexpr int TileLayer::NoTile;
 
-  TileLayer::TileLayer(Vector2u layerSize)
-  : m_layerSize(layerSize)
+  TileLayer::TileLayer(Vector2u layerSize, Type type)
+  : m_type(type)
+  , m_staggerIndex(StaggerIndex::Odd)
+  , m_staggerAxis(StaggerAxis::Y)
+  , m_layerSize(layerSize)
   , m_blockSize(0, 0)
   , m_texture(nullptr)
   , m_tileSize(0, 0)
@@ -130,6 +133,10 @@ inline namespace v1 {
 
     gf::Vector2u blockSize = getBlockSize();
 
+    if (m_type == Staggered) {
+      blockSize.y /= 2;
+    }
+
     // compute the viewable part of the layer
 
     const View& view = target.getView();
@@ -149,6 +156,8 @@ inline namespace v1 {
     if (local.intersects(layer, intersection)) {
       rect.setPosition(intersection.getPosition() / blockSize + 0.5f);
       rect.setSize(intersection.getSize() / blockSize + 0.5f);
+
+      rect.intersects(gf::RectU({ 0u, 0u }, m_layerSize - 1), rect);
     }
 
     // build vertex array (if necessary)
@@ -176,6 +185,8 @@ inline namespace v1 {
     Vector2u tilesetSize = (m_texture->getSize() - 2 * m_margin + m_spacing) / (m_tileSize + m_spacing);
     Vector2u blockSize = getBlockSize();
 
+//     gf::Log::info("block: %u,%u | tile: %u,%u\n", blockSize.x, blockSize.y, m_tileSize.x, m_tileSize.y);
+
     Vector2u local;
 
     for (local.y = 0; local.y < rect.height; ++local.y) {
@@ -193,7 +204,28 @@ inline namespace v1 {
 
         // position
 
-        RectF position(cell * blockSize, blockSize);
+        RectF position({ 0.0f, 0.0f }, { 0.0f, 0.0f });
+
+        if (m_type == Orthogonal) {
+          position.setSize(blockSize);
+          position.setPosition(cell * blockSize);
+        } else {
+          assert(m_type == Staggered);
+          position.setSize(m_tileSize);
+
+          if (cell.y % 2 == 0) {
+            gf::Vector2f pos = cell * blockSize;
+            pos.y /= 2;
+            pos -= (m_tileSize - blockSize);
+            position.setPosition(pos);
+          } else {
+            gf::Vector2f pos = cell * blockSize;
+            pos.y /= 2;
+            pos.x += blockSize.x / 2;
+            pos -= (m_tileSize - blockSize);
+            position.setPosition(pos);
+          }
+        }
 
         // texture coords
 

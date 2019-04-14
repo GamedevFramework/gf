@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2018 Julien Bernard
+ * Copyright (C) 2016-2019 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -30,6 +30,9 @@ inline namespace v1 {
   template struct Matrix<float, 2, 2>;
   template struct Matrix<float, 3, 3>;
   template struct Matrix<float, 4, 4>;
+  template struct Matrix<double, 2, 2>;
+  template struct Matrix<double, 3, 3>;
+  template struct Matrix<double, 4, 4>;
 #endif
 
   static_assert(sizeof(Matrix2f) == 2 * 2 * sizeof(float), "Matrix size mismatch");

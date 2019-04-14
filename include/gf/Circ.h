@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2018 Julien Bernard
+ * Copyright (C) 2016-2019 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -49,6 +49,7 @@ inline namespace v1 {
    * - gf::CircU with `unsigned` as `T`
    * - gf::CircZ with `std::size_t` as `T`
    * - gf::CircF with `float` as `T`
+   * - gf::CircD with `double` as `T`
    *
    * So that you don't have to care about the temlate syntax.
    *
@@ -216,6 +217,14 @@ inline namespace v1 {
 
   /**
    * @ingroup core
+   * @brief A `double` circle
+   *
+   * @sa gf::Circ
+   */
+  using CircD = Circ<double>;
+
+  /**
+   * @ingroup core
    * @brief A `int` circle
    *
    * @sa gf::Circ
@@ -240,9 +249,10 @@ inline namespace v1 {
 
 // MSVC does not like extern template
 #ifndef _MSC_VER
-  extern template struct Circ<float>;
-  extern template struct Circ<int>;
-  extern template struct Circ<unsigned>;
+  extern template struct GF_API Circ<float>;
+  extern template struct GF_API Circ<double>;
+  extern template struct GF_API Circ<int>;
+  extern template struct GF_API Circ<unsigned>;
 #endif
 
   /**

@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2018 Julien Bernard
+ * Copyright (C) 2016-2019 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -25,6 +25,7 @@
 #include "Flags.h"
 #include "Flip.h"
 #include "Portability.h"
+#include "Stagger.h"
 #include "Transformable.h"
 #include "VertexArray.h"
 #include "VertexBuffer.h"
@@ -67,11 +68,29 @@ inline namespace v1 {
     static constexpr int NoTile = -1;
 
     /**
+     * @brief The type of tile layer
+     */
+    enum Type {
+      Orthogonal, ///< An orthogonal tile layer
+      Staggered,  ///< A staggered tile layer
+    };
+
+    /**
      * @brief Constructor
      *
-     * @param layerSize the size of the layer, in number of tiles
+     * @param layerSize The size of the layer, in number of tiles
+     * @param type The type of the layer
      */
-    TileLayer(Vector2u layerSize);
+    TileLayer(Vector2u layerSize, Type type = Orthogonal);
+
+    /**
+     * @brief Get the size of the layer
+     *
+     * @returns The size of the layer, in number of tiles
+     */
+    Vector2u getMapSize() const {
+      return m_tiles.getSize();
+    }
 
     /**
      * @name Tileset parameters
@@ -311,6 +330,10 @@ inline namespace v1 {
     void updateGeometry();
 
   private:
+    Type m_type;
+    StaggerIndex m_staggerIndex;
+    StaggerAxis m_staggerAxis;
+
     Vector2u m_layerSize;
     Vector2u m_blockSize;
 

@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2018 Julien Bernard
+ * Copyright (C) 2016-2019 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -224,7 +224,7 @@ inline namespace v1 {
   }
 
   void BareTexture::bind(const BareTexture *texture) {
-    if (texture && texture->m_name != 0) {
+    if (texture != nullptr && texture->m_name != 0) {
       glCheck(glBindTexture(GL_TEXTURE_2D, texture->m_name));
     } else {
       glCheck(glBindTexture(GL_TEXTURE_2D, 0));

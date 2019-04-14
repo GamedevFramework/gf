@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2018 Julien Bernard
+ * Copyright (C) 2016-2019 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -152,17 +152,17 @@ inline namespace v1 {
   }
 
   double Heightmap::getSlope(Vector2i position) const {
-    const double altitudeHere = m_data(position);
+    const double altitude = m_data(position);
     double altitudeDifferenceMax = 0.0;
 
-    m_data.visit4Neighbors(position, [altitudeHere, &altitudeDifferenceMax](Vector2i positionThere, double altitudeThere) {
-      gf::unused(positionThere);
-      double altitudeDifference = std::abs(altitudeHere - altitudeThere);
+    for (auto positionThere : m_data.get4NeighborsRange(position)) {
+      double altitudeThere = m_data(positionThere);
+      double altitudeDifference = std::abs(altitude - altitudeThere);
 
       if (altitudeDifference > altitudeDifferenceMax) {
         altitudeDifferenceMax = altitudeDifference;
       }
-    });
+    }
 
     return altitudeDifferenceMax;
   }
@@ -329,15 +329,17 @@ inline namespace v1 {
         double altitudeDifferenceMax = 0.0;
         Vector2i positionMax = position;
 
-        const double altitudeHere = m_data(position);
+        const double altitude = m_data(position);
 
-        m_data.visit8Neighbors(position, [altitudeHere, &altitudeDifferenceMax, &positionMax](Vector2i positionThere, double altitudeThere) {
-          double altitudeDifference = altitudeHere - altitudeThere;
+        for (auto positionThere : m_data.get8NeighborsRange(position)) {
+          double altitudeThere = m_data(positionThere);
+
+          double altitudeDifference = altitude - altitudeThere;
           if (altitudeDifference > altitudeDifferenceMax) {
             altitudeDifferenceMax = altitudeDifference;
             positionMax = positionThere;
           }
-        });
+        }
 
         if (0 < altitudeDifferenceMax && altitudeDifferenceMax <= talus) {
           material(position) -= fraction * altitudeDifferenceMax;

@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2018 Julien Bernard
+ * Copyright (C) 2016-2019 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -129,6 +129,24 @@ inline namespace v1 {
      * @sa begin()
      */
     const Vector2f *end() const;
+
+    /**
+     * @brief Get an iterator to the first point
+     *
+     * @returns A pointer to the first point
+     *
+     * @sa end()
+     */
+    Vector2f *begin();
+
+    /**
+     * @brief Get an iterator past the last point
+     *
+     * @returns A pointer past the last point
+     *
+     * @sa begin()
+     */
+    Vector2f *end();
 
     /**
      * @brief Check if there is a point before the i-th point

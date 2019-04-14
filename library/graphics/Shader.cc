@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2018 Julien Bernard
+ * Copyright (C) 2016-2019 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -183,7 +183,7 @@ inline namespace v1 {
   }
 
   bool Shader::compile(const char *vertexShaderCode, const char *fragmentShaderCode) {
-    assert(vertexShaderCode || fragmentShaderCode);
+    assert(vertexShaderCode != nullptr || fragmentShaderCode != nullptr);
 
     if (m_program != 0) {
       glCheck(glDeleteProgram(m_program));
@@ -191,13 +191,13 @@ inline namespace v1 {
 
     glCheck(m_program = glCreateProgram());
 
-    if (vertexShaderCode) {
+    if (vertexShaderCode != nullptr) {
       GLuint id = compileShader(vertexShaderCode, Vertex);
       glCheck(glAttachShader(m_program, id));
       glCheck(glDeleteShader(id)); // the shader is still here because it is attached to the program
     }
 
-    if (fragmentShaderCode) {
+    if (fragmentShaderCode != nullptr) {
       GLuint id = compileShader(fragmentShaderCode, Fragment);
       glCheck(glAttachShader(m_program, id));
       glCheck(glDeleteShader(id)); // the shader is still here because it is attached to the program
@@ -310,9 +310,9 @@ inline namespace v1 {
     GLint loc;
     glCheck(loc = glGetUniformLocation(static_cast<GLuint>(m_program), name.getData()));
 
-    if (loc == -1) {
-      Log::warning("Uniform not found: '%s'\n", name.getData());
-    }
+//     if (loc == -1) {
+//       Log::warning("Uniform not found: '%s'\n", name.getData());
+//     }
 
     return loc;
   }
@@ -321,15 +321,15 @@ inline namespace v1 {
     GLint loc;
     glCheck(loc = glGetAttribLocation(static_cast<GLuint>(m_program), name.getData()));
 
-    if (loc == -1) {
-      Log::warning("Attribute not found: '%s'\n", name.getData());
-    }
+//     if (loc == -1) {
+//       Log::warning("Attribute not found: '%s'\n", name.getData());
+//     }
 
     return loc;
   }
 
   void Shader::bind(const Shader *shader) {
-    if (shader && shader->m_program != 0) {
+    if (shader != nullptr && shader->m_program != 0) {
       glCheck(glUseProgram(static_cast<GLuint>(shader->m_program)));
 
       // bind textures

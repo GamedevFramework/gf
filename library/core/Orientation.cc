@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2018 Julien Bernard
+ * Copyright (C) 2016-2019 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -21,6 +21,7 @@
 #include <gf/Orientation.h>
 
 #include <cassert>
+#include <limits>
 
 #include <gf/Math.h>
 
@@ -82,11 +83,54 @@ inline namespace v1 {
   }
 
   float angle(Orientation orientation) {
-    if (orientation == Orientation::Center) {
-      return 0.0f;
+    static constexpr float Pi4 = Pi / 4.0f;
+
+    switch (orientation) {
+      case Orientation::Center:
+        return std::numeric_limits<float>::quiet_NaN();
+      case Orientation::North:
+        return 6 * Pi4;
+      case Orientation::NorthEast:
+        return 7 * Pi4;
+      case Orientation::East:
+        return 0 * Pi4;
+      case Orientation::SouthEast:
+        return 1 * Pi4;
+      case Orientation::South:
+        return 2 * Pi4;
+      case Orientation::SouthWest:
+        return 3 * Pi4;
+      case Orientation::West:
+        return 4 * Pi4;
+      case Orientation::NorthWest:
+        return 5 * Pi4;
     }
 
-    return static_cast<int>(orientation) * Pi / 4;
+    assert(false);
+    return std::numeric_limits<float>::quiet_NaN();
+  }
+
+  Orientation orientation(float angle) {
+    float normalized = std::fmod(angle, 2 * Pi);
+
+    if (angle < 0) {
+      assert(normalized < 0);
+      normalized += 2 * Pi;
+    }
+
+    assert(0.0f <= normalized && normalized < 2 * Pi);
+
+    static constexpr float Pi8 = Pi / 8.0f;
+
+    if (normalized <  1 * Pi8) { return Orientation::East; }
+    if (normalized <  3 * Pi8) { return Orientation::SouthEast; }
+    if (normalized <  5 * Pi8) { return Orientation::South; }
+    if (normalized <  7 * Pi8) { return Orientation::SouthWest; }
+    if (normalized <  9 * Pi8) { return Orientation::West; }
+    if (normalized < 11 * Pi8) { return Orientation::NorthWest; }
+    if (normalized < 13 * Pi8) { return Orientation::North; }
+    if (normalized < 15 * Pi8) { return Orientation::NorthEast; }
+    return Orientation::East;
   }
 
   Orientation opposite(Orientation orientation) {

@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2018 Julien Bernard
+ * Copyright (C) 2016-2019 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -34,8 +34,8 @@ inline namespace v1 {
    * ValueActivity
    */
 
-  ValueActivity::ValueActivity(float from, float target, float& value, Time duration, Easing easing)
-  : m_tween(from, target, value, duration, easing)
+  ValueActivity::ValueActivity(float origin, float target, float& value, Time duration, Easing easing)
+  : m_tween(origin, target, value, duration, easing)
   {
 
   }

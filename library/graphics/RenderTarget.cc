@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2018 Julien Bernard
+ * Copyright (C) 2016-2019 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -44,6 +44,22 @@ namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
 #endif
+
+  namespace {
+
+    struct AttributeInfo {
+      const char *name;
+      std::size_t offset;
+      GLint size;
+    };
+
+    constexpr AttributeInfo PredefinedAttributes[] = {
+      { "a_position",   offsetof(Vertex, position),   2 },
+      { "a_color",      offsetof(Vertex, color),      4 },
+      { "a_texCoords",  offsetof(Vertex, texCoords),  2 },
+    };
+
+  }
 
   RenderTarget::~RenderTarget() = default;
 
@@ -264,34 +280,29 @@ inline namespace v1 {
      */
 
     Shader::bind(shader);
+    std::size_t index = 0;
 
-    int positionLoc = shader->getAttributeLocation("a_position");
-    int colorLoc = shader->getAttributeLocation("a_color");
-    int texCoordsLoc = shader->getAttributeLocation("a_texCoords");
+    for (auto info : PredefinedAttributes) {
+      int loc = shader->getAttributeLocation(info.name);
+      locations.data[index++] = loc;
 
-    glCheck(glEnableVertexAttribArray(positionLoc));
-    glCheck(glEnableVertexAttribArray(colorLoc));
-    glCheck(glEnableVertexAttribArray(texCoordsLoc));
+      if (loc == -1) {
+        continue;
+      }
 
-    const void *positionPointer = reinterpret_cast<const void *>(offsetof(Vertex, position));
-    const void *colorPointer = reinterpret_cast<const void *>(offsetof(Vertex, color));
-    const void *texCoordsPointer = reinterpret_cast<const void *>(offsetof(Vertex, texCoords));
-
-    glCheck(glVertexAttribPointer(positionLoc, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), positionPointer));
-    glCheck(glVertexAttribPointer(colorLoc, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), colorPointer));
-    glCheck(glVertexAttribPointer(texCoordsLoc, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), texCoordsPointer));
-
-    locations.positionLoc = positionLoc;
-    locations.colorLoc = colorLoc;
-    locations.texCoordsLoc = texCoordsLoc;
+      glCheck(glEnableVertexAttribArray(loc));
+      const void *pointer = reinterpret_cast<const void *>(info.offset);
+      glCheck(glVertexAttribPointer(loc, info.size, GL_FLOAT, GL_FALSE, sizeof(Vertex), pointer));
+    }
   }
 
   void RenderTarget::drawFinish(const Locations& locations) {
-    glCheck(glDisableVertexAttribArray(locations.positionLoc));
-    glCheck(glDisableVertexAttribArray(locations.colorLoc));
-    glCheck(glDisableVertexAttribArray(locations.texCoordsLoc));
+    for (auto loc : locations.data) {
+      if (loc != -1) {
+        glCheck(glDisableVertexAttribArray(loc));
+      }
+    }
   }
-
 
   void RenderTarget::draw(Drawable& drawable, const RenderStates& states) {
     drawable.draw(*this, states);

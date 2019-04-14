@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2018 Julien Bernard
+ * Copyright (C) 2016-2019 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -71,6 +71,7 @@
 #include "Shapes.cc"
 #include "SpriteBatch.cc"
 #include "Sprite.cc"
+#include "Stagger.cc"
 #include "SystemInfo.cc"
 #include "Text.cc"
 #include "TextureAtlas.cc"

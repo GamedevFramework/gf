@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0)
 
 project(GF
-  VERSION 0.11.0
+  VERSION 0.12.0
   LANGUAGES CXX C
 )
 
@@ -54,7 +54,7 @@ if(MSVC)
 else()
   message(STATUS "Using GCC or Clang compiler")
   # assume it's a GNU-like compiler (GCC, clang)
-  set(CMAKE_CXX_FLAGS                 "-Wall -Wextra -std=c++14 -pedantic")
+  set(CMAKE_CXX_FLAGS                 "-Wall -Wextra -std=c++14 -pedantic -fvisibility=hidden")
   set(CMAKE_CXX_FLAGS_DEBUG           "-O0 -g")
   set(CMAKE_CXX_FLAGS_MINSIZEREL      "-Os -DNDEBUG")
   set(CMAKE_CXX_FLAGS_RELEASE         "-O3 -DNDEBUG")
@@ -103,6 +103,7 @@ if(GF_BUILD_GAMES)
   add_subdirectory(games/bank_robbery_for_dummies)
   add_subdirectory(games/gf_2048)
   add_subdirectory(games/gf_pong)
+  add_subdirectory(games/HOME)
   add_subdirectory(games/huaca)
   add_subdirectory(games/islands)
   add_subdirectory(games/krokodile)

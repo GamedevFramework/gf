@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2018 Julien Bernard
+ * Copyright (C) 2016-2019 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -26,6 +26,7 @@
 
 #include "Activities.cc"
 #include "Activity.cc"
+#include "Array2D.cc"
 #include "AssetManager.cc"
 #include "Circ.cc"
 #include "Clock.cc"

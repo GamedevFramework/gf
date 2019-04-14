@@ -30,4 +30,4 @@ This game is an adaptation of a [game](http://globalgamejam.org/2017/games/bygon
 
 ## License
 
-Huaca is licensed under the terms and conditions of the [GPL 3.0](https://opensource.org/licenses/GPL-3.0) for the code and [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) for the data.
+Bygone Islands is licensed under the terms and conditions of the [GPL 3.0](https://opensource.org/licenses/GPL-3.0) for the code and [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) for the data.

@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2018 Julien Bernard
+ * Copyright (C) 2016-2019 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -627,11 +627,27 @@ inline namespace v1 {
 
   /**
    * @ingroup core
+   * @brief A double square matrix of size 2
+   *
+   * @sa gf::Matrix, gf::Matrix<T, 2, 2>
+   */
+  using Matrix2d = Matrix<double, 2, 2>;
+
+  /**
+   * @ingroup core
    * @brief A float square matrix of size 3
    *
    * @sa gf::Matrix, gf::Matrix<T, 3, 3>
    */
   using Matrix3f = Matrix<float, 3, 3>;
+
+  /**
+   * @ingroup core
+   * @brief A double square matrix of size 3
+   *
+   * @sa gf::Matrix, gf::Matrix<T, 3, 3>
+   */
+  using Matrix3d = Matrix<double, 3, 3>;
 
   /**
    * @ingroup core
@@ -641,11 +657,23 @@ inline namespace v1 {
    */
   using Matrix4f = Matrix<float, 4, 4>;
 
+  /**
+   * @ingroup core
+   * @brief A double square matrix of size 4
+   *
+   * @sa gf::Matrix, gf::Matrix<T, 4, 4>
+   */
+  using Matrix4d = Matrix<double, 4, 4>;
+
 // MSVC does not like extern template
 #ifndef _MSC_VER
-  extern template struct Matrix<float, 2, 2>;
-  extern template struct Matrix<float, 3, 3>;
-  extern template struct Matrix<float, 4, 4>;
+  extern template struct GF_API Matrix<float, 2, 2>;
+  extern template struct GF_API Matrix<float, 3, 3>;
+  extern template struct GF_API Matrix<float, 4, 4>;
+
+  extern template struct GF_API Matrix<double, 2, 2>;
+  extern template struct GF_API Matrix<double, 3, 3>;
+  extern template struct GF_API Matrix<double, 4, 4>;
 #endif
 
   /*

@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2018 Julien Bernard
+ * Copyright (C) 2016-2019 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -24,6 +24,7 @@
 #include <cstddef>
 #include <iterator>
 
+#include "Math.h"
 #include "Vector.h"
 
 namespace gf {
@@ -47,7 +48,13 @@ inline namespace v1 {
      * @ingroup core
      * @brief A range iterator
      */
-    struct Iterator : public std::iterator<std::input_iterator_tag, T> {
+    struct Iterator {
+      using difference_type = std::ptrdiff_t;
+      using value_type = T;
+      using pointer = value_type;
+      using reference = value_type;
+      using iterator_category = std::bidirectional_iterator_tag;
+
       T index; ///< The index in the range
 
       /**
@@ -62,11 +69,28 @@ inline namespace v1 {
       }
 
       /**
+       * @brief Swap the iterator with another iterator
+       */
+      void swap(Iterator& other) noexcept {
+        using std::swap;
+        swap(index, other.index);
+      }
+
+      /**
        * @brief Dereference operator
        *
        * @return The index
        */
-      T operator*() noexcept {
+      reference operator*() noexcept {
+        return index;
+      }
+
+      /**
+       * @brief Pointer operator
+       *
+       * @return The index
+       */
+      pointer operator->() noexcept {
         return index;
       }
 
@@ -88,6 +112,27 @@ inline namespace v1 {
       Iterator operator++(int) noexcept {
         Iterator copy = *this;
         ++index;
+        return copy;
+      }
+
+      /**
+       * @brief Decrement operator (prefix)
+       *
+       * @return The iterator
+       */
+      Iterator& operator--() noexcept {
+        --index;
+        return *this;
+      }
+
+      /**
+       * @brief Decrement operator (postfix)
+       *
+       * @return The iterator
+       */
+      Iterator operator--(int) noexcept {
+        Iterator copy = *this;
+        --index;
         return copy;
       }
 
@@ -175,6 +220,16 @@ inline namespace v1 {
   };
 
   /**
+   * @relates Range::Iterator
+   * @brief Swap two range iterators
+   */
+  template<typename T>
+  inline
+  void swap(typename Range<T>::Iterator& lhs, typename Range<T>::Iterator& rhs) noexcept {
+    lhs.swap(rhs);
+  }
+
+  /**
    * @ingroup core
    * @brief A float range
    *
@@ -229,7 +284,13 @@ inline namespace v1 {
     /**
      * @brief An iterator for a 2D range
      */
-    struct Iterator : public std::iterator<std::input_iterator_tag, T> {
+    struct Iterator {
+      using difference_type = std::ptrdiff_t;
+      using value_type = Vector<T, 2>;
+      using pointer = value_type;
+      using reference = value_type;
+      using iterator_category = std::forward_iterator_tag;
+
       Range<T> range;
       Vector<T, 2> position;
 
@@ -247,18 +308,36 @@ inline namespace v1 {
       }
 
       /**
+       * @brief Swap the iterator with another iterator
+       */
+      void swap(Iterator& other) noexcept {
+        using std::swap;
+        swap(range, other.range);
+        swap(position, other.position);
+      }
+
+      /**
        * @brief Dereference operator
        *
-       * @return The position
+       * @returns The position
        */
-      Vector<T, 2> operator*() noexcept {
+      reference operator*() noexcept {
+        return position;
+      }
+
+      /**
+       * @brief Pointer operator
+       *
+       * @returns The position
+       */
+      pointer operator->() noexcept {
         return position;
       }
 
       /**
        * @brief Increment operator (prefix)
        *
-       * @return The iterator
+       * @returns The iterator
        */
       Iterator& operator++() noexcept {
         step();
@@ -268,7 +347,7 @@ inline namespace v1 {
       /**
        * @brief Increment operator (postfix)
        *
-       * @return The iterator
+       * @returns The iterator
        */
       Iterator operator++(int) noexcept {
         Iterator copy = *this;
@@ -297,7 +376,7 @@ inline namespace v1 {
       }
 
     private:
-      void step() {
+      void step() noexcept {
         ++position.x;
 
         if (position.x >= range.hi) {
@@ -328,6 +407,369 @@ inline namespace v1 {
     }
 
   };
+
+  /**
+   * @relates PositionRange::Iterator
+   * @brief Swap two range iterators
+   */
+  template<typename T>
+  inline
+  void swap(typename PositionRange<T>::Iterator& lhs, typename PositionRange<T>::Iterator& rhs) noexcept {
+    lhs.swap(rhs);
+  }
+
+
+  /**
+   * @ingroup core
+   * @brief A 2D range
+   *
+   * gf::NeighborSquareRange represents a range accross a square area around an origin (not included).
+   */
+  template<typename T>
+  struct NeighborSquareRange {
+    Range<T> first;   ///< The range in the first dimension
+    Range<T> second;  ///< The range in the second dimension
+    Vector<T, 2> origin;
+
+    /**
+     * @brief An iterator for a 2D range
+     */
+    struct Iterator {
+      using difference_type = std::ptrdiff_t;
+      using value_type = Vector<T, 2>;
+      using pointer = value_type;
+      using reference = value_type;
+      using iterator_category = std::forward_iterator_tag;
+
+      Vector<T, 2> position;
+      const NeighborSquareRange<T> *parent;
+
+      /**
+       * @brief Constructor
+       *
+       * @param iteratorPosition The current position in 2D
+       * @param iteratorParent The parent range of the iterator
+       */
+      constexpr Iterator(Vector<T, 2> iteratorPosition, const NeighborSquareRange<T> *iteratorParent) noexcept
+      : position(iteratorPosition)
+      , parent(iteratorParent)
+      {
+        if (isNotNeighbor(position)) {
+          step();
+        }
+      }
+
+      /**
+       * @brief Constructor of a end sentinel
+       *
+       * @param iteratorPosition The current position in 2D
+       */
+      constexpr Iterator(Vector<T, 2> iteratorPosition) noexcept
+      : position(iteratorPosition)
+      , parent(nullptr)
+      {
+
+      }
+
+      /**
+       * @brief Swap the iterator with another iterator
+       */
+      void swap(Iterator& other) noexcept {
+        using std::swap;
+        swap(position, other.position);
+        swap(parent, other.parent);
+      }
+
+      /**
+       * @brief Dereference operator
+       *
+       * @returns The position
+       */
+      reference operator*() noexcept {
+        return position;
+      }
+
+      /**
+       * @brief Pointer operator
+       *
+       * @returns The position
+       */
+      pointer operator->() noexcept {
+        return position;
+      }
+
+      /**
+       * @brief Increment operator (prefix)
+       *
+       * @returns The iterator
+       */
+      Iterator& operator++() noexcept {
+        step();
+        return *this;
+      }
+
+      /**
+       * @brief Increment operator (postfix)
+       *
+       * @returns The iterator
+       */
+      Iterator operator++(int) noexcept {
+        Iterator copy = *this;
+        step();
+        return copy;
+      }
+
+      /**
+       * @brief Inequality operator
+       *
+       * @param other Another iterator
+       * @return True if the iterator are different
+       */
+      constexpr bool operator!=(const Iterator& other) const noexcept {
+        return position.x != other.position.x || position.y != other.position.y;
+      }
+
+      /**
+       * @brief Equality operator
+       *
+       * @param other Another iterator
+       * @return True if the iterator are the same
+       */
+      constexpr bool operator==(const Iterator& other) const noexcept {
+        return position.x == other.position.x && position.y == other.position.y;
+      }
+
+    private:
+      void step() noexcept {
+        do {
+          ++position.x;
+
+          if (position.x >= parent->first.hi) {
+            position.x = parent->first.lo;
+            ++position.y;
+          }
+        } while (isNotNeighbor(position));
+      }
+
+      bool isNotNeighbor(Vector<T, 2> other) const noexcept {
+        return other.x == parent->origin.x && other.y == parent->origin.y;
+      }
+    };
+
+    /**
+     * @brief Get a begin iterator
+     *
+     * @return A begin iterator
+     * @sa end()
+     */
+    constexpr Iterator begin() const noexcept {
+      return Iterator({ first.lo, second.lo }, this);
+    }
+
+    /**
+     * @brief Get a end iterator
+     *
+     * @return A end iterator
+     * @sa begin()
+     */
+    constexpr Iterator end() const noexcept {
+      return Iterator({ first.lo, second.hi });
+    }
+
+  };
+
+  /**
+   * @relates NeighborSquareRange::Iterator
+   * @brief Swap two range iterators
+   */
+  template<typename T>
+  inline
+  void swap(typename NeighborSquareRange<T>::Iterator& lhs, typename NeighborSquareRange<T>::Iterator& rhs) noexcept {
+    lhs.swap(rhs);
+  }
+
+
+  /**
+   * @ingroup core
+   * @brief A 2D range
+   *
+   * gf::NeighborDiamondRange represents a range accross a diamond area around an origin (not included).
+   */
+  template<typename T>
+  struct NeighborDiamondRange {
+    Range<T> first;   ///< The range in the first dimension
+    Range<T> second;  ///< The range in the second dimension
+    Vector<T, 2> origin;
+    T radius;
+
+    /**
+     * @brief An iterator for a 2D range
+     */
+    struct Iterator {
+      using difference_type = std::ptrdiff_t;
+      using value_type = Vector<T, 2>;
+      using pointer = value_type;
+      using reference = value_type;
+      using iterator_category = std::forward_iterator_tag;
+
+      Vector<T, 2> position;
+      const NeighborDiamondRange<T> *parent;
+
+      /**
+       * @brief Constructor
+       *
+       * @param iteratorPosition The current position in 2D
+       * @param iteratorParent The parent range of the iterator
+       */
+      constexpr Iterator(Vector<T, 2> iteratorPosition, const NeighborDiamondRange<T> *iteratorParent) noexcept
+      : position(iteratorPosition)
+      , parent(iteratorParent)
+      {
+        if (isNotNeighbor(position)) {
+          step();
+        }
+      }
+
+      /**
+       * @brief Constructor of a end sentinel
+       *
+       * @param iteratorPosition The current position in 2D
+       */
+      constexpr Iterator(Vector<T, 2> iteratorPosition) noexcept
+      : position(iteratorPosition)
+      , parent(nullptr)
+      {
+
+      }
+
+      /**
+       * @brief Swap the iterator with another iterator
+       */
+      void swap(Iterator& other) noexcept {
+        using std::swap;
+        swap(position, other.position);
+        swap(parent, other.parent);
+      }
+
+      /**
+       * @brief Dereference operator
+       *
+       * @returns The position
+       */
+      reference operator*() noexcept {
+        return position;
+      }
+
+      /**
+       * @brief Pointer operator
+       *
+       * @returns The position
+       */
+      pointer operator->() noexcept {
+        return position;
+      }
+
+      /**
+       * @brief Increment operator (prefix)
+       *
+       * @returns The iterator
+       */
+      Iterator& operator++() noexcept {
+        step();
+        return *this;
+      }
+
+      /**
+       * @brief Increment operator (postfix)
+       *
+       * @returns The iterator
+       */
+      Iterator operator++(int) noexcept {
+        Iterator copy = *this;
+        step();
+        return copy;
+      }
+
+      /**
+       * @brief Inequality operator
+       *
+       * @param other Another iterator
+       * @return True if the iterator are different
+       */
+      constexpr bool operator!=(const Iterator& other) const noexcept {
+        return position.x != other.position.x || position.y != other.position.y;
+      }
+
+      /**
+       * @brief Equality operator
+       *
+       * @param other Another iterator
+       * @return True if the iterator are the same
+       */
+      constexpr bool operator==(const Iterator& other) const noexcept {
+        return position.x == other.position.x && position.y == other.position.y;
+      }
+
+    private:
+      void step() noexcept {
+        do {
+          ++position.x;
+
+          if (position.x >= parent->first.hi) {
+            position.x = parent->first.lo;
+            ++position.y;
+
+            if (position.y >= parent->second.hi) {
+              break;
+            }
+          }
+        } while (isNotNeighbor(position));
+      }
+
+      bool isNotNeighbor(Vector<T, 2> other) const noexcept {
+        return isOrigin(other) || isOutOfDiamond(position);
+      }
+
+      bool isOrigin(Vector<T, 2> other) const noexcept {
+        return other.x == parent->origin.x && other.y == parent->origin.y;
+      }
+
+      bool isOutOfDiamond(Vector<T, 2> other) const noexcept {
+        return gf::absdiff(other.x, parent->origin.x) + gf::absdiff(other.y, parent->origin.y) > parent->radius;
+      }
+    };
+
+    /**
+     * @brief Get a begin iterator
+     *
+     * @return A begin iterator
+     * @sa end()
+     */
+    constexpr Iterator begin() const noexcept {
+      return Iterator({ first.lo, second.lo }, this);
+    }
+
+    /**
+     * @brief Get a end iterator
+     *
+     * @return A end iterator
+     * @sa begin()
+     */
+    constexpr Iterator end() const noexcept {
+      return Iterator({ first.lo, second.hi });
+    }
+
+  };
+
+  /**
+   * @relates NeighborDiamondRange::Iterator
+   * @brief Swap two range iterators
+   */
+  template<typename T>
+  inline
+  void swap(typename NeighborDiamondRange<T>::Iterator& lhs, typename NeighborDiamondRange<T>::Iterator& rhs) noexcept {
+    lhs.swap(rhs);
+  }
 
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

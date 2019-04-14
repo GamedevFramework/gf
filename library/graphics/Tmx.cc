@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2018 Julien Bernard
+ * Copyright (C) 2016-2019 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -479,7 +479,7 @@ inline namespace v1 {
           std::string name = required_attribute(property, "name").as_string();
           assert(!name.empty());
 
-          if (property.attribute("type")) {
+          if (property.attribute("type") != nullptr) {
             std::string type = property.attribute("type").as_string();
 
             if (type == "string") {
@@ -510,13 +510,59 @@ inline namespace v1 {
     void parseTmxLayer(const pugi::xml_node node, TmxLayer& tmx) {
       tmx.properties = parseTmxProperties(node);
 
-      tmx.name = required_attribute(node, "name").as_string();
+      tmx.name = node.attribute("name").as_string();
       tmx.opacity = node.attribute("opacity").as_double(1.0);
       tmx.visible = node.attribute("visible").as_bool(true);
       tmx.offset.x = node.attribute("offsetx").as_int(0);
       tmx.offset.y = node.attribute("offsety").as_int(0);
     }
 
+    std::vector<TmxCell> parseCells(const pugi::xml_node node, TmxFormat format) {
+      std::vector<TmxCell> cells;
+
+      switch (format) {
+        case TmxFormat::Base64:
+        case TmxFormat::Base64_Zlib:
+        case TmxFormat::Base64_Gzip:
+        {
+          std::vector<uint8_t> buffer = parseDataBuffer(node, format);
+
+          const std::size_t size = buffer.size();
+          assert(size % 4 == 0);
+
+          for (std::size_t i = 0; i < size; i += 4) {
+            unsigned gid = buffer[i] | (buffer[i + 1] << 8) | (buffer[i + 2] << 16) | (buffer[i + 3] << 24);
+            cells.push_back(decodeGID(gid));
+          }
+
+          break;
+        }
+
+        case TmxFormat::Csv:
+        {
+          const std::string csv = node.child_value();
+          std::vector<std::string> items;
+          boost::algorithm::split(items, csv, boost::algorithm::is_any_of(","));
+
+          for (auto item : items) {
+            unsigned gid = std::stoul(item);
+            cells.push_back(decodeGID(gid));
+          }
+
+          break;
+        }
+
+        case TmxFormat::Xml:
+          for (pugi::xml_node tile : node.children("tile")) {
+            unsigned gid = required_attribute(tile, "gid").as_uint();
+            cells.push_back(decodeGID(gid));
+          };
+
+          break;
+      }
+
+      return cells;
+    }
 
     std::unique_ptr<TmxTileLayer> parseTmxTileLayer(const pugi::xml_node node) {
       assert(node.name() == "layer"s);
@@ -526,46 +572,20 @@ inline namespace v1 {
 
       for (pugi::xml_node data : node.children("data")) {
         auto format = parseDataFormat(data);
+        auto range = data.children("chunk");
 
-        switch (format) {
-          case TmxFormat::Base64:
-          case TmxFormat::Base64_Zlib:
-          case TmxFormat::Base64_Gzip:
-          {
-            std::vector<uint8_t> buffer = parseDataBuffer(data, format);
-
-            const std::size_t size = buffer.size();
-            assert(size % 4 == 0);
-
-            for (std::size_t i = 0; i < size; i += 4) {
-              unsigned gid = buffer[i] | (buffer[i + 1] << 8) | (buffer[i + 2] << 16) | (buffer[i + 3] << 24);
-              tmx->cells.push_back(decodeGID(gid));
-            }
-
-            break;
+        if (std::distance(range.begin(), range.end()) > 0) {
+          for (pugi::xml_node chunk : range) {
+            TmxChunk ck;
+            ck.position.x = required_attribute(node, "x").as_int();
+            ck.position.y = required_attribute(node, "y").as_int();
+            ck.size.width = required_attribute(node, "width").as_int();
+            ck.size.height = required_attribute(node, "height").as_int();
+            ck.cells = parseCells(chunk, format);
+            tmx->chunks.push_back(std::move(ck));
           }
-
-          case TmxFormat::Csv:
-          {
-            const std::string csv = data.child_value();
-            std::vector<std::string> items;
-            boost::algorithm::split(items, csv, boost::algorithm::is_any_of(","));
-
-            for (auto item : items) {
-              unsigned gid = std::stoul(item);
-              tmx->cells.push_back(decodeGID(gid));
-            }
-
-            break;
-          }
-
-          case TmxFormat::Xml:
-            for (pugi::xml_node tile : data.children("tile")) {
-              unsigned gid = required_attribute(tile, "gid").as_uint();
-              tmx->cells.push_back(decodeGID(gid));
-            };
-
-            break;
+        } else {
+          tmx->cells = parseCells(data, format);
         }
       }
 
@@ -633,7 +653,7 @@ inline namespace v1 {
     }
 
     std::unique_ptr<TmxObject> parseTmxObject(const pugi::xml_node node) {
-      if (node.child("polygon")) {
+      if (node.child("polygon") != nullptr) {
         auto tmx = std::make_unique<TmxPolygon>();
         parseTmxObjectCommon(node, *tmx);
 
@@ -645,7 +665,7 @@ inline namespace v1 {
         return std::move(tmx);
       }
 
-      if (node.child("polyline")) {
+      if (node.child("polyline") != nullptr) {
         auto tmx = std::make_unique<TmxPolyline>();
         parseTmxObjectCommon(node, *tmx);
 
@@ -657,7 +677,7 @@ inline namespace v1 {
         return std::move(tmx);
       }
 
-      if (node.child("text")) {
+      if (node.child("text") != nullptr) {
         auto tmx = std::make_unique<TmxText>();
         parseTmxObjectCommon(node, *tmx);
 
@@ -677,7 +697,7 @@ inline namespace v1 {
 
         tmx->halign = TmxText::HAlign::Left;
 
-        if (text.attribute("halign")) {
+        if (text.attribute("halign") != nullptr) {
           std::string halign = text.attribute("halign").as_string();
 
           if (halign == "left") {
@@ -693,7 +713,7 @@ inline namespace v1 {
 
         tmx->valign = TmxText::VAlign::Top;
 
-        if (text.attribute("valign")) {
+        if (text.attribute("valign") != nullptr) {
           std::string valign = text.attribute("valign").as_string();
 
           if (valign == "top") {
@@ -712,7 +732,7 @@ inline namespace v1 {
         return std::move(tmx);
       }
 
-      if (node.attribute("gid")) {
+      if (node.attribute("gid") != nullptr) {
         unsigned gid = node.attribute("gid").as_uint();
         TmxCell cell = decodeGID(gid);
 
@@ -726,7 +746,7 @@ inline namespace v1 {
         return std::move(tmx);
       }
 
-      if (node.child("point")) {
+      if (node.child("point") != nullptr) {
         auto tmx = std::make_unique<TmxPoint>();
         parseTmxObjectCommon(node, *tmx);
 
@@ -735,7 +755,7 @@ inline namespace v1 {
         return std::move(tmx);
       }
 
-      if (node.child("ellipse")) {
+      if (node.child("ellipse") != nullptr) {
         auto tmx = std::make_unique<TmxEllipse>();
         parseTmxObjectCommon(node, *tmx);
 
@@ -765,7 +785,7 @@ inline namespace v1 {
       tmx->color = computeColor(node.attribute("color"));
       tmx->drawOrder = TmxDrawOrder::TopDown;
 
-      if (node.attribute("draworder")) {
+      if (node.attribute("draworder") != nullptr) {
         std::string drawOrder = node.attribute("draworder").as_string();
 
         if (drawOrder == "topdown") {
@@ -866,21 +886,21 @@ inline namespace v1 {
       tmx.image = nullptr;
       pugi::xml_node image = node.child("image");
 
-      if (image) {
+      if (image != nullptr) {
         tmx.image = parseTmxImage(image, ctx);
       }
 
       tmx.objects = nullptr;
       pugi::xml_node objects = node.child("objectgroup");
 
-      if (objects) {
+      if (objects != nullptr) {
         tmx.objects = parseTmxObjectLayer(objects);
       }
 
       tmx.animation = nullptr;
-      pugi::xml_node animation = node.child("objectgroup");
+      pugi::xml_node animation = node.child("animation");
 
-      if (animation) {
+      if (animation != nullptr) {
         tmx.animation = parseTmxAnimation(animation);
       }
 
@@ -917,7 +937,7 @@ inline namespace v1 {
       tmx.offset = { 0, 0 };
       pugi::xml_node offset = node.child("tileoffset");
 
-      if (offset) {
+      if (offset != nullptr) {
         tmx.offset.x = offset.attribute("x").as_int();
         tmx.offset.y = offset.attribute("y").as_int();
       }
@@ -925,13 +945,13 @@ inline namespace v1 {
       tmx.image = nullptr;
       pugi::xml_node image = node.child("image");
 
-      if (image) {
+      if (image != nullptr) {
         tmx.image = parseTmxImage(image, ctx);
       }
 
       pugi::xml_node terrains = node.child("terraintypes");
 
-      if (terrains) {
+      if (terrains != nullptr) {
         for (pugi::xml_node terrain : terrains.children("terrain")) {
           tmx.terrains.push_back(parseTmxTerrain(terrain));
         }
@@ -957,11 +977,11 @@ inline namespace v1 {
 
       ctx.currentPath = tilesetPath.parent_path();
 
-      if (tileset.attribute("firstgid")) {
+      if (tileset.attribute("firstgid") != nullptr) {
         Log::warning("Attribute 'firstgid' present in a TSX file: '%s'\n", tilesetPath.string().c_str());
       }
 
-      if (tileset.attribute("source")) {
+      if (tileset.attribute("source") != nullptr) {
         Log::warning("Attribute 'source' present in a TSX file: '%s'\n", tilesetPath.string().c_str());
       }
 
@@ -1016,7 +1036,7 @@ inline namespace v1 {
 
       tmx.renderOrder = TmxRenderOrder::RightDown; // default value
 
-      if (node.attribute("renderorder")) {
+      if (node.attribute("renderorder") != nullptr) {
         std::string renderOrder = node.attribute("renderorder").as_string();
 
         if (renderOrder == "right-down") {
@@ -1032,6 +1052,7 @@ inline namespace v1 {
         }
       }
 
+      tmx.infinite = node.attribute("invisible").as_bool(false);
       tmx.mapSize.width = required_attribute(node, "width").as_uint();
       tmx.mapSize.height = required_attribute(node, "height").as_uint();
 
@@ -1040,29 +1061,29 @@ inline namespace v1 {
 
       tmx.hexSideLength = node.attribute("hexsidelength").as_uint(0u);
 
-      tmx.staggerAxis = TmxStaggerAxis::Y;
+      tmx.staggerAxis = StaggerAxis::Y;
 
-      if (node.attribute("staggeraxis")) {
+      if (node.attribute("staggeraxis") != nullptr) {
         std::string staggerAxis = node.attribute("staggeraxis").as_string();
 
         if (staggerAxis == "x") {
-          tmx.staggerAxis = TmxStaggerAxis::X;
+          tmx.staggerAxis = StaggerAxis::X;
         } else if (staggerAxis == "y") {
-          tmx.staggerAxis = TmxStaggerAxis::Y;
+          tmx.staggerAxis = StaggerAxis::Y;
         } else {
           Log::error("Wrong stagger axis string: '%s'\n", staggerAxis.c_str());
         }
       }
 
-      tmx.staggerIndex = TmxStaggerIndex::Odd;
+      tmx.staggerIndex = StaggerIndex::Odd;
 
-      if (node.attribute("staggerindex")) {
+      if (node.attribute("staggerindex") != nullptr) {
         std::string staggerIndex = node.attribute("staggerindex").as_string();
 
         if (staggerIndex == "odd") {
-          tmx.staggerIndex = TmxStaggerIndex::Odd;
+          tmx.staggerIndex = StaggerIndex::Odd;
         } else if (staggerIndex == "even") {
-          tmx.staggerIndex = TmxStaggerIndex::Even;
+          tmx.staggerIndex = StaggerIndex::Even;
         } else {
           Log::error("Wrong stagger index string: '%s'\n", staggerIndex.c_str());
         }

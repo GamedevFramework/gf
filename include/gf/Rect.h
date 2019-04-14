@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2018 Julien Bernard
+ * Copyright (C) 2016-2019 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -129,8 +129,8 @@ inline namespace v1 {
      * @param position Position of the top left corner of the rectangle
      * @param size Size of the rectangle
      */
-    Rect(const Vector<T, 2>& position, const Vector<T, 2>& size) noexcept
-    : left(position.x), top(position.y), width(size.width), height(size.height)
+    constexpr Rect(Vector<T, 2> position, Vector<T, 2> size) noexcept
+    : left(position.x), top(position.y), width(size.x), height(size.y)
     {
 
     }
@@ -364,6 +364,14 @@ inline namespace v1 {
 
   /**
    * @ingroup core
+   * @brief A `double` rectangle
+   *
+   * @sa gf::Rect
+   */
+  using RectD = Rect<double>;
+
+  /**
+   * @ingroup core
    * @brief A `int` rectangle
    *
    * @sa gf::Rect
@@ -388,9 +396,10 @@ inline namespace v1 {
 
 // MSVC does not like extern template
 #ifndef _MSC_VER
-  extern template struct Rect<float>;
-  extern template struct Rect<int>;
-  extern template struct Rect<unsigned>;
+  extern template struct GF_API Rect<float>;
+  extern template struct GF_API Rect<double>;
+  extern template struct GF_API Rect<int>;
+  extern template struct GF_API Rect<unsigned>;
 #endif
 
   /**

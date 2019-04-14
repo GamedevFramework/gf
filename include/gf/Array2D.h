@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2018 Julien Bernard
+ * Copyright (C) 2016-2019 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -42,6 +42,249 @@ inline namespace v1 {
 
   /**
    * @ingroup core
+   * @brief A two-dimensional array with no data
+   *
+   * You probably want to use gf::Array2D
+   *
+   * @sa gf::Array2D
+   */
+  template<typename I>
+  class Index2D {
+  public:
+    /**
+     * @brief Default constructor
+     *
+     * Creates an empty array.
+     */
+    Index2D()
+    : m_size(0, 0)
+    {
+
+    }
+
+    /**
+     * @brief Constructor with a size
+     *
+     * @param size The size of the array
+     */
+    Index2D(Vector<I, 2> size)
+    : m_size(size)
+    {
+
+    }
+
+    /**
+     * @brief Default copy constructor
+     */
+    Index2D(const Index2D&) = default;
+
+    /**
+     * @brief Default copy assignment
+     */
+    Index2D& operator=(const Index2D&) = default;
+
+    /**
+     * @brief Default move constructor
+     */
+    Index2D(Index2D&&) = default;
+
+    /**
+     * @brief Default move assignement
+     */
+    Index2D& operator=(Index2D&&) = default;
+
+    /**
+     * @brief Swap with another array
+     *
+     * @param other An other array
+     */
+    void swap(Index2D& other) {
+      std::swap(m_size, other.m_size);
+    }
+
+    /**
+     * @name Size and position
+     * @{
+     */
+
+    /**
+     * @brief Get the size of the array
+     *
+     * @return The size of the array
+     */
+    constexpr Vector<I, 2> getSize() const noexcept {
+      return m_size;
+    }
+
+    /**
+     * @brief Get the number of columns
+     *
+     * @return The number of columns
+     */
+    constexpr I getCols() const noexcept {
+      return m_size.col;
+    }
+
+    /**
+     * @brief Get the number of rows
+     *
+     * @return The number of rows
+     */
+    constexpr I getRows() const noexcept {
+      return m_size.row;
+    }
+
+    /**
+     * @brief Check if a position is valid
+     *
+     * A valid position is a position inside the array
+     *
+     * @return True if the position is valid
+     */
+    constexpr bool isValid(Vector<I, 2> pos) const noexcept {
+      return pos.col < m_size.col && pos.row < m_size.row && (std::is_unsigned<I>::value || (0 <= pos.col && 0 <= pos.row));
+    }
+
+    /**
+     * @brief Transform a 1D position into a 2D position
+     *
+     * @param index A 1D position
+     * @return The corresponding 2D position
+     */
+    constexpr Vector<I, 2> toPosition(std::size_t index) const noexcept {
+      return { static_cast<I>(index % m_size.col), static_cast<I>(index / m_size.col) };
+    }
+
+    /**
+     * @brief Transform a 2D position into a 1D position
+     *
+     * @param pos A 2D position
+     * @return The corresponding 1D position
+     */
+    constexpr std::size_t toIndex(Vector<I, 2> pos) const noexcept {
+      return pos.row * m_size.col + pos.col;
+    }
+
+    /** @} */
+
+    /**
+     * @name Ranges
+     * @{
+     */
+
+    /**
+     * @brief Get the 1D index range of the array
+     *
+     * @return A range with all the 1D index in the array
+     */
+    constexpr RangeZ getIndexRange() const noexcept {
+      return { 0, static_cast<std::size_t>(m_size.col) * static_cast<std::size_t>(m_size.row) };
+    }
+
+    /**
+     * @brief Get the row range
+     *
+     * @return A range with all the rows
+     */
+    constexpr Range<I> getRowRange() const noexcept {
+      return { 0, m_size.row };
+    }
+
+    /**
+     * @brief Get the column range
+     *
+     * @return A range with all the columns
+     */
+    constexpr Range<I> getColRange() const noexcept {
+      return { 0, m_size.col };
+    }
+
+    /**
+     * @brief Get the position range
+     *
+     * @return A range for iterating among the positions
+     */
+    constexpr PositionRange<I> getPositionRange() const noexcept {
+      return { getColRange(), getRowRange() };
+    }
+
+    /**
+     * @brief Get a range for 8 neighbors (at most)
+     *
+     * @param pos The base position
+     * @return A range over neighbors (position not included)
+     */
+    NeighborSquareRange<I> get8NeighborsRange(Vector<I, 2> pos) const noexcept {
+      return getNeighborSquareRange(pos, 1);
+    }
+
+    /**
+     * @brief Get a range for 24 neighbors (at most)
+     *
+     * @param pos The base position
+     * @return A range over neighbors (position not included)
+     */
+    NeighborSquareRange<I> get24NeighborsRange(Vector<I, 2> pos) const noexcept {
+      return getNeighborSquareRange(pos, 2);
+    }
+
+    /**
+     * @brief Get a range for 4 neighbors (at most)
+     *
+     * @param pos The base position
+     * @return A range over neighbors (position not included)
+     */
+    NeighborDiamondRange<I> get4NeighborsRange(Vector<I, 2> pos) const noexcept {
+      return getNeighborDiamondRange(pos, 1);
+    }
+
+    /**
+     * @brief Get a range for 12 neighbors (at most)
+     *
+     * @param pos The base position
+     * @return A range over neighbors (position not included)
+     */
+    NeighborDiamondRange<I> get12NeighborsRange(Vector<I, 2> pos) const noexcept {
+      return getNeighborDiamondRange(pos, 2);
+    }
+
+    /** @} */
+
+  private:
+    NeighborSquareRange<I> getNeighborSquareRange(Vector<I, 2> pos, I n) const noexcept {
+      assert(isValid(pos));
+
+      auto colMin = pos.col - std::min(pos.col, n);
+      auto colMax = pos.col + std::min(m_size.col - pos.col - 1, n);
+      auto rowMin = pos.row - std::min(pos.row, n);
+      auto rowMax = pos.row + std::min(m_size.row - pos.row - 1, n);
+
+      return NeighborSquareRange<I>{ Range<I>{ colMin, colMax + 1 }, Range<I>{ rowMin, rowMax + 1 }, pos };
+    }
+
+    NeighborDiamondRange<I> getNeighborDiamondRange(Vector<I, 2> pos, I n) const noexcept {
+      assert(isValid(pos));
+
+      auto colMin = pos.col - std::min(pos.col, n);
+      auto colMax = pos.col + std::min(m_size.col - pos.col - 1, n);
+      auto rowMin = pos.row - std::min(pos.row, n);
+      auto rowMax = pos.row + std::min(m_size.row - pos.row - 1, n);
+
+      return NeighborDiamondRange<I>{ Range<I>{ colMin, colMax + 1 }, Range<I>{ rowMin, rowMax + 1 }, pos, n };
+    }
+
+  private:
+    Vector<I, 2> m_size;
+  };
+
+// MSVC does not like extern template
+#ifndef _MSC_VER
+  extern template class GF_API Index2D<unsigned>;
+  extern template class GF_API Index2D<int>;
+#endif
+
+  /**
+   * @ingroup core
    * @brief A two-dimensional array
    *
    * gf::Array represents a two-dimensional array, organized in row-major order.
@@ -62,7 +305,7 @@ inline namespace v1 {
    * @sa gf::Matrix
    */
   template<typename T, typename I = unsigned>
-  class Array2D {
+  class Array2D : public Index2D<I> {
   public:
     /**
      * @brief Default constructor
@@ -70,7 +313,7 @@ inline namespace v1 {
      * Creates an empty array.
      */
     Array2D()
-    : m_size(0, 0)
+    : Index2D<I>()
     {
 
     }
@@ -81,7 +324,7 @@ inline namespace v1 {
      * @param size The size of the array
      */
     Array2D(Vector<I, 2> size)
-    : m_size(size)
+    : Index2D<I>(size)
     , m_data(static_cast<std::size_t>(size.width) * static_cast<std::size_t>(size.height))
     {
 
@@ -94,7 +337,7 @@ inline namespace v1 {
      * @param value The initial value in the array
      */
     Array2D(Vector<I, 2> size, const T& value)
-    : m_size(size)
+    : Index2D<I>(size)
     , m_data(static_cast<std::size_t>(size.width) * static_cast<std::size_t>(size.height), value)
     {
 
@@ -126,9 +369,22 @@ inline namespace v1 {
      * @param other An other array
      */
     void swap(Array2D& other) {
+      Index2D<I>::swap(other);
       std::swap(m_data, other.m_data);
-      std::swap(m_size, other.m_size);
     }
+
+    using Index2D<I>::getSize;
+    using Index2D<I>::getCols;
+    using Index2D<I>::getRows;
+    using Index2D<I>::isValid;
+    using Index2D<I>::toPosition;
+    using Index2D<I>::toIndex;
+    using Index2D<I>::getIndexRange;
+    using Index2D<I>::getRowRange;
+    using Index2D<I>::getColRange;
+    using Index2D<I>::getPositionRange;
+    using Index2D<I>::get8NeighborsRange;
+    using Index2D<I>::get24NeighborsRange;
 
     /**
      * @name Raw data access
@@ -157,33 +413,6 @@ inline namespace v1 {
     }
 
     /**
-     * @brief Get the size of the array
-     *
-     * @return The size of the array
-     */
-    constexpr Vector<I, 2> getSize() const noexcept {
-      return m_size;
-    }
-
-    /**
-     * @brief Get the number of columns
-     *
-     * @return The number of columns
-     */
-    constexpr I getCols() const noexcept {
-      return m_size.col;
-    }
-
-    /**
-     * @brief Get the number of rows
-     *
-     * @return The number of rows
-     */
-    constexpr I getRows() const noexcept {
-      return m_size.row;
-    }
-
-    /**
      * @brief Check if the array is empty
      *
      * An empty array is an array with @f$ 0 @f$ elements, i.e. either the
@@ -193,17 +422,6 @@ inline namespace v1 {
      */
     constexpr bool isEmpty() const noexcept {
       return m_data.empty();
-    }
-
-    /**
-     * @brief Check if a position is valid
-     *
-     * A valid position is a position inside the array
-     *
-     * @return True if the position is valid
-     */
-    constexpr bool isValid(Vector<I, 2> pos) const noexcept {
-      return pos.col < m_size.col && pos.row < m_size.row && (std::is_unsigned<I>::value || (0 <= pos.col && 0 <= pos.row));
     }
 
     /** @} */
@@ -251,237 +469,11 @@ inline namespace v1 {
       return m_data[index];
     }
 
-    /**
-     * @brief Transform a 1D position into a 2D position
-     *
-     * @param pos A 1D position
-     * @return The corresponding 2D position
-     */
-    constexpr Vector<I, 2> toPosition(std::size_t pos) const noexcept {
-      return { pos % m_size.col, pos / m_size.col };
-    }
-
     /** @} */
 
-    /**
-     * @name Visitors
-     * @{
-     */
 
     /**
-     * @brief Visit the 4 neighbors of a given position
-     *
-     * This function calls a callback function for every neighbor in the
-     * vertical and horizontal direction. The function checks if the neighbor
-     * actually exists.
-     *
-     * The callback function has the following prototype:
-     *
-     * ~~~{.cc}
-     * void callback(Vector<I, 2> pos, T value);
-     * // pos is the position of the neighbor
-     * // value is the value of the neighbor
-     * ~~~
-     *
-     * The callback function can be a simple function but also a
-     * [lambda expression](http://en.cppreference.com/w/cpp/language/lambda).
-     *
-     * @param pos The position
-     * @param func A callback function
-     */
-    template<typename Func>
-    void visit4Neighbors(Vector<I, 2> pos, Func func) {
-      visitNeighborsDiamond(pos, func, 1);
-    }
-
-    /**
-     * @brief Visit the 4 neighbors of a given position
-     *
-     * This function calls a callback function for every neighbor in the
-     * vertical and horizontal direction. The function checks if the neighbor
-     * actually exists.
-     *
-     * The callback function has the following prototype:
-     *
-     * ~~~{.cc}
-     * void callback(Vector<I, 2> pos, T value);
-     * // pos is the position of the neighbor
-     * // value is the value of the neighbor
-     * ~~~
-     *
-     * The callback function can be a simple function but also a
-     * [lambda expression](http://en.cppreference.com/w/cpp/language/lambda).
-     *
-     * @param pos The position
-     * @param func A callback function
-     */
-    template<typename Func>
-    void visit4Neighbors(Vector<I, 2> pos, Func func) const {
-      visitNeighborsDiamond(pos, func, 1);
-    }
-
-    /**
-     * @brief Visit the 12 neighbors of a given position
-     *
-     * This function calls a callback function for every neighbor in the
-     * vertical and horizontal direction. The function checks if the neighbor
-     * actually exists.
-     *
-     * The callback function has the following prototype:
-     *
-     * ~~~{.cc}
-     * void callback(Vector<I, 2> pos, T value);
-     * // pos is the position of the neighbor
-     * // value is the value of the neighbor
-     * ~~~
-     *
-     * The callback function can be a simple function but also a
-     * [lambda expression](http://en.cppreference.com/w/cpp/language/lambda).
-     *
-     * @param pos The position
-     * @param func A callback function
-     */
-    template<typename Func>
-    void visit12Neighbors(Vector<I, 2> pos, Func func) {
-      visitNeighborsDiamond(pos, func, 2);
-    }
-
-    /**
-     * @brief Visit the 12 neighbors of a given position
-     *
-     * This function calls a callback function for every neighbor in the
-     * vertical and horizontal direction. The function checks if the neighbor
-     * actually exists.
-     *
-     * The callback function has the following prototype:
-     *
-     * ~~~{.cc}
-     * void callback(Vector<I, 2> pos, T value);
-     * // pos is the position of the neighbor
-     * // value is the value of the neighbor
-     * ~~~
-     *
-     * The callback function can be a simple function but also a
-     * [lambda expression](http://en.cppreference.com/w/cpp/language/lambda).
-     *
-     * @param pos The position
-     * @param func A callback function
-     */
-    template<typename Func>
-    void visit12Neighbors(Vector<I, 2> pos, Func func) const {
-      visitNeighborsDiamond(pos, func, 2);
-    }
-
-    /**
-     * @brief Visit the 8 neighbors of a given position
-     *
-     * This function calls a callback function for every neighbor in the
-     * vertical, horizontal and diagonal direction. The function checks if the
-     * neighbor actually exists.
-     *
-     * The callback function has the following prototype:
-     *
-     * ~~~{.cc}
-     * void callback(Vector<I, 2> pos, T value);
-     * // pos is the position of the neighbor
-     * // value is the value of the neighbor
-     * ~~~
-     *
-     * The callback function can be a simple function but also a
-     * [lambda expression](http://en.cppreference.com/w/cpp/language/lambda).
-     *
-     * @param pos The position
-     * @param func A callback function
-     */
-    template<typename Func>
-    void visit8Neighbors(Vector<I, 2> pos, Func func) {
-      visitNeighborsSquare(pos, func, 1);
-    }
-
-    /**
-     * @brief Visit the 8 neighbors of a given position
-     *
-     * This function calls a callback function for every neighbor in the
-     * vertical, horizontal and diagonal direction. The function checks if the
-     * neighbor actually exists.
-     *
-     * The callback function has the following prototype:
-     *
-     * ~~~{.cc}
-     * void callback(Vector<I, 2> pos, T value);
-     * // pos is the position of the neighbor
-     * // value is the value of the neighbor
-     * ~~~
-     *
-     * The callback function can be a simple function but also a
-     * [lambda expression](http://en.cppreference.com/w/cpp/language/lambda).
-     *
-     * @param pos The position
-     * @param func A callback function
-     */
-
-
-    template<typename Func>
-    void visit8Neighbors(Vector<I, 2> pos, Func func) const {
-      visitNeighborsSquare(pos, func, 1);
-    }
-
-    /**
-     * @brief Visit the 24 neighbors of a given position
-     *
-     * This function calls a callback function for every neighbor in the
-     * vertical, horizontal and diagonal direction. The function checks if the
-     * neighbor actually exists.
-     *
-     * The callback function has the following prototype:
-     *
-     * ~~~{.cc}
-     * void callback(Vector<I, 2> pos, T value);
-     * // pos is the position of the neighbor
-     * // value is the value of the neighbor
-     * ~~~
-     *
-     * The callback function can be a simple function but also a
-     * [lambda expression](http://en.cppreference.com/w/cpp/language/lambda).
-     *
-     * @param pos The position
-     * @param func A callback function
-     */
-    template<typename Func>
-    void visit24Neighbors(Vector<I, 2> pos, Func func) {
-      visitNeighborsSquare(pos, func, 2);
-    }
-
-    /**
-     * @brief Visit the 24 neighbors of a given position
-     *
-     * This function calls a callback function for every neighbor in the
-     * vertical, horizontal and diagonal direction. The function checks if the
-     * neighbor actually exists.
-     *
-     * The callback function has the following prototype:
-     *
-     * ~~~{.cc}
-     * void callback(Vector<I, 2> pos, T value);
-     * // pos is the position of the neighbor
-     * // value is the value of the neighbor
-     * ~~~
-     *
-     * The callback function can be a simple function but also a
-     * [lambda expression](http://en.cppreference.com/w/cpp/language/lambda).
-     *
-     * @param pos The position
-     * @param func A callback function
-     */
-    template<typename Func>
-    void visit24Neighbors(Vector<I, 2> pos, Func func) const {
-      visitNeighborsSquare(pos, func, 2);
-    }
-
-    /** @} */
-
-    /**
-     * @name Iterators and ranges
+     * @name Iterators
      * @{
      */
 
@@ -525,144 +517,18 @@ inline namespace v1 {
       return m_data.data() + m_data.size();
     }
 
-    /**
-     * @brief Get the 1D index range of the array
-     *
-     * @return A range with all the 1D index in the array
-     */
-    constexpr RangeZ getIndexRange() const noexcept {
-      return { 0, m_size.col * m_size.row };
-    }
-
-    /**
-     * @brief Get the row range
-     *
-     * @return A range with all the rows
-     */
-    constexpr Range<I> getRowRange() const noexcept {
-      return { 0, m_size.row };
-    }
-
-    /**
-     * @brief Get the column range
-     *
-     * @return A range with all the columns
-     */
-    constexpr Range<I> getColRange() const noexcept {
-      return { 0, m_size.col };
-    }
-
-    /**
-     * @brief Get the position range
-     *
-     * @return A range for iterating among the positions
-     */
-    constexpr PositionRange<I> getPositionRange() const noexcept {
-      return { getColRange(), getRowRange() };
-    }
-
     /** @} */
 
   private:
     T& get(Vector<I, 2> pos) {
-      return m_data[pos.row * m_size.col + pos.col];
+      return m_data[toIndex(pos)];
     }
 
     const T& get(Vector<I, 2> pos) const {
-      return m_data[pos.row * m_size.col + pos.col];
-    }
-
-    template<typename Func>
-    void visitNeighborsSquare(Vector<I, 2> pos, Func func, I n) const {
-      assert(isValid(pos));
-
-      auto colMin = pos.col - std::min(pos.col, n);
-      auto colMax = pos.col + std::min(m_size.col - pos.col - 1, n);
-      auto rowMin = pos.row - std::min(pos.row, n);
-      auto rowMax = pos.row + std::min(m_size.row - pos.row - 1, n);
-
-      for (auto row = rowMin; row <= rowMax; ++row) {
-        for (auto col = colMin; col <= colMax; ++col) {
-          if (col == pos.col && row == pos.row) { // avoid to include VectorOps.h
-            continue;
-          }
-
-          func({ col, row }, get({ col, row }));
-        }
-      }
-    }
-
-    template<typename Func>
-    void visitNeighborsSquare(Vector<I, 2> pos, Func func, I n) {
-      assert(isValid(pos));
-
-      auto colMin = pos.col - std::min(pos.col, n);
-      auto colMax = pos.col + std::min(m_size.col - pos.col - 1, n);
-      auto rowMin = pos.row - std::min(pos.row, n);
-      auto rowMax = pos.row + std::min(m_size.row - pos.row - 1, n);
-
-      for (auto row = rowMin; row <= rowMax; ++row) {
-        for (auto col = colMin; col <= colMax; ++col) {
-          if (col == pos.col && row == pos.row) { // avoid to include VectorOps.h
-            continue;
-          }
-
-          func({ col, row }, get({ col, row }));
-        }
-      }
-    }
-
-
-    template<typename Func>
-    void visitNeighborsDiamond(Vector<I, 2> pos, Func func, I n) const {
-      assert(isValid(pos));
-
-      auto colMin = pos.col - std::min(pos.col, n);
-      auto colMax = pos.col + std::min(m_size.col - pos.col - 1, n);
-      auto rowMin = pos.row - std::min(pos.row, n);
-      auto rowMax = pos.row + std::min(m_size.row - pos.row - 1, n);
-
-      for (auto row = rowMin; row <= rowMax; ++row) {
-        for (auto col = colMin; col <= colMax; ++col) {
-          if (col == pos.col && row == pos.row) { // avoid to include VectorOps.h
-            continue;
-          }
-
-          if (gf::absdiff(col, pos.col) + gf::absdiff(row, pos.row) > n) {
-            continue;
-          }
-
-          func({ col, row }, get({ col, row }));
-        }
-      }
-    }
-
-    template<typename Func>
-    void visitNeighborsDiamond(Vector<I, 2> pos, Func func, I n) {
-      assert(isValid(pos));
-
-      auto colMin = pos.col - std::min(pos.col, n);
-      auto colMax = pos.col + std::min(m_size.col - pos.col - 1, n);
-      auto rowMin = pos.row - std::min(pos.row, n);
-      auto rowMax = pos.row + std::min(m_size.row - pos.row - 1, n);
-
-      for (auto row = rowMin; row <= rowMax; ++row) {
-        for (auto col = colMin; col <= colMax; ++col) {
-          if (col == pos.col && row == pos.row) { // avoid to include VectorOps.h
-            continue;
-          }
-
-          if (gf::absdiff(col, pos.col) + gf::absdiff(row, pos.row) > n) {
-            continue;
-          }
-
-          func({ col, row }, get({ col, row }));
-        }
-      }
+      return m_data[toIndex(pos)];
     }
 
   private:
-    Vector<I, 2> m_size;
     std::vector<T> m_data;
   };
 

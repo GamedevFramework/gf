@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2018 Julien Bernard
+ * Copyright (C) 2016-2019 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -28,6 +28,7 @@ inline namespace v1 {
 // MSVC does not like extern template
 #ifndef _MSC_VER
   template struct Circ<float>;
+  template struct Circ<double>;
   template struct Circ<int>;
   template struct Circ<unsigned>;
 #endif

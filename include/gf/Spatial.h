@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2018 Julien Bernard
+ * Copyright (C) 2016-2019 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -450,6 +450,17 @@ inline namespace v1 {
   private:
     static constexpr std::size_t Size = MaxSize + 1;
 
+    enum SplitOrder {
+      Min,
+      Max,
+    };
+
+    struct SplitResult {
+      std::size_t index;
+      std::size_t axis;
+      SplitOrder order;
+    };
+
     class Leaf;
     class Branch;
 
@@ -497,18 +508,6 @@ inline namespace v1 {
 
       virtual void appendToStructure(std::vector<SpatialStructure<U, N>>& structures, int level) const = 0;
 
-    protected:
-      enum SplitOrder {
-        Min,
-        Max,
-      };
-
-      struct SplitResult {
-        std::size_t index;
-        std::size_t axis;
-        SplitOrder order;
-      };
-
     private:
       Branch *m_parent;
       Box<U, N> m_orig;
@@ -524,9 +523,6 @@ inline namespace v1 {
 
     class Leaf : public Node {
     public:
-      using typename Node::SplitOrder;
-      using typename Node::SplitResult;
-
       virtual std::size_t query(const Box<U, N>& bounds, SpatialQueryCallback<T>& callback, SpatialQuery kind) const override {
         std::size_t found = 0;
 
@@ -785,9 +781,6 @@ inline namespace v1 {
 
     class Branch : public Node {
     public:
-      using typename Node::SplitOrder;
-      using typename Node::SplitResult;
-
       virtual ~Branch() {
         for (auto& entry : m_entries) {
           delete entry.child;

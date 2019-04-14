@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2018 Julien Bernard
+ * Copyright (C) 2016-2019 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -40,6 +40,9 @@ inline namespace v1 {
    */
   class StringRef {
   public:
+    using iterator = const char*;
+    using const_iterator = const char*;
+
     /**
      * @brief Default constructor
      *
@@ -104,6 +107,19 @@ inline namespace v1 {
     }
 
     /**
+     * @brief Constructor from two iterators
+     *
+     * @param b A pointer to the beginning of a string
+     * @param e A pointer to the end of the same string
+     */
+    constexpr StringRef(const char *b, const char *e)
+    : m_data(b)
+    , m_size(e - b)
+    {
+
+    }
+
+    /**
      * @brief Get a pointer to the string
      *
      * @returns A pointer to the beginning of the string
@@ -139,7 +155,7 @@ inline namespace v1 {
      *
      * @sa end()
      */
-    constexpr const char *begin() const noexcept {
+    constexpr const_iterator begin() const noexcept {
       return m_data;
     }
 
@@ -150,7 +166,7 @@ inline namespace v1 {
      *
      * @sa begin()
      */
-    constexpr const char *end() const noexcept {
+    constexpr const_iterator end() const noexcept {
       return m_data + m_size;
     }
 

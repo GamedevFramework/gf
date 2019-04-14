@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2018 Julien Bernard
+ * Copyright (C) 2016-2019 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -21,6 +21,7 @@
 #ifndef GF_STRING_UTILS_H
 #define GF_STRING_UTILS_H
 
+#include <cassert>
 #include <cstdarg>
 
 #include <vector>
@@ -48,15 +49,6 @@ inline namespace v1 {
 
   /**
    * @ingroup core
-   * @brief Compute a UTF-32 string from a UTF-8 string
-   *
-   * @param str A UTF-8 string
-   * @returns The corresponding UTF-32 string
-   */
-  GF_API std::u32string computeUnicodeString(StringRef str);
-
-  /**
-   * @ingroup core
    * @brief Format a string like printf
    *
    * @param fmt The [format string](http://en.cppreference.com/w/cpp/io/c/fprintf)
@@ -72,13 +64,185 @@ inline namespace v1 {
    */
   GF_API std::string formatString(const char *fmt, va_list ap);
 
+  /**
+   * @ingroup core
+   * @brief Escape a string
+   *
+   * This function replaces characters with their escaped equivalent. For
+   * example, a '\\n' character is replaced with "\\\\n". This function can be
+   * used to display strings.
+   *
+   * @param str The input string
+   * @returns An escaped string
+   */
+  GF_API std::string escapeString(StringRef str);
 
   /**
    * @ingroup core
+   * @brief Split a string in multiples paragraphs
+   *
+   * The paragraphs are separated by '\\n'.
+   *
+   * @param str The input string
+   * @returns A vector of strings containing the paragraphs
    */
-  std::vector<std::u32string> splitInParagraphs(const std::u32string& str);
+  GF_API std::vector<StringRef> splitInParagraphs(StringRef str);
 
-  std::vector<std::u32string> splitInWords(const std::u32string& str);
+  /**
+   * @ingroup core
+   * @brief Split a string in multiples words
+   *
+   * The words are separated by ' ' (space) or '\\t' (tabulation).
+   *
+   * @param str The input string
+   * @returns A vector of strings containing the words
+   */
+  GF_API std::vector<StringRef> splitInWords(StringRef str);
+
+
+  /**
+   * @ingroup core
+   * @brief A range over a sequence of codepoints in UTF-8
+   *
+   * @sa gf::codepoints
+   */
+  struct GF_API CodepointRange {
+    StringRef ref;
+
+    struct Iterator {
+      using difference_type = std::ptrdiff_t;
+      using value_type = char32_t;
+      using pointer = value_type;
+      using reference = value_type;
+      using iterator_category = std::forward_iterator_tag;
+
+      /**
+       * @brief Swap the iterator with another iterator
+       */
+      void swap(Iterator& other) noexcept {
+        std::swap(current, other.current);
+      }
+
+      /**
+       * @brief Dereference operator
+       *
+       * @returns The position
+       */
+      constexpr reference operator*() const noexcept {
+        return decode();
+      }
+
+      /**
+       * @brief Pointer operator
+       *
+       * @returns The position
+       */
+      constexpr pointer operator->() const noexcept {
+        return decode();
+      }
+
+      /**
+       * @brief Increment operator (prefix)
+       *
+       * @returns The iterator
+       */
+      constexpr Iterator& operator++() noexcept {
+        step();
+        return *this;
+      }
+
+      /**
+       * @brief Increment operator (postfix)
+       *
+       * @returns The iterator
+       */
+      constexpr Iterator operator++(int) noexcept {
+        Iterator copy = *this;
+        step();
+        return copy;
+      }
+
+      /**
+       * @brief Inequality operator
+       *
+       * @param other Another iterator
+       * @return True if the iterator are different
+       */
+      constexpr bool operator!=(const Iterator& other) const noexcept {
+        return current != other.current;
+      }
+
+      /**
+       * @brief Equality operator
+       *
+       * @param other Another iterator
+       * @return True if the iterator are the same
+       */
+      constexpr bool operator==(const Iterator& other) const noexcept {
+        return current == other.current;
+      }
+
+      const char *current;
+
+    private:
+      constexpr char32_t decode() const noexcept {
+        char32_t codepoint = 0;
+        uint8_t c = current[0];
+
+        if ((c & 0b10000000) == 0b00000000) {
+          codepoint = c & 0b01111111;
+        } else if ((c & 0b11100000) == 0b11000000) {
+          codepoint = c & 0b00011111;
+          codepoint = (codepoint << 6) + (current[1] & 0b00111111);
+        } else if ((c & 0b11110000) == 0b11100000) {
+          codepoint = c & 0b00001111;
+          codepoint = (codepoint << 6) + (current[1] & 0b00111111);
+          codepoint = (codepoint << 6) + (current[2] & 0b00111111);
+        } else {
+          assert((c & 0b11111000) == 0b11110000);
+          codepoint = c & 0b00000111;
+          codepoint = (codepoint << 6) + (current[1] & 0b00111111);
+          codepoint = (codepoint << 6) + (current[2] & 0b00111111);
+          codepoint = (codepoint << 6) + (current[3] & 0b00111111);
+        }
+
+        return codepoint;
+      }
+
+      constexpr void step() noexcept {
+        uint8_t c = current[0];
+
+        if ((c & 0b10000000) == 0b00000000) {
+          current += 1;
+        } else if ((c & 0b11100000) == 0b11000000) {
+          current += 2;
+        } else if ((c & 0b11110000) == 0b11100000) {
+          current += 3;
+        } else {
+          assert((c & 0b11111000) == 0b11110000);
+          current += 4;
+        }
+      }
+    };
+
+    constexpr Iterator begin() const noexcept {
+      return Iterator{ ref.begin() };
+    }
+
+    constexpr Iterator end() const noexcept {
+      return Iterator{ ref.end() };
+    }
+
+  };
+
+  /**
+   * @ingroup core
+   * @brief Create a range over codepoints from a string
+   */
+  inline
+  constexpr CodepointRange codepoints(StringRef ref) {
+    return CodepointRange{ ref };
+  }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

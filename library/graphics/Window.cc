@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2018 Julien Bernard
+ * Copyright (C) 2016-2019 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -593,7 +593,7 @@ inline namespace v1 {
 
   void Window::setFramerateLimit(unsigned int limit) {
     if (limit == 0) {
-      m_duration = Time::Zero;
+      m_duration = Time::zero();
     } else {
       m_duration = seconds(1.0f / limit);
     }
@@ -605,7 +605,7 @@ inline namespace v1 {
 
     // handle framerate limit
 
-    if (m_duration == Time::Zero) {
+    if (m_duration == Time::zero()) {
       return;
     }
 
