@@ -165,7 +165,7 @@ inline namespace v1 {
   Deserializer& operator|(Deserializer& ar, Polygon& polygon) {
     polygon = Polygon();
 
-    uint64_t size;
+    uint64_t size = 0;
     ar | size;
 
     for (uint64_t i = 0; i < size; ++i) {

@@ -43,6 +43,7 @@ namespace brfd {
   StoryModel::StoryModel(gf::MessageManager& messages)
   : m_state(State::Starting)
   , m_currentStepIndex(0)
+  , m_currentStep()
   {
     messages.registerHandler<HeroPosition>(&StoryModel::onHeroPosition, this);
   }

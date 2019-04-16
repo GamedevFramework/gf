@@ -312,6 +312,7 @@ namespace lux {
   , m_currentWave(0)
   , m_currentShip(0)
   , m_font(resources.getFont("SulphurPoint-Regular.otf"))
+  , m_currentScore(0)
   , m_win(true)
   , m_updateScore(true)
   , m_highScores({{0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}})

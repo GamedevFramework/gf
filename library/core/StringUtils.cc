@@ -112,6 +112,8 @@ inline namespace v1 {
     auto buffer = std::make_unique<char[]>(size);
     std::vsnprintf(buffer.get(), size, fmt, ap);
 
+    va_end(test);
+
     return std::string(buffer.get());
   }
 

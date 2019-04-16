@@ -43,9 +43,9 @@ namespace kkd {
     gf::Font& m_font;
     const gf::Texture& m_texture;
 
-    int m_merges;
-    float m_energyRatio;
-    float m_lifeRatio;
+    int m_merges = 0;
+    float m_energyRatio = 0.0f;
+    float m_lifeRatio = 0.0f;
 
     gf::Clock m_clock;
   };

@@ -98,6 +98,7 @@ namespace huaca {
   Level::Level()
   : gf::Entity(1)
   , m_heroCoords(0, 0)
+  , m_runeOrder{ 0, 1, 2, 3}
   , m_currentRune(0)
   , m_currentPortal(0)
   , m_isOnPortal(false)

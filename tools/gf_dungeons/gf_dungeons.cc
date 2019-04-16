@@ -443,10 +443,10 @@ namespace {
 
     // public parameters
 
-    int leafSizeMinimum;
-    int leafSizeMaximum;
-    int roomSizeMinimum;
-    int roomSizeMaximum;
+    int leafSizeMinimum = 0;
+    int leafSizeMaximum = 0;
+    int roomSizeMinimum = 0;
+    int roomSizeMaximum = 0;
 
     virtual Dungeon generate(gf::Vector2u size, gf::Random& random) override {
       switch (getPhase()) {
