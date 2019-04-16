@@ -232,18 +232,16 @@ inline namespace v1 {
         return def;
       }
 
-      const char *value = attr.as_string();
-      auto size = std::strlen(value);
-      assert(size > 0);
+      std::string value = attr.as_string();
+      assert(!value.empty());
 
       if (value[0] == '#') {
-        ++value;
-        --size;
+        value.erase(value.begin());
       }
 
       Color4u color = def;
 
-      switch (size) {
+      switch (value.size()) {
         case 6:
           color.a = 0xFF;
           color.r = (convertHexChar(value[0]) << 4) + convertHexChar(value[1]);
@@ -259,7 +257,7 @@ inline namespace v1 {
           break;
 
         default:
-          Log::error("Unknown color format: %s\n", value);
+          Log::error("Unknown color format: %s\n", value.c_str());
           break;
       }
 

@@ -90,11 +90,6 @@ inline namespace v1 {
     return ar;
   }
 
-  Serializer& operator|(Serializer& ar, const char *str) {
-    ar.writeString(str, std::strlen(str));
-    return ar;
-  }
-
   Serializer& operator|(Serializer& ar, const std::string& str) {
     ar.writeString(str.data(), str.length());
     return ar;
