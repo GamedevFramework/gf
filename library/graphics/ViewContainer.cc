@@ -40,13 +40,13 @@ inline namespace v1 {
     onScreenSizeChange(event.size);
   }
 
-  void ViewContainer::onScreenSizeChange(Vector2u screenSize) {
+  void ViewContainer::onScreenSizeChange(Vector2i screenSize) {
     for (AdaptativeView& view : m_views) {
       view.onScreenSizeChange(screenSize);
     }
   }
 
-  void ViewContainer::setInitialScreenSize(Vector2u screenSize) {
+  void ViewContainer::setInitialScreenSize(Vector2i screenSize) {
     onScreenSizeChange(screenSize);
   }
 

@@ -34,8 +34,8 @@ namespace brfd {
 
   class Level : public gf::Entity {
   public:
-    static constexpr unsigned StreetCount = 15;
-    static constexpr unsigned Size = StreetCount * 3;
+    static constexpr int StreetCount = 15;
+    static constexpr int Size = StreetCount * 3;
 
     Level(gf::ResourceManager& resources);
 

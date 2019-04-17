@@ -41,7 +41,7 @@ inline namespace v1 {
     initialize();
     Texture::bind(nullptr);
 
-    Vector2u size = m_window.getFramebufferSize();
+    Vector2i size = m_window.getFramebufferSize();
 
     for (auto& buffer : m_buffers) {
       buffer.name = 0;
@@ -86,7 +86,7 @@ inline namespace v1 {
   void RenderPipeline::resized() {
     Texture::bind(nullptr);
 
-    Vector2u size = m_window.getFramebufferSize();
+    Vector2i size = m_window.getFramebufferSize();
 
     for (auto& buffer : m_buffers) {
       if (!buffer.texture.create(size)) {
@@ -104,7 +104,7 @@ inline namespace v1 {
     onFramebufferResize(size);
   }
 
-  Vector2u RenderPipeline::getSize() const {
+  Vector2i RenderPipeline::getSize() const {
     return m_window.getSize();
   }
 
@@ -142,7 +142,7 @@ inline namespace v1 {
     glCheck(glBindFramebuffer(GL_FRAMEBUFFER, m_buffers[m_current].name));
   }
 
-  void RenderPipeline::onFramebufferResize(Vector2u size) {
+  void RenderPipeline::onFramebufferResize(Vector2i size) {
     gf::unused(size);
     // nothing by default
   }

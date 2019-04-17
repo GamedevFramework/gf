@@ -114,7 +114,7 @@ inline namespace v1 {
 
   } // anonymous namespace
 
-  bool BareTexture::create(Vector2u size, const uint8_t *data) {
+  bool BareTexture::create(Vector2i size, const uint8_t *data) {
     if (size.width == 0 || size.height == 0) {
       return false;
     }
@@ -174,10 +174,10 @@ inline namespace v1 {
   }
 
   void BareTexture::update(const uint8_t *data) {
-    update(data, RectU({0, 0}, m_size));
+    update(data, RectI({0, 0}, m_size));
   }
 
-  void BareTexture::update(const uint8_t *data, const RectU& rect) {
+  void BareTexture::update(const uint8_t *data, const RectI& rect) {
     assert(rect.left + rect.width <= m_size.width);
     assert(rect.top + rect.height <= m_size.height);
 
@@ -200,7 +200,7 @@ inline namespace v1 {
 #endif
   }
 
-  RectF BareTexture::computeTextureCoords(const RectU& rect) const {
+  RectF BareTexture::computeTextureCoords(const RectI& rect) const {
     return {
       static_cast<float>(rect.left) / m_size.width,
       static_cast<float>(rect.top) / m_size.height,
@@ -237,7 +237,7 @@ inline namespace v1 {
 
   }
 
-  bool Texture::create(Vector2u size) {
+  bool Texture::create(Vector2i size) {
     return BareTexture::create(size, nullptr);
   }
 
@@ -261,7 +261,7 @@ inline namespace v1 {
   }
 
   void Texture::update(const Image& image) {
-    BareTexture::update(image.getPixelsPtr(), RectU({ 0, 0 }, image.getSize()));
+    BareTexture::update(image.getPixelsPtr(), RectI({ 0, 0 }, image.getSize()));
   }
 
 
@@ -308,7 +308,7 @@ inline namespace v1 {
 
   }
 
-  bool AlphaTexture::create(Vector2u size) {
+  bool AlphaTexture::create(Vector2i size) {
     return BareTexture::create(size, nullptr);
   }
 

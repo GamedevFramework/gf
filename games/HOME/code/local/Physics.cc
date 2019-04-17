@@ -148,16 +148,16 @@ namespace home {
 
         gf::Vector2i tileSize = map.tileSize;
 
-        gf::Array2D<int> biomes(map.mapSize, Void);
+        gf::Array2D<int, int> biomes(map.mapSize, Void);
 
-        unsigned k = 0;
+        int k = 0;
 
         for (auto& cell : layer.cells) {
-          unsigned i = k % map.mapSize.width;
-          unsigned j = k / map.mapSize.width;
+          int i = k % map.mapSize.width;
+          int j = k / map.mapSize.width;
           assert(j < map.mapSize.height);
 
-          unsigned gid = cell.gid;
+          int gid = cell.gid;
 
           if (gid != 0) {
             biomes({ i, j }) = Land;

@@ -428,14 +428,14 @@ inline namespace v1 {
      *
      * @param screenSize The initial size of the screen
      */
-    void setInitialScreenSize(Vector2u screenSize);
+    void setInitialScreenSize(Vector2i screenSize);
 
     /**
      * @brief Callback when the screen has just been resized
      *
      * @param screenSize The new size of the screen
      */
-    virtual void onScreenSizeChange(Vector2u screenSize) = 0;
+    virtual void onScreenSizeChange(Vector2i screenSize) = 0;
 
   };
 

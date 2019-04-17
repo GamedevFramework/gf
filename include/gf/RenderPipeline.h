@@ -55,7 +55,7 @@ inline namespace v1 {
    *   }
    *
    * protected:
-   *   virtual void onFramebufferResize(Vector2u size) override {
+   *   virtual void onFramebufferResize(Vector2i size) override {
    *     // update effects with size
    *   }
    *
@@ -115,7 +115,7 @@ inline namespace v1 {
      */
     void resized();
 
-    virtual Vector2u getSize() const override;
+    virtual Vector2i getSize() const override;
 
     /**
      * @brief Apply the effects and display what has been rendered
@@ -130,7 +130,7 @@ inline namespace v1 {
      *
      * @param size The new framebuffer size
      */
-    virtual void onFramebufferResize(Vector2u size);
+    virtual void onFramebufferResize(Vector2i size);
 
   private:
     Window& m_window;

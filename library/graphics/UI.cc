@@ -574,8 +574,8 @@ inline namespace v1 {
     image.w = size.width;
     image.h = size.height;
 
-    Vector2u topLeft = size * textureRect.getTopLeft();
-    Vector2u bottomRight = size * textureRect.getBottomRight();
+    Vector2i topLeft = size * textureRect.getTopLeft();
+    Vector2i bottomRight = size * textureRect.getBottomRight();
     image.region[0] = topLeft.x;
     image.region[1] = topLeft.y;
     image.region[2] = bottomRight.x;

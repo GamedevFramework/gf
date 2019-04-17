@@ -327,7 +327,7 @@ inline namespace v1 {
     return cache;
   }
 
-  static constexpr unsigned Padding = 1;
+  static constexpr int Padding = 1;
 
   Glyph Font::createGlyph(char32_t codepoint, unsigned characterSize, float outlineThickness, GlyphCache& cache) {
     Glyph out;
@@ -386,7 +386,7 @@ inline namespace v1 {
 
     // size
 
-    Vector2u glyphSize(bglyph->bitmap.width, bglyph->bitmap.rows);
+    Vector2i glyphSize(bglyph->bitmap.width, bglyph->bitmap.rows);
 
     if (glyphSize.height == 0 || glyphSize.width == 0) {
       FT_Done_Glyph(glyph);
@@ -395,7 +395,7 @@ inline namespace v1 {
 
     // textureRect (dumb online 2D bin packing)
 
-    glyphSize += Vector2u{2 * Padding, 2 * Padding};
+    glyphSize += Vector2i{2 * Padding, 2 * Padding};
 
     auto textureSize = cache.texture.getSize();
 
@@ -412,7 +412,7 @@ inline namespace v1 {
       return out;
     }
 
-    RectU rect;
+    RectI rect;
     rect.left = cache.packing.right;
     rect.top = cache.packing.top;
     rect.width = glyphSize.width;
@@ -445,9 +445,9 @@ inline namespace v1 {
     std::vector<uint8_t> paddedBuffer(static_cast<std::size_t>(rect.width) * static_cast<std::size_t>(rect.height), 0);
     const uint8_t *sourceBuffer = bglyph->bitmap.buffer;
 
-    for (unsigned y = Padding; y < rect.height - Padding; ++y) {
-      for (unsigned x = Padding; x < rect.width - Padding; ++x) {
-        unsigned index = y * rect.width + x;
+    for (int y = Padding; y < rect.height - Padding; ++y) {
+      for (int x = Padding; x < rect.width - Padding; ++x) {
+        int index = y * rect.width + x;
         paddedBuffer[index] = sourceBuffer[x - Padding];
       }
 

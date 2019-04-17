@@ -176,7 +176,7 @@ inline namespace v1 {
      * @param name The name of the sub-texture
      * @param rect The rectangle inside the texture
      */
-    void addSubTexture(std::string name, const RectU& rect);
+    void addSubTexture(std::string name, const RectI& rect);
 
     /**
      * @brief Get the sub-texture rectangle
@@ -185,7 +185,7 @@ inline namespace v1 {
      * @return The rectangle corresponding to the name
      * @sa getTextureRect()
      */
-    RectU getSubTexture(const std::string& name) const;
+    RectI getSubTexture(const std::string& name) const;
 
     /**
      * @brief Get the texture rectangle in normalized coordinates
@@ -199,7 +199,7 @@ inline namespace v1 {
   private:
     Path m_texturePath;
     const Texture *m_texture;
-    std::map<std::string, RectU> m_rects;
+    std::map<std::string, RectI> m_rects;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

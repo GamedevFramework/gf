@@ -31,7 +31,7 @@ namespace kkd {
     virtual void render(gf::RenderTarget &target, const gf::RenderStates &states) override;
 
   private:
-    static constexpr unsigned Size = 75;
+    static constexpr int Size = 75;
 
   private:
     gf::Texture& m_texture;

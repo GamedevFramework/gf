@@ -46,21 +46,21 @@ inline namespace v1 {
      * @param color The color of the grid frame
      * @param lineWidth The width of the grid frame
      */
-    SquareGrid(Vector2u gridSize, Vector2f cellSize, const Color4f& color, float lineWidth = 1.0f);
+    SquareGrid(Vector2i gridSize, Vector2f cellSize, const Color4f& color, float lineWidth = 1.0f);
 
     /**
      * @brief Set the grid size
      *
      * @param gridSize The new grid size
      */
-    void setGridSize(Vector2u gridSize);
+    void setGridSize(Vector2i gridSize);
 
     /**
      * @brief Get the grid size
      *
      * @returns The current grid size
      */
-    Vector2u getGridSize() const noexcept {
+    Vector2i getGridSize() const noexcept {
       return m_gridSize;
     }
 
@@ -155,7 +155,7 @@ inline namespace v1 {
     void updateGeometry();
 
   private:
-    Vector2u m_gridSize;
+    Vector2i m_gridSize;
     Vector2f m_cellSize;
     Color4f m_color;
     float m_lineWidth;

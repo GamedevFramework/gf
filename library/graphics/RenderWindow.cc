@@ -39,7 +39,7 @@ inline namespace v1 {
     initialize();
   }
 
-  Vector2u RenderWindow::getSize() const {
+  Vector2i RenderWindow::getSize() const {
     return m_window.getFramebufferSize();
   }
 

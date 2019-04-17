@@ -78,7 +78,7 @@ inline namespace v1 {
 
     }
 
-    virtual void onScreenSizeChange(Vector2u screenSize) override;
+    virtual void onScreenSizeChange(Vector2i screenSize) override;
   };
 
   /**
@@ -135,7 +135,7 @@ inline namespace v1 {
 
     }
 
-    virtual void onScreenSizeChange(Vector2u screenSize) override;
+    virtual void onScreenSizeChange(Vector2i screenSize) override;
 
   protected:
     virtual void onSizeChange(Vector2f size) override;
@@ -144,7 +144,7 @@ inline namespace v1 {
     void updateView();
 
   private:
-    Vector2u m_localScreenSize;
+    Vector2i m_localScreenSize;
     RectF m_localViewport;
   };
 
@@ -201,7 +201,7 @@ inline namespace v1 {
 
     }
 
-    virtual void onScreenSizeChange(Vector2u screenSize) override;
+    virtual void onScreenSizeChange(Vector2i screenSize) override;
 
   protected:
     virtual void onSizeChange(Vector2f size) override;
@@ -211,7 +211,7 @@ inline namespace v1 {
 
   private:
     Vector2f m_localSize;
-    Vector2u m_localScreenSize;
+    Vector2i m_localScreenSize;
   };
 
   /**
@@ -268,7 +268,7 @@ inline namespace v1 {
 
     }
 
-    virtual void onScreenSizeChange(Vector2u screenSize) override;
+    virtual void onScreenSizeChange(Vector2i screenSize) override;
 
   protected:
     virtual void onSizeChange(Vector2f size) override;
@@ -278,7 +278,7 @@ inline namespace v1 {
 
   private:
     Vector2f m_localSize;
-    Vector2u m_localScreenSize;
+    Vector2i m_localScreenSize;
   };
 
 
@@ -337,7 +337,7 @@ inline namespace v1 {
 
     }
 
-    virtual void onScreenSizeChange(Vector2u screenSize) override;
+    virtual void onScreenSizeChange(Vector2i screenSize) override;
 
   protected:
     virtual void onSizeChange(Vector2f size) override;
@@ -347,7 +347,7 @@ inline namespace v1 {
 
   private:
     Vector2f m_localSize;
-    Vector2u m_localScreenSize;
+    Vector2i m_localScreenSize;
     RectF m_localViewport;
   };
 
@@ -378,13 +378,13 @@ inline namespace v1 {
 
     }
 
-    virtual void onScreenSizeChange(Vector2u screenSize) override;
+    virtual void onScreenSizeChange(Vector2i screenSize) override;
     virtual void onViewportChange(const RectF& viewport) override;
 
     void updateView();
 
   private:
-    Vector2u m_localScreenSize;
+    Vector2i m_localScreenSize;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

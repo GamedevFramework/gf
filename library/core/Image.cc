@@ -73,7 +73,7 @@ inline namespace v1 {
 
   }
 
-  void Image::create(Vector2u size, const Color4u& color) {
+  void Image::create(Vector2i size, const Color4u& color) {
     if (size.width == 0 || size.height == 0) {
       m_size = { 0, 0 };
       m_pixels.clear();
@@ -85,15 +85,15 @@ inline namespace v1 {
 
     uint8_t *ptr = m_pixels.data();
 
-    for (unsigned y = 0; y < size.height; ++y) {
-      for (unsigned x = 0; x < size.width; ++x) {
+    for (int y = 0; y < size.height; ++y) {
+      for (int x = 0; x < size.width; ++x) {
         std::copy_n(color.begin(), 4, ptr);
         ptr += 4;
       }
     }
   }
 
-  void Image::create(Vector2u size, const uint8_t* pixels) {
+  void Image::create(Vector2i size, const uint8_t* pixels) {
     if (size.width == 0 || size.height == 0) {
       m_size = { 0, 0 };
       m_pixels.clear();
@@ -106,7 +106,7 @@ inline namespace v1 {
     std::copy_n(pixels, m_pixels.size(), m_pixels.data());
   }
 
-  void Image::createRGB(Vector2u size, const uint8_t* pixels) {
+  void Image::createRGB(Vector2i size, const uint8_t* pixels) {
     if (size.width == 0 || size.height == 0) {
       m_size = { 0, 0 };
       m_pixels.clear();
@@ -118,8 +118,8 @@ inline namespace v1 {
 
     uint8_t *ptr = m_pixels.data();
 
-    for (unsigned y = 0; y < size.height; ++y) {
-      for (unsigned x = 0; x < size.width; ++x) {
+    for (int y = 0; y < size.height; ++y) {
+      for (int x = 0; x < size.width; ++x) {
         std::copy_n(pixels, 3, ptr);
         ptr[3] = 0xFF; // set alpha to max (opaque)
 
@@ -141,7 +141,7 @@ inline namespace v1 {
       return false;
     }
 
-    Vector2u size;
+    Vector2i size;
     size.width = width;
     size.height = height;
 
@@ -163,7 +163,7 @@ inline namespace v1 {
       return false;
     }
 
-    Vector2u size;
+    Vector2i size;
     size.width = width;
     size.height = height;
 
@@ -190,7 +190,7 @@ inline namespace v1 {
       return false;
     }
 
-    Vector2u size;
+    Vector2i size;
     size.width = width;
     size.height = height;
 
@@ -231,7 +231,7 @@ inline namespace v1 {
     return false;
   }
 
-  Vector2u Image::getSize() const {
+  Vector2i Image::getSize() const {
     return m_size;
   }
 
@@ -242,8 +242,8 @@ inline namespace v1 {
 
     uint8_t *ptr = m_pixels.data();
 
-    for (unsigned y = 0; y < m_size.height; ++y) {
-      for (unsigned x = 0; x < m_size.width; ++x) {
+    for (int y = 0; y < m_size.height; ++y) {
+      for (int x = 0; x < m_size.width; ++x) {
         if (ptr[0] == color.r && ptr[1] == color.g && ptr[2] == color.b && ptr[3] == color.a) {
           ptr[3] = alpha;
         }
@@ -253,7 +253,7 @@ inline namespace v1 {
     }
   }
 
-  void Image::setPixel(Vector2u pos, const Color4u& color) {
+  void Image::setPixel(Vector2i pos, const Color4u& color) {
     if (pos.x >= m_size.width || pos.y >= m_size.height) {
       return;
     }
@@ -265,7 +265,7 @@ inline namespace v1 {
     ptr[3] = color.a;
   }
 
-  Color4u Image::getPixel(Vector2u pos) const {
+  Color4u Image::getPixel(Vector2i pos) const {
     if (pos.x >= m_size.width || pos.y >= m_size.height) {
       return Color4u{0x00, 0x00, 0x00, 0x00};
     }
@@ -292,7 +292,7 @@ inline namespace v1 {
     uint8_t *src = &m_pixels[0];
     uint8_t *dst = src + (m_size.height - 1) * stride;
 
-    for (unsigned i = 0; i < m_size.height / 2; ++i) {
+    for (int i = 0; i < m_size.height / 2; ++i) {
       std::swap_ranges(src, src + stride, dst);
       src += stride;
       dst -= stride;

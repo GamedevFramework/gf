@@ -150,7 +150,7 @@ inline namespace v1 {
   TmxObject::~TmxObject() = default;
 
 
-  const TmxTile *TmxTileset::getTile(unsigned id) const noexcept {
+  const TmxTile *TmxTileset::getTile(int id) const noexcept {
     for (auto& tile : tiles) {
       if (tile.id == id) {
         return std::addressof(tile);
@@ -160,16 +160,16 @@ inline namespace v1 {
     return nullptr;
   }
 
-  RectU TmxTileset::getSubTexture(unsigned id, Vector2u size) const noexcept {
-    unsigned width = (size.width - 2 * margin + spacing) / (tileSize.width + spacing); // number of tiles
-    unsigned height = (size.height - 2 * margin + spacing) / (tileSize.height + spacing); // number of tiles
+  RectI TmxTileset::getSubTexture(int id, Vector2i size) const noexcept {
+    int width = (size.width - 2 * margin + spacing) / (tileSize.width + spacing); // number of tiles
+    int height = (size.height - 2 * margin + spacing) / (tileSize.height + spacing); // number of tiles
 
-    unsigned tu = id % width;
-    unsigned tv = id / width;
+    int tu = id % width;
+    int tv = id / width;
     assert(tv < height);
 
-    unsigned du = margin + tu * spacing + offset.x;
-    unsigned dv = margin + tv * spacing + offset.y;
+    int du = margin + tu * spacing + offset.x;
+    int dv = margin + tv * spacing + offset.y;
     assert((tu + 1) * tileSize.width + du <= size.width);
     assert((tv + 1) * tileSize.height + dv <= size.height);
 
@@ -177,7 +177,7 @@ inline namespace v1 {
   }
 
 
-  const TmxTileset *TmxLayers::getTileSetFromGID(unsigned gid) const noexcept {
+  const TmxTileset *TmxLayers::getTileSetFromGID(int gid) const noexcept {
     for (auto it = tilesets.rbegin(); it != tilesets.rend(); ++it) {
       if (it->firstGid <= gid) {
         return std::addressof(*it);
@@ -443,10 +443,10 @@ inline namespace v1 {
       return data;
     }
 
-    TmxCell decodeGID(unsigned gid) {
-      static constexpr unsigned FlippedHorizontallyFlag = 0x80000000;
-      static constexpr unsigned FlippedVerticallyFlag   = 0x40000000;
-      static constexpr unsigned FlippedDiagonallyFlag   = 0x20000000;
+    TmxCell decodeGID(int gid) {
+      static constexpr int FlippedHorizontallyFlag = 0x80000000;
+      static constexpr int FlippedVerticallyFlag   = 0x40000000;
+      static constexpr int FlippedDiagonallyFlag   = 0x20000000;
 
       TmxCell cell;
 
@@ -529,7 +529,7 @@ inline namespace v1 {
           assert(size % 4 == 0);
 
           for (std::size_t i = 0; i < size; i += 4) {
-            unsigned gid = buffer[i] | (buffer[i + 1] << 8) | (buffer[i + 2] << 16) | (buffer[i + 3] << 24);
+            int gid = buffer[i] | (buffer[i + 1] << 8) | (buffer[i + 2] << 16) | (buffer[i + 3] << 24);
             cells.push_back(decodeGID(gid));
           }
 
@@ -543,7 +543,7 @@ inline namespace v1 {
           boost::algorithm::split(items, csv, boost::algorithm::is_any_of(","));
 
           for (auto item : items) {
-            unsigned gid = std::stoul(item);
+            int gid = std::stoi(item);
             cells.push_back(decodeGID(gid));
           }
 
@@ -552,7 +552,7 @@ inline namespace v1 {
 
         case TmxFormat::Xml:
           for (pugi::xml_node tile : node.children("tile")) {
-            unsigned gid = required_attribute(tile, "gid").as_uint();
+            int gid = required_attribute(tile, "gid").as_int();
             cells.push_back(decodeGID(gid));
           };
 
@@ -598,8 +598,8 @@ inline namespace v1 {
       tmx->format = node.attribute("format").as_string();
       tmx->source = ctx.currentPath / required_attribute(node, "source").as_string();
       tmx->transparent = computeColor(node.attribute("trans"));
-      tmx->size.width = node.attribute("width").as_uint();
-      tmx->size.height = node.attribute("height").as_uint();
+      tmx->size.width = node.attribute("width").as_int();
+      tmx->size.height = node.attribute("height").as_int();
 
       // TODO: handle "data"
 
@@ -684,7 +684,7 @@ inline namespace v1 {
         pugi::xml_node text = node.child("text");
 
         tmx->fontFamily = text.attribute("fontfamily").as_string("sans-serif");
-        tmx->sizeInPixels = text.attribute("pixelsize").as_uint(16);
+        tmx->sizeInPixels = text.attribute("pixelsize").as_int(16);
         tmx->wrap = text.attribute("wrap").as_bool(false);
         tmx->color = computeColor(text.attribute("color"), { 0x00, 0x00, 0x00, 0xFF });
         tmx->bold = text.attribute("bold").as_bool(false);
@@ -731,7 +731,7 @@ inline namespace v1 {
       }
 
       if (node.attribute("gid") != nullptr) {
-        unsigned gid = node.attribute("gid").as_uint();
+        int gid = node.attribute("gid").as_int();
         TmxCell cell = decodeGID(gid);
 
         auto tmx = std::make_unique<TmxTileObject>();
@@ -834,8 +834,8 @@ inline namespace v1 {
 
       TmxFrame tmx;
 
-      tmx.tileId = required_attribute(node, "tileId").as_uint();
-      tmx.duration = gf::milliseconds(required_attribute(node, "duration").as_uint());
+      tmx.tileId = required_attribute(node, "tileId").as_int();
+      tmx.duration = gf::milliseconds(required_attribute(node, "duration").as_int());
 
       return tmx;
     }
@@ -858,10 +858,10 @@ inline namespace v1 {
       TmxTile tmx;
 
       tmx.properties = parseTmxProperties(node);
-      tmx.id = required_attribute(node, "id").as_uint();
+      tmx.id = required_attribute(node, "id").as_int();
       tmx.type = node.attribute("type").as_string();
 
-      static constexpr unsigned Invalid = static_cast<unsigned>(-1);
+      static constexpr int Invalid = -1;
 
       tmx.terrain = { { Invalid, Invalid, Invalid, Invalid } };
 
@@ -870,16 +870,16 @@ inline namespace v1 {
       if (!terrain.empty()) {
         std::vector<std::string> items;
         boost::algorithm::split(items, terrain, boost::algorithm::is_any_of(","));
-        unsigned t = 0;
+        int t = 0;
 
         for (auto item : items) {
           if (!item.empty()) {
-            tmx.terrain[t++] = std::stoul(item);
+            tmx.terrain[t++] = std::stoi(item);
           }
         }
       }
 
-      tmx.probability = node.attribute("probability").as_uint(100u);
+      tmx.probability = node.attribute("probability").as_int(100u);
 
       tmx.image = nullptr;
       pugi::xml_node image = node.child("image");
@@ -913,7 +913,7 @@ inline namespace v1 {
       tmx.properties = parseTmxProperties(node);
 
       tmx.name = required_attribute(node, "name").as_string();
-      tmx.tile = required_attribute(node, "tile").as_uint();
+      tmx.tile = required_attribute(node, "tile").as_int();
 
       return tmx;
     }
@@ -923,14 +923,14 @@ inline namespace v1 {
 
       tmx.name = node.attribute("name").as_string();
 
-      tmx.tileSize.width = node.attribute("tilewidth").as_uint();
-      tmx.tileSize.height = node.attribute("tileheight").as_uint();
+      tmx.tileSize.width = node.attribute("tilewidth").as_int();
+      tmx.tileSize.height = node.attribute("tileheight").as_int();
 
-      tmx.spacing = node.attribute("spacing").as_uint();
-      tmx.margin = node.attribute("margin").as_uint();
+      tmx.spacing = node.attribute("spacing").as_int();
+      tmx.margin = node.attribute("margin").as_int();
 
-      tmx.tileCount = node.attribute("tilecount").as_uint();
-      tmx.columnCount = node.attribute("columns").as_uint();
+      tmx.tileCount = node.attribute("tilecount").as_int();
+      tmx.columnCount = node.attribute("columns").as_int();
 
       tmx.offset = { 0, 0 };
       pugi::xml_node offset = node.child("tileoffset");
@@ -992,7 +992,7 @@ inline namespace v1 {
 
       tmx.properties = parseTmxProperties(node);
 
-      tmx.firstGid = required_attribute(node, "firstgid").as_uint();
+      tmx.firstGid = required_attribute(node, "firstgid").as_int();
 
       Path source = node.attribute("source").as_string();
 
@@ -1051,13 +1051,13 @@ inline namespace v1 {
       }
 
       tmx.infinite = node.attribute("invisible").as_bool(false);
-      tmx.mapSize.width = required_attribute(node, "width").as_uint();
-      tmx.mapSize.height = required_attribute(node, "height").as_uint();
+      tmx.mapSize.width = required_attribute(node, "width").as_int();
+      tmx.mapSize.height = required_attribute(node, "height").as_int();
 
-      tmx.tileSize.width = required_attribute(node, "tilewidth").as_uint();
-      tmx.tileSize.height = required_attribute(node, "tileheight").as_uint();
+      tmx.tileSize.width = required_attribute(node, "tilewidth").as_int();
+      tmx.tileSize.height = required_attribute(node, "tileheight").as_int();
 
-      tmx.hexSideLength = node.attribute("hexsidelength").as_uint(0u);
+      tmx.hexSideLength = node.attribute("hexsidelength").as_int(0);
 
       tmx.staggerAxis = StaggerAxis::Y;
 
@@ -1089,7 +1089,7 @@ inline namespace v1 {
 
       tmx.backgroundColor = computeColor(node.attribute("backgroundcolor"), Color4u(0xFF, 0xFF, 0xFF, 0xFF));
 
-      tmx.nextObjectId = node.attribute("nextobjectid").as_uint(0u);
+      tmx.nextObjectId = node.attribute("nextobjectid").as_int(0);
 
       for (pugi::xml_node tileset : node.children("tileset")) {
         tmx.tilesets.push_back(parseTmxTileset(tileset, ctx));

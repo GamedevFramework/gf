@@ -30,7 +30,7 @@
 #include <gf/VectorOps.h>
 
 namespace brfd {
-  static constexpr unsigned TileSize = 256;
+  static constexpr int TileSize = 256;
 
   // see tileset.png
   enum class Tile : int {
@@ -75,7 +75,7 @@ namespace brfd {
     Block data[Level::Size][Level::Size];
   };
 
-  static bool isPositionKnown(gf::Vector2u newPosition, const std::vector<gf::Vector2u>& positions) {
+  static bool isPositionKnown(gf::Vector2i newPosition, const std::vector<gf::Vector2i>& positions) {
     for (auto position : positions) {
       if (newPosition == position) {
         return true;
@@ -90,12 +90,12 @@ namespace brfd {
     float angle;
   };
 
-  static std::tuple<gf::Vector2f, float> getNewPosition(gf::Random& random, Map& map, std::vector<gf::Vector2u>& positions, Tile tile) {
-    gf::Vector2u pos;
+  static std::tuple<gf::Vector2f, float> getNewPosition(gf::Random& random, Map& map, std::vector<gf::Vector2i>& positions, Tile tile) {
+    gf::Vector2i pos;
 
     do {
-      pos.x = random.computeUniformInteger(0u, Level::StreetCount - 2);
-      pos.y = random.computeUniformInteger(0u, Level::StreetCount - 2);
+      pos.x = random.computeUniformInteger(0, Level::StreetCount - 2);
+      pos.y = random.computeUniformInteger(0, Level::StreetCount - 2);
     } while (isPositionKnown(pos, positions));
 
     positions.push_back(pos);
@@ -113,7 +113,7 @@ namespace brfd {
     };
 
     for (auto clear : ClearRoads) {
-      gf::Vector2u otherPos = pos + clear.dir;
+      gf::Vector2i otherPos = pos + clear.dir;
 
       if (map.data[otherPos.x][otherPos.y].type == BlockType::Street) {
         gf::Vector2f goal = (otherPos + gf::Vector2f(0.5f, 0.5f)) * TileSize;
@@ -125,7 +125,7 @@ namespace brfd {
     return std::make_tuple(gf::Vector2f(0, 0), 0.0f);
   }
 
-  static bool isRealStreet(gf::Vector2u pos, const Map& map) {
+  static bool isRealStreet(gf::Vector2i pos, const Map& map) {
     return map.data[pos.x][pos.y].tile == Tile::Road_H || map.data[pos.x][pos.y].tile == Tile::Road_V;
   }
 
@@ -150,8 +150,8 @@ namespace brfd {
 
     Map map;
 
-    for (unsigned i = 0; i < Size; ++i) {
-      for (unsigned j = 0; j < Size; ++j) {
+    for (int i = 0; i < Size; ++i) {
+      for (int j = 0; j < Size; ++j) {
         auto& block = map.data[i][j];
 
         if (i == 0 || j == 0 || i == Size - 1 || j == Size - 1) {
@@ -186,12 +186,12 @@ namespace brfd {
 
     // set the occupied tiles
 
-    for (unsigned i = 1; i < StreetCount - 1; ++i) {
-      for (unsigned j = 0; j < StreetCount - 1; ++j) {
+    for (int i = 1; i < StreetCount - 1; ++i) {
+      for (int j = 0; j < StreetCount - 1; ++j) {
         if (random.computeBernoulli(OccupiedRatio)) {
-          unsigned x = 3 * i + 1;
-          unsigned y1 = 3 * j + 2;
-          unsigned y2 = 3 * j + 3;
+          int x = 3 * i + 1;
+          int y1 = 3 * j + 2;
+          int y2 = 3 * j + 3;
 
           map.data[x][y1].type = BlockType::Occupied;
           map.data[x][y2].type = BlockType::Occupied;
@@ -225,12 +225,12 @@ namespace brfd {
       }
     }
 
-    for (unsigned i = 1; i < StreetCount - 1; ++i) {
-      for (unsigned j = 0; j < StreetCount - 1; ++j) {
+    for (int i = 1; i < StreetCount - 1; ++i) {
+      for (int j = 0; j < StreetCount - 1; ++j) {
         if (random.computeBernoulli(OccupiedRatio)) {
-          unsigned y = 3 * i + 1;
-          unsigned x1 = 3 * j + 2;
-          unsigned x2 = 3 * j + 3;
+          int y = 3 * i + 1;
+          int x1 = 3 * j + 2;
+          int x2 = 3 * j + 3;
 
           map.data[x1][y].type = BlockType::Occupied;
           map.data[x2][y].type = BlockType::Occupied;
@@ -266,8 +266,8 @@ namespace brfd {
 
     // set the road tiles
 
-    for (unsigned i = 1; i < Size - 1; ++i) {
-      for (unsigned j = 1; j < Size - 1; j += 3) {
+    for (int i = 1; i < Size - 1; ++i) {
+      for (int j = 1; j < Size - 1; j += 3) {
         auto& block = map.data[i][j];
 
         if (block.type == BlockType::Street) {
@@ -278,8 +278,8 @@ namespace brfd {
       }
     }
 
-    for (unsigned i = 1; i < Size - 1; i += 3) {
-      for (unsigned j = 1; j < Size - 1; ++j) {
+    for (int i = 1; i < Size - 1; i += 3) {
+      for (int j = 1; j < Size - 1; ++j) {
         auto& block = map.data[i][j];
 
         if (block.type == BlockType::Street) {
@@ -297,7 +297,7 @@ namespace brfd {
 
     // compute special buildings
 
-    std::vector<gf::Vector2u> positions;
+    std::vector<gf::Vector2i> positions;
 
     std::tie(m_partner, std::ignore) = getNewPosition(random, map, positions, Tile::Home2_NW);
     std::tie(m_clothingStore, std::ignore) = getNewPosition(random, map, positions, Tile::Building1_NW);
@@ -308,8 +308,8 @@ namespace brfd {
 
     // set special buildings tiles
 
-    for (unsigned i = 2; i < Size - 2; i += 3) {
-      for (unsigned j = 2; j < Size - 2; j += 3) {
+    for (int i = 2; i < Size - 2; i += 3) {
+      for (int j = 2; j < Size - 2; j += 3) {
         const auto& block = map.data[i][j];
 
         assert(block.type == BlockType::Building);
@@ -359,8 +359,8 @@ namespace brfd {
 
     // set the tiles of the layer
 
-    for (unsigned i = 0; i < Size; ++i) {
-      for (unsigned j = 0; j < Size; ++j) {
+    for (int i = 0; i < Size; ++i) {
+      for (int j = 0; j < Size; ++j) {
         auto& block = map.data[i][j];
         m_layer.setTile({ i, j }, static_cast<int>(block.tile));
       }
@@ -370,16 +370,16 @@ namespace brfd {
      * Step 2: the cars
      */
 
-    static constexpr unsigned CarCount = 150;
+    static constexpr int CarCount = 150;
 
     positions.clear();
 
-    for (unsigned k = 0; k < CarCount; ++k) {
-      gf::Vector2u pos;
+    for (int k = 0; k < CarCount; ++k) {
+      gf::Vector2i pos;
 
       do {
-        pos.x = random.computeUniformInteger(1u, Size - 1);
-        pos.y = random.computeUniformInteger(1u, Size - 1);
+        pos.x = random.computeUniformInteger(1, Size - 1);
+        pos.y = random.computeUniformInteger(1, Size - 1);
       } while (!isRealStreet(pos, map) || isPositionKnown(pos, positions));
 
       positions.push_back(pos);
@@ -424,8 +424,8 @@ namespace brfd {
       physics.addBody(car.getBody());
     }
 
-    for (unsigned i = 2; i < Size - 2; i += 3) {
-      for (unsigned j = 2; j < Size - 2; j += 3) {
+    for (int i = 2; i < Size - 2; i += 3) {
+      for (int j = 2; j < Size - 2; j += 3) {
         gf::Vector2f position(static_cast<float>(i), static_cast<float>(j));
 
         gf::PhysicsBody body(m_buildingGeometry, gf::PhysicsBody::Static);
@@ -438,8 +438,8 @@ namespace brfd {
       physics.addBody(building);
     }
 
-    for (unsigned i = 0; i < Size; ++i) {
-      for (unsigned j = 0; j < Size; ++j) {
+    for (int i = 0; i < Size; ++i) {
+      for (int j = 0; j < Size; ++j) {
         if (map.data[i][j].type == BlockType::Grass || map.data[i][j].type == BlockType::Occupied) {
           gf::Vector2f position(static_cast<float>(i), static_cast<float>(j));
 

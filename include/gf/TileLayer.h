@@ -81,14 +81,14 @@ inline namespace v1 {
      * @param layerSize The size of the layer, in number of tiles
      * @param type The type of the layer
      */
-    TileLayer(Vector2u layerSize, Type type = Orthogonal);
+    TileLayer(Vector2i layerSize, Type type = Orthogonal);
 
     /**
      * @brief Get the size of the layer
      *
      * @returns The size of the layer, in number of tiles
      */
-    Vector2u getMapSize() const {
+    Vector2i getMapSize() const {
       return m_tiles.getSize();
     }
 
@@ -150,7 +150,7 @@ inline namespace v1 {
      * @param tileSize The new tile size, in pixels
      * @sa getTileSize()
      */
-    void setTileSize(Vector2u tileSize);
+    void setTileSize(Vector2i tileSize);
 
     /**
      * @brief Get the tile size in the tileset
@@ -158,7 +158,7 @@ inline namespace v1 {
      * @return The tile size, in pixels
      * @sa setTileSize()
      */
-    Vector2u getTileSize() const {
+    Vector2i getTileSize() const {
       return m_tileSize;
     }
 
@@ -168,7 +168,7 @@ inline namespace v1 {
      * @param margin The margin, in pixels
      * @sa getMargin()
      */
-    void setMargin(unsigned margin) {
+    void setMargin(int margin) {
       setMargin({ margin, margin });
     }
 
@@ -178,7 +178,7 @@ inline namespace v1 {
      * @param margin The margin, in pixels
      * @sa getMargin()
      */
-    void setMargin(Vector2u margin);
+    void setMargin(Vector2i margin);
 
     /**
      * @brief Get the margin of the tileset
@@ -186,7 +186,7 @@ inline namespace v1 {
      * @return The margin, in pixels
      * @sa setMargin()
      */
-    Vector2u getMargin() const {
+    Vector2i getMargin() const {
       return m_margin;
     }
 
@@ -196,7 +196,7 @@ inline namespace v1 {
      * @param spacing The spacing, in pixels
      * @sa getSpacing()
      */
-    void setSpacing(unsigned spacing) {
+    void setSpacing(int spacing) {
       setSpacing({ spacing, spacing });
     }
 
@@ -206,7 +206,7 @@ inline namespace v1 {
      * @param spacing The spacing, in pixels
      * @sa getSpacing()
      */
-    void setSpacing(Vector2u spacing);
+    void setSpacing(Vector2i spacing);
 
     /**
      * @brief Get the spacing of the tileset
@@ -214,7 +214,7 @@ inline namespace v1 {
      * @return The spacing, in pixels
      * @sa setSpacing()
      */
-    Vector2u getSpacing() const {
+    Vector2i getSpacing() const {
       return m_spacing;
     }
 
@@ -234,7 +234,7 @@ inline namespace v1 {
      * @param blockSize The new size of the block, in pixels
      * @sa getBlockSize()
      */
-    void setBlockSize(Vector2u blockSize);
+    void setBlockSize(Vector2i blockSize);
 
     /**
      * @brief Get the block size
@@ -244,7 +244,7 @@ inline namespace v1 {
      *
      * @return The block size
      */
-    Vector2u getBlockSize() const;
+    Vector2i getBlockSize() const;
 
     /**
      * @brief Set a tile
@@ -254,7 +254,7 @@ inline namespace v1 {
      * @param flip The flip property of the tile
      * @sa getTile()
      */
-    void setTile(Vector2u position, int tile, Flags<Flip> flip = None);
+    void setTile(Vector2i position, int tile, Flags<Flip> flip = None);
 
     /**
      * @brief Get a tile
@@ -263,7 +263,7 @@ inline namespace v1 {
      * @return The number of the tile in the tileset or `gf::TileLayer::NoTile`
      * @sa setTile()
      */
-    int getTile(Vector2u position) const;
+    int getTile(Vector2i position) const;
 
 
     /**
@@ -273,7 +273,7 @@ inline namespace v1 {
      * @return A flag to indicate how the tile is flipped
      * @sa setTile()
      */
-    Flags<Flip> getFlip(Vector2u position) const;
+    Flags<Flip> getFlip(Vector2i position) const;
 
     /**
      * @brief Remove all the tiles
@@ -326,7 +326,7 @@ inline namespace v1 {
     };
 
   private:
-    void fillVertexArray(VertexArray& array, RectU rect) const;
+    void fillVertexArray(VertexArray& array, RectI rect) const;
     void updateGeometry();
 
   private:
@@ -334,17 +334,17 @@ inline namespace v1 {
     StaggerIndex m_staggerIndex;
     StaggerAxis m_staggerAxis;
 
-    Vector2u m_layerSize;
-    Vector2u m_blockSize;
+    Vector2i m_layerSize;
+    Vector2i m_blockSize;
 
     const Texture *m_texture;
-    Vector2u m_tileSize;
-    Vector2u m_margin;
-    Vector2u m_spacing;
+    Vector2i m_tileSize;
+    Vector2i m_margin;
+    Vector2i m_spacing;
 
     Array2D<Cell> m_tiles;
 
-    RectU m_rect;
+    RectI m_rect;
     VertexArray m_vertices;
   };
 

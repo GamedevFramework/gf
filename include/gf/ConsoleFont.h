@@ -138,7 +138,7 @@ inline namespace v1 {
      *
      * @returns The size in characters of the font
      */
-    Vector2u getSize() const {
+    Vector2i getSize() const {
       return m_size;
     }
 
@@ -147,7 +147,7 @@ inline namespace v1 {
      *
      * @returns The size in pixels of the characters
      */
-    Vector2u getCharacterSize() const {
+    Vector2i getCharacterSize() const {
       return m_characterSize;
     }
 
@@ -166,7 +166,7 @@ inline namespace v1 {
      * @param c A character
      * @param position The position, in characters, of the character
      */
-    void mapCode(char16_t c, Vector2u position);
+    void mapCode(char16_t c, Vector2i position);
 
     /**
      * @brief Map a range of characters to consecutive positions in the font
@@ -175,7 +175,7 @@ inline namespace v1 {
      * @param count The number of character in the range
      * @param position The position, in characters, of the first character
      */
-    void mapCodeRange(char16_t c, unsigned count, Vector2u position);
+    void mapCodeRange(char16_t c, int count, Vector2i position);
 
     /**
      * @brief Map characters from a string to consecutive positions in the font
@@ -183,7 +183,7 @@ inline namespace v1 {
      * @param str The string with the characters
      * @param position The position, in characters, of the first character of the string
      */
-    void mapString(StringRef str, Vector2u position);
+    void mapString(StringRef str, Vector2i position);
 
     /**
      * @brief Map an element in the font
@@ -223,7 +223,7 @@ inline namespace v1 {
      *
      * @sa getTexture(), getTextureRect()
      */
-    RectU getSubTexture(char16_t c) const;
+    RectI getSubTexture(char16_t c) const;
 
     /**
      * @brief Get the texture rectangle for a character
@@ -257,7 +257,7 @@ inline namespace v1 {
      * @param size The size given by the user, may be @f$ (0, 0) @f$
      * @param imageSize The size of the source image
      */
-    bool setFormatAndComputeSizes(ConsoleFontFormat format, Vector2u size, Vector2u imageSize);
+    bool setFormatAndComputeSizes(ConsoleFontFormat format, Vector2i size, Vector2i imageSize);
 
     /**
      * @brief Print the format of the font
@@ -276,13 +276,13 @@ inline namespace v1 {
      *
      * @returns A pixel position where to find the color key
      */
-    Vector2u getColorKeyPosition() const;
+    Vector2i getColorKeyPosition() const;
 
   private:
     std::vector<uint8_t> m_mapping;
     ConsoleFontFormat m_format;
-    Vector2u m_size;
-    Vector2u m_characterSize;
+    Vector2i m_size;
+    Vector2i m_characterSize;
   };
 
   /**
@@ -307,7 +307,7 @@ inline namespace v1 {
      * @param size The size, in characters, of the font
      * @returns True if the font was correctly loaded
      */
-    bool loadFromFile(const Path& filename, ConsoleFontFormat format, Vector2u size = { 0u, 0u });
+    bool loadFromFile(const Path& filename, ConsoleFontFormat format, Vector2i size = { 0u, 0u });
 
   private:
     AlphaTexture m_texture;
@@ -333,7 +333,7 @@ inline namespace v1 {
      * @param size The size, in characters, of the font
      * @returns True if the font was correctly loaded
      */
-    bool loadFromFile(const Path& filename, ConsoleFontFormat format, Vector2u size = { 0u, 0u });
+    bool loadFromFile(const Path& filename, ConsoleFontFormat format, Vector2i size = { 0u, 0u });
 
   private:
     Texture m_texture;

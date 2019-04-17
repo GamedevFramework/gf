@@ -83,11 +83,11 @@ inline namespace v1 {
     return { rect.x, rect.y };
   }
 
-  Vector2u Monitor::getPhysicalSize() const {
+  Vector2i Monitor::getPhysicalSize() const {
     SDL_Rect rect;
     int err = SDL_GetDisplayBounds(m_index, &rect);
     sdlCheckError(err);
-    return { static_cast<unsigned>(rect.w), static_cast<unsigned>(rect.h) };
+    return { rect.w, rect.h };
   }
 
   std::vector<VideoMode> Monitor::getAvailableVideoModes() const {
@@ -102,7 +102,7 @@ inline namespace v1 {
 
       if (err == 0) {
         list.push_back({
-          { static_cast<unsigned>(mode.w), static_cast<unsigned>(mode.h) },
+          { mode.w, mode.h },
           SDL_BITSPERPIXEL(mode.format),
           mode.refresh_rate
         });
@@ -118,7 +118,7 @@ inline namespace v1 {
     sdlCheckError(err);
 
     return VideoMode{
-      { static_cast<unsigned>(mode.w), static_cast<unsigned>(mode.h) },
+      { mode.w, mode.h },
       SDL_BITSPERPIXEL(mode.format),
       mode.refresh_rate
     };

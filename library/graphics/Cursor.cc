@@ -59,7 +59,7 @@ inline namespace v1 {
     }
   }
 
-  bool Cursor::loadFromPixels(const uint8_t* pixels, Vector2u size, Vector2u hotspot) {
+  bool Cursor::loadFromPixels(const uint8_t* pixels, Vector2i size, Vector2i hotspot) {
     if (pixels == nullptr || size.width == 0 || size.height == 0) {
       return false;
     }
@@ -101,7 +101,7 @@ inline namespace v1 {
     return true;
   }
 
-  bool Cursor::loadFromImage(const Image& image, Vector2u hotspot) {
+  bool Cursor::loadFromImage(const Image& image, Vector2i hotspot) {
     return loadFromPixels(image.getPixelsPtr(), image.getSize(), hotspot);
   }
 

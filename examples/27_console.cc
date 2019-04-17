@@ -31,7 +31,7 @@
 #include <gf/Window.h>
 
 int main() {
-  static constexpr gf::Vector2u CharacterSize(12u, 12u);
+  static constexpr gf::Vector2i CharacterSize(12, 12);
   static constexpr gf::Vector2i ConsoleSize(80, 50);
 
   const gf::Vector2u ScreenSize = CharacterSize * ConsoleSize;

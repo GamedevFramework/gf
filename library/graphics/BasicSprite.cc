@@ -88,7 +88,7 @@ inline namespace v1 {
       return;
     }
 
-    Vector2u textureSize = m_texture->getSize();
+    Vector2i textureSize = m_texture->getSize();
     Vector2f spriteSize = textureSize * m_textureRect.getSize();
 
     vertices[0].position = {  0.0f,            0.0f };

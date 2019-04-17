@@ -289,7 +289,7 @@ inline namespace v1 {
    * @brief A cell in a tile layer
    */
   struct GF_API TmxCell {
-    unsigned gid;             ///< The global id of the tile
+    int gid;             ///< The global id of the tile
     Flags<Flip> flip = None;  ///< The flip properties of the tile
   };
 
@@ -391,7 +391,7 @@ inline namespace v1 {
    * @brief An image put in the map identified by its global id
    */
   struct GF_API TmxTileObject : public TmxObject {
-    unsigned gid;
+    int gid;
     Flags<Flip> flip;
   };
 
@@ -423,7 +423,7 @@ inline namespace v1 {
     std::string text;       ///< The text of the object
 
     std::string fontFamily; ///< The font family
-    unsigned sizeInPixels;  ///< The size of the text in pixel
+    int sizeInPixels;       ///< The size of the text in pixel
     bool wrap;              ///< The wrap mode
     Color4u color;          ///< The color of the text
     bool bold;              ///< Is the text in bold?
@@ -482,7 +482,7 @@ inline namespace v1 {
     std::string format;   ///< The format of the image
     Path source;          ///< The path to the image
     Color4u transparent;  ///< The transparent color
-    Vector2u size;        ///< The size of the image
+    Vector2i size;        ///< The size of the image
   };
 
   /**
@@ -513,7 +513,7 @@ inline namespace v1 {
    * @sa gf::TmxAnimation
    */
   struct GF_API TmxFrame {
-    unsigned tileId;
+    int tileId;
     Time duration;
   };
 
@@ -534,7 +534,7 @@ inline namespace v1 {
   struct GF_API TmxTerrain {
     TmxProperties properties; ///< The properties of the terrain
     std::string name;         ///< The name of the terrain
-    unsigned tile;            ///< The representing tile for the terrain
+    int tile;                 ///< The representing tile for the terrain
   };
 
   /**
@@ -545,10 +545,10 @@ inline namespace v1 {
    */
   struct GF_API TmxTile {
     TmxProperties properties; ///< The properties of the tile
-    unsigned id;              ///< The local id of the tile
+    int id;                   ///< The local id of the tile
     std::string type;         ///< The type of the tile
-    std::array<unsigned, 4> terrain;  ///< The terrain if the corners (top-left, top-right, bottom-left, bottom-right)
-    unsigned probability;     ///< The probability of the tile
+    std::array<int, 4> terrain;  ///< The terrain if the corners (top-left, top-right, bottom-left, bottom-right)
+    int probability;          ///< The probability of the tile
 
     std::unique_ptr<TmxImage> image;  ///< The image of this tile
     std::unique_ptr<TmxObjectLayer> objects;  ///< The objects in the tile
@@ -562,13 +562,13 @@ inline namespace v1 {
   struct GF_API TmxTileset {
     TmxProperties properties; ///< The properties of the tileset
 
-    unsigned firstGid;        ///< The first global id of the tileset
+    int firstGid;             ///< The first global id of the tileset
     std::string name;         ///< The name of the tileset
-    Vector2u tileSize;        ///< The size of the tileset
-    unsigned spacing;         ///< The spacing between tiles (in pixels)
-    unsigned margin;          ///< The margin around tiles (in pixels)
-    unsigned tileCount;       ///< The number of tiles
-    unsigned columnCount;     ///< The number of columns
+    Vector2i tileSize;        ///< The size of the tileset
+    int spacing;              ///< The spacing between tiles (in pixels)
+    int margin;               ///< The margin around tiles (in pixels)
+    int tileCount;            ///< The number of tiles
+    int columnCount;          ///< The number of columns
 
     Vector2i offset;          ///< The offset of the tileset
 
@@ -583,7 +583,7 @@ inline namespace v1 {
      * @param id The id of the tile
      * @returns The tile
      */
-    const TmxTile *getTile(unsigned id) const noexcept;
+    const TmxTile *getTile(int id) const noexcept;
 
     /**
      * @brief Get the rectangle of a tile corresponding to an id.
@@ -592,7 +592,7 @@ inline namespace v1 {
      * @param size The size of the image corresponding to the tile
      * @returns The rectangle of the tile
      */
-    RectU getSubTexture(unsigned id, Vector2u size) const noexcept;
+    RectI getSubTexture(int id, Vector2i size) const noexcept;
 
   };
 
@@ -609,16 +609,16 @@ inline namespace v1 {
     TmxRenderOrder renderOrder; ///< The render order of the map
 
     bool infinite;              ///< Is the map infinite?
-    Vector2u mapSize;           ///< The size of the map
-    Vector2u tileSize;          ///< The size of the tiles
+    Vector2i mapSize;           ///< The size of the map
+    Vector2i tileSize;          ///< The size of the tiles
 
-    unsigned hexSideLength;     ///< The length of the side for hexagonal map
+    int hexSideLength;          ///< The length of the side for hexagonal map
     StaggerAxis staggerAxis;    ///< The stagger axis for hexagonal map
     StaggerIndex staggerIndex;  ///< The stagger index for hexagonal map
 
     Color4u backgroundColor;    ///< The background color
 
-    unsigned nextObjectId;      ///< The next object id
+    int nextObjectId;           ///< The next object id
 
     std::vector<TmxTileset> tilesets; ///< The tilesets used in the map
     std::vector<std::unique_ptr<TmxLayer>> layers;  ///< The layers of the map
@@ -631,7 +631,7 @@ inline namespace v1 {
      * @param gid A global id
      * @returns The corresponding tileset
      */
-    const TmxTileset *getTileSetFromGID(unsigned gid) const noexcept;
+    const TmxTileset *getTileSetFromGID(int gid) const noexcept;
 
     /**
      * @brief Visit the layers with a visitor.

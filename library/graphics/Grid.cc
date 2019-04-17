@@ -28,7 +28,7 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  SquareGrid::SquareGrid(Vector2u gridSize, Vector2f cellSize, const Color4f& color, float lineWidth)
+  SquareGrid::SquareGrid(Vector2i gridSize, Vector2f cellSize, const Color4f& color, float lineWidth)
   : m_gridSize(gridSize)
   , m_cellSize(cellSize)
   , m_color(color)
@@ -38,7 +38,7 @@ inline namespace v1 {
     updateGeometry();
   }
 
-  void SquareGrid::setGridSize(Vector2u gridSize) {
+  void SquareGrid::setGridSize(Vector2i gridSize) {
     m_gridSize = gridSize;
     updateGeometry();
   }
@@ -85,7 +85,7 @@ inline namespace v1 {
     Vertex vertices[2];
     vertices[0].color = vertices[1].color = m_color;
 
-    for (unsigned i = 0; i < m_gridSize.width; ++i) {
+    for (int i = 0; i < m_gridSize.width; ++i) {
       float x = i * m_cellSize.width;
       vertices[0].position = { x, 0.0f };
       vertices[1].position = { x, max.y };
@@ -94,7 +94,7 @@ inline namespace v1 {
       m_vertices.append(vertices[1]);
     }
 
-    for (unsigned j = 0; j < m_gridSize.height; ++j) {
+    for (int j = 0; j < m_gridSize.height; ++j) {
       float y = j * m_cellSize.height;
       vertices[0].position = { 0.0f, y };
       vertices[1].position = { max.x, y };

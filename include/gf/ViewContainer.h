@@ -74,14 +74,14 @@ inline namespace v1 {
      *
      * @sa gf::AdaptativeView::onScreenSizeChange()
      */
-    void onScreenSizeChange(Vector2u screenSize);
+    void onScreenSizeChange(Vector2i screenSize);
 
     /**
      * @brief Set the initial screen size
      *
      * @param screenSize The initial size of the screen
      */
-    void setInitialScreenSize(Vector2u screenSize);
+    void setInitialScreenSize(Vector2i screenSize);
 
   private:
     std::vector<Ref<AdaptativeView>> m_views;

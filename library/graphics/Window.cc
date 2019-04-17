@@ -102,7 +102,7 @@ inline namespace v1 {
     }
   }
 
-  Window::Window(StringRef title, Vector2u size, WindowFlags hints)
+  Window::Window(StringRef title, Vector2i size, WindowFlags hints)
   : m_window(nullptr)
   , m_context(nullptr)
   , m_shouldClose(false)
@@ -167,19 +167,19 @@ inline namespace v1 {
     SDL_SetWindowPosition(m_window, position.x, position.y);
   }
 
-  Vector2u Window::getSize() const {
+  Vector2i Window::getSize() const {
     assert(m_window);
     Vector2i size;
     SDL_GetWindowSize(m_window, &size.width, &size.height);
     return size;
   }
 
-  void Window::setSize(Vector2u size) {
+  void Window::setSize(Vector2i size) {
     assert(m_window);
     SDL_SetWindowSize(m_window, size.width, size.height);
   }
 
-  Vector2u Window::getFramebufferSize() const {
+  Vector2i Window::getFramebufferSize() const {
     assert(m_window);
     Vector2i size;
     SDL_GL_GetDrawableSize(m_window, &size.width, &size.height);
