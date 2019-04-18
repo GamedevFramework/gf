@@ -130,20 +130,15 @@ inline namespace v1 {
   }
 
   bool Image::loadFromFile(const Path& filename) {
-    int width = 0;
-    int height = 0;
+    Vector2i size = { 0, 0 };
     int n = 0;
 
-    uint8_t *ptr = stbi_load(filename.string().c_str(), &width, &height, &n, STBI_rgb_alpha);
+    uint8_t *ptr = stbi_load(filename.string().c_str(), &size.width, &size.height, &n, STBI_rgb_alpha);
 
-    if (width == 0 || height == 0 || ptr == nullptr) {
+    if (size.width == 0 || size.height == 0 || ptr == nullptr) {
       Log::warning("Could not load image from file '%s': %s\n", filename.c_str(), stbi_failure_reason());
       return false;
     }
-
-    Vector2i size;
-    size.width = width;
-    size.height = height;
 
     create(size, ptr);
     stbi_image_free(ptr);
@@ -152,20 +147,15 @@ inline namespace v1 {
   }
 
   bool Image::loadFromMemory(const uint8_t* data, std::size_t length) {
-    int width = 0;
-    int height = 0;
+    Vector2i size = { 0, 0 };
     int n = 0;
 
-    uint8_t *ptr = stbi_load_from_memory(data, length, &width, &height, &n, STBI_rgb_alpha);
+    uint8_t *ptr = stbi_load_from_memory(data, length, &size.width, &size.height, &n, STBI_rgb_alpha);
 
-    if (width == 0 || height == 0 || ptr == nullptr) {
+    if (size.width == 0 || size.height == 0 || ptr == nullptr) {
       Log::warning("Could not load image from memory: %s\n", stbi_failure_reason());
       return false;
     }
-
-    Vector2i size;
-    size.width = width;
-    size.height = height;
 
     create(size, ptr);
     stbi_image_free(ptr);
@@ -179,20 +169,15 @@ inline namespace v1 {
     callbacks.skip = &callbackSkip;
     callbacks.eof  = &callbackEof;
 
-    int width = 0;
-    int height = 0;
+    Vector2i size = { 0, 0 };
     int n = 0;
 
-    uint8_t *ptr = stbi_load_from_callbacks(&callbacks, &stream, &width, &height, &n, STBI_rgb_alpha);
+    uint8_t *ptr = stbi_load_from_callbacks(&callbacks, &stream, &size.width, &size.height, &n, STBI_rgb_alpha);
 
-    if (width == 0 || height == 0 || ptr == nullptr) {
+    if (size.width == 0 || size.height == 0 || ptr == nullptr) {
       Log::warning("Could not load image from stream: %s\n", stbi_failure_reason());
       return false;
     }
-
-    Vector2i size;
-    size.width = width;
-    size.height = height;
 
     create(size, ptr);
     stbi_image_free(ptr);
@@ -254,7 +239,7 @@ inline namespace v1 {
   }
 
   void Image::setPixel(Vector2i pos, const Color4u& color) {
-    if (pos.x >= m_size.width || pos.y >= m_size.height) {
+    if (pos.x < 0 || pos.x >= m_size.width || pos.y < 0 || pos.y >= m_size.height) {
       return;
     }
 
@@ -266,7 +251,7 @@ inline namespace v1 {
   }
 
   Color4u Image::getPixel(Vector2i pos) const {
-    if (pos.x >= m_size.width || pos.y >= m_size.height) {
+    if (pos.x < 0 || pos.x >= m_size.width || pos.y < 0 || pos.y >= m_size.height) {
       return Color4u{0x00, 0x00, 0x00, 0x00};
     }
 

@@ -395,7 +395,7 @@ inline namespace v1 {
 
     // textureRect (dumb online 2D bin packing)
 
-    glyphSize += Vector2i{2 * Padding, 2 * Padding};
+    glyphSize += gf::vec(2 * Padding, 2 * Padding);
 
     auto textureSize = cache.texture.getSize();
 

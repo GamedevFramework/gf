@@ -31,7 +31,7 @@
 #include <gf/Window.h>
 
 int main() {
-  constexpr gf::Vector2u InitialScreenSize = { 166, 169 };
+  constexpr gf::Vector2i InitialScreenSize = { 166, 169 };
 
   gf::Window window("Logo", InitialScreenSize);
   gf::RenderWindow renderer(window);

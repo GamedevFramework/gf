@@ -36,7 +36,7 @@
 
 
 int main() {
-  static constexpr gf::Vector2u ScreenSize(640, 480);
+  static constexpr gf::Vector2i ScreenSize(640, 480);
   static const gf::RectF World({ -500.0f, -500.0f }, { 1000.0f, 1000.0f });
 
   gf::Window window("43_points", ScreenSize, ~gf::WindowHints::Resizable);

@@ -29,7 +29,7 @@
 #include <gf/Window.h>
 
 int main() {
-  static constexpr gf::Vector2u ScreenSize(640, 480);
+  static constexpr gf::Vector2i ScreenSize(640, 480);
 
   gf::Window window("07_fullscreen", ScreenSize);
   gf::RenderWindow renderer(window);

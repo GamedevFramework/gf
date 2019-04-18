@@ -34,7 +34,7 @@ int main() {
   static constexpr gf::Vector2i CharacterSize(12, 12);
   static constexpr gf::Vector2i ConsoleSize(80, 50);
 
-  const gf::Vector2u ScreenSize = CharacterSize * ConsoleSize;
+  const gf::Vector2i ScreenSize = CharacterSize * ConsoleSize;
 
   gf::Window window("27_console", ScreenSize, ~gf::WindowHints::Resizable);
   gf::RenderWindow renderer(window);

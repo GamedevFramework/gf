@@ -116,7 +116,7 @@ int main() {
   static constexpr std::size_t DiagonalCostsCount = 3;
   static constexpr float DiagonalCosts[DiagonalCostsCount] = { 0.0f, 1.0f, gf::Sqrt2 };
 
-  gf::Window window("26_map", gf::Vector2u(Size, Size), ~gf::WindowHints::Resizable);
+  gf::Window window("26_map", { Size, Size }, ~gf::WindowHints::Resizable);
   gf::RenderWindow renderer(window);
 
   std::cout << "Gamedev Framework (gf) example #26: Map\n";
@@ -136,7 +136,7 @@ int main() {
   std::cout << '\n';
 
   gf::SquareMap map({ GridSize, GridSize });
-  gf::SquareGrid grid(gf::Vector2u(GridSize, GridSize), { CellSize, CellSize }, gf::Color::Azure);
+  gf::SquareGrid grid({ GridSize, GridSize }, { CellSize, CellSize }, gf::Color::Azure);
 
   // build a map
 

@@ -68,7 +68,7 @@ static constexpr float ZoomInFactor = 0.8f;
 static constexpr float ZoomOutFactor = 1.25f;
 
 int main() {
-  static constexpr gf::Vector2u ScreenSize(640, 480);
+  static constexpr gf::Vector2i ScreenSize(640, 480);
 
   gf::Window window("18_tilelayer", ScreenSize);
   gf::RenderWindow renderer(window);
