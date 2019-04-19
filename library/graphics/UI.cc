@@ -163,6 +163,60 @@ inline namespace v1 {
 #undef ENUM_CHECK
 #undef FLAG_CHECK
 
+  /*
+   * UICharBuffer
+   */
+
+  UICharBuffer::UICharBuffer(std::size_t capacity)
+  : m_data(capacity > 0 ? new char[capacity] : nullptr)
+  , m_length(0)
+  , m_capacity(capacity)
+  {
+
+  }
+
+  UICharBuffer::~UICharBuffer() {
+    delete [] m_data;
+  }
+
+  UICharBuffer::UICharBuffer(UICharBuffer&& other) noexcept
+  : m_data(std::exchange(other.m_data, nullptr))
+  , m_length(std::exchange(other.m_length, 0))
+  , m_capacity(std::exchange(other.m_capacity, 0))
+  {
+
+  }
+
+  UICharBuffer& UICharBuffer::operator=(UICharBuffer&& other) noexcept {
+    std::swap(m_data, other.m_data);
+    std::swap(m_length, other.m_length);
+    std::swap(m_capacity, other.m_capacity);
+    return *this;
+  }
+
+  void UICharBuffer::clear() {
+    m_length = 0;
+  }
+
+  void UICharBuffer::append(const UICharBuffer& other) {
+    if (other.m_length == 0) {
+      return;
+    }
+
+    if (m_length + other.m_length > m_capacity) {
+      std::size_t capacity = m_capacity + other.m_capacity;
+      char *data = new char[capacity];
+      std::copy(m_data, m_data + m_length, data);
+      delete [] m_data;
+      m_data = data;
+      m_capacity = capacity;
+    }
+
+    std::copy(other.m_data, other.m_data + other.m_length, m_data + m_length);
+    m_length += other.m_length;
+  }
+
+
   namespace {
 
     float getTextWidth(nk_handle handle, float characterSize, const char *text, int len) {
@@ -738,11 +792,11 @@ inline namespace v1 {
       UIEdit::Clipboard
   );
 
-  UIEditEventFlags UI::edit(UIEditFlags flags, BufferRef<char> buffer, std::size_t& length, UIEditFilter filter) {
+  UIEditEventFlags UI::edit(UIEditFlags flags, UICharBuffer& buffer, UIEditFilter filter) {
     setState(State::Setup);
-    int len = length;
-    nk_flags ret = nk_edit_string(&m_impl->ctx, flags.getValue(), buffer.getData(), &len, buffer.getSize(), getPluginFilter(filter));
-    length = len;
+    int length = buffer.m_length;
+    nk_flags ret = nk_edit_string(&m_impl->ctx, flags.getValue(), buffer.m_data, &length, buffer.m_capacity, getPluginFilter(filter));
+    buffer.m_length = length;
     return static_cast<UIEditEvent>(ret);
   }
 

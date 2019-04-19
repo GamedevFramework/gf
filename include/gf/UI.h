@@ -261,6 +261,42 @@ inline namespace v1 {
 
   /**
    * @ingroup graphics
+   * @brief A character buffer for edition
+   *
+   * @sa UI::edit()
+   */
+  class GF_API UICharBuffer {
+  public:
+    UICharBuffer(std::size_t capacity);
+    ~UICharBuffer();
+
+    UICharBuffer(const UICharBuffer&) = delete;
+    UICharBuffer& operator=(const UICharBuffer&) = delete;
+
+    UICharBuffer(UICharBuffer&& other) noexcept;
+    UICharBuffer& operator=(UICharBuffer&& other) noexcept;
+
+    std::string asString() const {
+      return std::string(m_data, m_length);
+    }
+
+    StringRef asStringRef() const {
+      return StringRef(m_data, m_length);
+    }
+
+    void clear();
+    void append(const UICharBuffer& other);
+
+  private:
+    friend class UI;
+
+    char *m_data;
+    std::size_t m_length;
+    std::size_t m_capacity;
+  };
+
+  /**
+   * @ingroup graphics
    * @brief Context for an immediate mode graphical interface
    *
    * When building a graphical interfaces, you have basically two choices:
@@ -1011,7 +1047,7 @@ inline namespace v1 {
      * @{
      */
 
-    UIEditEventFlags edit(UIEditFlags flags, BufferRef<char> buffer, std::size_t& length, UIEditFilter filter = UIEditFilter::Default);
+    UIEditEventFlags edit(UIEditFlags flags, UICharBuffer& buffer, UIEditFilter filter = UIEditFilter::Default);
 
     /**
      * @}
