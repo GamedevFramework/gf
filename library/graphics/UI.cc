@@ -324,6 +324,134 @@ inline namespace v1 {
 
   UI& UI::operator=(UI&&) noexcept = default;
 
+  namespace {
+
+    void handleKeyboard(nk_context* ctx, const Event::KeyEvent& key, int down) {
+      switch (key.keycode) {
+        case Keycode::LeftShift:
+        case Keycode::RightShift:
+          nk_input_key(ctx, NK_KEY_SHIFT, down);
+          break;
+
+        case Keycode::LeftCtrl:
+        case Keycode::RightCtrl:
+          nk_input_key(ctx, NK_KEY_CTRL, down);
+          break;
+
+        case Keycode::Delete:
+          nk_input_key(ctx, NK_KEY_DEL, down);
+          break;
+
+        case Keycode::Return:
+          nk_input_key(ctx, NK_KEY_ENTER, down);
+          break;
+
+        case Keycode::Tab:
+          nk_input_key(ctx, NK_KEY_TAB, down);
+          break;
+
+        case Keycode::Backspace:
+          nk_input_key(ctx, NK_KEY_BACKSPACE, down);
+          break;
+
+        case Keycode::Up:
+          nk_input_key(ctx, NK_KEY_UP, down);
+          break;
+
+        case Keycode::Down:
+          nk_input_key(ctx, NK_KEY_DOWN, down);
+          break;
+
+        case Keycode::Left:
+          if (key.modifiers.test(Mod::Control)) {
+            nk_input_key(ctx, NK_KEY_TEXT_WORD_LEFT, down);
+          } else {
+            nk_input_key(ctx, NK_KEY_LEFT, down);
+          }
+          break;
+
+        case Keycode::Right:
+          if (key.modifiers.test(Mod::Control)) {
+            nk_input_key(ctx, NK_KEY_TEXT_WORD_RIGHT, down);
+          } else {
+            nk_input_key(ctx, NK_KEY_RIGHT, down);
+          }
+          break;
+
+        case Keycode::Home:
+          nk_input_key(ctx, NK_KEY_TEXT_START, down);
+          nk_input_key(ctx, NK_KEY_SCROLL_START, down);
+          break;
+
+        case Keycode::End:
+          nk_input_key(ctx, NK_KEY_TEXT_END, down);
+          nk_input_key(ctx, NK_KEY_SCROLL_END, down);
+          break;
+
+        case Keycode::PageUp:
+          nk_input_key(ctx, NK_KEY_SCROLL_UP, down);
+          break;
+
+        case Keycode::PageDown:
+          nk_input_key(ctx, NK_KEY_SCROLL_DOWN, down);
+          break;
+
+        case Keycode::A:
+          if (key.modifiers.test(Mod::Control)) {
+            nk_input_key(ctx, NK_KEY_TEXT_SELECT_ALL, down);
+          }
+          break;
+
+        case Keycode::C:
+          if (key.modifiers.test(Mod::Control)) {
+            nk_input_key(ctx, NK_KEY_COPY, down);
+          }
+          break;
+
+        case Keycode::X:
+          if (key.modifiers.test(Mod::Control)) {
+            nk_input_key(ctx, NK_KEY_CUT, down);
+          }
+          break;
+
+        case Keycode::V:
+          if (key.modifiers.test(Mod::Control)) {
+            nk_input_key(ctx, NK_KEY_PASTE, down);
+          }
+          break;
+
+        case Keycode::B:
+          if (key.modifiers.test(Mod::Control)) {
+            nk_input_key(ctx, NK_KEY_TEXT_LINE_START, down);
+          }
+          break;
+
+        case Keycode::E:
+          if (key.modifiers.test(Mod::Control)) {
+            nk_input_key(ctx, NK_KEY_TEXT_LINE_END, down);
+          }
+          break;
+
+        case Keycode::Z:
+          if (key.modifiers.test(Mod::Control)) {
+            nk_input_key(ctx, NK_KEY_TEXT_UNDO, down);
+          }
+          break;
+
+        case Keycode::R:
+          if (key.modifiers.test(Mod::Control)) {
+            nk_input_key(ctx, NK_KEY_TEXT_REDO, down);
+          }
+          break;
+
+        default:
+          // nothing to do
+          break;
+      }
+    }
+
+  }
+
   void UI::processEvent(const Event& event) {
     setState(State::Input);
 
@@ -364,129 +492,7 @@ inline namespace v1 {
       case EventType::KeyReleased:
       {
         int down = static_cast<int>(event.type == EventType::KeyPressed);
-
-        switch (event.key.keycode) {
-          case Keycode::LeftShift:
-          case Keycode::RightShift:
-            nk_input_key(&m_impl->ctx, NK_KEY_SHIFT, down);
-            break;
-
-          case Keycode::LeftCtrl:
-          case Keycode::RightCtrl:
-            nk_input_key(&m_impl->ctx, NK_KEY_CTRL, down);
-            break;
-
-          case Keycode::Delete:
-            nk_input_key(&m_impl->ctx, NK_KEY_DEL, down);
-            break;
-
-          case Keycode::Return:
-            nk_input_key(&m_impl->ctx, NK_KEY_ENTER, down);
-            break;
-
-          case Keycode::Tab:
-            nk_input_key(&m_impl->ctx, NK_KEY_TAB, down);
-            break;
-
-          case Keycode::Backspace:
-            nk_input_key(&m_impl->ctx, NK_KEY_BACKSPACE, down);
-            break;
-
-          case Keycode::Up:
-            nk_input_key(&m_impl->ctx, NK_KEY_UP, down);
-            break;
-
-          case Keycode::Down:
-            nk_input_key(&m_impl->ctx, NK_KEY_DOWN, down);
-            break;
-
-          case Keycode::Left:
-            if (event.key.modifiers.test(Mod::Control)) {
-              nk_input_key(&m_impl->ctx, NK_KEY_TEXT_WORD_LEFT, down);
-            } else {
-              nk_input_key(&m_impl->ctx, NK_KEY_LEFT, down);
-            }
-            break;
-
-          case Keycode::Right:
-            if (event.key.modifiers.test(Mod::Control)) {
-              nk_input_key(&m_impl->ctx, NK_KEY_TEXT_WORD_RIGHT, down);
-            } else {
-              nk_input_key(&m_impl->ctx, NK_KEY_RIGHT, down);
-            }
-            break;
-
-          case Keycode::Home:
-            nk_input_key(&m_impl->ctx, NK_KEY_TEXT_START, down);
-            nk_input_key(&m_impl->ctx, NK_KEY_SCROLL_START, down);
-            break;
-
-          case Keycode::End:
-            nk_input_key(&m_impl->ctx, NK_KEY_TEXT_END, down);
-            nk_input_key(&m_impl->ctx, NK_KEY_SCROLL_END, down);
-            break;
-
-          case Keycode::PageUp:
-            nk_input_key(&m_impl->ctx, NK_KEY_SCROLL_UP, down);
-            break;
-
-          case Keycode::PageDown:
-            nk_input_key(&m_impl->ctx, NK_KEY_SCROLL_DOWN, down);
-            break;
-
-          case Keycode::A:
-            if (event.key.modifiers.test(Mod::Control)) {
-              nk_input_key(&m_impl->ctx, NK_KEY_TEXT_SELECT_ALL, down);
-            }
-            break;
-
-          case Keycode::C:
-            if (event.key.modifiers.test(Mod::Control)) {
-              nk_input_key(&m_impl->ctx, NK_KEY_COPY, down);
-            }
-            break;
-
-          case Keycode::X:
-            if (event.key.modifiers.test(Mod::Control)) {
-              nk_input_key(&m_impl->ctx, NK_KEY_CUT, down);
-            }
-            break;
-
-          case Keycode::V:
-            if (event.key.modifiers.test(Mod::Control)) {
-              nk_input_key(&m_impl->ctx, NK_KEY_PASTE, down);
-            }
-            break;
-
-          case Keycode::B:
-            if (event.key.modifiers.test(Mod::Control)) {
-              nk_input_key(&m_impl->ctx, NK_KEY_TEXT_LINE_START, down);
-            }
-            break;
-
-          case Keycode::E:
-            if (event.key.modifiers.test(Mod::Control)) {
-              nk_input_key(&m_impl->ctx, NK_KEY_TEXT_LINE_END, down);
-            }
-            break;
-
-          case Keycode::Z:
-            if (event.key.modifiers.test(Mod::Control)) {
-              nk_input_key(&m_impl->ctx, NK_KEY_TEXT_UNDO, down);
-            }
-            break;
-
-          case Keycode::R:
-            if (event.key.modifiers.test(Mod::Control)) {
-              nk_input_key(&m_impl->ctx, NK_KEY_TEXT_REDO, down);
-            }
-            break;
-
-          default:
-            // nothing to do
-            break;
-        }
-
+        handleKeyboard(&m_impl->ctx, event.key, down);
         break;
       }
 
