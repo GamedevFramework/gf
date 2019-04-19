@@ -128,6 +128,12 @@ inline namespace v1 {
    * @relates Serializer
    * @brief Serialize a string object
    */
+  GF_API Serializer& operator|(Serializer& ar, const char *str);
+
+  /**
+   * @relates Serializer
+   * @brief Serialize a string object
+   */
   GF_API Serializer& operator|(Serializer& ar, const std::string& str);
 
   /**
