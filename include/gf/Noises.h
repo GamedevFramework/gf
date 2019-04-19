@@ -59,7 +59,7 @@ inline namespace v1 {
      */
     ValueNoise2D(Random& random, Step<double> step);
 
-    virtual double getValue(double x, double y) override;
+    double getValue(double x, double y) override;
 
   private:
     Step<double> m_step;
@@ -89,7 +89,7 @@ inline namespace v1 {
      */
     GradientNoise2D(Random& random, Step<double> step);
 
-    virtual double getValue(double x, double y) override;
+    double getValue(double x, double y) override;
 
   private:
     Step<double> m_step;
@@ -118,7 +118,7 @@ inline namespace v1 {
      */
     GradientNoise3D(Random& random, Step<double> step);
 
-    virtual double getValue(double x, double y, double z) override;
+    double getValue(double x, double y, double z) override;
 
   private:
     Step<double> m_step;
@@ -147,7 +147,7 @@ inline namespace v1 {
      */
     BetterGradientNoise2D(Random& random);
 
-    virtual double getValue(double x, double y) override;
+    double getValue(double x, double y) override;
 
   private:
     std::array<uint8_t, 256> m_permX;
@@ -180,7 +180,7 @@ inline namespace v1 {
     FractalNoise2D(Noise2D& noise, double scale, std::size_t octaves = 8, double lacunarity = 2.0, double persistence = 0.5, double
     dimension = 1.0);
 
-    virtual double getValue(double x, double y) override;
+    double getValue(double x, double y) override;
 
   private:
     Noise2D& m_noise;
@@ -214,7 +214,7 @@ inline namespace v1 {
      */
     FractalNoise3D(Noise3D& noise, double scale, std::size_t octaves = 8, double lacunarity = 2.0, double persistence = 0.5, double dimension = 1.0);
 
-    virtual double getValue(double x, double y, double z) override;
+    double getValue(double x, double y, double z) override;
 
   private:
     Noise3D& m_noise;
@@ -246,7 +246,7 @@ inline namespace v1 {
      */
     PerlinNoise2D(Random& random, double scale, std::size_t octaves = 8);
 
-    virtual double getValue(double x, double y) override;
+    double getValue(double x, double y) override;
 
   private:
     GradientNoise2D m_gradient;
@@ -273,7 +273,7 @@ inline namespace v1 {
      */
     PerlinNoise3D(Random& random, double scale, std::size_t octaves = 8);
 
-    virtual double getValue(double x, double y, double z) override;
+    double getValue(double x, double y, double z) override;
 
   private:
     GradientNoise3D m_gradient;
@@ -302,7 +302,7 @@ inline namespace v1 {
      */
     SimplexNoise2D(Random& random);
 
-    virtual double getValue(double x, double y) override;
+    double getValue(double x, double y) override;
 
   private:
     std::array<uint8_t, 256> m_perm;
@@ -329,7 +329,7 @@ inline namespace v1 {
      */
     OpenSimplexNoise2D(Random& random);
 
-    virtual double getValue(double x, double y) override;
+    double getValue(double x, double y) override;
 
   private:
     std::array<uint8_t, 256> m_perm;
@@ -355,7 +355,7 @@ inline namespace v1 {
      */
     OpenSimplexNoise3D(Random& random);
 
-    virtual double getValue(double x, double y, double z) override;
+    double getValue(double x, double y, double z) override;
 
   private:
     std::array<uint8_t, 256> m_perm;
@@ -379,7 +379,7 @@ inline namespace v1 {
      */
     WaveletNoise3D(Random& random, std::ptrdiff_t n = 32);
 
-    virtual double getValue(double x, double y, double z) override;
+    double getValue(double x, double y, double z) override;
 
   private:
     std::ptrdiff_t m_n;
@@ -406,7 +406,7 @@ inline namespace v1 {
      */
     WorleyNoise2D(Random& random, std::size_t count, Distance2<double> distance, std::vector<double> coeffs);
 
-    virtual double getValue(double x, double y) override;
+    double getValue(double x, double y) override;
 
   private:
     std::size_t m_count;
@@ -435,7 +435,7 @@ inline namespace v1 {
      */
     Multifractal2D(Noise2D& noise, double scale, std::size_t octaves = 8, double lacunarity = 2.0, double persistence = 0.5, double dimension = 1.0);
 
-    virtual double getValue(double x, double y) override;
+    double getValue(double x, double y) override;
 
   private:
     Noise2D& m_noise;
@@ -467,7 +467,7 @@ inline namespace v1 {
      */
     HeteroTerrain2D(Noise2D& noise, double scale, double offset = 0.0, std::size_t octaves = 8, double lacunarity = 2.0, double persistence = 0.5, double dimension = 1.0);
 
-    virtual double getValue(double x, double y) override;
+    double getValue(double x, double y) override;
 
   private:
     Noise2D& m_noise;
@@ -499,7 +499,7 @@ inline namespace v1 {
      */
     HybridMultifractal2D(Noise2D& noise, double scale, double offset = 0.0, std::size_t octaves = 8, double lacunarity = 2.0, double persistence = 0.5, double dimension = 1.0);
 
-    virtual double getValue(double x, double y) override;
+    double getValue(double x, double y) override;
 
   private:
     Noise2D& m_noise;
@@ -532,7 +532,7 @@ inline namespace v1 {
      */
     RidgedMultifractal2D(Noise2D& noise, double scale, double offset = 1.0, double gain = 1.0, std::size_t octaves = 8, double lacunarity = 2.0, double persistence = 0.5, double dimension = 1.0);
 
-    virtual double getValue(double x, double y) override;
+    double getValue(double x, double y) override;
 
   private:
     Noise2D& m_noise;
@@ -566,7 +566,7 @@ inline namespace v1 {
      */
     Noise3DTo2DAdapter(Noise3D& noise, Vector3d normal = Vector3d(0.0, 0.0, 1.0), Vector3d point = Vector3d(0.0, 0.0, 0.0));
 
-    virtual double getValue(double x, double y) override;
+    double getValue(double x, double y) override;
 
   private:
     Noise3D& m_noise;

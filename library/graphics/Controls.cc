@@ -34,7 +34,6 @@ inline namespace v1 {
   KeycodeKeyControl::KeycodeKeyControl(Keycode code)
   : m_code(code)
   {
-
   }
 
   void KeycodeKeyControl::processEvent(const Event& event) {
@@ -56,7 +55,6 @@ inline namespace v1 {
   ScancodeKeyControl::ScancodeKeyControl(Scancode code)
   : m_code(code)
   {
-
   }
 
   void ScancodeKeyControl::processEvent(const Event& event) {
@@ -78,7 +76,6 @@ inline namespace v1 {
   MouseButtonControl::MouseButtonControl(MouseButton button)
   : m_button(button)
   {
-
   }
 
   void MouseButtonControl::processEvent(const Event& event) {
@@ -101,7 +98,6 @@ inline namespace v1 {
   : m_id(id)
   , m_button(button)
   {
-
   }
 
   void GamepadButtonControl::processEvent(const Event& event) {
@@ -126,7 +122,6 @@ inline namespace v1 {
   , m_dir(dir)
   , m_repeated(false)
   {
-
   }
 
   static constexpr int16_t GamepadAxisThreshold = 8000;
@@ -169,7 +164,6 @@ inline namespace v1 {
 
   CloseControl::CloseControl()
   {
-
   }
 
   void CloseControl::processEvent(const Event& event) {
@@ -204,7 +198,6 @@ inline namespace v1 {
   : m_index(0)
   , m_state(Released)
   {
-
   }
 
   void KonamiKeyboardControl::processEvent(const Event& event) {
@@ -263,7 +256,6 @@ inline namespace v1 {
   , m_index(0)
   , m_state(Released)
   {
-
   }
 
   void KonamiGamepadControl::processEvent(const Event& event) {

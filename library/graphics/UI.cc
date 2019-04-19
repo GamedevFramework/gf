@@ -500,7 +500,6 @@ inline namespace v1 {
       default:
         break;
     }
-
   }
 
   void UI::setCharacterSize(unsigned characterSize) {
@@ -806,7 +805,6 @@ inline namespace v1 {
       DirectoryRange(const Path& directory)
       : path(directory)
       {
-
       }
 
       boost::filesystem::directory_iterator begin() const {

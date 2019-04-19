@@ -43,7 +43,6 @@ inline namespace v1 {
   , m_repeated(false)
   , m_mipmap(false)
   {
-
   }
 
   BareTexture::~BareTexture() {
@@ -61,7 +60,6 @@ inline namespace v1 {
   , m_repeated(other.m_repeated)
   , m_mipmap(other.m_mipmap)
   {
-
   }
 
   BareTexture& BareTexture::operator=(BareTexture&& other) noexcept {
@@ -234,7 +232,6 @@ inline namespace v1 {
   Texture::Texture()
   : BareTexture(Format::Color)
   {
-
   }
 
   bool Texture::create(Vector2i size) {
@@ -305,7 +302,6 @@ inline namespace v1 {
   AlphaTexture::AlphaTexture()
   : BareTexture(Format::Alpha)
   {
-
   }
 
   bool AlphaTexture::create(Vector2i size) {

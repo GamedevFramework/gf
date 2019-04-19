@@ -347,7 +347,6 @@ inline namespace v1 {
     : x(val)
     , y(val)
     {
-
     }
 
     /**
@@ -367,7 +366,6 @@ inline namespace v1 {
     : x(array[0])
     , y(array[1])
     {
-
     }
 
     /**
@@ -380,7 +378,6 @@ inline namespace v1 {
     : x(first)
     , y(second)
     {
-
     }
 
     /**
@@ -597,7 +594,6 @@ inline namespace v1 {
     , y(val)
     , z(val)
     {
-
     }
 
     /**
@@ -618,7 +614,6 @@ inline namespace v1 {
     , y(array[1])
     , z(array[2])
     {
-
     }
 
     /**
@@ -633,7 +628,6 @@ inline namespace v1 {
     , y(second)
     , z(third)
     {
-
     }
 
     /**
@@ -647,7 +641,6 @@ inline namespace v1 {
     , y(xy.y)
     , z(third)
     {
-
     }
 
     /**
@@ -802,7 +795,6 @@ inline namespace v1 {
       T z; ///< Third coordinate in the `(x,y,z)` representation. @sa x, y
       T b; ///< Third coordinate in the `(r,g,b)` representation. @sa r, g
     };
-
   };
 
   /**
@@ -878,7 +870,6 @@ inline namespace v1 {
     , z(val)
     , w(val)
     {
-
     }
 
     /**
@@ -900,7 +891,6 @@ inline namespace v1 {
     , z(array[2])
     , w(array[3])
     {
-
     }
 
     /**
@@ -917,7 +907,6 @@ inline namespace v1 {
     , z(third)
     , w(fourth)
     {
-
     }
 
     /**
@@ -1068,34 +1057,33 @@ inline namespace v1 {
      * An anonymous union to handle the first coordinate
      */
     union {
-        T x; ///< First coordinate in the `(x,y,z,w)` representation. @sa y, z, w
-        T r; ///< First coordinate in the `(r,g,b,a)` representation. @sa g, b, a
+      T x; ///< First coordinate in the `(x,y,z,w)` representation. @sa y, z, w
+      T r; ///< First coordinate in the `(r,g,b,a)` representation. @sa g, b, a
     };
 
     /**
      * An anonymous union to handle the second coordinate
      */
     union {
-        T y; ///< Second coordinate in the `(x,y,z,w)` representation. @sa x, z, w
-        T g; ///< Second coordinate in the `(r,g,b,a)` representation. @sa r, b, a
+      T y; ///< Second coordinate in the `(x,y,z,w)` representation. @sa x, z, w
+      T g; ///< Second coordinate in the `(r,g,b,a)` representation. @sa r, b, a
     };
 
     /**
      * An anonymous union to handle the third coordinate
      */
     union {
-        T z; ///< Third coordinate in the `(x,y,z,w)` representation. @sa x, y, w
-        T b; ///< Third coordinate in the `(r,g,b,a)` representation. @sa r, g, a
+      T z; ///< Third coordinate in the `(x,y,z,w)` representation. @sa x, y, w
+      T b; ///< Third coordinate in the `(r,g,b,a)` representation. @sa r, g, a
     };
 
     /**
      * An anonymous union to handle the fourth coordinate
      */
     union {
-        T w; ///< Fourth coordinate in the `(x,y,z,w)` representation. @sa x, y, z
-        T a; ///< Fourth coordinate in the `(r,g,b,a)` representation. @sa r, g, b
+      T w; ///< Fourth coordinate in the `(x,y,z,w)` representation. @sa x, y, z
+      T a; ///< Fourth coordinate in the `(r,g,b,a)` representation. @sa r, g, b
     };
-
   };
 
   /**

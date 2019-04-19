@@ -50,7 +50,6 @@ inline namespace v1 {
     Rotation()
     : cos(1.0f), sin(0.0f)
     {
-
     }
 
     /**
@@ -61,7 +60,6 @@ inline namespace v1 {
     Rotation(float angle)
     : cos(std::cos(angle)), sin(std::sin(angle))
     {
-
     }
 
     /**
@@ -132,7 +130,6 @@ inline namespace v1 {
     Translation()
     : offset(0.0f, 0.0f)
     {
-
     }
 
     /**
@@ -143,7 +140,6 @@ inline namespace v1 {
     Translation(Vector2f translationOffset)
     : offset(translationOffset)
     {
-
     }
 
     /**
@@ -212,7 +208,6 @@ inline namespace v1 {
      */
     Transform()
     {
-
     }
 
     /**
@@ -224,7 +219,6 @@ inline namespace v1 {
     Transform(float angle, Vector2f offset)
     : rotation(angle), translation(offset)
     {
-
     }
 
     /**
@@ -237,7 +231,6 @@ inline namespace v1 {
     Transform(float angle)
     : rotation(angle)
     {
-
     }
 
     /**
@@ -250,7 +243,6 @@ inline namespace v1 {
     Transform(Vector2f offset)
     : translation(offset)
     {
-
     }
 
     /**

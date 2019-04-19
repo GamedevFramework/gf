@@ -52,7 +52,6 @@ inline namespace v1 {
     StretchView()
     : AdaptativeView()
     {
-
     }
 
     /**
@@ -63,7 +62,6 @@ inline namespace v1 {
     explicit StretchView(const RectF& rect)
     : AdaptativeView(rect)
     {
-
     }
 
     /**
@@ -75,10 +73,9 @@ inline namespace v1 {
     StretchView(Vector2f center, Vector2f size)
     : AdaptativeView(center, size)
     {
-
     }
 
-    virtual void onScreenSizeChange(Vector2i screenSize) override;
+    void onScreenSizeChange(Vector2i screenSize) override;
   };
 
   /**
@@ -105,7 +102,6 @@ inline namespace v1 {
     , m_localScreenSize(0, 0)
     , m_localViewport(0.0f, 0.0f, 1.0f, 1.0f)
     {
-
     }
 
     /**
@@ -118,7 +114,6 @@ inline namespace v1 {
     , m_localScreenSize(0, 0)
     , m_localViewport(0.0f, 0.0f, 1.0f, 1.0f)
     {
-
     }
 
     /**
@@ -132,14 +127,13 @@ inline namespace v1 {
     , m_localScreenSize(0, 0)
     , m_localViewport(0.0f, 0.0f, 1.0f, 1.0f)
     {
-
     }
 
-    virtual void onScreenSizeChange(Vector2i screenSize) override;
+    void onScreenSizeChange(Vector2i screenSize) override;
 
   protected:
-    virtual void onSizeChange(Vector2f size) override;
-    virtual void onViewportChange(const RectF& viewport) override;
+    void onSizeChange(Vector2f size) override;
+    void onViewportChange(const RectF& viewport) override;
 
     void updateView();
 
@@ -171,7 +165,6 @@ inline namespace v1 {
     , m_localSize(1000.0f, 1000.0f)
     , m_localScreenSize(0, 0)
     {
-
     }
 
     /**
@@ -184,7 +177,6 @@ inline namespace v1 {
     , m_localSize(rect.getSize())
     , m_localScreenSize(0, 0)
     {
-
     }
 
     /**
@@ -198,14 +190,13 @@ inline namespace v1 {
     , m_localSize(size)
     , m_localScreenSize(0, 0)
     {
-
     }
 
-    virtual void onScreenSizeChange(Vector2i screenSize) override;
+    void onScreenSizeChange(Vector2i screenSize) override;
 
   protected:
-    virtual void onSizeChange(Vector2f size) override;
-    virtual void onViewportChange(const RectF& viewport) override;
+    void onSizeChange(Vector2f size) override;
+    void onViewportChange(const RectF& viewport) override;
 
     void updateView();
 
@@ -238,7 +229,6 @@ inline namespace v1 {
     , m_localSize(1000.0f, 1000.0f)
     , m_localScreenSize(0, 0)
     {
-
     }
 
     /**
@@ -251,7 +241,6 @@ inline namespace v1 {
     , m_localSize(rect.getSize())
     , m_localScreenSize(0, 0)
     {
-
     }
 
     /**
@@ -265,14 +254,13 @@ inline namespace v1 {
     , m_localSize(size)
     , m_localScreenSize(0, 0)
     {
-
     }
 
-    virtual void onScreenSizeChange(Vector2i screenSize) override;
+    void onScreenSizeChange(Vector2i screenSize) override;
 
   protected:
-    virtual void onSizeChange(Vector2f size) override;
-    virtual void onViewportChange(const RectF& viewport) override;
+    void onSizeChange(Vector2f size) override;
+    void onViewportChange(const RectF& viewport) override;
 
     void updateView();
 
@@ -307,7 +295,6 @@ inline namespace v1 {
     , m_localScreenSize(0, 0)
     , m_localViewport(0.0f, 0.0f, 1.0f, 1.0f)
     {
-
     }
 
     /**
@@ -320,7 +307,6 @@ inline namespace v1 {
     , m_localSize(rect.getSize())
     , m_localViewport(0.0f, 0.0f, 1.0f, 1.0f)
     {
-
     }
 
     /**
@@ -334,14 +320,13 @@ inline namespace v1 {
     , m_localSize(size)
     , m_localViewport(0.0f, 0.0f, 1.0f, 1.0f)
     {
-
     }
 
-    virtual void onScreenSizeChange(Vector2i screenSize) override;
+    void onScreenSizeChange(Vector2i screenSize) override;
 
   protected:
-    virtual void onSizeChange(Vector2f size) override;
-    virtual void onViewportChange(const RectF& viewport) override;
+    void onSizeChange(Vector2f size) override;
+    void onViewportChange(const RectF& viewport) override;
 
     void updateView();
 
@@ -375,11 +360,10 @@ inline namespace v1 {
     : AdaptativeView()
     , m_localScreenSize(0, 0)
     {
-
     }
 
-    virtual void onScreenSizeChange(Vector2i screenSize) override;
-    virtual void onViewportChange(const RectF& viewport) override;
+    void onScreenSizeChange(Vector2i screenSize) override;
+    void onViewportChange(const RectF& viewport) override;
 
     void updateView();
 
