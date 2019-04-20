@@ -363,19 +363,11 @@ inline namespace v1 {
           break;
 
         case Keycode::Left:
-          if (key.modifiers.test(Mod::Control)) {
-            nk_input_key(ctx, NK_KEY_TEXT_WORD_LEFT, down);
-          } else {
-            nk_input_key(ctx, NK_KEY_LEFT, down);
-          }
+          nk_input_key(ctx, NK_KEY_LEFT, down);
           break;
 
         case Keycode::Right:
-          if (key.modifiers.test(Mod::Control)) {
-            nk_input_key(ctx, NK_KEY_TEXT_WORD_RIGHT, down);
-          } else {
-            nk_input_key(ctx, NK_KEY_RIGHT, down);
-          }
+          nk_input_key(ctx, NK_KEY_RIGHT, down);
           break;
 
         case Keycode::Home:
@@ -396,52 +388,54 @@ inline namespace v1 {
           nk_input_key(ctx, NK_KEY_SCROLL_DOWN, down);
           break;
 
+        default:
+          // nothing to do
+          break;
+      }
+    }
+
+    void handleKeyboardWithControl(nk_context* ctx, const Event::KeyEvent& key, int down) {
+      assert(key.modifiers.test(Mod::Control));
+
+      switch (key.keycode) {
+        case Keycode::Left:
+          nk_input_key(ctx, NK_KEY_TEXT_WORD_LEFT, down);
+          break;
+
+        case Keycode::Right:
+          nk_input_key(ctx, NK_KEY_TEXT_WORD_RIGHT, down);
+          break;
+
         case Keycode::A:
-          if (key.modifiers.test(Mod::Control)) {
-            nk_input_key(ctx, NK_KEY_TEXT_SELECT_ALL, down);
-          }
+          nk_input_key(ctx, NK_KEY_TEXT_SELECT_ALL, down);
           break;
 
         case Keycode::C:
-          if (key.modifiers.test(Mod::Control)) {
-            nk_input_key(ctx, NK_KEY_COPY, down);
-          }
+          nk_input_key(ctx, NK_KEY_COPY, down);
           break;
 
         case Keycode::X:
-          if (key.modifiers.test(Mod::Control)) {
-            nk_input_key(ctx, NK_KEY_CUT, down);
-          }
+          nk_input_key(ctx, NK_KEY_CUT, down);
           break;
 
         case Keycode::V:
-          if (key.modifiers.test(Mod::Control)) {
-            nk_input_key(ctx, NK_KEY_PASTE, down);
-          }
+          nk_input_key(ctx, NK_KEY_PASTE, down);
           break;
 
         case Keycode::B:
-          if (key.modifiers.test(Mod::Control)) {
-            nk_input_key(ctx, NK_KEY_TEXT_LINE_START, down);
-          }
+          nk_input_key(ctx, NK_KEY_TEXT_LINE_START, down);
           break;
 
         case Keycode::E:
-          if (key.modifiers.test(Mod::Control)) {
-            nk_input_key(ctx, NK_KEY_TEXT_LINE_END, down);
-          }
+          nk_input_key(ctx, NK_KEY_TEXT_LINE_END, down);
           break;
 
         case Keycode::Z:
-          if (key.modifiers.test(Mod::Control)) {
-            nk_input_key(ctx, NK_KEY_TEXT_UNDO, down);
-          }
+          nk_input_key(ctx, NK_KEY_TEXT_UNDO, down);
           break;
 
         case Keycode::R:
-          if (key.modifiers.test(Mod::Control)) {
-            nk_input_key(ctx, NK_KEY_TEXT_REDO, down);
-          }
+          nk_input_key(ctx, NK_KEY_TEXT_REDO, down);
           break;
 
         default:
@@ -492,7 +486,12 @@ inline namespace v1 {
       case EventType::KeyReleased:
       {
         int down = static_cast<int>(event.type == EventType::KeyPressed);
-        handleKeyboard(&m_impl->ctx, event.key, down);
+
+        if (event.key.modifiers.test(Mod::Control)) {
+          handleKeyboardWithControl(&m_impl->ctx, event.key, down);
+        } else {
+          handleKeyboard(&m_impl->ctx, event.key, down);
+        }
         break;
       }
 
