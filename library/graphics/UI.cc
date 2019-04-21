@@ -172,7 +172,6 @@ inline namespace v1 {
   , m_length(0)
   , m_capacity(capacity)
   {
-
   }
 
   UICharBuffer::~UICharBuffer() {
@@ -184,7 +183,6 @@ inline namespace v1 {
   , m_length(std::exchange(other.m_length, 0))
   , m_capacity(std::exchange(other.m_capacity, 0))
   {
-
   }
 
   UICharBuffer& UICharBuffer::operator=(UICharBuffer&& other) noexcept {
@@ -1265,66 +1263,32 @@ inline namespace v1 {
   }
 
   void UI::setState(State state) {
+    assert(state != State::Start);
+
     if (m_impl->state == state) {
       return;
     }
 
-    switch (m_impl->state) {
-      case State::Start:
-        switch (state) {
-          case State::Input:
-            nk_input_begin(&m_impl->ctx);
-            break;
-
-          case State::Setup:
-          case State::Draw:
-            nk_input_begin(&m_impl->ctx);
-            nk_input_end(&m_impl->ctx);
-            break;
-
-          case State::Start:
-            assert(false);
-            break;
-        }
-        break;
-
-      case State::Input:
-        switch (state) {
-          case State::Setup:
-            nk_input_end(&m_impl->ctx);
-            break;
-
-          default:
-            assert(false && "TODO");
-            break;
-        }
-
-      case State::Setup:
-        break;
-
-      case State::Draw:
-        switch (state) {
-          case State::Input:
-            nk_clear(&m_impl->ctx);
-            nk_input_begin(&m_impl->ctx);
-            break;
-
-          case State::Setup:
-            nk_clear(&m_impl->ctx);
-            nk_input_begin(&m_impl->ctx);
-            nk_input_end(&m_impl->ctx);
-            break;
-
-          default:
-            assert(false && "TODO");
-            break;
-        }
-        break;
-
-
+    while (m_impl->state != state) {
+      switch (m_impl->state) {
+        case State::Start:
+          nk_input_begin(&m_impl->ctx);
+          m_impl->state = State::Input;
+          break;
+        case State::Input:
+          nk_input_end(&m_impl->ctx);
+          m_impl->state = State::Setup;
+          break;
+        case State::Setup:
+          m_impl->state = State::Draw;
+          break;
+        case State::Draw:
+          nk_clear(&m_impl->ctx);
+          nk_input_begin(&m_impl->ctx);
+          m_impl->state = State::Input;
+          break;
+      }
     }
-
-    m_impl->state = state;
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
