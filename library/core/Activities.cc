@@ -37,7 +37,6 @@ inline namespace v1 {
   ValueActivity::ValueActivity(float origin, float target, float& value, Time duration, Easing easing)
   : m_tween(origin, target, value, duration, easing)
   {
-
   }
 
   ActivityStatus ValueActivity::run(Time time) {
@@ -93,7 +92,6 @@ inline namespace v1 {
   MoveToActivity::MoveToActivity(Vector2f origin, Vector2f target, Vector2f& position, Time duration, Easing easing)
   : m_tween(origin, target, position, duration, easing)
   {
-
   }
 
   ActivityStatus MoveToActivity::run(Time time) {
@@ -116,7 +114,6 @@ inline namespace v1 {
   ColorActivity::ColorActivity(Color4f origin, Color4f target, Color4f& color, Time duration, Easing easing)
   : m_tween(origin, target, color, duration, easing)
   {
-
   }
 
   ActivityStatus ColorActivity::run(Time time) {
@@ -140,7 +137,6 @@ inline namespace v1 {
   : m_callback(std::move(callback))
   , m_called(false)
   {
-
   }
 
   ActivityStatus CallbackActivity::run(Time time) {
@@ -166,7 +162,6 @@ inline namespace v1 {
   : m_elapsed() // 0
   , m_duration(duration)
   {
-
   }
 
   ActivityStatus DelayActivity::run(Time time) {
@@ -190,7 +185,6 @@ inline namespace v1 {
   SequenceActivity::SequenceActivity()
   : m_current(0)
   {
-
   }
 
   void SequenceActivity::addActivity(Activity& activity) {
@@ -233,7 +227,6 @@ inline namespace v1 {
   , m_count(0)
   , m_repeat(repeat)
   {
-
   }
 
   ActivityStatus RepeatActivity::run(Time time) {
@@ -263,7 +256,6 @@ inline namespace v1 {
   RepeatedSequenceActivity::RepeatedSequenceActivity(unsigned repeat)
   : m_repeat(m_sequence, repeat)
   {
-
   }
 
   ActivityStatus RepeatedSequenceActivity::run(Time time) {
@@ -282,7 +274,6 @@ inline namespace v1 {
   : m_finish(finish)
   , m_status(ActivityStatus::Running)
   {
-
   }
 
   void ParallelActivity::addActivity(Activity& activity) {

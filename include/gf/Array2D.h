@@ -59,7 +59,6 @@ inline namespace v1 {
     Index2D()
     : m_size(0, 0)
     {
-
     }
 
     /**
@@ -70,7 +69,6 @@ inline namespace v1 {
     Index2D(Vector<I, 2> size)
     : m_size(size)
     {
-
     }
 
     /**
@@ -315,7 +313,6 @@ inline namespace v1 {
     Array2D()
     : Index2D<I>()
     {
-
     }
 
     /**
@@ -327,7 +324,6 @@ inline namespace v1 {
     : Index2D<I>(size)
     , m_data(static_cast<std::size_t>(size.width) * static_cast<std::size_t>(size.height))
     {
-
     }
 
     /**
@@ -340,7 +336,6 @@ inline namespace v1 {
     : Index2D<I>(size)
     , m_data(static_cast<std::size_t>(size.width) * static_cast<std::size_t>(size.height), value)
     {
-
     }
 
     /**

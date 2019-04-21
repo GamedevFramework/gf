@@ -57,7 +57,6 @@ namespace huaca {
   : gf::Entity(3)
   , m_vertices(gf::PrimitiveType::Triangles)
   {
-
   }
 
   void Roof::addRoof(gf::Vector2u coords) {
@@ -239,7 +238,6 @@ namespace huaca {
       sprite.setScale(PortalSize / PortalTextureSize);
       target.draw(sprite, states);
     }
-
   }
 
   gf::MessageStatus Level::onHeroPosition(gf::Id id, gf::Message *msg) {
@@ -465,7 +463,6 @@ namespace huaca {
     NewLevelMessage msg;
     msg.heroPosition = m_heroCoords * BlockSize + BlockSize / 2;
     gMessageManager().sendMessage(&msg);
-
   }
 
   void Level::generateNew(gf::Random& random) {
@@ -692,7 +689,6 @@ namespace huaca {
       std::size_t doorIndexMax = index + 2 * doorRange / 3;
 
       do {
-
         do {
           index = random.computeUniformInteger(doorIndexMin, doorIndexMax);
         } while (m_world[path[index].x][path[index].y].tile != Tile::Ground);
@@ -712,13 +708,11 @@ namespace huaca {
         while (index < path.size() && (!isCorridor(path[index]) || m_world[path[index].x][path[index].y].tile != Tile::Ground)) {
           index++;
         }
-
       } while (index == path.size());
 
       m_doors[i].coords = path[index];
       m_world[path[index].x][path[index].y].tile = Tile::GroundWithItem;
     }
-
   }
 
 

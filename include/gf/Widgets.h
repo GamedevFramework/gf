@@ -45,7 +45,6 @@ inline namespace v1 {
    */
   class GF_API TextWidget : public Widget {
   public:
-
     /**
      * @brief Constructor
      *
@@ -55,9 +54,9 @@ inline namespace v1 {
      */
     TextWidget(std::string text, Font& font, unsigned characterSize = 30);
 
-    virtual void draw(RenderTarget &target, const RenderStates& states) override;
+    void draw(RenderTarget &target, const RenderStates& states) override;
 
-    virtual bool contains(Vector2f coords) override;
+    bool contains(Vector2f coords) override;
 
     /**
      * @brief Set the thickness of the outline.
@@ -141,7 +140,7 @@ inline namespace v1 {
     void updateColors(Color4f textColor, Color4f outlineColor);
     void updateGeometry();
 
-    virtual void onStateChanged() override;
+    void onStateChanged() override;
 
     BasicText& getText() {
       return m_basic;
@@ -179,9 +178,9 @@ inline namespace v1 {
      */
     TextButtonWidget(std::string text, Font& font, unsigned characterSize = 30);
 
-    virtual void draw(RenderTarget &target, const RenderStates& states) override;
+    void draw(RenderTarget &target, const RenderStates& states) override;
 
-    virtual bool contains(Vector2f coords) override;
+    bool contains(Vector2f coords) override;
 
     /**
      * @brief Set the thickness of the outline.
@@ -255,7 +254,7 @@ inline namespace v1 {
   protected:
     void updateGeometry();
 
-    virtual void onStateChanged() override;
+    void onStateChanged() override;
 
   private:
     gf::RoundedRectangleShape m_rect;
@@ -305,9 +304,9 @@ inline namespace v1 {
      */
     SpriteWidget(const Texture& defaultTexture, const Texture& selectedTexture, const Texture& disabledTexture);
 
-    virtual void draw(RenderTarget &target, const RenderStates& states) override;
+    void draw(RenderTarget &target, const RenderStates& states) override;
 
-    virtual bool contains(Vector2f coords) override;
+    bool contains(Vector2f coords) override;
 
     /**
      * @brief Set the texture for disabled state
@@ -363,7 +362,7 @@ inline namespace v1 {
   private:
     void updateGeometry();
 
-    virtual void onStateChanged() override;
+    void onStateChanged() override;
 
   private:
     BasicSprite& getSprite();
@@ -401,9 +400,9 @@ inline namespace v1 {
      */
     ChoiceSpriteWidget(const Texture& emptyTexture, const Texture& chosenTexture);
 
-    virtual void draw(RenderTarget &target, const RenderStates& states) override;
+    void draw(RenderTarget &target, const RenderStates& states) override;
 
-    virtual bool contains(Vector2f coords) override;
+    bool contains(Vector2f coords) override;
 
     /**
      * @brief Set the state of the widget
@@ -444,7 +443,7 @@ inline namespace v1 {
     void setChosenSprite(const Texture& texture, const RectF& textureRect);
 
   protected:
-    virtual void triggered() override;
+    void triggered() override;
 
   private:
     void updateGeometry();

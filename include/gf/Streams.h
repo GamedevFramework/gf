@@ -61,10 +61,10 @@ inline namespace v1 {
      */
     ~FileInputStream();
 
-    virtual std::size_t read(BufferRef<uint8_t> buffer) override;
-    virtual void seek(std::ptrdiff_t position) override;
-    virtual void skip(std::ptrdiff_t position) override;
-    virtual bool isFinished() override;
+    std::size_t read(BufferRef<uint8_t> buffer) override;
+    void seek(std::ptrdiff_t position) override;
+    void skip(std::ptrdiff_t position) override;
+    bool isFinished() override;
 
   private:
     std::FILE *m_file;
@@ -87,10 +87,10 @@ inline namespace v1 {
      */
     explicit MemoryInputStream(ArrayRef<uint8_t> memory);
 
-    virtual std::size_t read(BufferRef<uint8_t> buffer) override;
-    virtual void seek(std::ptrdiff_t position) override;
-    virtual void skip(std::ptrdiff_t position) override;
-    virtual bool isFinished() override;
+    std::size_t read(BufferRef<uint8_t> buffer) override;
+    void seek(std::ptrdiff_t position) override;
+    void skip(std::ptrdiff_t position) override;
+    bool isFinished() override;
 
   private:
     ArrayRef<uint8_t> m_memory;
@@ -116,10 +116,10 @@ inline namespace v1 {
      */
     virtual ~CompressedInputStream();
 
-    virtual std::size_t read(BufferRef<uint8_t> buffer) override;
-    virtual void seek(std::ptrdiff_t position) override;
-    virtual void skip(std::ptrdiff_t position) override;
-    virtual bool isFinished() override;
+    std::size_t read(BufferRef<uint8_t> buffer) override;
+    void seek(std::ptrdiff_t position) override;
+    void skip(std::ptrdiff_t position) override;
+    bool isFinished() override;
 
   private:
     static constexpr uInt BufferSize = 256;
@@ -166,9 +166,9 @@ inline namespace v1 {
      */
     ~FileOutputStream();
 
-    virtual std::size_t write(ArrayRef<uint8_t> buffer) override;
+    std::size_t write(ArrayRef<uint8_t> buffer) override;
 
-    virtual std::size_t getWrittenBytesCount() const override;
+    std::size_t getWrittenBytesCount() const override;
 
   private:
     std::FILE *m_file;
@@ -191,9 +191,9 @@ inline namespace v1 {
      */
     explicit MemoryOutputStream(BufferRef<uint8_t> memory);
 
-    virtual std::size_t write(ArrayRef<uint8_t> buffer) override;
+    std::size_t write(ArrayRef<uint8_t> buffer) override;
 
-    virtual std::size_t getWrittenBytesCount() const override;
+    std::size_t getWrittenBytesCount() const override;
   private:
     BufferRef<uint8_t> m_memory;
     std::size_t m_offset;
@@ -218,9 +218,9 @@ inline namespace v1 {
      */
     ~CompressedOutputStream();
 
-    virtual std::size_t write(ArrayRef<uint8_t> buffer) override;
+    std::size_t write(ArrayRef<uint8_t> buffer) override;
 
-    virtual std::size_t getWrittenBytesCount() const override;
+    std::size_t getWrittenBytesCount() const override;
   private:
     static constexpr uInt BufferSize = 256;
 

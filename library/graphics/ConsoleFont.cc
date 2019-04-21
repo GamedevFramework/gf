@@ -76,12 +76,9 @@ inline namespace v1 {
   , m_size(0, 0)
   , m_characterSize(0, 0)
   {
-
   }
 
-  ConsoleFont::~ConsoleFont() {
-
-  }
+  ConsoleFont::~ConsoleFont() = default;
 
   void ConsoleFont::mapCode(char16_t c, Vector2i position) {
     int index = computeIndex(position, m_format.layout, m_size);
@@ -214,7 +211,6 @@ inline namespace v1 {
     { u'\u03B2', 0xE1 }, { u'\u03A0', 0xE3 }, { u'\u220F', 0xE3 }, { u'\u2211', 0xE4 },
     { u'\u03BC', 0xE6 }, { u'\u2126', 0xEA }, { u'\u03D5', 0xED }, { u'\u2205', 0xED },
     { u'\u2300', 0xED }, { u'\u00D8', 0xED }, { u'\u00F8', 0xED }, { u'\u2208', 0xEE },
-
   };
 
   static constexpr ConsoleFontElement ModifiedCodePage437Mapping[] = {
@@ -275,7 +271,6 @@ inline namespace v1 {
     { u'\u0071', 0x90 }, { u'\u0072', 0x91 }, { u'\u0073', 0x92 }, { u'\u0074', 0x93 },
     { u'\u0075', 0x94 }, { u'\u0076', 0x95 }, { u'\u0077', 0x96 }, { u'\u0078', 0x97 },
     { u'\u0079', 0x98 }, { u'\u007A', 0x99 },
-
   };
 
   bool ConsoleFont::setFormatAndComputeSizes(ConsoleFontFormat format, Vector2i size, Vector2i imageSize) {
@@ -464,7 +459,6 @@ inline namespace v1 {
 
         break;
       }
-
     }
 
     m_texture.create(imageSize);
@@ -521,7 +515,6 @@ inline namespace v1 {
 
         break;
       }
-
     }
 
     return m_texture.loadFromImage(image);

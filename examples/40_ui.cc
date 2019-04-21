@@ -156,7 +156,6 @@ static void overview(gf::UI& ui) {
     static gf::UICollapse widgetsCollapsed = gf::UICollapse::Minimized;
 
     if (ui.treePush(gf::UITree::Tab, "Widgets", widgetsCollapsed)) {
-
       static gf::UICollapse textCollapsed = gf::UICollapse::Minimized;
 
       if (ui.treePush(gf::UITree::Node, "Text", textCollapsed)) {
@@ -277,7 +276,6 @@ static void overview(gf::UI& ui) {
       static gf::UICollapse selectableCollapsed = gf::UICollapse::Minimized;
 
       if (ui.treePush(gf::UITree::Node, "Selectable", selectableCollapsed)) {
-
         static gf::UICollapse listCollapsed = gf::UICollapse::Minimized;
 
         if (ui.treePush(gf::UITree::Node, "List", listCollapsed)) {
@@ -613,7 +611,6 @@ static void overview(gf::UI& ui) {
         if (!ui.fileSelector(browser, "Choose a file", fileSelectorBounds)) {
           fileSelectorActive = false;
         }
-
       }
 
       ui.layoutRowDynamic(30, 2);
@@ -637,7 +634,6 @@ static void overview(gf::UI& ui) {
     static gf::UICollapse layoutCollapsed = gf::UICollapse::Minimized;
 
     if (ui.treePush(gf::UITree::Tab, "Layout", layoutCollapsed)) {
-
       static gf::UICollapse widgetCollapsed = gf::UICollapse::Minimized;
 
       if (ui.treePush(gf::UITree::Node, "Widget", widgetCollapsed)) {
@@ -793,7 +789,6 @@ int main() {
     }
 
     if (ui.begin("Show", gf::RectF(50, 50, 220, 220), gf::UIWindow::Border | gf::UIWindow::Movable | gf::UIWindow::Scalable | gf::UIWindow::Closable | gf::UIWindow::Minimizable | gf::UIWindow::Title)) {
-
       /* fixed widget pixel width */
 
       ui.layoutRowStatic(30, 80, 1);
@@ -820,12 +815,12 @@ int main() {
       ui.layoutRowPush(50);
       ui.label("Volume:");
       ui.layoutRowPush(110);
+
       if (ui.sliderFloat(0.0f, value, 1.0f, 0.1f)) {
         std::cout << "Value: " << value << '\n';
       }
+
       ui.layoutRowEnd();
-
-
     }
 
     ui.end();

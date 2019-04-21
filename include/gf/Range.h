@@ -65,7 +65,6 @@ inline namespace v1 {
       constexpr Iterator(T iteratorIndex) noexcept
       : index(iteratorIndex)
       {
-
       }
 
       /**
@@ -155,7 +154,6 @@ inline namespace v1 {
       constexpr bool operator==(const Iterator& other) const noexcept {
         return index == other.index;
       }
-
     };
 
     /**
@@ -216,7 +214,6 @@ inline namespace v1 {
     constexpr bool isValid() const noexcept {
       return lo <= hi;
     }
-
   };
 
   /**
@@ -304,7 +301,6 @@ inline namespace v1 {
       : range(iteratorRange)
       , position(iteratorPosition)
       {
-
       }
 
       /**
@@ -405,7 +401,6 @@ inline namespace v1 {
     constexpr Iterator end() const noexcept {
       return Iterator(first, { first.lo, second.hi });
     }
-
   };
 
   /**
@@ -468,7 +463,6 @@ inline namespace v1 {
       : position(iteratorPosition)
       , parent(nullptr)
       {
-
       }
 
       /**
@@ -575,7 +569,6 @@ inline namespace v1 {
     constexpr Iterator end() const noexcept {
       return Iterator({ first.lo, second.hi });
     }
-
   };
 
   /**
@@ -639,7 +632,6 @@ inline namespace v1 {
       : position(iteratorPosition)
       , parent(nullptr)
       {
-
       }
 
       /**
@@ -758,7 +750,6 @@ inline namespace v1 {
     constexpr Iterator end() const noexcept {
       return Iterator({ first.lo, second.hi });
     }
-
   };
 
   /**

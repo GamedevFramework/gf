@@ -33,7 +33,6 @@ namespace lux {
       : m_origin(origin)
       , m_shipClass(shipClass)
       {
-
       }
 
       Origin getOrigin() const {
@@ -54,10 +53,9 @@ namespace lux {
       SingleShoot(Origin origin, ShipClass shipClass)
       : ConcreteShoot(origin, shipClass)
       {
-
       }
 
-      virtual void shoot(float dt, gf::Vector2f position, gf::Vector2f direction, gf::MessageManager& messages) override {
+      void shoot(float dt, gf::Vector2f position, gf::Vector2f direction, gf::MessageManager& messages) override {
         gf::unused(dt);
 
         ShootMessage shoot;
@@ -78,10 +76,9 @@ namespace lux {
       ConeShoot(Origin origin, ShipClass shipClass)
       : ConcreteShoot(origin, shipClass)
       {
-
       }
 
-      virtual void shoot(float dt, gf::Vector2f position, gf::Vector2f direction, gf::MessageManager& messages) override {
+      void shoot(float dt, gf::Vector2f position, gf::Vector2f direction, gf::MessageManager& messages) override {
         gf::unused(dt);
 
         ShootMessage shoot;
@@ -130,10 +127,9 @@ namespace lux {
       , m_elapsedTime(0.0f)
       , m_period(period)
       {
-
       }
 
-      virtual void shoot(float dt, gf::Vector2f position, gf::Vector2f direction, gf::MessageManager& messages) override {
+      void shoot(float dt, gf::Vector2f position, gf::Vector2f direction, gf::MessageManager& messages) override {
         m_elapsedTime -= dt;
 
         if (m_elapsedTime <= 0) {
@@ -154,10 +150,9 @@ namespace lux {
       , m_elapsedTime(0.0f)
       , m_delay(delay)
       {
-
       }
 
-      virtual void shoot(float dt, gf::Vector2f position, gf::Vector2f direction, gf::MessageManager& messages) override {
+      void shoot(float dt, gf::Vector2f position, gf::Vector2f direction, gf::MessageManager& messages) override {
         m_elapsedTime += dt;
 
         if (m_elapsedTime >= m_delay) {
@@ -176,10 +171,9 @@ namespace lux {
       : ShootDecorator(std::move(decorated))
       , m_count(count)
       {
-
       }
 
-      virtual void shoot(float dt, gf::Vector2f position, gf::Vector2f direction, gf::MessageManager& messages) override {
+      void shoot(float dt, gf::Vector2f position, gf::Vector2f direction, gf::MessageManager& messages) override {
         if (m_count > 0) {
           getDecorated().shoot(dt, position, direction, messages);
           m_count--;
@@ -201,10 +195,9 @@ namespace lux {
       , m_elapsedTime(0.0f)
       , m_topFront(false)
       {
-
       }
 
-      virtual void shoot(float dt, gf::Vector2f position, gf::Vector2f direction, gf::MessageManager& messages) override {
+      void shoot(float dt, gf::Vector2f position, gf::Vector2f direction, gf::MessageManager& messages) override {
         m_elapsedTime += dt;
 
         // Update state of shoot
@@ -237,9 +230,7 @@ namespace lux {
 
   }
 
-  Shoot::~Shoot() {
-
-  }
+  Shoot::~Shoot() = default;
 
   std::unique_ptr<Shoot> makeSimpleShoot(Origin origin, ShipClass shipClass, float delay) {
     return std::make_unique<DelayedShoot>(

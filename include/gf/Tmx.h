@@ -311,7 +311,7 @@ inline namespace v1 {
     std::vector<TmxCell> cells; ///< The cells of the layer
     std::vector<TmxChunk> chunks; ///< The chunks of the layer
 
-    virtual void accept(const TmxLayers& map, TmxVisitor& visitor) const override;
+    void accept(const TmxLayers& map, TmxVisitor& visitor) const override;
   };
 
   /**
@@ -471,7 +471,7 @@ inline namespace v1 {
     TmxDrawOrder drawOrder; ///< The draw order of the objects
     std::vector<std::unique_ptr<TmxObject>> objects;  ///< The objects of the layer
 
-    virtual void accept(const TmxLayers& map, TmxVisitor& visitor) const override;
+    void accept(const TmxLayers& map, TmxVisitor& visitor) const override;
   };
 
   /**
@@ -492,7 +492,7 @@ inline namespace v1 {
   struct GF_API TmxImageLayer : public TmxLayer {
     std::unique_ptr<TmxImage> image;  ///< The image of the layer
 
-    virtual void accept(const TmxLayers& map, TmxVisitor& visitor) const override;
+    void accept(const TmxLayers& map, TmxVisitor& visitor) const override;
   };
 
 
@@ -503,7 +503,7 @@ inline namespace v1 {
   struct GF_API TmxGroupLayer : public TmxLayer {
     std::vector<std::unique_ptr<TmxLayer>> layers;  ///< The other layers
 
-    virtual void accept(const TmxLayers& map, TmxVisitor& visitor) const override;
+    void accept(const TmxLayers& map, TmxVisitor& visitor) const override;
   };
 
   /**
@@ -593,7 +593,6 @@ inline namespace v1 {
      * @returns The rectangle of the tile
      */
     RectI getSubTexture(int id, Vector2i size) const noexcept;
-
   };
 
   /**
@@ -624,7 +623,6 @@ inline namespace v1 {
     std::vector<std::unique_ptr<TmxLayer>> layers;  ///< The layers of the map
 
   public:
-
     /**
      * @brief Get the tileset corresponding to a global id.
      *
@@ -646,7 +644,6 @@ inline namespace v1 {
      * @param filename The name of the TMX file
      */
     bool loadFromFile(const Path& filename);
-
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

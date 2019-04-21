@@ -44,9 +44,7 @@ static constexpr float Impulse = 20000.0f;
 
 class PhysicsEntity : public gf::Entity {
 public:
-
   virtual gf::PhysicsBody& getBody() = 0;
-
 };
 
 class Block : public PhysicsEntity {
@@ -58,11 +56,11 @@ public:
     m_body.setPosition(position);
   }
 
-  virtual gf::PhysicsBody& getBody() override {
+  gf::PhysicsBody& getBody() override {
     return m_body;
   }
 
-  virtual void render(gf::RenderTarget &target, const gf::RenderStates& states) override {
+  void render(gf::RenderTarget &target, const gf::RenderStates& states) override {
     gf::RectangleShape shape({ SideLength, SideLength });
     shape.setColor(gf::Color::Azure);
     shape.setPosition(m_body.getPosition());
@@ -88,11 +86,11 @@ public:
     m_body.applyLinearImpulse(impulse);
   }
 
-  virtual gf::PhysicsBody& getBody() override {
+  gf::PhysicsBody& getBody() override {
     return m_body;
   }
 
-  virtual void render(gf::RenderTarget &target, const gf::RenderStates& states) override {
+  void render(gf::RenderTarget &target, const gf::RenderStates& states) override {
     gf::CircleShape shape(Radius);
     shape.setColor(gf::Color::Orange);
     shape.setPosition(m_body.getPosition());
@@ -113,7 +111,6 @@ public:
   PhysicsWorld()
   : m_fixed(m_physics)
   {
-
   }
 
   void addEntity(std::unique_ptr<PhysicsEntity> entity) {
