@@ -311,7 +311,7 @@ inline namespace v1 {
     getGlyph(' ', characterSize, 0);
   }
 
-  static constexpr unsigned DefaultSize = 1024;
+  static constexpr int DefaultSize = 1024;
 
   Font::GlyphCache Font::createCache(unsigned characterSize) {
     GlyphCache cache;
