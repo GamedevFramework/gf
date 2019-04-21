@@ -255,14 +255,14 @@ static std::vector<double> getCombinationVector(CombinationFunction func) {
 int main() {
   gf::Random random;
 
-  constexpr unsigned Size = 1024;
-  constexpr unsigned ExtraSize = 250;
+  constexpr int Size = 1024;
+  constexpr int ExtraSize = 250;
 
   constexpr float ComboHeightMax = 200.0f;
 
   gf::RectF bounds;
 
-  gf::Heightmap heightmap({ static_cast<int>(Size), static_cast<int>(Size) });
+  gf::Heightmap heightmap({ Size, Size });
   gf::Image image;
   image.create({ Size, Size }); // initial image
 

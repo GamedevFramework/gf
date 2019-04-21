@@ -722,8 +722,8 @@ static void computeDisplay(const Dungeon& dungeon, gf::VertexArray& vertices) {
 int main() {
   gf::Random random;
 
-  static constexpr unsigned Size = 1024;
-  static constexpr unsigned ExtraSize = 250;
+  static constexpr int Size = 1024;
+  static constexpr int ExtraSize = 250;
   static constexpr float ViewportX = static_cast<float>(Size) / (Size + ExtraSize);
 
   static constexpr float ComboHeightMax = 200.0f;
