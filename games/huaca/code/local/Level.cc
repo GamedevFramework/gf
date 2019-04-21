@@ -32,8 +32,8 @@
 
 namespace huaca {
 
-  static constexpr unsigned RoomSizeMin = 12;
-  static constexpr unsigned RoomSizePad = 5;
+  static constexpr int RoomSizeMin = 12;
+  static constexpr int RoomSizePad = 5;
 
   static constexpr int GroundTileCount = 7;
   static constexpr int WallTileCount = 5;
@@ -59,7 +59,7 @@ namespace huaca {
   {
   }
 
-  void Roof::addRoof(gf::Vector2u coords) {
+  void Roof::addRoof(gf::Vector2i coords) {
     gf::Vertex vertices[4];
 
     float size = Level::BlockSize;
@@ -111,16 +111,16 @@ namespace huaca {
     //  258 = 1 * 256 + 0 * 0 + 2 * 1
     m_groundLayer.setBlockSize({ BlockSize, BlockSize });
     m_groundLayer.setTileSize({ TileSize, TileSize });
-    m_groundLayer.setMargin({ 1u, 1u });
-    m_groundLayer.setSpacing({ 2u, 0u });
+    m_groundLayer.setMargin({ 1, 1 });
+    m_groundLayer.setSpacing({ 2, 0 });
     m_groundLayer.setTexture(gResourceManager().getTexture("img/ground.png"));
 
     // 1290 = 5 * 256 + 4 * 2 + 2 * 1
     //  256 = 1 * 256 + 0 * 0 + 2 * 0
     m_wallLayer.setBlockSize({ BlockSize, BlockSize });
     m_wallLayer.setTileSize({ TileSize, TileSize });
-    m_wallLayer.setMargin({ 1u, 0u });
-    m_wallLayer.setSpacing({ 2u, 0u });
+    m_wallLayer.setMargin({ 1, 0 });
+    m_wallLayer.setSpacing({ 2, 0 });
     m_wallLayer.setTexture(gResourceManager().getTexture("img/walls.png"));
 
     // load textures
@@ -148,16 +148,16 @@ namespace huaca {
 
     // set numbers
 
-    for (unsigned number = 0; number < RuneCount; ++number) {
+    for (int number = 0; number < RuneCount; ++number) {
       m_runes[number].number = number;
     }
 
-    for (unsigned number = 0; number < KeyDoorCount; ++number) {
+    for (int number = 0; number < KeyDoorCount; ++number) {
       m_keys[number].number = number;
       m_doors[number].number = number;
     }
 
-    for (unsigned number = 0; number < PortalCount; ++number) {
+    for (int number = 0; number < PortalCount; ++number) {
       m_portals[number].number = number;
     }
 
@@ -312,7 +312,7 @@ namespace huaca {
     }
 
     if (m_currentPortal == 2) {
-      unsigned collisions = 0;
+      int collisions = 0;
 
       for (auto& portal : m_portals) {
         if (portal.bounds.intersects(heroPosition->bounds)) {
@@ -393,8 +393,8 @@ namespace huaca {
   }
 
 
-  static constexpr unsigned FirstWidth = 29;
-  static constexpr unsigned FirstHeight = 15;
+  static constexpr int FirstWidth = 29;
+  static constexpr int FirstHeight = 15;
 
   static const char *FirstLevel[FirstHeight] = {
     "#############################",
@@ -414,19 +414,19 @@ namespace huaca {
     "#############################",
   };
 
-  static constexpr unsigned Shift = 10;
+  static constexpr int Shift = 10;
 
   void Level::generateFirst(gf::Random& random) {
     // initialize with walls
 
-    for (unsigned x = 0; x < MapSize; ++x) {
-      for (unsigned y = 0; y < MapSize; ++y) {
+    for (int x = 0; x < MapSize; ++x) {
+      for (int y = 0; y < MapSize; ++y) {
         m_world[x][y].tile = Tile::Wall;
       }
     }
 
-    for (unsigned y = 0; y < FirstHeight; ++y) {
-      for (unsigned x = 0; x < FirstWidth; ++x) {
+    for (int y = 0; y < FirstHeight; ++y) {
+      for (int x = 0; x < FirstWidth; ++x) {
         if (FirstLevel[y][x] == ' ') {
           m_world[x + Shift][y + Shift].tile = Tile::Ground;
         }
@@ -468,8 +468,8 @@ namespace huaca {
   void Level::generateNew(gf::Random& random) {
     // initialize with walls
 
-    for (unsigned x = 0; x < MapSize; ++x) {
-      for (unsigned y = 0; y < MapSize; ++y) {
+    for (int x = 0; x < MapSize; ++x) {
+      for (int y = 0; y < MapSize; ++y) {
         m_world[x][y].tile = Tile::Wall;
       }
     }
@@ -478,8 +478,8 @@ namespace huaca {
 
     generateRooms(random, 0, MapSize, 0, MapSize);
 
-    for (unsigned y = 0; y < MapSize; ++y) {
-      for (unsigned x = 0; x < MapSize; ++x) {
+    for (int y = 0; y < MapSize; ++y) {
+      for (int x = 0; x < MapSize; ++x) {
         if (m_world[x][y].tile == Tile::Wall) {
           std::cout << '#';
         } else {
@@ -503,8 +503,8 @@ namespace huaca {
   Roof Level::getRoof() const {
     Roof roof;
 
-    for (unsigned x = 0; x < MapSize; ++x) {
-      for (unsigned y = 0; y < MapSize; ++y) {
+    for (int x = 0; x < MapSize; ++x) {
+      for (int y = 0; y < MapSize; ++y) {
         if (m_world[x][y].tile == Tile::Wall) {
           roof.addRoof({ x, y });
         }
@@ -514,9 +514,9 @@ namespace huaca {
     return roof;
   }
 
-  void Level::generateRooms(gf::Random& random, unsigned xMin, unsigned xMax, unsigned yMin, unsigned yMax) {
-    unsigned dx = xMax - xMin;
-    unsigned dy = yMax - yMin;
+  void Level::generateRooms(gf::Random& random, int xMin, int xMax, int yMin, int yMax) {
+    int dx = xMax - xMin;
+    int dy = yMax - yMin;
 
     if (dx < RoomSizeMin && dy < RoomSizeMin) {
       // create a room
@@ -524,14 +524,14 @@ namespace huaca {
       assert(dx >= RoomSizePad);
       assert(dy >= RoomSizePad);
 
-      unsigned h = random.computeUniformInteger(3u, dx - 2);
-      unsigned w = random.computeUniformInteger(3u, dy - 2);
+      int h = random.computeUniformInteger(3, dx - 2);
+      int w = random.computeUniformInteger(3, dy - 2);
 
-      unsigned xStart = random.computeUniformInteger(xMin + 1, xMax - h - 1);
-      unsigned yStart = random.computeUniformInteger(yMin + 1, yMax - w - 1);
+      int xStart = random.computeUniformInteger(xMin + 1, xMax - h - 1);
+      int yStart = random.computeUniformInteger(yMin + 1, yMax - w - 1);
 
-      for (unsigned x = xStart; x < xStart + h; ++x) {
-        for (unsigned y = yStart; y < yStart + w; ++y) {
+      for (int x = xStart; x < xStart + h; ++x) {
+        for (int y = yStart; y < yStart + w; ++y) {
           m_world[x][y].tile = Tile::Ground;
         }
       }
@@ -552,14 +552,14 @@ namespace huaca {
     }
 
     if (split == Vertical) {
-      unsigned yMid = random.computeUniformInteger(yMin + RoomSizePad, yMax - RoomSizePad);
+      int yMid = random.computeUniformInteger(yMin + RoomSizePad, yMax - RoomSizePad);
       generateRooms(random, xMin, xMax, yMin, yMid);
       generateRooms(random, xMin, xMax, yMid, yMax);
 
       // generate corridor
 
-      unsigned x = xMin + dx / 2;
-      unsigned y = yMid;
+      int x = xMin + dx / 2;
+      int y = yMid;
 
       while (y < yMax - 1 && m_world[x][y].tile != Tile::Ground) {
         m_world[x][y].tile = Tile::Ground;
@@ -576,14 +576,14 @@ namespace huaca {
     } else {
       assert(split == Horizontal);
 
-      unsigned xMid = random.computeUniformInteger(xMin + RoomSizePad, xMax - RoomSizePad);
+      int xMid = random.computeUniformInteger(xMin + RoomSizePad, xMax - RoomSizePad);
       generateRooms(random, xMin, xMid, yMin, yMax);
       generateRooms(random, xMid, xMax, yMin, yMax);
 
       // generate corridor
 
-      unsigned y = yMin + dy / 2;
-      unsigned x = xMid;
+      int y = yMin + dy / 2;
+      int x = xMid;
 
       while (x < xMax - 1 && m_world[x][y].tile != Tile::Ground) {
         m_world[x][y].tile = Tile::Ground;
@@ -600,14 +600,14 @@ namespace huaca {
   }
 
   void Level::generateItems(gf::Random& random) {
-    unsigned x, y;
+    int x, y;
 
     // runes
 
     for (auto& rune : m_runes) {
       do {
-        x = random.computeUniformInteger(0u, MapSize - 1);
-        y = random.computeUniformInteger(0u, MapSize - 1);
+        x = random.computeUniformInteger(0, MapSize - 1);
+        y = random.computeUniformInteger(0, MapSize - 1);
       } while (m_world[x][y].tile != Tile::Ground);
 
       rune.coords = { x, y };
@@ -621,8 +621,8 @@ namespace huaca {
     // hero
 
     do {
-      x = random.computeUniformInteger(0u, MapSize - 1);
-      y = random.computeUniformInteger(0u, MapSize - 1);
+      x = random.computeUniformInteger(0, MapSize - 1);
+      y = random.computeUniformInteger(0, MapSize - 1);
     } while (m_world[x][y].tile != Tile::Ground);
 
     m_heroCoords = { x, y };
@@ -640,27 +640,27 @@ namespace huaca {
 
     visited[m_heroCoords.x][m_heroCoords.y] = true;
 
-    std::vector<gf::Vector2u> stack;
+    std::vector<gf::Vector2i> stack;
     stack.push_back(m_heroCoords);
 
-    std::vector<gf::Vector2u> path;
+    std::vector<gf::Vector2i> path;
 
     gf::Direction directions[4] = { gf::Direction::Up, gf::Direction::Left, gf::Direction::Down, gf::Direction::Right };
 
     do {
-      gf::Vector2u curr = stack.back();
+      gf::Vector2i curr = stack.back();
       assert(visited[curr.x][curr.y]);
       stack.pop_back();
       path.push_back(curr);
 
-      for (unsigned k = 0; k < 10; ++k) {
-        unsigned i = random.computeUniformInteger(0, 3);
-        unsigned j = random.computeUniformInteger(0, 3);
+      for (int k = 0; k < 10; ++k) {
+        int i = random.computeUniformInteger(0, 3);
+        int j = random.computeUniformInteger(0, 3);
         std::swap(directions[i], directions[j]);
       }
 
       for (auto direction : directions) {
-        gf::Vector2u next = curr + gf::displacement(direction);
+        gf::Vector2i next = curr + gf::displacement(direction);
 
         if (m_world[next.x][next.y].tile != Tile::Wall && !visited[next.x][next.y]) {
           visited[next.x][next.y] = true;
@@ -676,7 +676,7 @@ namespace huaca {
 
     std::size_t index;
 
-    for (unsigned i = 0; i < KeyDoorCount; ++i) {
+    for (int i = 0; i < KeyDoorCount; ++i) {
       do {
         index = random.computeUniformInteger(keyIndexMin, keyIndexMax);
       } while (m_world[path[index].x][path[index].y].tile != Tile::Ground);
@@ -693,7 +693,7 @@ namespace huaca {
           index = random.computeUniformInteger(doorIndexMin, doorIndexMax);
         } while (m_world[path[index].x][path[index].y].tile != Tile::Ground);
 
-        auto isCorridor = [this](gf::Vector2u coords) {
+        auto isCorridor = [this](gf::Vector2i coords) {
           assert(0 < coords.x && coords.x < MapSize - 1);
           assert(0 < coords.y && coords.y < MapSize - 1);
           Cell& n = m_world[coords.x][coords.y - 1];
@@ -723,9 +723,9 @@ namespace huaca {
     m_wallLayer.clear();
     m_walls.clear();
 
-    for (unsigned x = 0; x < MapSize; ++x) {
-      for (unsigned y = 0; y < MapSize; ++y) {
-        gf::Vector2u coords(x, y);
+    for (int x = 0; x < MapSize; ++x) {
+      for (int y = 0; y < MapSize; ++y) {
+        gf::Vector2i coords(x, y);
 
         switch (m_world[x][y].tile) {
           case Tile::Wall:

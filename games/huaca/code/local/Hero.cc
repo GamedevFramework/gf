@@ -44,7 +44,7 @@ namespace huaca {
     gf::Texture& texture = gResourceManager().getTexture(path);
     texture.setSmooth();
 
-    for (unsigned i = 0; i < 12; ++i) {
+    for (int i = 0; i < 12; ++i) {
       animation.addFrame(texture, { (i % 4) / 4.0f, (i / 4) / 3.0f, 1.0f / 4.0f, 1.0f / 3.0f }, FrameTime);
     }
   }
