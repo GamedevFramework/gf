@@ -13,7 +13,10 @@ inline namespace v1 {
   , m_visibility(Visibility::Hidden)
   , m_closeWindowAction("Close")
   {
+    m_views.addView(m_mainView);
+    m_views.addView(m_hudView);
     m_views.setInitialScreenSize(initialSize);
+
     m_closeWindowAction.addCloseControl();
     m_actions.addAction(m_closeWindowAction);
   }
@@ -88,6 +91,14 @@ inline namespace v1 {
 
   bool Scene::isHidden() const {
     return m_visibility == Visibility::Hidden;
+  }
+
+  void Scene::setWorldViewCenter(Vector2f center) {
+    m_mainView.setCenter(center);
+  }
+
+  void Scene::setWorldViewSize(Vector2f size) {
+    m_mainView.setSize(size);
   }
 
   void Scene::renderMainEntities(RenderTarget& target) {

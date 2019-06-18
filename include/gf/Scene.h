@@ -276,6 +276,10 @@ inline namespace v1 {
     /**
      * @}
      */
+
+    void setWorldViewCenter(Vector2f center);
+    void setWorldViewSize(Vector2f size);
+
   protected:
     /**
      * @brief Render the main entities
