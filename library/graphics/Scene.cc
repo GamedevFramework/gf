@@ -7,12 +7,15 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  Scene::Scene()
+  Scene::Scene(Vector2i initialSize)
   : m_active(false)
   , m_status(Status::Paused)
   , m_visibility(Visibility::Hidden)
+  , m_closeWindowAction("Close")
   {
-
+    m_views.setInitialScreenSize(initialSize);
+    m_closeWindowAction.addCloseControl();
+    m_actions.addAction(m_closeWindowAction);
   }
 
   Scene::~Scene() = default;
@@ -23,8 +26,12 @@ inline namespace v1 {
     doProcessEvent(event);
   }
 
-  void Scene::handleActions() {
-    doHandleActions();
+  void Scene::handleActions(Window& window) {
+    if (m_closeWindowAction.isActive()) {
+      window.close();
+    }
+
+    doHandleActions(window);
     m_actions.reset();
   }
 
@@ -98,7 +105,8 @@ inline namespace v1 {
     // nothing
   }
 
-  void Scene::doHandleActions() {
+  void Scene::doHandleActions(Window& window) {
+    gf::unused(window);
     // nothing
   }
 

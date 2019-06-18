@@ -35,7 +35,7 @@ inline namespace v1 {
         }
 
         for (Scene& scene : m_scenes) {
-          scene.handleActions();
+          scene.handleActions(m_window);
         }
 
         Time time = clock.restart();

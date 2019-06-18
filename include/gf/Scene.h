@@ -68,8 +68,12 @@ inline namespace v1 {
      * @brief Constructor
      *
      * At construction, a scene is paused, hidden and inactive.
+     *
+     * @param initialSize The initial screen size
+     *
+     * @sa gf::ViewContainer::setInitialScreenSize()
      */
-    Scene();
+    Scene(Vector2i initialSize);
 
     /**
      * @brief Destructor
@@ -103,9 +107,11 @@ inline namespace v1 {
      *
      * At the end of this function, all the actions are resetted.
      *
+     * @param window The current window
+     *
      * @sa gf::ActionContainer::reset()
      */
-    void handleActions();
+    void handleActions(Window& window);
 
     /**
      * @brief Update the scene
@@ -289,7 +295,7 @@ inline namespace v1 {
     /**
      * @brief Customization point for handleActions()
      */
-    virtual void doHandleActions();
+    virtual void doHandleActions(Window& window);
 
     /**
      * @brief Customization point for update()
@@ -339,6 +345,7 @@ inline namespace v1 {
     Visibility m_visibility;
 
     ActionContainer m_actions;
+    Action m_closeWindowAction;
 
     ModelContainer m_models;
 
