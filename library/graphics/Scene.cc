@@ -8,7 +8,7 @@ inline namespace v1 {
 #endif
 
   Scene::Scene()
-  : m_life(Life::Stopped)
+  : m_active(false)
   , m_status(Status::Paused)
   , m_visibility(Visibility::Hidden)
   {
@@ -16,9 +16,6 @@ inline namespace v1 {
   }
 
   Scene::~Scene() = default;
-
-  void Scene::loop(Window& window, RenderWindow& target) {
-  }
 
   void Scene::processEvent(Event& event) {
     m_views.processEvent(event);
@@ -50,16 +47,12 @@ inline namespace v1 {
     doRender(target);
   }
 
-  void Scene::start() {
-    m_life = Life::Started;
+  void Scene::setActive(bool active) {
+    m_active = active;
   }
 
-  void Scene::stop() {
-    m_life = Life::Stopped;
-  }
-
-  bool Scene::isStarted() const {
-    return m_life == Life::Started;
+  bool Scene::isActive() const {
+    return m_active;
   }
 
   void Scene::pause() {

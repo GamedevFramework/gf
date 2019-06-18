@@ -41,17 +41,13 @@ inline namespace v1 {
     Scene();
     virtual ~Scene();
 
-    void loop(Window& window, RenderWindow& target);
-
     void processEvent(Event& event);
     void handleActions();
     void update(Time time);
     void render(RenderTarget& target);
 
-    void start();
-    void stop();
-
-    bool isStarted() const;
+    void setActive(bool active = true);
+    bool isActive() const;
 
     void pause();
     void resume();
@@ -100,12 +96,7 @@ inline namespace v1 {
     virtual void doShow();
 
   private:
-    enum class Life {
-      Started,
-      Stopped,
-    };
-
-    Life m_life;
+    bool m_active;
 
     enum class Status {
       Paused,
