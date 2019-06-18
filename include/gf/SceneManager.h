@@ -23,6 +23,7 @@
 
 #include <vector>
 
+#include "Portability.h"
 #include "Ref.h"
 #include "RenderWindow.h"
 #include "Scene.h"
@@ -47,7 +48,7 @@ inline namespace v1 {
    *
    * @sa gf::Scene
    */
-  class SceneManager {
+  class GF_API SceneManager {
   public:
     /**
      * @brief Constructor

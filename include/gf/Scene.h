@@ -25,6 +25,7 @@
 #include "EntityContainer.h"
 #include "Event.h"
 #include "ModelContainer.h"
+#include "Portability.h"
 #include "RenderWindow.h"
 #include "Time.h"
 #include "ViewContainer.h"
@@ -61,7 +62,7 @@ inline namespace v1 {
    *
    * @sa gf::SceneManager
    */
-  class Scene {
+  class GF_API Scene {
   public:
     /**
      * @brief Constructor
