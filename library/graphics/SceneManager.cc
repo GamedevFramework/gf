@@ -20,7 +20,7 @@ inline namespace v1 {
     Clock clock;
     m_renderer.clear(Color::White);
 
-    while (!m_scenes.empty()) {
+    while (!m_scenes.empty() && m_window.isOpen()) {
       Scene& currentScene = m_scenes.back();
       currentScene.show();
       currentScene.resume();
