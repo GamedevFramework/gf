@@ -1232,11 +1232,29 @@ inline namespace v1 {
 
   /**
    * @ingroup core
+   * @brief A color vector with 3 components
+   *
+   * @sa gf::Vector, gf::Vector<T, 4>
+   */
+  template<typename T>
+  using Color3 = Vector<T, 3>;
+
+  /**
+   * @ingroup core
+   * @brief A color vector with 4 components
+   *
+   * @sa gf::Vector, gf::Vector<T, 4>
+   */
+  template<typename T>
+  using Color4 = Vector<T, 4>;
+
+  /**
+   * @ingroup core
    * @brief A float color vector with 3 components
    *
    * @sa gf::Vector, gf::Vector<T, 3>
    */
-  using Color3f = Vector<float, 3>;
+  using Color3f = Color3<float>;
 
   /**
    * @ingroup core
@@ -1244,7 +1262,23 @@ inline namespace v1 {
    *
    * @sa gf::Vector, gf::Vector<T, 4>
    */
-  using Color4f = Vector<float, 4>;
+  using Color4f = Color4<float>;
+
+  /**
+   * @ingroup core
+   * @brief A double color vector with 3 components
+   *
+   * @sa gf::Vector, gf::Vector<T, 3>
+   */
+  using Color3d = Color3<double>;
+
+  /**
+   * @ingroup core
+   * @brief A double color vector with 4 components
+   *
+   * @sa gf::Vector, gf::Vector<T, 4>
+   */
+  using Color4d = Color4<double>;
 
   /**
    * @ingroup core
@@ -1252,7 +1286,7 @@ inline namespace v1 {
    *
    * @sa gf::Vector, gf::Vector<T, 3>
    */
-  using Color3u = Vector<uint8_t, 3>;
+  using Color3u = Color3<uint8_t>;
 
   /**
    * @ingroup core
@@ -1260,7 +1294,9 @@ inline namespace v1 {
    *
    * @sa gf::Vector, gf::Vector<T, 4>
    */
-  using Color4u = Vector<uint8_t, 4>;
+  using Color4u = Color4<uint8_t>;
+
+
 
 // MSVC does not like extern template
 #ifndef _MSC_VER
