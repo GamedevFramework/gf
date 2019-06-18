@@ -33,15 +33,54 @@ namespace gf {
 inline namespace v1 {
 #endif
 
+  /**
+   * @ingroup graphics
+   * @brief A scene manager
+   *
+   * A scene manager handles several scenes, organised into a stack. It has a
+   * window and a renderer and use them to handle the scenes.
+   *
+   * The top of the stack is the active scene. The manager runs the active
+   * scene while the stack is not empty. All the scene in the stack receive
+   * inputs, are updated and are rendered, beginning from the base of the
+   * stack until the top.
+   *
+   * @sa gf::Scene
+   */
   class SceneManager {
   public:
+    /**
+     * @brief Constructor
+     *
+     * @param title The title of the window
+     * @param size The size of the window
+     */
     SceneManager(StringRef title, Vector2i size);
 
+    /**
+     * @brief Run the scene manager until completion
+     */
     void run();
 
+    /**
+     * @brief Add a scene on top of the stack
+     *
+     * @param scene The scene to add
+     */
     void pushScene(Scene& scene);
+
+    /**
+     * @brief Remove the top scene from the non-empty stack
+     */
     void popScene();
 
+    /**
+     * @brief Replace the top scene with a new scene
+     *
+     * It is equivalent to popping the current top scene and pushing the new scene.
+     *
+     * @param scene The scene to add
+     */
     void replaceScene(Scene& scene) {
       popScene();
       pushScene(scene);

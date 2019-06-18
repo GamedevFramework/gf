@@ -36,63 +36,288 @@ namespace gf {
 inline namespace v1 {
 #endif
 
+  /**
+   * @ingroup graphics
+   * @brief A scene in the game
+   *
+   * A scene is a set of entities that are handled together in the game. A
+   * scene is associated with a set of user actions. A scene is responsible
+   * for handling the steps of a game: handling the input (and the actions),
+   * updating the entities, rendering the entities.
+   *
+   * A scene can be associated to a scene manager, with other scenes. A scene
+   * is active when it is the top scene on the stack of scenes. The scene
+   * manager is responsible for activating and desactivating the scenes.
+   *
+   * A scene can be either paused or resumed. A paused scene is not updated.
+   * In other words, the update step is discarded. It is the user's
+   * responsability to pause or resume a scene. An active scene is always
+   * resumed when becoming active.
+   *
+   * A scene can be either hidden or shown. A hidden scene is not rendererd.
+   * In other words, the render step is discarded. It is the user's
+   * responsability to hide or show a scene. An active scene is always shown
+   * when becoming active.
+   *
+   * @sa gf::SceneManager
+   */
   class Scene {
   public:
+    /**
+     * @brief Constructor
+     *
+     * At construction, a scene is paused, hidden and inactive.
+     */
     Scene();
+
+    /**
+     * @brief Destructor
+     */
     virtual ~Scene();
 
+    /**
+     * @name Game loop
+     * @{
+     */
+
+    /**
+     * @brief Process an event
+     *
+     * All the registered views and actions are updated with the event.
+     *
+     * This function can be customized with doProcessEvent() that is called
+     * after all other event processing.
+     *
+     * @param event The event
+     *
+     * @sa gf::ActionContainer::processEvent(), gf::ViewContainer::processEvent()
+     */
     void processEvent(Event& event);
+
+    /**
+     * @brief Handle actions
+     *
+     * This function must be customized with doHandleActions() in order to
+     * handle the actions that have been updated with the event processing.
+     *
+     * At the end of this function, all the actions are resetted.
+     *
+     * @sa gf::ActionContainer::reset()
+     */
     void handleActions();
+
+    /**
+     * @brief Update the scene
+     *
+     * This function updates all the models and entities of the scene, if the
+     * scene is not paused. It can be customized with doUpdate() that is called
+     * after all other updates.
+     *
+     * @param time The time since the last frame
+     *
+     * @sa gf::ModelContainer::update(), gf::EntityContainer::update()
+     */
     void update(Time time);
+
+    /**
+     * @brief Render the scene
+     *
+     * This function render all the entities of the scene, if the scene is not
+     * hidden. It can be customized with doRender().
+     *
+     * By default, it first renders the main entities (with a gf::ExtendView)
+     * through a call to renderMainEntities() and then it renders the HUD
+     * entities (with a gf::ScreenView) through a call to renderHudEntities().
+     *
+     * @param target The target to render the scene
+     *
+     * @sa gf::EntityContainer::render()
+     */
     void render(RenderTarget& target);
 
+    /**
+     * @}
+     */
+
+    /**
+     * @name Scene properties
+     * @{
+     */
+
+    /**
+     * @brief Change the active state of the scene
+     *
+     * @param active The new state of the scene
+     *
+     * @sa isActive()
+     */
     void setActive(bool active = true);
+
+    /**
+     * @brief Check if the scene is active
+     *
+     * @returns True if the scene is active, and false otherwise
+     *
+     * @sa setActive()
+     */
     bool isActive() const;
 
+    /**
+     * @brief Pause the scene
+     *
+     * When a scene is paused, the entities are not updated.
+     *
+     * @sa resume(), isPaused()
+     */
     void pause();
+
+    /**
+     * @brief Resume the scene
+     *
+     * @sa pause(), isPaused()
+     */
     void resume();
 
+    /**
+     * @brief Check if the scene is paused
+     *
+     * @returns True if the scene is paused, and false otherwise
+     *
+     * @sa pause(), resume()
+     */
     bool isPaused() const;
 
+    /**
+     * @brief Hide the scene
+     *
+     * When a scene is hidden, the entities are not rendered.
+     *
+     * @sa show(), isHidden()
+     */
     void hide();
+
+    /**
+     * @brief Show the scene
+     *
+     * @sa hide(), isHidden()
+     */
     void show();
 
+    /**
+     * @brief Check if the scene is hidden.
+     *
+     * @returns True if the scene is hidden
+     *
+     * @sa hide(), show()
+     */
     bool isHidden() const;
 
+    /**
+     * @}
+     */
+
+    /**
+     * @name Scene content
+     * @{
+     */
+
+    /**
+     * @brief Add a view to the scene
+     *
+     * @param view A custom view
+     */
     void addView(AdaptativeView& view) {
       m_views.addView(view);
     }
 
+    /**
+     * @brief Add an action to the scene
+     *
+     * @param action The action
+     */
     void addAction(Action& action) {
       m_actions.addAction(action);
     }
 
+    /**
+     * @brief Add a model to the scene
+     *
+     * @param model The  model
+     */
     void addModel(Model& model) {
       m_models.addModel(model);
     }
 
+    /**
+     * @brief Add a main entity to the scene
+     *
+     * @param entity The entity
+     */
     void addMainEntity(Entity& entity) {
       m_mainEntities.addEntity(entity);
     }
 
+    /**
+     * @brief Add a HUD entity to the scene
+     *
+     * @param entity The entity
+     */
     void addHudEntity(Entity& entity) {
       m_hudEntities.addEntity(entity);
     }
 
+    /**
+     * @}
+     */
   protected:
+    /**
+     * @brief Render the main entities
+     */
     void renderMainEntities(RenderTarget& target);
+
+    /**
+     * @brief Render the HUD entities
+     */
     void renderHudEntities(RenderTarget& target);
 
-  private:
+    /**
+     * @brief Customization point for processEvent()
+     */
     virtual void doProcessEvent(Event& event);
+
+    /**
+     * @brief Customization point for handleActions()
+     */
     virtual void doHandleActions();
+
+    /**
+     * @brief Customization point for update()
+     */
     virtual void doUpdate(Time time);
+
+    /**
+     * @brief Customization point for render()
+     */
     virtual void doRender(RenderTarget& target);
 
+    /**
+     * @brief Customization point for pause()
+     */
     virtual void doPause();
+
+    /**
+     * @brief Customization point for resume()
+     */
     virtual void doResume();
 
+    /**
+     * @brief Customization point for hide()
+     */
     virtual void doHide();
+
+    /**
+     * @brief Customization point for show()
+     */
     virtual void doShow();
 
   private:
