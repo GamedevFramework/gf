@@ -66,6 +66,8 @@
 #include "RenderTexture.cc"
 #include "RenderWindow.cc"
 #include "ResourceManager.cc"
+#include "Scene.cc"
+#include "SceneManager.cc"
 #include "Shader.cc"
 #include "Shape.cc"
 #include "Shapes.cc"
