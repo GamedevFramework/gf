@@ -13,7 +13,7 @@ inline namespace v1 {
   , m_visibility(Visibility::Hidden)
   , m_closeWindowAction("Close")
   {
-    m_views.addView(m_mainView);
+    m_views.addView(m_worldView);
     m_views.addView(m_hudView);
     m_views.setInitialScreenSize(initialSize);
 
@@ -44,7 +44,7 @@ inline namespace v1 {
     }
 
     m_models.update(time);
-    m_mainEntities.update(time);
+    m_worldEntities.update(time);
     m_hudEntities.update(time);
     doUpdate(time);
   }
@@ -94,16 +94,16 @@ inline namespace v1 {
   }
 
   void Scene::setWorldViewCenter(Vector2f center) {
-    m_mainView.setCenter(center);
+    m_worldView.setCenter(center);
   }
 
   void Scene::setWorldViewSize(Vector2f size) {
-    m_mainView.setSize(size);
+    m_worldView.setSize(size);
   }
 
-  void Scene::renderMainEntities(RenderTarget& target) {
-    target.setView(m_mainView);
-    m_mainEntities.render(target);
+  void Scene::renderWorldEntities(RenderTarget& target) {
+    target.setView(m_worldView);
+    m_worldEntities.render(target);
   }
 
   void Scene::renderHudEntities(RenderTarget& target) {
@@ -127,7 +127,7 @@ inline namespace v1 {
   }
 
   void Scene::doRender(RenderTarget& target) {
-    renderMainEntities(target);
+    renderWorldEntities(target);
     renderHudEntities(target);
   }
 

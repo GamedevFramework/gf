@@ -87,6 +87,13 @@ inline namespace v1 {
       pushScene(scene);
     }
 
+    /**
+     * @brief Get the renderer associated to the scene
+     */
+    const RenderTarget& getRenderer() const {
+      return m_renderer;
+    }
+
   private:
     Window m_window;
     RenderWindow m_renderer;

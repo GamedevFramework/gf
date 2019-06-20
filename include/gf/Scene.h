@@ -132,8 +132,8 @@ inline namespace v1 {
      * This function render all the entities of the scene, if the scene is not
      * hidden. It can be customized with doRender().
      *
-     * By default, it first renders the main entities (with a gf::ExtendView)
-     * through a call to renderMainEntities() and then it renders the HUD
+     * By default, it first renders the world entities (with a gf::ExtendView)
+     * through a call to renderWorldEntities() and then it renders the HUD
      * entities (with a gf::ScreenView) through a call to renderHudEntities().
      *
      * @param target The target to render the scene
@@ -256,12 +256,12 @@ inline namespace v1 {
     }
 
     /**
-     * @brief Add a main entity to the scene
+     * @brief Add a world entity to the scene
      *
      * @param entity The entity
      */
-    void addMainEntity(Entity& entity) {
-      m_mainEntities.addEntity(entity);
+    void addWorldEntity(Entity& entity) {
+      m_worldEntities.addEntity(entity);
     }
 
     /**
@@ -277,19 +277,46 @@ inline namespace v1 {
      * @}
      */
 
+    /**
+     * @name World view management
+     * @{
+     */
+
+    /**
+     * @brief Set the center of the world view
+     *
+     * @param center The new center
+     */
     void setWorldViewCenter(Vector2f center);
+
+    /**
+     * @brief Set the size of the world view
+     *
+     * @param size The new size
+     */
     void setWorldViewSize(Vector2f size);
+
+    /**
+     * @}
+     */
 
   protected:
     /**
-     * @brief Render the main entities
+     * @brief Render the world entities
      */
-    void renderMainEntities(RenderTarget& target);
+    void renderWorldEntities(RenderTarget& target);
 
     /**
      * @brief Render the HUD entities
      */
     void renderHudEntities(RenderTarget& target);
+
+    /**
+     * @brief Get the world view
+     */
+    View& getWorldView() {
+      return m_worldView;
+    }
 
     /**
      * @brief Customization point for processEvent()
@@ -353,11 +380,11 @@ inline namespace v1 {
 
     ModelContainer m_models;
 
-    ExtendView m_mainView;
+    ExtendView m_worldView;
     ScreenView m_hudView;
     ViewContainer m_views;
 
-    EntityContainer m_mainEntities;
+    EntityContainer m_worldEntities;
     EntityContainer m_hudEntities;
   };
 
