@@ -674,7 +674,7 @@ inline namespace v1 {
         U value = { };
 
         for (std::size_t j = MinSize; j <= MaxSize - MinSize + 1; ++j) {
-          value += firstBounds[j].getExtentDistance() + secondBounds[Size - j].getExtentDistance();
+          value += firstBounds[j].getExtentLength() + secondBounds[Size - j].getExtentLength();
         }
 
         return value;
@@ -725,7 +725,7 @@ inline namespace v1 {
 
         if (firstBounds[MinSize].getVolume() == 0 || secondBounds[MinSize].getVolume() == 0) {
           // perimeter based strategy
-          overlapFn = &Box<U,N>::getIntersectionExtentDistance;
+          overlapFn = &Box<U,N>::getIntersectionExtentLength;
         } else {
           // volume based strategy
           overlapFn = &Box<U,N>::getIntersectionVolume;
@@ -733,7 +733,7 @@ inline namespace v1 {
 
         bool overlapFree = false;
 
-        U perimeterMax = 2 * bounds.getExtentDistance() - bounds.getMinimumEdge();
+        U perimeterMax = 2 * bounds.getExtentLength() - bounds.getMinimumEdge();
 
         for (std::size_t index = MinSize; index <= MaxSize - MinSize + 1; ++index) {
           auto weight = (firstBounds[index].*overlapFn)(secondBounds[Size - index - 1]);
@@ -752,7 +752,7 @@ inline namespace v1 {
           }
 
           if (overlapFree && weight == 0) {
-            weight = firstBounds[index].getExtentDistance() + secondBounds[Size - index - 1].getExtentDistance() - perimeterMax;
+            weight = firstBounds[index].getExtentLength() + secondBounds[Size - index - 1].getExtentLength() - perimeterMax;
             assert(weight <= 0);
 
             auto value = weight / wf(index);
@@ -807,8 +807,8 @@ inline namespace v1 {
         Node *bestNodeForVolume = nullptr;
         U bestVolume = std::numeric_limits<U>::max();
 
-        Node *bestNodeForExtentDistance = nullptr;
-        U bestExtentDistance = std::numeric_limits<U>::max();
+        Node *bestNodeForExtentLength = nullptr;
+        U bestExtentLength = std::numeric_limits<U>::max();
 
         for (auto& entry : m_entries) {
           if (entry.bounds.getIntersection(bounds) == bounds) {
@@ -819,11 +819,11 @@ inline namespace v1 {
               bestNodeForVolume = entry.child;
             }
 
-            U extentDistance = entry.bounds.getExtentDistance();
+            U extentDistance = entry.bounds.getExtentLength();
 
-            if (bestNodeForExtentDistance == nullptr || extentDistance < bestExtentDistance) {
-              bestExtentDistance = extentDistance;
-              bestNodeForExtentDistance = entry.child;
+            if (bestNodeForExtentLength == nullptr || extentDistance < bestExtentLength) {
+              bestExtentLength = extentDistance;
+              bestNodeForExtentLength = entry.child;
             }
           }
         }
@@ -833,8 +833,8 @@ inline namespace v1 {
             return bestNodeForVolume;
           }
 
-          assert(bestNodeForExtentDistance);
-          return bestNodeForExtentDistance;
+          assert(bestNodeForExtentLength);
+          return bestNodeForExtentLength;
         }
 
         return nullptr;
@@ -847,9 +847,9 @@ inline namespace v1 {
           return covering;
         }
 
-        std::sort(m_entries.begin(), m_entries.end(), ExtentDistanceEnlargement(bounds));
+        std::sort(m_entries.begin(), m_entries.end(), ExtentLengthEnlargement(bounds));
 
-        OverlapExtentDistanceEnlargement extentDistanceEnlargement(bounds, m_entries.front());
+        OverlapExtentLengthEnlargement extentDistanceEnlargement(bounds, m_entries.front());
 
         std::size_t p;
 
@@ -867,7 +867,7 @@ inline namespace v1 {
         Node *node = nullptr;
 
         if (existsEmptyVolumeExtension(bounds)) {
-          node = findCandidates<OverlapExtentDistanceEnlargement>(0, p, bounds, candidates);
+          node = findCandidates<OverlapExtentLengthEnlargement>(0, p, bounds, candidates);
         } else {
           node = findCandidates<OverlapVolumeEnlargement>(0, p, bounds, candidates);
         }
@@ -1072,13 +1072,13 @@ inline namespace v1 {
 
         if (firstBounds[MinSize].getVolume() == 0 || secondBounds[MinSize].getVolume() == 0) {
           // perimeter based strategy
-          overlapFn = &Box<U,N>::getIntersectionExtentDistance;
+          overlapFn = &Box<U,N>::getIntersectionExtentLength;
         } else {
           // volume based strategy
           overlapFn = &Box<U,N>::getIntersectionVolume;
         }
 
-        U perimeterMax = 2 * bounds.getExtentDistance() - bounds.getMinimumEdge();
+        U perimeterMax = 2 * bounds.getExtentLength() - bounds.getMinimumEdge();
 
         for (std::size_t index = MinSize; index <= MaxSize - MinSize + 1; ++index) {
           auto weight = (firstBounds[index].*overlapFn)(secondBounds[Size - index - 1]);
@@ -1099,7 +1099,7 @@ inline namespace v1 {
           }
 
           if (status.overlapFree && weight == 0) {
-            weight = firstBounds[index].getExtentDistance() + secondBounds[Size - index - 1].getExtentDistance() - perimeterMax;
+            weight = firstBounds[index].getExtentLength() + secondBounds[Size - index - 1].getExtentLength() - perimeterMax;
             assert(weight <= 0);
 
             auto value = weight / wf(index);
@@ -1122,29 +1122,29 @@ inline namespace v1 {
      * Comparators and Functors
      */
 
-    class ExtentDistanceEnlargement {
+    class ExtentLengthEnlargement {
     public:
-      ExtentDistanceEnlargement(const Box<U, N>& bounds)
+      ExtentLengthEnlargement(const Box<U, N>& bounds)
       : m_bounds(bounds)
       {
 
       }
 
       bool operator()(const Entry& lhs, const Entry& rhs) const {
-        return getExtentDistanceEnlargement(lhs) < getExtentDistanceEnlargement(rhs);
+        return getExtentLengthEnlargement(lhs) < getExtentLengthEnlargement(rhs);
       }
 
-      U getExtentDistanceEnlargement(const Entry& entry) const {
-        return entry.bounds.getExtended(m_bounds).getExtentDistance() - entry.bounds.getExtentDistance();
+      U getExtentLengthEnlargement(const Entry& entry) const {
+        return entry.bounds.getExtended(m_bounds).getExtentLength() - entry.bounds.getExtentLength();
       }
 
     private:
       const Box<U, N>& m_bounds;
     };
 
-    class OverlapExtentDistanceEnlargement {
+    class OverlapExtentLengthEnlargement {
     public:
-      OverlapExtentDistanceEnlargement(const Box<U, N>& bounds, const Entry& reference)
+      OverlapExtentLengthEnlargement(const Box<U, N>& bounds, const Entry& reference)
       : m_bounds(bounds)
       , m_reference(reference)
       , m_extended(reference.bounds.getExtended(bounds))
@@ -1153,11 +1153,11 @@ inline namespace v1 {
       }
 
       U operator()(const Entry& entry) const {
-        return getOverlapExtentDistanceEnlargement(entry);
+        return getOverlapExtentLengthEnlargement(entry);
       }
 
-      U getOverlapExtentDistanceEnlargement(const Entry& entry) const {
-        return m_extended.getIntersectionExtentDistance(entry.bounds) - m_reference.bounds.getIntersectionExtentDistance(entry.bounds);
+      U getOverlapExtentLengthEnlargement(const Entry& entry) const {
+        return m_extended.getIntersectionExtentLength(entry.bounds) - m_reference.bounds.getIntersectionExtentLength(entry.bounds);
       }
 
     private:

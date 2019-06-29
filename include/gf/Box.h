@@ -153,7 +153,7 @@ inline namespace v1 {
       return res;
     }
 
-    T getIntersectionExtentDistance(const Box<T, N>& other) const noexcept {
+    T getIntersectionExtentLength(const Box<T, N>& other) const noexcept {
       T res = 0;
 
       for (std::size_t i = 0; i < N; ++i) {
@@ -209,7 +209,7 @@ inline namespace v1 {
       return volume;
     }
 
-    constexpr T getExtentDistance() const noexcept {
+    constexpr T getExtentLength() const noexcept {
       T distance = 0;
 
       for (std::size_t i = 0; i < N; ++i) {
