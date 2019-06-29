@@ -3,6 +3,7 @@
 #include <cassert>
 
 #include <gf/Color.h>
+#include <gf/Log.h>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -13,7 +14,15 @@ inline namespace v1 {
   : m_window(title, size)
   , m_renderer(m_window)
   {
+    if (s_instance != nullptr) {
+      gf::Log::warning("An instance of SceneManager is already registered as the current instance. You should not use SceneManager::get().");
+    }
 
+    s_instance = this;
+  }
+
+  SceneManager::~SceneManager() {
+    s_instance = nullptr;
   }
 
   void SceneManager::run() {
@@ -86,6 +95,11 @@ inline namespace v1 {
     }
   }
 
+  SceneManager& SceneManager::get() {
+    return *s_instance;
+  }
+
+  SceneManager *SceneManager::s_instance = nullptr;
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
