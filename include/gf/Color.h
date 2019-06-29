@@ -27,7 +27,6 @@
 #include <tuple>
 #include <type_traits>
 
-
 #include "Math.h"
 #include "Portability.h"
 #include "Vector.h"
@@ -52,6 +51,8 @@ inline namespace v1 {
   template<typename T>
   struct ColorBase {
     static_assert(std::is_floating_point<T>::value, "T must be a floating point type.");
+
+  private:
 
     /**
      * @brief A structure to represent a color in the HSV color space
@@ -150,6 +151,7 @@ inline namespace v1 {
       return color;
     }
 
+  public:
 
     /**
      * @brief Black predefined color
