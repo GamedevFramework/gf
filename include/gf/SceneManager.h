@@ -53,21 +53,10 @@ inline namespace v1 {
     /**
      * @brief Constructor
      *
-     * The constructor registers the current scene manager as the current instance.
-     *
      * @param title The title of the window
      * @param size The size of the window
-     *
-     * @sa SceneManager::get()
      */
     SceneManager(StringRef title, Vector2i size);
-
-    /**
-     * @brief Destructor
-     *
-     * The destructor unregisters the current scene manager as the current instance.
-     */
-    ~SceneManager();
 
     /**
      * @brief Run the scene manager until completion
@@ -104,14 +93,6 @@ inline namespace v1 {
     const RenderTarget& getRenderer() const {
       return m_renderer;
     }
-
-    /**
-     * @brief Get the current instance of the scene manager
-     */
-    static SceneManager& get();
-
-  private:
-    static SceneManager *s_instance;
 
   private:
     Window m_window;
