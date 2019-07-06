@@ -564,7 +564,7 @@ inline namespace v1 {
 
     int firstGid;             ///< The first global id of the tileset
     std::string name;         ///< The name of the tileset
-    Vector2i tileSize;        ///< The size of the tileset
+    Vector2i tileSize;        ///< The size of a tile in the tileset
     int spacing;              ///< The spacing between tiles (in pixels)
     int margin;               ///< The margin around tiles (in pixels)
     int tileCount;            ///< The number of tiles

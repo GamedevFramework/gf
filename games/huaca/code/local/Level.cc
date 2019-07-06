@@ -62,7 +62,7 @@ namespace huaca {
   void Roof::addRoof(gf::Vector2i coords) {
     gf::Vertex vertices[4];
 
-    float size = Level::BlockSize;
+    float size = Level::TileSize;
 
     vertices[0].position = coords * size + gf::Vector2f(0,    -size / 2);
     vertices[1].position = coords * size + gf::Vector2f(size, -size / 2);
@@ -109,16 +109,16 @@ namespace huaca {
 
     // 1806 = 7 * 256 + 6 * 2 + 2 * 1
     //  258 = 1 * 256 + 0 * 0 + 2 * 1
-    m_groundLayer.setBlockSize({ BlockSize, BlockSize });
     m_groundLayer.setTileSize({ TileSize, TileSize });
+    m_groundLayer.setTilesetTileSize({ TilesetTileSize, TilesetTileSize });
     m_groundLayer.setMargin({ 1, 1 });
     m_groundLayer.setSpacing({ 2, 0 });
     m_groundLayer.setTexture(gResourceManager().getTexture("img/ground.png"));
 
     // 1290 = 5 * 256 + 4 * 2 + 2 * 1
     //  256 = 1 * 256 + 0 * 0 + 2 * 0
-    m_wallLayer.setBlockSize({ BlockSize, BlockSize });
     m_wallLayer.setTileSize({ TileSize, TileSize });
+    m_wallLayer.setTilesetTileSize({ TilesetTileSize, TilesetTileSize });
     m_wallLayer.setMargin({ 1, 0 });
     m_wallLayer.setSpacing({ 2, 0 });
     m_wallLayer.setTexture(gResourceManager().getTexture("img/walls.png"));
@@ -212,7 +212,7 @@ namespace huaca {
       gf::Sprite sprite;
 
       if (door.isVertical) {
-        gf::Vector2f shift(0.0f, BlockSize / 2);
+        gf::Vector2f shift(0.0f, TileSize / 2);
         sprite.setPosition(door.bounds.getCenter() - shift);
         sprite.setTexture(*door.verTexture);
         sprite.setScale(DoorVerticalSize / DoorVerticalTextureSize);
@@ -319,7 +319,7 @@ namespace huaca {
           collisions++;
 
           if (!m_isOnPortal) {
-            gf::Vector2f newPosition = m_portals[1 - portal.number].bounds.getCenter() - gf::Vector2f(0.0f, BlockSize / 3); // HACK
+            gf::Vector2f newPosition = m_portals[1 - portal.number].bounds.getCenter() - gf::Vector2f(0.0f, TileSize / 3); // HACK
             gf::Vector2f delta = newPosition - heroPosition->position;
             heroPosition->position += delta;
             heroPosition->bounds.setPosition(heroPosition->bounds.getPosition() + delta);
@@ -461,7 +461,7 @@ namespace huaca {
     // warn about the end of the generation
 
     NewLevelMessage msg;
-    msg.heroPosition = m_heroCoords * BlockSize + BlockSize / 2;
+    msg.heroPosition = m_heroCoords * TileSize + TileSize / 2;
     gMessageManager().sendMessage(&msg);
   }
 
@@ -496,7 +496,7 @@ namespace huaca {
     // warn about the end of the generation
 
     NewLevelMessage msg;
-    msg.heroPosition = m_heroCoords * BlockSize + BlockSize / 2;
+    msg.heroPosition = m_heroCoords * TileSize + TileSize / 2;
     gMessageManager().sendMessage(&msg);
   }
 
@@ -730,7 +730,7 @@ namespace huaca {
         switch (m_world[x][y].tile) {
           case Tile::Wall:
             m_wallLayer.setTile(coords, random.computeUniformInteger(0, WallTileCount - 1));
-            m_walls.push_back(gf::RectF(coords * BlockSize, gf::Vector2f(BlockSize, BlockSize)));
+            m_walls.push_back(gf::RectF(coords * TileSize, gf::Vector2f(TileSize, TileSize)));
             break;
           default:
             m_groundLayer.setTile(coords, gf::clamp(random.computeUniformInteger(-10, GroundTileCount - 1), 0, GroundTileCount - 1));
@@ -742,7 +742,7 @@ namespace huaca {
     // items
 
     for (auto& rune : m_runes) {
-      gf::Vector2f pos = rune.coords * BlockSize + BlockSize / 2 - RuneSize / 2;
+      gf::Vector2f pos = rune.coords * TileSize + TileSize / 2 - RuneSize / 2;
       rune.bounds = gf::RectF(pos, { RuneSize, RuneSize });
       rune.isPressed = false;
     }
@@ -750,7 +750,7 @@ namespace huaca {
     m_currentRune = 0;
 
     for (auto& key : m_keys) {
-      gf::Vector2f pos = key.coords * BlockSize + BlockSize / 2 - KeySize / 2;
+      gf::Vector2f pos = key.coords * TileSize + TileSize / 2 - KeySize / 2;
       key.bounds = gf::RectF(pos, { KeySize, KeySize });
       key.isLooted = false;
     }
@@ -758,7 +758,7 @@ namespace huaca {
     for (auto& door : m_doors) {
       door.isVertical = m_world[door.coords.x][door.coords.y + 1].tile == Tile::Wall;
 
-      gf::Vector2f pos = door.coords * BlockSize;
+      gf::Vector2f pos = door.coords * TileSize;
 
       if (door.isVertical) {
         door.bounds = gf::RectF(pos, DoorVerticalSize);

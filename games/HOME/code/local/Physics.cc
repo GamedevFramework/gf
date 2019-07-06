@@ -147,6 +147,7 @@ namespace home {
         gf::Log::info("Parsing layer '%s'\n", layer.name.c_str());
 
         gf::Vector2i tileSize = map.tileSize;
+        gf::Vector2i tilesetTileSize = tileSize;
 
         gf::Array2D<int, int> biomes(map.mapSize, Void);
 
@@ -161,6 +162,10 @@ namespace home {
 
           if (gid != 0) {
             biomes({ i, j }) = Land;
+
+            auto tileset = map.getTileSetFromGID(gid);
+            assert(tileset);
+            tilesetTileSize = tileset->tileSize;
           }
 
           k++;
@@ -191,9 +196,7 @@ namespace home {
             if (pos.y % 2 == 0) {
               gf::Vector2i base(pos * tileSize);
               base.y /= 2;
-              base += tileSize / 2;
-
-              base.y -= tileSize.height / 2; // HACK
+              base += tilesetTileSize / 2;
 
               for (auto& rel : NeighborsEven) {
                 gf::Vector2i neighbor = pos + rel.first;
@@ -217,10 +220,8 @@ namespace home {
             } else {
               gf::Vector2i base(pos * tileSize);
               base.y /= 2;
-              base.x += tileSize.width;
-              base.y += tileSize.height / 2;
-
-              base.y -= tileSize.height / 2; // HACK
+              base.x += tileSize.width / 2;
+              base += tilesetTileSize / 2;
 
               for (auto& rel : NeighborsOdd) {
                 gf::Vector2i neighbor = pos + rel.first;

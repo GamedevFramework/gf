@@ -69,8 +69,8 @@ namespace huaca {
 
   class Level : public gf::Entity {
   public:
-    static constexpr int TileSize = 256;
-    static constexpr int BlockSize = 64;
+    static constexpr int TilesetTileSize = 256;
+    static constexpr int TileSize = 64;
 
     static constexpr int RuneCount = 4;
     static constexpr int KeyDoorCount = 4;
