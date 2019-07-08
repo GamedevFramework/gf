@@ -16,6 +16,7 @@ addons:
       - freetype
       - sdl2
       - zlib
+    update: true
 
 matrix:
   include:
