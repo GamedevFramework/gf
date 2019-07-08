@@ -46,6 +46,11 @@ inline namespace v1 {
    *
    * If you want to define a color, you should use gf::Color4f.
    *
+   * If you want to use the functions of this class, you can use:
+   *
+   * - gf::ColorF or gf::Color for the instantiation with `float`
+   * - gf::ColorD for the instantiation with `double`
+   *
    * @sa gf::Color4f
    */
   template<typename T>
@@ -392,19 +397,19 @@ inline namespace v1 {
 
   /**
    * @ingroup graphics
-   * @brief Instantiation of ColoBase for float
+   * @brief Instantiation of ColoBase for `float`
    */
   using ColorF = ColorBase<float>;
 
   /**
    * @ingroup graphics
-   * @brief Instantiation of ColoBase for double
+   * @brief Instantiation of ColoBase for `double`
    */
   using ColorD = ColorBase<double>;
 
   /**
    * @ingroup graphics
-   * @brief Instantiation of ColorBase
+   * @brief Instantiation of ColorBase for `float`
    *
    * This name is used for compatibility with SFML.
    */
