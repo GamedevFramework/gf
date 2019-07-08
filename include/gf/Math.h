@@ -31,6 +31,10 @@ namespace gf {
 inline namespace v1 {
 #endif
 
+  /**
+   * @ingroup core
+   * @brief Templated value of @f$ \pi @f$
+   */
   template<typename T>
   constexpr
   T pi() {
