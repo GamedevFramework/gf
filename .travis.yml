@@ -9,7 +9,7 @@ addons:
       - libfreetype6-dev
       - libsdl2-dev
       - zlib1g-dev
-  brew:
+  homebrew:
     packages:
       - cmake
       - boost
