@@ -242,13 +242,40 @@ inline namespace v1 {
     }
   };
 
+  /**
+   * @ingroup core
+   * @brief A box of dimension 2 with float
+   */
   using Box2f = Box<float, 2>;
+
+  /**
+   * @ingroup core
+   * @brief A box of dimension 3 with float
+   */
   using Box3f = Box<float, 3>;
 
+  /**
+   * @ingroup core
+   * @brief A box of dimension 2 with int
+   */
   using Box2i = Box<int, 2>;
+
+  /**
+   * @ingroup core
+   * @brief A box of dimension 3 with int
+   */
   using Box3i = Box<int, 3>;
 
+  /**
+   * @ingroup core
+   * @brief A box of dimension 2 with unsigned
+   */
   using Box2u = Box<unsigned, 2>;
+
+  /**
+   * @ingroup core
+   * @brief A box of dimension 3 with unsigned
+   */
   using Box3u = Box<unsigned, 3>;
 
 

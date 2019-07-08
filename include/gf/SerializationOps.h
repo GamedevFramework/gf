@@ -310,6 +310,10 @@ inline namespace v1 {
    */
   GF_API Deserializer& operator|(Deserializer& ar, int64_t& data);
 
+  /**
+   * @relates Deserializer
+   * @brief Deserialize an enum object
+   */
   template<typename T, typename E = typename std::enable_if<std::is_enum<T>::value, T>::type>
   inline
   Deserializer& operator|(Deserializer& ar, T& data) {

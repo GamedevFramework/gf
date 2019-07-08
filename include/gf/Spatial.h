@@ -44,16 +44,30 @@ namespace gf {
 inline namespace v1 {
 #endif
 
+  /**
+   * @ingroup core
+   * @brief A type of spatial structure
+   *
+   * @sa gf::SpatialStructure
+   */
   enum class SpatialStructureType {
-    Object,
-    Node,
+    Object, ///< The structure represents an actuel object
+    Node,   ///< The structure represents an internal node
   };
 
+  /**
+   * @ingroup core
+   * @brief A spatial structure
+   *
+   * A spatial structure reflects the internal states of a spatial index.
+   *
+   * @sa gf::QuadTree, gf::RStarTree
+   */
   template<typename U, std::size_t N>
   struct SpatialStructure {
-    Box<U, N> bounds;
-    SpatialStructureType type;
-    int level;
+    Box<U, N> bounds;           ///< The bounds of the structure
+    SpatialStructureType type;  ///< The type of the structure
+    int level;                  ///< The level of the structure
   };
 
   /**
