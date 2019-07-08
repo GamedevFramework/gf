@@ -2,55 +2,39 @@ language: cpp
 
 addons:
   apt:
-    packages: &common_packages
+    packages:
       - cmake
       - libboost-filesystem-dev
       - libboost-dev
       - libfreetype6-dev
       - libsdl2-dev
       - zlib1g-dev
+  brew:
+    packages:
+      - cmake
+      - boost
+      - freetype
+      - sdl2
+      - zlib
 
 matrix:
   include:
     - os: linux
-      dist: trusty
-      sudo: false
+      dist: xenial
       compiler: gcc
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - *common_packages
-            - g++-5
-      env: CXX_COMPILER=g++-5 C_COMPILER=gcc-5
     - os: linux
-      dist: trusty
-      sudo: false
+      dist: xenial
       compiler: clang
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-            - llvm-toolchain-trusty-5.0
-          packages:
-            - *common_packages
-            - clang-5.0
-            - libstdc++-6-dev
-      env: CXX_COMPILER=clang++-5.0 C_COMPILER=clang-5.0
     - os: osx
-      env: CXX_COMPILER=clang++ C_COMPILER=clang
 
 branches:
   only:
     - master
     - develop
 
-before_install:
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew update && brew bundle ; fi
 before_script:
   - mkdir build
   - cd build
-  - cmake -DCMAKE_CXX_COMPILER=$CXX_COMPILER -DCMAKE_C_COMPILER=$C_COMPILER -DCMAKE_BUILD_TYPE=Release -DGF_DEBUG=OFF -DGF_BUILD_GAMES=ON -DGF_BUILD_TOOLS=ON -DGF_SINGLE_COMPILTATION_UNIT=ON ..
+  - cmake -DCMAKE_BUILD_TYPE=Release -DGF_DEBUG=OFF -DGF_BUILD_GAMES=ON -DGF_BUILD_TOOLS=ON -DGF_SINGLE_COMPILTATION_UNIT=ON ..
 script:
   - make && ./tests/gf_tests
