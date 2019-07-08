@@ -255,10 +255,10 @@ inline namespace v1 {
       void subdivide() {
         m_children = std::make_unique<Node[]>(4);
 
-        m_children[0].m_bounds = computeBoxQuadrant(m_bounds, Quadrant::UpperLeft);
-        m_children[1].m_bounds = computeBoxQuadrant(m_bounds, Quadrant::UpperRight);
-        m_children[2].m_bounds = computeBoxQuadrant(m_bounds, Quadrant::LowerRight);
-        m_children[3].m_bounds = computeBoxQuadrant(m_bounds, Quadrant::LowerLeft);
+        m_children[0].m_bounds = computeBoxQuarter(m_bounds, Quarter::UpperLeft);
+        m_children[1].m_bounds = computeBoxQuarter(m_bounds, Quarter::UpperRight);
+        m_children[2].m_bounds = computeBoxQuarter(m_bounds, Quarter::LowerRight);
+        m_children[3].m_bounds = computeBoxQuarter(m_bounds, Quarter::LowerLeft);
 
         std::vector<Entry> entries;
 

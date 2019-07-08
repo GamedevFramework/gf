@@ -30,6 +30,7 @@
 #include <tuple>
 
 #include "Portability.h"
+#include "Quarter.h"
 #include "Vector.h"
 #include "VectorOps.h"
 
@@ -251,58 +252,41 @@ inline namespace v1 {
   using Box3u = Box<unsigned, 3>;
 
 
-  enum Quadrant {
-    UpperLeft,
-    UpperRight,
-    LowerRight,
-    LowerLeft,
-  };
-
+  /**
+   * @ingroup core
+   * @brief Divide a box in quarters
+   *
+   * @param box The box to divide
+   * @param quarter The quarter to compute
+   */
   template<typename T>
-  inline
-  Box<T, 2> computeBoxQuadrant(const Box<T, 2>& box, Quadrant quadrant) {
+  constexpr
+  Box<T, 2> computeBoxQuarter(const Box<T, 2>& box, Quarter quarter) {
     Vector<T, 2> size = (box.max - box.min) / 2;
 
-    switch (quadrant) {
-      case Quadrant::UpperLeft:
+    switch (quarter) {
+      case Quarter::UpperLeft:
         return Box<T,2>(box.min, box.max - size);
-      case Quadrant::UpperRight:
+      case Quarter::UpperRight:
         return Box<T,2>({ box.min.x + size.width, box.min.y }, { box.max.x, box.max.y - size.height });
-      case Quadrant::LowerRight:
+      case Quarter::LowerRight:
         return Box<T,2>(box.min + size, box.max);
-      case Quadrant::LowerLeft:
+      case Quarter::LowerLeft:
         return Box<T,2>({ box.min.x, box.min.y + size.height }, { box.max.x - size.width, box.max.y });
     }
 
     return box;
   }
 
+  /**
+   * @relates Box
+   * @brief Equality operator
+   */
   template<typename T, std::size_t N>
   constexpr
   bool operator==(const Box<T, N>& lhs, const Box<T, N>& rhs) {
     return lhs.min == rhs.min && lhs.max == rhs.max;
   }
-
-//   template<typename T, std::size_t N>
-//   constexpr
-//   Box<T, N> extension(const Box<T, N>& lhs, const Box<T, N>& rhs) {
-//     Box<T, N> res(lhs);
-//     res.extend(rhs);
-//     return res;
-//   }
-//
-//   template<typename T, std::size_t N>
-//   constexpr
-//   Box<T, N> operator+(const Box<T, N>& lhs, const Box<T, N>& rhs) {
-//     return extension(lhs, rhs);
-//   }
-//
-//   template<typename T, std::size_t N>
-//   constexpr
-//   Box<T, N>& operator+=(Box<T, N> lhs, const Box<T, N>& rhs) {
-//     lhs.extend(rhs);
-//     return lhs;
-//   }
 
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
