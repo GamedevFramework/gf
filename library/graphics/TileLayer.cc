@@ -179,7 +179,13 @@ inline namespace v1 {
   void TileLayer::fillVertexArray(VertexArray& array, RectI rect) const {
     array.reserve(static_cast<std::size_t>(rect.height) * static_cast<std::size_t>(rect.width) * 6);
 
-    Vector2i tilesetSize = (m_texture->getSize() - 2 * m_margin + m_spacing) / (m_tilesetTileSize + m_spacing);
+    gf::Vector2i tilesetTileSize = m_tilesetTileSize;
+
+    if (tilesetTileSize.width == 0 || tilesetTileSize.height == 0) {
+      tilesetTileSize = m_tileSize;
+    }
+
+    Vector2i tilesetSize = (m_texture->getSize() - 2 * m_margin + m_spacing) / (tilesetTileSize + m_spacing);
 
     Vector2i local;
 
@@ -205,7 +211,7 @@ inline namespace v1 {
           position.setPosition(cell * m_tileSize + m_offset);
         } else {
           assert(m_type == Staggered);
-          position.setSize(m_tilesetTileSize);
+          position.setSize(tilesetTileSize);
 
           if (cell.y % 2 == 0) {
             gf::Vector2f pos = cell * m_tileSize;
@@ -224,7 +230,7 @@ inline namespace v1 {
         Vector2i tileCoords(tile % tilesetSize.width, tile / tilesetSize.width);
         assert(tileCoords.y < tilesetSize.height);
 
-        RectI textureRect(tileCoords * m_tilesetTileSize + tileCoords * m_spacing + m_margin, m_tilesetTileSize);
+        RectI textureRect(tileCoords * tilesetTileSize + tileCoords * m_spacing + m_margin, tilesetTileSize);
         RectF textureCoords = m_texture->computeTextureCoords(textureRect);
 
         // vertices
