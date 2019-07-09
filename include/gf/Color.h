@@ -305,7 +305,7 @@ inline namespace v1 {
      * @param b The blue channel
      * @returns The corresponding color
      */
-    static Color4<T> fromRgb(T r, T g, T b) {
+    static constexpr Color4<T> fromRgb(T r, T g, T b) {
       return Color4<T>(r, g, b, T(1));
     }
 
@@ -318,7 +318,7 @@ inline namespace v1 {
      * @param a The alpha channel
      * @returns The corresponding color
      */
-    static Color4<T> fromRgba32(uint8_t r, uint8_t g, uint8_t b, uint8_t a = 255) {
+    static constexpr Color4<T> fromRgba32(uint8_t r, uint8_t g, uint8_t b, uint8_t a = 255) {
       return { r / T(255), g / T(255), b / T(255), a / T(255) };
     }
 
@@ -328,7 +328,7 @@ inline namespace v1 {
      * @param color The 32-bit color
      * @returns The corresponding color
      */
-    static Color4<T> fromRgba32(uint32_t color) {
+    static constexpr Color4<T> fromRgba32(uint32_t color) {
       return fromRgba32(static_cast<uint8_t>(color >> 24), static_cast<uint8_t>(color >> 16), static_cast<uint8_t>(color >> 8), static_cast<uint8_t>(color));
     }
 
@@ -338,7 +338,7 @@ inline namespace v1 {
      * @param color A 32-bit color
      * @return The corresponding color
      */
-    static Color4<T> fromRgba32(Color4u color)  {
+    static constexpr Color4<T> fromRgba32(Color4u color)  {
       return fromRgba32(color.r, color.g, color.b, color.a);
     }
 
@@ -348,7 +348,7 @@ inline namespace v1 {
      * @param color A color
      * @return The corresponding 32-bit color
      */
-    static Color4u toRgba32(Color4<T> color) {
+    static constexpr Color4u toRgba32(Color4<T> color) {
       return {
         static_cast<uint8_t>(color.r * 255),
         static_cast<uint8_t>(color.g * 255),
