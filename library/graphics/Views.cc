@@ -32,7 +32,7 @@ inline namespace v1 {
    * StretchView
    */
 
-  void StretchView::onScreenSizeChange(Vector2u screenSize) {
+  void StretchView::onScreenSizeChange(Vector2i screenSize) {
     gf::unused(screenSize);
     // nothing to do
   }
@@ -42,7 +42,7 @@ inline namespace v1 {
    * FitView
    */
 
-  void FitView::onScreenSizeChange(Vector2u screenSize) {
+  void FitView::onScreenSizeChange(Vector2i screenSize) {
     m_localScreenSize = screenSize;
     updateView();
   }
@@ -94,7 +94,7 @@ inline namespace v1 {
    * FillView
    */
 
-  void FillView::onScreenSizeChange(Vector2u screenSize) {
+  void FillView::onScreenSizeChange(Vector2i screenSize) {
     m_localScreenSize = screenSize;
     updateView();
   }
@@ -133,7 +133,7 @@ inline namespace v1 {
    * ExtendView
    */
 
-  void ExtendView::onScreenSizeChange(Vector2u screenSize) {
+  void ExtendView::onScreenSizeChange(Vector2i screenSize) {
     m_localScreenSize = screenSize;
     updateView();
   }
@@ -171,7 +171,7 @@ inline namespace v1 {
    * LockedView
    */
 
-  void LockedView::onScreenSizeChange(Vector2u screenSize) {
+  void LockedView::onScreenSizeChange(Vector2i screenSize) {
     m_localScreenSize = screenSize;
     updateView();
   }
@@ -224,7 +224,7 @@ inline namespace v1 {
    * ScreenView
    */
 
-  void ScreenView::onScreenSizeChange(Vector2u screenSize) {
+  void ScreenView::onScreenSizeChange(Vector2i screenSize) {
     m_localScreenSize = screenSize;
     updateView();
   }

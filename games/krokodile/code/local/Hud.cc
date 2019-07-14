@@ -35,6 +35,9 @@ namespace kkd {
   : gf::Entity(10)
   , m_font(gResourceManager().getFont("Gravity-Regular.otf"))
   , m_texture(gTextureAtlas().getTexture())
+  , m_merges(0)
+  , m_energyRatio(0)
+  , m_lifeRatio(0)
   {
     // register message handler
     gMessageManager().registerHandler<KrokodileState>(&Hud::onKrokodileState, this);

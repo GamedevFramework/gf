@@ -153,7 +153,7 @@ inline namespace v1 {
      *
      * @sa loadFromImage()
      */
-    bool loadFromPixels(const uint8_t* pixels, Vector2u size, Vector2u hotspot);
+    bool loadFromPixels(const uint8_t* pixels, Vector2i size, Vector2i hotspot);
 
     /**
      * @brief Create a cursor from the provided image
@@ -164,7 +164,7 @@ inline namespace v1 {
      *
      * @sa loadFromPixels()
      */
-    bool loadFromImage(const Image& image, Vector2u hotspot);
+    bool loadFromImage(const Image& image, Vector2i hotspot);
 
     /**
      * @brief Create a native system cursor

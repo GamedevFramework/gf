@@ -39,7 +39,7 @@ inline namespace v1 {
   }
 
   Deserializer& operator|(Deserializer& ar, Time& time) {
-    int64_t amount;
+    int64_t amount = 0;
     ar | amount;
     time = gf::microseconds(amount);
     return ar;

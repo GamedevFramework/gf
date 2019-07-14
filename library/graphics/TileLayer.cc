@@ -36,16 +36,17 @@ inline namespace v1 {
 
   constexpr int TileLayer::NoTile;
 
-  TileLayer::TileLayer(Vector2u layerSize, Type type)
+  TileLayer::TileLayer(Vector2i layerSize, Type type)
   : m_type(type)
   , m_staggerIndex(StaggerIndex::Odd)
   , m_staggerAxis(StaggerAxis::Y)
   , m_layerSize(layerSize)
-  , m_blockSize(0, 0)
-  , m_texture(nullptr)
   , m_tileSize(0, 0)
+  , m_texture(nullptr)
+  , m_tilesetTileSize(0, 0)
   , m_margin(0, 0)
   , m_spacing(0, 0)
+  , m_offset(0, 0)
   , m_tiles(layerSize)
   , m_rect(0, 0, 0, 0)
   , m_vertices(PrimitiveType::Triangles)
@@ -61,42 +62,38 @@ inline namespace v1 {
     m_texture = nullptr;
   }
 
-  void TileLayer::setTileSize(Vector2u tileSize) {
-    m_tileSize = tileSize;
+  void TileLayer::setTilesetTileSize(Vector2i tileSize) {
+    m_tilesetTileSize = tileSize;
   }
 
-  void TileLayer::setMargin(Vector2u margin) {
+  void TileLayer::setMargin(Vector2i margin) {
     m_margin = margin;
   }
 
-  void TileLayer::setSpacing(Vector2u spacing) {
+  void TileLayer::setSpacing(Vector2i spacing) {
     m_spacing = spacing;
   }
 
-  void TileLayer::setBlockSize(Vector2u blockSize) {
-    m_blockSize = blockSize;
+  void TileLayer::setOffset(Vector2i offset) {
+    m_offset = offset;
   }
 
-  Vector2u TileLayer::getBlockSize() const {
-    if (m_blockSize.height == 0 && m_blockSize.width == 0) {
-      return m_tileSize;
-    }
-
-    return m_blockSize;
+  void TileLayer::setTileSize(Vector2i tileSize) {
+    m_tileSize = tileSize;
   }
 
-  void TileLayer::setTile(Vector2u position, int tile, Flags<Flip> flip) {
+  void TileLayer::setTile(Vector2i position, int tile, Flags<Flip> flip) {
     assert(m_tiles.isValid(position));
     m_tiles(position) = { tile, flip };
   }
 
-  int TileLayer::getTile(Vector2u position) const {
+  int TileLayer::getTile(Vector2i position) const {
     assert(m_tiles.isValid(position));
     return m_tiles(position).tile;
   }
 
 
-  Flags<Flip> TileLayer::getFlip(Vector2u position) const {
+  Flags<Flip> TileLayer::getFlip(Vector2i position) const {
     assert(m_tiles.isValid(position));
     return m_tiles(position).flip;
   }
@@ -109,7 +106,7 @@ inline namespace v1 {
   }
 
   RectF TileLayer::getLocalBounds() const {
-    return RectF({ 0.0f, 0.0f }, m_layerSize * m_blockSize);
+    return RectF({ 0.0f, 0.0f }, m_layerSize * m_tileSize);
   }
 
   void TileLayer::setAnchor(Anchor anchor) {
@@ -118,7 +115,7 @@ inline namespace v1 {
 
   VertexBuffer TileLayer::commitGeometry() const {
     VertexArray vertices(PrimitiveType::Triangles);
-    RectU rect({ 0u, 0u }, m_layerSize);
+    RectI rect({ 0u, 0u }, m_layerSize);
     fillVertexArray(vertices, rect);
 
     VertexBuffer buffer;
@@ -131,10 +128,10 @@ inline namespace v1 {
       return;
     }
 
-    gf::Vector2u blockSize = getBlockSize();
+    gf::Vector2i tileSize = m_tileSize;
 
     if (m_type == Staggered) {
-      blockSize.y /= 2;
+      tileSize.y /= 2;
     }
 
     // compute the viewable part of the layer
@@ -146,18 +143,18 @@ inline namespace v1 {
     size.width = size.height = gf::Sqrt2 * std::max(size.width, size.height);
 
     RectF world(center - size / 2, size);
-    RectF local = gf::transform(getInverseTransform(), world).grow(std::max(blockSize.width, blockSize.height));
+    RectF local = gf::transform(getInverseTransform(), world).grow(std::max(tileSize.width, tileSize.height));
 
-    RectF layer({ 0.0f, 0.0f }, m_layerSize * blockSize);
+    RectF layer({ 0.0f, 0.0f }, m_layerSize * tileSize);
 
-    RectU rect(0, 0, 0, 0);
+    RectI rect(0, 0, 0, 0);
     RectF intersection;
 
     if (local.intersects(layer, intersection)) {
-      rect.setPosition(intersection.getPosition() / blockSize + 0.5f);
-      rect.setSize(intersection.getSize() / blockSize + 0.5f);
+      rect.setPosition(intersection.getPosition() / tileSize + 0.5f);
+      rect.setSize(intersection.getSize() / tileSize + 0.5f);
 
-      rect.intersects(gf::RectU({ 0u, 0u }, m_layerSize - 1), rect);
+      rect.intersects(gf::RectI({ 0, 0 }, m_layerSize - 1), rect);
     }
 
     // build vertex array (if necessary)
@@ -179,19 +176,22 @@ inline namespace v1 {
   }
 
 
-  void TileLayer::fillVertexArray(VertexArray& array, RectU rect) const {
+  void TileLayer::fillVertexArray(VertexArray& array, RectI rect) const {
     array.reserve(static_cast<std::size_t>(rect.height) * static_cast<std::size_t>(rect.width) * 6);
 
-    Vector2u tilesetSize = (m_texture->getSize() - 2 * m_margin + m_spacing) / (m_tileSize + m_spacing);
-    Vector2u blockSize = getBlockSize();
+    gf::Vector2i tilesetTileSize = m_tilesetTileSize;
 
-//     gf::Log::info("block: %u,%u | tile: %u,%u\n", blockSize.x, blockSize.y, m_tileSize.x, m_tileSize.y);
+    if (tilesetTileSize.width == 0 || tilesetTileSize.height == 0) {
+      tilesetTileSize = m_tileSize;
+    }
 
-    Vector2u local;
+    Vector2i tilesetSize = (m_texture->getSize() - 2 * m_margin + m_spacing) / (tilesetTileSize + m_spacing);
+
+    Vector2i local;
 
     for (local.y = 0; local.y < rect.height; ++local.y) {
       for (local.x = 0; local.x < rect.width; ++local.x) {
-        Vector2u cell(rect.getPosition() + local);
+        Vector2i cell(rect.getPosition() + local);
 
         assert(m_tiles.isValid(cell));
         int tile = m_tiles(cell).tile;
@@ -207,32 +207,30 @@ inline namespace v1 {
         RectF position({ 0.0f, 0.0f }, { 0.0f, 0.0f });
 
         if (m_type == Orthogonal) {
-          position.setSize(blockSize);
-          position.setPosition(cell * blockSize);
+          position.setSize(m_tileSize);
+          position.setPosition(cell * m_tileSize + m_offset);
         } else {
           assert(m_type == Staggered);
-          position.setSize(m_tileSize);
+          position.setSize(tilesetTileSize);
 
           if (cell.y % 2 == 0) {
-            gf::Vector2f pos = cell * blockSize;
+            gf::Vector2f pos = cell * m_tileSize;
             pos.y /= 2;
-            pos -= (m_tileSize - blockSize);
-            position.setPosition(pos);
+            position.setPosition(pos + m_offset);
           } else {
-            gf::Vector2f pos = cell * blockSize;
+            gf::Vector2f pos = cell * m_tileSize;
             pos.y /= 2;
-            pos.x += blockSize.x / 2;
-            pos -= (m_tileSize - blockSize);
-            position.setPosition(pos);
+            pos.x += m_tileSize.width / 2;
+            position.setPosition(pos + m_offset);
           }
         }
 
         // texture coords
 
-        Vector2u tileCoords(tile % tilesetSize.width, tile / tilesetSize.width);
+        Vector2i tileCoords(tile % tilesetSize.width, tile / tilesetSize.width);
         assert(tileCoords.y < tilesetSize.height);
 
-        RectU textureRect(tileCoords * m_tileSize + tileCoords * m_spacing + m_margin, m_tileSize);
+        RectI textureRect(tileCoords * tilesetTileSize + tileCoords * m_spacing + m_margin, tilesetTileSize);
         RectF textureCoords = m_texture->computeTextureCoords(textureRect);
 
         // vertices

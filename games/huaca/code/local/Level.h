@@ -31,7 +31,7 @@ namespace huaca {
   class Roof : public gf::Entity {
   public:
     Roof();
-    void addRoof(gf::Vector2u coords);
+    void addRoof(gf::Vector2i coords);
     virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
   private:
     gf::VertexArray m_vertices;
@@ -39,9 +39,9 @@ namespace huaca {
 
 
   struct Item {
-    gf::Vector2u coords;
+    gf::Vector2i coords;
     gf::RectF bounds;
-    unsigned number;
+    int number;
   };
 
   struct Rune : public Item {
@@ -69,12 +69,12 @@ namespace huaca {
 
   class Level : public gf::Entity {
   public:
-    static constexpr unsigned TileSize = 256;
-    static constexpr unsigned BlockSize = 64;
+    static constexpr int TilesetTileSize = 256;
+    static constexpr int TileSize = 64;
 
-    static constexpr unsigned RuneCount = 4;
-    static constexpr unsigned KeyDoorCount = 4;
-    static constexpr unsigned PortalCount = 2;
+    static constexpr int RuneCount = 4;
+    static constexpr int KeyDoorCount = 4;
+    static constexpr int PortalCount = 2;
 
     Level();
 
@@ -92,7 +92,7 @@ namespace huaca {
     }
 
   private:
-    void generateRooms(gf::Random& random, unsigned xMin, unsigned xMax, unsigned yMin, unsigned yMax);
+    void generateRooms(gf::Random& random, int xMin, int xMax, int yMin, int yMax);
     void generateItems(gf::Random& random);
     void generateWorld(gf::Random& random);
 
@@ -104,7 +104,7 @@ namespace huaca {
     void clearSequence();
 
   private:
-    static constexpr unsigned MapSize = 40;
+    static constexpr int MapSize = 40;
 
     // raw world
 
@@ -122,17 +122,17 @@ namespace huaca {
 
     // items
 
-    gf::Vector2u m_heroCoords;
+    gf::Vector2i m_heroCoords;
 
     Rune m_runes[RuneCount];
-    unsigned m_runeOrder[RuneCount];
-    unsigned m_currentRune;
+    int m_runeOrder[RuneCount];
+    int m_currentRune;
 
     Key m_keys[KeyDoorCount];
     Door m_doors[KeyDoorCount];
     Portal m_portals[PortalCount];
 
-    unsigned m_currentPortal;
+    int m_currentPortal;
     bool m_isOnPortal;
 
     // display

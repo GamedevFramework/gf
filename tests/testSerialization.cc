@@ -88,7 +88,6 @@ TEST(SerialTest, Version) {
     gf::Deserializer ar(stream);
     EXPECT_EQ(ar.getVersion(), Version);
   }
-
 }
 
 TEST(SerialTest, Boolean) {
@@ -103,14 +102,13 @@ TEST(SerialTest, Boolean) {
   out = true;
   saveAndLoad(in, out);
   EXPECT_EQ(in, out);
-
 }
 
 TEST(SerialTest, Signed8) {
   int8_t tests[] = {
     0,
-    127,
-    -32,
+    -1,
+    1,
     INT8_MIN,
     INT8_MAX
   };
@@ -121,17 +119,13 @@ TEST(SerialTest, Signed8) {
     saveAndLoad(in, out);
     EXPECT_EQ(in, out);
   }
-
 }
 
 TEST(SerialTest, Signed16) {
   int16_t tests[] = {
     0,
-    127,
-    -32,
-    INT8_MIN,
-    INT8_MAX,
-    UINT8_MAX,
+    -1,
+    1,
     INT16_MIN,
     INT16_MAX
   };
@@ -142,20 +136,13 @@ TEST(SerialTest, Signed16) {
     saveAndLoad(in, out);
     EXPECT_EQ(in, out);
   }
-
 }
 
 TEST(SerialTest, Signed32) {
   int32_t tests[] = {
     0,
-    127,
-    -32,
-    INT8_MIN,
-    INT8_MAX,
-    UINT8_MAX,
-    INT16_MIN,
-    INT16_MAX,
-    UINT16_MAX,
+    -1,
+    1,
     INT32_MIN,
     INT32_MAX
   };
@@ -166,23 +153,13 @@ TEST(SerialTest, Signed32) {
     saveAndLoad(in, out);
     EXPECT_EQ(in, out);
   }
-
 }
 
 TEST(SerialTest, Signed64) {
   int64_t tests[] = {
     0,
-    127,
-    -32,
-    INT8_MIN,
-    INT8_MAX,
-    UINT8_MAX,
-    INT16_MIN,
-    INT16_MAX,
-    UINT16_MAX,
-    INT32_MIN,
-    INT32_MAX,
-    UINT32_MAX,
+    -1,
+    1,
     INT64_MIN,
     INT64_MAX
   };
@@ -193,13 +170,12 @@ TEST(SerialTest, Signed64) {
     saveAndLoad(in, out);
     EXPECT_EQ(in, out);
   }
-
 }
 
 TEST(SerialTest, Unsigned8) {
   uint8_t tests[] = {
     0,
-    127,
+    1,
     INT8_MAX,
     UINT8_MAX
   };
@@ -210,15 +186,12 @@ TEST(SerialTest, Unsigned8) {
     saveAndLoad(in, out);
     EXPECT_EQ(in, out);
   }
-
 }
 
 TEST(SerialTest, Unsigned16) {
   uint16_t tests[] = {
     0,
-    127,
-    INT8_MAX,
-    UINT8_MAX,
+    1,
     INT16_MAX,
     UINT16_MAX
   };
@@ -229,17 +202,12 @@ TEST(SerialTest, Unsigned16) {
     saveAndLoad(in, out);
     EXPECT_EQ(in, out);
   }
-
 }
 
 TEST(SerialTest, Unsigned32) {
   uint32_t tests[] = {
     0,
-    127,
-    INT8_MAX,
-    UINT8_MAX,
-    INT16_MAX,
-    UINT16_MAX,
+    1,
     INT32_MAX,
     UINT32_MAX
   };
@@ -250,19 +218,12 @@ TEST(SerialTest, Unsigned32) {
     saveAndLoad(in, out);
     EXPECT_EQ(in, out);
   }
-
 }
 
 TEST(SerialTest, Unsigned64) {
   uint64_t tests[] = {
     0,
-    127,
-    INT8_MAX,
-    UINT8_MAX,
-    INT16_MAX,
-    UINT16_MAX,
-    INT32_MAX,
-    UINT32_MAX,
+    1,
     INT64_MAX,
     UINT64_MAX
   };
@@ -273,7 +234,6 @@ TEST(SerialTest, Unsigned64) {
     saveAndLoad(in, out);
     EXPECT_EQ(in, out);
   }
-
 }
 
 TEST(SerialTest, Enum) {
@@ -295,7 +255,6 @@ TEST(SerialTest, Enum) {
     saveAndLoad(in, out);
     EXPECT_EQ(in, out);
   }
-
 }
 
 TEST(SerialTest, Float) {
@@ -313,7 +272,6 @@ TEST(SerialTest, Float) {
     EXPECT_FLOAT_EQ(in, out);
     EXPECT_EQ(in, out);
   }
-
 }
 
 TEST(SerialTest, Double) {
@@ -331,7 +289,6 @@ TEST(SerialTest, Double) {
     EXPECT_DOUBLE_EQ(in, out);
     EXPECT_EQ(in, out);
   }
-
 }
 
 TEST(SerialTest, String) {
@@ -370,7 +327,6 @@ TEST(SerialTest, String) {
 
   saveAndLoadString(in3, out3);
   EXPECT_TRUE(std::strcmp(in3, out3) == 0);
-
 }
 
 TEST(SerialTest, Binary) {
@@ -409,7 +365,6 @@ TEST(SerialTest, Binary) {
   for (int i = 0; i < 4; ++i) {
     EXPECT_EQ(in3[i], out3[i]);
   }
-
 }
 
 TEST(SerialTest, Array) {
@@ -458,7 +413,6 @@ TEST(SerialTest, Array) {
   for (int i = 0; i < 4; ++i) {
     EXPECT_EQ(in3[i], out3[i]);
   }
-
 }
 
 TEST(SerialTest, Set) {
@@ -533,7 +487,6 @@ TEST(SerialTest, Set) {
   for (int i = 0; i < 6; ++i) {
     EXPECT_EQ(tests2[i], out2bis[i]);
   }
-
 }
 
 TEST(SerialTest, Map) {
@@ -608,7 +561,6 @@ TEST(SerialTest, Map) {
   for (int i = 0; i < 6; ++i) {
     EXPECT_EQ(tests2[i], out2bis[i]);
   }
-
 }
 
 TEST(SerialTest, Vector) {

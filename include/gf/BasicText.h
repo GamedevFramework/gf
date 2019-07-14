@@ -41,6 +41,9 @@ inline namespace v1 {
 
   /**
    * @ingroup graphics
+   * @brief A basic text
+   *
+   * You should use gf::Text instead.
    *
    * @sa gf::Text
    */

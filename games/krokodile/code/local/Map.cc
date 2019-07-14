@@ -34,16 +34,16 @@ namespace kkd {
     m_layer.setTexture(m_texture);
     m_layer.setTileSize({ 64u, 64u });
 
-    gf::Heightmap heightmap({ static_cast<int>(Size), static_cast<int>(Size) });
+    gf::Heightmap heightmap({ Size, Size });
     heightmap.reset();
 
     gf::PerlinNoise2D noise(gRandom(), 2);
     heightmap.addNoise(noise);
     heightmap.normalize();
 
-    for (unsigned y = 0; y < Size; ++y) {
-      for (unsigned x = 0; x < Size; ++x) {
-        double value = heightmap.getValue({ static_cast<int>(x), static_cast<int>(y) });
+    for (int y = 0; y < Size; ++y) {
+      for (int x = 0; x < Size; ++x) {
+        double value = heightmap.getValue({ x, y });
         assert(0.0 <= value && value <= 1.0);
         int tile = static_cast<int>(value * 3.999999);
         assert(0 <= tile && tile <= 3);

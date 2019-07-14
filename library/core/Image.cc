@@ -73,7 +73,7 @@ inline namespace v1 {
 
   }
 
-  void Image::create(Vector2u size, const Color4u& color) {
+  void Image::create(Vector2i size, const Color4u& color) {
     if (size.width == 0 || size.height == 0) {
       m_size = { 0, 0 };
       m_pixels.clear();
@@ -85,15 +85,15 @@ inline namespace v1 {
 
     uint8_t *ptr = m_pixels.data();
 
-    for (unsigned y = 0; y < size.height; ++y) {
-      for (unsigned x = 0; x < size.width; ++x) {
+    for (int y = 0; y < size.height; ++y) {
+      for (int x = 0; x < size.width; ++x) {
         std::copy_n(color.begin(), 4, ptr);
         ptr += 4;
       }
     }
   }
 
-  void Image::create(Vector2u size, const uint8_t* pixels) {
+  void Image::create(Vector2i size, const uint8_t* pixels) {
     if (size.width == 0 || size.height == 0) {
       m_size = { 0, 0 };
       m_pixels.clear();
@@ -106,7 +106,7 @@ inline namespace v1 {
     std::copy_n(pixels, m_pixels.size(), m_pixels.data());
   }
 
-  void Image::createRGB(Vector2u size, const uint8_t* pixels) {
+  void Image::createRGB(Vector2i size, const uint8_t* pixels) {
     if (size.width == 0 || size.height == 0) {
       m_size = { 0, 0 };
       m_pixels.clear();
@@ -118,8 +118,8 @@ inline namespace v1 {
 
     uint8_t *ptr = m_pixels.data();
 
-    for (unsigned y = 0; y < size.height; ++y) {
-      for (unsigned x = 0; x < size.width; ++x) {
+    for (int y = 0; y < size.height; ++y) {
+      for (int x = 0; x < size.width; ++x) {
         std::copy_n(pixels, 3, ptr);
         ptr[3] = 0xFF; // set alpha to max (opaque)
 
@@ -130,20 +130,15 @@ inline namespace v1 {
   }
 
   bool Image::loadFromFile(const Path& filename) {
-    int width = 0;
-    int height = 0;
+    Vector2i size = { 0, 0 };
     int n = 0;
 
-    uint8_t *ptr = stbi_load(filename.string().c_str(), &width, &height, &n, STBI_rgb_alpha);
+    uint8_t *ptr = stbi_load(filename.string().c_str(), &size.width, &size.height, &n, STBI_rgb_alpha);
 
-    if (width == 0 || height == 0 || ptr == nullptr) {
+    if (size.width == 0 || size.height == 0 || ptr == nullptr) {
       Log::warning("Could not load image from file '%s': %s\n", filename.c_str(), stbi_failure_reason());
       return false;
     }
-
-    Vector2u size;
-    size.width = width;
-    size.height = height;
 
     create(size, ptr);
     stbi_image_free(ptr);
@@ -152,20 +147,15 @@ inline namespace v1 {
   }
 
   bool Image::loadFromMemory(const uint8_t* data, std::size_t length) {
-    int width = 0;
-    int height = 0;
+    Vector2i size = { 0, 0 };
     int n = 0;
 
-    uint8_t *ptr = stbi_load_from_memory(data, length, &width, &height, &n, STBI_rgb_alpha);
+    uint8_t *ptr = stbi_load_from_memory(data, length, &size.width, &size.height, &n, STBI_rgb_alpha);
 
-    if (width == 0 || height == 0 || ptr == nullptr) {
+    if (size.width == 0 || size.height == 0 || ptr == nullptr) {
       Log::warning("Could not load image from memory: %s\n", stbi_failure_reason());
       return false;
     }
-
-    Vector2u size;
-    size.width = width;
-    size.height = height;
 
     create(size, ptr);
     stbi_image_free(ptr);
@@ -179,20 +169,15 @@ inline namespace v1 {
     callbacks.skip = &callbackSkip;
     callbacks.eof  = &callbackEof;
 
-    int width = 0;
-    int height = 0;
+    Vector2i size = { 0, 0 };
     int n = 0;
 
-    uint8_t *ptr = stbi_load_from_callbacks(&callbacks, &stream, &width, &height, &n, STBI_rgb_alpha);
+    uint8_t *ptr = stbi_load_from_callbacks(&callbacks, &stream, &size.width, &size.height, &n, STBI_rgb_alpha);
 
-    if (width == 0 || height == 0 || ptr == nullptr) {
+    if (size.width == 0 || size.height == 0 || ptr == nullptr) {
       Log::warning("Could not load image from stream: %s\n", stbi_failure_reason());
       return false;
     }
-
-    Vector2u size;
-    size.width = width;
-    size.height = height;
 
     create(size, ptr);
     stbi_image_free(ptr);
@@ -231,7 +216,7 @@ inline namespace v1 {
     return false;
   }
 
-  Vector2u Image::getSize() const {
+  Vector2i Image::getSize() const {
     return m_size;
   }
 
@@ -242,8 +227,8 @@ inline namespace v1 {
 
     uint8_t *ptr = m_pixels.data();
 
-    for (unsigned y = 0; y < m_size.height; ++y) {
-      for (unsigned x = 0; x < m_size.width; ++x) {
+    for (int y = 0; y < m_size.height; ++y) {
+      for (int x = 0; x < m_size.width; ++x) {
         if (ptr[0] == color.r && ptr[1] == color.g && ptr[2] == color.b && ptr[3] == color.a) {
           ptr[3] = alpha;
         }
@@ -253,8 +238,8 @@ inline namespace v1 {
     }
   }
 
-  void Image::setPixel(Vector2u pos, const Color4u& color) {
-    if (pos.x >= m_size.width || pos.y >= m_size.height) {
+  void Image::setPixel(Vector2i pos, const Color4u& color) {
+    if (pos.x < 0 || pos.x >= m_size.width || pos.y < 0 || pos.y >= m_size.height) {
       return;
     }
 
@@ -265,8 +250,8 @@ inline namespace v1 {
     ptr[3] = color.a;
   }
 
-  Color4u Image::getPixel(Vector2u pos) const {
-    if (pos.x >= m_size.width || pos.y >= m_size.height) {
+  Color4u Image::getPixel(Vector2i pos) const {
+    if (pos.x < 0 || pos.x >= m_size.width || pos.y < 0 || pos.y >= m_size.height) {
       return Color4u{0x00, 0x00, 0x00, 0x00};
     }
 
@@ -292,7 +277,7 @@ inline namespace v1 {
     uint8_t *src = &m_pixels[0];
     uint8_t *dst = src + (m_size.height - 1) * stride;
 
-    for (unsigned i = 0; i < m_size.height / 2; ++i) {
+    for (int i = 0; i < m_size.height / 2; ++i) {
       std::swap_ranges(src, src + stride, dst);
       src += stride;
       dst -= stride;

@@ -100,7 +100,7 @@ inline namespace v1 {
      * @param hints Some hints for the creation of the window
      * @sa gf::WindowHints
      */
-    Window(StringRef title, Vector2u size, WindowFlags hints = WindowFlags(All));
+    Window(StringRef title, Vector2i size, WindowFlags hints = WindowFlags(All));
 
     /**
      * @brief Destructor
@@ -178,7 +178,7 @@ inline namespace v1 {
      * @return The size in pixels
      * @sa setSize(), getFramebufferSize()
      */
-    Vector2u getSize() const;
+    Vector2i getSize() const;
 
     /**
      * @brief Change the size of the rendering region of the window
@@ -186,7 +186,7 @@ inline namespace v1 {
      * @param size New size, in pixels
      * @sa getSize(), getFramebufferSize()
      */
-    void setSize(Vector2u size);
+    void setSize(Vector2i size);
 
     /**
      * @brief Get the size of the underlying framebuffer
@@ -195,7 +195,7 @@ inline namespace v1 {
      *
      * @return getSize(), setSize()
      */
-    Vector2u getFramebufferSize() const;
+    Vector2i getFramebufferSize() const;
 
     /**
      * @brief Change the window state to fullscreen or not

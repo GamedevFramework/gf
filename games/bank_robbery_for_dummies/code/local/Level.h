@@ -34,8 +34,8 @@ namespace brfd {
 
   class Level : public gf::Entity {
   public:
-    static constexpr unsigned StreetCount = 15;
-    static constexpr unsigned Size = StreetCount * 3;
+    static constexpr int StreetCount = 15;
+    static constexpr int Size = StreetCount * 3;
 
     Level(gf::ResourceManager& resources);
 
@@ -79,13 +79,13 @@ namespace brfd {
   private:
     gf::TileLayer m_layer;
 
-    gf::Vector2f m_partner;
-    gf::Vector2f m_clothingStore;
-    gf::Vector2f m_gunStore;
-    gf::Vector2f m_rocketStore;
-    gf::Vector2f m_bank;
-    gf::Vector2f m_home;
-    float m_homeStartingAngle;
+    gf::Vector2f m_partner = { 0.0f, 0.0f };
+    gf::Vector2f m_clothingStore = { 0.0f, 0.0f };
+    gf::Vector2f m_gunStore = { 0.0f, 0.0f };
+    gf::Vector2f m_rocketStore = { 0.0f, 0.0f };
+    gf::Vector2f m_bank = { 0.0f, 0.0f };
+    gf::Vector2f m_home = { 0.0f, 0.0f };
+    float m_homeStartingAngle = 0.0f;
 
     gf::Texture& m_carTexture;
     gf::PolygonGeometry m_carGeometry;

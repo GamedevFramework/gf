@@ -163,6 +163,58 @@ inline namespace v1 {
 #undef ENUM_CHECK
 #undef FLAG_CHECK
 
+  /*
+   * UICharBuffer
+   */
+
+  UICharBuffer::UICharBuffer(std::size_t capacity)
+  : m_data(capacity > 0 ? new char[capacity] : nullptr)
+  , m_length(0)
+  , m_capacity(capacity)
+  {
+  }
+
+  UICharBuffer::~UICharBuffer() {
+    delete [] m_data;
+  }
+
+  UICharBuffer::UICharBuffer(UICharBuffer&& other) noexcept
+  : m_data(std::exchange(other.m_data, nullptr))
+  , m_length(std::exchange(other.m_length, 0))
+  , m_capacity(std::exchange(other.m_capacity, 0))
+  {
+  }
+
+  UICharBuffer& UICharBuffer::operator=(UICharBuffer&& other) noexcept {
+    std::swap(m_data, other.m_data);
+    std::swap(m_length, other.m_length);
+    std::swap(m_capacity, other.m_capacity);
+    return *this;
+  }
+
+  void UICharBuffer::clear() {
+    m_length = 0;
+  }
+
+  void UICharBuffer::append(const UICharBuffer& other) {
+    if (other.m_length == 0) {
+      return;
+    }
+
+    if (m_length + other.m_length > m_capacity) {
+      std::size_t capacity = m_capacity + other.m_capacity;
+      char *data = new char[capacity];
+      std::copy(m_data, m_data + m_length, data);
+      delete [] m_data;
+      m_data = data;
+      m_capacity = capacity;
+    }
+
+    std::copy(other.m_data, other.m_data + other.m_length, m_data + m_length);
+    m_length += other.m_length;
+  }
+
+
   namespace {
 
     float getTextWidth(nk_handle handle, float characterSize, const char *text, int len) {
@@ -270,6 +322,128 @@ inline namespace v1 {
 
   UI& UI::operator=(UI&&) noexcept = default;
 
+  namespace {
+
+    void handleKeyboard(nk_context* ctx, const Event::KeyEvent& key, int down) {
+      switch (key.keycode) {
+        case Keycode::LeftShift:
+        case Keycode::RightShift:
+          nk_input_key(ctx, NK_KEY_SHIFT, down);
+          break;
+
+        case Keycode::LeftCtrl:
+        case Keycode::RightCtrl:
+          nk_input_key(ctx, NK_KEY_CTRL, down);
+          break;
+
+        case Keycode::Delete:
+          nk_input_key(ctx, NK_KEY_DEL, down);
+          break;
+
+        case Keycode::Return:
+          nk_input_key(ctx, NK_KEY_ENTER, down);
+          break;
+
+        case Keycode::Tab:
+          nk_input_key(ctx, NK_KEY_TAB, down);
+          break;
+
+        case Keycode::Backspace:
+          nk_input_key(ctx, NK_KEY_BACKSPACE, down);
+          break;
+
+        case Keycode::Up:
+          nk_input_key(ctx, NK_KEY_UP, down);
+          break;
+
+        case Keycode::Down:
+          nk_input_key(ctx, NK_KEY_DOWN, down);
+          break;
+
+        case Keycode::Left:
+          nk_input_key(ctx, NK_KEY_LEFT, down);
+          break;
+
+        case Keycode::Right:
+          nk_input_key(ctx, NK_KEY_RIGHT, down);
+          break;
+
+        case Keycode::Home:
+          nk_input_key(ctx, NK_KEY_TEXT_START, down);
+          nk_input_key(ctx, NK_KEY_SCROLL_START, down);
+          break;
+
+        case Keycode::End:
+          nk_input_key(ctx, NK_KEY_TEXT_END, down);
+          nk_input_key(ctx, NK_KEY_SCROLL_END, down);
+          break;
+
+        case Keycode::PageUp:
+          nk_input_key(ctx, NK_KEY_SCROLL_UP, down);
+          break;
+
+        case Keycode::PageDown:
+          nk_input_key(ctx, NK_KEY_SCROLL_DOWN, down);
+          break;
+
+        default:
+          // nothing to do
+          break;
+      }
+    }
+
+    void handleKeyboardWithControl(nk_context* ctx, const Event::KeyEvent& key, int down) {
+      assert(key.modifiers.test(Mod::Control));
+
+      switch (key.keycode) {
+        case Keycode::Left:
+          nk_input_key(ctx, NK_KEY_TEXT_WORD_LEFT, down);
+          break;
+
+        case Keycode::Right:
+          nk_input_key(ctx, NK_KEY_TEXT_WORD_RIGHT, down);
+          break;
+
+        case Keycode::A:
+          nk_input_key(ctx, NK_KEY_TEXT_SELECT_ALL, down);
+          break;
+
+        case Keycode::C:
+          nk_input_key(ctx, NK_KEY_COPY, down);
+          break;
+
+        case Keycode::X:
+          nk_input_key(ctx, NK_KEY_CUT, down);
+          break;
+
+        case Keycode::V:
+          nk_input_key(ctx, NK_KEY_PASTE, down);
+          break;
+
+        case Keycode::B:
+          nk_input_key(ctx, NK_KEY_TEXT_LINE_START, down);
+          break;
+
+        case Keycode::E:
+          nk_input_key(ctx, NK_KEY_TEXT_LINE_END, down);
+          break;
+
+        case Keycode::Z:
+          nk_input_key(ctx, NK_KEY_TEXT_UNDO, down);
+          break;
+
+        case Keycode::R:
+          nk_input_key(ctx, NK_KEY_TEXT_REDO, down);
+          break;
+
+        default:
+          // nothing to do
+          break;
+      }
+    }
+
+  }
+
   void UI::processEvent(const Event& event) {
     setState(State::Input);
 
@@ -311,128 +485,11 @@ inline namespace v1 {
       {
         int down = static_cast<int>(event.type == EventType::KeyPressed);
 
-        switch (event.key.keycode) {
-          case Keycode::LeftShift:
-          case Keycode::RightShift:
-            nk_input_key(&m_impl->ctx, NK_KEY_SHIFT, down);
-            break;
-
-          case Keycode::LeftCtrl:
-          case Keycode::RightCtrl:
-            nk_input_key(&m_impl->ctx, NK_KEY_CTRL, down);
-            break;
-
-          case Keycode::Delete:
-            nk_input_key(&m_impl->ctx, NK_KEY_DEL, down);
-            break;
-
-          case Keycode::Return:
-            nk_input_key(&m_impl->ctx, NK_KEY_ENTER, down);
-            break;
-
-          case Keycode::Tab:
-            nk_input_key(&m_impl->ctx, NK_KEY_TAB, down);
-            break;
-
-          case Keycode::Backspace:
-            nk_input_key(&m_impl->ctx, NK_KEY_BACKSPACE, down);
-            break;
-
-          case Keycode::Up:
-            nk_input_key(&m_impl->ctx, NK_KEY_UP, down);
-            break;
-
-          case Keycode::Down:
-            nk_input_key(&m_impl->ctx, NK_KEY_DOWN, down);
-            break;
-
-          case Keycode::Left:
-            if (event.key.modifiers.test(Mod::Control)) {
-              nk_input_key(&m_impl->ctx, NK_KEY_TEXT_WORD_LEFT, down);
-            } else {
-              nk_input_key(&m_impl->ctx, NK_KEY_LEFT, down);
-            }
-            break;
-
-          case Keycode::Right:
-            if (event.key.modifiers.test(Mod::Control)) {
-              nk_input_key(&m_impl->ctx, NK_KEY_TEXT_WORD_RIGHT, down);
-            } else {
-              nk_input_key(&m_impl->ctx, NK_KEY_RIGHT, down);
-            }
-            break;
-
-          case Keycode::Home:
-            nk_input_key(&m_impl->ctx, NK_KEY_TEXT_START, down);
-            nk_input_key(&m_impl->ctx, NK_KEY_SCROLL_START, down);
-            break;
-
-          case Keycode::End:
-            nk_input_key(&m_impl->ctx, NK_KEY_TEXT_END, down);
-            nk_input_key(&m_impl->ctx, NK_KEY_SCROLL_END, down);
-            break;
-
-          case Keycode::PageUp:
-            nk_input_key(&m_impl->ctx, NK_KEY_SCROLL_UP, down);
-            break;
-
-          case Keycode::PageDown:
-            nk_input_key(&m_impl->ctx, NK_KEY_SCROLL_DOWN, down);
-            break;
-
-          case Keycode::A:
-            if (event.key.modifiers.test(Mod::Control)) {
-              nk_input_key(&m_impl->ctx, NK_KEY_TEXT_SELECT_ALL, down);
-            }
-            break;
-
-          case Keycode::C:
-            if (event.key.modifiers.test(Mod::Control)) {
-              nk_input_key(&m_impl->ctx, NK_KEY_COPY, down);
-            }
-            break;
-
-          case Keycode::X:
-            if (event.key.modifiers.test(Mod::Control)) {
-              nk_input_key(&m_impl->ctx, NK_KEY_CUT, down);
-            }
-            break;
-
-          case Keycode::V:
-            if (event.key.modifiers.test(Mod::Control)) {
-              nk_input_key(&m_impl->ctx, NK_KEY_PASTE, down);
-            }
-            break;
-
-          case Keycode::B:
-            if (event.key.modifiers.test(Mod::Control)) {
-              nk_input_key(&m_impl->ctx, NK_KEY_TEXT_LINE_START, down);
-            }
-            break;
-
-          case Keycode::E:
-            if (event.key.modifiers.test(Mod::Control)) {
-              nk_input_key(&m_impl->ctx, NK_KEY_TEXT_LINE_END, down);
-            }
-            break;
-
-          case Keycode::Z:
-            if (event.key.modifiers.test(Mod::Control)) {
-              nk_input_key(&m_impl->ctx, NK_KEY_TEXT_UNDO, down);
-            }
-            break;
-
-          case Keycode::R:
-            if (event.key.modifiers.test(Mod::Control)) {
-              nk_input_key(&m_impl->ctx, NK_KEY_TEXT_REDO, down);
-            }
-            break;
-
-          default:
-            // nothing to do
-            break;
+        if (event.key.modifiers.test(Mod::Control)) {
+          handleKeyboardWithControl(&m_impl->ctx, event.key, down);
+        } else {
+          handleKeyboard(&m_impl->ctx, event.key, down);
         }
-
         break;
       }
 
@@ -446,7 +503,6 @@ inline namespace v1 {
       default:
         break;
     }
-
   }
 
   void UI::setCharacterSize(unsigned characterSize) {
@@ -574,8 +630,8 @@ inline namespace v1 {
     image.w = size.width;
     image.h = size.height;
 
-    Vector2u topLeft = size * textureRect.getTopLeft();
-    Vector2u bottomRight = size * textureRect.getBottomRight();
+    Vector2i topLeft = size * textureRect.getTopLeft();
+    Vector2i bottomRight = size * textureRect.getBottomRight();
     image.region[0] = topLeft.x;
     image.region[1] = topLeft.y;
     image.region[2] = bottomRight.x;
@@ -738,11 +794,11 @@ inline namespace v1 {
       UIEdit::Clipboard
   );
 
-  UIEditEventFlags UI::edit(UIEditFlags flags, BufferRef<char> buffer, std::size_t& length, UIEditFilter filter) {
+  UIEditEventFlags UI::edit(UIEditFlags flags, UICharBuffer& buffer, UIEditFilter filter) {
     setState(State::Setup);
-    int len = length;
-    nk_flags ret = nk_edit_string(&m_impl->ctx, flags.getValue(), buffer.getData(), &len, buffer.getSize(), getPluginFilter(filter));
-    length = len;
+    int length = buffer.m_length;
+    nk_flags ret = nk_edit_string(&m_impl->ctx, flags.getValue(), buffer.m_data, &length, buffer.m_capacity, getPluginFilter(filter));
+    buffer.m_length = length;
     return static_cast<UIEditEvent>(ret);
   }
 
@@ -752,7 +808,6 @@ inline namespace v1 {
       DirectoryRange(const Path& directory)
       : path(directory)
       {
-
       }
 
       boost::filesystem::directory_iterator begin() const {
@@ -1208,66 +1263,32 @@ inline namespace v1 {
   }
 
   void UI::setState(State state) {
+    assert(state != State::Start);
+
     if (m_impl->state == state) {
       return;
     }
 
-    switch (m_impl->state) {
-      case State::Start:
-        switch (state) {
-          case State::Input:
-            nk_input_begin(&m_impl->ctx);
-            break;
-
-          case State::Setup:
-          case State::Draw:
-            nk_input_begin(&m_impl->ctx);
-            nk_input_end(&m_impl->ctx);
-            break;
-
-          case State::Start:
-            assert(false);
-            break;
-        }
-        break;
-
-      case State::Input:
-        switch (state) {
-          case State::Setup:
-            nk_input_end(&m_impl->ctx);
-            break;
-
-          default:
-            assert(false && "TODO");
-            break;
-        }
-
-      case State::Setup:
-        break;
-
-      case State::Draw:
-        switch (state) {
-          case State::Input:
-            nk_clear(&m_impl->ctx);
-            nk_input_begin(&m_impl->ctx);
-            break;
-
-          case State::Setup:
-            nk_clear(&m_impl->ctx);
-            nk_input_begin(&m_impl->ctx);
-            nk_input_end(&m_impl->ctx);
-            break;
-
-          default:
-            assert(false && "TODO");
-            break;
-        }
-        break;
-
-
+    while (m_impl->state != state) {
+      switch (m_impl->state) {
+        case State::Start:
+          nk_input_begin(&m_impl->ctx);
+          m_impl->state = State::Input;
+          break;
+        case State::Input:
+          nk_input_end(&m_impl->ctx);
+          m_impl->state = State::Setup;
+          break;
+        case State::Setup:
+          m_impl->state = State::Draw;
+          break;
+        case State::Draw:
+          nk_clear(&m_impl->ctx);
+          nk_input_begin(&m_impl->ctx);
+          m_impl->state = State::Input;
+          break;
+      }
     }
-
-    m_impl->state = state;
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

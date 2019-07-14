@@ -44,7 +44,7 @@ namespace huaca {
     gf::Texture& texture = gResourceManager().getTexture(path);
     texture.setSmooth();
 
-    for (unsigned i = 0; i < 12; ++i) {
+    for (int i = 0; i < 12; ++i) {
       animation.addFrame(texture, { (i % 4) / 4.0f, (i / 4) / 3.0f, 1.0f / 4.0f, 1.0f / 3.0f }, FrameTime);
     }
   }
@@ -77,16 +77,16 @@ namespace huaca {
 
   void Hero::dropPortal() {
     PortalDroppedMessage msg;
-    msg.position = m_position + gf::Vector2f(0.0f, Level::BlockSize / 3); // HACK
+    msg.position = m_position + gf::Vector2f(0.0f, Level::TileSize / 3); // HACK
     gMessageManager().sendMessage(&msg);
   }
 
   static gf::RectF boundsFromPosition(gf::Vector2f position) {
     gf::RectF bounds;
-    bounds.left = position.x - Level::BlockSize / 4 - 2; // some magic
-    bounds.top = position.y + Level::BlockSize / 12; // here too
-    bounds.width = Level::BlockSize / 2;
-    bounds.height = Level::BlockSize / 2;
+    bounds.left = position.x - Level::TileSize / 4 - 2; // some magic
+    bounds.top = position.y + Level::TileSize / 12; // here too
+    bounds.width = Level::TileSize / 2;
+    bounds.height = Level::TileSize / 2;
     return bounds;
   }
 
@@ -127,7 +127,7 @@ namespace huaca {
   void Hero::render(gf::RenderTarget& target, const gf::RenderStates& states) {
     gf::AnimatedSprite sprite;
     sprite.setAnimation(*m_currentAnimation);
-    sprite.setScale(Level::BlockSize / TextureSize);
+    sprite.setScale(Level::TileSize / TextureSize);
     sprite.setPosition(m_position);
     sprite.setAnchor(gf::Anchor::Center);
     target.draw(sprite, states);

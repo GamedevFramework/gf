@@ -29,6 +29,8 @@
 #include <gf/Event.h>
 #include <gf/Log.h>
 
+#define GF_IMPLEMENTATION
+
 // see also data/generated.cc
 #if SDL_VERSION_ATLEAST(2,0,6)
 #include "generated/gamecontrollerdb.txt.h"
@@ -204,7 +206,7 @@ inline namespace v1 {
       return;
     }
 
-    int added = SDL_GameControllerAddMappingsFromRW(SDL_RWFromConstMem(gamecontrollerdb, std::strlen(gamecontrollerdb)), 1);
+    int added = SDL_GameControllerAddMappingsFromRW(SDL_RWFromConstMem(gamecontrollerdb, sizeof gamecontrollerdb), 1);
 
     if (added == -1) {
       Log::error("Unable to load game controller mappings: '%s'\n", SDL_GetError());

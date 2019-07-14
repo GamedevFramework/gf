@@ -49,21 +49,22 @@ namespace home {
 
         gf::Log::info("Parsing layer '%s'\n", layer.name.c_str());
 
-        tileLayer.setBlockSize(map.tileSize);
+        tileLayer.setTileSize(map.tileSize);
 
-        unsigned k = 0;
+        int k = 0;
 
         for (auto& cell : layer.cells) {
-          unsigned i = k % map.mapSize.width;
-          unsigned j = k / map.mapSize.width;
+          int i = k % map.mapSize.width;
+          int j = k / map.mapSize.width;
           assert(j < map.mapSize.height);
 
-          unsigned gid = cell.gid;
+          int gid = cell.gid;
 
           if (gid != 0) {
             auto tileset = map.getTileSetFromGID(gid);
             assert(tileset);
-            tileLayer.setTileSize(tileset->tileSize);
+            tileLayer.setTilesetTileSize(tileset->tileSize);
+            tileLayer.setOffset(tileset->offset);
 
             gid = gid - tileset->firstGid;
             tileLayer.setTile({ i, j }, gid, cell.flip);

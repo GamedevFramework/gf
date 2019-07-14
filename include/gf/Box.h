@@ -30,6 +30,7 @@
 #include <tuple>
 
 #include "Portability.h"
+#include "Quarter.h"
 #include "Vector.h"
 #include "VectorOps.h"
 
@@ -153,7 +154,7 @@ inline namespace v1 {
       return res;
     }
 
-    T getIntersectionExtentDistance(const Box<T, N>& other) const noexcept {
+    T getIntersectionExtentLength(const Box<T, N>& other) const noexcept {
       T res = 0;
 
       for (std::size_t i = 0; i < N; ++i) {
@@ -209,7 +210,7 @@ inline namespace v1 {
       return volume;
     }
 
-    constexpr T getExtentDistance() const noexcept {
+    constexpr T getExtentLength() const noexcept {
       T distance = 0;
 
       for (std::size_t i = 0; i < N; ++i) {
@@ -241,68 +242,78 @@ inline namespace v1 {
     }
   };
 
+  /**
+   * @ingroup core
+   * @brief A box of dimension 2 with `float`
+   */
   using Box2f = Box<float, 2>;
+
+  /**
+   * @ingroup core
+   * @brief A box of dimension 3 with `float`
+   */
   using Box3f = Box<float, 3>;
 
+  /**
+   * @ingroup core
+   * @brief A box of dimension 2 with `int`
+   */
   using Box2i = Box<int, 2>;
+
+  /**
+   * @ingroup core
+   * @brief A box of dimension 3 with `int`
+   */
   using Box3i = Box<int, 3>;
 
+  /**
+   * @ingroup core
+   * @brief A box of dimension 2 with `unsigned`
+   */
   using Box2u = Box<unsigned, 2>;
+
+  /**
+   * @ingroup core
+   * @brief A box of dimension 3 with `unsigned`
+   */
   using Box3u = Box<unsigned, 3>;
 
 
-  enum Quadrant {
-    UpperLeft,
-    UpperRight,
-    LowerRight,
-    LowerLeft,
-  };
-
+  /**
+   * @ingroup core
+   * @brief Divide a box in quarters
+   *
+   * @param box The box to divide
+   * @param quarter The quarter to compute
+   */
   template<typename T>
-  inline
-  Box<T, 2> computeBoxQuadrant(const Box<T, 2>& box, Quadrant quadrant) {
+  constexpr
+  Box<T, 2> computeBoxQuarter(const Box<T, 2>& box, Quarter quarter) {
     Vector<T, 2> size = (box.max - box.min) / 2;
 
-    switch (quadrant) {
-      case Quadrant::UpperLeft:
+    switch (quarter) {
+      case Quarter::UpperLeft:
         return Box<T,2>(box.min, box.max - size);
-      case Quadrant::UpperRight:
+      case Quarter::UpperRight:
         return Box<T,2>({ box.min.x + size.width, box.min.y }, { box.max.x, box.max.y - size.height });
-      case Quadrant::LowerRight:
+      case Quarter::LowerRight:
         return Box<T,2>(box.min + size, box.max);
-      case Quadrant::LowerLeft:
+      case Quarter::LowerLeft:
         return Box<T,2>({ box.min.x, box.min.y + size.height }, { box.max.x - size.width, box.max.y });
     }
 
     return box;
   }
 
+  /**
+   * @relates Box
+   * @brief Equality operator
+   */
   template<typename T, std::size_t N>
   constexpr
   bool operator==(const Box<T, N>& lhs, const Box<T, N>& rhs) {
     return lhs.min == rhs.min && lhs.max == rhs.max;
   }
-
-//   template<typename T, std::size_t N>
-//   constexpr
-//   Box<T, N> extension(const Box<T, N>& lhs, const Box<T, N>& rhs) {
-//     Box<T, N> res(lhs);
-//     res.extend(rhs);
-//     return res;
-//   }
-//
-//   template<typename T, std::size_t N>
-//   constexpr
-//   Box<T, N> operator+(const Box<T, N>& lhs, const Box<T, N>& rhs) {
-//     return extension(lhs, rhs);
-//   }
-//
-//   template<typename T, std::size_t N>
-//   constexpr
-//   Box<T, N>& operator+=(Box<T, N> lhs, const Box<T, N>& rhs) {
-//     lhs.extend(rhs);
-//     return lhs;
-//   }
 
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

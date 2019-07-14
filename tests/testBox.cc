@@ -165,8 +165,8 @@ TEST(BoxTest, Volume) {
   EXPECT_EQ(150, box.getVolume());
 }
 
-TEST(BoxTest, ExtentDistance) {
+TEST(BoxTest, ExtentLength) {
   gf::Box2i box({ 0, 5 }, { 10, 20 });
 
-  EXPECT_EQ(25, box.getExtentDistance());
+  EXPECT_EQ(25, box.getExtentLength());
 }

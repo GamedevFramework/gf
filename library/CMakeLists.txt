@@ -171,6 +171,8 @@ else()
     graphics/RenderTexture.cc
     graphics/RenderWindow.cc
     graphics/ResourceManager.cc
+    graphics/Scene.cc
+    graphics/SceneManager.cc
     graphics/Shader.cc
     graphics/Shape.cc
     graphics/Shapes.cc

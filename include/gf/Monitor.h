@@ -39,7 +39,7 @@ inline namespace v1 {
    *
    */
   struct GF_API VideoMode {
-    Vector2u size; ///< Video mode size, in pixels
+    Vector2i size; ///< Video mode size, in pixels
     unsigned bitsPerPixel; ///< Video mode pixel depth, in bits per pixel
     int refreshRate; ///< Video mode refresh rate, in Hz
   };
@@ -101,7 +101,7 @@ inline namespace v1 {
      *
      * @return The physical size of the monitor
      */
-    Vector2u getPhysicalSize() const;
+    Vector2i getPhysicalSize() const;
 
     /**
      * @brief Get the available video modes for this monitor

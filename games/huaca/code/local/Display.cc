@@ -114,8 +114,8 @@ namespace huaca {
 
     position = coordinates.getAbsolutePoint({ HudPadding, HudRuneSize + HudRuneSpace + HudRuneSize + HudPadding }, gf::Anchor::BottomLeft);
 
-    for (unsigned i = 0; i < 2; ++i) {
-      for (unsigned j = 0; j < 2; ++j) {
+    for (int i = 0; i < 2; ++i) {
+      for (int j = 0; j < 2; ++j) {
         const auto& rune = m_runes[i * 2 + j];
 
         gf::Sprite sprite;

@@ -287,9 +287,9 @@ inline namespace v1 {
 
   private:
     struct Packing {
-      unsigned top = 0;
-      unsigned bottom = 0;
-      unsigned right = 0;
+      int top = 0;
+      int bottom = 0;
+      int right = 0;
     };
 
     struct GlyphCache {

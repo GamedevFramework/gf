@@ -175,14 +175,12 @@ inline namespace v1 {
     : m11(val), m12(val)
     , m21(val), m22(val)
     {
-
     }
 
     explicit constexpr Matrix(const T *array)
     : m11(array[0]), m12(array[1])
     , m21(array[2]), m22(array[3])
     {
-
     }
 
     /**
@@ -197,7 +195,6 @@ inline namespace v1 {
     : m11(e11), m12(e12)
     , m21(e21), m22(e22)
     {
-
     }
 
     const T *getData() const noexcept {
@@ -248,7 +245,6 @@ inline namespace v1 {
       T yy;
       T m22;
     };
-
   };
 
   /**
@@ -300,7 +296,6 @@ inline namespace v1 {
     , m21(val), m22(val), m23(val)
     , m31(val), m32(val), m33(val)
     {
-
     }
 
     explicit constexpr Matrix(const T *array)
@@ -308,7 +303,6 @@ inline namespace v1 {
     , m21(array[3]), m22(array[4]), m23(array[5])
     , m31(array[6]), m32(array[7]), m33(array[8])
     {
-
     }
 
     /**
@@ -329,7 +323,6 @@ inline namespace v1 {
     , m21(e21), m22(e22), m23(e23)
     , m31(e31), m32(e32), m33(e33)
     {
-
     }
 
     const T *getData() const noexcept {
@@ -408,7 +401,6 @@ inline namespace v1 {
       T zz;
       T m33;
     };
-
   };
 
   /**
@@ -459,7 +451,6 @@ inline namespace v1 {
     , m31(val), m32(val), m33(val), m34(val)
     , m41(val), m42(val), m43(val), m44(val)
     {
-
     }
 
     explicit constexpr Matrix(const T *array)
@@ -468,7 +459,6 @@ inline namespace v1 {
     , m31(array[ 8]), m32(array[ 9]), m33(array[10]), m34(array[11])
     , m41(array[12]), m42(array[13]), m43(array[14]), m44(array[15])
     {
-
     }
 
     /**
@@ -497,7 +487,6 @@ inline namespace v1 {
     , m31(e31), m32(e32), m33(e33), m34(e34)
     , m41(e41), m42(e42), m43(e43), m44(e44)
     {
-
     }
 
     const T *getData() const noexcept {
@@ -614,7 +603,6 @@ inline namespace v1 {
       T ww;
       T m44;
     };
-
   };
 
   /**

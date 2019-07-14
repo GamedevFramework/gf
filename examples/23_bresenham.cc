@@ -37,11 +37,9 @@
 #include <gf/VertexArray.h>
 #include <gf/Window.h>
 
-static constexpr unsigned GridSize = 60;
+static constexpr int GridSize = 60;
 static constexpr float CellSize = 10.0f;
-static constexpr unsigned Size = GridSize * CellSize;
-
-
+static constexpr int Size = GridSize * CellSize;
 
 int main() {
   gf::Window window("23_bresenham", { Size, Size }, ~gf::WindowHints::Resizable);

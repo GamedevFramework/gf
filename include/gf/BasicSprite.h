@@ -37,6 +37,9 @@ inline namespace v1 {
 
   /**
    * @ingroup graphics
+   * @brief A basic sprite
+   *
+   * You should use gf::Sprite instead.
    *
    * @sa gf::Sprite
    */

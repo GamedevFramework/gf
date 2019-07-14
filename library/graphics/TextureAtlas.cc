@@ -63,7 +63,7 @@ inline namespace v1 {
       assert(sub.attribute("name"));
       std::string name = sub.attribute("name").value();
 
-      RectU rect;
+      RectI rect;
 
       assert(sub.attribute("x"));
       rect.left = sub.attribute("x").as_uint();
@@ -94,15 +94,15 @@ inline namespace v1 {
     return true;
   }
 
-  void TextureAtlas::addSubTexture(std::string name, const RectU& rect) {
+  void TextureAtlas::addSubTexture(std::string name, const RectI& rect) {
     m_rects.emplace(std::move(name), rect);
   }
 
-  RectU TextureAtlas::getSubTexture(const std::string& name) const {
+  RectI TextureAtlas::getSubTexture(const std::string& name) const {
     auto it = m_rects.find(name);
 
     if (it == m_rects.end()) {
-      return RectU(0, 0, 1, 1);
+      return RectI(0, 0, 1, 1);
     }
 
     return it->second;
@@ -113,7 +113,7 @@ inline namespace v1 {
       return RectF(0, 0, 1, 1);
     }
 
-    RectU rect = getSubTexture(name);
+    RectI rect = getSubTexture(name);
     return m_texture->computeTextureCoords(rect);
   }
 

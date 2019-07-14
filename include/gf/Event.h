@@ -188,7 +188,7 @@ inline namespace v1 {
     EventType type; ///< Type of the event
 
     union {
-      Vector2u size; ///< Size event parameters (EventType::Resized)
+      Vector2i size; ///< Size event parameters (EventType::Resized)
       KeyEvent key; ///< Key event parameters (EventType::KeyPressed, EventType::KeyReleased, EventType::KeyRepeated)
       TextEvent text; ///< Text event parameters (EventType::TextEntered)
       MouseButtonEvent mouseButton; ///< Mouse button event parameters (EventType::MouseButtonPressed, EventType::MouseButtonReleased)

@@ -47,7 +47,7 @@ inline namespace v1 {
 
   }
 
-  bool RenderTexture::create(Vector2u size) {
+  bool RenderTexture::create(Vector2i size) {
     if (!m_texture.create(size)) {
       return false;
     }
@@ -73,7 +73,7 @@ inline namespace v1 {
     return true;
   }
 
-  Vector2u RenderTexture::getSize() const {
+  Vector2i RenderTexture::getSize() const {
     return m_texture.getSize();
   }
 

@@ -156,7 +156,6 @@ static void overview(gf::UI& ui) {
     static gf::UICollapse widgetsCollapsed = gf::UICollapse::Minimized;
 
     if (ui.treePush(gf::UITree::Tab, "Widgets", widgetsCollapsed)) {
-
       static gf::UICollapse textCollapsed = gf::UICollapse::Minimized;
 
       if (ui.treePush(gf::UITree::Node, "Text", textCollapsed)) {
@@ -277,7 +276,6 @@ static void overview(gf::UI& ui) {
       static gf::UICollapse selectableCollapsed = gf::UICollapse::Minimized;
 
       if (ui.treePush(gf::UITree::Node, "Selectable", selectableCollapsed)) {
-
         static gf::UICollapse listCollapsed = gf::UICollapse::Minimized;
 
         if (ui.treePush(gf::UITree::Node, "List", listCollapsed)) {
@@ -459,40 +457,41 @@ static void overview(gf::UI& ui) {
       static gf::UICollapse inputCollapsed = gf::UICollapse::Minimized;
 
       if (ui.treePush(gf::UITree::Node, "Input", inputCollapsed)) {
-        static char text[9][64];
-        static std::size_t textLength[9];
-        static char box[512];
-        static std::size_t boxLength;
+        static gf::UICharBuffer text[9] = {
+          gf::UICharBuffer(64), gf::UICharBuffer(64), gf::UICharBuffer(64),
+          gf::UICharBuffer(64), gf::UICharBuffer(64), gf::UICharBuffer(64),
+          gf::UICharBuffer(64), gf::UICharBuffer(64), gf::UICharBuffer(64),
+        };
+
+        static gf::UICharBuffer box(512);
 
         ui.layoutRow(gf::UILayout::Static, 25, { 120.0f, 150.0f });
 
         ui.label("Default:");
-        ui.edit(gf::UIEditType::Simple, text[0], textLength[0], gf::UIEditFilter::Default);
+        ui.edit(gf::UIEditType::Simple, text[0], gf::UIEditFilter::Default);
         ui.label("Int:");
-        ui.edit(gf::UIEditType::Simple, text[1], textLength[1], gf::UIEditFilter::Decimal);
+        ui.edit(gf::UIEditType::Simple, text[1], gf::UIEditFilter::Decimal);
         ui.label("Float:");
-        ui.edit(gf::UIEditType::Simple, text[2], textLength[2], gf::UIEditFilter::Float);
+        ui.edit(gf::UIEditType::Simple, text[2], gf::UIEditFilter::Float);
         ui.label("Hex:");
-        ui.edit(gf::UIEditType::Simple, text[3], textLength[3], gf::UIEditFilter::Hex);
+        ui.edit(gf::UIEditType::Simple, text[3], gf::UIEditFilter::Hex);
         ui.label("Octal:");
-        ui.edit(gf::UIEditType::Simple, text[4], textLength[4], gf::UIEditFilter::Oct);
+        ui.edit(gf::UIEditType::Simple, text[4], gf::UIEditFilter::Oct);
         ui.label("Binary:");
-        ui.edit(gf::UIEditType::Simple, text[5], textLength[5], gf::UIEditFilter::Binary);
+        ui.edit(gf::UIEditType::Simple, text[5], gf::UIEditFilter::Binary);
 
         ui.label("Field:");
-        ui.edit(gf::UIEditType::Field, text[6], textLength[6]);
+        ui.edit(gf::UIEditType::Field, text[6]);
 
         ui.label("Box:");
         ui.layoutRowStatic(180.0f, 278, 1);
-        ui.edit(gf::UIEditType::Box, box, boxLength);
+        ui.edit(gf::UIEditType::Box, box);
         ui.layoutRow(gf::UILayout::Static, 25, { 120.0f, 150.0f });
-        gf::UIEditEventFlags flags = ui.edit(gf::UIEditType::Field | gf::UIEdit::SigEnter, text[7], textLength[7], gf::UIEditFilter::Ascii);
+        gf::UIEditEventFlags flags = ui.edit(gf::UIEditType::Field | gf::UIEdit::SigEnter, text[7], gf::UIEditFilter::Ascii);
 
         if (ui.buttonLabel("Submit") || flags.test(gf::UIEditEvent::Commited)) {
-          std::size_t length = std::min(textLength[7], 512 - boxLength);
-          std::strncat(box, text[7], length);
-          boxLength += length;
-          textLength[7] = 0;
+          box.append(text[7]);
+          text[7].clear();
         }
 
         ui.treePop();
@@ -612,7 +611,6 @@ static void overview(gf::UI& ui) {
         if (!ui.fileSelector(browser, "Choose a file", fileSelectorBounds)) {
           fileSelectorActive = false;
         }
-
       }
 
       ui.layoutRowDynamic(30, 2);
@@ -636,7 +634,6 @@ static void overview(gf::UI& ui) {
     static gf::UICollapse layoutCollapsed = gf::UICollapse::Minimized;
 
     if (ui.treePush(gf::UITree::Tab, "Layout", layoutCollapsed)) {
-
       static gf::UICollapse widgetCollapsed = gf::UICollapse::Minimized;
 
       if (ui.treePush(gf::UITree::Node, "Widget", widgetCollapsed)) {
@@ -792,7 +789,6 @@ int main() {
     }
 
     if (ui.begin("Show", gf::RectF(50, 50, 220, 220), gf::UIWindow::Border | gf::UIWindow::Movable | gf::UIWindow::Scalable | gf::UIWindow::Closable | gf::UIWindow::Minimizable | gf::UIWindow::Title)) {
-
       /* fixed widget pixel width */
 
       ui.layoutRowStatic(30, 80, 1);
@@ -819,12 +815,12 @@ int main() {
       ui.layoutRowPush(50);
       ui.label("Volume:");
       ui.layoutRowPush(110);
+
       if (ui.sliderFloat(0.0f, value, 1.0f, 0.1f)) {
         std::cout << "Value: " << value << '\n';
       }
+
       ui.layoutRowEnd();
-
-
     }
 
     ui.end();

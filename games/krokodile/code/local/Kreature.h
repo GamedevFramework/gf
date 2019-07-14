@@ -90,10 +90,10 @@ namespace kkd {
     float m_energy;
     int m_merges;
 
-    Part m_body;
-    Part m_head;
-    Part m_limbs;
-    Part m_tail;
+    Part m_body = { };
+    Part m_head = { };
+    Part m_limbs = { };
+    Part m_tail = { };
 
     gf::LinearMove m_linearMove;
     gf::AngularMove m_angularMove;

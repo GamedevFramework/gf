@@ -31,8 +31,8 @@
 #include <gf/ViewContainer.h>
 #include <gf/Window.h>
 
-static constexpr unsigned MapWidth = 44;
-static constexpr unsigned MapHeight = 25;
+static constexpr int MapWidth = 44;
+static constexpr int MapHeight = 25;
 
 static int map[MapHeight][MapWidth] = {
   { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, },
@@ -62,13 +62,13 @@ static int map[MapHeight][MapWidth] = {
   { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, },
 };
 
-static constexpr unsigned TileSize = 128;
+static constexpr int TileSize = 128;
 
 static constexpr float ZoomInFactor = 0.8f;
 static constexpr float ZoomOutFactor = 1.25f;
 
 int main() {
-  static constexpr gf::Vector2u ScreenSize(640, 480);
+  static constexpr gf::Vector2i ScreenSize(640, 480);
 
   gf::Window window("18_tilelayer", ScreenSize);
   gf::RenderWindow renderer(window);
@@ -98,8 +98,8 @@ int main() {
   tileLayer.setTexture(texture);
   tileLayer.setOrigin({ TileSize * MapWidth / 2, TileSize * MapHeight / 2 });
 
-  for (unsigned y = 0; y < MapHeight; ++y) {
-    for (unsigned x = 0; x < MapWidth; ++x) {
+  for (int y = 0; y < MapHeight; ++y) {
+    for (int x = 0; x < MapWidth; ++x) {
       tileLayer.setTile({ x, y }, map[y][x]);
     }
   }

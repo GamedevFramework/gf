@@ -87,7 +87,7 @@ inline namespace v1 {
      */
     RenderWindow(Window& window);
 
-    virtual Vector2u getSize() const override;
+    virtual Vector2i getSize() const override;
 
     /**
      * @brief Activate the target for rendering

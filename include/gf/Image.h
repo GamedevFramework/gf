@@ -124,7 +124,7 @@ inline namespace v1 {
      * @param size  Size of the image
      * @param color Fill color
      */
-    void create(Vector2u size, const Color4u& color = Color4u{0x00, 0x00, 0x00, 0xFF});
+    void create(Vector2i size, const Color4u& color = Color4u{0x00, 0x00, 0x00, 0xFF});
 
     /**
      * @brief Create the image from an array of pixels
@@ -136,7 +136,7 @@ inline namespace v1 {
      * @param size   Size of the image
      * @param pixels Array of pixels to copy to the image
      */
-    void create(Vector2u size, const uint8_t* pixels);
+    void create(Vector2i size, const uint8_t* pixels);
 
     /**
      * @brief Create the image from an array of pixels
@@ -148,7 +148,7 @@ inline namespace v1 {
      * @param size   Size of the image
      * @param pixels Array of pixels to copy to the image
      */
-    void createRGB(Vector2u size, const uint8_t* pixels);
+    void createRGB(Vector2i size, const uint8_t* pixels);
 
     /**
      * @brief Load the image from a file on disk
@@ -220,7 +220,7 @@ inline namespace v1 {
      *
      * @return Size of the image, in pixels
      */
-    Vector2u getSize() const;
+    Vector2i getSize() const;
 
     /**
      * @brief Create a transparency mask from a specified color-key
@@ -246,7 +246,7 @@ inline namespace v1 {
      *
      * @sa getPixel
      */
-    void setPixel(Vector2u pos, const Color4u& color);
+    void setPixel(Vector2i pos, const Color4u& color);
 
     /**
      * @brief Get the color of a pixel
@@ -261,7 +261,7 @@ inline namespace v1 {
      *
      * @sa setPixel
      */
-    Color4u getPixel(Vector2u pos) const;
+    Color4u getPixel(Vector2i pos) const;
 
     /**
      * @brief Get a read-only pointer to the array of pixels
@@ -285,7 +285,7 @@ inline namespace v1 {
     void flipHorizontally();
 
   private:
-    Vector2u m_size;
+    Vector2i m_size;
     std::vector<uint8_t> m_pixels;
 
   };

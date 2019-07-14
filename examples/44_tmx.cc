@@ -60,21 +60,23 @@ struct LayersMaker : public gf::TmxVisitor {
     std::cout << "Parsing layer '" << layer.name << "'\n";
 
     gf::TileLayer tiles(map.mapSize, getTypeFromOrientation(map.orientation));
-    tiles.setBlockSize(map.tileSize);
+    tiles.setTileSize(map.tileSize);
 
-    unsigned k = 0;
+    int k = 0;
 
     for (auto& cell : layer.cells) {
-      unsigned i = k % map.mapSize.width;
-      unsigned j = k / map.mapSize.width;
+      int i = k % map.mapSize.width;
+      int j = k / map.mapSize.width;
       assert(j < map.mapSize.height);
+      gf::unused(j);
 
-      unsigned gid = cell.gid;
+      int gid = cell.gid;
 
       if (gid != 0) {
         auto tileset = map.getTileSetFromGID(gid);
         assert(tileset);
-        tiles.setTileSize(tileset->tileSize);
+        tiles.setTilesetTileSize(tileset->tileSize);
+        tiles.setOffset(tileset->offset);
 
         gid = gid - tileset->firstGid;
         tiles.setTile({ i, j }, gid, cell.flip);
@@ -119,7 +121,7 @@ struct LayersMaker : public gf::TmxVisitor {
 };
 
 int main() {
-  static constexpr gf::Vector2u ScreenSize(640, 480);
+  static constexpr gf::Vector2i ScreenSize(640, 480);
 
   gf::Window window("44_tmx", ScreenSize);
   gf::RenderWindow renderer(window);

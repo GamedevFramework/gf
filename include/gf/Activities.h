@@ -108,8 +108,8 @@ inline namespace v1 {
       return m_tween.getDuration();
     }
 
-    virtual ActivityStatus run(Time time) override;
-    virtual void restart() override;
+    ActivityStatus run(Time time) override;
+    void restart() override;
 
   private:
     Tween<float> m_tween;
@@ -193,8 +193,8 @@ inline namespace v1 {
       return m_tween.getDuration();
     }
 
-    virtual ActivityStatus run(Time time) override;
-    virtual void restart() override;
+    ActivityStatus run(Time time) override;
+    void restart() override;
 
   private:
     void normalize();
@@ -277,8 +277,8 @@ inline namespace v1 {
       return m_tween.getDuration();
     }
 
-    virtual ActivityStatus run(Time time) override;
-    virtual void restart() override;
+    ActivityStatus run(Time time) override;
+    void restart() override;
 
   private:
     Tween<Vector2f> m_tween;
@@ -358,8 +358,8 @@ inline namespace v1 {
       return m_tween.getDuration();
     }
 
-    virtual ActivityStatus run(Time time) override;
-    virtual void restart() override;
+    ActivityStatus run(Time time) override;
+    void restart() override;
 
   private:
     Tween<Color4f> m_tween;
@@ -379,8 +379,8 @@ inline namespace v1 {
      */
     CallbackActivity(std::function<void()> callback);
 
-    virtual ActivityStatus run(Time time) override;
-    virtual void restart() override;
+    ActivityStatus run(Time time) override;
+    void restart() override;
 
   private:
     std::function<void()> m_callback;
@@ -401,8 +401,8 @@ inline namespace v1 {
      */
     DelayActivity(Time duration);
 
-    virtual ActivityStatus run(Time time) override;
-    virtual void restart() override;
+    ActivityStatus run(Time time) override;
+    void restart() override;
 
   private:
     Time m_elapsed;
@@ -433,8 +433,8 @@ inline namespace v1 {
      */
     void clear();
 
-    virtual ActivityStatus run(Time time) override;
-    virtual void restart() override;
+    ActivityStatus run(Time time) override;
+    void restart() override;
 
   private:
     std::size_t m_current;
@@ -456,8 +456,8 @@ inline namespace v1 {
      */
     RepeatActivity(Activity& activity, unsigned repeat = 0);
 
-    virtual ActivityStatus run(Time time) override;
-    virtual void restart() override;
+    ActivityStatus run(Time time) override;
+    void restart() override;
 
   private:
     Activity& m_activity;
@@ -482,8 +482,8 @@ inline namespace v1 {
      */
     RepeatedSequenceActivity(unsigned repeat = 0);
 
-    virtual ActivityStatus run(Time time) override;
-    virtual void restart() override;
+    ActivityStatus run(Time time) override;
+    void restart() override;
 
   private:
     SequenceActivity m_sequence;
@@ -524,8 +524,8 @@ inline namespace v1 {
      */
     void clear();
 
-    virtual ActivityStatus run(Time time) override;
-    virtual void restart() override;
+    ActivityStatus run(Time time) override;
+    void restart() override;
 
   private:
     Finish m_finish;

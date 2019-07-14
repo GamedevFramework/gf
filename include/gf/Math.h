@@ -33,9 +33,19 @@ inline namespace v1 {
 
   /**
    * @ingroup core
+   * @brief Templated value of @f$ \pi @f$
+   */
+  template<typename T>
+  constexpr
+  T pi() {
+    return T(3.141592653589793238462643383279502884197169399L);
+  }
+
+  /**
+   * @ingroup core
    * @brief The @f$ \pi @f$ constant
    */
-  constexpr float Pi = 3.14159265358979323846f;
+  constexpr float Pi = pi<float>();
 
   /**
    * @ingroup core
@@ -84,7 +94,7 @@ inline namespace v1 {
    * @sa [Comparison - The Floating-Point Guide](http://floating-point-gui.de/errors/comparison/)
    */
   template<typename T>
-  inline
+  constexpr
   bool almostEquals(T a, T b, T epsilon = std::numeric_limits<T>::epsilon()) {
     if (a == b) {
       return true;
@@ -274,6 +284,21 @@ inline namespace v1 {
   constexpr
   T square(T val) {
     return val * val;
+  }
+
+  /**
+   * @ingroup core
+   * @brief Cube function
+   *
+   * For a value @f$ x @f$, the cube value is @f$ x^3 @f$.
+   *
+   * @param val A value
+   * @returns The cube of the value
+   */
+  template<typename T>
+  constexpr
+  T cube(T val) {
+    return val * val * val;
   }
 
   /**

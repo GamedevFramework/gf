@@ -30,7 +30,7 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  Coordinates::Coordinates(Vector2u size)
+  Coordinates::Coordinates(Vector2i size)
   : m_size(size)
   {
 

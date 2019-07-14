@@ -18,16 +18,28 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#include <gf/Color.h>
+#ifndef GF_QUARTER_H
+#define GF_QUARTER_H
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
 #endif
 
-
+  /**
+   * @ingroup core
+   * @brief A quarter in a square
+   */
+  enum Quarter {
+    UpperLeft,  ///< Upper-left quarter
+    UpperRight, ///< Upper-right quarter
+    LowerRight, ///< Lower-right quarter
+    LowerLeft,  ///< Lower-left quarter
+  };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif
 }
+
+#endif // GF_QUARTER_H

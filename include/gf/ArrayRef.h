@@ -50,7 +50,6 @@ inline namespace v1 {
     : m_data(nullptr)
     , m_size(0)
     {
-
     }
 
     /**
@@ -62,7 +61,6 @@ inline namespace v1 {
     : m_data(nullptr)
     , m_size(0)
     {
-
     }
 
     /**
@@ -75,7 +73,6 @@ inline namespace v1 {
     : m_data(data)
     , m_size(size)
     {
-
     }
 
     /**
@@ -87,7 +84,6 @@ inline namespace v1 {
     : m_data(values.data())
     , m_size(values.size())
     {
-
     }
 
     /**
@@ -100,7 +96,6 @@ inline namespace v1 {
     : m_data(values.data())
     , m_size(values.size())
     {
-
     }
 
     /**
@@ -115,7 +110,6 @@ inline namespace v1 {
     : m_data(data)
     , m_size(N)
     {
-
     }
 
     /**
@@ -127,7 +121,6 @@ inline namespace v1 {
     : m_data(values.size() == 0 ? nullptr : values.begin())
     , m_size(values.size())
     {
-
     }
 
     /**

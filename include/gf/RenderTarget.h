@@ -91,7 +91,7 @@ inline namespace v1 {
      *
      * @return Size in pixels
      */
-    virtual Vector2u getSize() const = 0;
+    virtual Vector2i getSize() const = 0;
 
     /**
      * @name Drawing commands

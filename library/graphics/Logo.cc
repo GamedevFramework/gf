@@ -637,11 +637,11 @@ inline namespace v1 {
 
     Image exportToImage() {
       Image image;
-      image.create(Vector2u(BoundsWidth, BoundsHeight));
+      image.create(Vector2i(BoundsWidth, BoundsHeight));
 
       for (int y = 0; y < BoundsHeight; ++y) {
         for (int x = 0; x < BoundsWidth; ++x) {
-          image.setPixel(Vector2u(x, y), Color::toRgba32(data[y][x]));
+          image.setPixel(Vector2i(x, y), Color::toRgba32(data[y][x]));
         }
       }
 

@@ -135,7 +135,7 @@ inline namespace v1 {
      *
      * @return Size in pixels
      */
-    Vector2u getSize() const {
+    Vector2i getSize() const {
       return m_size;
     }
 
@@ -233,7 +233,7 @@ inline namespace v1 {
      * @param data An array of pixels to copy to the texture
      * @param rect The region of the texture to update
      */
-    void update(const uint8_t *data, const RectU& rect);
+    void update(const uint8_t *data, const RectI& rect);
 
     /**
      * @brief Compute normalized texture coordinates
@@ -241,7 +241,7 @@ inline namespace v1 {
      * @param rect The rectangle in the texture, in pixels
      * @return Normalized texture coordinates
      */
-    RectF computeTextureCoords(const RectU& rect) const;
+    RectF computeTextureCoords(const RectI& rect) const;
 
     /**
      * @brief Generate a mipmap using the current texture data
@@ -284,12 +284,12 @@ inline namespace v1 {
      *
      * @return True if creation was successful
      */
-    bool create(Vector2u size, const uint8_t *data);
+    bool create(Vector2i size, const uint8_t *data);
 
   private:
     Format m_format;
     unsigned m_name;
-    Vector2u m_size;
+    Vector2i m_size;
     bool m_smooth;
     bool m_repeated;
     bool m_mipmap;
@@ -354,7 +354,7 @@ inline namespace v1 {
      *
      * @return True if creation was successful
      */
-    bool create(Vector2u size);
+    bool create(Vector2i size);
 
     /**
      * @brief Load the texture from an image
@@ -489,7 +489,7 @@ inline namespace v1 {
      *
      * @return True if creation was successful
      */
-    bool create(Vector2u size);
+    bool create(Vector2i size);
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

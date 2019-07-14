@@ -89,7 +89,7 @@ inline namespace v1 {
      */
     StringRef(const char *str)
     : m_data(str)
-    , m_size(std::strlen(str))
+    , m_size(std::char_traits<char>::length(str))
     {
 
     }

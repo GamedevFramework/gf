@@ -91,7 +91,7 @@ inline namespace v1 {
   }
 
   Serializer& operator|(Serializer& ar, const char *str) {
-    ar.writeString(str, std::strlen(str));
+    ar.writeString(str, std::char_traits<char>::length(str));
     return ar;
   }
 
@@ -187,6 +187,7 @@ inline namespace v1 {
     }
 
     str[size] = '\0';
+
     return ar;
   }
 
@@ -205,6 +206,7 @@ inline namespace v1 {
 
     str.clear();
     str.assign(data.get(), size);
+
     return ar;
   }
 

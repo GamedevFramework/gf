@@ -43,7 +43,7 @@ inline namespace v1 {
      *
      * @param size The size of the window
      */
-    Coordinates(Vector2u size);
+    Coordinates(Vector2i size);
 
     /**
      * @brief Constructor with render target
@@ -89,7 +89,7 @@ inline namespace v1 {
     Vector2f getAbsolutePoint(Vector2f distance, Anchor anchor) const;
 
   private:
-    Vector2u m_size;
+    Vector2i m_size;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

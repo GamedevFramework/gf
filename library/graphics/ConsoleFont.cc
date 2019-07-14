@@ -38,7 +38,7 @@ inline namespace v1 {
 
   namespace {
 
-    unsigned computeIndex(Vector2u position, ConsoleFontFormat::Layout layout, Vector2u size) {
+    int computeIndex(Vector2i position, ConsoleFontFormat::Layout layout, Vector2i size) {
       switch (layout) {
         case ConsoleFontFormat::InColumn:
           return position.x * size.height + position.y;
@@ -50,7 +50,7 @@ inline namespace v1 {
       return 0;
     }
 
-    Vector2u computePosition(uint8_t index, ConsoleFontFormat::Layout layout, Vector2u size) {
+    Vector2i computePosition(uint8_t index, ConsoleFontFormat::Layout layout, Vector2i size) {
       switch (layout) {
         case ConsoleFontFormat::InColumn:
           return { index / size.height, index % size.height };
@@ -59,7 +59,7 @@ inline namespace v1 {
       }
 
       assert(false);
-      return { 0u, 0u };
+      return { 0, 0 };
     }
 
   } // anonymous namespace
@@ -73,34 +73,31 @@ inline namespace v1 {
   ConsoleFont::ConsoleFont()
   : m_mapping(MappingSize, 0x00)
   , m_format({ ConsoleFontFormat::Alpha, ConsoleFontFormat::InRow, ConsoleFontFormat::Custom })
-  , m_size(0u, 0u)
-  , m_characterSize(0u, 0u)
+  , m_size(0, 0)
+  , m_characterSize(0, 0)
   {
-
   }
 
-  ConsoleFont::~ConsoleFont() {
+  ConsoleFont::~ConsoleFont() = default;
 
-  }
-
-  void ConsoleFont::mapCode(char16_t c, Vector2u position) {
-    unsigned index = computeIndex(position, m_format.layout, m_size);
-    assert(index < 0x100);
+  void ConsoleFont::mapCode(char16_t c, Vector2i position) {
+    int index = computeIndex(position, m_format.layout, m_size);
+    assert(0 <= index && index < 0x100);
     m_mapping[c] = static_cast<uint8_t>(index);
   }
 
-  void ConsoleFont::mapCodeRange(char16_t c, unsigned count, Vector2u position) {
-    unsigned index = computeIndex(position, m_format.layout, m_size);
+  void ConsoleFont::mapCodeRange(char16_t c, int count, Vector2i position) {
+    int index = computeIndex(position, m_format.layout, m_size);
 
-    for (unsigned i = 0; i < count; ++i) {
-      assert(index < 0x100);
+    for (int i = 0; i < count; ++i) {
+      assert(0 <= index && index < 0x100);
       m_mapping[c++] = static_cast<uint8_t>(index);
       ++index;
     }
   }
 
-  void ConsoleFont::mapString(StringRef str, Vector2u position) {
-    unsigned index = computeIndex(position, m_format.layout, m_size);
+  void ConsoleFont::mapString(StringRef str, Vector2i position) {
+    int index = computeIndex(position, m_format.layout, m_size);
 
     for (auto codepoint : gf::codepoints(str)) {
       if (codepoint >= 0x10000) {
@@ -108,7 +105,7 @@ inline namespace v1 {
         Log::error("Can not map a codepoint outside the Basic Multilingual Plane (BMP): U+%" PRIXLEAST32, value);
       } else {
         char16_t c = static_cast<char16_t>(codepoint);
-        assert(index < 0x100);
+        assert(0 <= index && index < 0x100);
         m_mapping[c] = static_cast<uint8_t>(index);
       }
 
@@ -131,10 +128,10 @@ inline namespace v1 {
     assert(m_mapping.size() == MappingSize);
   }
 
-  RectU ConsoleFont::getSubTexture(char16_t c) const {
+  RectI ConsoleFont::getSubTexture(char16_t c) const {
     uint8_t index = m_mapping[c];
-    Vector2u position = computePosition(index, m_format.layout, m_size);
-    return RectU(position * m_characterSize, m_characterSize);
+    Vector2i position = computePosition(index, m_format.layout, m_size);
+    return RectI(position * m_characterSize, m_characterSize);
   }
 
   RectF ConsoleFont::getTextureRect(char16_t c) const {
@@ -214,7 +211,6 @@ inline namespace v1 {
     { u'\u03B2', 0xE1 }, { u'\u03A0', 0xE3 }, { u'\u220F', 0xE3 }, { u'\u2211', 0xE4 },
     { u'\u03BC', 0xE6 }, { u'\u2126', 0xEA }, { u'\u03D5', 0xED }, { u'\u2205', 0xED },
     { u'\u2300', 0xED }, { u'\u00D8', 0xED }, { u'\u00F8', 0xED }, { u'\u2208', 0xEE },
-
   };
 
   static constexpr ConsoleFontElement ModifiedCodePage437Mapping[] = {
@@ -275,10 +271,9 @@ inline namespace v1 {
     { u'\u0071', 0x90 }, { u'\u0072', 0x91 }, { u'\u0073', 0x92 }, { u'\u0074', 0x93 },
     { u'\u0075', 0x94 }, { u'\u0076', 0x95 }, { u'\u0077', 0x96 }, { u'\u0078', 0x97 },
     { u'\u0079', 0x98 }, { u'\u007A', 0x99 },
-
   };
 
-  bool ConsoleFont::setFormatAndComputeSizes(ConsoleFontFormat format, Vector2u size, Vector2u imageSize) {
+  bool ConsoleFont::setFormatAndComputeSizes(ConsoleFontFormat format, Vector2i size, Vector2i imageSize) {
     m_format = format;
 
     clearMapping();
@@ -299,28 +294,28 @@ inline namespace v1 {
         break;
     }
 
-    if (size != Vector2u(0u, 0u)) {
+    if (size != gf::vec(0, 0)) {
       m_size = size;
     } else {
       switch (format.mapping) {
         case ConsoleFontFormat::CodePage437:
         case ConsoleFontFormat::ModifiedCodePage437:
-          m_size = { 16u, 16u };
+          m_size = { 16, 16 };
           break;
 
         case ConsoleFontFormat::Special:
-          m_size = { 32u, 8u };
+          m_size = { 32, 8 };
           break;
 
         case ConsoleFontFormat::Custom:
           Log::error("Undefined size for a custom font\n");
-          m_size = { 0u, 0u };
+          m_size = { 0, 0 };
           return false;
       }
     }
 
     if (imageSize.width % m_size.width != 0 || imageSize.height % m_size.height != 0) {
-      Log::error("Image size (%ux%u) is not a multiple of font layout (%ux%u)\n", imageSize.width, imageSize.height, m_size.width, m_size.height);
+      Log::error("Image size (%ix%i) is not a multiple of font layout (%ix%i)\n", imageSize.width, imageSize.height, m_size.width, m_size.height);
       return false;
     }
 
@@ -375,13 +370,13 @@ inline namespace v1 {
   } // anonymous namespace
 
   void ConsoleFont::logFormat(const Path& filename) const {
-    Log::info("Console font '%s': %ux%u with characters %ux%u, %s, %s, %s\n", filename.string().c_str(),
+    Log::info("Console font '%s': %ix%i with characters %ix%i, %s, %s, %s\n", filename.string().c_str(),
       m_size.width, m_size.height, m_characterSize.width, m_characterSize.height,
       getTransparencyString(m_format.transparency), getLayoutString(m_format.layout), getMappingString(m_format.mapping)
     );
   }
 
-  Vector2u ConsoleFont::getColorKeyPosition() const {
+  Vector2i ConsoleFont::getColorKeyPosition() const {
     switch (m_format.mapping) {
       case ConsoleFontFormat::CodePage437:
       case ConsoleFontFormat::ModifiedCodePage437:
@@ -407,14 +402,14 @@ inline namespace v1 {
     return &m_texture;
   }
 
-  bool BitmapConsoleFont::loadFromFile(const Path& filename, ConsoleFontFormat format, Vector2u size) {
+  bool BitmapConsoleFont::loadFromFile(const Path& filename, ConsoleFontFormat format, Vector2i size) {
     Image image;
 
     if (!image.loadFromFile(filename)) {
       return false;
     }
 
-    Vector2u imageSize = image.getSize();
+    Vector2i imageSize = image.getSize();
 
     if (!setFormatAndComputeSizes(format, size, imageSize)) {
       return false;
@@ -427,8 +422,8 @@ inline namespace v1 {
 
     switch (format.transparency) {
       case ConsoleFontFormat::Alpha:
-        for (unsigned y = 0; y < imageSize.height; ++y) {
-          for (unsigned x = 0; x < imageSize.width; ++x) {
+        for (int y = 0; y < imageSize.height; ++y) {
+          for (int x = 0; x < imageSize.width; ++x) {
             Color4u color = image.getPixel({ x, y });
             pixels[index++] = color.a;
           }
@@ -437,8 +432,8 @@ inline namespace v1 {
         break;
 
       case ConsoleFontFormat::Grayscale:
-        for (unsigned y = 0; y < imageSize.height; ++y) {
-          for (unsigned x = 0; x < imageSize.width; ++x) {
+        for (int y = 0; y < imageSize.height; ++y) {
+          for (int x = 0; x < imageSize.width; ++x) {
             Color4u color = image.getPixel({ x, y });
             assert(color.r == color.g && color.g == color.b);
             pixels[index++] = color.r;
@@ -450,8 +445,8 @@ inline namespace v1 {
       case ConsoleFontFormat::ColorKey: {
         Color4u key = image.getPixel(getColorKeyPosition());
 
-        for (unsigned y = 0; y < imageSize.height; ++y) {
-          for (unsigned x = 0; x < imageSize.width; ++x) {
+        for (int y = 0; y < imageSize.height; ++y) {
+          for (int x = 0; x < imageSize.width; ++x) {
             Color4u color = image.getPixel({ x, y });
 
             if (color == key) {
@@ -464,7 +459,6 @@ inline namespace v1 {
 
         break;
       }
-
     }
 
     m_texture.create(imageSize);
@@ -482,14 +476,14 @@ inline namespace v1 {
     return &m_texture;
   }
 
-  bool ColoredConsoleFont::loadFromFile(const Path& filename, ConsoleFontFormat format, Vector2u size) {
+  bool ColoredConsoleFont::loadFromFile(const Path& filename, ConsoleFontFormat format, Vector2i size) {
     Image image;
 
     if (!image.loadFromFile(filename)) {
       return false;
     }
 
-    Vector2u imageSize = image.getSize();
+    Vector2i imageSize = image.getSize();
 
     if (!setFormatAndComputeSizes(format, size, imageSize)) {
       return false;
@@ -509,8 +503,8 @@ inline namespace v1 {
       case ConsoleFontFormat::ColorKey: {
         Color4u key = image.getPixel(getColorKeyPosition());
 
-        for (unsigned y = 0; y < imageSize.height; ++y) {
-          for (unsigned x = 0; x < imageSize.width; ++x) {
+        for (int y = 0; y < imageSize.height; ++y) {
+          for (int x = 0; x < imageSize.width; ++x) {
             Color4u color = image.getPixel({ x, y });
 
             if (color == key) {
@@ -521,7 +515,6 @@ inline namespace v1 {
 
         break;
       }
-
     }
 
     return m_texture.loadFromImage(image);

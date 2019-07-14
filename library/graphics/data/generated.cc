@@ -18,7 +18,6 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#include <SDL.h>
 
 #define GF_IMPLEMENTATION
 
@@ -28,12 +27,3 @@
 #include "generated/default.vert.h"
 #include "generated/edge.frag.h"
 #include "generated/fxaa.frag.h"
-
-// see also Gamepad.cc
-#if SDL_VERSION_ATLEAST(2,0,6)
-#include "generated/gamecontrollerdb.txt.h"
-#elif SDL_VERSION_ATLEAST(2,0,5)
-#include "generated/gamecontrollerdb_205.txt.h"
-#else
-#include "generated/gamecontrollerdb_204.txt.h"
-#endif

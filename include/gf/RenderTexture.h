@@ -127,7 +127,7 @@ inline namespace v1 {
      *
      * @return True if creation has been successful
      */
-    bool create(Vector2u size);
+    bool create(Vector2i size);
 
     /**
      * @brief Enable or disable texture smoothing
@@ -179,7 +179,7 @@ inline namespace v1 {
       return m_texture.isRepeated();
     }
 
-    virtual Vector2u getSize() const override;
+    virtual Vector2i getSize() const override;
 
     /**
      * @brief Activate the render-texture for rendering
