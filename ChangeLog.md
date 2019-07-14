@@ -1,5 +1,19 @@
 # ChangeLog for gf
 
+## gf 0.13.0 (14 Jul 2019)
+
+- Core (gfcore)
+  - Add gf::ColorBase as a templatized version of Color
+  - Add gf::cube() and gf::pi<T>()
+- Graphics (gf)
+  - Add gf::UICharBuffer to handle edition in gf::UI
+  - Add gf::Scene and gf::SceneManager to handle scenes
+  - Fix a bug in gf::TileLayer regarding staggered map
+- Tools and games
+- Misc
+  - Remove all uses of `unsigned`, use `int` instead
+  - Reduce the complexity of some functions (e.g. UI::processEvent())
+
 ## gf 0.12.0 (14 Apr 2019)
 
 - Core (gfcore)
