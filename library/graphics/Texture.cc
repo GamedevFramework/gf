@@ -243,18 +243,18 @@ inline namespace v1 {
   }
 
   bool Texture::loadFromFile(const Path& filename) {
-    Image image;
-    return image.loadFromFile(filename) && loadFromImage(image);
+    Image image(filename);
+    return loadFromImage(image);
   }
 
   bool Texture::loadFromStream(InputStream& stream) {
-    Image image;
-    return image.loadFromStream(stream) && loadFromImage(image);
+    Image image(stream);
+    return loadFromImage(image);
   }
 
   bool Texture::loadFromMemory(const uint8_t *data, std::size_t length) {
-    Image image;
-    return image.loadFromMemory(data, length) && loadFromImage(image);
+    Image image(array(data, length));
+    return loadFromImage(image);
   }
 
   void Texture::update(const Image& image) {
@@ -291,8 +291,7 @@ inline namespace v1 {
 
     glCheck(glBindFramebuffer(GL_FRAMEBUFFER, boundFrameBuffer));
 
-    Image image;
-    image.create(size, pixels.data());
+    Image image(size, pixels.data());
     image.flipHorizontally();
     return image;
   }

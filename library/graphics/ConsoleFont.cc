@@ -403,12 +403,7 @@ inline namespace v1 {
   }
 
   bool BitmapConsoleFont::loadFromFile(const Path& filename, ConsoleFontFormat format, Vector2i size) {
-    Image image;
-
-    if (!image.loadFromFile(filename)) {
-      return false;
-    }
-
+    Image image(filename);
     Vector2i imageSize = image.getSize();
 
     if (!setFormatAndComputeSizes(format, size, imageSize)) {
@@ -477,12 +472,7 @@ inline namespace v1 {
   }
 
   bool ColoredConsoleFont::loadFromFile(const Path& filename, ConsoleFontFormat format, Vector2i size) {
-    Image image;
-
-    if (!image.loadFromFile(filename)) {
-      return false;
-    }
-
+    Image image(filename);
     Vector2i imageSize = image.getSize();
 
     if (!setFormatAndComputeSizes(format, size, imageSize)) {

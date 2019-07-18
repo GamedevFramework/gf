@@ -79,13 +79,11 @@ int main() {
 
   // cursor
 
-  gf::Image image;
+  gf::Image image(home::gResourceManager().getAbsolutePath("cursor.png"));
   gf::Cursor cursor;
 
-  if (image.loadFromFile(home::gResourceManager().getAbsolutePath("cursor.png"))) {
-    if (cursor.loadFromImage(image, { 32u, 32u })) {
-      window.setMouseCursor(cursor);
-    }
+  if (cursor.loadFromImage(image, { 32u, 32u })) {
+    window.setMouseCursor(cursor);
   }
 
   // views

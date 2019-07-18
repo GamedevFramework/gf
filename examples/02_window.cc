@@ -35,12 +35,7 @@ int main() {
   std::cout << "\t1...: Show a system cursor\n";
   std::cout << "\tBackspace: Show an image cursor\n";
 
-  gf::Image image;
-
-  if (!image.loadFromFile("assets/cursor.png")) {
-    return EXIT_FAILURE;
-  }
-
+  gf::Image image("assets/cursor.png");
   gf::Cursor cursor;
 
   while (window.isOpen()) {

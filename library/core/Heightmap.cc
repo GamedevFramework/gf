@@ -393,8 +393,7 @@ inline namespace v1 {
   }
 
   Image Heightmap::copyToGrayscaleImage() const {
-    Image image;
-    image.create(m_data.getSize());
+    Image image(m_data.getSize());
 
     for (auto pos : m_data.getPositionRange()) {
       uint8_t value = static_cast<uint8_t>(m_data(pos) * 255);
@@ -417,8 +416,7 @@ inline namespace v1 {
   } // anonymous namespace
 
   Image Heightmap::copyToColoredImage(const ColorRamp& ramp, double waterLevel, Render render) const {
-    Image image;
-    image.create(m_data.getSize());
+    Image image(m_data.getSize());
 
     for (auto pos : m_data.getPositionRange()) {
       double value = valueWithWaterLevel(m_data(pos), waterLevel);

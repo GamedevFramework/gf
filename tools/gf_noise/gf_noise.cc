@@ -263,8 +263,7 @@ int main() {
   gf::RectF bounds;
 
   gf::Heightmap heightmap({ Size, Size });
-  gf::Image image;
-  image.create({ Size, Size }); // initial image
+  gf::Image image(gf::vec(Size, Size)); // initial image
 
   gf::Window window("gf noise", { Size + ExtraSize, Size }, ~gf::WindowHints::Resizable);
   gf::RenderWindow renderer(window);

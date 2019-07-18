@@ -423,8 +423,7 @@ inline namespace v1 {
       glCheck(glBindFramebuffer(GL_FRAMEBUFFER, boundFrameBuffer));
     }
 
-    Image image;
-    image.create(size, pixels.data());
+    Image image(size, pixels.data());
     image.flipHorizontally();
     return image;
   }
@@ -442,9 +441,7 @@ inline namespace v1 {
 
   void RenderTarget::initializeTexture() {
     uint8_t pixel[] = { 0xFF, 0xFF, 0xFF, 0xFF };
-
-    Image image;
-    image.create({ 1, 1 }, pixel);
+    Image image({ 1, 1 }, pixel);
 
     m_defaultTexture.loadFromImage(image);
     m_defaultTexture.setRepeated(true);
