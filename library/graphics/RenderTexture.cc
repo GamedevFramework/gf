@@ -34,13 +34,12 @@ inline namespace v1 {
 #endif
 
   RenderTexture::RenderTexture(Vector2i size)
-  : m_name(0)
+  : RenderTarget(size)
+  , m_name(0)
   , m_texture(size)
   {
     m_texture.setSmooth();
     Texture::bind(nullptr);
-
-    initialize();
 
     GLuint name;
     glCheck(glGenFramebuffers(1, &name));

@@ -104,6 +104,7 @@ namespace home {
   , m_backpackTexture(gResourceManager().getTexture("images/inventory_icon.png"))
   , m_oxygen(MaxOxygen)
   , m_oxygenTexture(gResourceManager().getTexture("images/oxygen_icon.png"))
+  , m_shader(VertexShader, FragmentShader)
   , m_dying(false)
   {
     gMessageManager().registerHandler<HarvestSupply>(&Backpack::onSupplyHarvested, this);
@@ -111,7 +112,6 @@ namespace home {
 
     m_backpackTexture.setSmooth();
     m_oxygenTexture.setSmooth();
-    m_shader.loadFromMemory(VertexShader, FragmentShader);
 
     m_shader.setUniform("u_outlineRadius", 12.0f / 300.0f);
     m_shader.setUniform("u_outlineColor", gf::Color::Red * gf::Color::Opaque(0.5f));

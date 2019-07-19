@@ -120,6 +120,45 @@ inline namespace v1 {
       return id;
     }
 
+    GLuint compile(const char *vertexShaderCode, const char *fragmentShaderCode) {
+      assert(vertexShaderCode != nullptr || fragmentShaderCode != nullptr);
+
+      GLuint program = 0;
+      glCheck(program = glCreateProgram());
+
+      if (vertexShaderCode != nullptr) {
+        GLuint id = compileShader(vertexShaderCode, Shader::Vertex);
+        glCheck(glAttachShader(program, id));
+        glCheck(glDeleteShader(id)); // the shader is still here because it is attached to the program
+      }
+
+      if (fragmentShaderCode != nullptr) {
+        GLuint id = compileShader(fragmentShaderCode, Shader::Fragment);
+        glCheck(glAttachShader(program, id));
+        glCheck(glDeleteShader(id)); // the shader is still here because it is attached to the program
+      }
+
+      glCheck(glLinkProgram(program));
+
+      GLint linkStatus = GL_FALSE;
+      glCheck(glGetProgramiv(program, GL_LINK_STATUS, &linkStatus));
+
+      if (linkStatus == GL_FALSE) {
+        GLint infoLogLength;
+        glCheck(glGetProgramiv(program, GL_INFO_LOG_LENGTH, &infoLogLength));
+
+        assert(infoLogLength > 0);
+        std::unique_ptr<char[]> infoLog(new char[infoLogLength]);
+        glCheck(glGetProgramInfoLog(program, infoLogLength, nullptr, infoLog.get()));
+
+        Log::error("Error while linking program:\n%s\n", infoLog.get());
+        throw std::runtime_error("Error while linking program");
+      }
+
+      return program;
+    }
+
+
   } // anonymous namespace
 
   Shader::Shader()
@@ -128,100 +167,59 @@ inline namespace v1 {
 
   }
 
+  Shader::Shader(const Path& filename, Type type)
+  : Shader(loadFile(filename).c_str(), type)
+  {
+  }
+
+  Shader::Shader(const Path& vertexShaderFilename, const Path& fragmentShaderFilename)
+  : Shader(loadFile(vertexShaderFilename).c_str(), loadFile(fragmentShaderFilename).c_str())
+  {
+  }
+
+  Shader::Shader(const char *shader, Type type)
+  : m_program(0)
+  {
+    if (shader == nullptr) {
+      return;
+    }
+
+    switch (type) {
+      case Vertex:
+        m_program = compile(shader, nullptr);
+        break;
+      case Fragment:
+        m_program = compile(nullptr, shader);
+        break;
+    }
+  }
+
+  Shader::Shader(const char *vertexShader, const char *fragmentShader)
+  : m_program(0)
+  {
+    if (vertexShader == nullptr && fragmentShader == nullptr) {
+      return;
+    }
+
+    m_program = compile(vertexShader, fragmentShader);
+  }
+
+  Shader::Shader(InputStream& stream, Type type)
+  : Shader(loadStream(stream).c_str(), type)
+  {
+  }
+
+  Shader::Shader(InputStream& vertexShaderStream, InputStream& fragmentShaderStream)
+  : Shader(loadStream(vertexShaderStream).c_str(), loadStream(fragmentShaderStream).c_str())
+  {
+  }
+
   Shader::~Shader() {
     if (m_program != 0) {
       glCheck(glDeleteProgram(m_program));
     }
   }
 
-  bool Shader::loadFromFile(const Path& filename, Type type) {
-    std::string code = loadFile(filename);
-    return loadFromMemory(code, type);
-  }
-
-  bool Shader::loadFromFile(const Path& vertexShaderFilename, const Path& fragmentShaderFilename) {
-    std::string vertexShader = loadFile(vertexShaderFilename);
-    std::string fragmentShader = loadFile(fragmentShaderFilename);
-    return loadFromMemory(vertexShader, fragmentShader);
-  }
-
-  bool Shader::loadFromMemory(StringRef shader, Type type) {
-    if (shader.isEmpty()) {
-      return false;
-    }
-
-    switch (type) {
-      case Vertex:
-        return compile(shader.getData(), nullptr);
-      case Fragment:
-        return compile(nullptr, shader.getData());
-    }
-
-    return false;
-  }
-
-  bool Shader::loadFromMemory(StringRef vertexShader, StringRef fragmentShader) {
-    const char *vertexShaderCode = vertexShader.isEmpty() ? nullptr : vertexShader.getData();
-    const char *fragmentShaderCode = fragmentShader.isEmpty() ? nullptr : fragmentShader.getData();
-
-    if (vertexShaderCode == nullptr && fragmentShaderCode == nullptr) {
-      return false;
-    }
-
-    return compile(vertexShaderCode, fragmentShaderCode);
-  }
-
-  bool Shader::loadFromStream(InputStream& stream, Type type) {
-    std::string code = loadStream(stream);
-    return loadFromMemory(code, type);
-  }
-
-  bool Shader::loadFromStream(InputStream& vertexShaderStream, InputStream& fragmentShaderStream) {
-    std::string vertexShader = loadStream(vertexShaderStream);
-    std::string fragmentShader = loadStream(fragmentShaderStream);
-    return loadFromMemory(vertexShader, fragmentShader);
-  }
-
-  bool Shader::compile(const char *vertexShaderCode, const char *fragmentShaderCode) {
-    assert(vertexShaderCode != nullptr || fragmentShaderCode != nullptr);
-
-    if (m_program != 0) {
-      glCheck(glDeleteProgram(m_program));
-    }
-
-    glCheck(m_program = glCreateProgram());
-
-    if (vertexShaderCode != nullptr) {
-      GLuint id = compileShader(vertexShaderCode, Vertex);
-      glCheck(glAttachShader(m_program, id));
-      glCheck(glDeleteShader(id)); // the shader is still here because it is attached to the program
-    }
-
-    if (fragmentShaderCode != nullptr) {
-      GLuint id = compileShader(fragmentShaderCode, Fragment);
-      glCheck(glAttachShader(m_program, id));
-      glCheck(glDeleteShader(id)); // the shader is still here because it is attached to the program
-    }
-
-    glCheck(glLinkProgram(m_program));
-
-    GLint linkStatus = GL_FALSE;
-    glCheck(glGetProgramiv(m_program, GL_LINK_STATUS, &linkStatus));
-
-    if (linkStatus == GL_FALSE) {
-      GLint infoLogLength;
-      glCheck(glGetProgramiv(m_program, GL_INFO_LOG_LENGTH, &infoLogLength));
-
-      assert(infoLogLength > 0);
-      std::unique_ptr<char[]> infoLog(new char[infoLogLength]);
-      glCheck(glGetProgramInfoLog(m_program, infoLogLength, nullptr, infoLog.get()));
-
-      Log::error("Error while linking program:\n%s\n", infoLog.get());
-      return false;
-    }
-
-    return true;
-  }
 
   struct Shader::Guard {
     explicit Guard(Shader& shader)

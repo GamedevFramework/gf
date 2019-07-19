@@ -59,6 +59,19 @@ inline namespace v1 {
       { "a_texCoords",  offsetof(Vertex, texCoords),  2 },
     };
 
+    Image createWhitePixel() {
+      uint8_t pixel[] = { 0xFF, 0xFF, 0xFF, 0xFF };
+      return Image({ 1, 1 }, pixel);
+    }
+  }
+
+  RenderTarget::RenderTarget(Vector2i size)
+  : m_view({ 0.0f, 0.0f, static_cast<float>(size.width), static_cast<float>(size.height) })
+  , m_defaultShader(default_vert, default_frag)
+  , m_defaultAlphaShader(default_vert, default_alpha_frag)
+  , m_defaultTexture(createWhitePixel())
+  {
+    m_defaultTexture.setRepeated(true);
   }
 
   RenderTarget::~RenderTarget() = default;
@@ -400,12 +413,6 @@ inline namespace v1 {
     return mapCoordsToPixel(point, getView());
   }
 
-  void RenderTarget::initialize() {
-    initializeViews();
-    initializeTexture();
-    initializeShader();
-  }
-
   Image RenderTarget::captureFramebuffer(unsigned name) const {
     auto size = getSize();
     std::vector<uint8_t> pixels(static_cast<std::size_t>(size.width) * static_cast<std::size_t>(size.height) * 4);
@@ -426,26 +433,6 @@ inline namespace v1 {
     Image image(size, pixels.data());
     image.flipHorizontally();
     return image;
-  }
-
-
-  void RenderTarget::initializeViews() {
-    auto size = getSize();
-    m_view.reset({ 0.0f, 0.0f, static_cast<float>(size.width), static_cast<float>(size.height) });
-  }
-
-  void RenderTarget::initializeShader() {
-    m_defaultShader.loadFromMemory(default_vert, default_frag);
-    m_defaultAlphaShader.loadFromMemory(default_vert, default_alpha_frag);
-  }
-
-  void RenderTarget::initializeTexture() {
-    uint8_t pixel[] = { 0xFF, 0xFF, 0xFF, 0xFF };
-    Image image({ 1, 1 }, pixel);
-    Texture texture(image);
-
-    m_defaultTexture = std::move(texture);
-    m_defaultTexture.setRepeated(true);
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

@@ -35,10 +35,10 @@ inline namespace v1 {
 #endif
 
   RenderPipeline::RenderPipeline(Window& window)
-  : m_window(window)
+  : RenderTarget(window.getFramebufferSize())
+  , m_window(window)
   , m_current(0)
   {
-    initialize();
     Texture::bind(nullptr);
 
     Vector2i size = m_window.getFramebufferSize();
