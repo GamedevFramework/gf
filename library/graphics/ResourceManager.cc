@@ -28,16 +28,6 @@ inline namespace v1 {
   namespace {
 
     template<typename T>
-    class ResourceLoaderLegacy {
-    public:
-      std::unique_ptr<T> operator()(const Path& filename) {
-        auto ptr = std::make_unique<T>();
-        bool loaded = ptr->loadFromFile(filename);
-        return loaded ? std::move(ptr) : nullptr;
-      }
-    };
-
-    template<typename T>
     class ResourceLoader {
     public:
       std::unique_ptr<T> operator()(const Path& filename) {
@@ -49,7 +39,7 @@ inline namespace v1 {
 
   ResourceManager::ResourceManager()
   : m_textures(ResourceLoader<Texture>())
-  , m_fonts(ResourceLoaderLegacy<Font>())
+  , m_fonts(ResourceLoader<Font>())
   {
 
   }

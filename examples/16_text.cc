@@ -32,11 +32,7 @@ int main() {
   gf::Window window("16_text", { 640, 480 }, ~gf::WindowHints::Resizable);
   gf::RenderWindow renderer(window);
 
-  gf::Font font;
-
-  if (!font.loadFromFile("assets/DejaVuSans.ttf")) {
-    return EXIT_FAILURE;
-  }
+  gf::Font font("assets/DejaVuSans.ttf");
 
   gf::Text text;
   text.setFont(font);

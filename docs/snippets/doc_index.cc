@@ -43,10 +43,7 @@ int main() {
 
   // Create a graphical text to display
 
-  gf::Font font;
-  if (!font.loadFromFile("DroidSans.ttf")) {
-    return EXIT_FAILURE;
-  }
+  gf::Font font("DroidSans.ttf");
 
   gf::Text text("Hello gf!", font, 50);
   text.setPosition({ 100, 100 });

@@ -33,12 +33,7 @@ int main() {
   gf::RenderWindow renderer(window);
 
   /// [context]
-  gf::Font font;
-
-  if (!font.loadFromFile("font.ttf")) {
-    return EXIT_FAILURE;
-  }
-
+  gf::Font font("font.ttf");
   gf::UI ui(font, 13);
   /// [context]
 

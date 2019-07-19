@@ -269,13 +269,7 @@ int main() {
 
   gf::Sprite sprite(texture);
 
-  gf::Font font;
-  gf::Path fontPath(GF_DATADIR);
-
-  if (!font.loadFromFile(fontPath / "DroidSans.ttf")) {
-    return EXIT_FAILURE;
-  }
-
+  gf::Font font(gf::Path(GF_DATADIR) / "DroidSans.ttf");
   gf::UI ui(font);
 
   // noise states

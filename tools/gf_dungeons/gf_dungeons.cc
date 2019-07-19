@@ -731,12 +731,7 @@ int main() {
   gf::Window window("gf dungeons", { Size + ExtraSize, Size }, ~gf::WindowHints::Resizable);
   gf::RenderWindow renderer(window);
 
-  gf::Font font;
-
-  if (!font.loadFromFile(gf::Path(GF_DATADIR) / "DroidSans.ttf")) {
-    return EXIT_FAILURE;
-  }
-
+  gf::Font font(gf::Path(GF_DATADIR) / "DroidSans.ttf");
   gf::UI ui(font);
 
   // views

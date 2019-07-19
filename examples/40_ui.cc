@@ -752,12 +752,7 @@ int main() {
   gf::Window window("40_ui", { 1024, 768 }, ~gf::WindowHints::Resizable);
   gf::RenderWindow renderer(window);
 
-  gf::Font font;
-
-  if (!font.loadFromFile("assets/DejaVuSans.ttf")) {
-    return EXIT_FAILURE;
-  }
-
+  gf::Font font("assets/DejaVuSans.ttf");
   gf::UI ui(font);
 
   renderer.clear(gf::Color::Gray());

@@ -42,11 +42,7 @@ int main() {
   gf::Window window("28_widgets", { 640, 480 }, ~gf::WindowHints::Resizable);
   gf::RenderWindow renderer(window);
 
-  gf::Font font;
-
-  if (!font.loadFromFile("assets/DejaVuSans.ttf")) {
-    return EXIT_FAILURE;
-  }
+  gf::Font font("assets/DejaVuSans.ttf");
 
   gf::TextureAtlas atlas;
 

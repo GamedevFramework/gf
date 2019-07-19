@@ -25,6 +25,8 @@
 
 #include <cstring>
 
+#include <stdexcept>
+
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_STROKER_H
@@ -102,7 +104,7 @@ inline namespace v1 {
 
     if (auto err = FT_Init_FreeType(&library)) {
       Log::error("Could not init Freetype library: %s\n", FT_ErrorMessage(err));
-      return;
+      throw std::runtime_error("Could not init Freetype library");
     }
 
     m_library = library;
@@ -111,10 +113,76 @@ inline namespace v1 {
 
     if (auto err = FT_Stroker_New(library, &stroker)) {
       Log::error("Could not create the stroker: %s\n", FT_ErrorMessage(err));
-      return;
+      throw std::runtime_error("Could not create the stroker");
     }
 
     m_stroker = stroker;
+  }
+
+  Font::Font(const Path& filename)
+  : Font()
+  {
+    FT_Library library = static_cast<FT_Library>(m_library);
+
+    // load face
+
+    FT_Face face = nullptr;
+
+    if (auto err = FT_New_Face(library, filename.string().c_str(), 0, &face)) {
+      Log::error("Could not create the font face '%s': %s\n", filename.string().c_str(), FT_ErrorMessage(err));
+      throw std::runtime_error("Could not create the font face");
+    }
+
+    m_face = face;
+  }
+
+  Font::Font(InputStream& stream)
+  : Font()
+  {
+    FT_Library library = static_cast<FT_Library>(m_library);
+
+    // load face
+
+    FT_StreamRec rec;
+    std::memset(&rec, 0, sizeof(FT_StreamRec));
+    rec.base = nullptr;
+    rec.size = 0x7FFFFFFF; // unknown size
+    rec.pos = 0;
+    rec.descriptor.pointer = &stream;
+    rec.read = callbackRead;
+    rec.close = callbackClose;
+
+    FT_Open_Args args;
+    std::memset(&args, 0, sizeof(FT_Open_Args));
+    args.flags = FT_OPEN_STREAM;
+    args.stream = &rec;
+    args.driver = nullptr;
+
+    FT_Face face = nullptr;
+
+    if (auto err = FT_Open_Face(library, &args, 0, &face)) {
+      Log::error("Could not create the font face from stream: %s\n", FT_ErrorMessage(err));
+      throw std::runtime_error("Could not create the font face from stream");
+    }
+
+    m_face = face;
+  }
+
+  Font::Font(ArrayRef<uint8_t> content)
+  : Font()
+  {
+    FT_Library library = static_cast<FT_Library>(m_library);
+
+    // load face
+
+    FT_Face face = nullptr;
+
+    if (auto err = FT_New_Memory_Face(library, static_cast<const FT_Byte*>(content.getData()), content.getSize(), 0, &face)) {
+      Log::error("Could not create the font face: %s\n", FT_ErrorMessage(err));
+      throw std::runtime_error("Could not create the font face");
+    }
+
+    m_face = face;
   }
 
   Font::~Font() {
@@ -152,84 +220,6 @@ inline namespace v1 {
     std::swap(m_face, other.m_face);
     std::swap(m_cache, other.m_cache);
     return *this;
-  }
-
-  bool Font::loadFromFile(const Path& filename) {
-    if (m_library == nullptr) {
-      return false;
-    }
-
-    FT_Library library = static_cast<FT_Library>(m_library);
-
-    // load face
-
-    FT_Face face = nullptr;
-
-    if (auto err = FT_New_Face(library, filename.string().c_str(), 0, &face)) {
-      Log::error("Could not create the font face '%s': %s\n", filename.string().c_str(), FT_ErrorMessage(err));
-      return false;
-    }
-
-    m_face = face;
-
-    return true;
-  }
-
-  bool Font::loadFromStream(InputStream& stream) {
-    if (m_library == nullptr) {
-      return false;
-    }
-
-    FT_Library library = static_cast<FT_Library>(m_library);
-
-    // load face
-
-    FT_StreamRec rec;
-    std::memset(&rec, 0, sizeof(FT_StreamRec));
-    rec.base = nullptr;
-    rec.size = 0x7FFFFFFF; // unknown size
-    rec.pos = 0;
-    rec.descriptor.pointer = &stream;
-    rec.read = callbackRead;
-    rec.close = callbackClose;
-
-    FT_Open_Args args;
-    std::memset(&args, 0, sizeof(FT_Open_Args));
-    args.flags = FT_OPEN_STREAM;
-    args.stream = &rec;
-    args.driver = nullptr;
-
-    FT_Face face = nullptr;
-
-    if (auto err = FT_Open_Face(library, &args, 0, &face)) {
-      Log::error("Could not create the font face from stream: %s\n", FT_ErrorMessage(err));
-      return false;
-    }
-
-    m_face = face;
-
-    return true;
-  }
-
-  bool Font::loadFromMemory(const uint8_t *data, std::size_t length) {
-    if (m_library == nullptr) {
-      return false;
-    }
-
-    FT_Library library = static_cast<FT_Library>(m_library);
-
-    // load face
-
-    FT_Face face = nullptr;
-
-    if (auto err = FT_New_Memory_Face(library, static_cast<const FT_Byte*>(data), length, 0, &face)) {
-      Log::error("Could not create the font face: %s\n", FT_ErrorMessage(err));
-      return false;
-    }
-
-    m_face = face;
-
-    return true;
   }
 
   const Glyph& Font::getGlyph(char32_t codepoint, unsigned characterSize, float outlineThickness) {

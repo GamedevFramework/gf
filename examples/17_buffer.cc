@@ -87,11 +87,7 @@ int main() {
    * a text in a buffer
    */
 
-  gf::Font font;
-
-  if (!font.loadFromFile("assets/DejaVuSans.ttf")) {
-    return EXIT_FAILURE;
-  }
+  gf::Font font("assets/DejaVuSans.ttf");
 
   gf::VertexBuffer textBuffer;
   gf::VertexBuffer textOutlineBuffer;
