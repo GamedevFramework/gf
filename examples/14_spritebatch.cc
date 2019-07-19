@@ -38,12 +38,7 @@ int main() {
   gf::Window window("14_spritebatch", { 640, 480 }, ~gf::WindowHints::Resizable);
   gf::RenderWindow renderer(window);
 
-  gf::Texture texture;
-
-  if (!texture.loadFromFile("assets/spritesheet.png")) {
-    return EXIT_FAILURE;
-  }
-
+  gf::Texture texture("assets/spritesheet.png");
   texture.setSmooth();
 
   gf::Sprite cars[8];

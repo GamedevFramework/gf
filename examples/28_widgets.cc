@@ -54,11 +54,7 @@ int main() {
     return EXIT_FAILURE;
   }
 
-  gf::Texture texture;
-
-  if (!texture.loadFromFile("assets/ui.png")) {
-    return EXIT_FAILURE;
-  }
+  gf::Texture texture("assets/ui.png");
 
   atlas.setTexture(texture);
 

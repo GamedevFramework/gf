@@ -37,8 +37,8 @@ int main() {
   gf::Window window("32_colorblind", { 1280,  768 }, ~gf::WindowHints::Resizable);
   gf::RenderWindow renderer(window);
 
-  gf::RenderTexture textureRenderer;
-  textureRenderer.create({ 1280, 768 });
+  auto framebufferSize = window.getFramebufferSize();
+  gf::RenderTexture textureRenderer(framebufferSize);
 
   gf::ColorBlindEffect effect(gf::ColorBlindEffect::Normal);
 
@@ -46,12 +46,7 @@ int main() {
    * Wesnoth screenshot
    */
 
-  gf::Texture texture;
-
-  if (!texture.loadFromFile("assets/wesnoth.png")) {
-    return EXIT_FAILURE;
-  }
-
+  gf::Texture texture("assets/wesnoth.png");
   texture.setSmooth();
 
   gf::Sprite sprite(texture);

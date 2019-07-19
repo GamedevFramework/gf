@@ -84,12 +84,7 @@ int main() {
 
   gf::ZoomingViewAdaptor adaptor(renderer, view);
 
-  gf::Texture texture;
-
-  if (!texture.loadFromFile("assets/tilelayer.png")) {
-    return EXIT_FAILURE;
-  }
-
+  gf::Texture texture("assets/tilelayer.png");
   texture.setSmooth();
 
   gf::TileLayer tileLayer({ MapWidth, MapHeight });

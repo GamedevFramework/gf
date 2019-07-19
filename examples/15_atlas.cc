@@ -42,12 +42,7 @@ int main() {
     return EXIT_FAILURE;
   }
 
-  gf::Texture texture;
-
-  if (!texture.loadFromFile("assets" / atlas.getTexturePath())) {
-    return EXIT_FAILURE;
-  }
-
+  gf::Texture texture("assets" / atlas.getTexturePath());
   texture.setSmooth();
   atlas.setTexture(texture);
 

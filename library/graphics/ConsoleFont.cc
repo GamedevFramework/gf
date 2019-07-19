@@ -456,9 +456,9 @@ inline namespace v1 {
       }
     }
 
-    m_texture.create(imageSize);
-    m_texture.update(pixels.data());
-
+    AlphaTexture texture(imageSize);
+    texture.update(pixels.data());
+    m_texture = std::move(texture);
     return true;
   }
 
@@ -507,7 +507,9 @@ inline namespace v1 {
       }
     }
 
-    return m_texture.loadFromImage(image);
+    Texture texture(image);
+    m_texture = std::move(texture);
+    return true;
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

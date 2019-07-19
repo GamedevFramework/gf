@@ -36,10 +36,7 @@ int main() {
 
   // Load a sprite to display
 
-  gf::Texture texture;
-  if (!texture.loadFromFile("sprite.png")) {
-    return EXIT_FAILURE;
-  }
+  gf::Texture texture("sprite.png");
 
   gf::Sprite sprite(texture);
   sprite.setPosition({ 300, 200 });

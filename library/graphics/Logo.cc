@@ -588,88 +588,95 @@ inline namespace v1 {
 
   static constexpr int Advance = 95;
 
+  namespace {
 
-  struct Framebuffer {
-    Color4f data[BoundsHeight][BoundsWidth];
+    struct Framebuffer {
+      Color4f data[BoundsHeight][BoundsWidth];
 
-    void clear(const Color4f& color) {
-      for (int y = 0; y < BoundsHeight; ++y) {
-        for (int x = 0; x < BoundsWidth; ++x) {
-          data[y][x] = color;
-        }
-      }
-    }
-
-    void blend(Vector2i pos, Color4f src) {
-      assert(0 <= pos.x && pos.x < BoundsWidth);
-      assert(0 <= pos.y && pos.y < BoundsHeight);
-
-      Color4f dst = data[pos.y][pos.x];
-
-      Color4f out;
-      out.a = src.a + dst.a * (1 - src.a);
-
-      if (out.a < Epsilon) {
-        out.r = out.g = out.b = 0.0f;
-      } else {
-        out.r = (src.r * src.a + dst.r * dst.a * (1 - src.a)) / out.a;
-        out.g = (src.g * src.a + dst.g * dst.a * (1 - src.a)) / out.a;
-        out.b = (src.b * src.a + dst.b * dst.a * (1 - src.a)) / out.a;
-      }
-
-      assert(0.0f <= out.r && out.r <= 1.0f);
-      assert(0.0f <= out.g && out.g <= 1.0f);
-      assert(0.0f <= out.b && out.b <= 1.0f);
-      assert(0.0f <= out.a && out.a <= 1.0f);
-
-      data[pos.y][pos.x] = out;
-    }
-
-    template<int Width, int Height>
-    void drawLetter(Vector2i position, Vector2i offset, Color4f color, const uint8_t data[Height][Width]) {
-      for (int y = 0; y < Height; ++y) {
-        for (int x = 0; x < Width; ++x) {
-          Vector2i coords(x, y);
-          blend(position + offset + coords, color * Color::Opaque(data[y][x] / 255.0f));
-        }
-      }
-    }
-
-    Image exportToImage() {
-      Image image(vec(BoundsWidth, BoundsHeight));
-
-      for (int y = 0; y < BoundsHeight; ++y) {
-        for (int x = 0; x < BoundsWidth; ++x) {
-          image.setPixel(vec(x, y), Color::toRgba32(data[y][x]));
+      void clear(const Color4f& color) {
+        for (int y = 0; y < BoundsHeight; ++y) {
+          for (int x = 0; x < BoundsWidth; ++x) {
+            data[y][x] = color;
+          }
         }
       }
 
-      return image;
+      void blend(Vector2i pos, Color4f src) {
+        assert(0 <= pos.x && pos.x < BoundsWidth);
+        assert(0 <= pos.y && pos.y < BoundsHeight);
+
+        Color4f dst = data[pos.y][pos.x];
+
+        Color4f out;
+        out.a = src.a + dst.a * (1 - src.a);
+
+        if (out.a < Epsilon) {
+          out.r = out.g = out.b = 0.0f;
+        } else {
+          out.r = (src.r * src.a + dst.r * dst.a * (1 - src.a)) / out.a;
+          out.g = (src.g * src.a + dst.g * dst.a * (1 - src.a)) / out.a;
+          out.b = (src.b * src.a + dst.b * dst.a * (1 - src.a)) / out.a;
+        }
+
+        assert(0.0f <= out.r && out.r <= 1.0f);
+        assert(0.0f <= out.g && out.g <= 1.0f);
+        assert(0.0f <= out.b && out.b <= 1.0f);
+        assert(0.0f <= out.a && out.a <= 1.0f);
+
+        data[pos.y][pos.x] = out;
+      }
+
+      template<int Width, int Height>
+      void drawLetter(Vector2i position, Vector2i offset, Color4f color, const uint8_t data[Height][Width]) {
+        for (int y = 0; y < Height; ++y) {
+          for (int x = 0; x < Width; ++x) {
+            Vector2i coords(x, y);
+            blend(position + offset + coords, color * Color::Opaque(data[y][x] / 255.0f));
+          }
+        }
+      }
+
+      Image exportToImage() {
+        Image image(vec(BoundsWidth, BoundsHeight));
+
+        for (int y = 0; y < BoundsHeight; ++y) {
+          for (int x = 0; x < BoundsWidth; ++x) {
+            image.setPixel(vec(x, y), Color::toRgba32(data[y][x]));
+          }
+        }
+
+        return image;
+      }
+
+    };
+
+    Image createLogoImage() {
+      Framebuffer fb;
+      fb.clear({ 1.0f, 1.0f, 1.0f, 0.0f });
+
+      Vector2i position(-BoundsLeft, -BoundsTop);
+
+      // g
+
+      fb.drawLetter<OutGWidth, OutGHeight>(position, { OutGLeft, OutGTop }, Color::Azure, OutG);
+      fb.drawLetter<LetterGWidth, LetterGHeight>(position, { LetterGLeft, LetterGTop }, Color::Orange, LetterG);
+
+      position.x += Advance;
+
+      // f
+
+      fb.drawLetter<OutFWidth, OutFHeight>(position, { OutFLeft, OutFTop }, Color::Azure, OutF);
+      fb.drawLetter<LetterFWidth, LetterFHeight>(position, { LetterFLeft, LetterFTop }, Color::Orange, LetterF);
+
+      return fb.exportToImage();
     }
 
-  };
+  } // anonymous namespace
+
 
   Logo::Logo()
+  : m_texture(createLogoImage())
   {
-    Framebuffer fb;
-    fb.clear({ 1.0f, 1.0f, 1.0f, 0.0f });
-
-    Vector2i position(-BoundsLeft, -BoundsTop);
-
-    // g
-
-    fb.drawLetter<OutGWidth, OutGHeight>(position, { OutGLeft, OutGTop }, Color::Azure, OutG);
-    fb.drawLetter<LetterGWidth, LetterGHeight>(position, { LetterGLeft, LetterGTop }, Color::Orange, LetterG);
-
-    position.x += Advance;
-
-    // f
-
-    fb.drawLetter<OutFWidth, OutFHeight>(position, { OutFLeft, OutFTop }, Color::Azure, OutF);
-    fb.drawLetter<LetterFWidth, LetterFHeight>(position, { LetterFLeft, LetterFTop }, Color::Orange, LetterF);
-
-    Image image = fb.exportToImage();
-    m_texture.loadFromImage(image);
     m_texture.setSmooth();
     m_texture.generateMipmap();
   }

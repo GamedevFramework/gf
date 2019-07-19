@@ -38,9 +38,7 @@ int main() {
   gf::RenderWindow renderer(window);
 
   auto framebufferSize = window.getFramebufferSize();
-
-  gf::RenderTexture textureRenderer;
-  textureRenderer.create(framebufferSize);
+  gf::RenderTexture textureRenderer(framebufferSize);
 
   gf::DefaultEffect defaultEffect;
 

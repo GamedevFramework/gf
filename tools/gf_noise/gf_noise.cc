@@ -103,12 +103,9 @@ static void generateArrayFromNoise(gf::Heightmap& heightmap, gf::Noise2D& noise,
 }
 
 static gf::Image generateImageFromArray(const RenderingParams& renderingParams, const gf::Heightmap& heightmap) {
-  gf::Image image;
-
   switch (renderingParams.rendering) {
     case Rendering::Grayscale:
-      image = heightmap.copyToGrayscaleImage();
-      break;
+      return heightmap.copyToGrayscaleImage();
 
     case Rendering::Colored: {
       // see: http://www.blitzbasic.com/codearcs/codearcs.php?code=2415
@@ -124,12 +121,12 @@ static gf::Image generateImageFromArray(const RenderingParams& renderingParams, 
       ramp.addColorStop(1.000f, gf::Color::fromRgba32(255, 255, 255)); // white: snow
 
       gf::Heightmap::Render renderMode = renderingParams.shaded ? gf::Heightmap::Render::Shaded : gf::Heightmap::Render::Colored;
-      image = heightmap.copyToColoredImage(ramp, renderingParams.waterLevel, renderMode);
-      break;
+      return heightmap.copyToColoredImage(ramp, renderingParams.waterLevel, renderMode);
     }
   }
 
-  return image;
+  assert(false);
+  return gf::Image();
 }
 
 static gf::Image generate(gf::Texture& texture, const RenderingParams& renderingParams, gf::Heightmap& heightmap, gf::Noise2D& noise, const FractalParams& fractalParams, double scale = 1.0) {
@@ -268,8 +265,7 @@ int main() {
   gf::Window window("gf noise", { Size + ExtraSize, Size }, ~gf::WindowHints::Resizable);
   gf::RenderWindow renderer(window);
 
-  gf::Texture texture;
-  texture.loadFromImage(image);
+  gf::Texture texture(image);
 
   gf::Sprite sprite(texture);
 

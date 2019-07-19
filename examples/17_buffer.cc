@@ -63,12 +63,7 @@ int main() {
    * a sprite in a buffer
    */
 
-  gf::Texture texture;
-
-  if (!texture.loadFromFile("assets/bomb.png")) {
-    return EXIT_FAILURE;
-  }
-
+  gf::Texture texture("assets/bomb.png");
   texture.setSmooth();
 
   gf::VertexBuffer spriteBuffer;

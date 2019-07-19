@@ -35,43 +35,6 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  BareTexture::BareTexture(Format format)
-  : m_format(format)
-  , m_name(0)
-  , m_size{0, 0}
-  , m_smooth(false)
-  , m_repeated(false)
-  , m_mipmap(false)
-  {
-  }
-
-  BareTexture::~BareTexture() {
-    if (m_name != 0) {
-      GLuint name = static_cast<GLuint>(m_name);
-      glCheck(glDeleteTextures(1, &name));
-    }
-  }
-
-  BareTexture::BareTexture(BareTexture&& other) noexcept
-  : m_format(other.m_format)
-  , m_name(std::exchange(other.m_name, 0))
-  , m_size(other.m_size)
-  , m_smooth(other.m_smooth)
-  , m_repeated(other.m_repeated)
-  , m_mipmap(other.m_mipmap)
-  {
-  }
-
-  BareTexture& BareTexture::operator=(BareTexture&& other) noexcept {
-    std::swap(m_format, other.m_format);
-    std::swap(m_name, other.m_name);
-    std::swap(m_size, other.m_size);
-    std::swap(m_smooth, other.m_smooth);
-    std::swap(m_repeated, other.m_repeated);
-    std::swap(m_mipmap, other.m_mipmap);
-    return *this;
-  }
-
   namespace {
 
     GLenum getEnum(BareTexture::Format format) {
@@ -112,18 +75,29 @@ inline namespace v1 {
 
   } // anonymous namespace
 
-  bool BareTexture::create(Vector2i size, const uint8_t *data) {
-    if (size.width == 0 || size.height == 0) {
-      return false;
-    }
+  BareTexture::BareTexture(Format format)
+  : m_format(format)
+  , m_name(0)
+  , m_size{0, 0}
+  , m_smooth(false)
+  , m_repeated(false)
+  , m_mipmap(false)
+  {
+  }
 
-    if (m_name == 0) {
-      GLuint name;
-      glCheck(glGenTextures(1, &name));
-      m_name = static_cast<unsigned>(name);
-    }
+  BareTexture::BareTexture(Format format, Vector2i size, const uint8_t *data)
+  : m_format(format)
+  , m_name(0)
+  , m_size(size)
+  , m_smooth(false)
+  , m_repeated(false)
+  , m_mipmap(false)
+  {
+    assert(m_size.width > 0 && m_size.height > 0);
 
-    m_size = size;
+    GLuint name;
+    glCheck(glGenTextures(1, &name));
+    m_name = static_cast<unsigned>(name);
 
     GLenum textureFormat = getEnum(m_format);
 
@@ -131,12 +105,33 @@ inline namespace v1 {
 
     glCheck(glBindTexture(GL_TEXTURE_2D, m_name));
     glCheck(glTexImage2D(GL_TEXTURE_2D, 0, textureFormat, m_size.width, m_size.height, 0, textureFormat, GL_UNSIGNED_BYTE, data));
-    glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, m_repeated ? GL_REPEAT : GL_CLAMP_TO_EDGE));
-    glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, m_repeated ? GL_REPEAT : GL_CLAMP_TO_EDGE));
-    glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, m_smooth ? GL_LINEAR : GL_NEAREST));
-    glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, getMinFilter(m_smooth, m_mipmap)));
+  }
 
-    return true;
+  BareTexture::~BareTexture() {
+    if (m_name != 0) {
+      GLuint name = static_cast<GLuint>(m_name);
+      glCheck(glDeleteTextures(1, &name));
+    }
+  }
+
+  BareTexture::BareTexture(BareTexture&& other) noexcept
+  : m_format(other.m_format)
+  , m_name(std::exchange(other.m_name, 0))
+  , m_size(other.m_size)
+  , m_smooth(other.m_smooth)
+  , m_repeated(other.m_repeated)
+  , m_mipmap(other.m_mipmap)
+  {
+  }
+
+  BareTexture& BareTexture::operator=(BareTexture&& other) noexcept {
+    std::swap(m_format, other.m_format);
+    std::swap(m_name, other.m_name);
+    std::swap(m_size, other.m_size);
+    std::swap(m_smooth, other.m_smooth);
+    std::swap(m_repeated, other.m_repeated);
+    std::swap(m_mipmap, other.m_mipmap);
+    return *this;
   }
 
   void BareTexture::setSmooth(bool smooth) {
@@ -234,33 +229,34 @@ inline namespace v1 {
   {
   }
 
-  bool Texture::create(Vector2i size) {
-    return BareTexture::create(size, nullptr);
+  Texture::Texture(Vector2i size)
+  : BareTexture(Format::Color, size, nullptr)
+  {
   }
 
-  bool Texture::loadFromImage(const Image& image) {
-    return BareTexture::create(image.getSize(), image.getPixelsPtr());
+  Texture::Texture(const Image& image)
+  : BareTexture(Format::Color, image.getSize(), image.getPixelsPtr())
+  {
   }
 
-  bool Texture::loadFromFile(const Path& filename) {
-    Image image(filename);
-    return loadFromImage(image);
+  Texture::Texture(const Path& filename)
+  : Texture(Image(filename))
+  {
   }
 
-  bool Texture::loadFromStream(InputStream& stream) {
-    Image image(stream);
-    return loadFromImage(image);
+  Texture::Texture(InputStream& stream)
+  : Texture(Image(stream))
+  {
   }
 
-  bool Texture::loadFromMemory(const uint8_t *data, std::size_t length) {
-    Image image(array(data, length));
-    return loadFromImage(image);
+  Texture::Texture(ArrayRef<uint8_t> content)
+  : Texture(Image(content))
+  {
   }
 
   void Texture::update(const Image& image) {
     BareTexture::update(image.getPixelsPtr(), RectI({ 0, 0 }, image.getSize()));
   }
-
 
   Image Texture::copyToImage() const {
     if (getName() == 0) {
@@ -303,8 +299,9 @@ inline namespace v1 {
   {
   }
 
-  bool AlphaTexture::create(Vector2i size) {
-    return BareTexture::create(size, nullptr);
+  AlphaTexture::AlphaTexture(Vector2i size)
+  : BareTexture(Format::Alpha, size, nullptr)
+  {
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

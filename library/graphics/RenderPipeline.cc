@@ -46,10 +46,8 @@ inline namespace v1 {
     for (auto& buffer : m_buffers) {
       buffer.name = 0;
 
-      if (!buffer.texture.create(size)) {
-        continue;
-      }
-
+      Texture texture(size);
+      buffer.texture = std::move(texture);
       buffer.texture.setSmooth();
 
       GLuint name;
@@ -89,10 +87,8 @@ inline namespace v1 {
     Vector2i size = m_window.getFramebufferSize();
 
     for (auto& buffer : m_buffers) {
-      if (!buffer.texture.create(size)) {
-        continue;
-      }
-
+      Texture texture(size);
+      buffer.texture = std::move(texture);
       buffer.texture.setSmooth();
 
       glCheck(glBindFramebuffer(GL_FRAMEBUFFER, buffer.name));

@@ -58,11 +58,7 @@ inline namespace v1 {
    * gf::RenderWindow renderer(window);
    *
    * // Create a new render-texture
-   * gf::RenderTexture textureRenderer;
-   *
-   * if (!textureRenderer.create(500, 500)) {
-   *   return -1;
-   * }
+   * gf::RenderTexture textureRenderer({ 500, 500 });
    *
    * // The main loop
    * while (window.isOpen()) {
@@ -102,32 +98,16 @@ inline namespace v1 {
   class GF_API RenderTexture : public RenderTarget {
   public:
     /**
-     * @brief Default constructor
+     * @brief Create the render-texture
      *
-     * Constructs an empty, invalid render-texture. You must
-     * call `create()` to have a valid render-texture.
-     *
-     * @sa create()
+     * @param size Size of the render-texture
      */
-    RenderTexture();
+    RenderTexture(Vector2i size);
 
     /**
      * @brief Destructor
      */
     ~RenderTexture();
-
-    /**
-     * @brief Create the render-texture
-     *
-     * Before calling this function, the render-texture is in
-     * an invalid state, thus it is mandatory to call it before
-     * doing anything with the render-texture.
-     *
-     * @param size Size of the render-texture
-     *
-     * @return True if creation has been successful
-     */
-    bool create(Vector2i size);
 
     /**
      * @brief Enable or disable texture smoothing

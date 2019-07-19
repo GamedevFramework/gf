@@ -33,10 +33,23 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  RenderTexture::RenderTexture()
+  RenderTexture::RenderTexture(Vector2i size)
   : m_name(0)
+  , m_texture(size)
   {
+    m_texture.setSmooth();
+    Texture::bind(nullptr);
 
+    initialize();
+
+    GLuint name;
+    glCheck(glGenFramebuffers(1, &name));
+    m_name = static_cast<unsigned>(name);
+
+    glCheck(glBindFramebuffer(GL_FRAMEBUFFER, m_name));
+    glCheck(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_texture.getName(), 0));
+    assert(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
+    glCheck(glBindFramebuffer(GL_FRAMEBUFFER, 0));
   }
 
   RenderTexture::~RenderTexture() {
@@ -44,33 +57,6 @@ inline namespace v1 {
       GLuint name = static_cast<GLuint>(m_name);
       glCheck(glDeleteFramebuffers(1, &name));
     }
-
-  }
-
-  bool RenderTexture::create(Vector2i size) {
-    if (!m_texture.create(size)) {
-      return false;
-    }
-
-    m_texture.setSmooth();
-    Texture::bind(nullptr);
-
-    initialize();
-
-
-    if (m_name == 0) {
-      GLuint name;
-      glCheck(glGenFramebuffers(1, &name));
-      m_name = static_cast<unsigned>(name);
-    }
-
-
-    glCheck(glBindFramebuffer(GL_FRAMEBUFFER, m_name));
-    glCheck(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_texture.getName(), 0));
-    assert(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
-    glCheck(glBindFramebuffer(GL_FRAMEBUFFER, 0));
-
-    return true;
   }
 
   Vector2i RenderTexture::getSize() const {

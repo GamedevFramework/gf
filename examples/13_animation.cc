@@ -34,12 +34,7 @@ int main() {
   gf::Window window("13_animation", { 640, 480 }, ~gf::WindowHints::Resizable);
   gf::RenderWindow renderer(window);
 
-  gf::Texture texture;
-
-  if (!texture.loadFromFile("assets/skeleton.png")) {
-    return EXIT_FAILURE;
-  }
-
+  gf::Texture texture("assets/skeleton.png");
   texture.setSmooth();
 
   gf::Animation animation;

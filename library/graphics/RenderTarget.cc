@@ -442,8 +442,9 @@ inline namespace v1 {
   void RenderTarget::initializeTexture() {
     uint8_t pixel[] = { 0xFF, 0xFF, 0xFF, 0xFF };
     Image image({ 1, 1 }, pixel);
+    Texture texture(image);
 
-    m_defaultTexture.loadFromImage(image);
+    m_defaultTexture = std::move(texture);
     m_defaultTexture.setRepeated(true);
   }
 

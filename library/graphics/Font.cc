@@ -315,7 +315,9 @@ inline namespace v1 {
 
   Font::GlyphCache Font::createCache(unsigned characterSize) {
     GlyphCache cache;
-    cache.texture.create({ DefaultSize, DefaultSize });
+
+    AlphaTexture texture({ DefaultSize, DefaultSize });
+    cache.texture = std::move(texture);
 
     // create the glyphs for the usual characters
     for (char c : "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz") {

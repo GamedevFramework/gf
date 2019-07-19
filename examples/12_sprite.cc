@@ -36,12 +36,7 @@ int main() {
 
   bool smooth = true;
 
-  gf::Texture texture;
-
-  if (!texture.loadFromFile("assets/bomb.png")) {
-    return EXIT_FAILURE;
-  }
-
+  gf::Texture texture("assets/bomb.png");
   texture.setSmooth(smooth);
 
   gf::Sprite sprite(texture);
@@ -49,12 +44,7 @@ int main() {
   sprite.setScale({ 0.8f, 0.8f });
   sprite.setAnchor(gf::Anchor::Center);
 
-  gf::Texture textureWithMipmap;
-
-  if (!textureWithMipmap.loadFromFile("assets/bomb.png")) {
-    return EXIT_FAILURE;
-  }
-
+  gf::Texture textureWithMipmap("assets/bomb.png");
   textureWithMipmap.setSmooth(smooth);
   textureWithMipmap.generateMipmap();
 
