@@ -45,12 +45,7 @@ int main() {
 //   std::cout << "\tM: change mode between field of vision and route finding\n";
 //   std::cout << "\tEscape: Close the window\n";
 
-  gf::BitmapConsoleFont font;
-
-  if (!font.loadFromFile("assets/terminal.png", { gf::ConsoleFontFormat::Grayscale, gf::ConsoleFontFormat::InRow, gf::ConsoleFontFormat::ModifiedCodePage437 })) {
-    return EXIT_FAILURE;
-  }
-
+  gf::BitmapConsoleFont font("assets/terminal.png", { gf::ConsoleFontFormat::Grayscale, gf::ConsoleFontFormat::InRow, gf::ConsoleFontFormat::ModifiedCodePage437 });
   assert(CharacterSize == font.getCharacterSize());
 
   gf::Console console(font, ConsoleSize);
