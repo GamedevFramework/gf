@@ -26,6 +26,16 @@
 #include <gf/Image.h>
 #include <gf/Window.h>
 
+namespace {
+
+  void setSystemCursor(gf::Window& window, gf::Cursor& cursor, gf::Cursor::Type type) {
+    gf::Cursor newCursor(type);
+    cursor = std::move(newCursor);
+    window.setMouseCursor(cursor);
+  }
+
+}
+
 int main() {
   gf::Window window("02_window", { 640, 480 }, ~gf::WindowHints::Resizable);
 
@@ -67,69 +77,59 @@ int main() {
               break;
 
             case gf::Scancode::Num1:
-              cursor.loadFromSystem(gf::Cursor::Arrow);
-              window.setMouseCursor(cursor);
+              setSystemCursor(window, cursor, gf::Cursor::Arrow);
               break;
 
             case gf::Scancode::Num2:
-              cursor.loadFromSystem(gf::Cursor::ArrowWait);
-              window.setMouseCursor(cursor);
+              setSystemCursor(window, cursor, gf::Cursor::ArrowWait);
               break;
 
             case gf::Scancode::Num3:
-              cursor.loadFromSystem(gf::Cursor::Wait);
-              window.setMouseCursor(cursor);
+              setSystemCursor(window, cursor, gf::Cursor::Wait);
               break;
 
             case gf::Scancode::Num4:
-              cursor.loadFromSystem(gf::Cursor::Text);
-              window.setMouseCursor(cursor);
+              setSystemCursor(window, cursor, gf::Cursor::Text);
               break;
 
             case gf::Scancode::Num5:
-              cursor.loadFromSystem(gf::Cursor::Hand);
-              window.setMouseCursor(cursor);
+              setSystemCursor(window, cursor, gf::Cursor::Hand);
               break;
 
             case gf::Scancode::Num6:
-              cursor.loadFromSystem(gf::Cursor::SizeHorizontal);
-              window.setMouseCursor(cursor);
+              setSystemCursor(window, cursor, gf::Cursor::SizeHorizontal);
               break;
 
             case gf::Scancode::Num7:
-              cursor.loadFromSystem(gf::Cursor::SizeVertical);
-              window.setMouseCursor(cursor);
+              setSystemCursor(window, cursor, gf::Cursor::SizeVertical);
               break;
 
             case gf::Scancode::Num8:
-              cursor.loadFromSystem(gf::Cursor::SizeTopLeftBottomRight);
-              window.setMouseCursor(cursor);
+              setSystemCursor(window, cursor, gf::Cursor::SizeTopLeftBottomRight);
               break;
 
             case gf::Scancode::Num9:
-              cursor.loadFromSystem(gf::Cursor::SizeBottomLeftTopRight);
-              window.setMouseCursor(cursor);
+              setSystemCursor(window, cursor, gf::Cursor::SizeBottomLeftTopRight);
               break;
 
             case gf::Scancode::Num0:
-              cursor.loadFromSystem(gf::Cursor::SizeAll);
-              window.setMouseCursor(cursor);
+              setSystemCursor(window, cursor, gf::Cursor::SizeAll);
               break;
 
             case gf::Scancode::Minus:
-              cursor.loadFromSystem(gf::Cursor::Cross);
-              window.setMouseCursor(cursor);
+              setSystemCursor(window, cursor, gf::Cursor::Cross);
               break;
 
             case gf::Scancode::Equals:
-              cursor.loadFromSystem(gf::Cursor::NotAllowed);
-              window.setMouseCursor(cursor);
+              setSystemCursor(window, cursor, gf::Cursor::NotAllowed);
               break;
 
-            case gf::Scancode::Backspace:
-              cursor.loadFromImage(image, { 4u, 4u });
+            case gf::Scancode::Backspace: {
+              gf::Cursor newCursor(image, { 4, 4 });
+              cursor = std::move(newCursor);
               window.setMouseCursor(cursor);
               break;
+            }
 
             default:
               break;

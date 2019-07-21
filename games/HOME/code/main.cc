@@ -80,11 +80,8 @@ int main() {
   // cursor
 
   gf::Image image(home::gResourceManager().getAbsolutePath("cursor.png"));
-  gf::Cursor cursor;
-
-  if (cursor.loadFromImage(image, { 32u, 32u })) {
-    window.setMouseCursor(cursor);
-  }
+  gf::Cursor cursor(image, { 32, 32 });
+  window.setMouseCursor(cursor);
 
   // views
 

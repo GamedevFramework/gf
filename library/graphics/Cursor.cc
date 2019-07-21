@@ -42,32 +42,10 @@ inline namespace v1 {
 
   }
 
-  Cursor::Cursor(Cursor&& other) noexcept
-  : m_cursor(std::exchange(other.m_cursor, nullptr))
+  Cursor::Cursor(const uint8_t* pixels, Vector2i size, Vector2i hotspot)
+  : m_cursor(nullptr)
   {
-
-  }
-
-  Cursor& Cursor::operator=(Cursor&& other) noexcept {
-    m_cursor = std::exchange(other.m_cursor, nullptr);
-    return *this;
-  }
-
-  Cursor::~Cursor() {
-    if (m_cursor != nullptr) {
-      SDL_FreeCursor(m_cursor);
-    }
-  }
-
-  bool Cursor::loadFromPixels(const uint8_t* pixels, Vector2i size, Vector2i hotspot) {
-    if (pixels == nullptr || size.width == 0 || size.height == 0) {
-      return false;
-    }
-
-    if (m_cursor != nullptr) {
-      SDL_FreeCursor(m_cursor);
-      m_cursor = nullptr;
-    }
+    assert(pixels != nullptr && size.width > 0 && size.height > 0);
 
     Uint32 rmask, gmask, bmask, amask;
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
@@ -87,7 +65,7 @@ inline namespace v1 {
 
     if (surface == nullptr) {
       Log::error("Could not create surface for cursor: %s", SDL_GetError());
-      return false;
+      throw std::runtime_error("Could not create surface for cursor");
     }
 
     m_cursor = SDL_CreateColorCursor(surface, hotspot.x, hotspot.y);
@@ -95,14 +73,13 @@ inline namespace v1 {
 
     if (m_cursor == nullptr) {
       Log::error("Could not load cursor: '%s'\n", SDL_GetError());
-      return false;
+      throw std::runtime_error("Could not load cursor");
     }
-
-    return true;
   }
 
-  bool Cursor::loadFromImage(const Image& image, Vector2i hotspot) {
-    return loadFromPixels(image.getPixelsPtr(), image.getSize(), hotspot);
+  Cursor::Cursor(const Image& image, Vector2i hotspot)
+  : Cursor(image.getPixelsPtr(), image.getSize(), hotspot)
+  {
   }
 
   namespace {
@@ -141,23 +118,34 @@ inline namespace v1 {
 
   } // anonymous namespace
 
-  bool Cursor::loadFromSystem(Type type) {
-    if (m_cursor != nullptr) {
-      SDL_FreeCursor(m_cursor);
-      m_cursor = nullptr;
-    }
-
-    m_cursor = SDL_CreateSystemCursor(getSDLSystemCursor(type));
-
+  Cursor::Cursor(Type type)
+  : m_cursor(SDL_CreateSystemCursor(getSDLSystemCursor(type)))
+  {
     if (m_cursor == nullptr) {
       Log::error("Could not load system cursor: '%s'\n", SDL_GetError());
-      return false;
+      throw std::runtime_error("Could not load system cursor");
     }
+  }
 
-    return true;
+  Cursor::Cursor(Cursor&& other) noexcept
+  : m_cursor(std::exchange(other.m_cursor, nullptr))
+  {
+
+  }
+
+  Cursor& Cursor::operator=(Cursor&& other) noexcept {
+    std::swap(m_cursor, other.m_cursor);
+    return *this;
+  }
+
+  Cursor::~Cursor() {
+    if (m_cursor != nullptr) {
+      SDL_FreeCursor(m_cursor);
+    }
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif
 }
+
