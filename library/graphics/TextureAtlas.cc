@@ -34,27 +34,29 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  bool TextureAtlas::loadFromFile(const Path& filename) {
+  TextureAtlas::TextureAtlas(const Path& filename)
+  : m_texture(nullptr)
+  {
     pugi::xml_document doc;
     pugi::xml_parse_result result = doc.load_file(filename.string().c_str());
 
     if (!result) {
       Log::error("Could not load atlas texture '%s': %s\n", filename.string().c_str(), result.description());
-      return false;
+      throw std::runtime_error("Could not load atlas texture");
     }
 
     pugi::xml_node root = doc.child("TextureAtlas");
 
     if (!root) {
       Log::error("Atlas is not in the right format '%s'\n", filename.string().c_str());
-      return false;
+      throw std::runtime_error("Atlas is not in the right format");
     }
 
     Path texturePath = root.attribute("imagePath").as_string("");
 
     if (texturePath.empty()) {
       Log::error("Image path is not set in '%s'\n", filename.string().c_str());
-      return false;
+      throw std::runtime_error("Image path is not set");
     }
 
     setTexturePath(texturePath);
@@ -76,22 +78,15 @@ inline namespace v1 {
 
       addSubTexture(std::move(name), rect);
     }
-
-    return true;
   }
 
-  bool TextureAtlas::loadFromFile(const Path& filename, ResourceManager& resources) {
+  TextureAtlas::TextureAtlas(const Path& filename, ResourceManager& resources)
+  : TextureAtlas(resources.getAbsolutePath(filename))
+  {
     gf::Path absolute = resources.getAbsolutePath(filename);
-    bool loaded = loadFromFile(absolute);
-
-    if (!loaded) {
-      return false;
-    }
-
     Path parent = absolute.parent_path();
     Texture& texture = resources.getTexture(parent / getTexturePath());
     setTexture(texture);
-    return true;
   }
 
   void TextureAtlas::addSubTexture(std::string name, const RectI& rect) {

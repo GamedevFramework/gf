@@ -36,11 +36,7 @@ int main() {
   gf::Window window("15_atlas", { 640, 480 }, ~gf::WindowHints::Resizable);
   gf::RenderWindow renderer(window);
 
-  gf::TextureAtlas atlas;
-
-  if (!atlas.loadFromFile("assets/bricks.xml")) {
-    return EXIT_FAILURE;
-  }
+  gf::TextureAtlas atlas("assets/bricks.xml");
 
   gf::Texture texture("assets" / atlas.getTexturePath());
   texture.setSmooth();
@@ -86,8 +82,6 @@ int main() {
     renderer.draw(brickBlack01);
     renderer.display();
   }
-
-
 
   return 0;
 }
