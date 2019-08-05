@@ -65,6 +65,22 @@ inline namespace v1 {
     return { x, y };
   }
 
+  Vector2f Random::computePosition(const CircF& area) {
+    float angle = computeAngle();
+    float radius = computeRadius(0.0f, area.radius);
+    return radius * gf::unit(angle);
+  }
+
+  float Random::computeRadius(float radiusMin, float radiusMax) {
+    std::uniform_real_distribution<float> dist(gf::square(radiusMin), gf::square(radiusMax));
+    return std::sqrt(dist(m_engine));
+  }
+
+  float Random::computeAngle() {
+    std::uniform_real_distribution<float> dist(0.0f, 2.0f * gf::Pi);
+    return dist(m_engine);
+  }
+
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
