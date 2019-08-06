@@ -21,6 +21,8 @@
 #ifndef GF_MOVE_H
 #define GF_MOVE_H
 
+#include <cstdint>
+
 #include "Portability.h"
 
 namespace gf {
@@ -36,7 +38,7 @@ inline namespace v1 {
    *
    * @sa gf::LinearMove
    */
-  enum class AngularMove {
+  enum class AngularMove : uint8_t {
     None,   ///< No angular move
     Left,   ///< Move to the left (i.e. counter-clockwise)
     Right,  ///< Move to the right (i.e. clockwise)
@@ -58,7 +60,7 @@ inline namespace v1 {
    *
    * @sa gf::AngularMove
    */
-  enum class LinearMove {
+  enum class LinearMove : uint8_t {
     None,       ///< No linear move
     Forward,    ///< Move forward
     Backward,   ///< Move backward
