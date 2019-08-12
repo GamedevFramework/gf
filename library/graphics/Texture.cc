@@ -35,6 +35,14 @@ namespace gf {
 inline namespace v1 {
 #endif
 
+  void GraphicsTrait<GraphicsTag::Texture>::gen(int n, unsigned* resources) {
+    glCheck(glGenTextures(n, resources));
+  }
+
+  void GraphicsTrait<GraphicsTag::Texture>::del(int n, const unsigned* resources) {
+    glCheck(glDeleteTextures(n, resources));
+  }
+
   namespace {
 
     GLenum getEnum(BareTexture::Format format) {
@@ -77,7 +85,7 @@ inline namespace v1 {
 
   BareTexture::BareTexture(Format format)
   : m_format(format)
-  , m_name(0)
+  , m_handle(gf::None)
   , m_size{0, 0}
   , m_smooth(false)
   , m_repeated(false)
@@ -87,7 +95,6 @@ inline namespace v1 {
 
   BareTexture::BareTexture(Format format, Vector2i size, const uint8_t *data)
   : m_format(format)
-  , m_name(0)
   , m_size(size)
   , m_smooth(false)
   , m_repeated(false)
@@ -95,48 +102,17 @@ inline namespace v1 {
   {
     assert(m_size.width > 0 && m_size.height > 0);
 
-    GLuint name;
-    glCheck(glGenTextures(1, &name));
-    m_name = static_cast<unsigned>(name);
-
     GLenum textureFormat = getEnum(m_format);
 
     glCheck(glPixelStorei(GL_UNPACK_ALIGNMENT, getAlignment(m_format)));
 
-    glCheck(glBindTexture(GL_TEXTURE_2D, m_name));
+    glCheck(glBindTexture(GL_TEXTURE_2D, m_handle));
     glCheck(glTexImage2D(GL_TEXTURE_2D, 0, textureFormat, m_size.width, m_size.height, 0, textureFormat, GL_UNSIGNED_BYTE, data));
 
     glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE)); // m_repeated == false
     glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE)); // m_repeated == false
     glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)); // m_smooth == false
     glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)); // m_smooth == false && m_mipmap == false
-  }
-
-  BareTexture::~BareTexture() {
-    if (m_name != 0) {
-      GLuint name = static_cast<GLuint>(m_name);
-      glCheck(glDeleteTextures(1, &name));
-    }
-  }
-
-  BareTexture::BareTexture(BareTexture&& other) noexcept
-  : m_format(other.m_format)
-  , m_name(std::exchange(other.m_name, 0))
-  , m_size(other.m_size)
-  , m_smooth(other.m_smooth)
-  , m_repeated(other.m_repeated)
-  , m_mipmap(other.m_mipmap)
-  {
-  }
-
-  BareTexture& BareTexture::operator=(BareTexture&& other) noexcept {
-    std::swap(m_format, other.m_format);
-    std::swap(m_name, other.m_name);
-    std::swap(m_size, other.m_size);
-    std::swap(m_smooth, other.m_smooth);
-    std::swap(m_repeated, other.m_repeated);
-    std::swap(m_mipmap, other.m_mipmap);
-    return *this;
   }
 
   void BareTexture::setSmooth(bool smooth) {
@@ -146,11 +122,11 @@ inline namespace v1 {
 
     m_smooth = smooth;
 
-    if (m_name == 0) {
+    if (!m_handle.isValid()) {
       return;
     }
 
-    glCheck(glBindTexture(GL_TEXTURE_2D, m_name));
+    glCheck(glBindTexture(GL_TEXTURE_2D, m_handle));
     glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, m_smooth ? GL_LINEAR : GL_NEAREST));
     glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, getMinFilter(m_smooth, m_mipmap)));
   }
@@ -162,11 +138,11 @@ inline namespace v1 {
 
     m_repeated = repeated;
 
-    if (m_name == 0) {
+    if (!m_handle.isValid()) {
       return;
     }
 
-    glCheck(glBindTexture(GL_TEXTURE_2D, m_name));
+    glCheck(glBindTexture(GL_TEXTURE_2D, m_handle));
     glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, m_repeated ? GL_REPEAT : GL_CLAMP_TO_EDGE));
     glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, m_repeated ? GL_REPEAT : GL_CLAMP_TO_EDGE));
   }
@@ -179,7 +155,7 @@ inline namespace v1 {
     assert(rect.left + rect.width <= m_size.width);
     assert(rect.top + rect.height <= m_size.height);
 
-    if (m_name == 0 || data == nullptr) {
+    if (!m_handle.isValid() || data == nullptr) {
       return;
     }
 
@@ -187,7 +163,7 @@ inline namespace v1 {
 
     glCheck(glPixelStorei(GL_UNPACK_ALIGNMENT, getAlignment(m_format)));
 
-    glCheck(glBindTexture(GL_TEXTURE_2D, m_name));
+    glCheck(glBindTexture(GL_TEXTURE_2D, m_handle));
     glCheck(glTexSubImage2D(GL_TEXTURE_2D, 0, rect.left, rect.top, rect.width, rect.height, getEnum(m_format), GL_UNSIGNED_BYTE, data));
     glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, getMinFilter(m_smooth, m_mipmap)));
 
@@ -208,13 +184,13 @@ inline namespace v1 {
   }
 
   bool BareTexture::generateMipmap() {
-    if (m_name == 0) {
+    if (!m_handle.isValid()) {
       return false;
     }
 
     m_mipmap = true;
 
-    glCheck(glBindTexture(GL_TEXTURE_2D, m_name));
+    glCheck(glBindTexture(GL_TEXTURE_2D, m_handle));
     glCheck(glGenerateMipmap(GL_TEXTURE_2D));
     glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, getMinFilter(m_smooth, m_mipmap)));
 
@@ -222,8 +198,8 @@ inline namespace v1 {
   }
 
   void BareTexture::bind(const BareTexture *texture) {
-    if (texture != nullptr && texture->m_name != 0) {
-      glCheck(glBindTexture(GL_TEXTURE_2D, texture->m_name));
+    if (texture != nullptr && texture->m_handle.getName() != 0) {
+      glCheck(glBindTexture(GL_TEXTURE_2D, texture->m_handle));
     } else {
       glCheck(glBindTexture(GL_TEXTURE_2D, 0));
     }

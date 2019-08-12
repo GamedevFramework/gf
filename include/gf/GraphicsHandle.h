@@ -21,12 +21,22 @@
 #ifndef GF_GRAPHICS_HANDLE_H
 #define GF_GRAPHICS_HANDLE_H
 
+#include <utility>
+
 #include "Portability.h"
+#include "Types.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
 #endif
+
+  enum class GraphicsTag {
+    Texture,
+  };
+
+  template<GraphicsTag Tag>
+  struct GraphicsTrait;
 
   /**
    * @ingroup graphics
@@ -34,24 +44,53 @@ inline namespace v1 {
    *
    * This class is a RAII class around an OpenGL name.
    */
-  class GF_API GraphicsHandle {
+  template<GraphicsTag Tag>
+  class GraphicsHandle {
   public:
-    using Generator = void (*)(int, unsigned*);
-    using Deletor = void (*)(int, const unsigned*);
+    GraphicsHandle()
+    : m_name()
+    {
+      GraphicsTrait<Tag>::gen(1, &m_name);
+    }
 
-    GraphicsHandle(Generator gen, Deletor del);
-    ~GraphicsHandle() noexcept;
+    constexpr GraphicsHandle(NoneType) noexcept
+    : m_name(0)
+    {
+    }
+
+    ~GraphicsHandle() noexcept {
+      if (m_name != 0) {
+        GraphicsTrait<Tag>::del(1, &m_name);
+      }
+    }
 
     GraphicsHandle(const GraphicsHandle&) = delete;
+
     GraphicsHandle& operator=(const GraphicsHandle&) = delete;
 
-    GraphicsHandle(GraphicsHandle&& other) noexcept;
-    GraphicsHandle& operator=(GraphicsHandle&& other) noexcept;
+    GraphicsHandle(GraphicsHandle&& other) noexcept
+    : m_name(std::exchange(other.m_name, 0))
+    {
+    }
 
-    unsigned getName() const noexcept;
+    GraphicsHandle& operator=(GraphicsHandle&& other) noexcept {
+      std::swap(m_name, other.m_name);
+      return *this;
+    }
+
+    bool isValid() const noexcept {
+      return m_name != 0;
+    }
+
+    unsigned getName() const noexcept {
+      return m_name;
+    }
+
+    operator unsigned () const noexcept {
+      return m_name;
+    }
 
   private:
-    Deletor m_del;
     unsigned m_name;
   };
 

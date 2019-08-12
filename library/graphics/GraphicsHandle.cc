@@ -20,11 +20,6 @@
  */
 #include <gf/GraphicsHandle.h>
 
-#include <cassert>
-#include <utility>
-
-#include <gf/Log.h>
-
 #include "priv/OpenGLFwd.h"
 
 namespace gf {
@@ -34,39 +29,6 @@ inline namespace v1 {
 
   static_assert(std::is_same<GLsizei, int>::value, "GLsizei and int should be the same.");
   static_assert(std::is_same<GLuint, unsigned>::value, "GLuint and unsigned should be the same.");
-
-  GraphicsHandle::GraphicsHandle(Generator gen, Deletor del)
-  : m_del(del)
-  , m_name(0)
-  {
-    gen(1, &m_name);
-
-    if (m_name == 0) {
-      Log::error("A handle could not be generated.\n");
-    }
-  }
-
-  GraphicsHandle::~GraphicsHandle() noexcept {
-    if (m_name != 0) {
-      m_del(1, &m_name);
-    }
-  }
-
-  GraphicsHandle::GraphicsHandle(GraphicsHandle&& other) noexcept
-  : m_name(std::exchange(other.m_name, 0))
-  {
-    assert(m_del == other.m_del);
-  }
-
-  GraphicsHandle& GraphicsHandle::operator=(GraphicsHandle&& other) noexcept {
-    std::swap(m_name, other.m_name);
-    assert(m_del == other.m_del);
-    return *this;
-  }
-
-  unsigned GraphicsHandle::getName() const noexcept {
-    return m_name;
-  }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

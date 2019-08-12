@@ -27,6 +27,7 @@
 #include <cstdint>
 
 #include "ArrayRef.h"
+#include "GraphicsHandle.h"
 #include "Path.h"
 #include "Portability.h"
 #include "Rect.h"
@@ -39,6 +40,12 @@ inline namespace v1 {
 
   class Image;
   class InputStream;
+
+  template<>
+  struct GF_API GraphicsTrait<GraphicsTag::Texture> {
+    static void gen(int n, unsigned* resources);
+    static void del(int n, const unsigned* resources);
+  };
 
   /**
    * @ingroup graphics
@@ -96,31 +103,6 @@ inline namespace v1 {
     BareTexture(Format format, Vector2i size, const uint8_t *data);
 
     /**
-     * @brief Destructor
-     */
-    ~BareTexture();
-
-    /**
-     * @brief Deleted copy constructor
-     */
-    BareTexture(const BareTexture&) = delete;
-
-    /**
-     * @brief Deleted copy assignment
-     */
-    BareTexture& operator=(const BareTexture&) = delete;
-
-    /**
-     * @brief Move constructor
-     */
-    BareTexture(BareTexture&& other) noexcept;
-
-    /**
-     * @brief Move assignment
-     */
-    BareTexture& operator=(BareTexture&& other) noexcept;
-
-    /**
      * @brief Get the format of the texture
      *
      * @return The format of the texture
@@ -137,7 +119,7 @@ inline namespace v1 {
      * @return The OpenGL name of the texture
      */
     unsigned getName() const {
-      return m_name;
+      return m_handle.getName();
     }
 
     /**
@@ -285,7 +267,7 @@ inline namespace v1 {
 
   private:
     Format m_format;
-    unsigned m_name;
+    GraphicsHandle<GraphicsTag::Texture> m_handle;
     Vector2i m_size;
     bool m_smooth;
     bool m_repeated;
