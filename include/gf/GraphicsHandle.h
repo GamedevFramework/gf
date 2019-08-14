@@ -33,6 +33,7 @@ inline namespace v1 {
 
   enum class GraphicsTag {
     Buffer,
+    Framebuffer,
     Texture,
   };
 

@@ -45,6 +45,14 @@ namespace gf {
 inline namespace v1 {
 #endif
 
+  void GraphicsTrait<GraphicsTag::Framebuffer>::gen(int n, unsigned* resources) {
+    glCheck(glGenFramebuffers(n, resources));
+  }
+
+  void GraphicsTrait<GraphicsTag::Framebuffer>::del(int n, const unsigned* resources) {
+    glCheck(glDeleteFramebuffers(n, resources));
+  }
+
   namespace {
 
     struct AttributeInfo {

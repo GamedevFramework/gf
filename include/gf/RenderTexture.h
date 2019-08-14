@@ -105,11 +105,6 @@ inline namespace v1 {
     RenderTexture(Vector2i size);
 
     /**
-     * @brief Destructor
-     */
-    ~RenderTexture();
-
-    /**
      * @brief Enable or disable texture smoothing
      *
      * This function is similar to `Texture::setSmooth()`.
@@ -207,7 +202,7 @@ inline namespace v1 {
     }
 
   private:
-    unsigned m_name;
+    GraphicsHandle<GraphicsTag::Framebuffer> m_framebuffer;
     Texture m_texture;
   };
 

@@ -26,6 +26,7 @@
 #include <cassert>
 
 #include <gf/Image.h>
+#include <gf/RenderTarget.h>
 
 #include "priv/Debug.h"
 #include "priv/OpenGLFwd.h"
@@ -247,26 +248,19 @@ inline namespace v1 {
     auto size = getSize();
     std::vector<uint8_t> pixels(static_cast<std::size_t>(size.width) * static_cast<std::size_t>(size.height) * 4);
 
-    GLuint frameBuffer = 0;
-    glCheck(glGenFramebuffers(1, &frameBuffer));
+    GraphicsHandle<GraphicsTag::Framebuffer> framebuffer;
 
-    if (frameBuffer == 0) {
-      return Image();
-    }
+    GLint boundFramebuffer;
+    glCheck(glGetIntegerv(GL_FRAMEBUFFER_BINDING, &boundFramebuffer));
 
-    GLint boundFrameBuffer;
-    glCheck(glGetIntegerv(GL_FRAMEBUFFER_BINDING, &boundFrameBuffer));
-
-    glCheck(glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer));
+    glCheck(glBindFramebuffer(GL_FRAMEBUFFER, framebuffer));
     glCheck(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, getName(), 0));
     assert(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
 
     glCheck(glPixelStorei(GL_PACK_ALIGNMENT, 4));
     glCheck(glReadPixels(0, 0, size.width, size.height, GL_RGBA, GL_UNSIGNED_BYTE, &pixels[0]));
 
-    glCheck(glDeleteFramebuffers(1, &frameBuffer));
-
-    glCheck(glBindFramebuffer(GL_FRAMEBUFFER, boundFrameBuffer));
+    glCheck(glBindFramebuffer(GL_FRAMEBUFFER, boundFramebuffer));
 
     Image image(size, pixels.data());
     image.flipHorizontally();

@@ -26,6 +26,7 @@
 
 #include <cstdint>
 
+#include "GraphicsHandle.h"
 #include "Image.h"
 #include "Matrix.h"
 #include "Portability.h"
@@ -44,6 +45,12 @@ inline namespace v1 {
   class Drawable;
   class VertexBuffer;
   struct Vertex;
+
+  template<>
+  struct GF_API GraphicsTrait<GraphicsTag::Framebuffer> {
+    static void gen(int n, unsigned* resources);
+    static void del(int n, const unsigned* resources);
+  };
 
   /**
    * @ingroup graphics
