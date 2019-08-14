@@ -118,9 +118,7 @@ inline namespace v1 {
     RectI rect({ 0u, 0u }, m_layerSize);
     fillVertexArray(vertices, rect);
 
-    VertexBuffer buffer;
-    buffer.load(vertices.getVertexData(), vertices.getVertexCount(), vertices.getPrimitiveType());
-    return buffer;
+    return VertexBuffer(vertices.getVertexData(), vertices.getVertexCount(), vertices.getPrimitiveType());
   }
 
   void TileLayer::draw(RenderTarget& target, const RenderStates& states) {

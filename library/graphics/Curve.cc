@@ -92,15 +92,11 @@ inline namespace v1 {
   }
 
   VertexBuffer Curve::commitGeometry() const {
-    VertexBuffer buffer;
-    buffer.load(m_vertices.getVertexData(), m_vertices.getVertexCount(), m_vertices.getPrimitiveType());
-    return buffer;
+    return VertexBuffer(m_vertices.getVertexData(), m_vertices.getVertexCount(), m_vertices.getPrimitiveType());
   }
 
   VertexBuffer Curve::commitOutlineGeometry() const {
-    VertexBuffer buffer;
-    buffer.load(m_outlineVertices.getVertexData(), m_outlineVertices.getVertexCount(), m_outlineVertices.getPrimitiveType());
-    return buffer;
+    return VertexBuffer(m_outlineVertices.getVertexData(), m_outlineVertices.getVertexCount(), m_outlineVertices.getPrimitiveType());
   }
 
   void Curve::draw(RenderTarget& target, const RenderStates& states) {

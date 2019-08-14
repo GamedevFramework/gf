@@ -66,9 +66,7 @@ inline namespace v1 {
   }
 
   VertexBuffer SquareGrid::commitGeometry() const {
-    VertexBuffer buffer;
-    buffer.load(m_vertices.getVertexData(), m_vertices.getVertexCount(), m_vertices.getPrimitiveType());
-    return buffer;
+    return VertexBuffer(m_vertices.getVertexData(), m_vertices.getVertexCount(), m_vertices.getPrimitiveType());
   }
 
   void SquareGrid::draw(RenderTarget& target, const RenderStates& states) {

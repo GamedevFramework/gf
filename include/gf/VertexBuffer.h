@@ -24,6 +24,7 @@
 #include <cstddef>
 #include <cstdint>
 
+#include "GraphicsHandle.h"
 #include "Portability.h"
 #include "PrimitiveType.h"
 
@@ -33,6 +34,12 @@ inline namespace v1 {
 #endif
 
   struct Vertex;
+
+  template<>
+  struct GF_API GraphicsTrait<GraphicsTag::Buffer> {
+    static void gen(int n, unsigned* resources);
+    static void del(int n, const unsigned* resources);
+  };
 
   /**
    * @ingroup graphics
@@ -75,38 +82,13 @@ inline namespace v1 {
     VertexBuffer();
 
     /**
-     * @brief Destructor.
-     */
-    ~VertexBuffer();
-
-    /**
-     * @brief Deleted copy constructor
-     */
-    VertexBuffer(const VertexBuffer&) = delete;
-
-    /**
-     * @brief Deleted copy assignment
-     */
-    VertexBuffer& operator=(const VertexBuffer&) = delete;
-
-    /**
-     * @brief Move constructor
-     */
-    VertexBuffer(VertexBuffer&& other) noexcept;
-
-    /**
-     * @brief Move assignment
-     */
-    VertexBuffer& operator=(VertexBuffer&& other) noexcept;
-
-    /**
      * @brief Load an array of vertices
      *
      * @param vertices Pointer to the vertices
      * @param count Number of vertices in the array
      * @param type Type of primitives to draw
      */
-    void load(const Vertex *vertices, std::size_t count, PrimitiveType type);
+    VertexBuffer(const Vertex *vertices, std::size_t count, PrimitiveType type);
 
     /**
      * @brief Load an array of vertices and their indices
@@ -116,7 +98,7 @@ inline namespace v1 {
      * @param count Number of indices in the array
      * @param type Type of primitives to draw
      */
-    void load(const Vertex *vertices, const uint16_t *indices, std::size_t count, PrimitiveType type);
+    VertexBuffer(const Vertex *vertices, const uint16_t *indices, std::size_t count, PrimitiveType type);
 
     /**
      * @brief Check if there is an array buffer
@@ -124,7 +106,7 @@ inline namespace v1 {
      * @return True if an array buffer is defined
      */
     bool hasArrayBuffer() const {
-      return m_vbo != 0;
+      return m_vbo.isValid();
     }
 
     /**
@@ -133,7 +115,7 @@ inline namespace v1 {
      * @return True if an array element buffer is defined
      */
     bool hasElementArrayBuffer() const {
-      return m_ebo != 0;
+      return m_ebo.isValid();
     }
 
     /**
@@ -172,8 +154,8 @@ inline namespace v1 {
     static void bind(const VertexBuffer *buffer);
 
   private:
-    unsigned m_vbo;
-    unsigned m_ebo;
+    GraphicsHandle<GraphicsTag::Buffer> m_vbo;
+    GraphicsHandle<GraphicsTag::Buffer> m_ebo;
     std::size_t m_count;
     PrimitiveType m_type;
   };

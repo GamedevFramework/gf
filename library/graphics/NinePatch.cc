@@ -153,9 +153,7 @@ inline namespace v1 {
   }; // warning, there are four empty triangles
 
   VertexBuffer NinePatch::commitGeometry() const {
-    VertexBuffer buffer;
-    buffer.load(m_vertices, gIndices, 24, PrimitiveType::TriangleStrip);
-    return buffer;
+    return VertexBuffer(m_vertices, gIndices, 24, PrimitiveType::TriangleStrip);
   }
 
   void NinePatch::draw(RenderTarget& target, const RenderStates& states) {

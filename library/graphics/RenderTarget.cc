@@ -197,8 +197,7 @@ inline namespace v1 {
       return;
     }
 
-    VertexBuffer buffer;
-    buffer.load(vertices, count, type);
+    VertexBuffer buffer(vertices, count, type);
     draw(buffer, states);
   }
 
@@ -207,8 +206,7 @@ inline namespace v1 {
       return;
     }
 
-    VertexBuffer buffer;
-    buffer.load(vertices, indices, count, type);
+    VertexBuffer buffer(vertices, indices, count, type);
     draw(buffer, states);
   }
 

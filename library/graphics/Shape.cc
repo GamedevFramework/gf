@@ -191,15 +191,11 @@ inline namespace v1 {
   }
 
   VertexBuffer Shape::commitGeometry() const {
-    VertexBuffer buffer;
-    buffer.load(m_vertices.getVertexData(), m_vertices.getVertexCount(), m_vertices.getPrimitiveType());
-    return buffer;
+    return VertexBuffer(m_vertices.getVertexData(), m_vertices.getVertexCount(), m_vertices.getPrimitiveType());
   }
 
   VertexBuffer Shape::commitOutlineGeometry() const {
-    VertexBuffer buffer;
-    buffer.load(m_outlineVertices.getVertexData(), m_outlineVertices.getVertexCount(), m_outlineVertices.getPrimitiveType());
-    return buffer;
+    return VertexBuffer(m_outlineVertices.getVertexData(), m_outlineVertices.getVertexCount(), m_outlineVertices.getPrimitiveType());
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
