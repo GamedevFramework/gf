@@ -24,6 +24,7 @@
 #ifndef GF_CIRC_H
 #define GF_CIRC_H
 
+#include "Ball.h"
 #include "Portability.h"
 #include "Vector.h"
 #include "VectorOps.h"
@@ -71,10 +72,7 @@ inline namespace v1 {
    * ~~~
    */
   template<typename T>
-  struct Circ {
-    Vector<T, 2> center; ///< Center of the circle
-    T radius; ///< Radius of the circle
-
+  struct Circ : Ball<T, 2> {
     /**
      * @brief Default constructor
      *
@@ -82,10 +80,8 @@ inline namespace v1 {
      * `Circ({ 0, 0 }, 0`).
      */
     constexpr Circ() noexcept
-    : center(0, 0)
-    , radius(0)
+    : Ball<T, 2>()
     {
-
     }
 
     /**
@@ -95,55 +91,8 @@ inline namespace v1 {
      * @param circRadius Radius of the circle
      */
     constexpr Circ(const Vector<T, 2>& circCenter, T circRadius) noexcept
-    : center(circCenter)
-    , radius(circRadius)
+    : Ball<T, 2>(circCenter, circRadius)
     {
-
-    }
-
-    /**
-     * @brief Default copy constructor
-     */
-    Circ(const Circ&) = default;
-
-    /**
-     * @brief Default copy assignment
-     */
-    Circ& operator=(const Circ&) = default;
-
-    /**
-     * @brief Get the center of the circle
-     *
-     * It is a synonym for the `center` member
-     *
-     * @return The center of the circle
-     * @sa getRadius()
-     */
-    constexpr Vector<T, 2> getCenter() const noexcept {
-      return center;
-    }
-
-    /**
-     * @brief Get the radius of the circle
-     *
-     * It is a synonym for the `radius` member
-     *
-     * @return The radius of the circle
-     * @sa getCenter()
-     */
-    constexpr T getRadius() const noexcept {
-      return radius;
-    }
-
-    /**
-     * @brief Check if the circle is empty
-     *
-     * An empty circle is a circle with a zero radius.
-     *
-     * @return True if the circle is empty
-     */
-    constexpr bool isEmpty() const noexcept {
-      return radius == 0;
     }
 
     /**
@@ -152,7 +101,7 @@ inline namespace v1 {
      * @return The top of the circle
      */
     constexpr Vector<T, 2> getTop() const noexcept {
-      return { center.x, center.y - radius };
+      return this->center - gf::diry(this->radius);
     }
 
     /**
@@ -161,7 +110,7 @@ inline namespace v1 {
      * @return The bottom of the circle
      */
     constexpr Vector<T, 2> getBottom() const noexcept {
-      return { center.x, center.y + radius };
+      return this->center + gf::diry(this->radius);
     }
 
     /**
@@ -170,7 +119,7 @@ inline namespace v1 {
      * @return The left of the circle
      */
     constexpr Vector<T, 2> getLeft() const noexcept {
-      return { center.x - radius, center.y };
+      return this->center - gf::dirx(this->radius);
     }
 
     /**
@@ -179,29 +128,7 @@ inline namespace v1 {
      * @return The right of the circle
      */
     constexpr Vector<T, 2> getRight() const noexcept {
-      return { center.x + radius, center.y };
-    }
-
-    /**
-     * @brief Check if a point is insied a circle's area
-     *
-     * @param point Point to test
-     * @return True if the point is inside, false otherwise
-     * @sa intersects()
-     */
-    inline bool contains(const Vector<T, 2>& point) const noexcept {
-      return gf::squareDistance(center, point) <= gf::square(radius);
-    }
-
-    /**
-     * @brief Check the intersection between two circles
-     *
-     * @param other Circle to test
-     * @return True if circles overlap, false otherwise
-     * @sa contains()
-     */
-    inline bool intersects(const Circ<T>& other) const noexcept {
-      return gf::squareDistance(center, other.center) <= gf::square(radius + other.radius);
+      return this->center + gf::dirx(this->radius);
     }
 
   };
@@ -289,7 +216,7 @@ inline namespace v1 {
    *
    * @param ar The archive
    * @param circ The circle to serialize
-   * @sa gf::Serialize, gf::Deserialiser
+   * @sa gf::Serializer, gf::Deserializer
    */
   template<typename Archive, typename T>
   Archive& operator|(Archive& ar, Circ<T>& circ) {
