@@ -27,7 +27,7 @@ namespace home {
 
   namespace {
 
-    constexpr gf::RectF HitBox = gf::RectF({5318.0f, 2350.0f}, {350.0f, 200.0f});
+    constexpr gf::RectF HitBox = gf::RectF::fromPositionSize({5318.0f, 2350.0f}, {350.0f, 200.0f});
 
     constexpr int OxygenHarvestSpeed = 6'000;
     constexpr int OxygenQuantity = 1'000'000;

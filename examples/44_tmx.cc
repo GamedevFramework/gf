@@ -128,7 +128,7 @@ int main() {
 
   gf::ViewContainer views;
 
-  gf::ExtendView view(gf::RectF({ 0.0f, 0.0f }, { 640.0f, 480.0f }));
+  gf::ExtendView view(gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 640.0f, 480.0f }));
   views.addView(view);
 
   views.setInitialScreenSize(ScreenSize);

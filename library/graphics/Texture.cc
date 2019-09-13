@@ -149,12 +149,12 @@ inline namespace v1 {
   }
 
   void BareTexture::update(const uint8_t *data) {
-    update(data, RectI({0, 0}, m_size));
+    update(data, RectI::fromPositionSize({0, 0}, m_size));
   }
 
   void BareTexture::update(const uint8_t *data, const RectI& rect) {
-    assert(rect.left + rect.width <= m_size.width);
-    assert(rect.top + rect.height <= m_size.height);
+    assert(rect.max.x <= m_size.width);
+    assert(rect.max.y <= m_size.height);
 
     if (!m_handle.isValid() || data == nullptr) {
       return;
@@ -165,7 +165,7 @@ inline namespace v1 {
     glCheck(glPixelStorei(GL_UNPACK_ALIGNMENT, getAlignment(m_format)));
 
     glCheck(glBindTexture(GL_TEXTURE_2D, m_handle));
-    glCheck(glTexSubImage2D(GL_TEXTURE_2D, 0, rect.left, rect.top, rect.width, rect.height, getEnum(m_format), GL_UNSIGNED_BYTE, data));
+    glCheck(glTexSubImage2D(GL_TEXTURE_2D, 0, rect.min.x, rect.min.y, rect.getWidth(), rect.getHeight(), getEnum(m_format), GL_UNSIGNED_BYTE, data));
     glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, getMinFilter(m_smooth, m_mipmap)));
 
 #ifdef GF_OPENGL3
@@ -176,12 +176,8 @@ inline namespace v1 {
   }
 
   RectF BareTexture::computeTextureCoords(const RectI& rect) const {
-    return {
-      static_cast<float>(rect.left) / m_size.width,
-      static_cast<float>(rect.top) / m_size.height,
-      static_cast<float>(rect.width) / m_size.width,
-      static_cast<float>(rect.height) / m_size.height,
-    };
+    Vector2f size = m_size;
+    return RectF::fromMinMax(rect.min / size, rect.max / size);
   }
 
   bool BareTexture::generateMipmap() {
@@ -237,7 +233,7 @@ inline namespace v1 {
   }
 
   void Texture::update(const Image& image) {
-    BareTexture::update(image.getPixelsPtr(), RectI({ 0, 0 }, image.getSize()));
+    BareTexture::update(image.getPixelsPtr(), RectI::fromPositionSize({ 0, 0 }, image.getSize()));
   }
 
   Image Texture::copyToImage() const {

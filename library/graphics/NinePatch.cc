@@ -30,7 +30,7 @@ inline namespace v1 {
 
   NinePatch::NinePatch()
   : m_texture(nullptr)
-  , m_textureRect(0, 0, 1, 1)
+  , m_textureRect(RectF::fromPositionSize({ 0, 0 }, { 1, 1 }))
   , m_top(0)
   , m_bottom(1)
   , m_left(0)
@@ -43,7 +43,7 @@ inline namespace v1 {
 
   NinePatch::NinePatch(const Texture& texture)
   : m_texture(&texture)
-  , m_textureRect(0, 0, 1, 1)
+  , m_textureRect(RectF::fromPositionSize({ 0, 0 }, { 1, 1 }))
   , m_top(0)
   , m_bottom(1)
   , m_left(0)
@@ -72,7 +72,7 @@ inline namespace v1 {
     updatePositions();
 
     if (resetRect) {
-      m_textureRect = { 0.0f, 0.0f, 1.0f, 1.0f };
+      m_textureRect = RectF::fromPositionSize({ 0, 0 }, { 1, 1 });
       updateTexCoords();
     }
   }
@@ -128,7 +128,7 @@ inline namespace v1 {
   }
 
   RectF NinePatch::getLocalBounds() const {
-    return RectF({ 0.0f, 0.0f }, m_size);
+    return RectF::fromPositionSize({ 0.0f, 0.0f }, m_size);
   }
 
   void NinePatch::setAnchor(Anchor anchor) {
@@ -205,15 +205,15 @@ inline namespace v1 {
   }
 
   void NinePatch::updateTexCoords() {
-    float x0 = m_textureRect.left;
-    float x1 = m_textureRect.left + m_left * m_textureRect.width;
-    float x2 = m_textureRect.left + (1 - m_right) * m_textureRect.width;
-    float x3 = m_textureRect.left + m_textureRect.width;
+    float x0 = m_textureRect.min.x;
+    float x1 = gf::lerp(m_textureRect.min.x, m_textureRect.max.x, m_left);
+    float x2 = gf::lerp(m_textureRect.min.x, m_textureRect.max.x, 1 - m_right);
+    float x3 = m_textureRect.max.x;
 
-    float y0 = m_textureRect.top;
-    float y1 = m_textureRect.top + m_top * m_textureRect.height;
-    float y2 = m_textureRect.top + (1 - m_bottom) * m_textureRect.height;
-    float y3 = m_textureRect.top + m_textureRect.height;
+    float y0 = m_textureRect.min.y;
+    float y1 = gf::lerp(m_textureRect.min.y, m_textureRect.max.y, m_top);
+    float y2 = gf::lerp(m_textureRect.min.y, m_textureRect.max.y, 1 - m_bottom);
+    float y3 = m_textureRect.max.y;
 
     m_vertices[ 0].texCoords = { x0, y0 };
     m_vertices[ 1].texCoords = { x0, y1 };

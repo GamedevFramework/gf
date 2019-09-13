@@ -347,11 +347,11 @@ int main() {
     }
 
 
-    ui.begin("Noise parameters", gf::RectF(Size, 0, ExtraSize, Size), gf::UIWindow::Title | gf::UIWindow::Border);
+    ui.begin("Noise parameters", gf::RectF::fromPositionSize({ Size, 0.0f }, { ExtraSize, Size }), gf::UIWindow::Title | gf::UIWindow::Border);
 
     ui.layoutRowDynamic(20, 1);
     bounds = ui.getWidgetBounds();
-    ui.combobox(noiseChoices, noiseChoice, 20, { bounds.width, ComboHeightMax });
+    ui.combobox(noiseChoices, noiseChoice, 20, { bounds.getWidth(), ComboHeightMax });
 
     ui.separator(5);
 
@@ -364,23 +364,23 @@ int main() {
       case NoiseFunction::Noise:
         ui.label("Step function:");
         bounds = ui.getWidgetBounds();
-        ui.combobox(stepChoices, stepChoice, 20, { bounds.width, ComboHeightMax });
+        ui.combobox(stepChoices, stepChoice, 20, { bounds.getWidth(), ComboHeightMax });
         break;
 
       case NoiseFunction::Gradient:
         ui.label("Step function:");
         bounds = ui.getWidgetBounds();
-        ui.combobox(stepChoices, stepChoice, 20, { bounds.width, ComboHeightMax });
+        ui.combobox(stepChoices, stepChoice, 20, { bounds.getWidth(), ComboHeightMax });
         break;
 
       case NoiseFunction::Worley:
         ui.propertyInt("Point count", 5, pointCount, 40, 1, 1.0f);
         ui.label("Distance function:");
         bounds = ui.getWidgetBounds();
-        ui.combobox(distanceChoices, distanceChoice, 20, { bounds.width, ComboHeightMax });
+        ui.combobox(distanceChoices, distanceChoice, 20, { bounds.getWidth(), ComboHeightMax });
         ui.label("Combination:");
         bounds = ui.getWidgetBounds();
-        ui.combobox(combinationChoices, combinationChoice, 20, { bounds.width, ComboHeightMax });
+        ui.combobox(combinationChoices, combinationChoice, 20, { bounds.getWidth(), ComboHeightMax });
 
       default:
         break;
@@ -391,7 +391,7 @@ int main() {
     if (ui.treePush(gf::UITree::Tab, "Fractal", fractalCollapsed)) {
       ui.layoutRowDynamic(20, 1);
       bounds = ui.getWidgetBounds();
-      ui.combobox(fractalChoices, fractalChoice, 20, { bounds.width, ComboHeightMax });
+      ui.combobox(fractalChoices, fractalChoice, 20, { bounds.getWidth(), ComboHeightMax });
 
       fractalParams.fractal = static_cast<Fractal>(fractalChoice);
 
@@ -440,7 +440,7 @@ int main() {
     if (ui.treePush(gf::UITree::Tab, "Rendering", renderingCollapsed)) {
       ui.layoutRowDynamic(20, 1);
       bounds = ui.getWidgetBounds();
-      ui.combobox(renderingChoices, renderingChoice, 20, { bounds.width, ComboHeightMax });
+      ui.combobox(renderingChoices, renderingChoice, 20, { bounds.getWidth(), ComboHeightMax });
 
       renderingParams.rendering = static_cast<Rendering>(renderingChoice);
 

@@ -240,17 +240,17 @@ inline namespace v1 {
       float kerning = font->getKerning(currCodepoint, nextCodepoint, static_cast<unsigned>(characterSize));
       const Glyph& glyph = font->getGlyph(currCodepoint, static_cast<unsigned>(characterSize));
 
-      g->width = glyph.bounds.width;
-      g->height = glyph.bounds.height;
+      g->width = glyph.bounds.getWidth();
+      g->height = glyph.bounds.getHeight();
       g->xadvance = glyph.advance + kerning; // is it good?
 
-      g->uv[0].x = glyph.textureRect.left;
-      g->uv[0].y = glyph.textureRect.top;
-      g->uv[1].x = glyph.textureRect.left + glyph.textureRect.width;
-      g->uv[1].y = glyph.textureRect.top + glyph.textureRect.height;
+      g->uv[0].x = glyph.textureRect.min.x;
+      g->uv[0].y = glyph.textureRect.min.y;
+      g->uv[1].x = glyph.textureRect.max.x;
+      g->uv[1].y = glyph.textureRect.max.y;
 
-      g->offset.x = glyph.bounds.left;
-      g->offset.y = glyph.bounds.top + characterSize; // hacky but works
+      g->offset.x = glyph.bounds.min.x;
+      g->offset.y = glyph.bounds.min.y + characterSize; // hacky but works
     }
 
     void clipboardPaste(nk_handle usr, struct nk_text_edit *edit) {
@@ -519,7 +519,7 @@ inline namespace v1 {
 
   bool UI::begin(const std::string& title, const RectF& bounds, UIWindowFlags flags) {
     setState(State::Setup);
-    return nk_begin(&m_impl->ctx, title.c_str(), { bounds.left, bounds.top, bounds.width, bounds.height }, flags.getValue()) != 0;
+    return nk_begin(&m_impl->ctx, title.c_str(), { bounds.min.x, bounds.min.y, bounds.getWidth(), bounds.getHeight() }, flags.getValue()) != 0;
   }
 
   void UI::end() {
@@ -530,7 +530,7 @@ inline namespace v1 {
   RectF UI::windowGetBounds() {
     setState(State::Setup);
     auto bounds = nk_window_get_bounds(&m_impl->ctx);
-    return { bounds.x, bounds.y, bounds.w, bounds.y };
+    return RectF::fromPositionSize({ bounds.x, bounds.y }, { bounds.w, bounds.y });
   }
 
   void UI::layoutRowDynamic(float height, int cols) {
@@ -881,7 +881,7 @@ inline namespace v1 {
 
   bool UI::popupBegin(UIPopup type, const std::string& title, UIWindowFlags flags, const RectF& bounds) {
     setState(State::Setup);
-    return nk_popup_begin(&m_impl->ctx, static_cast<nk_popup_type>(type), title.c_str(), flags.getValue(), { bounds.left, bounds.top, bounds.width, bounds.height }) != 0;
+    return nk_popup_begin(&m_impl->ctx, static_cast<nk_popup_type>(type), title.c_str(), flags.getValue(), { bounds.min.x, bounds.min.y, bounds.getWidth(), bounds.getHeight() }) != 0;
   }
 
   void UI::popupClose() {
@@ -957,7 +957,8 @@ inline namespace v1 {
 
   bool UI::contextualBegin(UIWindowFlags flags, Vector2f size, const RectF& triggerBounds) {
     setState(State::Setup);
-    return nk_contextual_begin(&m_impl->ctx, flags.getValue(), { size.width, size.height }, { triggerBounds.left, triggerBounds.top, triggerBounds.width, triggerBounds.height }) != 0;
+    return nk_contextual_begin(&m_impl->ctx, flags.getValue(), { size.width, size.height },
+      { triggerBounds.min.x, triggerBounds.min.y, triggerBounds.getWidth(), triggerBounds.getHeight() }) != 0;
   }
 
   bool UI::contextualItemLabel(StringRef title, UIAlignment align) {
@@ -1043,7 +1044,7 @@ inline namespace v1 {
   RectF UI::getWidgetBounds() {
     setState(State::Setup);
     auto bounds = nk_widget_bounds(&m_impl->ctx);
-    return RectF(bounds.x, bounds.y, bounds.w, bounds.h);
+    return RectF::fromPositionSize({ bounds.x, bounds.y }, { bounds.w, bounds.h });
   }
 
   bool UI::isWidgetHovered() {
@@ -1250,7 +1251,7 @@ inline namespace v1 {
       }
 
       localStates.texture = static_cast<const BareTexture*>(command->texture.ptr);
-      target.setScissorBox(RectI(command->clip_rect.x, command->clip_rect.y, command->clip_rect.w, command->clip_rect.h));
+      target.setScissorBox(RectI::fromPositionSize( Vector2i(command->clip_rect.x, command->clip_rect.y), Vector2i(command->clip_rect.w, command->clip_rect.h)));
       target.draw(vertices, indices, command->elem_count, PrimitiveType::Triangles, localStates);
 
       indices += command->elem_count;

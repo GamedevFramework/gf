@@ -44,7 +44,7 @@ inline namespace v1 {
       max = gf::max(max, vertex.position);
     }
 
-    return RectF(min, max - min);
+    return RectF::fromMinMax(min, max);
   }
 
   void VertexArray::draw(RenderTarget& target, const RenderStates& states) {

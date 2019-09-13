@@ -119,7 +119,7 @@ int main() {
   std::cout << "\tS: Save the current landscape to 'landscape.png'\n";
   std::cout << "\tEscape: Close the window\n";
 
-  gf::View view(gf::RectF({ 0.0f, 0.0f }, { Width, Height }));
+  gf::View view(gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { Width, Height }));
   renderer.setView(view);
 
   gf::Random random;

@@ -383,12 +383,7 @@ inline namespace v1 {
     // checks
     Vector2i consoleSize = m_data.getSize();
 
-    if (rect.width < 0 || rect.height < 0) {
-      Log::warning("Size of console text rectangle is invalid\n");
-      return 0;
-    }
-
-    if (rect.left < 0 || rect.top < 0 || rect.left + rect.width > consoleSize.width || rect.top + rect.height > consoleSize.height) {
+    if (rect.min.x < 0 || rect.min.y < 0 || rect.max.x > consoleSize.width || rect.max.y > consoleSize.height) {
       Log::warning("Position of console text is outside the console\n");
       return 0;
     }
@@ -399,12 +394,12 @@ inline namespace v1 {
 
     if (flags.test(PrintOption::Split)) {
       // multiple line
-      int paragraphWidth = rect.width;
+      int paragraphWidth = rect.getWidth();
 
       if (paragraphWidth == 0) {
         switch (alignment) {
           case ConsoleAlignment::Left:
-            paragraphWidth = consoleSize.width - rect.left;
+            paragraphWidth = consoleSize.width - rect.min.x;
             break;
 
           case ConsoleAlignment::Center:
@@ -412,7 +407,7 @@ inline namespace v1 {
             break;
 
           case ConsoleAlignment::Right:
-            paragraphWidth = rect.left + 1;
+            paragraphWidth = rect.min.x + 1;
             break;
         }
       }
@@ -425,7 +420,7 @@ inline namespace v1 {
           lineCount += paragraph.lines.size();
         } else {
           for (const auto& line : paragraph.lines) {
-            if (rect.height > 0 && lineCount >= rect.height) {
+            if (rect.min.y + lineCount >= rect.max.y) {
               break;
             }
 
@@ -451,7 +446,7 @@ inline namespace v1 {
 
     } else {
       // single line
-      assert(rect.width == 0 && rect.height == 0);
+      assert(rect.min == rect.max);
       Vector2i position = rect.getPosition();
 
       int width = getWordWidth(message);
@@ -484,7 +479,7 @@ inline namespace v1 {
     auto message = formatString(fmt, ap);
     va_end(ap);
 
-    printInternal(RectI(position, { 0, 0 }), m_effect, m_alignment, message);
+    printInternal(RectI::fromPositionSize(position, { 0, 0 }), m_effect, m_alignment, message);
   }
 
   void Console::print(Vector2i position, ConsoleEffect effect, ConsoleAlignment alignment, const char *fmt, ...) {
@@ -493,7 +488,7 @@ inline namespace v1 {
     auto message = formatString(fmt, ap);
     va_end(ap);
 
-    printInternal(RectI(position, { 0, 0 }), effect, alignment, message);
+    printInternal(RectI::fromPositionSize(position, { 0, 0 }), effect, alignment, message);
   }
 
   int Console::printRect(const RectI& rect, const char *fmt, ...) {
@@ -534,12 +529,10 @@ inline namespace v1 {
   }
 
   void Console::drawRectangle(const RectI& rect, PrintAction action, ConsoleEffect effect) {
-    Vector2i offset;
+    Vector2i position;
 
-    for (offset.x = 0; offset.x < rect.width; ++offset.x) {
-      for (offset.y = 0; offset.y < rect.height; ++offset.y) {
-        auto position = rect.getPosition() + offset;
-
+    for (position.x = rect.min.x; position.x < rect.max.x; ++position.x) {
+      for (position.y = rect.min.y; position.y < rect.max.y; ++position.y) {
         if (!m_data.isValid(position)) {
           continue;
         }
@@ -570,18 +563,20 @@ inline namespace v1 {
   void Console::drawFrame(const RectI& rect, PrintAction action, ConsoleEffect effect, const char *title, ...) {
     drawRectangle(rect, action, effect);
 
-    int xWest = rect.left;
-    int xEast = rect.left + rect.width - 1;
-    int yNorth = rect.top;
-    int ySouth = rect.top + rect.height - 1;
+    auto size = rect.getSize();
+
+    int xWest = rect.min.x;
+    int xEast = rect.max.x - 1;
+    int yNorth = rect.min.y;
+    int ySouth = rect.max.y - 1;
     putChar({ xWest, yNorth }, ConsoleChar::BoxDrawingsLightDownAndRight, effect);
     putChar({ xEast, yNorth }, ConsoleChar::BoxDrawingsLightDownAndLeft, effect);
     putChar({ xWest, ySouth }, ConsoleChar::BoxDrawingsLightUpAndRight, effect);
     putChar({ xEast, ySouth }, ConsoleChar::BoxDrawingsLightUpAndLeft, effect);
-    drawHorizontalLine({ xWest + 1, yNorth }, rect.width - 2, effect);
-    drawHorizontalLine({ xWest + 1, ySouth }, rect.width - 2, effect);
-    drawVerticalLine({ xWest, yNorth + 1 }, rect.height - 2, effect);
-    drawVerticalLine({ xEast, yNorth + 1 }, rect.height - 2, effect);
+    drawHorizontalLine({ xWest + 1, yNorth }, size.width - 2, effect);
+    drawHorizontalLine({ xWest + 1, ySouth }, size.width - 2, effect);
+    drawVerticalLine({ xWest, yNorth + 1 }, size.height - 2, effect);
+    drawVerticalLine({ xEast, yNorth + 1 }, size.height - 2, effect);
 
     if (title == nullptr) {
       return;
@@ -707,7 +702,7 @@ inline namespace v1 {
 
       vertices[0].color = vertices[1].color = vertices[2].color = vertices[3].color = color;
 
-      RectF rect(position * characterSize, characterSize);
+      RectF rect = RectF::fromPositionSize(position * characterSize, characterSize);
 
       vertices[0].position = rect.getTopLeft();
       vertices[1].position = rect.getTopRight();

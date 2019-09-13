@@ -260,5 +260,5 @@ void Board::render(gf::RenderTarget& target, const gf::RenderStates& states) {
 }
 
 gf::RectF Board::getView() {
-  return gf::RectF(0, 0, ContainerSize, ContainerSize);
+  return gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { ContainerSize, ContainerSize });
 }

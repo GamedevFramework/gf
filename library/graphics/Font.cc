@@ -404,42 +404,34 @@ inline namespace v1 {
       return out;
     }
 
-    RectI rect;
-    rect.left = cache.packing.right;
-    rect.top = cache.packing.top;
-    rect.width = glyphSize.width;
-    rect.height = glyphSize.height;
+    RectI rect = RectI::fromPositionSize({ cache.packing.right, cache.packing.top }, glyphSize);
 
-    if (rect.top + rect.height > cache.packing.bottom) {
-      cache.packing.bottom = rect.top + rect.height;
+    if (rect.max.y > cache.packing.bottom) {
+      cache.packing.bottom = rect.max.y;
     }
 
-    cache.packing.right += rect.width;
+    cache.packing.right += (rect.max.x - rect.min.x);
 
     out.textureRect = cache.texture.computeTextureCoords(rect.shrink(Padding));
 
     // bounds
 
     if (outlineThickness == 0.0f) {
-      out.bounds.left = convert(slot->metrics.horiBearingX);
-      out.bounds.top = - convert(slot->metrics.horiBearingY);
-      out.bounds.width = convert(slot->metrics.width);
-      out.bounds.height = convert(slot->metrics.height);
+      out.bounds = RectF::fromPositionSize({ convert(slot->metrics.horiBearingX), - convert(slot->metrics.horiBearingY) }, { convert(slot->metrics.width), convert(slot->metrics.height) });
     } else {
-      out.bounds.left = static_cast<float>(bglyph->left);
-      out.bounds.top = - static_cast<float>(bglyph->top);
-      out.bounds.width = static_cast<float>(bglyph->bitmap.width);
-      out.bounds.height = static_cast<float>(bglyph->bitmap.rows);
+      out.bounds = RectF::fromPositionSize( { static_cast<float>(bglyph->left), - static_cast<float>(bglyph->top) }, { static_cast<float>(bglyph->bitmap.width), static_cast<float>(bglyph->bitmap.rows) });
     }
 
     // bitmap
 
-    std::vector<uint8_t> paddedBuffer(static_cast<std::size_t>(rect.width) * static_cast<std::size_t>(rect.height), 0);
+    auto size = rect.getSize();
+
+    std::vector<uint8_t> paddedBuffer(static_cast<std::size_t>(size.width) * static_cast<std::size_t>(size.height), 0);
     const uint8_t *sourceBuffer = bglyph->bitmap.buffer;
 
-    for (int y = Padding; y < rect.height - Padding; ++y) {
-      for (int x = Padding; x < rect.width - Padding; ++x) {
-        int index = y * rect.width + x;
+    for (int y = Padding; y < size.height - Padding; ++y) {
+      for (int x = Padding; x < size.width - Padding; ++x) {
+        int index = y * size.width + x;
         paddedBuffer[index] = sourceBuffer[x - Padding];
       }
 

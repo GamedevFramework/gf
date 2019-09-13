@@ -244,7 +244,7 @@ private:
 
 int main() {
   static constexpr gf::Vector2i ScreenSize(500, 500);
-  static const gf::RectF World({ 0.0f, 0.0f }, { 500.0f, 500.0f });
+  static constexpr gf::RectF World = gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 500.0f, 500.0f });
 
   gf::Window window("42_physics", ScreenSize, ~gf::WindowHints::Resizable);
   gf::RenderWindow renderer(window);

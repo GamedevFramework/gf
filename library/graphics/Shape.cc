@@ -37,10 +37,9 @@ inline namespace v1 {
 
   Shape::Shape()
   : m_texture(nullptr)
-  , m_textureRect(0, 0, 1, 1)
+  , m_textureRect(gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }))
   , m_color(Color::White)
   , m_vertices(PrimitiveType::TriangleFan)
-  , m_bounds(0, 0, 0, 0)
   , m_outlineColor(Color::White)
   , m_outlineThickness(0.0f)
   , m_outlineVertices(PrimitiveType::TriangleStrip)
@@ -52,14 +51,14 @@ inline namespace v1 {
     m_texture = &texture;
 
     if (resetRect) {
-      m_textureRect = { 0.0f, 0.0f, 1.0f, 1.0f };
+      m_textureRect = gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f });
       updateTexCoords();
     }
   }
 
   void Shape::unsetTexture() {
     m_texture = nullptr;
-    m_bounds = { 0.0f, 0.0f, 0.0f, 0.0f };
+    m_bounds = RectF();
   }
 
   void Shape::setTextureRect(const RectF& rect) {

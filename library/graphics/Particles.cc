@@ -81,7 +81,7 @@ inline namespace v1 {
   }
 
   void ShapeParticles::addRectangle(Vector2f position, Vector2f size, Color4f color) {
-    addRectangle(RectF(position, size), color);
+    addRectangle(RectF::fromPositionSize(position, size), color);
   }
 
   void ShapeParticles::addRectangle(const RectF& rect, Color4f color) {
@@ -135,7 +135,7 @@ inline namespace v1 {
     }
 
     Vector2f size = textureRect.getSize() * m_texture->getSize();
-    RectF box(position - size / 2, size);
+    RectF box = RectF::fromCenterSize(position, size);
 
     Vertex vertices[4];
 

@@ -107,8 +107,8 @@ namespace home {
 
           if (isResources) {
             gf::Vector2f position = tile->position;
-            position.x += subTexture.width / 2;
-            position.y -= subTexture.height / 2;
+            position.x += subTexture.getWidth() / 2;
+            position.y -= subTexture.getHeight() / 2;
 
             switch (lid) {
               case 0:

@@ -65,18 +65,19 @@ inline namespace v1 {
       assert(sub.attribute("name"));
       std::string name = sub.attribute("name").value();
 
-      RectI rect;
-
+      Vector2i position;
       assert(sub.attribute("x"));
-      rect.left = sub.attribute("x").as_uint();
+      position.x = sub.attribute("x").as_int();
       assert(sub.attribute("y"));
-      rect.top = sub.attribute("y").as_uint();
-      assert(sub.attribute("width"));
-      rect.width = sub.attribute("width").as_uint();
-      assert(sub.attribute("height"));
-      rect.height = sub.attribute("height").as_uint();
+      position.y = sub.attribute("y").as_int();
 
-      addSubTexture(std::move(name), rect);
+      Vector2i size;
+      assert(sub.attribute("width"));
+      size.width = sub.attribute("width").as_int();
+      assert(sub.attribute("height"));
+      size.height = sub.attribute("height").as_int();
+
+      addSubTexture(std::move(name), RectI::fromPositionSize(position, size));
     }
   }
 
@@ -97,7 +98,7 @@ inline namespace v1 {
     auto it = m_rects.find(name);
 
     if (it == m_rects.end()) {
-      return RectI(0, 0, 1, 1);
+      return RectI::fromPositionSize({ 0, 0 }, { 1, 1 });
     }
 
     return it->second;
@@ -105,7 +106,7 @@ inline namespace v1 {
 
   RectF TextureAtlas::getTextureRect(const std::string& name) const {
     if (m_texture == nullptr) {
-      return RectF(0, 0, 1, 1);
+      return RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f });
     }
 
     RectI rect = getSubTexture(name);

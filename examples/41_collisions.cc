@@ -35,7 +35,7 @@ static constexpr float Speed = 1.0f;
 
 int main() {
   static constexpr gf::Vector2i ScreenSize(640, 480);
-  static const gf::RectF World({ 0.0f, 0.0f }, { 15.0f, 15.0f });
+  static constexpr gf::RectF World = gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 15.0f, 15.0f });
 
   gf::Window window("41_collision", ScreenSize, ~gf::WindowHints::Resizable);
   gf::RenderWindow renderer(window);

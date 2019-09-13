@@ -317,7 +317,7 @@ inline namespace v1 {
   RectI ConsoleFont::getSubTexture(char16_t c) const {
     uint8_t index = m_mapping[c];
     Vector2i position = computePosition(index, m_format.layout, m_size);
-    return RectI(position * m_characterSize, m_characterSize);
+    return RectI::fromPositionSize(position * m_characterSize, m_characterSize);
   }
 
   RectF ConsoleFont::getTextureRect(char16_t c) const {

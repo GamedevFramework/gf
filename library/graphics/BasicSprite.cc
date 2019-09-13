@@ -34,16 +34,14 @@ inline namespace v1 {
 
   BasicSprite::BasicSprite()
   : m_texture(nullptr)
-  , m_textureRect(0, 0, 1, 1)
-  , m_bounds(0, 0, 0, 0)
+  , m_textureRect(RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }))
   {
 
   }
 
   BasicSprite::BasicSprite(const Texture& texture)
   : m_texture(&texture)
-  , m_textureRect(0, 0, 1, 1)
-  , m_bounds(0, 0, 0, 0)
+  , m_textureRect(RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }))
   {
 
   }
@@ -51,7 +49,6 @@ inline namespace v1 {
   BasicSprite::BasicSprite(const Texture& texture, const RectF& textureRect)
   : m_texture(&texture)
   , m_textureRect(textureRect)
-  , m_bounds(0, 0, 0, 0)
   {
 
   }
@@ -60,7 +57,7 @@ inline namespace v1 {
     m_texture = &texture;
 
     if (resetRect) {
-      m_textureRect = { 0.0f, 0.0f, 1.0f, 1.0f };
+      m_textureRect = RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f });
     }
   }
 
@@ -96,7 +93,7 @@ inline namespace v1 {
     vertices[2].position = {  0.0f,            spriteSize.height };
     vertices[3].position = { spriteSize.width, spriteSize.height };
 
-    m_bounds.setSize(spriteSize);
+    m_bounds = RectF::fromPositionSize({ 0.0f, 0.0f }, spriteSize);
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

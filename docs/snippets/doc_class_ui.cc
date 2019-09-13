@@ -59,7 +59,7 @@ int main() {
     /// [events]
 
     /// [window]
-    if (ui.begin("Title", gf::RectF(20, 20, 200, 200), gf::UIWindow::Title | gf::UIWindow::Border)) {
+    if (ui.begin("Title", gf::RectF::fromPositionSize({ 20, 20 }, { 200, 200 }), gf::UIWindow::Title | gf::UIWindow::Border)) {
 
       // content of the window
 

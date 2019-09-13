@@ -289,7 +289,7 @@ namespace home {
     static constexpr gf::Time FrameDuration = gf::seconds(1.0f / 30.0f);
 
     for (int i = 0; i < 22; ++i) {
-      gf::RectF frame(gf::Vector2i(i, line) *  FrameSize / TextureSize, FrameSize / TextureSize);
+      gf::RectF frame = gf::RectF::fromPositionSize(gf::Vector2i(i, line) *  FrameSize / TextureSize, FrameSize / TextureSize);
       animation.addFrame(m_moveAndPauseTexture, frame, FrameDuration);
     }
   }
@@ -301,7 +301,7 @@ namespace home {
 
     for (int i = 0; i < 4; ++i) {
       for (int j = 0; j < 22; ++j) {
-        gf::RectF frame(gf::Vector2i(j, i) * FrameSize / TextureSize, FrameSize / TextureSize);
+        gf::RectF frame = gf::RectF::fromPositionSize(gf::Vector2i(j, i) * FrameSize / TextureSize, FrameSize / TextureSize);
 
         if (i == 3 && j == 18) {
           m_death.addFrame(m_deathTexture, frame, gf::seconds(60 * 60 * 24 * 10000));

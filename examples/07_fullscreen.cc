@@ -34,7 +34,7 @@ int main() {
   gf::Window window("07_fullscreen", ScreenSize);
   gf::RenderWindow renderer(window);
 
-  gf::RectF world(-1, -1, 2, 2);
+  gf::RectF world = gf::RectF::fromPositionSize({ -1, -1 }, { 2, 2 });
   gf::RectF extendedWorld = world.grow(1);
 
   /*

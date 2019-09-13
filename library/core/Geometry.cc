@@ -213,7 +213,7 @@ inline namespace v1 {
     }
 
     Vector2i offset = (actualSize - size) / 2;
-    return map.subMap({ offset, size });
+    return map.subMap(RectI::fromPositionSize(offset, size));
   }
 
   /*
@@ -303,7 +303,7 @@ inline namespace v1 {
     }
 
     Vector2i offset = (actualSize - size) / 2;
-    return map.subMap({ offset, size });
+    return map.subMap(RectI::fromPositionSize(offset, size));
   }
 
   /*

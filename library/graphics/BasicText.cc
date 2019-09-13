@@ -44,7 +44,6 @@ inline namespace v1 {
   , m_letterSpacingFactor(1.0f)
   , m_paragraphWidth(0.0f)
   , m_align(Alignment::None)
-  , m_bounds(0.0f, 0.0f, 0.0f, 0.0f)
   {
 
   }
@@ -58,7 +57,6 @@ inline namespace v1 {
   , m_letterSpacingFactor(1.0f)
   , m_paragraphWidth(0.0f)
   , m_align(Alignment::None)
-  , m_bounds(0.0f, 0.0f, 0.0f, 0.0f)
   {
 
   }
@@ -333,11 +331,11 @@ inline namespace v1 {
       }
     }
 
-    m_bounds = RectF(min, max - min);
+    m_bounds = RectF::fromMinMax(min, max);
 
     if (m_align != Alignment::None) {
-      m_bounds.left = 0;
-      m_bounds.width = m_paragraphWidth;
+      m_bounds.min.x = 0;
+      m_bounds.max.x = m_paragraphWidth;
     }
   }
 

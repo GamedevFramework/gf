@@ -58,7 +58,7 @@ inline namespace v1 {
   }
 
   RectF SquareGrid::getLocalBounds() const {
-    return RectF({ 0.0f, 0.0f }, m_gridSize * m_cellSize);
+    return RectF::fromPositionSize({ 0.0f, 0.0f }, m_gridSize * m_cellSize);
   }
 
   void SquareGrid::setAnchor(Anchor anchor) {

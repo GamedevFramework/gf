@@ -60,28 +60,28 @@ inline namespace v1 {
 
       assert(node.isLeaf());
 
-      auto area = node.getArea();
+      RectI area = node.getArea();
+      Vector2i size = area.getSize();
 
-      if (area.width > maxSize.width || area.height > maxSize.height) {
+      if (size.width > maxSize.width || size.height > maxSize.height) {
         bool splitHorizontally = random.computeBernoulli(0.5);
 
-        if (area.width >= maxRatio * area.height) {
+        if (size.width >= maxRatio * size.height) {
           splitHorizontally = false;
-        } else if (area.height >= maxRatio * area.width) {
+        } else if (size.height >= maxRatio * size.width) {
           splitHorizontally = true;
         }
 
         if (splitHorizontally) {
-          if (area.height <= 2 * minSize.height) {
+          if (size.height <= 2 * minSize.height) {
             continue;
           }
 
-          assert(minSize.height < area.height - minSize.height);
-          int height = random.computeUniformInteger(minSize.height, area.height - minSize.height);
-          int split = area.top + height;
+          assert(minSize.height < size.height - minSize.height);
+          int height = random.computeUniformInteger(minSize.height, size.height - minSize.height);
 
-          Node left(RectI(area.left, area.top, area.width, height), current, level);
-          Node right(RectI(area.left, split, area.width, area.height - height), current, level);
+          Node left(RectI::fromPositionSize(area.min, { size.width, height }), current, level);
+          Node right(RectI::fromPositionSize(area.min + gf::diry(height),  { size.width, size.height - height}), current, level);
 
           node.setChildrenIndices(next, next + 1);
           // do not use `node` after this position
@@ -90,17 +90,15 @@ inline namespace v1 {
           m_nodes.push_back(right);
 
         } else {
-
-          if (area.width <= 2 * minSize.width) {
+          if (size.width <= 2 * minSize.width) {
             continue;
           }
 
-          assert(minSize.width < area.width - minSize.width);
-          int width = random.computeUniformInteger(minSize.width, area.width - minSize.width);
-          int split = area.left + width;
+          assert(minSize.width < size.width - minSize.width);
+          int width = random.computeUniformInteger(minSize.width, size.width - minSize.width);
 
-          Node left(RectI(area.left, area.top, width, area.height), current, level);
-          Node right(RectI(split, area.top, area.width - width, area.height), current, level);
+          Node left(RectI::fromPositionSize(area.min, { width, size.height }), current, level);
+          Node right(RectI::fromPositionSize(area.min + gf::dirx(width), { size.width - width, size.height }), current, level);
 
           node.setChildrenIndices(next, next + 1);
           // do not use `node` after this position

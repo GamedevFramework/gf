@@ -50,7 +50,7 @@ int main() {
     std::size_t j = k / 4;
 
     sprite.setTexture(texture);
-    sprite.setTextureRect({ i * 0.25f, j * 0.5f, 0.25f, 0.5f });
+    sprite.setTextureRect(gf::RectF::fromPositionSize({ i * 0.25f, j * 0.5f }, { 0.25f, 0.5f }));
     sprite.setScale(0.5f);
     sprite.setOrigin({ 128.0f, 128.0f });
   }

@@ -65,7 +65,7 @@ namespace kkd {
     mergesSprite.setAnchor(gf::Anchor::BottomLeft);
     target.draw(mergesSprite, states);
 
-    mergesPosition.x += mergesSprite.getLocalBounds().width * HudIconsScale + Padding;
+    mergesPosition.x += mergesSprite.getLocalBounds().getWidth() * HudIconsScale + Padding;
 
     gf::Text mergesText(std::to_string(m_merges), m_font, characterSize);
     mergesText.setColor(gf::Color::White);
@@ -85,7 +85,7 @@ namespace kkd {
       heartSprite.setTextureRect(gTextureAtlas().getTextureRect("heart_rose"));
     }
 
-    heartPosition.y -= mergesSprite.getLocalBounds().height * HudIconsScale + Padding;
+    heartPosition.y -= mergesSprite.getLocalBounds().getHeight() * HudIconsScale + Padding;
 
     heartSprite.setScale(HudIconsScale);
     heartSprite.setPosition(heartPosition);
@@ -103,7 +103,7 @@ namespace kkd {
     timer.setColor(gf::Color::White);
     timer.setOutlineColor(gf::Color::Black);
     timer.setOutlineThickness(characterSize / 30.0f);
-    timer.setPosition({ 2.0f * Padding + clockSprite.getLocalBounds().width * HudIconsScale, Padding });
+    timer.setPosition({ 2.0f * Padding + clockSprite.getLocalBounds().getWidth() * HudIconsScale, Padding });
     timer.setAnchor(gf::Anchor::TopLeft);
     target.draw(timer, states);
 

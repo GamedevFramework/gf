@@ -33,7 +33,6 @@ inline namespace v1 {
   : m_buffer(nullptr)
   , m_outlineBuffer(nullptr)
   , m_texture(nullptr)
-  , m_bounds(0, 0, 0, 0)
   {
 
   }
@@ -42,7 +41,6 @@ inline namespace v1 {
   : m_buffer(&buffer)
   , m_outlineBuffer(nullptr)
   , m_texture(nullptr)
-  , m_bounds(0, 0, 0, 0)
   {
 
   }
@@ -51,7 +49,6 @@ inline namespace v1 {
   : m_buffer(&buffer)
   , m_outlineBuffer(&outlineBuffer)
   , m_texture(nullptr)
-  , m_bounds(0, 0, 0, 0)
   {
 
   }

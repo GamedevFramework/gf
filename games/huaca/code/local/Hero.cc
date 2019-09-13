@@ -37,7 +37,7 @@ namespace huaca {
   static void loadSingleFrameAnimation(gf::Animation& animation, const gf::Path& path) {
     gf::Texture& texture = gResourceManager().getTexture(path);
     texture.setSmooth();
-    animation.addFrame(texture, { 0.0f, 0.0f, 1.0f, 1.0f }, gf::seconds(1));
+    animation.addFrame(texture, gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }), gf::seconds(1));
   }
 
   static void loadMultiFrameAnimation(gf::Animation& animation, const gf::Path& path) {
@@ -45,7 +45,7 @@ namespace huaca {
     texture.setSmooth();
 
     for (int i = 0; i < 12; ++i) {
-      animation.addFrame(texture, { (i % 4) / 4.0f, (i / 4) / 3.0f, 1.0f / 4.0f, 1.0f / 3.0f }, FrameTime);
+      animation.addFrame(texture, gf::RectF::fromPositionSize({ (i % 4) / 4.0f, (i / 4) / 3.0f }, { 1.0f / 4.0f, 1.0f / 3.0f }), FrameTime);
     }
   }
 
@@ -82,12 +82,10 @@ namespace huaca {
   }
 
   static gf::RectF boundsFromPosition(gf::Vector2f position) {
-    gf::RectF bounds;
-    bounds.left = position.x - Level::TileSize / 4 - 2; // some magic
-    bounds.top = position.y + Level::TileSize / 12; // here too
-    bounds.width = Level::TileSize / 2;
-    bounds.height = Level::TileSize / 2;
-    return bounds;
+    return gf::RectF::fromPositionSize(
+      { position.x - Level::TileSize / 4 - 2, position.y + Level::TileSize / 12 }, // some magic
+      { Level::TileSize / 2, Level::TileSize / 2 }
+    );
   }
 
   void Hero::update(gf::Time time) {

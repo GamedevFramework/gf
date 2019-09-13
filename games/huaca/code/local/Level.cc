@@ -251,7 +251,8 @@ namespace huaca {
       if (gf::collides(wall, heroPosition->bounds, p)) {
         gf::Vector2f delta = p.depth * p.normal;
         heroPosition->position += delta;
-        heroPosition->bounds.setPosition(heroPosition->bounds.getPosition() + delta);
+        heroPosition->bounds.min += delta;
+        heroPosition->bounds.max += delta;
       }
     }
 
@@ -283,7 +284,8 @@ namespace huaca {
         } else {
           gf::Vector2f delta = p.depth * p.normal;
           heroPosition->position += delta;
-          heroPosition->bounds.setPosition(heroPosition->bounds.getPosition() + delta);
+          heroPosition->bounds.min += delta;
+          heroPosition->bounds.max += delta;
         }
       }
     }
@@ -322,7 +324,8 @@ namespace huaca {
             gf::Vector2f newPosition = m_portals[1 - portal.number].bounds.getCenter() - gf::Vector2f(0.0f, TileSize / 3); // HACK
             gf::Vector2f delta = newPosition - heroPosition->position;
             heroPosition->position += delta;
-            heroPosition->bounds.setPosition(heroPosition->bounds.getPosition() + delta);
+            heroPosition->bounds.min += delta;
+            heroPosition->bounds.max += delta;
             m_isOnPortal = true;
           }
         }
@@ -385,7 +388,7 @@ namespace huaca {
     auto portalDropped = static_cast<PortalDroppedMessage*>(msg);
 
     m_portals[m_currentPortal].isActive = true;
-    m_portals[m_currentPortal].bounds = gf::RectF(portalDropped->position - PortalSize / 2, { PortalSize, PortalSize });
+    m_portals[m_currentPortal].bounds = gf::RectF::fromPositionSize(portalDropped->position - PortalSize / 2, { PortalSize, PortalSize });
     m_currentPortal++;
     m_isOnPortal = true;
 
@@ -730,7 +733,7 @@ namespace huaca {
         switch (m_world[x][y].tile) {
           case Tile::Wall:
             m_wallLayer.setTile(coords, random.computeUniformInteger(0, WallTileCount - 1));
-            m_walls.push_back(gf::RectF(coords * TileSize, gf::Vector2f(TileSize, TileSize)));
+            m_walls.push_back(gf::RectF::fromPositionSize(coords * TileSize, gf::Vector2f(TileSize, TileSize)));
             break;
           default:
             m_groundLayer.setTile(coords, gf::clamp(random.computeUniformInteger(-10, GroundTileCount - 1), 0, GroundTileCount - 1));
@@ -743,7 +746,7 @@ namespace huaca {
 
     for (auto& rune : m_runes) {
       gf::Vector2f pos = rune.coords * TileSize + TileSize / 2 - RuneSize / 2;
-      rune.bounds = gf::RectF(pos, { RuneSize, RuneSize });
+      rune.bounds = gf::RectF::fromPositionSize(pos, { RuneSize, RuneSize });
       rune.isPressed = false;
     }
 
@@ -751,7 +754,7 @@ namespace huaca {
 
     for (auto& key : m_keys) {
       gf::Vector2f pos = key.coords * TileSize + TileSize / 2 - KeySize / 2;
-      key.bounds = gf::RectF(pos, { KeySize, KeySize });
+      key.bounds = gf::RectF::fromPositionSize(pos, { KeySize, KeySize });
       key.isLooted = false;
     }
 
@@ -761,9 +764,9 @@ namespace huaca {
       gf::Vector2f pos = door.coords * TileSize;
 
       if (door.isVertical) {
-        door.bounds = gf::RectF(pos, DoorVerticalSize);
+        door.bounds = gf::RectF::fromPositionSize(pos, DoorVerticalSize);
       } else {
-        door.bounds = gf::RectF(pos, DoorHorizontalSize);
+        door.bounds = gf::RectF::fromPositionSize(pos, DoorHorizontalSize);
       }
 
       door.keyFound = false;

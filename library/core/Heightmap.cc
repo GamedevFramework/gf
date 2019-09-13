@@ -373,19 +373,27 @@ inline namespace v1 {
   }
 
   Heightmap Heightmap::subMap(RectI area) const {
-    if (area.left + area.width > m_data.getCols()) {
-      area.width = m_data.getCols() - area.left;
+    if (area.min.x < 0) {
+      area.min.x = 0;
     }
 
-    if (area.top + area.height > m_data.getRows()) {
-      area.height = m_data.getRows() - area.top;
+    if (area.min.y < 0) {
+      area.min.y = 0;
+    }
+
+    if (area.max.x > m_data.getCols()) {
+      area.max.x = m_data.getCols();
+    }
+
+    if (area.max.y > m_data.getRows()) {
+      area.max.y = m_data.getRows();
     }
 
     Heightmap out(area.getSize());
 
-    for (int j = 0; j < area.height; ++j) {
-      for (int i = 0; i < area.width; ++i) {
-        out.m_data({ i, j }) = m_data({ area.left + i, area.top + j });
+    for (int j = area.min.y; j < area.max.y; ++j) {
+      for (int i = area.min.x; i < area.max.x; ++i) {
+        out.m_data({ i - area.min.x, j - area.min.y }) = m_data({ i, j });
       }
     }
 

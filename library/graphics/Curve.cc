@@ -35,7 +35,6 @@ inline namespace v1 {
   , m_color(Color::White)
   , m_width(1)
   , m_vertices(PrimitiveType::TriangleStrip)
-  , m_bounds(0, 0, 0, 0)
   , m_outlineColor(Color::White)
   , m_outlineThickness(0.0f)
   , m_outlineVertices(PrimitiveType::TriangleStrip)

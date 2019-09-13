@@ -478,7 +478,7 @@ namespace lux {
 
     auto bounds = text.getLocalBounds();
     gf::Vector2f position = coordinates.getRelativePoint({ 0.5f, 0.3f });
-    position.y -= bounds.height / 2;
+    position.y -= bounds.getHeight() / 2;
 
     text.setPosition(position);
     target.draw(text, states);
@@ -494,7 +494,7 @@ namespace lux {
     text.setAlignment(gf::Alignment::None);
     text.setAnchor(gf::Anchor::TopCenter);
 
-    position.y += bounds.height + Margin;
+    position.y += bounds.getHeight() + Margin;
 
     text.setPosition(position);
     target.draw(text, states);

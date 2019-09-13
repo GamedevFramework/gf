@@ -279,12 +279,13 @@ namespace {
       m_dungeon = Dungeon(size, State::Wall);
 
       for (int i = 0; i < maxRooms; ++i) {
-        gf::RectU room;
+        gf::Vector2u roomPos, roomSize;
+        roomSize.width = m_random.computeUniformInteger(roomSizeMinimum, roomSizeMaximum);
+        roomSize.height = m_random.computeUniformInteger(roomSizeMinimum, roomSizeMaximum);
+        roomPos.x = m_random.computeUniformInteger(0u, size.width - roomSize.width - 1);
+        roomPos.y = m_random.computeUniformInteger(0u, size.height - roomSize.height - 1);
 
-        room.width = m_random.computeUniformInteger(roomSizeMinimum, roomSizeMaximum);
-        room.height = m_random.computeUniformInteger(roomSizeMinimum, roomSizeMaximum);
-        room.left = m_random.computeUniformInteger(0u, size.width - room.width - 1);
-        room.top = m_random.computeUniformInteger(0u, size.height - room.height - 1);
+        gf::RectU room = gf::RectU::fromPositionSize(roomPos, roomSize);
 
         if (m_rooms.empty()) {
           createRoom(room);
@@ -313,9 +314,9 @@ namespace {
     }
 
     void createRoom(const gf::RectU& room) {
-      for (unsigned x = 1; x < room.width; ++x) {
-        for (unsigned y = 1; y < room.height; ++y) {
-          m_dungeon({ room.left + x, room.top + y }) = State::Void;
+      for (unsigned x = room.min.x + 1; x < room.max.x; ++x) {
+        for (unsigned y = room.min.y + 1; y < room.max.y; ++y) {
+          m_dungeon({ x, y }) = State::Void;
         }
       }
     }
@@ -373,13 +374,13 @@ namespace {
 
       bool splitHorizontally = random.computeBernoulli(0.5);
 
-      if (space.width >= 1.25 * space.height) {
+      if (space.getWidth() >= 1.25 * space.getHeight()) {
         splitHorizontally = false;
-      } else if (space.height >= 1.25 * space.width) {
+      } else if (space.getHeight() >= 1.25 * space.getWidth()) {
         splitHorizontally = true;
       }
 
-      unsigned max = splitHorizontally ? space.height : space.width;
+      unsigned max = splitHorizontally ? space.getHeight() : space.getWidth();
 
       if (max <= 2 * leafSizeMinimum) {
         return false;
@@ -388,11 +389,11 @@ namespace {
       unsigned split = random.computeUniformInteger(leafSizeMinimum, max - leafSizeMinimum);
 
       if (splitHorizontally) {
-        left = std::unique_ptr<Tree>(new Tree({ space.left, space.top, space.width, split }));
-        right = std::unique_ptr<Tree>(new Tree({ space.left, space.top + split, space.width, space.height - split }));
+        left = std::unique_ptr<Tree>(new Tree(gf::RectU::fromPositionSize(space.min, { space.getWidth(), split })));
+        right = std::unique_ptr<Tree>(new Tree(gf::RectU::fromPositionSize({ space.min.x, space.min.y + split }, { space.getWidth(), space.getHeight() - split })));
       } else {
-        left = std::unique_ptr<Tree>(new Tree({ space.left, space.top, split, space.height }));
-        right = std::unique_ptr<Tree>(new Tree({ space.left + split, space.top, space.width - split, space.height  }));
+        left = std::unique_ptr<Tree>(new Tree(gf::RectU::fromPositionSize(space.min, { split, space.getHeight() })));
+        right = std::unique_ptr<Tree>(new Tree(gf::RectU::fromPositionSize({ space.min.x + split, space.min.y }, { space.getWidth() - split, space.getHeight() })));
       }
 
       return true;
@@ -401,7 +402,7 @@ namespace {
     void recursiveSplit(gf::Random& random, unsigned leafSizeMinimum, unsigned leafSizeMaximum) {
       assert(!left && !right);
 
-      if (space.width > leafSizeMaximum || space.height > leafSizeMaximum || random.computeBernoulli(0.2)) {
+      if (space.getWidth() > leafSizeMaximum || space.getHeight() > leafSizeMaximum || random.computeBernoulli(0.2)) {
         if (split(random, leafSizeMinimum)) {
           assert(left);
           left->recursiveSplit(random, leafSizeMinimum, leafSizeMaximum);
@@ -424,10 +425,14 @@ namespace {
           room = right->room;
         }
       } else {
-        room.width = random.computeUniformInteger(roomSizeMinimum, std::min(roomSizeMaximum, space.width - 1));
-        room.height = random.computeUniformInteger(roomSizeMinimum, std::min(roomSizeMaximum, space.height - 1));
-        room.left = space.left + random.computeUniformInteger(0u, space.width - room.width - 1);
-        room.top = space.top + random.computeUniformInteger(0u, space.height - room.height - 1);
+        gf::Vector2u position, size;
+        size.width = random.computeUniformInteger(roomSizeMinimum, std::min(roomSizeMaximum, space.getWidth() - 1));
+        size.height = random.computeUniformInteger(roomSizeMinimum, std::min(roomSizeMaximum, space.getHeight() - 1));
+        position.x = random.computeUniformInteger(0u, space.getWidth() - size.width - 1);
+        position.y = random.computeUniformInteger(0u, space.getHeight() - size.height - 1);
+        position += space.getPosition();
+
+        room = gf::RectU::fromPositionSize(position, size);
       }
     }
 
@@ -436,7 +441,7 @@ namespace {
   class BinarySpacePartioningTree : public DungeonGenerator {
   public:
     BinarySpacePartioningTree()
-    : m_root({ 0u, 0u, 1u, 1u })
+    : m_root(gf::RectU::fromPositionSize({ 0u, 0u }, { 1u, 1u }))
     {
 
     }
@@ -470,7 +475,7 @@ namespace {
     void generateRooms(gf::Vector2u size) {
       m_dungeon = Dungeon(size, State::Wall);
 
-      m_root.space = gf::RectU({ 0u, 0u }, size);
+      m_root.space = gf::RectU::fromPositionSize({ 0u, 0u }, size);
       m_root.left = nullptr;
       m_root.right = nullptr;
 
@@ -501,9 +506,9 @@ namespace {
     }
 
     void createRoom(const gf::RectU& room) {
-      for (unsigned x = 1; x < room.width; ++x) {
-        for (unsigned y = 1; y < room.height; ++y) {
-          m_dungeon({ room.left + x, room.top + y }) = State::Void;
+      for (unsigned x = room.min.x + 1; x < room.max.x; ++x) {
+        for (unsigned y = room.min.y + 1; y < room.max.y; ++y) {
+          m_dungeon({ x, y }) = State::Void;
         }
       }
     }
@@ -738,8 +743,8 @@ int main() {
 
   gf::ViewContainer views;
 
-  gf::ExtendView automatonView(gf::RectF(0.0f, 0.0f, Size, Size));
-  automatonView.setViewport(gf::RectF(0.0f, 0.0f, ViewportX, 1.0f));
+  gf::ExtendView automatonView(gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { Size, Size }));
+  automatonView.setViewport(gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { ViewportX, 1.0f }));
   views.addView(automatonView);
 
   gf::ScreenView uiView;
@@ -825,7 +830,7 @@ int main() {
     }
 
 
-    ui.begin("Dungeons", gf::RectF(Size, 0, ExtraSize, Size), gf::UIWindow::Title | gf::UIWindow::Border);
+    ui.begin("Dungeons", gf::RectF::fromPositionSize({ Size, 0.0f }, { ExtraSize, Size }), gf::UIWindow::Title | gf::UIWindow::Border);
 
     ui.layoutRow(gf::UILayout::Dynamic, 20, { 0.75f, 0.25f });
     ui.label("Size");
@@ -844,7 +849,7 @@ int main() {
     ui.layoutRowDynamic(20, 1);
     ui.label("Algorithm");
     auto algorithmBounds = ui.getWidgetBounds();
-    ui.combobox(algorithmChoices, algorithmChoice, 20, { algorithmBounds.width, ComboHeightMax });
+    ui.combobox(algorithmChoices, algorithmChoice, 20, { algorithmBounds.getWidth(), ComboHeightMax });
 
     switch (algorithmChoice) {
       case AlgorithmCellularAutomaton: {
@@ -861,7 +866,7 @@ int main() {
         ui.layoutRowDynamic(20, 1);
         ui.label("Neighborhood");
         auto bounds = ui.getWidgetBounds();
-        ui.combobox(modeChoices, modeChoice, 20, { bounds.width, ComboHeightMax });
+        ui.combobox(modeChoices, modeChoice, 20, { bounds.getWidth(), ComboHeightMax });
 
         if (currentModeChoice != modeChoice) {
           currentModeChoice = modeChoice;

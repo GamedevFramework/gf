@@ -75,7 +75,7 @@ namespace lux {
   void Bullets::update(gf::Time time) {
     float dt = time.asSeconds();
 
-    gf::RectF view(WorldCenter - WorldSize / 2, WorldSize);
+    gf::RectF view = gf::RectF::fromCenterSize(WorldCenter, WorldSize);
     view.grow(BulletsExtra);
 
     for (Bullet& bullet : m_bullets) {
