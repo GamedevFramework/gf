@@ -347,7 +347,7 @@ int main() {
     }
 
 
-    ui.begin("Noise parameters", gf::RectF::fromPositionSize({ Size, 0.0f }, { ExtraSize, Size }), gf::UIWindow::Title | gf::UIWindow::Border);
+    ui.begin("Noise parameters", gf::RectF::fromPositionSize(gf::Vector2f(Size, 0.0f), gf::Vector2f(ExtraSize, Size)), gf::UIWindow::Title | gf::UIWindow::Border);
 
     ui.layoutRowDynamic(20, 1);
     bounds = ui.getWidgetBounds();

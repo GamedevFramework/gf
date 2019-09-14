@@ -743,8 +743,8 @@ int main() {
 
   gf::ViewContainer views;
 
-  gf::ExtendView automatonView(gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { Size, Size }));
-  automatonView.setViewport(gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { ViewportX, 1.0f }));
+  gf::ExtendView automatonView(gf::RectF::fromPositionSize({ 0.0f, 0.0f }, gf::Vector2f(Size, Size)));
+  automatonView.setViewport(gf::RectF::fromPositionSize({ 0.0f, 0.0f }, gf::Vector2f(ViewportX, 1.0f)));
   views.addView(automatonView);
 
   gf::ScreenView uiView;
@@ -775,7 +775,7 @@ int main() {
   int log2DungeonSize = 6;
 
   CellularAutomaton cellular;
-  cellular.threshold = 0.4;
+  cellular.threshold = 0.4f;
   cellular.mode = CellularAutomaton::Mode::Square8;
   cellular.survivalThreshold = 4;
   cellular.birthThreshold = 6;
@@ -830,7 +830,7 @@ int main() {
     }
 
 
-    ui.begin("Dungeons", gf::RectF::fromPositionSize({ Size, 0.0f }, { ExtraSize, Size }), gf::UIWindow::Title | gf::UIWindow::Border);
+    ui.begin("Dungeons", gf::RectF::fromPositionSize(gf::Vector2f(Size, 0.0f), gf::Vector2f(ExtraSize, Size)), gf::UIWindow::Title | gf::UIWindow::Border);
 
     ui.layoutRow(gf::UILayout::Dynamic, 20, { 0.75f, 0.25f });
     ui.label("Size");
