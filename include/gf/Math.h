@@ -120,8 +120,10 @@ inline namespace v1 {
    * @returns The angle in radians
    * @sa radiansToDegrees()
    */
-  constexpr float degreesToRadians(float degrees) {
-    return degrees * Pi / 180.0f;
+  template<typename T>
+  constexpr
+  T degreesToRadians(T degrees) {
+    return degrees * gf::pi<T>() / T(180);
   }
 
   /**
@@ -132,8 +134,10 @@ inline namespace v1 {
    * @returns The angle in degrees
    * @sa degreesToRadians()
    */
-  constexpr float radiansToDegrees(float radians) {
-    return radians * 180.0f / Pi;
+  template<typename T>
+  constexpr
+  T radiansToDegrees(T radians) {
+    return radians * T(180) / gf::pi<T>();
   }
 
   /**
@@ -231,7 +235,7 @@ inline namespace v1 {
   template<typename T>
   inline
   T cosineStep(T t) {
-    return (T(1) - std::cos(Pi * t)) * T(0.5);
+    return (T(1) - std::cos(gf::pi<T>() * t)) * T(0.5);
   }
 
   /**
