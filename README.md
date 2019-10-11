@@ -26,27 +26,20 @@ Gamedev Framework (gf) is licensed under the terms and conditions of the [zlib/l
 
 int main() {
   // Create the main window and the renderer
+
   gf::Window window("Example", { 640, 480 });
   gf::RenderWindow renderer(window);
 
   // Load a sprite to display
 
-  gf::Texture texture;
-
-  if (!texture.loadFromFile("sprite.png")) {
-    return EXIT_FAILURE;
-  }
+  gf::Texture texture("sprite.png");
 
   gf::Sprite sprite(texture);
   sprite.setPosition({ 300, 200 });
 
   // Create a graphical text to display
 
-  gf::Font font;
-
-  if (!font.loadFromFile("DroidSans.ttf")) {
-    return EXIT_FAILURE;
-  }
+  gf::Font font("DroidSans.ttf");
 
   gf::Text text("Hello gf!", font, 50);
   text.setPosition({ 100, 100 });
@@ -56,6 +49,7 @@ int main() {
   // Start the game loop
 
   while (window.isOpen()) {
+
     // Process events
 
     gf::Event event;
@@ -65,6 +59,7 @@ int main() {
         case gf::EventType::Closed:
           window.close();
           break;
+
         default:
           break;
       }
