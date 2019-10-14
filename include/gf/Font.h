@@ -66,7 +66,7 @@ inline namespace v1 {
    *
    * Fonts can be loaded from a file, from memory or from a custom
    * stream, and supports the most common types of fonts. See
-   * the `loadFromFile()` function for the complete list of supported formats.
+   * the constructors for the complete list of supported formats.
    *
    * Once it is loaded, a gf::Font instance provides three
    * types of information about the font:
@@ -99,28 +99,7 @@ inline namespace v1 {
    *
    * Usage example:
    *
-   * ~~~{.cc}
-   * // Declare a new font
-   * gf::Font font;
-   *
-   * // Load it from a file
-   * if (!font.loadFromFile("arial.ttf"))
-   * {
-   *     // error...
-   * }
-   *
-   * // Create a text which uses our font
-   * gf::Text text1;
-   * text1.setString("Hello World!")
-   * text1.setFont(font);
-   * text1.setCharacterSize(30);
-   *
-   * // Create another text using the same font, but with different parameters
-   * gf::Text text2;
-   * text2.setString("Goodbye world!");
-   * text2.setFont(font);
-   * text2.setCharacterSize(50);
-   * ~~~
+   * @snippet snippets/doc_class_font.cc font
    *
    * Apart from loading font files, and passing them to instances
    * of gf::Text, you should normally not have to deal directly
@@ -135,6 +114,51 @@ inline namespace v1 {
      * This constructor defines an empty font.
      */
     Font();
+
+    /**
+     * @brief Load the font from a file
+     *
+     * The supported font formats are: TrueType, Type 1, CFF,
+     * OpenType, SFNT, X11 PCF, Windows FNT, BDF, PFR and Type 42.
+     * Note that this function know nothing about the standard
+     * fonts installed on the user's system, thus you can't
+     * load them directly.
+     *
+     * @warning gf cannot preload all the font data in this
+     * function, so the file has to remain accessible until
+     * the gf::Font object loads a new font or is destroyed.
+     *
+     * @param filename Path of the font file to load
+     */
+    Font(const Path& filename);
+
+    /**
+     * @brief Load the font from a custom stream
+     *
+     * The supported font formats are: TrueType, Type 1, CFF,
+     * OpenType, SFNT, X11 PCF, Windows FNT, BDF, PFR and Type 42.
+     *
+     * @warning gf cannot preload all the font data in this
+     * function, so the stream has to remain accessible until
+     * the gf::Font object loads a new font or is destroyed.
+     *
+     * @param stream Source stream to read from
+     */
+    Font(InputStream& stream);
+
+    /**
+     * @brief Load the font from a file in memory
+     *
+     * The supported font formats are: TrueType, Type 1, CFF,
+     * OpenType, SFNT, X11 PCF, Windows FNT, BDF, PFR and Type 42.
+     *
+     * @warning gf cannot preload all the font data in this
+     * function, so the stream has to remain accessible until
+     * the gf::Font object loads a new font or is destroyed.
+     *
+     * @param content Content of the file data in memory
+     */
+    Font(ArrayRef<uint8_t> content);
 
     /**
      * @brief Destructor
@@ -160,62 +184,6 @@ inline namespace v1 {
      * @brief Move assignement
 	   */
     Font& operator=(Font&& other) noexcept;
-
-    /**
-     * @brief Load the font from a file
-     *
-     * The supported font formats are: TrueType, Type 1, CFF,
-     * OpenType, SFNT, X11 PCF, Windows FNT, BDF, PFR and Type 42.
-     * Note that this function know nothing about the standard
-     * fonts installed on the user's system, thus you can't
-     * load them directly.
-     *
-     * @warning gf cannot preload all the font data in this
-     * function, so the file has to remain accessible until
-     * the gf::Font object loads a new font or is destroyed.
-     *
-     * @param filename Path of the font file to load
-     * @return True if loading succeeded, false if it failed
-     *
-     * @sa loadFromMemory(), loadFromStream()
-     */
-    bool loadFromFile(const Path& filename);
-
-    /**
-     * @brief Load the font from a custom stream
-     *
-     * The supported font formats are: TrueType, Type 1, CFF,
-     * OpenType, SFNT, X11 PCF, Windows FNT, BDF, PFR and Type 42.
-     *
-     * @warning gf cannot preload all the font data in this
-     * function, so the stream has to remain accessible until
-     * the gf::Font object loads a new font or is destroyed.
-     *
-     * @param stream Source stream to read from
-     * @return True if loading succeeded, false if it failed
-     *
-     * @sa loadFromFile(), loadFromMemory()
-     */
-    bool loadFromStream(InputStream& stream);
-
-
-    /**
-     * @brief Load the font from a file in memory
-     *
-     * The supported font formats are: TrueType, Type 1, CFF,
-     * OpenType, SFNT, X11 PCF, Windows FNT, BDF, PFR and Type 42.
-     *
-     * @warning gf cannot preload all the font data in this
-     * function, so the stream has to remain accessible until
-     * the gf::Font object loads a new font or is destroyed.
-     *
-     * @param data Pointer to the file data in memory
-     * @param length Length of the data to load, in bytes
-     * @return True if loading succeeded, false if it failed
-     *
-     * @sa loadFromFile(), loadFromStream()
-     */
-    bool loadFromMemory(const uint8_t *data, std::size_t length);
 
 
     /**

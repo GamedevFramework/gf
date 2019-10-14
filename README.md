@@ -2,9 +2,6 @@
 
 [![Travis](https://img.shields.io/travis/GamedevFramework/gf.svg?style=flat-square)](https://travis-ci.org/GamedevFramework/gf)
 [![AppVeyor](https://img.shields.io/appveyor/ci/jube/gf.svg?style=flat-square)](https://ci.appveyor.com/project/jube/gf)
-[![Language grade: C/C++](https://img.shields.io/lgtm/grade/cpp/g/GamedevFramework/gf.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/GamedevFramework/gf/context:cpp)
-[![CodeFactor](https://www.codefactor.io/repository/github/gamedevframework/gf/badge)](https://www.codefactor.io/repository/github/gamedevframework/gf)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/991cd949d3d74b3a9052be89d7b42541)](https://www.codacy.com/app/jube/gf?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=GamedevFramework/gf&amp;utm_campaign=Badge_Grade)
 [![GitHub license](https://img.shields.io/badge/license-zlib-blue.svg?style=flat-square)](https://raw.githubusercontent.com/GamedevFramework/gf/master/LICENSE)
 [![GitHub tag](https://img.shields.io/github/tag/GamedevFramework/gf.svg?style=flat-square)](https://github.com/GamedevFramework/gf/tags)
 
@@ -26,27 +23,20 @@ Gamedev Framework (gf) is licensed under the terms and conditions of the [zlib/l
 
 int main() {
   // Create the main window and the renderer
+
   gf::Window window("Example", { 640, 480 });
   gf::RenderWindow renderer(window);
 
   // Load a sprite to display
 
-  gf::Texture texture;
-
-  if (!texture.loadFromFile("sprite.png")) {
-    return EXIT_FAILURE;
-  }
+  gf::Texture texture("sprite.png");
 
   gf::Sprite sprite(texture);
   sprite.setPosition({ 300, 200 });
 
   // Create a graphical text to display
 
-  gf::Font font;
-
-  if (!font.loadFromFile("DroidSans.ttf")) {
-    return EXIT_FAILURE;
-  }
+  gf::Font font("DroidSans.ttf");
 
   gf::Text text("Hello gf!", font, 50);
   text.setPosition({ 100, 100 });
@@ -56,6 +46,7 @@ int main() {
   // Start the game loop
 
   while (window.isOpen()) {
+
     // Process events
 
     gf::Event event;
@@ -65,6 +56,7 @@ int main() {
         case gf::EventType::Closed:
           window.close();
           break;
+
         default:
           break;
       }
@@ -126,3 +118,10 @@ These screenshots are from games and tools included in the repository.
 
 ![gf Noise](tools/gf_noise/gf_noise.png)
 ![gf Dungeons](tools/gf_dungeons/gf_dungeons.png)
+
+## Code Quality
+
+- LGTM: [![Language grade: C/C++](https://img.shields.io/lgtm/grade/cpp/g/GamedevFramework/gf.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/GamedevFramework/gf/context:cpp)
+- CodeFactor: [![CodeFactor](https://www.codefactor.io/repository/github/gamedevframework/gf/badge)](https://www.codefactor.io/repository/github/gamedevframework/gf)
+- Codacy: [![Codacy Badge](https://api.codacy.com/project/badge/Grade/991cd949d3d74b3a9052be89d7b42541)](https://www.codacy.com/app/jube/gf?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=GamedevFramework/gf&amp;utm_campaign=Badge_Grade)
+

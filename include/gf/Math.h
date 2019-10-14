@@ -120,8 +120,10 @@ inline namespace v1 {
    * @returns The angle in radians
    * @sa radiansToDegrees()
    */
-  constexpr float degreesToRadians(float degrees) {
-    return degrees * Pi / 180.0f;
+  template<typename T>
+  constexpr
+  T degreesToRadians(T degrees) {
+    return degrees * gf::pi<T>() / T(180);
   }
 
   /**
@@ -132,8 +134,10 @@ inline namespace v1 {
    * @returns The angle in degrees
    * @sa degreesToRadians()
    */
-  constexpr float radiansToDegrees(float radians) {
-    return radians * 180.0f / Pi;
+  template<typename T>
+  constexpr
+  T radiansToDegrees(T radians) {
+    return radians * T(180) / gf::pi<T>();
   }
 
   /**
@@ -194,7 +198,7 @@ inline namespace v1 {
   template<typename T>
   constexpr
   T cubicStep(T t) {
-    return (-2 * t + 3) * t * t;
+    return (-T(2) * t + T(3)) * t * t;
   }
 
   /**
@@ -217,7 +221,7 @@ inline namespace v1 {
   template<typename T>
   constexpr
   T quinticStep(T t) {
-    return ((6 * t - 15) * t + 10) * t * t * t;
+    return ((T(6) * t - T(15)) * t + T(10)) * t * t * t;
   }
 
   /**
@@ -231,7 +235,7 @@ inline namespace v1 {
   template<typename T>
   inline
   T cosineStep(T t) {
-    return (1 - std::cos(Pi * t)) * 0.5;
+    return (T(1) - std::cos(gf::pi<T>() * t)) * T(0.5);
   }
 
   /**
@@ -250,7 +254,7 @@ inline namespace v1 {
   template<typename T, typename U>
   constexpr
   T lerp(T lhs, T rhs, U t) {
-    return (1 - t) * lhs + t * rhs;
+    return (U(1) - t) * lhs + t * rhs;
   }
 
   /**

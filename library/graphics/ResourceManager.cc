@@ -31,9 +31,7 @@ inline namespace v1 {
     class ResourceLoader {
     public:
       std::unique_ptr<T> operator()(const Path& filename) {
-        auto ptr = std::make_unique<T>();
-        bool loaded = ptr->loadFromFile(filename);
-        return loaded ? std::move(ptr) : nullptr;
+        return std::make_unique<T>(filename);
       }
     };
 

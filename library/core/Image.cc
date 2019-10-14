@@ -44,6 +44,10 @@ inline namespace v1 {
 
   namespace {
 
+    std::size_t computeImageSize(Vector2i size) {
+      return 4 * size.width * size.height;
+    }
+
     void lower(std::string& str) {
       for (char& c : str) {
         c = std::tolower(c, std::locale::classic());
@@ -73,116 +77,130 @@ inline namespace v1 {
 
   }
 
-  void Image::create(Vector2i size, const Color4u& color) {
-    if (size.width == 0 || size.height == 0) {
-      m_size = { 0, 0 };
-      m_pixels.clear();
-      return;
-    }
+  Image::Image(Vector2i size)
+  : m_size(size)
+  , m_pixels(computeImageSize(size), 0xFF)
+  {
 
-    m_size = size;
-    m_pixels.resize(static_cast<std::size_t>(size.width) * static_cast<std::size_t>(size.height) * 4);
+  }
 
+  Image::Image(Vector2i size, Color4u color)
+  : m_size(size)
+  , m_pixels(computeImageSize(size))
+  {
     uint8_t *ptr = m_pixels.data();
 
-    for (int y = 0; y < size.height; ++y) {
-      for (int x = 0; x < size.width; ++x) {
-        std::copy_n(color.begin(), 4, ptr);
+    for (int y = 0; y < m_size.height; ++y) {
+      for (int x = 0; x < m_size.width; ++x) {
+        ptr[0] = color.r;
+        ptr[1] = color.g;
+        ptr[2] = color.b;
+        ptr[3] = color.a;
         ptr += 4;
       }
     }
   }
 
-  void Image::create(Vector2i size, const uint8_t* pixels) {
-    if (size.width == 0 || size.height == 0) {
-      m_size = { 0, 0 };
-      m_pixels.clear();
-      return;
-    }
-
-    m_size = size;
-    m_pixels.resize(static_cast<std::size_t>(size.width) * static_cast<std::size_t>(size.height) * 4);
-
-    std::copy_n(pixels, m_pixels.size(), m_pixels.data());
-  }
-
-  void Image::createRGB(Vector2i size, const uint8_t* pixels) {
-    if (size.width == 0 || size.height == 0) {
-      m_size = { 0, 0 };
-      m_pixels.clear();
-      return;
-    }
-
-    m_size = size;
-    m_pixels.resize(static_cast<std::size_t>(size.width) * static_cast<std::size_t>(size.height) * 4);
-
+  Image::Image(Vector2i size, Color3u color)
+  : m_size(size)
+  , m_pixels(computeImageSize(size))
+  {
     uint8_t *ptr = m_pixels.data();
 
-    for (int y = 0; y < size.height; ++y) {
-      for (int x = 0; x < size.width; ++x) {
-        std::copy_n(pixels, 3, ptr);
+    for (int y = 0; y < m_size.height; ++y) {
+      for (int x = 0; x < m_size.width; ++x) {
+        ptr[0] = color.r;
+        ptr[1] = color.g;
+        ptr[2] = color.b;
         ptr[3] = 0xFF; // set alpha to max (opaque)
-
         ptr += 4;
-        pixels += 4;
       }
     }
   }
 
-  bool Image::loadFromFile(const Path& filename) {
-    Vector2i size = { 0, 0 };
+  Image::Image(Vector2i size, const uint8_t *pixels, PixelFormat format)
+  : m_size(size)
+  , m_pixels(computeImageSize(size))
+  {
+    assert(pixels != nullptr);
+
+    switch (format) {
+      case PixelFormat::Rgb24: {
+        uint8_t *ptr = m_pixels.data();
+
+        for (int y = 0; y < size.height; ++y) {
+          for (int x = 0; x < size.width; ++x) {
+            ptr[0] = pixels[0];
+            ptr[1] = pixels[1];
+            ptr[2] = pixels[2];
+            ptr[3] = 0xFF; // set alpha to max (opaque)
+
+            ptr += 4;
+            pixels += 3;
+          }
+        }
+
+        break;
+      }
+
+      case PixelFormat::Rgba32:
+        std::copy_n(pixels, m_pixels.size(), m_pixels.data());
+        break;
+    }
+
+  }
+
+  Image::Image(const Path& filename)
+  : m_size({ 0, 0 })
+  {
     int n = 0;
+    uint8_t *pixels = stbi_load(filename.string().c_str(), &m_size.width, &m_size.height, &n, STBI_rgb_alpha);
 
-    uint8_t *ptr = stbi_load(filename.string().c_str(), &size.width, &size.height, &n, STBI_rgb_alpha);
-
-    if (size.width == 0 || size.height == 0 || ptr == nullptr) {
+    if (m_size.width == 0 || m_size.height == 0 || pixels == nullptr) {
       Log::warning("Could not load image from file '%s': %s\n", filename.c_str(), stbi_failure_reason());
-      return false;
+      throw std::runtime_error("Could not load image from file");
     }
 
-    create(size, ptr);
-    stbi_image_free(ptr);
-
-    return true;
+    m_pixels.resize(computeImageSize(m_size));
+    std::copy_n(pixels, m_pixels.size(), m_pixels.data());
+    stbi_image_free(pixels);
   }
 
-  bool Image::loadFromMemory(const uint8_t* data, std::size_t length) {
-    Vector2i size = { 0, 0 };
+  Image::Image(ArrayRef<uint8_t> content)
+  : m_size({ 0, 0 })
+  {
     int n = 0;
+    uint8_t *pixels = stbi_load_from_memory(content.getData(), content.getSize(), &m_size.width, &m_size.height, &n, STBI_rgb_alpha);
 
-    uint8_t *ptr = stbi_load_from_memory(data, length, &size.width, &size.height, &n, STBI_rgb_alpha);
-
-    if (size.width == 0 || size.height == 0 || ptr == nullptr) {
+    if (m_size.width == 0 || m_size.height == 0 || pixels == nullptr) {
       Log::warning("Could not load image from memory: %s\n", stbi_failure_reason());
-      return false;
+      throw std::runtime_error("Could not load image from memory");
     }
 
-    create(size, ptr);
-    stbi_image_free(ptr);
-
-    return true;
+    m_pixels.resize(computeImageSize(m_size));
+    std::copy_n(pixels, m_pixels.size(), m_pixels.data());
+    stbi_image_free(pixels);
   }
 
-  bool Image::loadFromStream(InputStream& stream) {
+  Image::Image(InputStream& stream)
+  : m_size({ 0, 0 })
+  {
     stbi_io_callbacks callbacks;
     callbacks.read = &callbackRead;
     callbacks.skip = &callbackSkip;
     callbacks.eof  = &callbackEof;
 
-    Vector2i size = { 0, 0 };
     int n = 0;
+    uint8_t *pixels = stbi_load_from_callbacks(&callbacks, &stream, &m_size.width, &m_size.height, &n, STBI_rgb_alpha);
 
-    uint8_t *ptr = stbi_load_from_callbacks(&callbacks, &stream, &size.width, &size.height, &n, STBI_rgb_alpha);
-
-    if (size.width == 0 || size.height == 0 || ptr == nullptr) {
+    if (m_size.width == 0 || m_size.height == 0 || pixels == nullptr) {
       Log::warning("Could not load image from stream: %s\n", stbi_failure_reason());
-      return false;
+      throw std::runtime_error("Could not load image from stream");
     }
 
-    create(size, ptr);
-    stbi_image_free(ptr);
-
-    return true;
+    m_pixels.resize(computeImageSize(m_size));
+    std::copy_n(pixels, m_pixels.size(), m_pixels.data());
+    stbi_image_free(pixels);
   }
 
   bool Image::saveToFile (const Path& filename) const {
@@ -272,7 +290,7 @@ inline namespace v1 {
       return;
     }
 
-    unsigned stride = m_size.width * 4;
+    int stride = m_size.width * 4;
 
     uint8_t *src = &m_pixels[0];
     uint8_t *dst = src + (m_size.height - 1) * stride;
@@ -283,6 +301,7 @@ inline namespace v1 {
       dst -= stride;
     }
   }
+
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

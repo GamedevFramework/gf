@@ -47,25 +47,15 @@ inline namespace v1 {
    * associated with either a native system cursor or a custom
    * cursor.
    *
-   * After loading the cursor the graphical appearance
-   * with either loadFromPixels() or loadFromSystem(), the
-   * cursor can be changed with gf::Window::setMouseCursor().
+   * After construction, the cursor can be changed with
+   * gf::Window::setMouseCursor().
    *
    * The behaviour is undefined if the cursor is destroyed while
    * in use by the window.
    *
    * Usage example:
-   * @code
-   * gf::Window window;
    *
-   * // ... create window as usual ...
-   *
-   * gf::Cursor cursor;
-   *
-   * if (cursor.loadFromSystem(gf::Cursor::Hand)) {
-   *   window.setMouseCursor(cursor);
-   * }
-   * @endcode
+   * @snippet snippets/doc_class_cursor.cc cursor
    *
    * @see gf::Window::setMouseCursor()
    */
@@ -93,12 +83,48 @@ inline namespace v1 {
     /**
      * @brief Default constructor
      *
-     * This constructor doesn't actually create the cursor;
-     * initially the new instance is invalid and must not be
-     * used until either loadFromPixels() or loadFromSystem()
-     * is called and successfully created a cursor.
+     * This constructor doesn't actually create the cursor.
      */
     Cursor();
+
+    /**
+     * @brief Create a cursor with the provided pixels
+     *
+     * @a pixels must be an array of @a width by @a height pixels
+     * in 32-bit RGBA format. If not, this will cause undefined behavior.
+     *
+     * If @a pixels is null or either @a width or @a height are 0,
+     * the current cursor is left unchanged and the function will
+     * return false.
+     *
+     * In addition to specifying the pixel data, you can also
+     * specify the location of the hotspot of the cursor. The
+     * hotspot is the pixel coordinate within the cursor image
+     * which will be located exactly where the mouse pointer
+     * position is. Any mouse actions that are performed will
+     * return the window/screen location of the hotspot.
+     *
+     *
+     * @param pixels An array of pixels of the image
+     * @param size The width and height of the image
+     * @param hotspot The location of the hotspot
+     */
+    Cursor(const uint8_t* pixels, Vector2i size, Vector2i hotspot);
+
+    /**
+     * @brief Create a cursor from the provided image
+     *
+     * @param image The image
+     * @param hotspot THe location of the hotspot
+     */
+    Cursor(const Image& image, Vector2i hotspot);
+
+    /**
+     * @brief Create a native system cursor
+     *
+     * @param type The native system cursor type
+     */
+    Cursor(Type type);
 
     /**
      * @brief Deleted copy constructor
@@ -127,52 +153,6 @@ inline namespace v1 {
      * associated with this cursor, if any.
      */
     ~Cursor();
-
-    /**
-     * @brief Create a cursor with the provided pixels
-     *
-     * @a pixels must be an array of @a width by @a height pixels
-     * in 32-bit RGBA format. If not, this will cause undefined behavior.
-     *
-     * If @a pixels is null or either @a width or @a height are 0,
-     * the current cursor is left unchanged and the function will
-     * return false.
-     *
-     * In addition to specifying the pixel data, you can also
-     * specify the location of the hotspot of the cursor. The
-     * hotspot is the pixel coordinate within the cursor image
-     * which will be located exactly where the mouse pointer
-     * position is. Any mouse actions that are performed will
-     * return the window/screen location of the hotspot.
-     *
-     *
-     * @param pixels An array of pixels of the image
-     * @param size The width and height of the image
-     * @param hotspot The location of the hotspot
-     * @returns True if the cursor was successfully loaded; false otherwise
-     *
-     * @sa loadFromImage()
-     */
-    bool loadFromPixels(const uint8_t* pixels, Vector2i size, Vector2i hotspot);
-
-    /**
-     * @brief Create a cursor from the provided image
-     *
-     * @param image The image
-     * @param hotspot THe location of the hotspot
-     * @returns True if the cursor was successfully loaded; false otherwise
-     *
-     * @sa loadFromPixels()
-     */
-    bool loadFromImage(const Image& image, Vector2i hotspot);
-
-    /**
-     * @brief Create a native system cursor
-     *
-     * @param type The native system cursor type
-     * @return True if the cursor was successfully loaded; false otherwise
-     */
-    bool loadFromSystem(Type type);
 
   private:
     friend class Window;

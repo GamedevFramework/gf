@@ -24,6 +24,7 @@
 #include <cstdint>
 #include <random>
 
+#include "Circ.h"
 #include "Portability.h"
 #include "Rect.h"
 #include "Vector.h"
@@ -135,6 +136,30 @@ inline namespace v1 {
      * @returns A value in the area
      */
     Vector2i computePosition(const RectI& area);
+
+    /**
+     * @brief Compute a uniform position in a circle
+     *
+     * @param area The area
+     * @returns A value in the circle
+     */
+    Vector2f computePosition(const CircF& area);
+
+    /**
+     * @brief Compute a uniform radius
+     *
+     * @param radiusMin The minimum radius
+     * @param radiusMax The maximum radius
+     * @returns A valid radius
+     */
+    float computeRadius(float radiusMin, float radiusMax);
+
+    /**
+     * @brief Compute a uniform angle in the range @f$ [ 0, 2 \pi ] @f$
+     *
+     * @returns A valid angle
+     */
+    float computeAngle();
 
     /**
      * @brief Get the underlying engine

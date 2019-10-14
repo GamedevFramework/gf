@@ -118,7 +118,7 @@ namespace home {
     static constexpr gf::Vector2f BarOffset = { 64.0f, 80.0f };
 
     for (auto &supply: m_supplies) {
-      gf::RectF textureRect({ static_cast<int>(supply.kind) * AssetSize.width / TilesetSize.width, 0.0f }, AssetSize / TilesetSize);
+      gf::RectF textureRect = gf::RectF::fromPositionSize({ static_cast<int>(supply.kind) * AssetSize.width / TilesetSize.width, 0.0f }, AssetSize / TilesetSize);
 
       gf::Sprite sprite(m_texture, textureRect);
       sprite.setPosition(supply.position);

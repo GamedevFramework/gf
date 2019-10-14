@@ -59,11 +59,12 @@ int main() {
 
   gf::SingletonStorage<gf::ResourceManager> storageForResourceManager(kkd::gResourceManager);
   gf::SingletonStorage<gf::MessageManager> storageForMessageManager(kkd::gMessageManager);
-  gf::SingletonStorage<gf::Random> storageForRandom(kkd::gRandom);
-  gf::SingletonStorage<gf::TextureAtlas> storageForTextureAtlas(kkd::gTextureAtlas);
 
   kkd::gResourceManager().addSearchDir(KROKODILE_DATA_DIR);
-  kkd::gTextureAtlas().loadFromFile("atlas.xml", kkd::gResourceManager());
+
+  gf::SingletonStorage<gf::Random> storageForRandom(kkd::gRandom);
+  gf::SingletonStorage<gf::TextureAtlas> storageForTextureAtlas(kkd::gTextureAtlas, "atlas.xml", kkd::gResourceManager());
+
   kkd::gResourceManager().getTexture(kkd::gTextureAtlas().getTexturePath()).setSmooth();
 
   // views

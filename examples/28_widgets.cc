@@ -42,24 +42,10 @@ int main() {
   gf::Window window("28_widgets", { 640, 480 }, ~gf::WindowHints::Resizable);
   gf::RenderWindow renderer(window);
 
-  gf::Font font;
+  gf::Font font("assets/DejaVuSans.ttf");
 
-  if (!font.loadFromFile("assets/DejaVuSans.ttf")) {
-    return EXIT_FAILURE;
-  }
-
-  gf::TextureAtlas atlas;
-
-  if (!atlas.loadFromFile("assets/ui.xml")) {
-    return EXIT_FAILURE;
-  }
-
-  gf::Texture texture;
-
-  if (!texture.loadFromFile("assets/ui.png")) {
-    return EXIT_FAILURE;
-  }
-
+  gf::TextureAtlas atlas("assets/ui.xml");
+  gf::Texture texture("assets/ui.png");
   atlas.setTexture(texture);
 
   std::cout << "Gamedev Framework (gf) example #28: widgets\n";
@@ -188,7 +174,6 @@ int main() {
 
     renderer.clear();
     widgets.render(renderer);
-    renderer.draw(options);
     renderer.display();
   }
 

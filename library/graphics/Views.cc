@@ -64,29 +64,27 @@ inline namespace v1 {
     const Vector2f viewportSize = m_localScreenSize * m_localViewport.getSize();
     float screenRatio = viewportSize.width / viewportSize.height;
 
-    RectF viewport;
+    Vector2f position, size;
 
     if (screenRatio < worldRatio) {
       float ratio = screenRatio / worldRatio;
 
-      viewport.left = 0.0f;
-      viewport.width = 1.0f;
+      position.x = 0.0f;
+      size.width = 1.0f;
 
-      viewport.top = (1 - ratio) / 2;
-      viewport.height = ratio;
+      position.y = (1 - ratio) / 2;
+      size.height = ratio;
     } else {
       float ratio = worldRatio / screenRatio;
 
-      viewport.top = 0.0f;
-      viewport.height = 1.0f;
+      position.y = 0.0f;
+      size.height = 1.0f;
 
-      viewport.left = (1 - ratio) / 2;
-      viewport.width = ratio;
+      position.x = (1 - ratio) / 2;
+      size.width = ratio;
     }
 
-    viewport.setPosition(viewport.getPosition() * m_localViewport.getSize() + m_localViewport.getPosition());
-    viewport.setSize(viewport.getSize() * m_localViewport.getSize());
-
+    RectF viewport = RectF::fromPositionSize(position * m_localViewport.getSize() + m_localViewport.getPosition(), size * m_localViewport.getSize());
     setViewportNoCallback(viewport);
   }
 
@@ -191,31 +189,29 @@ inline namespace v1 {
 
     const Vector2f viewportSize = m_localScreenSize * m_localViewport.getSize();
 
-    RectF viewport;
+    Vector2f position, size;
 
     if (m_localSize.width > viewportSize.width) {
-      viewport.left = 0.0f;
-      viewport.width = 1.0f;
+      position.x = 0.0f;
+      size.width = 1.0f;
       actualSize.width = viewportSize.width;
     } else {
-      viewport.width = m_localSize.width / viewportSize.width;
-      viewport.left = (1.0f - viewport.width) / 2.0f;
+      size.width = m_localSize.width / viewportSize.width;
+      position.x = (1.0f - size.width) / 2.0f;
     }
 
     if (m_localSize.height > viewportSize.height) {
-      viewport.top = 0.0f;
-      viewport.height = 1.0f;
+      position.y = 0.0f;
+      size.height = 1.0f;
       actualSize.height = viewportSize.height;
     } else {
-      viewport.height = m_localSize.height / viewportSize.height;
-      viewport.top = (1.0f - viewport.height) / 2.0f;
+      size.height = m_localSize.height / viewportSize.height;
+      position.y = (1.0f - size.height) / 2.0f;
     }
 
     setSizeNoCallback(actualSize);
 
-    viewport.setPosition(viewport.getPosition() * m_localViewport.getSize() + m_localViewport.getPosition());
-    viewport.setSize(viewport.getSize() * m_localViewport.getSize());
-
+    RectF viewport = RectF::fromPositionSize(position * m_localViewport.getSize() + m_localViewport.getPosition(), size * m_localViewport.getSize());
     setViewportNoCallback(viewport);
   }
 
@@ -235,7 +231,7 @@ inline namespace v1 {
   }
 
   void ScreenView::updateView() {
-    RectF screen({ 0.0f, 0.0f }, m_localScreenSize * getViewport().getSize());
+    RectF screen = RectF::fromPositionSize({ 0.0f, 0.0f }, m_localScreenSize * getViewport().getSize());
     reset(screen);
   }
 

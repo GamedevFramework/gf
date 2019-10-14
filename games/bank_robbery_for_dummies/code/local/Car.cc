@@ -111,7 +111,7 @@ namespace brfd {
   static constexpr gf::Vector2f TileScale(CarWidth / TilesetWidth, CarHeight / TilesetHeight);
 
   void HeroCar::render(gf::RenderTarget& target, const gf::RenderStates& states) {
-    gf::Sprite sprite(m_texture, gf::RectF(TileScale * gf::Vector2u(1, 1), TileScale));
+    gf::Sprite sprite(m_texture, gf::RectF::fromPositionSize(TileScale * gf::Vector2u(1, 1), TileScale));
     sprite.setAnchor(gf::Anchor::Center);
     sprite.setRotation(m_body.getAngle());
     sprite.setPosition(m_body.getPosition());
@@ -125,11 +125,7 @@ namespace brfd {
   StaticCar::StaticCar(int number, gf::Vector2f position, float angle, const gf::PhysicsGeometry& geometry)
   : m_body(geometry, gf::PhysicsBody::Dynamic)
   {
-    m_textureRect.left = (number % 4) * CarWidth / TilesetWidth;
-    m_textureRect.top = (number / 4) * CarHeight / TilesetHeight;
-    m_textureRect.width = CarWidth / TilesetWidth;
-    m_textureRect.height = CarHeight / TilesetHeight;
-
+    m_textureRect = gf::RectF::fromPositionSize({ (number % 4) * CarWidth / TilesetWidth, (number / 4) * CarHeight / TilesetHeight }, { CarWidth / TilesetWidth, CarHeight / TilesetHeight });
     m_body.setPosition(position);
     m_body.setAngle(angle);
     m_body.setDensity(10.0f);

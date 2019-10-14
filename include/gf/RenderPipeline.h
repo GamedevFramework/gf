@@ -77,11 +77,6 @@ inline namespace v1 {
     RenderPipeline(Window& window);
 
     /**
-     * @brief Destructor
-     */
-    ~RenderPipeline();
-
-    /**
      * @brief Add an effect to the pipeline
      *
      * @param effect The effect
@@ -137,7 +132,7 @@ inline namespace v1 {
 
     struct TextureBuffer {
       Texture texture;
-      unsigned name;
+      GraphicsHandle<GraphicsTag::Framebuffer> framebuffer;
     };
 
     TextureBuffer m_buffers[2];

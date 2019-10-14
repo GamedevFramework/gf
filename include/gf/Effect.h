@@ -36,6 +36,29 @@ inline namespace v1 {
    * @sa gf::PostProcessing
    */
   class GF_API Effect : public Shader {
+
+  protected:
+    /**
+    * @brief Load both the vertex and fragment shaders from source codes
+    * in memory
+    *
+    * This function loads both the vertex and the fragment
+    * shaders. If one of them fails to load, the shader is left
+    * empty (the valid shader is unloaded).
+    *
+    * The source codes must be a valid shaders in GLSL language.
+    * GLSL is a C-like language dedicated to OpenGL shaders;
+    * you'll probably need to read a good documentation for
+    * it before writing your own shaders.
+    *
+    * @param vertexShader String containing the source code of the vertex shader
+    * @param fragmentShader String containing the source code of the fragment shader
+    */
+    Effect(const char *vertexShader, const char *fragmentShader)
+    : Shader(vertexShader, fragmentShader)
+    {
+    }
+
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

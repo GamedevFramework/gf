@@ -45,12 +45,7 @@ int main() {
 //   std::cout << "\tM: change mode between field of vision and route finding\n";
 //   std::cout << "\tEscape: Close the window\n";
 
-  gf::BitmapConsoleFont font;
-
-  if (!font.loadFromFile("assets/terminal.png", { gf::ConsoleFontFormat::Grayscale, gf::ConsoleFontFormat::InRow, gf::ConsoleFontFormat::ModifiedCodePage437 })) {
-    return EXIT_FAILURE;
-  }
-
+  gf::BitmapConsoleFont font("assets/terminal.png", { gf::ConsoleFontFormat::Grayscale, gf::ConsoleFontFormat::InRow, gf::ConsoleFontFormat::ModifiedCodePage437 });
   assert(CharacterSize == font.getCharacterSize());
 
   gf::Console console(font, ConsoleSize);
@@ -68,12 +63,12 @@ int main() {
   console.setColorControl(gf::ConsoleColorControl3, gf::Color::Black, gf::Color::Yellow);
   const char *text = "This is a simple but long text with %cmultiple%c lines.";
 
-  console.printRect(gf::RectI({ 2,  5 }, { 16, 5 }), gf::ConsoleEffect::Set, gf::ConsoleAlignment::Left, text, gf::ConsoleColorControl3, gf::ConsoleColorControlStop);
-  console.printRect(gf::RectI({ 2, 15 }, { 16, 5 }), gf::ConsoleEffect::Set, gf::ConsoleAlignment::Center, text, gf::ConsoleColorControl3, gf::ConsoleColorControlStop);
-  console.printRect(gf::RectI({ 2, 25 }, { 16, 5 }), gf::ConsoleEffect::Set, gf::ConsoleAlignment::Right, text, gf::ConsoleColorControl3, gf::ConsoleColorControlStop);
+  console.printRect(gf::RectI::fromPositionSize({ 2,  5 }, { 16, 5 }), gf::ConsoleEffect::Set, gf::ConsoleAlignment::Left, text, gf::ConsoleColorControl3, gf::ConsoleColorControlStop);
+  console.printRect(gf::RectI::fromPositionSize({ 2, 15 }, { 16, 5 }), gf::ConsoleEffect::Set, gf::ConsoleAlignment::Center, text, gf::ConsoleColorControl3, gf::ConsoleColorControlStop);
+  console.printRect(gf::RectI::fromPositionSize({ 2, 25 }, { 16, 5 }), gf::ConsoleEffect::Set, gf::ConsoleAlignment::Right, text, gf::ConsoleColorControl3, gf::ConsoleColorControlStop);
 
-  console.drawFrame(gf::RectI({ 30,  5 }, { 16, 5 }));
-  console.drawFrame(gf::RectI({ 30, 15 }, { 16, 5 }), gf::Console::PrintAction::None, gf::ConsoleEffect::Set, "Frame title");
+  console.drawFrame(gf::RectI::fromPositionSize({ 30,  5 }, { 16, 5 }));
+  console.drawFrame(gf::RectI::fromPositionSize({ 30, 15 }, { 16, 5 }), gf::Console::PrintAction::None, gf::ConsoleEffect::Set, "Frame title");
 
   renderer.clear(gf::Color::White);
 

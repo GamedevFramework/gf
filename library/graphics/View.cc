@@ -39,7 +39,7 @@ inline namespace v1 {
   : m_center{0.0f, 0.0f}
   , m_size{1000.0f, 1000.0f}
   , m_rotation(0)
-  , m_viewport{0.0f, 0.0f, 1.0f, 1.0f}
+  , m_viewport(RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }))
   {
 
   }
@@ -48,7 +48,7 @@ inline namespace v1 {
   : m_center(rect.getCenter())
   , m_size(rect.getSize())
   , m_rotation(0)
-  , m_viewport{0.0f, 0.0f, 1.0f, 1.0f}
+  , m_viewport(RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }))
   {
 
   }
@@ -57,7 +57,7 @@ inline namespace v1 {
   : m_center(center)
   , m_size(size)
   , m_rotation(0)
-  , m_viewport{0.0f, 0.0f, 1.0f, 1.0f}
+  , m_viewport(RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }))
   {
 
   }
@@ -65,7 +65,7 @@ inline namespace v1 {
   View::~View() = default;
 
   RectF View::getBounds() const {
-    return RectF(m_center - m_size / 2, m_size);
+    return RectF::fromCenterSize(m_center, m_size);
   }
 
   namespace {
@@ -79,10 +79,10 @@ inline namespace v1 {
   }
 
   void View::setViewport(const RectF& viewport) {
-    assert(isClamped(viewport.top));
-    assert(isClamped(viewport.left));
-    assert(isClamped(viewport.width));
-    assert(isClamped(viewport.height));
+    assert(isClamped(viewport.min.x));
+    assert(isClamped(viewport.min.y));
+    assert(isClamped(viewport.max.x));
+    assert(isClamped(viewport.max.y));
 
     m_viewport = viewport;
     onViewportChange(viewport);
@@ -135,10 +135,10 @@ inline namespace v1 {
   }
 
   void View::setViewportNoCallback(const RectF& viewport) {
-    assert(isClamped(viewport.top));
-    assert(isClamped(viewport.left));
-    assert(isClamped(viewport.width));
-    assert(isClamped(viewport.height));
+    assert(isClamped(viewport.min.x));
+    assert(isClamped(viewport.min.y));
+    assert(isClamped(viewport.max.x));
+    assert(isClamped(viewport.max.y));
 
     m_viewport = viewport;
   }
@@ -174,7 +174,7 @@ inline namespace v1 {
   namespace {
 
     bool isCursorOnView(Vector2i cursor, Vector2i screenSize, const RectF& viewport) {
-      RectF visible(viewport.getPosition() * screenSize, viewport.getSize() * screenSize);
+      RectF visible = RectF::fromPositionSize(viewport.getPosition() * screenSize, viewport.getSize() * screenSize);
       return visible.contains(cursor);
     }
 

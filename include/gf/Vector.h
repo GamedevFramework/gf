@@ -326,8 +326,9 @@ inline namespace v1 {
      * @brief Constructor that zero the vector out
      */
     constexpr Vector(ZeroType) noexcept
+    : x(T(0))
+    , y(T(0))
     {
-      zero();
     }
 
     /**

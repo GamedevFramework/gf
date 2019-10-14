@@ -34,12 +34,7 @@ int main() {
   gf::Window window("13_animation", { 640, 480 }, ~gf::WindowHints::Resizable);
   gf::RenderWindow renderer(window);
 
-  gf::Texture texture;
-
-  if (!texture.loadFromFile("assets/skeleton.png")) {
-    return EXIT_FAILURE;
-  }
-
+  gf::Texture texture("assets/skeleton.png");
   texture.setSmooth();
 
   gf::Animation animation;
@@ -47,7 +42,7 @@ int main() {
   for (unsigned frame = 0; frame < 8; ++frame) {
     unsigned x = frame % 4;
     unsigned y = frame / 4;
-    animation.addFrame(texture, { 0.25f * x, 0.5f * y, 0.25f, 0.5f }, gf::milliseconds(100));
+    animation.addFrame(texture, gf::RectF::fromPositionSize({ 0.25f * x, 0.5f * y }, { 0.25f, 0.5f }), gf::milliseconds(100));
   }
 
   gf::AnimatedSprite animatedSprite;

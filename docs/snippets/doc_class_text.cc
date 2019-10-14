@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -18,54 +18,22 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#include <cstdlib>
-#include <iostream>
-
-#include <gf/Event.h>
 #include <gf/Font.h>
-#include <gf/RenderWindow.h>
-#include <gf/Shapes.h>
+#include <gf/RenderTarget.h>
 #include <gf/Text.h>
-#include <gf/Window.h>
+#include <gf/Unused.h>
 
-int main() {
-  gf::Window window("bug6", { 640, 480 }, ~gf::WindowHints::Resizable);
-  gf::RenderWindow renderer(window);
+void dummyTextUsage(gf::RenderTarget& renderer) {
+  /// [text]
+  // Declare and load a font
+  gf::Font font("arial.ttf");
 
-  gf::Font font;
-
-  if (!font.loadFromFile("16_DejaVuSans.ttf")) {
-    return EXIT_FAILURE;
-  }
-
-  gf::Text text;
-  text.setFont(font);
+  // Create a text
+  gf::Text text("hello", font);
   text.setCharacterSize(30);
-  text.setColor(gf::Color::Gray());
-  text.setString("This text should be gray");
-  text.setPosition({ 320.0f, 100.0f });
-  text.setAnchor(gf::Anchor::Center);
+  text.setColor(gf::Color::Red);
 
-  renderer.clear(gf::Color::White);
-
-  while (window.isOpen()) {
-    gf::Event event;
-
-    while (window.pollEvent(event)) {
-      switch (event.type) {
-        case gf::EventType::Closed:
-          window.close();
-          break;
-
-        default:
-          break;
-      }
-    }
-
-    renderer.clear();
-    renderer.draw(text);
-    renderer.display();
-  }
-
-  return 0;
+  // Draw it
+  renderer.draw(text);
+  /// [text]
 }

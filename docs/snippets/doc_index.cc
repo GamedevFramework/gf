@@ -36,20 +36,14 @@ int main() {
 
   // Load a sprite to display
 
-  gf::Texture texture;
-  if (!texture.loadFromFile("sprite.png")) {
-    return EXIT_FAILURE;
-  }
+  gf::Texture texture("sprite.png");
 
   gf::Sprite sprite(texture);
   sprite.setPosition({ 300, 200 });
 
   // Create a graphical text to display
 
-  gf::Font font;
-  if (!font.loadFromFile("DroidSans.ttf")) {
-    return EXIT_FAILURE;
-  }
+  gf::Font font("DroidSans.ttf");
 
   gf::Text text("Hello gf!", font, 50);
   text.setPosition({ 100, 100 });

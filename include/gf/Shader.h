@@ -135,6 +135,108 @@ inline namespace v1 {
     Shader();
 
     /**
+     * @brief Load the vertex of fragment shader from a file
+     *
+     * This function loads a single shader, vertex or
+     * fragment, identified by the second argument.
+     *
+     * The source must be a text file containing a valid
+     * shader in GLSL language. GLSL is a C-like language
+     * dedicated to OpenGL shaders; you'll probably need to
+     * read a good documentation for it before writing your
+     * own shaders.
+     *
+     * @param filename Path of the vertex or fragment shader file to load
+     * @param type Type of shader (vertex or fragment)
+     */
+    Shader(const Path& filename, Type type);
+
+    /**
+     * @brief Load both the vertex and fragment shaders from files
+     *
+     * This function loads both the vertex and the fragment
+     * shaders. If one of them fails to load, the shader is left
+     * empty (the valid shader is unloaded).
+     *
+     * The sources must be a text files containing a valid
+     * shader in GLSL language. GLSL is a C-like language
+     * dedicated to OpenGL shaders; you'll probably need to
+     * read a good documentation for it before writing your
+     * own shaders.
+     *
+     * @param vertexShaderFilename   Path of the vertex shader file to load
+     * @param fragmentShaderFilename Path of the fragment shader file to load
+     */
+    Shader(const Path& vertexShaderFilename, const Path& fragmentShaderFilename);
+
+    /**
+     * @brief Load the vertex or fragment shader from a source code in memory
+     *
+     * This function loads a single shader, vertex
+     * or fragment, identified by the second argument.
+     *
+     * The source code must be a valid shader in GLSL language.
+     * GLSL is a C-like language dedicated to OpenGL shaders;
+     * you'll probably need to read a good documentation for
+     * it before writing your own shaders.
+     *
+     * @param shader String containing the source code of the shader
+     * @param type   Type of shader (vertex or fragment)
+     */
+    Shader(const char *shader, Type type);
+
+    /**
+    * @brief Load both the vertex and fragment shaders from source codes
+    * in memory
+    *
+    * This function loads both the vertex and the fragment
+    * shaders. If one of them fails to load, the shader is left
+    * empty (the valid shader is unloaded).
+    *
+    * The source codes must be a valid shaders in GLSL language.
+    * GLSL is a C-like language dedicated to OpenGL shaders;
+    * you'll probably need to read a good documentation for
+    * it before writing your own shaders.
+    *
+    * @param vertexShader String containing the source code of the vertex shader
+    * @param fragmentShader String containing the source code of the fragment shader
+    */
+    Shader(const char *vertexShader, const char *fragmentShader);
+
+    /**
+     * @brief Load the vertex or fragment shader from a custom stream
+     *
+     * This function loads a single shader, vertex
+     * or fragment, identified by the second argument.
+     *
+     * The source code must be a valid shader in GLSL language.
+     * GLSL is a C-like language dedicated to OpenGL shaders;
+     * you'll probably need to read a good documentation for it
+     * before writing your own shaders.
+     *
+     * @param stream Source stream to read from
+     * @param type Type of shader (vertex, geometry or fragment)
+     */
+    Shader(InputStream& stream, Type type);
+
+    /**
+     * @brief Load both the vertex and fragment shaders from custom streams
+     *
+     * This function loads both the vertex and the fragment
+     * shaders. If one of them fails to load, the shader is left
+     * empty (the valid shader is unloaded).
+     *
+     * The source codes must be valid shaders in GLSL language.
+     * GLSL is a C-like language dedicated to OpenGL shaders;
+     * you'll probably need to read a good documentation for
+     * it before writing your own shaders.
+     *
+     * @param vertexShaderStream Source stream to read the vertex shader from
+     * @param fragmentShaderStream Source stream to read the fragment shader from
+     */
+    Shader(InputStream& vertexShaderStream, InputStream& fragmentShaderStream);
+
+    /**
      * @brief Destructor
      */
     ~Shader();
@@ -154,134 +256,6 @@ inline namespace v1 {
      * @{
      */
 
-    /**
-     * @brief Load the vertex of fragment shader from a file
-     *
-     * This function loads a single shader, vertex or
-     * fragment, identified by the second argument.
-     *
-     * The source must be a text file containing a valid
-     * shader in GLSL language. GLSL is a C-like language
-     * dedicated to OpenGL shaders; you'll probably need to
-     * read a good documentation for it before writing your
-     * own shaders.
-     *
-     * @param filename Path of the vertex or fragment shader file to load
-     * @param type Type of shader (vertex or fragment)
-     *
-     * @return True if loading succeeded, false if it failed
-     *
-     * @sa loadFromMemory(), loadFromStream()
-     */
-    bool loadFromFile(const Path& filename, Type type);
-
-    /**
-     * @brief Load both the vertex and fragment shaders from files
-     *
-     * This function loads both the vertex and the fragment
-     * shaders. If one of them fails to load, the shader is left
-     * empty (the valid shader is unloaded).
-     *
-     * The sources must be a text files containing a valid
-     * shader in GLSL language. GLSL is a C-like language
-     * dedicated to OpenGL shaders; you'll probably need to
-     * read a good documentation for it before writing your
-     * own shaders.
-     *
-     * @param vertexShaderFilename   Path of the vertex shader file to load
-     * @param fragmentShaderFilename Path of the fragment shader file to load
-     *
-     * @return True if loading succeeded, false if it failed
-     *
-     * @sa loadFromMemory(), loadFromStream()
-     */
-    bool loadFromFile(const Path& vertexShaderFilename, const Path& fragmentShaderFilename);
-
-    /**
-     * @brief Load the vertex or fragment shader from a source code in memory
-     *
-     * This function loads a single shader, vertex
-     * or fragment, identified by the second argument.
-     *
-     * The source code must be a valid shader in GLSL language.
-     * GLSL is a C-like language dedicated to OpenGL shaders;
-     * you'll probably need to read a good documentation for
-     * it before writing your own shaders.
-     *
-     * @param shader String containing the source code of the shader
-     * @param type   Type of shader (vertex or fragment)
-     *
-     * @return True if loading succeeded, false if it failed
-     *
-     * @sa loadFromFile(), loadFromStream()
-     */
-    bool loadFromMemory(StringRef shader, Type type);
-
-    /**
-    * @brief Load both the vertex and fragment shaders from source codes
-    * in memory
-    *
-    * This function loads both the vertex and the fragment
-    * shaders. If one of them fails to load, the shader is left
-    * empty (the valid shader is unloaded).
-    *
-    * The source codes must be a valid shaders in GLSL language.
-    * GLSL is a C-like language dedicated to OpenGL shaders;
-    * you'll probably need to read a good documentation for
-    * it before writing your own shaders.
-    *
-    * @param vertexShader String containing the source code of the vertex shader
-    * @param fragmentShader String containing the source code of the fragment shader
-    *
-    * @return True if loading succeeded, false if it failed
-    *
-    * @sa loadFromFile(), loadFromStream()
-    */
-    bool loadFromMemory(StringRef vertexShader, StringRef fragmentShader);
-
-
-    /**
-     * @brief Load the vertex or fragment shader from a custom stream
-     *
-     * This function loads a single shader, vertex
-     * or fragment, identified by the second argument.
-     *
-     * The source code must be a valid shader in GLSL language.
-     * GLSL is a C-like language dedicated to OpenGL shaders;
-     * you'll probably need to read a good documentation for it
-     * before writing your own shaders.
-     *
-     * @param stream Source stream to read from
-     * @param type Type of shader (vertex, geometry or fragment)
-     *
-     * @return True if loading succeeded, false if it failed
-     *
-     * @sa loadFromFile(), loadFromMemory()
-     */
-    bool loadFromStream(InputStream& stream, Type type);
-
-    /**
-     * @brief Load both the vertex and fragment shaders from custom streams
-     *
-     * This function loads both the vertex and the fragment
-     * shaders. If one of them fails to load, the shader is left
-     * empty (the valid shader is unloaded).
-     *
-     * The source codes must be valid shaders in GLSL language.
-     * GLSL is a C-like language dedicated to OpenGL shaders;
-     * you'll probably need to read a good documentation for
-     * it before writing your own shaders.
-     *
-     * @param vertexShaderStream Source stream to read the vertex shader from
-     * @param fragmentShaderStream Source stream to read the fragment shader from
-     *
-     * @return True if loading succeeded, false if it failed
-     *
-     * @sa loadFromFile(), loadFromMemory()
-     */
-    bool loadFromStream(InputStream& vertexShaderStream, InputStream& fragmentShaderStream);
-
-    /** @} */
 
     /**
      * @name Uniform setting
@@ -386,7 +360,6 @@ inline namespace v1 {
 
   private:
     friend class RenderTarget;
-    bool compile(const char *vertexShaderCode, const char *fragmentShaderCode);
     int getUniformLocation(StringRef name);
     int getAttributeLocation(StringRef name);
 

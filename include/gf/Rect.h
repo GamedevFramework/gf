@@ -28,6 +28,7 @@
 #include <algorithm>
 
 #include "Anchor.h"
+#include "Box.h"
 #include "Portability.h"
 #include "Vector.h"
 
@@ -85,12 +86,7 @@ inline namespace v1 {
    * ~~~
    */
   template<typename T>
-  struct Rect {
-    T left; ///< Left coordinate of the rectangle
-    T top; ///< Top coordinate of the rectangle
-    T width; ///< Width of the rectangle
-    T height; ///< Height of the rectangle
-
+  struct Rect : Box<T, 2> {
     /**
      * @brief Default constructor
      *
@@ -98,139 +94,50 @@ inline namespace v1 {
      * `Rect(0, 0, 0, 0)`).
      */
     constexpr Rect() noexcept
-    : left{0}, top{0}, width{0}, height{0}
+    : Box<T, 2>({ T(0), T(0) })
     {
-
     }
 
-    /**
-     * @brief Construct the rectangle from its coordinates
-     *
-     * Be careful, the last two parameters are the width
-     * and height, not the right and bottom coordinates!
-     *
-     * @param rectLeft Left coordinate of the rectangle
-     * @param rectTop Top coordinate of the rectangle
-     * @param rectWidth Width of the rectangle
-     * @param rectHeight Height of the rectangle
-     */
-    constexpr Rect(T rectLeft, T rectTop, T rectWidth, T rectHeight) noexcept
-    : left{rectLeft}, top{rectTop}, width{rectWidth}, height{rectHeight}
+    constexpr Rect(const Box<T, 2>& box)
+    : Box<T, 2>(box)
     {
-
     }
 
-    /**
-     * @brief Construct the rectangle from position and size
-     *
-     * Be careful, the last parameter is the size,
-     * not the bottom-right corner!
-     *
-     * @param position Position of the top left corner of the rectangle
-     * @param size Size of the rectangle
-     */
-    constexpr Rect(Vector<T, 2> position, Vector<T, 2> size) noexcept
-    : left(position.x), top(position.y), width(size.x), height(size.y)
-    {
-
+    static constexpr Rect<T> fromMinMax(Vector<T, 2> min, Vector<T, 2> max) noexcept {
+      return Rect<T>(min, max);
     }
 
-    /**
-     * @brief Default copy constructor
-     */
-    Rect(const Rect&) = default;
-
-    /**
-     * @brief Default copy assignment
-     */
-    Rect& operator=(const Rect&) = default;
-
-    /**
-     * @brief Get the position of the rectangle
-     *
-     * @return The position of the rectangle
-     * @sa setPosition(), getSize()
-     */
-    constexpr Vector<T, 2> getPosition() const noexcept {
-      return { left, top };
+    static constexpr Rect<T> fromPositionSize(Vector<T, 2> position, Vector<T, 2> size) noexcept {
+      return Rect<T>(position, position + size);
     }
 
-    /**
-     * @brief Set the position of the rectangle
-     *
-     * @param position The new position of the rectangle
-     * @sa getPosition(), setSize()
-     */
-    constexpr void setPosition(Vector<T, 2> position) noexcept {
-      left = position.x;
-      top = position.y;
-    }
-
-    /**
-     * @brief Get the size of the rectangle
-     *
-     * @return The size of the rectangle
-     * @sa setSize(), getPosition()
-     */
-    constexpr Vector<T, 2> getSize() const noexcept {
-      return { width, height };
-    }
-
-    /**
-     * @brief Set the size of the rectangle
-     *
-     * @param size The new size of the rectangle
-     * @sa getSize(), setPosition()
-     */
-    constexpr void setSize(Vector<T, 2> size) noexcept {
-      width = size.width;
-      height = size.height;
-    }
-
-    /**
-     * @brief Check if the rectangle is empty
-     *
-     * An empty rectangle is a rectangle that has one of its size coordinates
-     * that is zero.
-     *
-     * @return True if the rectangle is empty
-     */
-    constexpr bool isEmpty() const noexcept {
-      return width == 0 || height == 0;
+    static constexpr Rect<T> fromCenterSize(Vector<T, 2> center, Vector<T, 2> size) noexcept {
+      return Rect<T>(center - size / T(2), center + size / T(2));
     }
 
     constexpr Vector<T, 2> getPositionFromAnchor(Anchor anchor) const noexcept {
       switch (anchor) {
         case Anchor::TopLeft:
-          return { left, top };
+          return this->min;
         case Anchor::TopCenter:
-          return { left + width / 2, top };
+          return { (this->min.x + this->max.x) / T(2), this->min.y };
         case Anchor::TopRight:
-          return { left + width, top };
+          return { this->max.x, this->min.y };
         case Anchor::CenterLeft:
-          return { left, top + height / 2 };
+          return { this->min.x, (this->min.y + this->max.y) / T(2) };
         case Anchor::Center:
-          return { left + width / 2, top + height / 2 };
+          return this->getCenter();
         case Anchor::CenterRight:
-          return { left + width, top + height / 2 };
+          return { this->max.x, (this->min.y + this->max.y) / T(2) };
         case Anchor::BottomLeft:
-          return { left, top + height };
+          return { this->min.x, this->max.y };
         case Anchor::BottomCenter:
-          return { left + width / 2, top + height };
+          return { (this->min.x + this->max.x) / T(2), this->max.y };
         case Anchor::BottomRight:
-          return { left + width, top + height };
+          return this->max;
       }
 
-      return { left, top };
-    }
-
-    /**
-     * @brief Get the center of the rectangle
-     *
-     * @return The center of the rectangle
-     */
-    constexpr Vector<T, 2> getCenter() const noexcept {
-      return getPositionFromAnchor(Anchor::Center);
+      return this->min;
     }
 
     /**
@@ -269,88 +176,18 @@ inline namespace v1 {
       return getPositionFromAnchor(Anchor::BottomRight);
     }
 
-
-    /**
-     * @brief Check if a point is inside the rectangle's area
-     *
-     * @param point Point to test
-     * @return True if the point is inside, false otherwise
-     * @sa intersects()
-     */
-    constexpr bool contains(const Vector<T, 2>& point) const noexcept {
-      return left <= point.x && point.x < left + width && top <= point.y && point.y < top + height;
+    constexpr T getWidth() const noexcept {
+      return this->max.x - this->min.x;
     }
 
-    /**
-     * @brief Check if a rectangle is inside the rectangle's area
-     *
-     * @param other Rectangle to test
-     * @return True if the rectangle is inside, false otherwise
-     * @sa intersects()
-     */
-    constexpr bool contains(const Rect<T>& other) const noexcept {
-      return left <= other.left && other.left + other.width <= left + width
-          && top <= other.top && other.top + other.height <= top + height;
+    constexpr T getHeight() const noexcept {
+      return this->max.y - this->min.y;
     }
 
-    /**
-     * @brief Check the intersection between two rectangles
-     *
-     * @param other Rectangle to test
-     * @return True if rectangles overlap, false otherwise
-     * @sa contains()
-     */
-    constexpr bool intersects(const Rect<T>& other) const noexcept {
-      return left + width > other.left && left < other.left + other.width
-          && top + height > other.top && top < other.top + other.height;
-    }
-
-    /**
-     * @brief Check the intersection between two rectangles
-     *
-     * This overload returns the overlapped rectangle in the
-     * `result` parameter.
-     *
-     * @param other Rectangle to test
-     * @param result Rectangle to be filled with the intersection
-     * @return True if rectangles overlap, false otherwise
-     * @sa contains
-     */
-    bool intersects(const Rect<T>& other, Rect<T>& result) const noexcept {
-      if (!intersects(other)) {
-        result = Rect<T>();
-        return false;
-      }
-
-      T resultLeft = std::max(left, other.left);
-      T resultTop = std::max(top, other.top);
-      T resultRight = std::min(left + width, other.left + other.width);
-      T resultBottom = std::min(top + height, other.top + other.height);
-
-      result = Rect<T>(resultLeft, resultTop, resultRight - resultLeft, resultBottom - resultTop);
-      return true;
-    }
-
-    /**
-     * @brief Grow the rectangle
-     *
-     * @param value The amount to grow
-     * @return A new extended rectangle
-     * @sa shrink()
-     */
-    constexpr Rect<T> grow(T value) const noexcept {
-      return Rect<T>(left - value, top - value, width + 2 * value, height + 2 * value);
-    }
-
-    /**
-     * @brief Shrink the rectangle
-     *
-     * @param value The amount to shrink
-     * @return A new shrinked rectangle
-     * @sa grow()
-     */
-    constexpr Rect<T> shrink(T value) const noexcept {
-      return Rect<T>(left + value, top + value, width - 2 * value, height - 2 * value);
+  private:
+    constexpr Rect(Vector<T, 2> min, Vector<T, 2> max) noexcept
+    : Box<T, 2>(min, max)
+    {
     }
   };
 
@@ -413,7 +250,7 @@ inline namespace v1 {
   template<typename T>
   inline
   bool operator==(const Rect<T>& lhs, const Rect<T>& rhs) {
-    return lhs.left == rhs.left && lhs.top == rhs.top && lhs.width == rhs.width && lhs.height == rhs.height;
+    return lhs.min == rhs.min && lhs.max == rhs.max;
   }
 
   /**
@@ -440,7 +277,7 @@ inline namespace v1 {
    */
   template<typename Archive, typename T>
   Archive& operator|(Archive& ar, Rect<T>& rect) {
-    return ar | rect.left | rect.top | rect.width | rect.height;
+    return ar | rect.min.x | rect.min.y | rect.max.x | rect.max.y;
   }
 
 

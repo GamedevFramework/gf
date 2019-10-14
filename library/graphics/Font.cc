@@ -25,6 +25,8 @@
 
 #include <cstring>
 
+#include <stdexcept>
+
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_STROKER_H
@@ -102,7 +104,7 @@ inline namespace v1 {
 
     if (auto err = FT_Init_FreeType(&library)) {
       Log::error("Could not init Freetype library: %s\n", FT_ErrorMessage(err));
-      return;
+      throw std::runtime_error("Could not init Freetype library");
     }
 
     m_library = library;
@@ -111,10 +113,76 @@ inline namespace v1 {
 
     if (auto err = FT_Stroker_New(library, &stroker)) {
       Log::error("Could not create the stroker: %s\n", FT_ErrorMessage(err));
-      return;
+      throw std::runtime_error("Could not create the stroker");
     }
 
     m_stroker = stroker;
+  }
+
+  Font::Font(const Path& filename)
+  : Font()
+  {
+    FT_Library library = static_cast<FT_Library>(m_library);
+
+    // load face
+
+    FT_Face face = nullptr;
+
+    if (auto err = FT_New_Face(library, filename.string().c_str(), 0, &face)) {
+      Log::error("Could not create the font face '%s': %s\n", filename.string().c_str(), FT_ErrorMessage(err));
+      throw std::runtime_error("Could not create the font face");
+    }
+
+    m_face = face;
+  }
+
+  Font::Font(InputStream& stream)
+  : Font()
+  {
+    FT_Library library = static_cast<FT_Library>(m_library);
+
+    // load face
+
+    FT_StreamRec rec;
+    std::memset(&rec, 0, sizeof(FT_StreamRec));
+    rec.base = nullptr;
+    rec.size = 0x7FFFFFFF; // unknown size
+    rec.pos = 0;
+    rec.descriptor.pointer = &stream;
+    rec.read = callbackRead;
+    rec.close = callbackClose;
+
+    FT_Open_Args args;
+    std::memset(&args, 0, sizeof(FT_Open_Args));
+    args.flags = FT_OPEN_STREAM;
+    args.stream = &rec;
+    args.driver = nullptr;
+
+    FT_Face face = nullptr;
+
+    if (auto err = FT_Open_Face(library, &args, 0, &face)) {
+      Log::error("Could not create the font face from stream: %s\n", FT_ErrorMessage(err));
+      throw std::runtime_error("Could not create the font face from stream");
+    }
+
+    m_face = face;
+  }
+
+  Font::Font(ArrayRef<uint8_t> content)
+  : Font()
+  {
+    FT_Library library = static_cast<FT_Library>(m_library);
+
+    // load face
+
+    FT_Face face = nullptr;
+
+    if (auto err = FT_New_Memory_Face(library, static_cast<const FT_Byte*>(content.getData()), content.getSize(), 0, &face)) {
+      Log::error("Could not create the font face: %s\n", FT_ErrorMessage(err));
+      throw std::runtime_error("Could not create the font face");
+    }
+
+    m_face = face;
   }
 
   Font::~Font() {
@@ -152,84 +220,6 @@ inline namespace v1 {
     std::swap(m_face, other.m_face);
     std::swap(m_cache, other.m_cache);
     return *this;
-  }
-
-  bool Font::loadFromFile(const Path& filename) {
-    if (m_library == nullptr) {
-      return false;
-    }
-
-    FT_Library library = static_cast<FT_Library>(m_library);
-
-    // load face
-
-    FT_Face face = nullptr;
-
-    if (auto err = FT_New_Face(library, filename.string().c_str(), 0, &face)) {
-      Log::error("Could not create the font face '%s': %s\n", filename.string().c_str(), FT_ErrorMessage(err));
-      return false;
-    }
-
-    m_face = face;
-
-    return true;
-  }
-
-  bool Font::loadFromStream(InputStream& stream) {
-    if (m_library == nullptr) {
-      return false;
-    }
-
-    FT_Library library = static_cast<FT_Library>(m_library);
-
-    // load face
-
-    FT_StreamRec rec;
-    std::memset(&rec, 0, sizeof(FT_StreamRec));
-    rec.base = nullptr;
-    rec.size = 0x7FFFFFFF; // unknown size
-    rec.pos = 0;
-    rec.descriptor.pointer = &stream;
-    rec.read = callbackRead;
-    rec.close = callbackClose;
-
-    FT_Open_Args args;
-    std::memset(&args, 0, sizeof(FT_Open_Args));
-    args.flags = FT_OPEN_STREAM;
-    args.stream = &rec;
-    args.driver = nullptr;
-
-    FT_Face face = nullptr;
-
-    if (auto err = FT_Open_Face(library, &args, 0, &face)) {
-      Log::error("Could not create the font face from stream: %s\n", FT_ErrorMessage(err));
-      return false;
-    }
-
-    m_face = face;
-
-    return true;
-  }
-
-  bool Font::loadFromMemory(const uint8_t *data, std::size_t length) {
-    if (m_library == nullptr) {
-      return false;
-    }
-
-    FT_Library library = static_cast<FT_Library>(m_library);
-
-    // load face
-
-    FT_Face face = nullptr;
-
-    if (auto err = FT_New_Memory_Face(library, static_cast<const FT_Byte*>(data), length, 0, &face)) {
-      Log::error("Could not create the font face: %s\n", FT_ErrorMessage(err));
-      return false;
-    }
-
-    m_face = face;
-
-    return true;
   }
 
   const Glyph& Font::getGlyph(char32_t codepoint, unsigned characterSize, float outlineThickness) {
@@ -315,7 +305,9 @@ inline namespace v1 {
 
   Font::GlyphCache Font::createCache(unsigned characterSize) {
     GlyphCache cache;
-    cache.texture.create({ DefaultSize, DefaultSize });
+
+    AlphaTexture texture({ DefaultSize, DefaultSize });
+    cache.texture = std::move(texture);
 
     // create the glyphs for the usual characters
     for (char c : "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz") {
@@ -412,42 +404,34 @@ inline namespace v1 {
       return out;
     }
 
-    RectI rect;
-    rect.left = cache.packing.right;
-    rect.top = cache.packing.top;
-    rect.width = glyphSize.width;
-    rect.height = glyphSize.height;
+    RectI rect = RectI::fromPositionSize({ cache.packing.right, cache.packing.top }, glyphSize);
 
-    if (rect.top + rect.height > cache.packing.bottom) {
-      cache.packing.bottom = rect.top + rect.height;
+    if (rect.max.y > cache.packing.bottom) {
+      cache.packing.bottom = rect.max.y;
     }
 
-    cache.packing.right += rect.width;
+    cache.packing.right += (rect.max.x - rect.min.x);
 
     out.textureRect = cache.texture.computeTextureCoords(rect.shrink(Padding));
 
     // bounds
 
     if (outlineThickness == 0.0f) {
-      out.bounds.left = convert(slot->metrics.horiBearingX);
-      out.bounds.top = - convert(slot->metrics.horiBearingY);
-      out.bounds.width = convert(slot->metrics.width);
-      out.bounds.height = convert(slot->metrics.height);
+      out.bounds = RectF::fromPositionSize({ convert(slot->metrics.horiBearingX), - convert(slot->metrics.horiBearingY) }, { convert(slot->metrics.width), convert(slot->metrics.height) });
     } else {
-      out.bounds.left = static_cast<float>(bglyph->left);
-      out.bounds.top = - static_cast<float>(bglyph->top);
-      out.bounds.width = static_cast<float>(bglyph->bitmap.width);
-      out.bounds.height = static_cast<float>(bglyph->bitmap.rows);
+      out.bounds = RectF::fromPositionSize( { static_cast<float>(bglyph->left), - static_cast<float>(bglyph->top) }, { static_cast<float>(bglyph->bitmap.width), static_cast<float>(bglyph->bitmap.rows) });
     }
 
     // bitmap
 
-    std::vector<uint8_t> paddedBuffer(static_cast<std::size_t>(rect.width) * static_cast<std::size_t>(rect.height), 0);
+    auto size = rect.getSize();
+
+    std::vector<uint8_t> paddedBuffer(static_cast<std::size_t>(size.width) * static_cast<std::size_t>(size.height), 0);
     const uint8_t *sourceBuffer = bglyph->bitmap.buffer;
 
-    for (int y = Padding; y < rect.height - Padding; ++y) {
-      for (int x = Padding; x < rect.width - Padding; ++x) {
-        int index = y * rect.width + x;
+    for (int y = Padding; y < size.height - Padding; ++y) {
+      for (int x = Padding; x < size.width - Padding; ++x) {
+        int index = y * size.width + x;
         paddedBuffer[index] = sourceBuffer[x - Padding];
       }
 

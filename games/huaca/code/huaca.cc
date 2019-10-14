@@ -40,11 +40,6 @@ static constexpr float VisibleSize = 320.0f;
 int main() {
   gf::Log::setLevel(gf::Log::Info);
 
-  // setup singletons
-
-  gf::SingletonStorage<gf::MessageManager> storageForMessageManager(huaca::gMessageManager);
-  gf::SingletonStorage<gf::ResourceManager> storageForResourceManager(huaca::gResourceManager);
-
   // initialize window
 
   gf::Vector2i screenSize = { 1024, 576 };
@@ -53,6 +48,11 @@ int main() {
   window.setFramerateLimit(60);
 
   gf::RenderWindow renderer(window);
+
+  // setup singletons
+
+  gf::SingletonStorage<gf::MessageManager> storageForMessageManager(huaca::gMessageManager);
+  gf::SingletonStorage<gf::ResourceManager> storageForResourceManager(huaca::gResourceManager);
 
   // setup resource directories
 

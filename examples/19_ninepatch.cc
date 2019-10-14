@@ -32,12 +32,7 @@ int main() {
   gf::Window window("19_ninepatch", { 640, 480 }, ~gf::WindowHints::Resizable);
   gf::RenderWindow renderer(window);
 
-  gf::Texture texture;
-
-  if (!texture.loadFromFile("assets/patch.png")) {
-    return EXIT_FAILURE;
-  }
-
+  gf::Texture texture("assets/patch.png");
   texture.setSmooth();
 
   gf::NinePatch patch(texture);

@@ -42,11 +42,8 @@ int main() {
 
   {
   /// [init]
-  gf::Font font;
-  font.loadFromFile("path/to/Arial.ttf");
-
-  gf::Texture texture;
-  texture.loadFromFile("path/to/image.png");
+  gf::Font font("path/to/Arial.ttf");
+  gf::Texture texture("path/to/image.png");
   /// [init]
   }
 

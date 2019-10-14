@@ -48,6 +48,7 @@
 #include "EntityContainer.cc"
 #include "Font.cc"
 #include "Gamepad.cc"
+#include "GraphicsHandle.cc"
 #include "GraphicsInfo.cc"
 #include "Grid.cc"
 #include "Keyboard.cc"

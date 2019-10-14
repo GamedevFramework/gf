@@ -35,7 +35,7 @@ namespace kkd {
     constexpr float MaxBound = 1500.0f;
     constexpr float MinBound = - MaxBound;
 
-    constexpr gf::RectF Bounds(MinBound, MinBound, MaxBound - MinBound, MaxBound - MinBound);
+    constexpr gf::RectF Bounds = gf::RectF::fromMinMax({ MinBound, MinBound }, { MaxBound, MaxBound });
 
     constexpr float SprintVelocityFactor = 2.0f;
     constexpr float SprintEnergyFactor = -2.0f;

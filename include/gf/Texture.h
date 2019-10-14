@@ -26,6 +26,8 @@
 
 #include <cstdint>
 
+#include "ArrayRef.h"
+#include "GraphicsHandle.h"
 #include "Path.h"
 #include "Portability.h"
 #include "Rect.h"
@@ -38,6 +40,12 @@ inline namespace v1 {
 
   class Image;
   class InputStream;
+
+  template<>
+  struct GF_API GraphicsTrait<GraphicsTag::Texture> {
+    static void gen(int n, unsigned* resources);
+    static void del(int n, const unsigned* resources);
+  };
 
   /**
    * @ingroup graphics
@@ -78,37 +86,21 @@ inline namespace v1 {
 
     /**
      * @brief Constructor
-     *
-     * @param format The format of the texture
-     *
+
      * Once set, the format can not be changed.
+     *
+     * @param format Format of the texture
      */
     BareTexture(Format format);
 
     /**
-     * @brief Destructor
+     * @brief Create the texture
+     *
+     * @param format Format of the texture
+     * @param size Size of the texture
+     * @param data Initial pixels of the texture (can be `nullptr`)
      */
-    ~BareTexture();
-
-    /**
-     * @brief Deleted copy constructor
-     */
-    BareTexture(const BareTexture&) = delete;
-
-    /**
-     * @brief Deleted copy assignment
-     */
-    BareTexture& operator=(const BareTexture&) = delete;
-
-    /**
-     * @brief Move constructor
-     */
-    BareTexture(BareTexture&& other) noexcept;
-
-    /**
-     * @brief Move assignment
-     */
-    BareTexture& operator=(BareTexture&& other) noexcept;
+    BareTexture(Format format, Vector2i size, const uint8_t *data);
 
     /**
      * @brief Get the format of the texture
@@ -127,7 +119,7 @@ inline namespace v1 {
      * @return The OpenGL name of the texture
      */
     unsigned getName() const {
-      return m_name;
+      return m_handle.getName();
     }
 
     /**
@@ -273,22 +265,9 @@ inline namespace v1 {
      */
     static void bind(const BareTexture *texture);
 
-  protected:
-    /**
-     * @brief Create the texture
-     *
-     * If this function fails, the texture is left unchanged.
-     *
-     * @param size Size of the texture
-     * @param data Initial pixels of the texture (can be `nullptr`)
-     *
-     * @return True if creation was successful
-     */
-    bool create(Vector2i size, const uint8_t *data);
-
   private:
     Format m_format;
-    unsigned m_name;
+    GraphicsHandle<GraphicsTag::Texture> m_handle;
     Vector2i m_size;
     bool m_smooth;
     bool m_repeated;
@@ -306,7 +285,7 @@ inline namespace v1 {
    * However, if you want to perform some modifications on the pixels
    * before creating the final texture, you can load your file to a
    * gf::Image, do whatever you need with the pixels, and then call
-   * Texture::loadFromImage.
+   * the appropriate constructor.
    *
    * Like gf::Image, gf::Texture can handle a unique internal
    * representation of pixels, which is RGBA. This means
@@ -315,24 +294,7 @@ inline namespace v1 {
    *
    * Usage example:
    *
-   * ~~~{.cc}
-   * // This example shows the most common use of gf::Texture:
-   * // drawing a sprite
-   *
-   * // Load a texture from a file
-   * gf::Texture texture;
-   *
-   * if (!texture.loadFromFile("texture.png")) {
-   *   return -1;
-   * }
-   *
-   * // Assign it to a sprite
-   * gf::Sprite sprite;
-   * sprite.setTexture(texture);
-   *
-   * // Draw the textured sprite
-   * window.draw(sprite);
-   * ~~~
+   * @snippet snippets/doc_class_texture.cc texture
    *
    * @sa gf::Sprite, gf::Image, gf::RenderTexture
    */
@@ -348,88 +310,37 @@ inline namespace v1 {
     /**
      * @brief Create the texture
      *
-     * If this function fails, the texture is left unchanged.
-     *
      * @param size Size of the texture
-     *
-     * @return True if creation was successful
      */
-    bool create(Vector2i size);
+    Texture(Vector2i size);
 
     /**
      * @brief Load the texture from an image
      *
-     * If this function fails, the texture is left unchanged.
-     *
      * @param image Image to load into the texture
-     *
-     * @return True if loading was successful
-     *
-     * @sa loadFromFile(), loadFromMemory(), loadFromStream()
      */
-    bool loadFromImage(const Image& image);
+    Texture(const Image& image);
 
     /**
      * @brief Load the texture from a file on disk
      *
-     * This function is a shortcut for the following code:
-     *
-     * ~~~{.cc}
-     * gf::Image image;
-     * image.loadFromFile(filename);
-     * texture.loadFromImage(image);
-     * ~~~
-     *
-     * If this function fails, the texture is left unchanged.
-     *
      * @param filename Path of the image file to load
-     *
-     * @return True if loading was successful
-     *
-     * @sa loadFromMemory(), loadFromStream(), loadFromImage()
      */
-    bool loadFromFile(const Path& filename);
+    Texture(const Path& filename);
 
     /**
      * @brief Load the texture from a custom stream
      *
-     * This function is a shortcut for the following code:
-     *
-     * ~~~{.cc}
-     * gf::Image image;
-     * image.loadFromStream(stream);
-     * texture.loadFromImage(image);
-     * ~~~
-     *
-     * If this function fails, the texture is left unchanged.
-     *
      * @param stream Source stream to read from
-     * @return True if loading was successful
-     *
-     * @see loadFromFile(), loadFromMemory(), loadFromImage()
      */
-    bool loadFromStream(InputStream& stream);
+    Texture(InputStream& stream);
 
     /**
      * @brief Load the texture from a file in memory
      *
-     * This function is a shortcut for the following code:
-     *
-     * ~~~{.cc}
-     * gf::Image image;
-     * image.loadFromMemory(data, length);
-     * texture.loadFromImage(image);
-     * ~~~
-     *
-     * If this function fails, the texture is left unchanged.
-     *
-     * @param data Pointer to the file data in memory
-     * @param length Length of the data to load, in bytes
-     * @return True if loading was successful
-     *
-     * @see loadFromFile(), loadFromStream(), loadFromImage()
+     * @param content Content of the file data in memory
      */
-    bool loadFromMemory(const uint8_t *data, std::size_t length);
+    Texture(ArrayRef<uint8_t> content);
 
     /**
      * @brief Update the texture from an image
@@ -457,8 +368,6 @@ inline namespace v1 {
      * to pixels if necessary (texture may be padded or flipped).
      *
      * @return An image containing the texture's pixels
-     *
-     * @sa loadFromImage()
      */
     Image copyToImage() const;
 
@@ -483,13 +392,9 @@ inline namespace v1 {
     /**
      * @brief Create the texture
      *
-     * If this function fails, the texture is left unchanged.
-     *
      * @param size Size of the texture
-     *
-     * @return True if creation was successful
      */
-    bool create(Vector2i size);
+    AlphaTexture(Vector2i size);
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

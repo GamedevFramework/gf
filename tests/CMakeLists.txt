@@ -31,25 +31,3 @@ target_include_directories(gf_tests
 )
 
 target_link_libraries(gf_tests gf0)
-
-
-add_executable(bug6
-  EXCLUDE_FROM_ALL
-  bugs/bug6.cc
-)
-
-target_link_libraries(bug6 gf0)
-
-add_executable(bug23
-  EXCLUDE_FROM_ALL
-  bugs/bug23.cc
-)
-
-target_link_libraries(bug23 gf0)
-
-add_executable(bug28
-  EXCLUDE_FROM_ALL
-  bugs/bug28.cc
-)
-
-target_link_libraries(bug28 gf0)

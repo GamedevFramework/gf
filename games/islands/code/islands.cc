@@ -60,11 +60,11 @@ int main() {
 
   gf::SingletonStorage<gf::MessageManager> storageForMessageManager(bi::gMessageManager);
   gf::SingletonStorage<gf::ResourceManager> storageForResourceManager(bi::gResourceManager);
-  gf::SingletonStorage<gf::TextureAtlas> storageForTextureAtlas(bi::gTextureAtlas);
-  gf::SingletonStorage<gf::Random> storageForRandom(bi::gRandom);
 
   bi::gResourceManager().addSearchDir(ISLANDS_DATA_DIR);
-  bi::gTextureAtlas().loadFromFile("sheet.xml", bi::gResourceManager());
+
+  gf::SingletonStorage<gf::TextureAtlas> storageForTextureAtlas(bi::gTextureAtlas, "sheet.xml", bi::gResourceManager());
+  gf::SingletonStorage<gf::Random> storageForRandom(bi::gRandom);
 
   // splash screen
 

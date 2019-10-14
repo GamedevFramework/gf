@@ -51,7 +51,7 @@ namespace lux {
 
   void BonusManager::update(gf::Time time) {
     float dt = time.asSeconds();
-    gf::RectF view(WorldCenter - WorldSize / 2, WorldSize);
+    gf::RectF view = gf::RectF::fromCenterSize(WorldCenter, WorldSize);
     view.grow(BonusExtra);
 
     for (Bonus& bonus : m_bonus) {
@@ -92,8 +92,8 @@ namespace lux {
   }
 
   static bool isTargetReachedByBonus(gf::Vector2f shipPos, gf::Vector2f bonusPos) {
-    gf::RectF rectShip(shipPos, { Hero::Width, Hero::Height });
-    gf::RectF rectBonus(bonusPos, { BonusSize, BonusSize });
+    gf::RectF rectShip = gf::RectF::fromPositionSize(shipPos, { Hero::Width, Hero::Height });
+    gf::RectF rectBonus = gf::RectF::fromPositionSize(bonusPos, { BonusSize, BonusSize });
     return rectShip.intersects(rectBonus);
   }
 

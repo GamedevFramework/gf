@@ -35,7 +35,6 @@ inline namespace v1 {
   , m_color(Color::White)
   , m_width(1)
   , m_vertices(PrimitiveType::TriangleStrip)
-  , m_bounds(0, 0, 0, 0)
   , m_outlineColor(Color::White)
   , m_outlineThickness(0.0f)
   , m_outlineVertices(PrimitiveType::TriangleStrip)
@@ -92,15 +91,11 @@ inline namespace v1 {
   }
 
   VertexBuffer Curve::commitGeometry() const {
-    VertexBuffer buffer;
-    buffer.load(m_vertices.getVertexData(), m_vertices.getVertexCount(), m_vertices.getPrimitiveType());
-    return buffer;
+    return VertexBuffer(m_vertices.getVertexData(), m_vertices.getVertexCount(), m_vertices.getPrimitiveType());
   }
 
   VertexBuffer Curve::commitOutlineGeometry() const {
-    VertexBuffer buffer;
-    buffer.load(m_outlineVertices.getVertexData(), m_outlineVertices.getVertexCount(), m_outlineVertices.getPrimitiveType());
-    return buffer;
+    return VertexBuffer(m_outlineVertices.getVertexData(), m_outlineVertices.getVertexCount(), m_outlineVertices.getPrimitiveType());
   }
 
   void Curve::draw(RenderTarget& target, const RenderStates& states) {

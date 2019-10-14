@@ -59,15 +59,32 @@ inline namespace v1 {
     }
 
     constexpr Box(Vector<T, N> p0, Vector<T, N> p1) noexcept
+    : min(gf::Zero)
+    , max(gf::Zero)
     {
       for (std::size_t i = 0; i < N; ++i) {
-        std::tie(min[i], max[i]) = std::minmax(p0[i], p1[i]);
+        if (p0[i] < p1[i]) {
+          min[i] = p0[i];
+          max[i] = p1[i];
+        } else {
+          min[i] = p1[i];
+          max[i] = p0[i];
+        }
       }
     }
 
-    constexpr Box(const T (&p0)[N], const T (&p1)[N]) noexcept {
+    constexpr Box(const T (&p0)[N], const T (&p1)[N]) noexcept
+    : min(gf::Zero)
+    , max(gf::Zero)
+    {
       for (std::size_t i = 0; i < N; ++i) {
-        std::tie(min[i], max[i]) = std::minmax(p0[i], p1[i]);
+        if (p0[i] < p1[i]) {
+          min[i] = p0[i];
+          max[i] = p1[i];
+        } else {
+          min[i] = p1[i];
+          max[i] = p0[i];
+        }
       }
     }
 
@@ -76,6 +93,10 @@ inline namespace v1 {
     , max(p)
     {
 
+    }
+
+    constexpr Vector<T, N> getPosition() const noexcept {
+      return min;
     }
 
     constexpr Vector<T, N> getSize() const noexcept {
@@ -98,7 +119,7 @@ inline namespace v1 {
 
     constexpr bool contains(Vector<T, N> point) const noexcept {
       for (std::size_t i = 0; i < N; ++i) {
-        if (!(min[i] <= point[i] && point[i] <= max[i])) {
+        if (!(min[i] <= point[i] && point[i] < max[i])) {
           return false;
         }
       }
@@ -126,7 +147,16 @@ inline namespace v1 {
       return true;
     }
 
-    Box<T, N> getIntersection(const Box<T, N>& other) const noexcept {
+    constexpr bool intersects(const Box<T, N>& other, Box<T, N>& result) const noexcept {
+      if (!intersects(other)) {
+        return false;
+      }
+
+      result = getIntersection(other);
+      return true;
+    }
+
+    constexpr Box<T, N> getIntersection(const Box<T, N>& other) const noexcept {
       Box<T, N> res;
 
       for (std::size_t i = 0; i < N; ++i) {
@@ -137,7 +167,7 @@ inline namespace v1 {
       return res;
     }
 
-    T getIntersectionVolume(const Box<T, N>& other) const noexcept {
+    constexpr T getIntersectionVolume(const Box<T, N>& other) const noexcept {
       T res = 1;
 
       for (std::size_t i = 0; i < N; ++i) {
@@ -154,7 +184,7 @@ inline namespace v1 {
       return res;
     }
 
-    T getIntersectionExtentLength(const Box<T, N>& other) const noexcept {
+    constexpr T getIntersectionExtentLength(const Box<T, N>& other) const noexcept {
       T res = 0;
 
       for (std::size_t i = 0; i < N; ++i) {
@@ -228,6 +258,28 @@ inline namespace v1 {
       }
 
       return minimum;
+    }
+
+    /**
+     * @brief Grow the rectangle
+     *
+     * @param value The amount to grow
+     * @return A new extended rectangle
+     * @sa shrink()
+     */
+    constexpr Box<T, 2> grow(T value) const noexcept {
+      return Box<T, 2>(min - value, max + value);
+    }
+
+    /**
+     * @brief Shrink the rectangle
+     *
+     * @param value The amount to shrink
+     * @return A new shrinked rectangle
+     * @sa grow()
+     */
+    constexpr Box<T, 2> shrink(T value) const noexcept {
+      return Box<T, 2>(min + value, max - value);
     }
 
     /**

@@ -44,7 +44,7 @@ inline namespace v1 {
     std::tie(min.x, max.x) = std::minmax({ pointTopLeft.x, pointTopRight.x, pointBottomLeft.x, pointBottomRight.x });
     std::tie(min.y, max.y) = std::minmax({ pointTopLeft.y, pointTopRight.y, pointBottomLeft.y, pointBottomRight.y });
 
-    return RectF(min, max - min);
+    return RectF::fromMinMax(min, max);
   }
 
   void translate(Matrix3f& mat, Vector2f offset) {

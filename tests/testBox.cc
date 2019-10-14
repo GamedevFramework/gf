@@ -80,16 +80,16 @@ TEST(BoxTest, ContainsVector) {
   EXPECT_TRUE(box.contains({ 0, 5 }));
 
   // top-right
-  EXPECT_TRUE(box.contains({ 10, 5 }));
+  EXPECT_FALSE(box.contains({ 10, 5 }));
 
   // bottom-left
-  EXPECT_TRUE(box.contains({ 0, 20 }));
+  EXPECT_FALSE(box.contains({ 0, 20 }));
 
   // bottom-right
-  EXPECT_TRUE(box.contains({ 10, 20 }));
+  EXPECT_FALSE(box.contains({ 10, 20 }));
 }
 
-TEST(BoxTest, ContainsRect) {
+TEST(BoxTest, ContainsBox) {
   gf::Box2i box0({ 0, 5 }, { 10, 20 });
 
   // reflexivity

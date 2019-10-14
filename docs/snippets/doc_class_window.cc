@@ -22,7 +22,7 @@
 #include <gf/Event.h>
 #include <gf/Window.h>
 
-int main() {
+void dummyWindowUsage() {
   /// [window]
   gf::Window window("My window", { 640, 480 }, gf::WindowHints::Resizable | gf::WindowHints::Visible);
 
@@ -42,5 +42,4 @@ int main() {
   }
   /// [window]
 
-  return 0;
 }

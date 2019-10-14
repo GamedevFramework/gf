@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -18,70 +18,28 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-
-#include <cassert>
-
-#include <string>
-
-#include <gf/Id.h>
+#include <gf/Image.h>
 #include <gf/Unused.h>
 
-/// [using]
-using namespace gf::literals; // necessary to use _id
-/// [using]
+void dummyImageUsage() {
 
-namespace {
+  /// [image]
+  // Load an image file from a file
+  gf::Image background("background.jpg");
 
-  std::string myInput() {
-    return "";
+  // Create a 20x20 image filled with black color
+  gf::Image image({ 20, 20 }, gf::Color4u{0xFF, 0xFF, 0xFF, 0xFF});
+
+  // Make the top-left pixel transparent
+  gf::Color4u color = image.getPixel({ 0, 0 });
+  color.a = 0;
+  image.setPixel({ 0, 0 }, color);
+
+  // Save the image to a file
+  if (!image.saveToFile("result.png")) {
+    // error
+    return;
   }
+  /// [image]
 
-}
-
-
-int main() {
-
-  {
-  /// [hash]
-  gf::Id id1 = gf::hash("C string");
-
-  std::string str("std::string");
-  gf::Id id2 = gf::hash(str);
-  /// [hash]
-
-  gf::unused(id1, id2);
-  }
-
-  {
-  /// [udl]
-  gf::Id id1 = "C string"_id;
-  gf::Id id2 = "std::string"_id;
-  /// [udl]
-
-  gf::unused(id1, id2);
-  }
-
-  {
-  /// [comptime]
-  static_assert("foobar"_id == 0x85944171f73967e8, "It works at compile-time!");
-  /// [comptime]
-  }
-
-  /// [switch]
-  std::string input = myInput();
-
-  switch (gf::hash(input)) {
-    case "Foo"_id:
-      // input is "Foo"
-      break;
-    case "Bar"_id:
-      // input is "Bar"
-      break;
-    case "Baz"_id:
-      // input is "Baz"
-      break;
-  }
-  /// [switch]
-
-  return 0;
 }

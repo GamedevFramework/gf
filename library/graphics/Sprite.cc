@@ -82,9 +82,7 @@ inline namespace v1 {
   }
 
   VertexBuffer Sprite::commitGeometry() const {
-    VertexBuffer buffer;
-    buffer.load(m_vertices, 4, PrimitiveType::TriangleStrip);
-    return buffer;
+    return VertexBuffer(m_vertices, 4, PrimitiveType::TriangleStrip);
   }
 
   void Sprite::draw(RenderTarget& target, const RenderStates& states) {

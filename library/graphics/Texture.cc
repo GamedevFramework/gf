@@ -26,6 +26,7 @@
 #include <cassert>
 
 #include <gf/Image.h>
+#include <gf/RenderTarget.h>
 
 #include "priv/Debug.h"
 #include "priv/OpenGLFwd.h"
@@ -35,41 +36,12 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  BareTexture::BareTexture(Format format)
-  : m_format(format)
-  , m_name(0)
-  , m_size{0, 0}
-  , m_smooth(false)
-  , m_repeated(false)
-  , m_mipmap(false)
-  {
+  void GraphicsTrait<GraphicsTag::Texture>::gen(int n, unsigned* resources) {
+    glCheck(glGenTextures(n, resources));
   }
 
-  BareTexture::~BareTexture() {
-    if (m_name != 0) {
-      GLuint name = static_cast<GLuint>(m_name);
-      glCheck(glDeleteTextures(1, &name));
-    }
-  }
-
-  BareTexture::BareTexture(BareTexture&& other) noexcept
-  : m_format(other.m_format)
-  , m_name(std::exchange(other.m_name, 0))
-  , m_size(other.m_size)
-  , m_smooth(other.m_smooth)
-  , m_repeated(other.m_repeated)
-  , m_mipmap(other.m_mipmap)
-  {
-  }
-
-  BareTexture& BareTexture::operator=(BareTexture&& other) noexcept {
-    std::swap(m_format, other.m_format);
-    std::swap(m_name, other.m_name);
-    std::swap(m_size, other.m_size);
-    std::swap(m_smooth, other.m_smooth);
-    std::swap(m_repeated, other.m_repeated);
-    std::swap(m_mipmap, other.m_mipmap);
-    return *this;
+  void GraphicsTrait<GraphicsTag::Texture>::del(int n, const unsigned* resources) {
+    glCheck(glDeleteTextures(n, resources));
   }
 
   namespace {
@@ -112,31 +84,36 @@ inline namespace v1 {
 
   } // anonymous namespace
 
-  bool BareTexture::create(Vector2i size, const uint8_t *data) {
-    if (size.width == 0 || size.height == 0) {
-      return false;
-    }
+  BareTexture::BareTexture(Format format)
+  : m_format(format)
+  , m_handle(gf::None)
+  , m_size{0, 0}
+  , m_smooth(false)
+  , m_repeated(false)
+  , m_mipmap(false)
+  {
+  }
 
-    if (m_name == 0) {
-      GLuint name;
-      glCheck(glGenTextures(1, &name));
-      m_name = static_cast<unsigned>(name);
-    }
-
-    m_size = size;
+  BareTexture::BareTexture(Format format, Vector2i size, const uint8_t *data)
+  : m_format(format)
+  , m_size(size)
+  , m_smooth(false)
+  , m_repeated(false)
+  , m_mipmap(false)
+  {
+    assert(m_size.width > 0 && m_size.height > 0);
 
     GLenum textureFormat = getEnum(m_format);
 
     glCheck(glPixelStorei(GL_UNPACK_ALIGNMENT, getAlignment(m_format)));
 
-    glCheck(glBindTexture(GL_TEXTURE_2D, m_name));
+    glCheck(glBindTexture(GL_TEXTURE_2D, m_handle));
     glCheck(glTexImage2D(GL_TEXTURE_2D, 0, textureFormat, m_size.width, m_size.height, 0, textureFormat, GL_UNSIGNED_BYTE, data));
-    glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, m_repeated ? GL_REPEAT : GL_CLAMP_TO_EDGE));
-    glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, m_repeated ? GL_REPEAT : GL_CLAMP_TO_EDGE));
-    glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, m_smooth ? GL_LINEAR : GL_NEAREST));
-    glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, getMinFilter(m_smooth, m_mipmap)));
 
-    return true;
+    glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE)); // m_repeated == false
+    glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE)); // m_repeated == false
+    glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)); // m_smooth == false
+    glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)); // m_smooth == false && m_mipmap == false
   }
 
   void BareTexture::setSmooth(bool smooth) {
@@ -146,11 +123,11 @@ inline namespace v1 {
 
     m_smooth = smooth;
 
-    if (m_name == 0) {
+    if (!m_handle.isValid()) {
       return;
     }
 
-    glCheck(glBindTexture(GL_TEXTURE_2D, m_name));
+    glCheck(glBindTexture(GL_TEXTURE_2D, m_handle));
     glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, m_smooth ? GL_LINEAR : GL_NEAREST));
     glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, getMinFilter(m_smooth, m_mipmap)));
   }
@@ -162,24 +139,24 @@ inline namespace v1 {
 
     m_repeated = repeated;
 
-    if (m_name == 0) {
+    if (!m_handle.isValid()) {
       return;
     }
 
-    glCheck(glBindTexture(GL_TEXTURE_2D, m_name));
+    glCheck(glBindTexture(GL_TEXTURE_2D, m_handle));
     glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, m_repeated ? GL_REPEAT : GL_CLAMP_TO_EDGE));
     glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, m_repeated ? GL_REPEAT : GL_CLAMP_TO_EDGE));
   }
 
   void BareTexture::update(const uint8_t *data) {
-    update(data, RectI({0, 0}, m_size));
+    update(data, RectI::fromPositionSize({0, 0}, m_size));
   }
 
   void BareTexture::update(const uint8_t *data, const RectI& rect) {
-    assert(rect.left + rect.width <= m_size.width);
-    assert(rect.top + rect.height <= m_size.height);
+    assert(rect.max.x <= m_size.width);
+    assert(rect.max.y <= m_size.height);
 
-    if (m_name == 0 || data == nullptr) {
+    if (!m_handle.isValid() || data == nullptr) {
       return;
     }
 
@@ -187,8 +164,8 @@ inline namespace v1 {
 
     glCheck(glPixelStorei(GL_UNPACK_ALIGNMENT, getAlignment(m_format)));
 
-    glCheck(glBindTexture(GL_TEXTURE_2D, m_name));
-    glCheck(glTexSubImage2D(GL_TEXTURE_2D, 0, rect.left, rect.top, rect.width, rect.height, getEnum(m_format), GL_UNSIGNED_BYTE, data));
+    glCheck(glBindTexture(GL_TEXTURE_2D, m_handle));
+    glCheck(glTexSubImage2D(GL_TEXTURE_2D, 0, rect.min.x, rect.min.y, rect.getWidth(), rect.getHeight(), getEnum(m_format), GL_UNSIGNED_BYTE, data));
     glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, getMinFilter(m_smooth, m_mipmap)));
 
 #ifdef GF_OPENGL3
@@ -199,22 +176,18 @@ inline namespace v1 {
   }
 
   RectF BareTexture::computeTextureCoords(const RectI& rect) const {
-    return {
-      static_cast<float>(rect.left) / m_size.width,
-      static_cast<float>(rect.top) / m_size.height,
-      static_cast<float>(rect.width) / m_size.width,
-      static_cast<float>(rect.height) / m_size.height,
-    };
+    Vector2f size = m_size;
+    return RectF::fromMinMax(rect.min / size, rect.max / size);
   }
 
   bool BareTexture::generateMipmap() {
-    if (m_name == 0) {
+    if (!m_handle.isValid()) {
       return false;
     }
 
     m_mipmap = true;
 
-    glCheck(glBindTexture(GL_TEXTURE_2D, m_name));
+    glCheck(glBindTexture(GL_TEXTURE_2D, m_handle));
     glCheck(glGenerateMipmap(GL_TEXTURE_2D));
     glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, getMinFilter(m_smooth, m_mipmap)));
 
@@ -222,8 +195,8 @@ inline namespace v1 {
   }
 
   void BareTexture::bind(const BareTexture *texture) {
-    if (texture != nullptr && texture->m_name != 0) {
-      glCheck(glBindTexture(GL_TEXTURE_2D, texture->m_name));
+    if (texture != nullptr && texture->m_handle.getName() != 0) {
+      glCheck(glBindTexture(GL_TEXTURE_2D, texture->m_handle));
     } else {
       glCheck(glBindTexture(GL_TEXTURE_2D, 0));
     }
@@ -234,33 +207,34 @@ inline namespace v1 {
   {
   }
 
-  bool Texture::create(Vector2i size) {
-    return BareTexture::create(size, nullptr);
+  Texture::Texture(Vector2i size)
+  : BareTexture(Format::Color, size, nullptr)
+  {
   }
 
-  bool Texture::loadFromImage(const Image& image) {
-    return BareTexture::create(image.getSize(), image.getPixelsPtr());
+  Texture::Texture(const Image& image)
+  : BareTexture(Format::Color, image.getSize(), image.getPixelsPtr())
+  {
   }
 
-  bool Texture::loadFromFile(const Path& filename) {
-    Image image;
-    return image.loadFromFile(filename) && loadFromImage(image);
+  Texture::Texture(const Path& filename)
+  : Texture(Image(filename))
+  {
   }
 
-  bool Texture::loadFromStream(InputStream& stream) {
-    Image image;
-    return image.loadFromStream(stream) && loadFromImage(image);
+  Texture::Texture(InputStream& stream)
+  : Texture(Image(stream))
+  {
   }
 
-  bool Texture::loadFromMemory(const uint8_t *data, std::size_t length) {
-    Image image;
-    return image.loadFromMemory(data, length) && loadFromImage(image);
+  Texture::Texture(ArrayRef<uint8_t> content)
+  : Texture(Image(content))
+  {
   }
 
   void Texture::update(const Image& image) {
-    BareTexture::update(image.getPixelsPtr(), RectI({ 0, 0 }, image.getSize()));
+    BareTexture::update(image.getPixelsPtr(), RectI::fromPositionSize({ 0, 0 }, image.getSize()));
   }
-
 
   Image Texture::copyToImage() const {
     if (getName() == 0) {
@@ -270,29 +244,21 @@ inline namespace v1 {
     auto size = getSize();
     std::vector<uint8_t> pixels(static_cast<std::size_t>(size.width) * static_cast<std::size_t>(size.height) * 4);
 
-    GLuint frameBuffer = 0;
-    glCheck(glGenFramebuffers(1, &frameBuffer));
+    GraphicsHandle<GraphicsTag::Framebuffer> framebuffer;
 
-    if (frameBuffer == 0) {
-      return Image();
-    }
+    GLint boundFramebuffer;
+    glCheck(glGetIntegerv(GL_FRAMEBUFFER_BINDING, &boundFramebuffer));
 
-    GLint boundFrameBuffer;
-    glCheck(glGetIntegerv(GL_FRAMEBUFFER_BINDING, &boundFrameBuffer));
-
-    glCheck(glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer));
+    glCheck(glBindFramebuffer(GL_FRAMEBUFFER, framebuffer));
     glCheck(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, getName(), 0));
     assert(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
 
     glCheck(glPixelStorei(GL_PACK_ALIGNMENT, 4));
     glCheck(glReadPixels(0, 0, size.width, size.height, GL_RGBA, GL_UNSIGNED_BYTE, &pixels[0]));
 
-    glCheck(glDeleteFramebuffers(1, &frameBuffer));
+    glCheck(glBindFramebuffer(GL_FRAMEBUFFER, boundFramebuffer));
 
-    glCheck(glBindFramebuffer(GL_FRAMEBUFFER, boundFrameBuffer));
-
-    Image image;
-    image.create(size, pixels.data());
+    Image image(size, pixels.data());
     image.flipHorizontally();
     return image;
   }
@@ -304,8 +270,9 @@ inline namespace v1 {
   {
   }
 
-  bool AlphaTexture::create(Vector2i size) {
-    return BareTexture::create(size, nullptr);
+  AlphaTexture::AlphaTexture(Vector2i size)
+  : BareTexture(Format::Alpha, size, nullptr)
+  {
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

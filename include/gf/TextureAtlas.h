@@ -51,7 +51,7 @@ inline namespace v1 {
    * <TextureAtlas imagePath="bricks.png">
    *   <SubTexture name="brickBlack01" x="718" y="500" width="32" height="32"/>
    *   <SubTexture name="brickBlack02" x="716" y="66" width="64" height="32"/>
-   *   ...
+   *   <!-- ... -->
    * </TextureAtlas>
    * ~~~
    *
@@ -79,9 +79,8 @@ inline namespace v1 {
      * Load the data about the sub-textures from a XML file.
      *
      * @param filename The filename of the XML file
-     * @return True if the file has been loaded
      */
-    bool loadFromFile(const Path& filename);
+    TextureAtlas(const Path& filename);
 
     /**
      * @brief Load an atlas from a XML file
@@ -91,9 +90,8 @@ inline namespace v1 {
      *
      * @param filename The filename of the XML file
      * @param resources A resource manager
-     * @return True if the file has been loaded
      */
-    bool loadFromFile(const Path& filename, ResourceManager& resources);
+    TextureAtlas(const Path& filename, ResourceManager& resources);
 
     /**
      * @brief Set the texture path

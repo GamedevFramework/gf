@@ -73,19 +73,7 @@ inline namespace v1 {
    *
    * Usage example:
    *
-   * ~~~{.cc}
-   * // Declare and load a font
-   * gf::Font font;
-   * font.loadFromFile("arial.ttf");
-   *
-   * // Create a text
-   * gf::Text text("hello", font);
-   * text.setCharacterSize(30);
-   * text.setColor(gf::Color::Red);
-   *
-   * // Draw it
-   * rendered.draw(text);
-   * ~~~
+   * @snippet snippets/doc_class_text.cc text
    *
    * @sa gf::Font
    */

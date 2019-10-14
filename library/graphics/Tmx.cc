@@ -173,7 +173,7 @@ inline namespace v1 {
     assert((tu + 1) * tileSize.width + du <= size.width);
     assert((tv + 1) * tileSize.height + dv <= size.height);
 
-    return { tu * tileSize.width + du, tv * tileSize.height + dv, tileSize.width, tileSize.height };
+    return RectI::fromPositionSize({ tu * tileSize.width + du, tv * tileSize.height + dv }, tileSize);
   }
 
 

@@ -34,7 +34,7 @@ int main() {
   gf::Window window("06_views", ScreenSize);
   gf::RenderWindow renderer(window);
 
-  gf::RectF world(-100, -100, 200, 200);
+  gf::RectF world = gf::RectF::fromPositionSize({ -100, -100 }, { 200, 200 });
   gf::RectF extendedWorld = world.grow(100);
 
   /*
@@ -68,8 +68,8 @@ int main() {
    * viewports
    */
 
-  gf::RectF maxiViewport({ 0.0f, 0.0f }, { 1.0f, 1.0f });
-  gf::RectF miniViewport({ 0.75f, 0.15f }, { 0.20f, 0.40f });
+  gf::RectF maxiViewport = gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f });
+  gf::RectF miniViewport = gf::RectF::fromPositionSize({ 0.75f, 0.15f }, { 0.20f, 0.40f });
 
   /*
    * some things to draw

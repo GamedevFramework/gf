@@ -100,7 +100,7 @@ inline namespace v1 {
     FitView()
     : AdaptativeView()
     , m_localScreenSize(0, 0)
-    , m_localViewport(0.0f, 0.0f, 1.0f, 1.0f)
+    , m_localViewport(gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }))
     {
     }
 
@@ -112,7 +112,7 @@ inline namespace v1 {
     explicit FitView(const RectF& rect)
     : AdaptativeView(rect)
     , m_localScreenSize(0, 0)
-    , m_localViewport(0.0f, 0.0f, 1.0f, 1.0f)
+    , m_localViewport(gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }))
     {
     }
 
@@ -125,7 +125,7 @@ inline namespace v1 {
     FitView(Vector2f center, Vector2f size)
     : AdaptativeView(center, size)
     , m_localScreenSize(0, 0)
-    , m_localViewport(0.0f, 0.0f, 1.0f, 1.0f)
+    , m_localViewport(gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }))
     {
     }
 
@@ -293,7 +293,7 @@ inline namespace v1 {
     : AdaptativeView()
     , m_localSize(0.0f, 0.0f)
     , m_localScreenSize(0, 0)
-    , m_localViewport(0.0f, 0.0f, 1.0f, 1.0f)
+    , m_localViewport(gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }))
     {
     }
 
@@ -305,7 +305,7 @@ inline namespace v1 {
     explicit LockedView(const RectF& rect)
     : AdaptativeView(rect)
     , m_localSize(rect.getSize())
-    , m_localViewport(0.0f, 0.0f, 1.0f, 1.0f)
+    , m_localViewport(gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }))
     {
     }
 
@@ -318,7 +318,7 @@ inline namespace v1 {
     LockedView(Vector2f center, Vector2f size)
     : AdaptativeView(center, size)
     , m_localSize(size)
-    , m_localViewport(0.0f, 0.0f, 1.0f, 1.0f)
+    , m_localViewport(gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }))
     {
     }
 

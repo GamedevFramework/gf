@@ -26,6 +26,7 @@
 
 #include <cstdint>
 
+#include "GraphicsHandle.h"
 #include "Image.h"
 #include "Matrix.h"
 #include "Portability.h"
@@ -44,6 +45,12 @@ inline namespace v1 {
   class Drawable;
   class VertexBuffer;
   struct Vertex;
+
+  template<>
+  struct GF_API GraphicsTrait<GraphicsTag::Framebuffer> {
+    static void gen(int n, unsigned* resources);
+    static void del(int n, const unsigned* resources);
+  };
 
   /**
    * @ingroup graphics
@@ -67,9 +74,11 @@ inline namespace v1 {
   public:
 
     /**
-     * @brief Default constructor
+     * @brief Constructor
+     *
+     * @param size Initial size of the target
      */
-    RenderTarget() = default;
+    RenderTarget(Vector2i size);
 
     /**
      * @brief Destructor
@@ -370,15 +379,6 @@ inline namespace v1 {
 
   protected:
     /**
-     * @brief Performs the common initialization step after creation
-     *
-     * The derived classes must call this function after the
-     * target is created and ready for drawing.
-     */
-    void initialize();
-
-
-    /**
      * @brief Capture the given framebuffer
      *
      * @param name The name of the framebuffer
@@ -386,10 +386,6 @@ inline namespace v1 {
     Image captureFramebuffer(unsigned name) const;
 
   private:
-    void initializeViews();
-    void initializeShader();
-    void initializeTexture();
-
     struct Locations {
       int data[3];
     };

@@ -81,7 +81,7 @@ static void overview(gf::UI& ui) {
   if (minimizable) { windowFlags |= gf::UIWindow::Minimizable; }
   if (scaleLeft) { windowFlags |= gf::UIWindow::ScaleLeft; }
 
-  if (ui.begin("Overview", gf::RectF(300, 50, 400, 600), windowFlags)) {
+  if (ui.begin("Overview", gf::RectF::fromPositionSize({ 300.0f, 50.0f }, { 400.0f, 600.0f }), windowFlags)) {
     if (showMenu) {
       ui.menubarBegin();
 
@@ -124,7 +124,7 @@ static void overview(gf::UI& ui) {
     }
 
     if (showAppAbout) {
-      static gf::RectF bounds(20.0f, 100.0f, 300.0f, 190.0f);
+      static gf::RectF bounds = gf::RectF::fromPositionSize({ 20.0f, 100.0f }, { 300.0f, 190.0f });
 
       if (ui.popupBegin(gf::UIPopup::Static, "About", gf::UIWindow::Closable, bounds)) {
         ui.layoutRowDynamic(20, 1);
@@ -568,7 +568,7 @@ static void overview(gf::UI& ui) {
       ui.layoutRowEnd();
 
       if (popupActive) {
-        static gf::RectF popupBounds(20.0f, 100.0f, 220.0f, 90.0f);
+        static gf::RectF popupBounds = gf::RectF::fromPositionSize({ 20.0f, 100.0f }, { 220.0f, 90.0f });
 
         if (ui.popupBegin(gf::UIPopup::Static, "Error", gf::None, popupBounds)) {
           ui.layoutRowDynamic(25, 1);
@@ -606,7 +606,7 @@ static void overview(gf::UI& ui) {
       static gf::UIBrowser browser;
 
       if (fileSelectorActive) {
-        static gf::RectF fileSelectorBounds(20.0f, 100.0f, 500.0f, 500.0f);
+        static gf::RectF fileSelectorBounds = gf::RectF::fromPositionSize({ 20.0f, 100.0f }, { 500.0f, 500.0f });
 
         if (!ui.fileSelector(browser, "Choose a file", fileSelectorBounds)) {
           fileSelectorActive = false;
@@ -752,12 +752,7 @@ int main() {
   gf::Window window("40_ui", { 1024, 768 }, ~gf::WindowHints::Resizable);
   gf::RenderWindow renderer(window);
 
-  gf::Font font;
-
-  if (!font.loadFromFile("assets/DejaVuSans.ttf")) {
-    return EXIT_FAILURE;
-  }
-
+  gf::Font font("assets/DejaVuSans.ttf");
   gf::UI ui(font);
 
   renderer.clear(gf::Color::Gray());
@@ -788,7 +783,7 @@ int main() {
       ui.processEvent(event);
     }
 
-    if (ui.begin("Show", gf::RectF(50, 50, 220, 220), gf::UIWindow::Border | gf::UIWindow::Movable | gf::UIWindow::Scalable | gf::UIWindow::Closable | gf::UIWindow::Minimizable | gf::UIWindow::Title)) {
+    if (ui.begin("Show", gf::RectF::fromPositionSize({ 50.0f, 50.0f }, { 220.0f, 220.0f }), gf::UIWindow::Border | gf::UIWindow::Movable | gf::UIWindow::Scalable | gf::UIWindow::Closable | gf::UIWindow::Minimizable | gf::UIWindow::Title)) {
       /* fixed widget pixel width */
 
       ui.layoutRowStatic(30, 80, 1);
@@ -825,7 +820,7 @@ int main() {
 
     ui.end();
 
-    if (ui.begin("Style", gf::RectF(50, 300, 220, 100), gf::UIWindow::Border | gf::UIWindow::Movable | gf::UIWindow::Scalable | gf::UIWindow::Closable | gf::UIWindow::Minimizable | gf::UIWindow::Title)) {
+    if (ui.begin("Style", gf::RectF::fromPositionSize({ 50.0f, 300.0f }, { 220.0f, 100.0f }), gf::UIWindow::Border | gf::UIWindow::Movable | gf::UIWindow::Scalable | gf::UIWindow::Closable | gf::UIWindow::Minimizable | gf::UIWindow::Title)) {
       ui.layoutRowDynamic(20, 1);
       ui.label("Style:");
       ui.comboboxSeparator("Default|White|Red|Blue|Dark", '|', selectedStyle, 20, { 220, 220 });

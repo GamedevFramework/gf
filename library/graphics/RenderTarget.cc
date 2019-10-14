@@ -45,6 +45,14 @@ namespace gf {
 inline namespace v1 {
 #endif
 
+  void GraphicsTrait<GraphicsTag::Framebuffer>::gen(int n, unsigned* resources) {
+    glCheck(glGenFramebuffers(n, resources));
+  }
+
+  void GraphicsTrait<GraphicsTag::Framebuffer>::del(int n, const unsigned* resources) {
+    glCheck(glDeleteFramebuffers(n, resources));
+  }
+
   namespace {
 
     struct AttributeInfo {
@@ -59,6 +67,19 @@ inline namespace v1 {
       { "a_texCoords",  offsetof(Vertex, texCoords),  2 },
     };
 
+    Image createWhitePixel() {
+      uint8_t pixel[] = { 0xFF, 0xFF, 0xFF, 0xFF };
+      return Image({ 1, 1 }, pixel);
+    }
+  }
+
+  RenderTarget::RenderTarget(Vector2i size)
+  : m_view(RectF::fromPositionSize({ 0.0f, 0.0f }, { static_cast<float>(size.width), static_cast<float>(size.height) }))
+  , m_defaultShader(default_vert, default_frag)
+  , m_defaultAlphaShader(default_vert, default_alpha_frag)
+  , m_defaultTexture(createWhitePixel())
+  {
+    m_defaultTexture.setRepeated(true);
   }
 
   RenderTarget::~RenderTarget() = default;
@@ -76,12 +97,12 @@ inline namespace v1 {
   RectI RenderTarget::getScissorBox() {
     Region region = getCanonicalScissorBox();
     Vector2i size = getSize();
-    return RectI(region.left, size.height - (region.bottom + region.height), region.width, region.height);
+    return RectI::fromPositionSize({ region.left, size.height - (region.bottom + region.height) }, { region.width, region.height });
   }
 
   void RenderTarget::setScissorBox(const RectI& box) {
     Vector2i size = getSize();
-    Region region = { box.left, size.height - (box.top + box.height), box.width, box.height };
+    Region region = { box.min.x, size.height - box.max.y, box.getWidth(), box.getHeight() };
     setCanonicalScissorBox(region);
   }
 
@@ -184,8 +205,7 @@ inline namespace v1 {
       return;
     }
 
-    VertexBuffer buffer;
-    buffer.load(vertices, count, type);
+    VertexBuffer buffer(vertices, count, type);
     draw(buffer, states);
   }
 
@@ -194,8 +214,7 @@ inline namespace v1 {
       return;
     }
 
-    VertexBuffer buffer;
-    buffer.load(vertices, indices, count, type);
+    VertexBuffer buffer(vertices, indices, count, type);
     draw(buffer, states);
   }
 
@@ -324,7 +343,7 @@ inline namespace v1 {
   RectI RenderTarget::getViewport(const View& view) const {
     Region region = getCanonicalViewport(view);
     Vector2i size = getSize();
-    return RectI(region.left, size.height - (region.bottom + region.height), region.width, region.height);
+    return RectI::fromPositionSize({ region.left, size.height - (region.bottom + region.height) }, { region.width, region.height });
   }
 
   Region RenderTarget::getCanonicalViewport(const View& view) const {
@@ -334,10 +353,10 @@ inline namespace v1 {
 //     gf::Log::info("Normalized viewport: %fx%f %fx%f\n", viewport.left, viewport.top, viewport.width, viewport.height);
 
     Region region;
-    region.left = static_cast<int>(viewport.left * size.width + 0.5f);
-    region.bottom = static_cast<int>((1.0f - (viewport.top + viewport.height)) * size.height + 0.5f);
-    region.width = static_cast<int>(viewport.width * size.width + 0.5f);
-    region.height = static_cast<int>(viewport.height * size.height + 0.5f);
+    region.left = static_cast<int>(viewport.min.x * size.width + 0.5f);
+    region.bottom = static_cast<int>((1.0f - viewport.max.y) * size.height + 0.5f);
+    region.width = static_cast<int>(viewport.getWidth() * size.width + 0.5f);
+    region.height = static_cast<int>(viewport.getHeight() * size.height + 0.5f);
 
 //     gf::Log::info("Computed viewport: %ix%i %ix%i\n", region.left, region.bottom, region.width, region.height);
 
@@ -358,8 +377,8 @@ inline namespace v1 {
      *   0         w       -1         1
      */
     Vector2f normalized;
-    normalized.x = 2.0f * (point.x - viewport.left) / viewport.width - 1;
-    normalized.y = 1 - 2.0f * (point.y - viewport.top) / viewport.height;
+    normalized.x = 2.0f * (point.x - viewport.min.x) / viewport.getWidth() - 1;
+    normalized.y = 1 - 2.0f * (point.y - viewport.min.y) / viewport.getHeight();
 
     /* apply inverse view transform
      * i.e. compute world coordinates from normalized device coordinates
@@ -390,20 +409,14 @@ inline namespace v1 {
      *   -1         1       0         w
      */
     Vector2i pixel;
-    pixel.x = static_cast<int>((1 + normalized.x) / 2 * viewport.width + viewport.left);
-    pixel.y = static_cast<int>((1 - normalized.y) / 2 * viewport.height + viewport.top);
+    pixel.x = static_cast<int>((1 + normalized.x) / 2 * viewport.getWidth() + viewport.min.x);
+    pixel.y = static_cast<int>((1 - normalized.y) / 2 * viewport.getHeight() + viewport.min.y);
 
     return pixel;
   }
 
   Vector2i RenderTarget::mapCoordsToPixel(Vector2f point) const {
     return mapCoordsToPixel(point, getView());
-  }
-
-  void RenderTarget::initialize() {
-    initializeViews();
-    initializeTexture();
-    initializeShader();
   }
 
   Image RenderTarget::captureFramebuffer(unsigned name) const {
@@ -423,31 +436,9 @@ inline namespace v1 {
       glCheck(glBindFramebuffer(GL_FRAMEBUFFER, boundFrameBuffer));
     }
 
-    Image image;
-    image.create(size, pixels.data());
+    Image image(size, pixels.data());
     image.flipHorizontally();
     return image;
-  }
-
-
-  void RenderTarget::initializeViews() {
-    auto size = getSize();
-    m_view.reset({ 0.0f, 0.0f, static_cast<float>(size.width), static_cast<float>(size.height) });
-  }
-
-  void RenderTarget::initializeShader() {
-    m_defaultShader.loadFromMemory(default_vert, default_frag);
-    m_defaultAlphaShader.loadFromMemory(default_vert, default_alpha_frag);
-  }
-
-  void RenderTarget::initializeTexture() {
-    uint8_t pixel[] = { 0xFF, 0xFF, 0xFF, 0xFF };
-
-    Image image;
-    image.create({ 1, 1 }, pixel);
-
-    m_defaultTexture.loadFromImage(image);
-    m_defaultTexture.setRepeated(true);
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

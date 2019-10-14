@@ -33,13 +33,15 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  DefaultEffect::DefaultEffect() {
-    loadFromMemory(default_vert, default_frag);
+  DefaultEffect::DefaultEffect()
+  : Effect(default_vert, default_frag)
+  {
   }
 
 
-  AntiAliasingEffect::AntiAliasingEffect() {
-    loadFromMemory(default_vert, fxaa_frag);
+  AntiAliasingEffect::AntiAliasingEffect()
+  : Effect(default_vert, fxaa_frag)
+  {
     setUniform("u_framebufferSize", Vector2f{ 1.0f, 1.0f });
   }
 
@@ -48,8 +50,9 @@ inline namespace v1 {
   }
 
 
-  ColorMatrixEffect::ColorMatrixEffect() {
-    loadFromMemory(default_vert, color_matrix_frag);
+  ColorMatrixEffect::ColorMatrixEffect()
+  : Effect(default_vert, color_matrix_frag)
+  {
   }
 
   void ColorMatrixEffect::setColorMatrix(const Matrix4f& mat) {
@@ -227,8 +230,9 @@ inline namespace v1 {
     }
   }
 
-  EdgeEffect::EdgeEffect() {
-    loadFromMemory(default_vert, edge_frag);
+  EdgeEffect::EdgeEffect()
+  : Effect(default_vert, edge_frag)
+  {
     setUniform("u_framebufferSize", Vector2f{ 1.0f, 1.0f });
   }
 

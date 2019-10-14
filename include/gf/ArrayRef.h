@@ -36,7 +36,7 @@ inline namespace v1 {
    * This class stores a pointer to some data and its size. It can be built
    * from various inputs: `std::vector`, static array, pointer and size.
    *
-   * @sa gf::BufferRef, gf::StringRef
+   * @sa gf::BufferRef, gf::StringRef, gf::array()
    */
   template<typename T>
   class ArrayRef {
@@ -188,6 +188,21 @@ inline namespace v1 {
     const T *m_data;
     std::size_t m_size;
   };
+
+
+  /**
+   * @ingroup core
+   * @brief Create a constant reference to an array
+   *
+   * @param data A pointer to the elements in the array
+   * @param size The number of elements in the array
+   * @returns A constant reference to an array
+   */
+  template<typename T>
+  constexpr
+  ArrayRef<T> array(const T *data, std::size_t size) {
+    return ArrayRef<T>(data, size);
+  }
 
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

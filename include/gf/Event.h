@@ -90,28 +90,7 @@ inline namespace v1 {
    *
    * Usage example:
    *
-   * ~~~{.cc}
-   * gf::Event event;
-   *
-   * while (window.pollEvent(event)) {
-   *   // Request for closing the window
-   *   if (event.type == gf::EventType::Closed) {
-   *     window.close();
-   *   }
-   *
-   *   // The escape key was pressed
-   *   if (event.type == gf::EventType::KeyPressed && event.key.keycode == gf::Keycode::Escape) {
-   *     window.close();
-   *   }
-   *
-   *   // The window was resized
-   *   if (event.type == gf::EventType::Resized) {
-   *     doSomethingWithTheNewSize(event.size.width, event.size.height);
-   *   }
-   *
-   *   // etc ...
-   * }
-   * ~~~
+   * @snippet snippets/doc_struct_event.cc event
    *
    * @sa gf::EventType
    */

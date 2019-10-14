@@ -61,10 +61,11 @@ int main() {
   gf::ViewContainer views;
 
   gf::FitView mainView;
-  mainView.setSize({ Ground::Width, Ground::Height });
   views.addView(mainView);
 
   views.setInitialScreenSize(ScreenSize);
+
+  mainView.setSize({ Ground::Width, Ground::Height });
 
   // add actions
 

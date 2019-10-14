@@ -112,15 +112,9 @@ inline namespace v1 {
    * All factors and colors are represented as floating point numbers between
    * 0 and 1. Where necessary, the result is clamped to fit in that range.
    *
-   * The most common blending modes are defined as constants
-   * in the `gf::PredefinedBlendMonde` namespace:
+   * The most common blending modes are defined as constants:
    *
-   * ~~~{.cc}
-   * gf::BlendMode alphaBlending          = gf::BlendAlpha;
-   * gf::BlendMode additiveBlending       = gf::BlendAdd;
-   * gf::BlendMode multiplicativeBlending = gf::BlendMultiply;
-   * gf::BlendMode noBlending             = gf::BlendNone;
-   * ~~~
+   * @snippet snippets/doc_struct_blend_mode.cc predefined
    *
    * A blend mode can be specified every time you draw a gf::Drawable
    * object to a gf::RenderWindow. It is part of the gf::RenderStates compound

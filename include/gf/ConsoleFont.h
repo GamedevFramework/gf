@@ -117,6 +117,15 @@ inline namespace v1 {
     ConsoleFont();
 
     /**
+     * @brief Constructor
+     *
+     * @param image The image used by the font
+     * @param format The format of the font
+     * @param size The size given by the user, may be @f$ (0, 0) @f$
+     */
+    ConsoleFont(const Image& image, ConsoleFontFormat format, Vector2i size);
+
+    /**
      * @brief Destructor
      */
     virtual ~ConsoleFont();
@@ -248,18 +257,6 @@ inline namespace v1 {
 
   protected:
     /**
-     * @brief Set the format of the font
-     *
-     * This function sets the format of the font and computes the actual size
-     * in characters of the font and the size of the characters.
-     *
-     * @param format The format of the font
-     * @param size The size given by the user, may be @f$ (0, 0) @f$
-     * @param imageSize The size of the source image
-     */
-    bool setFormatAndComputeSizes(ConsoleFontFormat format, Vector2i size, Vector2i imageSize);
-
-    /**
      * @brief Print the format of the font
      *
      * This function logs the format of the font
@@ -296,8 +293,14 @@ inline namespace v1 {
    */
   class GF_API BitmapConsoleFont : public ConsoleFont {
   public:
-
-    virtual const BareTexture *getTexture() const override;
+    /**
+     * @brief Load a console font from an image
+     *
+     * @param image The image used by the font
+     * @param format The format of the font
+     * @param size The size, in characters, of the font
+     */
+    BitmapConsoleFont(const Image& image, ConsoleFontFormat format, Vector2i size = { 0u, 0u });
 
     /**
      * @brief Load a console font from a file
@@ -305,9 +308,10 @@ inline namespace v1 {
      * @param filename The name of the file
      * @param format The format of the font
      * @param size The size, in characters, of the font
-     * @returns True if the font was correctly loaded
      */
-    bool loadFromFile(const Path& filename, ConsoleFontFormat format, Vector2i size = { 0u, 0u });
+    BitmapConsoleFont(const Path& filename, ConsoleFontFormat format, Vector2i size = { 0u, 0u });
+
+    const BareTexture *getTexture() const override;
 
   private:
     AlphaTexture m_texture;
@@ -322,8 +326,14 @@ inline namespace v1 {
    */
   class GF_API ColoredConsoleFont : public ConsoleFont {
   public:
-
-    virtual const BareTexture *getTexture() const override;
+    /**
+     * @brief Load a console font from an image
+     *
+     * @param image The image used by the font
+     * @param format The format of the font
+     * @param size The size, in characters, of the font
+     */
+    ColoredConsoleFont(const Image& image, ConsoleFontFormat format, Vector2i size = { 0u, 0u });
 
     /**
      * @brief Load a console font from a file
@@ -331,9 +341,10 @@ inline namespace v1 {
      * @param filename The name of the file
      * @param format The format of the font
      * @param size The size, in characters, of the font
-     * @returns True if the font was correctly loaded
      */
-    bool loadFromFile(const Path& filename, ConsoleFontFormat format, Vector2i size = { 0u, 0u });
+    ColoredConsoleFont(const Path& filename, ConsoleFontFormat format, Vector2i size = { 0u, 0u });
+
+    const BareTexture *getTexture() const override;
 
   private:
     Texture m_texture;

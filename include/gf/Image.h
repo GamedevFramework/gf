@@ -28,6 +28,7 @@
 #include <cstdint>
 #include <vector>
 
+#include "ArrayRef.h"
 #include "Path.h"
 #include "Portability.h"
 #include "Vector.h"
@@ -38,6 +39,15 @@ inline namespace v1 {
 #endif
 
   class InputStream;
+
+  /**
+   * @ingroup core
+   * @brief Pixel format
+   */
+  enum PixelFormat {
+    Rgba32, ///< Four 8-bit channels
+    Rgb24,  ///< Three 8-bit channels
+  };
 
   /**
    * @ingroup graphics
@@ -55,8 +65,7 @@ inline namespace v1 {
    *
    * All the functions that return an array of pixels follow
    * this rule, and all parameters that you pass to gf::Image
-   * functions (such as `loadFromMemory()`) must use this
-   * representation as well.
+   * constructors must use this representation as well.
    *
    * A gf::Image can be copied, but it is a heavy resource and
    * if possible you should always use (const) references to
@@ -64,28 +73,7 @@ inline namespace v1 {
    *
    * Usage example:
    *
-   * ~~~{.cc}
-   * // Load an image file from a file
-   * gf::Image background;
-   *
-   * if (!background.loadFromFile("background.jpg")) {
-   *   return -1;
-   * }
-   *
-   * // Create a 20x20 image filled with black color
-   * gf::Image image;
-   * image.create({ 20, 20 }, sf::Color4u{0xFF, 0xFF, 0xFF, 0xFF});
-   *
-   * // Make the top-left pixel transparent
-   * gf::Color4u color = image.getPixel({ 0, 0 });
-   * color.a = 0;
-   * image.setPixel({ 0, 0 }, color);
-   *
-   * // Save the image to a file
-   * if (!image.saveToFile("result.png")) {
-   *   return -1;
-   * }
-   * ~~~
+   * @snippet snippets/doc_class_image.cc image
    *
    * @sa gf::Texture
    */
@@ -97,6 +85,80 @@ inline namespace v1 {
      * Creates an empty image.
      */
     Image();
+
+    /**
+     * @brief Create the image
+     *
+     * The initial color of the pixels is opaque white
+     *
+     * @param size Size of the image
+     */
+    Image(Vector2i size);
+
+    /**
+     * @brief Create the image and fill it with a unique color
+     *
+     * @param size Size of the image
+     * @param color Fill color
+     */
+    Image(Vector2i size, Color4u color);
+
+    /**
+     * @brief Create the image and fill it with a unique color
+     *
+     * @param size Size of the image
+     * @param color Fill color
+     */
+    Image(Vector2i size, Color3u color);
+
+    /**
+     * @brief Create the image from an array of pixels
+     *
+     * The @a pixels array is assumed to contain pixels with format given by
+     * @a format pixel format, and have the given @a size. If not, this is an
+     * undefined behavior.
+     *
+     * @param size Size of the image
+     * @param pixels Array of pixels to copy to the image
+     * @param format Format of the pixels
+     */
+    Image(Vector2i size, const uint8_t *pixels, PixelFormat format = PixelFormat::Rgba32);
+
+    /**
+     * @brief Load the image from a file on disk
+     *
+     * The supported image formats are bmp, png, tga, jpg, gif,
+     * psd, hdr and pic. Some format options are not supported,
+     * like progressive jpeg.
+     * If this function fails, the image is left unchanged.
+     *
+     * @param filename Path of the image file to load
+     */
+    Image(const Path& filename);
+
+    /**
+     * @brief Load the image from a file in memory
+     *
+     * The supported image formats are bmp, png, tga, jpg, gif,
+     * psd, hdr and pic. Some format options are not supported,
+     * like progressive jpeg.
+     * If this function fails, the image is left unchanged.
+     *
+     * @param content Content of the file data in memory
+     */
+    Image(ArrayRef<uint8_t> content);
+
+    /**
+     * @brief Load the image from a custom stream
+     *
+     * The supported image formats are bmp, png, tga, jpg, gif,
+     * psd, hdr and pic. Some format options are not supported,
+     * like progressive jpeg.
+     * If this function fails, the image is left unchanged.
+     *
+     * @param stream Source stream to read from
+    */
+    Image(InputStream& stream);
 
     /**
      * @brief Default copy constructor
@@ -119,87 +181,6 @@ inline namespace v1 {
     Image& operator=(Image&&) = default;
 
     /**
-     * @brief Create the image and fill it with a unique color
-     *
-     * @param size  Size of the image
-     * @param color Fill color
-     */
-    void create(Vector2i size, const Color4u& color = Color4u{0x00, 0x00, 0x00, 0xFF});
-
-    /**
-     * @brief Create the image from an array of pixels
-     *
-     * The @a pixel array is assumed to contain 32-bits RGBA pixels,
-     * and have the given @a size. If not, this is an undefined behavior.
-     * If @a pixels is null, an empty image is created.
-     *
-     * @param size   Size of the image
-     * @param pixels Array of pixels to copy to the image
-     */
-    void create(Vector2i size, const uint8_t* pixels);
-
-    /**
-     * @brief Create the image from an array of pixels
-     *
-     * The @a pixel array is assumed to contain 24-bits RGB pixels,
-     * and have the given @a size. If not, this is an undefined behavior.
-     * If @a pixels is null, an empty image is created.
-     *
-     * @param size   Size of the image
-     * @param pixels Array of pixels to copy to the image
-     */
-    void createRGB(Vector2i size, const uint8_t* pixels);
-
-    /**
-     * @brief Load the image from a file on disk
-     *
-     * The supported image formats are bmp, png, tga, jpg, gif,
-     * psd, hdr and pic. Some format options are not supported,
-     * like progressive jpeg.
-     * If this function fails, the image is left unchanged.
-     *
-     * @param filename Path of the image file to load
-     *
-     * @return true if loading was successful
-     *
-     * @sa loadFromMemory(), loadFromStream(), saveToFile()
-     */
-    bool loadFromFile(const Path& filename);
-
-    /**
-     * @brief Load the image from a file in memory
-     *
-     * The supported image formats are bmp, png, tga, jpg, gif,
-     * psd, hdr and pic. Some format options are not supported,
-     * like progressive jpeg.
-     * If this function fails, the image is left unchanged.
-     *
-     * @param data Pointer to the file data in memory
-     * @param length Length of the data to load, in bytes
-     *
-     * @return true if loading was successful
-     *
-     * @sa loadFromFile(), loadFromStream(), saveToFile()
-     */
-    bool loadFromMemory(const uint8_t* data, std::size_t length);
-
-    /**
-     * @brief Load the image from a custom stream
-     *
-     * The supported image formats are bmp, png, tga, jpg, gif,
-     * psd, hdr and pic. Some format options are not supported,
-     * like progressive jpeg.
-     * If this function fails, the image is left unchanged.
-     *
-     * @param stream Source stream to read from
-     *
-     * @return True if loading was successful
-     *
-     * @sa loadFromFile(), loadFromMemory()
-    */
-    bool loadFromStream(InputStream& stream);
-
-    /**
      * @brief Save the image to a file on disk
      *
      * The format of the image is automatically deduced from
@@ -210,8 +191,6 @@ inline namespace v1 {
      * @param filename Path of the file to save
      *
      * @return true if saving was successful
-     *
-     * @sa create, loadFromFile(), loadFromMemory(), loadFromStream()
      */
     bool saveToFile(const Path& filename) const;
 

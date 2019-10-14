@@ -25,7 +25,6 @@
 #include <gf/Unused.h>
 #include <gf/Vector.h>
 
-
 /// [message]
 using namespace gf::literals; // necessary to use _id
 
@@ -143,7 +142,3 @@ private:
   gf::MessageHandlerId m_onFoo, m_onBar, m_onBaz;
 };
 /// [short]
-
-int main() {
-  return 0;
-}

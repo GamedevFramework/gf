@@ -51,29 +51,7 @@ inline namespace v1 {
    *
    * Example:
    *
-   * ~~~{.cc}
-   * class MyDrawable : public gf::Drawable {
-   * public:
-   *
-   *    ...
-   *
-   *   virtual void draw(gf::RenderTarget& target, gf::RenderStates states) override {
-   *     // You can draw other high-level objects
-   *     target.draw(m_sprite, states);
-   *
-   *     // ... or use the low-level API
-   *     states.texture = &m_texture;
-   *     target.draw(m_vertices, states);
-   *
-   *   }
-   *
-   *
-   * private:
-   *   gf::Sprite m_sprite;
-   *   gf::Texture m_texture;
-   *   gf::VertexArray m_vertices;
-   * };
-   * ~~~
+   * @snippet snippets/doc_class_drawable.cc mydrawable
    *
    */
   class GF_API Drawable {

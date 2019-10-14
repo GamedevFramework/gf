@@ -153,6 +153,7 @@ else()
     graphics/EntityContainer.cc
     graphics/Font.cc
     graphics/Gamepad.cc
+    graphics/GraphicsHandle.cc
     graphics/GraphicsInfo.cc
     graphics/Grid.cc
     graphics/Keyboard.cc

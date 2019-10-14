@@ -35,44 +35,26 @@ inline namespace v1 {
 #endif
 
   RenderPipeline::RenderPipeline(Window& window)
-  : m_window(window)
+  : RenderTarget(window.getFramebufferSize())
+  , m_window(window)
   , m_current(0)
   {
-    initialize();
     Texture::bind(nullptr);
 
     Vector2i size = m_window.getFramebufferSize();
 
     for (auto& buffer : m_buffers) {
-      buffer.name = 0;
-
-      if (!buffer.texture.create(size)) {
-        continue;
-      }
-
+      Texture texture(size);
+      buffer.texture = std::move(texture);
       buffer.texture.setSmooth();
 
-      GLuint name;
-      glCheck(glGenFramebuffers(1, &name));
-      buffer.name = static_cast<unsigned>(name);
-
-      glCheck(glBindFramebuffer(GL_FRAMEBUFFER, name));
+      glCheck(glBindFramebuffer(GL_FRAMEBUFFER, buffer.framebuffer));
       glCheck(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, buffer.texture.getName(), 0));
       assert(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
       glCheck(glBindFramebuffer(GL_FRAMEBUFFER, 0));
     }
 
-    glCheck(glBindFramebuffer(GL_FRAMEBUFFER, m_buffers[m_current].name));
-  }
-
-  RenderPipeline::~RenderPipeline() {
-    for (auto& buffer : m_buffers) {
-      if (buffer.name != 0) {
-        GLuint name = static_cast<GLuint>(buffer.name);
-        glCheck(glDeleteFramebuffers(1, &name));
-      }
-    }
-
+    glCheck(glBindFramebuffer(GL_FRAMEBUFFER, m_buffers[m_current].framebuffer));
   }
 
   void RenderPipeline::addEffect(Effect& effect) {
@@ -89,13 +71,11 @@ inline namespace v1 {
     Vector2i size = m_window.getFramebufferSize();
 
     for (auto& buffer : m_buffers) {
-      if (!buffer.texture.create(size)) {
-        continue;
-      }
-
+      Texture texture(size);
+      buffer.texture = std::move(texture);
       buffer.texture.setSmooth();
 
-      glCheck(glBindFramebuffer(GL_FRAMEBUFFER, buffer.name));
+      glCheck(glBindFramebuffer(GL_FRAMEBUFFER, buffer.framebuffer));
       glCheck(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, buffer.texture.getName(), 0));
       assert(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
       glCheck(glBindFramebuffer(GL_FRAMEBUFFER, 0));
@@ -118,7 +98,7 @@ inline namespace v1 {
       postProcessing.setEffect(effect);
 
       m_current = 1 - m_current;
-      glCheck(glBindFramebuffer(GL_FRAMEBUFFER, m_buffers[m_current].name));
+      glCheck(glBindFramebuffer(GL_FRAMEBUFFER, m_buffers[m_current].framebuffer));
 
       RenderTarget::clear();
       RenderTarget::draw(postProcessing);
@@ -139,7 +119,7 @@ inline namespace v1 {
     // prepare for next frame
 
     m_current = 0;
-    glCheck(glBindFramebuffer(GL_FRAMEBUFFER, m_buffers[m_current].name));
+    glCheck(glBindFramebuffer(GL_FRAMEBUFFER, m_buffers[m_current].framebuffer));
   }
 
   void RenderPipeline::onFramebufferResize(Vector2i size) {

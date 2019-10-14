@@ -50,19 +50,35 @@ inline namespace v1 {
   }
 
   Vector2f Random::computePosition(const RectF& area) {
-    std::uniform_real_distribution<float> distX(0.0f, area.width);
-    std::uniform_real_distribution<float> distY(0.0f, area.height);
-    float x = area.left + distX(m_engine);
-    float y = area.top + distY(m_engine);
+    std::uniform_real_distribution<float> distX(area.min.x, area.max.x);
+    std::uniform_real_distribution<float> distY(area.min.y, area.max.y);
+    float x = distX(m_engine);
+    float y = distY(m_engine);
     return { x, y };
   }
 
   Vector2i Random::computePosition(const RectI& area) {
-    std::uniform_int_distribution<int> distX(0, area.width);
-    std::uniform_int_distribution<int> distY(0, area.height);
-    int x = area.left + distX(m_engine);
-    int y = area.top + distY(m_engine);
+    std::uniform_int_distribution<int> distX(area.min.x, area.max.x);
+    std::uniform_int_distribution<int> distY(area.min.y, area.max.y);
+    int x = distX(m_engine);
+    int y = distY(m_engine);
     return { x, y };
+  }
+
+  Vector2f Random::computePosition(const CircF& area) {
+    float angle = computeAngle();
+    float radius = computeRadius(0.0f, area.radius);
+    return radius * gf::unit(angle);
+  }
+
+  float Random::computeRadius(float radiusMin, float radiusMax) {
+    std::uniform_real_distribution<float> dist(gf::square(radiusMin), gf::square(radiusMax));
+    return std::sqrt(dist(m_engine));
+  }
+
+  float Random::computeAngle() {
+    std::uniform_real_distribution<float> dist(0.0f, 2.0f * gf::Pi);
+    return dist(m_engine);
   }
 
 

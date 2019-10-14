@@ -34,9 +34,9 @@ inline namespace v1 {
 #endif
 
   RenderWindow::RenderWindow(Window& window)
-  : m_window(window)
+  : RenderTarget(window.getFramebufferSize())
+  , m_window(window)
   {
-    initialize();
   }
 
   Vector2i RenderWindow::getSize() const {
