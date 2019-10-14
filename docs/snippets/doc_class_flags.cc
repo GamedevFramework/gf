@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -18,28 +18,43 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#include <gf/Clock.h>
-#include <gf/Event.h>
-#include <gf/Window.h>
+#include <gf/Flags.h>
+#include <gf/Unused.h>
 
-void dummyWindowUsage() {
-  /// [window]
-  gf::Window window("My window", { 640, 480 }, gf::WindowHints::Resizable | gf::WindowHints::Visible);
+/// [flags_def]
+enum class AnimalProperties {
+  HasClaws     = 0x01,
+  CanFly       = 0x02,
+  EatsFish     = 0x04,
+  IsEndangered = 0x08,
+};
 
-  while (window.isOpen()) {
-    // process events
+namespace gf {
+  template<>
+  struct EnableBitmaskOperators<AnimalProperties> {
+    static constexpr bool value = true;
+  };
+}
+/// [flags_def]
 
-    gf::Event event;
+void dummyFlagsUsage() {
 
-    while (window.pollEvent(event)) {
-      if (event.type == gf::EventType::Closed) {
-        window.close();
-      }
-    }
+  /// [flags_usage]
+  using gf::operator|;
 
-    // ...
+  gf::Flags<AnimalProperties> seahawk = AnimalProperties::CanFly | AnimalProperties::EatsFish;
+  seahawk |= AnimalProperties::IsEndangered;
 
-  }
-  /// [window]
+  bool b = seahawk.test(AnimalProperties::HasClaws); // false
+  /// [flags_usage]
 
+  gf::unused(b);
+
+  /// [flags_all_none]
+  gf::Flags<AnimalProperties> unicorn(gf::All);
+
+  gf::Flags<AnimalProperties> rat(gf::None);
+  /// [flags_all_none]
+
+  gf::unused(unicorn, rat);
 }

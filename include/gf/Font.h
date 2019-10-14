@@ -66,7 +66,7 @@ inline namespace v1 {
    *
    * Fonts can be loaded from a file, from memory or from a custom
    * stream, and supports the most common types of fonts. See
-   * the `loadFromFile()` function for the complete list of supported formats.
+   * the constructors for the complete list of supported formats.
    *
    * Once it is loaded, a gf::Font instance provides three
    * types of information about the font:
@@ -99,28 +99,7 @@ inline namespace v1 {
    *
    * Usage example:
    *
-   * ~~~{.cc}
-   * // Declare a new font
-   * gf::Font font;
-   *
-   * // Load it from a file
-   * if (!font.loadFromFile("arial.ttf"))
-   * {
-   *     // error...
-   * }
-   *
-   * // Create a text which uses our font
-   * gf::Text text1;
-   * text1.setString("Hello World!")
-   * text1.setFont(font);
-   * text1.setCharacterSize(30);
-   *
-   * // Create another text using the same font, but with different parameters
-   * gf::Text text2;
-   * text2.setString("Goodbye world!");
-   * text2.setFont(font);
-   * text2.setCharacterSize(50);
-   * ~~~
+   * @snippet snippets/doc_class_font.cc font
    *
    * Apart from loading font files, and passing them to instances
    * of gf::Text, you should normally not have to deal directly

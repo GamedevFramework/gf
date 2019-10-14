@@ -67,21 +67,8 @@ inline namespace v1 {
    * uses a local gf::Texture instance for creating a sprite).
    *
    * Usage example:
-   * ~~~{.cc}
-   * // Declare and load a texture
-   * gf::Texture texture;
-   * texture.loadFromFile("texture.png");
    *
-   * // Create a sprite
-   * gf::Sprite sprite;
-   * sprite.setTexture(texture);
-   * sprite.setTextureRect({ 0.1f, 0.1f, 0.5f, 0.3f });
-   * sprite.setColor({ 1.0f, 1.0f, 1.0f, 0.8f });
-   * sprite.setPosition({ 100.0f, 25.0f });
-   *
-   * // Draw it
-   * renderer.draw(sprite);
-   * ~~~
+   * @snippet snippets/doc_class_sprite.cc sprite
    *
    * @sa gf::Texture, gf::Transformable, gf::SpriteBatch
    */

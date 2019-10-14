@@ -47,25 +47,15 @@ inline namespace v1 {
    * associated with either a native system cursor or a custom
    * cursor.
    *
-   * After loading the cursor the graphical appearance
-   * with either loadFromPixels() or loadFromSystem(), the
-   * cursor can be changed with gf::Window::setMouseCursor().
+   * After construction, the cursor can be changed with
+   * gf::Window::setMouseCursor().
    *
    * The behaviour is undefined if the cursor is destroyed while
    * in use by the window.
    *
    * Usage example:
-   * @code
-   * gf::Window window;
    *
-   * // ... create window as usual ...
-   *
-   * gf::Cursor cursor;
-   *
-   * if (cursor.loadFromSystem(gf::Cursor::Hand)) {
-   *   window.setMouseCursor(cursor);
-   * }
-   * @endcode
+   * @snippet snippets/doc_class_cursor.cc cursor
    *
    * @see gf::Window::setMouseCursor()
    */
@@ -93,10 +83,7 @@ inline namespace v1 {
     /**
      * @brief Default constructor
      *
-     * This constructor doesn't actually create the cursor;
-     * initially the new instance is invalid and must not be
-     * used until either loadFromPixels() or loadFromSystem()
-     * is called and successfully created a cursor.
+     * This constructor doesn't actually create the cursor.
      */
     Cursor();
 

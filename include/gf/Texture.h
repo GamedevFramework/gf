@@ -285,7 +285,7 @@ inline namespace v1 {
    * However, if you want to perform some modifications on the pixels
    * before creating the final texture, you can load your file to a
    * gf::Image, do whatever you need with the pixels, and then call
-   * Texture::loadFromImage.
+   * the appropriate constructor.
    *
    * Like gf::Image, gf::Texture can handle a unique internal
    * representation of pixels, which is RGBA. This means
@@ -294,24 +294,7 @@ inline namespace v1 {
    *
    * Usage example:
    *
-   * ~~~{.cc}
-   * // This example shows the most common use of gf::Texture:
-   * // drawing a sprite
-   *
-   * // Load a texture from a file
-   * gf::Texture texture;
-   *
-   * if (!texture.loadFromFile("texture.png")) {
-   *   return -1;
-   * }
-   *
-   * // Assign it to a sprite
-   * gf::Sprite sprite;
-   * sprite.setTexture(texture);
-   *
-   * // Draw the textured sprite
-   * window.draw(sprite);
-   * ~~~
+   * @snippet snippets/doc_class_texture.cc texture
    *
    * @sa gf::Sprite, gf::Image, gf::RenderTexture
    */
@@ -385,8 +368,6 @@ inline namespace v1 {
      * to pixels if necessary (texture may be padded or flipped).
      *
      * @return An image containing the texture's pixels
-     *
-     * @sa loadFromImage()
      */
     Image copyToImage() const;
 

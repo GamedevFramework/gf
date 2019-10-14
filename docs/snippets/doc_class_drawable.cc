@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -18,28 +18,32 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#include <gf/Clock.h>
-#include <gf/Event.h>
-#include <gf/Window.h>
+#include <gf/Drawable.h>
+#include <gf/RenderTarget.h>
+#include <gf/Sprite.h>
+#include <gf/Texture.h>
+#include <gf/Unused.h>
+#include <gf/VertexArray.h>
 
-void dummyWindowUsage() {
-  /// [window]
-  gf::Window window("My window", { 640, 480 }, gf::WindowHints::Resizable | gf::WindowHints::Visible);
+/// [mydrawable]
+class MyDrawable : public gf::Drawable {
+public:
 
-  while (window.isOpen()) {
-    // process events
+  // ...
 
-    gf::Event event;
+  virtual void draw(gf::RenderTarget& target, const gf::RenderStates& states) override {
+    // You can draw other high-level objects
+    target.draw(m_sprite, states);
 
-    while (window.pollEvent(event)) {
-      if (event.type == gf::EventType::Closed) {
-        window.close();
-      }
-    }
-
-    // ...
-
+    // ... or use the low-level API
+    gf::RenderStates localStates = states;
+    localStates.texture = &m_texture;
+    target.draw(m_vertices, localStates);
   }
-  /// [window]
 
-}
+private:
+  gf::Sprite m_sprite;
+  gf::Texture m_texture;
+  gf::VertexArray m_vertices;
+};
+/// [mydrawable]

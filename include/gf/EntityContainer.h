@@ -115,20 +115,8 @@ inline namespace v1 {
      *
      * Example:
      *
-     * ~~~{.cc}
-     *
-     * class Foo : public Entity {
-     *   ...
-     * };
-     *
-     * Foo foo;
-     * manager.addEntity(foo);
-     *
-     * ...
-     *
-     * Foo *removed = manager.removeTypedEntity<Foo>(&foo);
-     * removed->doSomething();
-     * ~~~
+     * @snippet snippets/doc_class_entity_container.cc entity
+     * @snippet snippets/doc_class_entity_container.cc remove
      *
      * @sa removeEntity()
      */

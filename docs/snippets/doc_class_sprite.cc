@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -18,28 +18,23 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#include <gf/Clock.h>
-#include <gf/Event.h>
-#include <gf/Window.h>
+#include <gf/RenderTarget.h>
+#include <gf/Sprite.h>
+#include <gf/Unused.h>
 
-void dummyWindowUsage() {
-  /// [window]
-  gf::Window window("My window", { 640, 480 }, gf::WindowHints::Resizable | gf::WindowHints::Visible);
+void dummySpriteUsage(gf::RenderTarget& renderer) {
+  /// [sprite]
+  // Declare and load a texture
+  gf::Texture texture("texture.png");
 
-  while (window.isOpen()) {
-    // process events
+  // Create a sprite
+  gf::Sprite sprite;
+  sprite.setTexture(texture);
+  sprite.setTextureRect(gf::RectF::fromPositionSize({ 0.1f, 0.1f }, { 0.5f, 0.3f }));
+  sprite.setColor({ 1.0f, 1.0f, 1.0f, 0.8f });
+  sprite.setPosition({ 100.0f, 25.0f });
 
-    gf::Event event;
-
-    while (window.pollEvent(event)) {
-      if (event.type == gf::EventType::Closed) {
-        window.close();
-      }
-    }
-
-    // ...
-
-  }
-  /// [window]
-
+  // Draw it
+  renderer.draw(sprite);
+  /// [sprite]
 }

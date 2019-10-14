@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -18,28 +18,19 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#include <gf/Clock.h>
-#include <gf/Event.h>
-#include <gf/Window.h>
+#include <gf/Color.h>
+#include <gf/Console.h>
+#include <gf/Unused.h>
 
-void dummyWindowUsage() {
-  /// [window]
-  gf::Window window("My window", { 640, 480 }, gf::WindowHints::Resizable | gf::WindowHints::Visible);
+void dummyConsoleUsage(gf::ConsoleFont& font) {
+  gf::Vector2i size(70, 40);
 
-  while (window.isOpen()) {
-    // process events
+  /// [console]
+  gf::Console console(font, size);
+  // A string with a red over black word, using predefined color control codes
+  console.setColorControl(gf::ConsoleColorControl1, gf::Color::Red, gf::Color::Black);
+  console.print({ 1, 1 }, "String with a %cred%c word.", gf::ConsoleColorControl1, gf::ConsoleColorControlStop);
+  /// [console]
 
-    gf::Event event;
-
-    while (window.pollEvent(event)) {
-      if (event.type == gf::EventType::Closed) {
-        window.close();
-      }
-    }
-
-    // ...
-
-  }
-  /// [window]
-
+  gf::unused(console);
 }

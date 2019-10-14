@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -18,28 +18,24 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#include <gf/Clock.h>
-#include <gf/Event.h>
-#include <gf/Window.h>
+#include <gf/RenderTarget.h>
+#include <gf/Sprite.h>
+#include <gf/Texture.h>
+#include <gf/Unused.h>
 
-void dummyWindowUsage() {
-  /// [window]
-  gf::Window window("My window", { 640, 480 }, gf::WindowHints::Resizable | gf::WindowHints::Visible);
+void dummyTextureUsage(gf::RenderTarget& renderer) {
+  /// [texture]
+  // This example shows the most common use of gf::Texture:
+  // drawing a sprite
 
-  while (window.isOpen()) {
-    // process events
+  // Load a texture from a file
+  gf::Texture texture("texture.png");
 
-    gf::Event event;
+  // Assign it to a sprite
+  gf::Sprite sprite;
+  sprite.setTexture(texture);
 
-    while (window.pollEvent(event)) {
-      if (event.type == gf::EventType::Closed) {
-        window.close();
-      }
-    }
-
-    // ...
-
-  }
-  /// [window]
-
+  // Draw the textured sprite
+  renderer.draw(sprite);
+  /// [texture]
 }

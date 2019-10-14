@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2018 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -18,28 +18,35 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#include <gf/Clock.h>
 #include <gf/Event.h>
+#include <gf/Unused.h>
 #include <gf/Window.h>
 
-void dummyWindowUsage() {
-  /// [window]
-  gf::Window window("My window", { 640, 480 }, gf::WindowHints::Resizable | gf::WindowHints::Visible);
+void doSomethingWithTheNewSize(gf::Vector2i size) {
+  gf::unused(size);
+}
 
-  while (window.isOpen()) {
-    // process events
+void dummyEventUsage(gf::Window& window) {
+  /// [event]
+  gf::Event event;
 
-    gf::Event event;
-
-    while (window.pollEvent(event)) {
-      if (event.type == gf::EventType::Closed) {
-        window.close();
-      }
+  while (window.pollEvent(event)) {
+    // Request for closing the window
+    if (event.type == gf::EventType::Closed) {
+      window.close();
     }
 
-    // ...
+    // The escape key was pressed
+    if (event.type == gf::EventType::KeyPressed && event.key.keycode == gf::Keycode::Escape) {
+      window.close();
+    }
 
+    // The window was resized
+    if (event.type == gf::EventType::Resized) {
+      doSomethingWithTheNewSize(event.size);
+    }
+
+    // etc ...
   }
-  /// [window]
-
+  /// [event]
 }

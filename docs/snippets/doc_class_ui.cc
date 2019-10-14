@@ -19,15 +19,13 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-#include <cstdlib>
-
 #include <gf/Event.h>
 #include <gf/Font.h>
 #include <gf/RenderWindow.h>
 #include <gf/UI.h>
 #include <gf/Window.h>
 
-int main() {
+void dummyUIUsage() {
 
   gf::Window window("UI", { 1024, 768 });
   gf::RenderWindow renderer(window);
@@ -102,5 +100,4 @@ int main() {
 
   }
 
-  return EXIT_SUCCESS;
 }

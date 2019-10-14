@@ -65,8 +65,7 @@ inline namespace v1 {
    *
    * All the functions that return an array of pixels follow
    * this rule, and all parameters that you pass to gf::Image
-   * functions (such as `loadFromMemory()`) must use this
-   * representation as well.
+   * constructors must use this representation as well.
    *
    * A gf::Image can be copied, but it is a heavy resource and
    * if possible you should always use (const) references to
@@ -74,23 +73,7 @@ inline namespace v1 {
    *
    * Usage example:
    *
-   * ~~~{.cc}
-   * // Load an image file from a file
-   * gf::Image background("background.jpg");
-   *
-   * // Create a 20x20 image filled with black color
-   * gf::Image image({ 20, 20 }, gf::Color4u{0xFF, 0xFF, 0xFF, 0xFF});
-   *
-   * // Make the top-left pixel transparent
-   * gf::Color4u color = image.getPixel({ 0, 0 });
-   * color.a = 0;
-   * image.setPixel({ 0, 0 }, color);
-   *
-   * // Save the image to a file
-   * if (!image.saveToFile("result.png")) {
-   *   return -1;
-   * }
-   * ~~~
+   * @snippet snippets/doc_class_image.cc image
    *
    * @sa gf::Texture
    */
@@ -208,8 +191,6 @@ inline namespace v1 {
      * @param filename Path of the file to save
      *
      * @return true if saving was successful
-     *
-     * @sa create, loadFromFile(), loadFromMemory(), loadFromStream()
      */
     bool saveToFile(const Path& filename) const;
 

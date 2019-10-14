@@ -74,11 +74,7 @@ inline namespace v1 {
     /**
      * @brief Desactivate the control.
      *
-     * This call is equivalent to:
-     *
-     * ~~~{.cc}
-     * this.setActive(false);
-     * ~~~
+     * This call is equivalent to calling `setActive()` with `false`.
      *
      * @sa Action::reset()
      */

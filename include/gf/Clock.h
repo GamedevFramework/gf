@@ -50,13 +50,7 @@ inline namespace v1 {
    *
    * Usage example:
    *
-   * ~~~{.cc}
-   * gf::Clock clock;
-   * ...
-   * gf::Time time1 = clock.getElapsedTime();
-   * ...
-   * gf::Time time2 = clock.restart();
-   * ~~~
+   * @snippet snippets/doc_class_clock.cc clock
    *
    * The gf::Time value returned by the clock can then be
    * converted to a number of seconds, milliseconds or even

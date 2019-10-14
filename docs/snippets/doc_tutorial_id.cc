@@ -18,28 +18,68 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#include <gf/Clock.h>
-#include <gf/Event.h>
-#include <gf/Window.h>
 
-void dummyWindowUsage() {
-  /// [window]
-  gf::Window window("My window", { 640, 480 }, gf::WindowHints::Resizable | gf::WindowHints::Visible);
+#include <cassert>
 
-  while (window.isOpen()) {
-    // process events
+#include <string>
 
-    gf::Event event;
+#include <gf/Id.h>
+#include <gf/Unused.h>
 
-    while (window.pollEvent(event)) {
-      if (event.type == gf::EventType::Closed) {
-        window.close();
-      }
-    }
+/// [using]
+using namespace gf::literals; // necessary to use _id
+/// [using]
 
-    // ...
+namespace {
 
+  std::string myInput() {
+    return "";
   }
-  /// [window]
+
+}
+
+void dummyIdUsage() {
+
+  {
+  /// [hash]
+  gf::Id id1 = gf::hash("C string");
+
+  std::string str("std::string");
+  gf::Id id2 = gf::hash(str);
+  /// [hash]
+
+  gf::unused(id1, id2);
+  }
+
+  {
+  /// [udl]
+  gf::Id id1 = "C string"_id;
+  gf::Id id2 = "std::string"_id;
+  /// [udl]
+
+  gf::unused(id1, id2);
+  }
+
+  {
+  /// [comptime]
+  static_assert("foobar"_id == 0x85944171f73967e8, "It works at compile-time!");
+  /// [comptime]
+  }
+
+  /// [switch]
+  std::string input = myInput();
+
+  switch (gf::hash(input)) {
+    case "Foo"_id:
+      // input is "Foo"
+      break;
+    case "Bar"_id:
+      // input is "Bar"
+      break;
+    case "Baz"_id:
+      // input is "Baz"
+      break;
+  }
+  /// [switch]
 
 }

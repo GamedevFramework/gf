@@ -542,12 +542,7 @@ inline namespace v1 {
      * with this function. The color control code gf::ConsoleColorControlStop
      * changes the colors back to their default.
      *
-     * ~~~{.cc}
-     * gf::Console console(font, size);
-     * // A string with a red over black word, using predefined color control codes
-     * console.setColorControl(gf::ConsoleColorControl1, gf::Color::Red, gf::Color::Black);
-     * console.print({ 1, 1 }, "String with a %cred%c word.", gf::ConsoleColorControl1, gf::ConsoleColorControlStop);
-     * ~~~
+     * @snippet snippets/doc_class_console.cc console
      */
     void setColorControl(ConsoleColorControl ctrl, const Color4f& foreground, const Color4f& background);
 

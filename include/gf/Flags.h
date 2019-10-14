@@ -34,35 +34,13 @@ inline namespace v1 {
    * @ingroup core
    * @brief Bitfield relying on an enumeration
    *
-   * ~~~
-   * enum class AnimalProperties {
-   *   HasClaws     = 0x01,
-   *   CanFly       = 0x02,
-   *   EatsFish     = 0x04,
-   *   IsEndangered = 0x08,
-   * };
-   *
-   * namespace gf {
-   *   template<>
-   *   struct EnableBitmaskOperators<AnimalProperties> {
-   *     static constexpr bool value = true;
-   *   };
-   * }
-   *
-   * gf::Flags<AnimalProperties> seahawk = AnimalProperties::CanFly | AnimalProperties::EatsFish;
-   * seahawk |= AnimalProperties::IsEndangered;
-   *
-   * bool b = seahawk.test(AnimalProperties::HasClaws); // false
-   * ~~~
+   * @snippet snippets/doc_class_flags.cc flags_def
+   * @snippet snippets/doc_class_flags.cc flags_usage
    *
    * If you do not initialize flags, then the state is undefined. You can use
    * semantic constants gf::All and gf::None to set all the flags or none.
    *
-   * ~~~{.cc}
-   * gf::Flags<AnimalProperties> unicorn(gf::All);
-   *
-   * gf::Flags<AnimalProperties> rat(gf::None);
-   * ~~~
+   * @snippet snippets/doc_class_flags.cc flags_all_none
    */
   template<typename E>
   class Flags {

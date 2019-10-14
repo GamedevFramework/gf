@@ -18,7 +18,7 @@ In this section, we will see how to defined and use messages in your game.
 
 A message is just a structure with your own fields. In gf, a message must derive from gf::Message and define a static unique type.
 
-@snippet snippets/doc_messages.cc message
+@snippet snippets/doc_tutorial_messages.cc message
 
 This piece of code defines a message `HeroPosition` with a single field: `position`. The type of the message is `"HeroPosition"_id` that is transformed at compile time in an integer of type `gf::Id`.
 
@@ -26,17 +26,17 @@ This piece of code defines a message `HeroPosition` with a single field: `positi
 
 To send a message, you need a gf::MessageManager. Here, we suppose we have a global variable called `messageManager` of this type (see also @ref singletons).
 
-@snippet snippets/doc_messages.cc manager
+@snippet snippets/doc_tutorial_messages.cc manager
 
 Then, you only have to call gf::MessageManager::sendMessage() with an instance of your message.
 
-@snippet snippets/doc_messages.cc send
+@snippet snippets/doc_tutorial_messages.cc send
 
 @subsection messages_recv Receiving a message
 
 To receive a message, you have to register a message handler in the message manager. A message handler is a function that will be called when a message of a given type is sent. This function can be a free function, or a member function. gf::MessageManager provides a shortcut for this last (very comon) case.
 
-@snippet snippets/doc_messages.cc recv
+@snippet snippets/doc_tutorial_messages.cc recv
 
 @section messages_more More about gf::MessageManager
 
@@ -54,6 +54,6 @@ A common error is to register an handler as a method of an object and to delete 
 
 A good way to prevent this type of error for short life objects is to keep the handler ids and to remove the handlers in the destructor of the class.
 
-@snippet snippets/doc_messages.cc short
+@snippet snippets/doc_tutorial_messages.cc short
 
 */

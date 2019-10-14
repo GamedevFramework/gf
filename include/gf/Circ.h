@@ -52,24 +52,11 @@ inline namespace v1 {
    * - gf::CircF with `float` as `T`
    * - gf::CircD with `double` as `T`
    *
-   * So that you don't have to care about the temlate syntax.
+   * So that you don't have to care about the template syntax.
    *
    * Usage example:
    *
-   * ~~~{.cc}
-   * // Define a circle, with a center at  (10, 10) and a radius of 20
-   * gf::CircI c1({ 10, 10 }, 20);
-   *
-   * // Define a circle with a center at (0, 0) and a radius of 2
-   * gf::CircI c2({ 0, 0 }, 2);
-   *
-   * // Test intersections with the point (3, 1)
-   * bool b1 = c1.contains({ 3, 1 }); // true
-   * bool b2 = c2.contains({ 3, 1 }); // false
-   *
-   * // Test the intersection between c1 and c2
-   * bool b3 = c1.intersects(c2); // true
-   * ~~~
+   * @snippet snippets/doc_struct_circ.cc circ
    */
   template<typename T>
   struct Circ : Ball<T, 2> {
