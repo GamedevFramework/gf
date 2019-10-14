@@ -1,5 +1,22 @@
 # ChangeLog for gf
 
+## gf 0.14.0 (14 Oct 2019)
+
+- Core (gfcore)
+  - Add gf::array()
+  - Add gf::Random::computeRadius(), gf::Random::computeAngle()
+  - Add gf::Random::computePosition() (uniformly in a circle)
+  - gf::Rect now inherits from gf::Box
+  - Remove gf::Rect constructor and add static functions for creating rectangles
+  - gf::Circ now inherits from gf::Ball
+  - Improve math functions regarding type conversions
+- Graphics (gf)
+  - Add gf::GraphicsHandle and make several class use it
+- Tools and games
+- Misc
+  - Make examples compilable in documentation
+  - Remove all loadFrom* methods and replace them by constructors
+
 ## gf 0.13.0 (14 Jul 2019)
 
 - Core (gfcore)
