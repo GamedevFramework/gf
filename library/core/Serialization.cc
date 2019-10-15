@@ -166,7 +166,7 @@ inline namespace v1 {
     writeSizeHeader(size);
 
     if (size > 0) {
-      m_stream->write(ArrayRef<uint8_t>(reinterpret_cast<const uint8_t *>(data), size));
+      m_stream->write(gf::array(reinterpret_cast<const uint8_t *>(data), size));
     }
   }
 

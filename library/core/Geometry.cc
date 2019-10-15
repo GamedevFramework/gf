@@ -423,9 +423,9 @@ inline namespace v1 {
       }
 
       if (maxDistance > distance) {
-        simplifyPointsRecursive(ArrayRef<Vector2f>(points.begin(), maxIndex + 1), distance, result);
+        simplifyPointsRecursive(gf::array(points.begin(), maxIndex + 1), distance, result);
         result.push_back(points[maxIndex]);
-        simplifyPointsRecursive(ArrayRef<Vector2f>(points.begin() + maxIndex, points.getSize() - maxIndex), distance, result);
+        simplifyPointsRecursive(gf::array(points.begin() + maxIndex, points.getSize() - maxIndex), distance, result);
       }
     }
 

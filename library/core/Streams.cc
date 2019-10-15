@@ -312,7 +312,7 @@ inline namespace v1 {
       uInt written = BufferSize - m_stream.avail_out;
 
       if (written > 0) {
-        std::size_t flushed = m_compressed->write(ArrayRef<uint8_t>(m_buffer, written));
+        std::size_t flushed = m_compressed->write(gf::array(m_buffer, written));
         assert(flushed == written);
 
         m_stream.next_out = m_buffer;
@@ -336,7 +336,7 @@ inline namespace v1 {
       uInt written = BufferSize - m_stream.avail_out;
 
       if (written > 0) {
-        std::size_t flushed = m_compressed->write(ArrayRef<uint8_t>(m_buffer, written));
+        std::size_t flushed = m_compressed->write(gf::array(m_buffer, written));
         assert(flushed == written);
 
         m_stream.next_out = m_buffer;
