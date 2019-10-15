@@ -57,16 +57,24 @@ inline namespace v1 {
     }
   }
 
-  void SquareMap::setTransparent(Vector2i pos) {
-    m_cells(pos).set(CellProperty::Transparent);
+  void SquareMap::setTransparent(Vector2i pos, bool transparent) {
+    if (transparent) {
+      m_cells(pos).set(CellProperty::Transparent);
+    } else {
+      m_cells(pos).reset(CellProperty::Transparent);
+    }
   }
 
   bool SquareMap::isTransparent(Vector2i pos) const {
     return m_cells(pos).test(CellProperty::Transparent);
   }
 
-  void SquareMap::setWalkable(Vector2i pos) {
-    m_cells(pos).set(CellProperty::Walkable);
+  void SquareMap::setWalkable(Vector2i pos, bool walkable) {
+    if (walkable) {
+      m_cells(pos).set(CellProperty::Walkable);
+    } else {
+      m_cells(pos).reset(CellProperty::Walkable);
+    }
   }
 
   bool SquareMap::isWalkable(Vector2i pos) const {

@@ -172,7 +172,7 @@ inline namespace v1 {
      *
      * @sa isTransparent()
      */
-    void setTransparent(Vector2i pos);
+    void setTransparent(Vector2i pos, bool transparent = true);
 
     /**
      * @brief Check if a cell is transparent
@@ -190,7 +190,7 @@ inline namespace v1 {
      *
      * @sa isWalkable()
      */
-    void setWalkable(Vector2i pos);
+    void setWalkable(Vector2i pos, bool walkable = true);
 
     /**
      * @brief Check if a cell is walkable
