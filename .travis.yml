@@ -21,10 +21,10 @@ addons:
 matrix:
   include:
     - os: linux
-      dist: xenial
+      dist: bionic
       compiler: gcc
     - os: linux
-      dist: xenial
+      dist: bionic
       compiler: clang
     - os: osx
 
