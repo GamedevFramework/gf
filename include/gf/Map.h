@@ -169,6 +169,7 @@ inline namespace v1 {
      * @brief Make a cell transparent
      *
      * @param pos The position of the cell
+     * @param transparent The new transparent status of the cell
      *
      * @sa isTransparent()
      */
@@ -187,6 +188,7 @@ inline namespace v1 {
      * @brief Make a cell walkable
      *
      * @param pos The position of the cell
+     * @param walkable The new walkable status of the cell
      *
      * @sa isWalkable()
      */
