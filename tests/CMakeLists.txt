@@ -30,4 +30,8 @@ target_include_directories(gf_tests
     ${CMAKE_CURRENT_SOURCE_DIR}/googletest/googletest
 )
 
-target_link_libraries(gf_tests gf0)
+target_link_libraries(gf_tests
+  PRIVATE
+    gf0
+    Threads::Threads
+)

@@ -254,10 +254,8 @@ target_compile_definitions(gf0
 target_include_directories(gfcore0
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
-    ${Boost_INCLUDE_DIRS}
-    ${ZLIB_INCLUDE_DIRS}
   PRIVATE
-    ${CMAKE_CURRENT_BINARY_DIR}
+    "${CMAKE_CURRENT_BINARY_DIR}"
     "${CMAKE_CURRENT_SOURCE_DIR}/vendor/stb"
 )
 
@@ -265,9 +263,7 @@ target_include_directories(gf0
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
   PRIVATE
-    ${SDL2_INCLUDE_DIR}
-    ${FREETYPE_INCLUDE_DIRS}
-    ${CMAKE_CURRENT_BINARY_DIR}
+    "${CMAKE_CURRENT_BINARY_DIR}"
     "${CMAKE_CURRENT_SOURCE_DIR}"
     "${CMAKE_CURRENT_SOURCE_DIR}/vendor/pugixml/src"
     "${CMAKE_CURRENT_SOURCE_DIR}/vendor/nuklear"
@@ -286,28 +282,24 @@ else()
 endif()
 
 target_link_libraries(gfcore0
-  ${Boost_LIBRARIES}
-  ${ZLIB_LIBRARIES}
+  PUBLIC
+    Boost::boost
+    Boost::filesystem
+  PRIVATE
+    ZLIB::ZLIB
 )
 
 target_link_libraries(gf0
-  ${SDL2_LIBRARY}
-  ${FREETYPE_LIBRARIES}
-  gfcore0
+  PUBLIC
+    gfcore0
+  PRIVATE
+    SDL2::Core
+    Freetype::Freetype
 )
 
 if (APPLE)
   target_link_libraries(gf0
     ${OPENGL_gl_LIBRARY}
-  )
-endif()
-
-# workaround for Travis-CI
-# see: https://bugs.launchpad.net/ubuntu/+source/gcc-5/+bug/1568899
-if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-  target_link_libraries(gf0
-    gcc_s
-    gcc
   )
 endif()
 
