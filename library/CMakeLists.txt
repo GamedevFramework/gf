@@ -299,7 +299,8 @@ target_link_libraries(gf0
 
 if (APPLE)
   target_link_libraries(gf0
-    ${OPENGL_gl_LIBRARY}
+    PRIVATE
+      ${OPENGL_gl_LIBRARY}
   )
 endif()
 
