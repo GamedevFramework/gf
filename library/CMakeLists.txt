@@ -295,6 +295,7 @@ target_link_libraries(gf0
   PRIVATE
     SDL2::Core
     Freetype::Freetype
+    ZLIB::ZLIB
 )
 
 if (APPLE)

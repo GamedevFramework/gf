@@ -1,3 +1,4 @@
+find_package(Threads REQUIRED)
 
 add_executable(gf_tests
   main.cc
