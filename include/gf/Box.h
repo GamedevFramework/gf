@@ -181,7 +181,7 @@ inline namespace v1 {
     /**
      * @brief Check if a box is totally inside the box
      *
-     * @param box The box to test
+     * @param other Another box to test
      * @returns True if the tested box is inside the current box
      */
     constexpr bool contains(const Box<T, N>& other) const noexcept {
