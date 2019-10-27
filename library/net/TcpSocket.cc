@@ -61,7 +61,7 @@ inline namespace v1 {
       }
 
       struct addrinfo *rp = nullptr;
-      SocketHandle sock;
+      SocketHandle sock = InvalidSocketHandle;
 
       for (rp = result; rp != nullptr; rp = rp->ai_next) {
         sock = ::socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
@@ -103,7 +103,7 @@ inline namespace v1 {
 
 #ifdef _WIN32
   SocketDataResult TcpSocket::sendRawBytes(ArrayRef<uint8_t> buffer) {
-    int res = ::send(getHandle(), static_cast<const char *>(buffer.getData()), static_cast<int>(buffer.getSize()), NoFlag);
+    int res = ::send(getHandle(), reinterpret_cast<const char *>(buffer.getData()), static_cast<int>(buffer.getSize()), NoFlag);
 
     if (res == SOCKET_ERROR) {
       gf::Log::error("Error while sending data: %d\n",  WSAGetLastError());
@@ -114,7 +114,7 @@ inline namespace v1 {
   }
 
   SocketDataResult TcpSocket::recvRawBytes(BufferRef<uint8_t> buffer) {
-    int res = ::recv(getHandle(), static_cast<char *>(buffer.getData()), static_cast<int>(buffer.getSize()), NoFlag);
+    int res = ::recv(getHandle(), reinterpret_cast<char *>(buffer.getData()), static_cast<int>(buffer.getSize()), NoFlag);
 
     if (res == SOCKET_ERROR) {
       gf::Log::error("Error while receiving data: %d\n",  WSAGetLastError());

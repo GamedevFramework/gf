@@ -23,6 +23,13 @@
  */
 #include <gf/SocketGuard.h>
 
+#ifdef _WIN32
+#include <atomic>
+#include <stdexcept>
+
+#include <winsock2.h>
+#endif
+
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
@@ -35,7 +42,7 @@ inline namespace v1 {
   {
     if (g_winsock.fetch_add(1) == 0) { // we are the first
       WSADATA wsaData;
-      auto res = ::WSAStartup(MAKEWORD(2, 2), &wsaData));
+      auto res = ::WSAStartup(MAKEWORD(2, 2), &wsaData);
 
       if (res != 0) {
         throw std::runtime_error("Unable to initialize the Winsock2 library.\n");

@@ -349,6 +349,13 @@ if (APPLE)
   )
 endif()
 
+if (WIN32)
+  target_link_libraries(gfnet0
+    PUBLIC
+      ws2_32
+  )
+endif()
+
 set_target_properties(gfcore0
   PROPERTIES
   VERSION ${PROJECT_VERSION}
