@@ -34,9 +34,12 @@ inline namespace v1 {
 
   class GF_API TcpListener : public Socket {
   public:
-    TcpListener(const std::string& service);
+    TcpListener(const std::string& service, SocketFamily family = SocketFamily::Unspec);
 
     TcpSocket accept();
+
+  private:
+    static SocketHandle nativeBindListen(const std::string& service, SocketFamily family);
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

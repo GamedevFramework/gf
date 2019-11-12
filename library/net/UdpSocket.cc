@@ -21,7 +21,7 @@
  * Part of this file comes from SFML, with the same license:
  * Copyright (C) 2007-2015 Laurent Gomila (laurent@sfml-dev.org)
  */
-#include <gf/TcpSocket.h>
+#include <gf/UdpSocket.h>
 
 #include <cstring>
 
@@ -40,20 +40,14 @@ namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
 #endif
-  TcpSocket::TcpSocket(const std::string& host, const std::string& service, SocketFamily family)
-  : Socket(nativeConnect(host, service, family))
-  {
 
+  UdpSocket::UdpSocket(const std::string& service, SocketFamily family)
+  : Socket(nativeBind(service, family))
+  {
   }
 
-  TcpSocket::TcpSocket(SocketHandle handle)
-  : Socket(handle)
-  {
-
-  }
-
-  SocketDataResult TcpSocket::sendRawBytes(ArrayRef<uint8_t> buffer) {
-    int res = ::send(getHandle(), sendBufferPointer(buffer), sendBufferLength(buffer), NoFlag);
+  SocketDataResult UdpSocket::sendRawBytesTo(ArrayRef<uint8_t> buffer, const SocketAddress& address) {
+    auto res = ::sendto(getHandle(), sendBufferPointer(buffer), sendBufferLength(buffer), NoFlag, reinterpret_cast<const sockaddr*>(&address.m_storage), address.m_length);
 
     if (res == InvalidCommunication) {
       gf::Log::error("Error while sending data: %d\n",  getErrorCode());
@@ -63,24 +57,20 @@ inline namespace v1 {
     return { SocketStatus::Data, static_cast<std::size_t>(res) };
   }
 
-  SocketDataResult TcpSocket::recvRawBytes(BufferRef<uint8_t> buffer) {
-    int res = ::recv(getHandle(), recvBufferPointer(buffer), recvBufferLength(buffer), NoFlag);
+  SocketDataResult UdpSocket::recvRawBytesFrom(BufferRef<uint8_t> buffer, SocketAddress& address) {
+    address.m_length = sizeof(sockaddr_storage);
+    auto res = ::recvfrom(getHandle(), recvBufferPointer(buffer), recvBufferLength(buffer), NoFlag, reinterpret_cast<sockaddr*>(&address.m_storage), &address.m_length);
 
     if (res == InvalidCommunication) {
       gf::Log::error("Error while receiving data: %d\n",  getErrorCode());
       return { SocketStatus::Error, 0u };
     }
 
-    if (res == 0) {
-      return { SocketStatus::Close, 0u };
-    }
-
     return { SocketStatus::Data, static_cast<std::size_t>(res) };
   }
 
-
-  SocketHandle TcpSocket::nativeConnect(const std::string& host, const std::string& service, SocketFamily family) {
-    auto addresses = getRemoteAddressInfo(host, service, SocketType::Tcp, family);
+  SocketHandle UdpSocket::nativeBind(const std::string& service, SocketFamily family) {
+    auto addresses = getLocalAddressInfo(service, SocketType::Udp, family);
 
     for (auto info : addresses) {
       SocketHandle sock = ::socket(static_cast<int>(info.family), static_cast<int>(info.type), 0);
@@ -89,7 +79,7 @@ inline namespace v1 {
         continue;
       }
 
-      if (::connect(sock, info.address.getData(), info.address.getLength()) != 0) {
+      if (::bind(sock, info.address.getData(), info.address.getLength()) != 0) {
         nativeCloseSocket(sock);
         continue;
       }
@@ -97,10 +87,9 @@ inline namespace v1 {
       return sock;
     }
 
-    gf::Log::error("Unable to connect to '%s:%s'\n", host.c_str(), service.c_str());
+    gf::Log::error("Unable to bind service '%s'\n", service.c_str());
     return InvalidSocketHandle;
   }
-
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

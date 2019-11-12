@@ -18,37 +18,58 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#ifndef GF_TCP_SOCKET_H
-#define GF_TCP_SOCKET_H
+#ifndef GF_SOCKET_ADDRESS_H
+#define GF_SOCKET_ADDRESS_H
 
-#include <cstdint>
 #include <string>
+#include <vector>
 
-#include "ArrayRef.h"
-#include "BufferRef.h"
+#ifdef _WIN32
+#include <winsock2.h>
+#else
+#include <sys/socket.h>
+#endif
+
 #include "Portability.h"
-#include "Socket.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
 #endif
 
-  class GF_API TcpSocket : public Socket {
+  enum SocketFamily : int {
+    Unspec  = AF_UNSPEC,
+    IPv4    = AF_INET,
+    IPv6    = AF_INET6,
+  };
+
+  class GF_API SocketAddress {
   public:
-    TcpSocket() = default;
-    TcpSocket(const std::string& host, const std::string& service, SocketFamily family = SocketFamily::Unspec);
+#ifdef _WIN32
+    using StorageLengthType = int;
+#else
+    using StorageLengthType = socklen_t;
+#endif
 
-    SocketDataResult sendRawBytes(ArrayRef<uint8_t> buffer);
-    SocketDataResult recvRawBytes(BufferRef<uint8_t> buffer);
+    SocketAddress() = default;
+    SocketAddress(sockaddr *storage, StorageLengthType length);
+
+    const sockaddr *getData() const {
+      return reinterpret_cast<const sockaddr*>(&m_storage);
+    }
+
+    StorageLengthType getLength() const {
+      return m_length;
+    }
+
+    SocketFamily getFamily() const;
 
   private:
-    TcpSocket(SocketHandle handle);
+    friend class UdpSocket;
+    friend class Socket;
 
-    friend class TcpListener;
-
-  private:
-    static SocketHandle nativeConnect(const std::string& host, const std::string& service, SocketFamily family);
+    sockaddr_storage m_storage;
+    StorageLengthType m_length;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -56,4 +77,4 @@ inline namespace v1 {
 #endif
 }
 
-#endif // GF_TCP_SOCKET_H
+#endif // GF_SOCKET_ADDRESS_H

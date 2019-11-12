@@ -23,14 +23,20 @@
  */
 #include <gf/Socket.h>
 
+#include <cstring>
 #include <utility>
 
 #ifdef _WIN32
-
+#include <winsock2.h>
 #else
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netdb.h>
 #include <unistd.h>
 #endif
 
+#include <gf/Log.h>
+#include <gf/Unused.h>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -55,15 +61,120 @@ inline namespace v1 {
     return *this;
   }
 
+  SocketAddress Socket::getLocalAddress() const {
+    SocketAddress address;
+    address.m_length = sizeof(address.m_storage);
+    int err = ::getsockname(m_handle, reinterpret_cast<sockaddr*>(&address.m_storage), &address.m_length);
+    gf::unused(err); // TODO: handle error
+    return address;
+  }
+
+  SocketAddress Socket::getRemoteAddress() const {
+    SocketAddress address;
+    address.m_length = sizeof(address.m_storage);
+    int err = ::getpeername(m_handle, reinterpret_cast<sockaddr*>(&address.m_storage), &address.m_length);
+    gf::unused(err); // TODO: handle error
+    return address;
+  }
+
+
 #ifdef _WIN32
     bool Socket::nativeCloseSocket(SocketHandle handle) {
       return ::closesocket(handle) == 0;
     }
+
+    auto Socket::sendBufferLength(ArrayRef<uint8_t> buffer) -> SendBufferLengthType {
+      return static_cast<SendBufferLengthType>(buffer.getSize());
+    }
+
+    auto Socket::sendBufferPointer(ArrayRef<uint8_t> buffer) -> SendBufferPointerType {
+      return reinterpret_cast<SendBufferPointerType>(buffer.getData());
+    }
+
+    auto Socket::recvBufferLength(BufferRef<uint8_t> buffer) -> RecvBufferLengthType {
+      return static_cast<SendBufferLengthType>(buffer.getSize());
+    }
+
+    auto Socket::recvBufferPointer(BufferRef<uint8_t> buffer) -> RecvBufferPointerType {
+      return reinterpret_cast<RecvBufferPointerType>(buffer.getData());
+    }
+
+    int Socket::getErrorCode() {
+      return WSAGetLastError();
+    }
+
 #else
     bool Socket::nativeCloseSocket(SocketHandle handle) {
       return ::close(handle) == 0;
     }
+
+    auto Socket::sendBufferLength(ArrayRef<uint8_t> buffer) -> SendBufferLengthType {
+      return buffer.getSize();
+    }
+
+    auto Socket::sendBufferPointer(ArrayRef<uint8_t> buffer) -> SendBufferPointerType {
+      return static_cast<SendBufferPointerType>(buffer.getData());
+    }
+
+    auto Socket::recvBufferLength(BufferRef<uint8_t> buffer) -> RecvBufferLengthType {
+      return buffer.getSize();
+    }
+
+    auto Socket::recvBufferPointer(BufferRef<uint8_t> buffer) -> RecvBufferPointerType {
+      return static_cast<RecvBufferPointerType>(buffer.getData());
+    }
+
+    int Socket::getErrorCode() {
+      return errno;
+    }
 #endif
+
+  std::vector<Socket::SocketAddressInfo> Socket::getRemoteAddressInfo(const std::string& host, const std::string& service, SocketType type, SocketFamily family) {
+    return getAddressInfoEx(host.c_str(), service.c_str(), NoFlag, type, family);
+  }
+
+  std::vector<Socket::SocketAddressInfo> Socket::getLocalAddressInfo(const std::string& service, SocketType type, SocketFamily family) {
+    return getAddressInfoEx(nullptr, service.c_str(), AI_PASSIVE, type, family);
+  }
+
+  std::vector<Socket::SocketAddressInfo> Socket::getAddressInfoEx(const char *host, const char *service, int flags, SocketType type, SocketFamily family) {
+    std::vector<SocketAddressInfo> result;
+
+    struct addrinfo hints;
+    struct addrinfo *first;
+
+    std::memset(&hints, 0, sizeof hints);
+    hints.ai_family = static_cast<int>(family);
+    hints.ai_socktype = static_cast<int>(type);
+    hints.ai_protocol = 0;
+    hints.ai_flags = flags;
+
+    int err = ::getaddrinfo(host, service, &hints, &first);
+
+    if (err != 0) {
+      if (host != nullptr) {
+        gf::Log::error("Error while getting an address for host '%s:%s': '%s'\n", host, service, ::gai_strerror(err));
+      } else {
+        gf::Log::error("Error while getting an address for service '%s': '%s'\n", service, ::gai_strerror(err));
+      }
+
+      return result;
+    }
+
+    struct addrinfo *rp = nullptr;
+
+    for (rp = first; rp != nullptr; rp = rp->ai_next) {
+      SocketAddressInfo info;
+      info.family = static_cast<SocketFamily>(rp->ai_family);
+      info.type = static_cast<SocketType>(rp->ai_socktype);
+      info.address = SocketAddress(rp->ai_addr, static_cast<SocketAddress::StorageLengthType>(rp->ai_addrlen));
+      result.push_back(info);
+    }
+
+    ::freeaddrinfo(first);
+
+    return result;
+  }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

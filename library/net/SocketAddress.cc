@@ -17,43 +17,30 @@
  * 2. Altered source versions must be plainly marked as such, and must not be
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
+ *
+ * Part of this file comes from SFML, with the same license:
+ * Copyright (C) 2007-2015 Laurent Gomila (laurent@sfml-dev.org)
  */
-#ifndef GF_TCP_SOCKET_H
-#define GF_TCP_SOCKET_H
+#include <gf/SocketAddress.h>
 
-#include <cstdint>
-#include <string>
-
-#include "ArrayRef.h"
-#include "BufferRef.h"
-#include "Portability.h"
-#include "Socket.h"
+#include <cstring>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
 #endif
 
-  class GF_API TcpSocket : public Socket {
-  public:
-    TcpSocket() = default;
-    TcpSocket(const std::string& host, const std::string& service, SocketFamily family = SocketFamily::Unspec);
+  SocketAddress::SocketAddress(sockaddr *storage, StorageLengthType length)
+  : m_length(length)
+  {
+    std::memcpy(&m_storage, storage, static_cast<std::size_t>(length));
+  }
 
-    SocketDataResult sendRawBytes(ArrayRef<uint8_t> buffer);
-    SocketDataResult recvRawBytes(BufferRef<uint8_t> buffer);
-
-  private:
-    TcpSocket(SocketHandle handle);
-
-    friend class TcpListener;
-
-  private:
-    static SocketHandle nativeConnect(const std::string& host, const std::string& service, SocketFamily family);
-  };
+  SocketFamily SocketAddress::getFamily() const {
+    return static_cast<SocketFamily>(m_storage.ss_family);
+  }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif
 }
-
-#endif // GF_TCP_SOCKET_H

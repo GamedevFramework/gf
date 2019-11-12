@@ -213,9 +213,11 @@ else()
 
   add_library(gfnet0
     net/Socket.cc
+    net/SocketAddress.cc
     net/SocketGuard.cc
     net/TcpListener.cc
     net/TcpSocket.cc
+    net/UdpSocket.cc
   )
 endif()
 

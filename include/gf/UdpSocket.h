@@ -18,12 +18,13 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#ifndef GF_TCP_SOCKET_H
-#define GF_TCP_SOCKET_H
+#ifndef GF_UDP_SOCKET_H
+#define GF_UDP_SOCKET_H
 
 #include <cstdint>
 #include <string>
 
+#include "SocketAddress.h"
 #include "ArrayRef.h"
 #include "BufferRef.h"
 #include "Portability.h"
@@ -34,21 +35,16 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  class GF_API TcpSocket : public Socket {
+  class GF_API UdpSocket : public Socket {
   public:
-    TcpSocket() = default;
-    TcpSocket(const std::string& host, const std::string& service, SocketFamily family = SocketFamily::Unspec);
+    UdpSocket() = default;
+    UdpSocket(const std::string& service, SocketFamily family = SocketFamily::Unspec);
 
-    SocketDataResult sendRawBytes(ArrayRef<uint8_t> buffer);
-    SocketDataResult recvRawBytes(BufferRef<uint8_t> buffer);
-
-  private:
-    TcpSocket(SocketHandle handle);
-
-    friend class TcpListener;
+    SocketDataResult sendRawBytesTo(ArrayRef<uint8_t> buffer, const SocketAddress& address);
+    SocketDataResult recvRawBytesFrom(BufferRef<uint8_t> buffer, SocketAddress& address);
 
   private:
-    static SocketHandle nativeConnect(const std::string& host, const std::string& service, SocketFamily family);
+    static SocketHandle nativeBind(const std::string& service, SocketFamily family);
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -56,4 +52,4 @@ inline namespace v1 {
 #endif
 }
 
-#endif // GF_TCP_SOCKET_H
+#endif // GF_UDP_SOCKET_H

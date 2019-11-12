@@ -40,57 +40,9 @@ namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
 #endif
-  namespace {
-    constexpr int NoFlag = 0;
 
-    SocketHandle nativeBindListen(const std::string& service) {
-      struct addrinfo hints;
-      struct addrinfo *result;
-
-      std::memset(&hints, 0, sizeof hints);
-      hints.ai_family = AF_UNSPEC;      /* Allow IPv4 or IPv6 */
-      hints.ai_socktype = SOCK_STREAM;  /* Datagram socket */
-      hints.ai_flags = AI_PASSIVE;      /* For wildcard IP address */
-      hints.ai_protocol = 0;            /* Any protocol */
-
-      int err = ::getaddrinfo(nullptr, service.c_str(), &hints, &result);
-
-      if (err != 0) {
-        gf::Log::error("Error while getting an address for service '%s' : '%s'\n", service.c_str(), ::gai_strerror(err));
-        return InvalidSocketHandle;
-      }
-
-      struct addrinfo *rp = nullptr;
-      SocketHandle sock = InvalidSocketHandle;
-
-      for (rp = result; rp != nullptr; rp = rp->ai_next) {
-        sock = ::socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
-
-        if (sock == InvalidSocketHandle) {
-          continue;
-        }
-
-        if (::bind(sock, rp->ai_addr, rp->ai_addrlen) != 0) {
-          Socket::nativeCloseSocket(sock);
-          continue;
-        }
-
-        if (::listen(sock, SOMAXCONN) != 0) {
-          Socket::nativeCloseSocket(sock);
-          continue;
-        }
-
-        break;
-      }
-
-      ::freeaddrinfo(result);
-      return sock;
-    }
-
-  }
-
-  TcpListener::TcpListener(const std::string& service)
-  : Socket(nativeBindListen(service))
+  TcpListener::TcpListener(const std::string& service, SocketFamily family)
+  : Socket(nativeBindListen(service, family))
   {
 
   }
@@ -105,6 +57,32 @@ inline namespace v1 {
     return TcpSocket(handle);
   }
 
+  SocketHandle TcpListener::nativeBindListen(const std::string& service, SocketFamily family) {
+    auto addresses = getLocalAddressInfo(service, SocketType::Tcp, family);
+
+    for (auto info : addresses) {
+      SocketHandle sock = ::socket(static_cast<int>(info.family), static_cast<int>(info.type), 0);
+
+      if (sock == InvalidSocketHandle) {
+        continue;
+      }
+
+      if (::bind(sock, info.address.getData(), info.address.getLength()) != 0) {
+        nativeCloseSocket(sock);
+        continue;
+      }
+
+      if (::listen(sock, SOMAXCONN) != 0) {
+        nativeCloseSocket(sock);
+        continue;
+      }
+
+      return sock;
+    }
+
+    gf::Log::error("Unable to bind service '%s'\n", service.c_str());
+    return InvalidSocketHandle;
+  }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

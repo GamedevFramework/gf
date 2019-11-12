@@ -25,9 +25,14 @@
 
 #ifdef _WIN32
 #include <winsock2.h>
+#else
+#include <unistd.h>
 #endif
 
+#include "ArrayRef.h"
+#include "BufferRef.h"
 #include "Portability.h"
+#include "SocketAddress.h"
 #include "SocketGuard.h"
 
 namespace gf {
@@ -69,7 +74,8 @@ inline namespace v1 {
       return m_handle != InvalidSocketHandle;
     }
 
-    static bool nativeCloseSocket(SocketHandle handle);
+    SocketAddress getLocalAddress() const;
+    SocketAddress getRemoteAddress() const;
 
   protected:
     Socket()
@@ -87,6 +93,54 @@ inline namespace v1 {
     SocketHandle getHandle() const {
       return m_handle;
     }
+
+    static bool nativeCloseSocket(SocketHandle handle);
+
+#ifdef _WIN32
+    using SendBufferLengthType = int;
+    using SendBufferPointerType = const char *;
+    using RecvBufferLengthType = int;
+    using RecvBufferPointerType = char *;
+#else
+    using SendBufferLengthType = std::size_t;
+    using SendBufferPointerType = const void *;
+    using RecvBufferLengthType = std::size_t;
+    using RecvBufferPointerType = void *;
+#endif
+
+    static SendBufferLengthType sendBufferLength(ArrayRef<uint8_t> buffer);
+    static SendBufferPointerType sendBufferPointer(ArrayRef<uint8_t> buffer);
+
+    static RecvBufferLengthType recvBufferLength(BufferRef<uint8_t> buffer);
+    static RecvBufferPointerType recvBufferPointer(BufferRef<uint8_t> buffer);
+
+    static int getErrorCode();
+
+#ifdef _WIN32
+    static constexpr int InvalidCommunication = SOCKET_ERROR;
+#else
+    static constexpr ssize_t InvalidCommunication = -1;
+#endif
+
+  protected:
+    enum SocketType : int {
+      Tcp     = SOCK_STREAM,
+      Udp     = SOCK_DGRAM,
+    };
+
+    struct SocketAddressInfo {
+      SocketFamily family;
+      SocketType type;
+      SocketAddress address;
+    };
+
+    static constexpr int NoFlag = 0;
+
+    static std::vector<SocketAddressInfo> getRemoteAddressInfo(const std::string& host, const std::string& service, SocketType type, SocketFamily family = SocketFamily::Unspec);
+    static std::vector<SocketAddressInfo> getLocalAddressInfo(const std::string& service, SocketType type, SocketFamily family = SocketFamily::Unspec);
+
+  private:
+    static std::vector<SocketAddressInfo> getAddressInfoEx(const char *host, const char *service, int flags, SocketType type, SocketFamily family);
 
   private:
     SocketHandle m_handle;
