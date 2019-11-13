@@ -214,6 +214,26 @@ inline namespace v1 {
     m_length += other.m_length;
   }
 
+  void UICharBuffer::append(const std::string& other) {
+    std::size_t otherLength = other.length();
+
+    if (otherLength == 0) {
+      return;
+    }
+
+    if (m_length + otherLength > m_capacity) {
+      std::size_t capacity = m_capacity + otherLength * 2;
+      char *data = new char[capacity];
+      std::copy(m_data, m_data + m_length, data);
+      delete [] m_data;
+      m_data = data;
+      m_capacity = capacity;
+    }
+
+    std::copy(other.c_str(), other.c_str() + otherLength, m_data + m_length);
+    m_length += otherLength;
+  }
+
 
   namespace {
 

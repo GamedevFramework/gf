@@ -286,6 +286,7 @@ inline namespace v1 {
 
     void clear();
     void append(const UICharBuffer& other);
+    void append(const std::string& other);
 
   private:
     friend class UI;
