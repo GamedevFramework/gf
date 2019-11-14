@@ -1072,6 +1072,17 @@ inline namespace v1 {
     return nk_widget_is_hovered(&m_impl->ctx) != 0;
   }
 
+  RectF UI::getWindowBounds() {
+    setState(State::Setup);
+    auto bounds = nk_window_get_bounds(&m_impl->ctx);
+    return RectF::fromPositionSize({ bounds.x, bounds.y }, { bounds.w, bounds.h });
+  }
+
+  bool UI::isWindowHovered() {
+    setState(State::Setup);
+    return nk_window_is_hovered(&m_impl->ctx) != 0;
+  }
+
   void UI::spacing(int cols) {
     setState(State::Setup);
     nk_spacing(&m_impl->ctx, cols);
