@@ -1423,6 +1423,22 @@ inline namespace v1 {
     bool isWidgetHovered();
 
     /**
+     * @brief Get the current window bounds
+     *
+     * @returns The bounds of the window
+     */
+    RectF getWindowBounds();
+
+    /**
+     * @brief Check if the window is hovered by the mouse
+     *
+     * You must do this check just after the layout specification
+     *
+     * @returns True if the mouse hovers the window
+     */
+    bool isWindowHovered();
+
+    /**
      * @brief Create a horizontal spacing to fill some columns
      *
      * @param cols The number of columns.
