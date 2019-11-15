@@ -214,6 +214,26 @@ inline namespace v1 {
     m_length += other.m_length;
   }
 
+  void UICharBuffer::append(const std::string& other) {
+    std::size_t otherLength = other.length();
+
+    if (otherLength == 0) {
+      return;
+    }
+
+    if (m_length + otherLength > m_capacity) {
+      std::size_t capacity = m_capacity + otherLength * 2;
+      char *data = new char[capacity];
+      std::copy(m_data, m_data + m_length, data);
+      delete [] m_data;
+      m_data = data;
+      m_capacity = capacity;
+    }
+
+    std::copy(other.c_str(), other.c_str() + otherLength, m_data + m_length);
+    m_length += otherLength;
+  }
+
 
   namespace {
 
@@ -1050,6 +1070,17 @@ inline namespace v1 {
   bool UI::isWidgetHovered() {
     setState(State::Setup);
     return nk_widget_is_hovered(&m_impl->ctx) != 0;
+  }
+
+  RectF UI::getWindowBounds() {
+    setState(State::Setup);
+    auto bounds = nk_window_get_bounds(&m_impl->ctx);
+    return RectF::fromPositionSize({ bounds.x, bounds.y }, { bounds.w, bounds.h });
+  }
+
+  bool UI::isWindowHovered() {
+    setState(State::Setup);
+    return nk_window_is_hovered(&m_impl->ctx) != 0;
   }
 
   void UI::spacing(int cols) {
