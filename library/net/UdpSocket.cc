@@ -46,6 +46,17 @@ inline namespace v1 {
   {
   }
 
+  SocketAddress UdpSocket::getRemoteAddress(const std::string& host, const std::string& service) {
+    auto addresses = getRemoteAddressInfo(host, service, SocketType::Udp, getLocalAddress().getFamily());
+
+    if (!addresses.empty()) {
+      return addresses.front().address;
+    }
+
+    return SocketAddress();
+  }
+
+
   SocketDataResult UdpSocket::sendRawBytesTo(ArrayRef<uint8_t> buffer, const SocketAddress& address) {
     auto res = ::sendto(getHandle(), sendBufferPointer(buffer), sendBufferLength(buffer), NoFlag, reinterpret_cast<const sockaddr*>(&address.m_storage), address.m_length);
 

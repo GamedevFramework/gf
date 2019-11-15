@@ -40,6 +40,8 @@ inline namespace v1 {
     UdpSocket() = default;
     UdpSocket(const std::string& service, SocketFamily family = SocketFamily::Unspec);
 
+    SocketAddress getRemoteAddress(const std::string& host, const std::string& service);
+
     SocketDataResult sendRawBytesTo(ArrayRef<uint8_t> buffer, const SocketAddress& address);
     SocketDataResult recvRawBytesFrom(BufferRef<uint8_t> buffer, SocketAddress& address);
 
