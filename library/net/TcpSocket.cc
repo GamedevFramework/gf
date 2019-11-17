@@ -43,13 +43,23 @@ inline namespace v1 {
   TcpSocket::TcpSocket(const std::string& host, const std::string& service, SocketFamily family)
   : Socket(nativeConnect(host, service, family))
   {
-
   }
 
   TcpSocket::TcpSocket(SocketHandle handle)
   : Socket(handle)
   {
+  }
 
+  SocketAddress TcpSocket::getRemoteAddress() const {
+    SocketAddress address;
+    address.m_length = sizeof(address.m_storage);
+    int err = ::getpeername(getHandle(), reinterpret_cast<sockaddr*>(&address.m_storage), &address.m_length);
+
+    if (err != 0) {
+      gf::Log::error("Could not get the remote address: %i\n", getErrorCode());
+    }
+
+    return address;
   }
 
   SocketDataResult TcpSocket::sendRawBytes(ArrayRef<uint8_t> buffer) {

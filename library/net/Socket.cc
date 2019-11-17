@@ -65,18 +65,13 @@ inline namespace v1 {
     SocketAddress address;
     address.m_length = sizeof(address.m_storage);
     int err = ::getsockname(m_handle, reinterpret_cast<sockaddr*>(&address.m_storage), &address.m_length);
-    gf::unused(err); // TODO: handle error
+
+    if (err != 0) {
+      gf::Log::error("Could not get the local address: %i\n", getErrorCode());
+    }
+
     return address;
   }
-
-  SocketAddress Socket::getRemoteAddress() const {
-    SocketAddress address;
-    address.m_length = sizeof(address.m_storage);
-    int err = ::getpeername(m_handle, reinterpret_cast<sockaddr*>(&address.m_storage), &address.m_length);
-    gf::unused(err); // TODO: handle error
-    return address;
-  }
-
 
 #ifdef _WIN32
     bool Socket::nativeCloseSocket(SocketHandle handle) {

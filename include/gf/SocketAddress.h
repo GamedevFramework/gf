@@ -68,8 +68,9 @@ inline namespace v1 {
     std::string getService() const;
 
   private:
-    friend class UdpSocket;
     friend class Socket;
+    friend class TcpSocket;
+    friend class UdpSocket;
 
     sockaddr_storage m_storage;
     StorageLengthType m_length;

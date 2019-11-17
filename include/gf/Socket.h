@@ -75,7 +75,6 @@ inline namespace v1 {
     }
 
     SocketAddress getLocalAddress() const;
-    SocketAddress getRemoteAddress() const;
 
   protected:
     Socket()
