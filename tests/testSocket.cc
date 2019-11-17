@@ -45,6 +45,10 @@ TEST(SocketTest, TcpListenerDefault) {
   gf::TcpListener listener("12345");
 
   EXPECT_TRUE(listener);
+
+  auto address = listener.getLocalAddress();
+  std::cout << "host: " << address.getHost() << '\n';
+  std::cout << "service: " << address.getService() << '\n';
 }
 
 TEST(SocketTest, TcpListenerOneClient) {
@@ -78,6 +82,14 @@ TEST(SocketTest, TcpListenerOneClient) {
     auto res = socket.sendRawBytes(buffer);
     EXPECT_EQ(res.status, gf::SocketStatus::Data);
     EXPECT_EQ(res.length, 4u);
+
+    auto local = socket.getLocalAddress();
+    std::cout << "local host: " << local.getHost() << '\n';
+    std::cout << "local service: " << local.getService() << '\n';
+
+    auto remote = socket.getRemoteAddress();
+    std::cout << "remote host: " << remote.getHost() << '\n';
+    std::cout << "remote service: " << remote.getService() << '\n';
   }
 
   serverThread.join();
@@ -128,12 +140,25 @@ TEST(SocketTest, UdpSocketDefault) {
   EXPECT_FALSE(socket);
 }
 
-TEST(SocketTest, UdpSocketConstructor) {
+TEST(SocketTest, UdpSocketService) {
   gf::UdpSocket socket("12345");
 
   EXPECT_TRUE(socket);
+
+  auto address = socket.getLocalAddress();
+  std::cout << "host: " << address.getHost() << '\n';
+  std::cout << "service: " << address.getService() << '\n';
 }
 
+TEST(SocketTest, UdpSocketAny) {
+  gf::UdpSocket socket(gf::Any);
+
+  EXPECT_TRUE(socket);
+
+  auto address = socket.getLocalAddress();
+  std::cout << "host: " << address.getHost() << '\n';
+  std::cout << "service: " << address.getService() << '\n';
+}
 
 TEST(SocketTest, UdpSocketOneWayCommunication) {
   std::thread receiverThread([]() {
@@ -155,7 +180,7 @@ TEST(SocketTest, UdpSocketOneWayCommunication) {
   std::this_thread::sleep_for(Delay);
 
   {
-    gf::UdpSocket socket("12346");
+    gf::UdpSocket socket(gf::Any);
     EXPECT_TRUE(socket);
 
     gf::SocketAddress address = socket.getRemoteAddress("localhost", "12345");
@@ -199,7 +224,7 @@ TEST(SocketTest, UdpSocketTwoWayCommunication) {
   std::this_thread::sleep_for(Delay);
 
   {
-    gf::UdpSocket socket("12346");
+    gf::UdpSocket socket(gf::Any);
     EXPECT_TRUE(socket);
 
     gf::SocketAddress address = socket.getRemoteAddress("localhost", "12345");

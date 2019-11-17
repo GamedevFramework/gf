@@ -25,6 +25,14 @@
 
 #include <cstring>
 
+#ifdef _WIN32
+#include <ws2tcpip.h>
+#else
+#include <netdb.h>
+#endif
+
+#include <gf/Log.h>
+
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
@@ -38,6 +46,30 @@ inline namespace v1 {
 
   SocketFamily SocketAddress::getFamily() const {
     return static_cast<SocketFamily>(m_storage.ss_family);
+  }
+
+  std::string SocketAddress::getHost() const {
+    char host[NI_MAXHOST];
+    auto err = ::getnameinfo(getData(), m_length, host, NI_MAXHOST, nullptr, 0, 0);
+
+    if (err != 0) {
+      gf::Log::error("Error while getting the host of an address: '%s'\n", ::gai_strerror(err));
+      return "";
+    }
+
+    return host;
+  }
+
+  std::string SocketAddress::getService() const {
+    char serv[NI_MAXSERV];
+    auto err = ::getnameinfo(getData(), m_length, nullptr, 0, serv, NI_MAXSERV, 0);
+
+    if (err != 0) {
+      gf::Log::error("Error while getting the service of an address: '%s'\n", ::gai_strerror(err));
+      return "";
+    }
+
+    return serv;
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

@@ -22,7 +22,6 @@
 #define GF_SOCKET_ADDRESS_H
 
 #include <string>
-#include <vector>
 
 #ifdef _WIN32
 #include <winsock2.h>
@@ -63,6 +62,10 @@ inline namespace v1 {
     }
 
     SocketFamily getFamily() const;
+
+    std::string getHost() const;
+
+    std::string getService() const;
 
   private:
     friend class UdpSocket;

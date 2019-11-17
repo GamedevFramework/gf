@@ -129,15 +129,15 @@ inline namespace v1 {
     }
 #endif
 
-  std::vector<Socket::SocketAddressInfo> Socket::getRemoteAddressInfo(const std::string& host, const std::string& service, SocketType type, SocketFamily family) {
+  auto Socket::getRemoteAddressInfo(const std::string& host, const std::string& service, SocketType type, SocketFamily family) -> std::vector<SocketAddressInfo> {
     return getAddressInfoEx(host.c_str(), service.c_str(), NoFlag, type, family);
   }
 
-  std::vector<Socket::SocketAddressInfo> Socket::getLocalAddressInfo(const std::string& service, SocketType type, SocketFamily family) {
+  auto Socket::getLocalAddressInfo(const std::string& service, SocketType type, SocketFamily family) -> std::vector<SocketAddressInfo> {
     return getAddressInfoEx(nullptr, service.c_str(), AI_PASSIVE, type, family);
   }
 
-  std::vector<Socket::SocketAddressInfo> Socket::getAddressInfoEx(const char *host, const char *service, int flags, SocketType type, SocketFamily family) {
+  auto Socket::getAddressInfoEx(const char *host, const char *service, int flags, SocketType type, SocketFamily family) -> std::vector<SocketAddressInfo> {
     std::vector<SocketAddressInfo> result;
 
     struct addrinfo hints;

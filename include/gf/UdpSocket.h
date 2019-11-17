@@ -24,11 +24,12 @@
 #include <cstdint>
 #include <string>
 
-#include "SocketAddress.h"
 #include "ArrayRef.h"
 #include "BufferRef.h"
 #include "Portability.h"
 #include "Socket.h"
+#include "SocketAddress.h"
+#include "Types.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -38,6 +39,7 @@ inline namespace v1 {
   class GF_API UdpSocket : public Socket {
   public:
     UdpSocket() = default;
+    UdpSocket(AnyType, SocketFamily family = SocketFamily::Unspec);
     UdpSocket(const std::string& service, SocketFamily family = SocketFamily::Unspec);
 
     SocketAddress getRemoteAddress(const std::string& host, const std::string& service);

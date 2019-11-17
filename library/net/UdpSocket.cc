@@ -46,6 +46,11 @@ inline namespace v1 {
   {
   }
 
+  UdpSocket::UdpSocket(AnyType, SocketFamily family)
+  : Socket(nativeBind("0", family))
+  {
+  }
+
   SocketAddress UdpSocket::getRemoteAddress(const std::string& host, const std::string& service) {
     auto addresses = getRemoteAddressInfo(host, service, SocketType::Udp, getLocalAddress().getFamily());
 
