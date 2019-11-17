@@ -27,7 +27,7 @@
 
 #include "gtest/gtest.h"
 
-static constexpr auto Delay = std::chrono::milliseconds(50);
+static constexpr const char *TestService = "12345";
 
 TEST(SocketTest, TcpSocketDefault) {
   gf::TcpSocket socket;
@@ -35,14 +35,8 @@ TEST(SocketTest, TcpSocketDefault) {
   EXPECT_FALSE(socket);
 }
 
-// TEST(SocketTest, TcpSocketService) {
-//   gf::TcpSocket socket("google.com", "80");
-//
-//   EXPECT_TRUE(socket);
-// }
-
 TEST(SocketTest, TcpListenerDefault) {
-  gf::TcpListener listener("12345");
+  gf::TcpListener listener(TestService);
 
   EXPECT_TRUE(listener);
 
@@ -52,30 +46,11 @@ TEST(SocketTest, TcpListenerDefault) {
 }
 
 TEST(SocketTest, TcpListenerOneClient) {
-  std::thread serverThread([]() {
-    gf::TcpListener listener("12345");
-    EXPECT_TRUE(listener);
+  gf::TcpListener listener(TestService);
+  EXPECT_TRUE(listener);
 
-    gf::TcpSocket socket = listener.accept();
-    EXPECT_TRUE(socket);
-
-    uint8_t buffer[10];
-    auto res = socket.recvRawBytes(buffer);
-    EXPECT_EQ(res.status, gf::SocketStatus::Data);
-    EXPECT_EQ(res.length, 4u);
-    EXPECT_EQ(buffer[0], 0x42);
-    EXPECT_EQ(buffer[1], 0x69);
-    EXPECT_EQ(buffer[2], 0xFF);
-    EXPECT_EQ(buffer[3], 0x12);
-
-    res = socket.recvRawBytes(buffer);
-    EXPECT_EQ(res.status, gf::SocketStatus::Close);
-  });
-
-  std::this_thread::sleep_for(Delay);
-
-  {
-    gf::TcpSocket socket("localhost", "12345");
+  std::thread clientThread([]() {
+    gf::TcpSocket socket("localhost", TestService);
     EXPECT_TRUE(socket);
 
     uint8_t buffer[4] = { 0x42, 0x69, 0xFF, 0x12 };
@@ -90,48 +65,61 @@ TEST(SocketTest, TcpListenerOneClient) {
     auto remote = socket.getRemoteAddress();
     std::cout << "remote host: " << remote.getHost() << '\n';
     std::cout << "remote service: " << remote.getService() << '\n';
-  }
+  });
 
-  serverThread.join();
+  gf::TcpSocket socket = listener.accept();
+  EXPECT_TRUE(socket);
+
+  uint8_t buffer[10];
+  auto res = socket.recvRawBytes(buffer);
+  EXPECT_EQ(res.status, gf::SocketStatus::Data);
+  EXPECT_EQ(res.length, 4u);
+  EXPECT_EQ(buffer[0], 0x42);
+  EXPECT_EQ(buffer[1], 0x69);
+  EXPECT_EQ(buffer[2], 0xFF);
+  EXPECT_EQ(buffer[3], 0x12);
+
+  res = socket.recvRawBytes(buffer);
+  EXPECT_EQ(res.status, gf::SocketStatus::Close);
+
+  clientThread.join();
 }
 
 TEST(SocketTest, TcpListenerMultipleClient) {
   static constexpr int ClientCount = 10;
 
-  std::thread serverThread([]() {
-    gf::TcpListener listener("12345");
-    EXPECT_TRUE(listener);
+  gf::TcpListener listener(TestService);
+  EXPECT_TRUE(listener);
 
+  std::thread clientThread([]() {
     for (int i = 0; i < ClientCount; ++i) {
-      gf::TcpSocket socket = listener.accept();
+      gf::TcpSocket socket("localhost", TestService);
+      EXPECT_TRUE(socket);
 
-      uint8_t buffer[10];
-      auto res = socket.recvRawBytes(buffer);
+      uint8_t buffer[4] = { 0x42, 0x69, 0xFF, 0x12 };
+      auto res = socket.sendRawBytes(buffer);
       EXPECT_EQ(res.status, gf::SocketStatus::Data);
       EXPECT_EQ(res.length, 4u);
-      EXPECT_EQ(buffer[0], 0x42);
-      EXPECT_EQ(buffer[1], 0x69);
-      EXPECT_EQ(buffer[2], 0xFF);
-      EXPECT_EQ(buffer[3], 0x12);
-
-      res = socket.recvRawBytes(buffer);
-      EXPECT_EQ(res.status, gf::SocketStatus::Close);
     }
   });
 
-  std::this_thread::sleep_for(Delay);
-
   for (int i = 0; i < ClientCount; ++i) {
-    gf::TcpSocket socket("localhost", "12345");
-    EXPECT_TRUE(socket);
+    gf::TcpSocket socket = listener.accept();
 
-    uint8_t buffer[4] = { 0x42, 0x69, 0xFF, 0x12 };
-    auto res = socket.sendRawBytes(buffer);
+    uint8_t buffer[10];
+    auto res = socket.recvRawBytes(buffer);
     EXPECT_EQ(res.status, gf::SocketStatus::Data);
     EXPECT_EQ(res.length, 4u);
+    EXPECT_EQ(buffer[0], 0x42);
+    EXPECT_EQ(buffer[1], 0x69);
+    EXPECT_EQ(buffer[2], 0xFF);
+    EXPECT_EQ(buffer[3], 0x12);
+
+    res = socket.recvRawBytes(buffer);
+    EXPECT_EQ(res.status, gf::SocketStatus::Close);
   }
 
-  serverThread.join();
+  clientThread.join();
 }
 
 TEST(SocketTest, UdpSocketDefault) {
@@ -141,7 +129,7 @@ TEST(SocketTest, UdpSocketDefault) {
 }
 
 TEST(SocketTest, UdpSocketService) {
-  gf::UdpSocket socket("12345");
+  gf::UdpSocket socket(TestService);
 
   EXPECT_TRUE(socket);
 
@@ -161,73 +149,44 @@ TEST(SocketTest, UdpSocketAny) {
 }
 
 TEST(SocketTest, UdpSocketOneWayCommunication) {
-  std::thread receiverThread([]() {
-    gf::UdpSocket socket("12345");
-    EXPECT_TRUE(socket);
+  gf::UdpSocket socket(TestService);
+  EXPECT_TRUE(socket);
 
-    gf::SocketAddress address;
-
-    uint8_t buffer[10];
-    auto res = socket.recvRawBytesFrom(buffer, address);
-    EXPECT_EQ(res.status, gf::SocketStatus::Data);
-    EXPECT_EQ(res.length, 4u);
-    EXPECT_EQ(buffer[0], 0x42);
-    EXPECT_EQ(buffer[1], 0x69);
-    EXPECT_EQ(buffer[2], 0xFF);
-    EXPECT_EQ(buffer[3], 0x12);
-  });
-
-  std::this_thread::sleep_for(Delay);
-
-  {
+  std::thread clientThread([]() {
     gf::UdpSocket socket(gf::Any);
     EXPECT_TRUE(socket);
 
-    gf::SocketAddress address = socket.getRemoteAddress("localhost", "12345");
+    gf::SocketAddress address = socket.getRemoteAddress("localhost", TestService);
 
     uint8_t buffer[4] = { 0x42, 0x69, 0xFF, 0x12 };
     auto res = socket.sendRawBytesTo(buffer, address);
     EXPECT_EQ(res.status, gf::SocketStatus::Data);
     EXPECT_EQ(res.length, 4u);
-  }
+  });
 
-  receiverThread.join();
+  gf::SocketAddress address;
+
+  uint8_t buffer[10];
+  auto res = socket.recvRawBytesFrom(buffer, address);
+  EXPECT_EQ(res.status, gf::SocketStatus::Data);
+  EXPECT_EQ(res.length, 4u);
+  EXPECT_EQ(buffer[0], 0x42);
+  EXPECT_EQ(buffer[1], 0x69);
+  EXPECT_EQ(buffer[2], 0xFF);
+  EXPECT_EQ(buffer[3], 0x12);
+
+  clientThread.join();
 }
 
 TEST(SocketTest, UdpSocketTwoWayCommunication) {
-  std::thread receiverThread([]() {
-    gf::UdpSocket socket("12345");
-    EXPECT_TRUE(socket);
+  gf::UdpSocket socket(TestService);
+  EXPECT_TRUE(socket);
 
-    gf::SocketAddress address;
-
-    {
-      uint8_t buffer[10];
-      auto res = socket.recvRawBytesFrom(buffer, address);
-      EXPECT_EQ(res.status, gf::SocketStatus::Data);
-      EXPECT_EQ(res.length, 4u);
-      EXPECT_EQ(buffer[0], 0x42);
-      EXPECT_EQ(buffer[1], 0x69);
-      EXPECT_EQ(buffer[2], 0xFF);
-      EXPECT_EQ(buffer[3], 0x12);
-    }
-
-    {
-      uint8_t buffer[4] = { 0x23, 0x17, 0x21, 0x23 };
-      auto res = socket.sendRawBytesTo(buffer, address);
-      EXPECT_EQ(res.status, gf::SocketStatus::Data);
-      EXPECT_EQ(res.length, 4u);
-    }
-
-  });
-
-  std::this_thread::sleep_for(Delay);
-
-  {
+  std::thread clientThread([]() {
     gf::UdpSocket socket(gf::Any);
     EXPECT_TRUE(socket);
 
-    gf::SocketAddress address = socket.getRemoteAddress("localhost", "12345");
+    gf::SocketAddress address = socket.getRemoteAddress("localhost", TestService);
 
     {
       uint8_t buffer[4] = { 0x42, 0x69, 0xFF, 0x12 };
@@ -246,8 +205,27 @@ TEST(SocketTest, UdpSocketTwoWayCommunication) {
       EXPECT_EQ(buffer[2], 0x21);
       EXPECT_EQ(buffer[3], 0x23);
     }
+  });
 
+  gf::SocketAddress address;
+
+  {
+    uint8_t buffer[10];
+    auto res = socket.recvRawBytesFrom(buffer, address);
+    EXPECT_EQ(res.status, gf::SocketStatus::Data);
+    EXPECT_EQ(res.length, 4u);
+    EXPECT_EQ(buffer[0], 0x42);
+    EXPECT_EQ(buffer[1], 0x69);
+    EXPECT_EQ(buffer[2], 0xFF);
+    EXPECT_EQ(buffer[3], 0x12);
   }
 
-  receiverThread.join();
+  {
+    uint8_t buffer[4] = { 0x23, 0x17, 0x21, 0x23 };
+    auto res = socket.sendRawBytesTo(buffer, address);
+    EXPECT_EQ(res.status, gf::SocketStatus::Data);
+    EXPECT_EQ(res.length, 4u);
+  }
+
+  clientThread.join();
 }
