@@ -66,7 +66,7 @@ inline namespace v1 {
     auto res = ::sendto(getHandle(), sendBufferPointer(buffer), sendBufferLength(buffer), NoFlag, reinterpret_cast<const sockaddr*>(&address.m_storage), address.m_length);
 
     if (res == InvalidCommunication) {
-      gf::Log::error("Error while sending data: %d\n",  getErrorCode());
+      gf::Log::error("Error while sending data. Reason: %s\n", getErrorString().c_str());
       return { SocketStatus::Error, 0u };
     }
 
@@ -78,7 +78,7 @@ inline namespace v1 {
     auto res = ::recvfrom(getHandle(), recvBufferPointer(buffer), recvBufferLength(buffer), NoFlag, reinterpret_cast<sockaddr*>(&address.m_storage), &address.m_length);
 
     if (res == InvalidCommunication) {
-      gf::Log::error("Error while receiving data: %d\n",  getErrorCode());
+      gf::Log::error("Error while receiving data. Reason: %s\n", getErrorString().c_str());
       return { SocketStatus::Error, 0u };
     }
 

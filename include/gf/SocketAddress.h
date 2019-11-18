@@ -21,6 +21,7 @@
 #ifndef GF_SOCKET_ADDRESS_H
 #define GF_SOCKET_ADDRESS_H
 
+#include <cstdint>
 #include <string>
 
 #ifdef _WIN32
@@ -36,10 +37,15 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  enum SocketFamily : int {
+  enum class SocketFamily : int {
     Unspec  = AF_UNSPEC,
     IPv4    = AF_INET,
     IPv6    = AF_INET6,
+  };
+
+  enum class SocketAddressFormat {
+    Unrestricted,
+    Numeric,
   };
 
   class GF_API SocketAddress {
@@ -63,9 +69,9 @@ inline namespace v1 {
 
     SocketFamily getFamily() const;
 
-    std::string getHost() const;
+    std::string getHost(SocketAddressFormat format = SocketAddressFormat::Unrestricted) const;
 
-    std::string getService() const;
+    std::string getService(SocketAddressFormat format = SocketAddressFormat::Unrestricted) const;
 
   private:
     friend class Socket;

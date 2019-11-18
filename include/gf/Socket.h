@@ -22,6 +22,7 @@
 #define GF_SOCKET_H
 
 #include <cstddef>
+#include <string>
 
 #ifdef _WIN32
 #include <winsock2.h>
@@ -114,6 +115,7 @@ inline namespace v1 {
     static RecvBufferPointerType recvBufferPointer(BufferRef<uint8_t> buffer);
 
     static int getErrorCode();
+    static std::string getErrorString();
 
 #ifdef _WIN32
     static constexpr int InvalidCommunication = SOCKET_ERROR;

@@ -48,24 +48,24 @@ inline namespace v1 {
     return static_cast<SocketFamily>(m_storage.ss_family);
   }
 
-  std::string SocketAddress::getHost() const {
+  std::string SocketAddress::getHost(SocketAddressFormat format) const {
     char host[NI_MAXHOST];
-    auto err = ::getnameinfo(getData(), m_length, host, NI_MAXHOST, nullptr, 0, 0);
+    auto err = ::getnameinfo(getData(), m_length, host, NI_MAXHOST, nullptr, 0, format == SocketAddressFormat::Numeric ? NI_NUMERICHOST : 0);
 
     if (err != 0) {
-      gf::Log::error("Error while getting the host of an address: '%s'\n", ::gai_strerror(err));
+      gf::Log::error("Error while getting the host of an address. Reason: %s\n", ::gai_strerror(err));
       return "";
     }
 
     return host;
   }
 
-  std::string SocketAddress::getService() const {
+  std::string SocketAddress::getService(SocketAddressFormat format) const {
     char serv[NI_MAXSERV];
-    auto err = ::getnameinfo(getData(), m_length, nullptr, 0, serv, NI_MAXSERV, 0);
+    auto err = ::getnameinfo(getData(), m_length, nullptr, 0, serv, NI_MAXSERV, format == SocketAddressFormat::Numeric ? NI_NUMERICSERV : 0);
 
     if (err != 0) {
-      gf::Log::error("Error while getting the service of an address: '%s'\n", ::gai_strerror(err));
+      gf::Log::error("Error while getting the service of an address. Reason: %s\n", ::gai_strerror(err));
       return "";
     }
 

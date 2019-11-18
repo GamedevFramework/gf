@@ -51,7 +51,7 @@ inline namespace v1 {
     SocketHandle handle = ::accept(getHandle(), nullptr, nullptr);
 
     if (handle == InvalidSocketHandle) {
-      gf::Log::error("Error while accepting.\n");
+      gf::Log::error("Error while accepting. Reason: %s\n", getErrorString().c_str());
     }
 
     return TcpSocket(handle);
@@ -80,7 +80,7 @@ inline namespace v1 {
       return sock;
     }
 
-    gf::Log::error("Unable to bind service '%s'\n", service.c_str());
+    gf::Log::error("Unable to bind service '%s'. Reason: %s\n", service.c_str(), getErrorString().c_str());
     return InvalidSocketHandle;
   }
 

@@ -98,6 +98,14 @@ inline namespace v1 {
       return WSAGetLastError();
     }
 
+    std::string Socket::getErrorString() {
+      static constexpr std::size_t BufferSize = 1024;
+      int err = getErrorCode();
+      char buffer[BufferSize];
+      ::FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, nullptr, err, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), buffer, BufferSize, nullptr);
+      return buffer;
+    }
+
 #else
     bool Socket::nativeCloseSocket(SocketHandle handle) {
       return ::close(handle) == 0;
@@ -122,6 +130,15 @@ inline namespace v1 {
     int Socket::getErrorCode() {
       return errno;
     }
+
+    std::string Socket::getErrorString() {
+      static constexpr std::size_t BufferSize = 1024;
+      int err = getErrorCode();
+      char buffer[BufferSize];
+      ::strerror_r(err, buffer, BufferSize);
+      return buffer;
+    }
+
 #endif
 
   auto Socket::getRemoteAddressInfo(const std::string& host, const std::string& service, SocketType type, SocketFamily family) -> std::vector<SocketAddressInfo> {

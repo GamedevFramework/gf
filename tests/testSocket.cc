@@ -41,8 +41,8 @@ TEST(SocketTest, TcpListenerDefault) {
   EXPECT_TRUE(listener);
 
   auto address = listener.getLocalAddress();
-  std::cout << "host: " << address.getHost() << '\n';
-  std::cout << "service: " << address.getService() << '\n';
+  std::cout << "host: " << address.getHost(gf::SocketAddressFormat::Numeric) << '\n';
+  std::cout << "service: " << address.getService(gf::SocketAddressFormat::Numeric) << '\n';
 }
 
 TEST(SocketTest, TcpListenerOneClient) {
@@ -59,12 +59,12 @@ TEST(SocketTest, TcpListenerOneClient) {
     EXPECT_EQ(res.length, 4u);
 
     auto local = socket.getLocalAddress();
-    std::cout << "local host: " << local.getHost() << '\n';
-    std::cout << "local service: " << local.getService() << '\n';
+    std::cout << "local host: " << local.getHost(gf::SocketAddressFormat::Numeric) << '\n';
+    std::cout << "local service: " << local.getService(gf::SocketAddressFormat::Numeric) << '\n';
 
     auto remote = socket.getRemoteAddress();
-    std::cout << "remote host: " << remote.getHost() << '\n';
-    std::cout << "remote service: " << remote.getService() << '\n';
+    std::cout << "remote host: " << remote.getHost(gf::SocketAddressFormat::Numeric) << '\n';
+    std::cout << "remote service: " << remote.getService(gf::SocketAddressFormat::Numeric) << '\n';
   });
 
   gf::TcpSocket socket = listener.accept();
@@ -134,8 +134,8 @@ TEST(SocketTest, UdpSocketService) {
   EXPECT_TRUE(socket);
 
   auto address = socket.getLocalAddress();
-  std::cout << "host: " << address.getHost() << '\n';
-  std::cout << "service: " << address.getService() << '\n';
+  std::cout << "host: " << address.getHost(gf::SocketAddressFormat::Numeric) << '\n';
+  std::cout << "service: " << address.getService(gf::SocketAddressFormat::Numeric) << '\n';
 }
 
 TEST(SocketTest, UdpSocketAny) {
@@ -144,8 +144,8 @@ TEST(SocketTest, UdpSocketAny) {
   EXPECT_TRUE(socket);
 
   auto address = socket.getLocalAddress();
-  std::cout << "host: " << address.getHost() << '\n';
-  std::cout << "service: " << address.getService() << '\n';
+  std::cout << "host: " << address.getHost(gf::SocketAddressFormat::Numeric) << '\n';
+  std::cout << "service: " << address.getService(gf::SocketAddressFormat::Numeric) << '\n';
 }
 
 TEST(SocketTest, UdpSocketOneWayCommunication) {

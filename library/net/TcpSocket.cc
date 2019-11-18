@@ -56,7 +56,7 @@ inline namespace v1 {
     int err = ::getpeername(getHandle(), reinterpret_cast<sockaddr*>(&address.m_storage), &address.m_length);
 
     if (err != 0) {
-      gf::Log::error("Could not get the remote address: %i\n", getErrorCode());
+      gf::Log::error("Could not get the remote address. Reason: %s\n", getErrorString().c_str());
     }
 
     return address;
@@ -66,7 +66,7 @@ inline namespace v1 {
     int res = ::send(getHandle(), sendBufferPointer(buffer), sendBufferLength(buffer), NoFlag);
 
     if (res == InvalidCommunication) {
-      gf::Log::error("Error while sending data: %d\n",  getErrorCode());
+      gf::Log::error("Error while sending data. Reason: %s\n", getErrorString().c_str());
       return { SocketStatus::Error, 0u };
     }
 
@@ -77,7 +77,7 @@ inline namespace v1 {
     int res = ::recv(getHandle(), recvBufferPointer(buffer), recvBufferLength(buffer), NoFlag);
 
     if (res == InvalidCommunication) {
-      gf::Log::error("Error while receiving data: %d\n",  getErrorCode());
+      gf::Log::error("Error while receiving data. Reason: %s\n", getErrorString().c_str());
       return { SocketStatus::Error, 0u };
     }
 
