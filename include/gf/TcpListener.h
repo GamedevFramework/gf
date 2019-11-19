@@ -34,6 +34,8 @@ inline namespace v1 {
 
   class GF_API TcpListener : public Socket {
   public:
+    TcpListener() = default;
+
     TcpListener(const std::string& service, SocketFamily family = SocketFamily::Unspec);
 
     TcpSocket accept();
