@@ -329,7 +329,9 @@ inline namespace v1 {
       Vector2i curr = target;
 
       while (curr != origin) {
-        assert(curr.x != -1 && curr.y != -1);
+        if (curr.x == -1 || curr.y == -1) {
+          return {};
+        }
         route.push_back(curr);
         curr = results(curr).previous;
       }
@@ -453,7 +455,10 @@ inline namespace v1 {
       Vector2i curr = target;
 
       while (curr != origin) {
-        assert(curr.x != -1 && curr.y != -1);
+        if (curr.x == -1 || curr.y == -1) {
+          return {};
+        }
+
         route.push_back(curr);
         curr = results(curr).previous;
       }

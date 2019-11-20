@@ -316,7 +316,7 @@ inline namespace v1 {
      * @param target The target of the route
      * @param diagonalCost The cost of going diagonal between two cells (0 means no diagonal movement)
      * @param algorithm The algorithm to use for computing the route
-     * @returns The route between the two points (included)
+     * @returns The route between the two points (included) or if the route doesn't exist, it return an empty vector
      */
     std::vector<Vector2i> computeRoute(Vector2i origin, Vector2i target, float diagonalCost = Sqrt2, Route algorithm = Route::AStar);
 
