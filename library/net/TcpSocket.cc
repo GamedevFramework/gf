@@ -50,6 +50,16 @@ inline namespace v1 {
     setHandle(handle);
   }
 
+  TcpSocket::~TcpSocket() {
+#ifdef _WIN32
+    static constexpr int ReadWrite = SD_BOTH;
+#else
+    static constexpr int ReadWrite = SHUT_RDWR;
+#endif
+    ::shutdown(getHandle(), ReadWrite);
+  }
+
+
   SocketAddress TcpSocket::getRemoteAddress() const {
     SocketAddress address;
     address.m_length = sizeof(address.m_storage);

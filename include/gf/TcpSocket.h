@@ -39,6 +39,14 @@ inline namespace v1 {
     TcpSocket() = default;
     TcpSocket(const std::string& host, const std::string& service, SocketFamily family = SocketFamily::Unspec);
 
+    TcpSocket(const TcpSocket&) = delete;
+    TcpSocket& operator=(const TcpSocket&) = delete;
+
+    TcpSocket(TcpSocket&&) = default;
+    TcpSocket& operator=(TcpSocket&&) = default;
+
+    ~TcpSocket();
+
     SocketAddress getRemoteAddress() const;
 
     SocketDataResult sendRawBytes(ArrayRef<uint8_t> buffer);

@@ -66,7 +66,6 @@ inline namespace v1 {
      * This function quits the library
      */
     ~SocketGuard();
-
 #endif
 
   };
