@@ -42,9 +42,8 @@ inline namespace v1 {
 #endif
 
   TcpListener::TcpListener(const std::string& service, SocketFamily family)
-  : Socket(nativeBindListen(service, family))
   {
-
+    setHandle(nativeBindListen(service, family));
   }
 
   TcpSocket TcpListener::accept() {

@@ -28,6 +28,8 @@
 #include <stdexcept>
 
 #include <winsock2.h>
+
+#include <gf/Log.h>
 #endif
 
 namespace gf {
@@ -45,6 +47,7 @@ inline namespace v1 {
       auto res = ::WSAStartup(MAKEWORD(2, 2), &wsaData);
 
       if (res != 0) {
+        Log::error("Unable to initialize the Winsock2 library.\n");
         throw std::runtime_error("Unable to initialize the Winsock2 library.\n");
       }
     }

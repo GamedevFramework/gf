@@ -42,13 +42,13 @@ inline namespace v1 {
 #endif
 
   UdpSocket::UdpSocket(const std::string& service, SocketFamily family)
-  : Socket(nativeBind(service, family))
   {
+    setHandle(nativeBind(service, family));
   }
 
   UdpSocket::UdpSocket(AnyType, SocketFamily family)
-  : Socket(nativeBind("0", family))
   {
+    setHandle(nativeBind("0", family));
   }
 
   SocketAddress UdpSocket::getRemoteAddress(const std::string& host, const std::string& service) {

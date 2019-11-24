@@ -34,7 +34,7 @@ namespace {
   void testTcpListenerService() {
     gf::TcpListener listener(TestService, Family);
 
-    EXPECT_TRUE(listener);
+    ASSERT_TRUE(listener);
 
     auto address = listener.getLocalAddress();
     std::cout << "host: " << address.getHost(gf::SocketAddressFormat::Numeric) << '\n';
@@ -44,11 +44,11 @@ namespace {
   template<gf::SocketFamily Family>
   void testTcpListenerOneClient() {
     gf::TcpListener listener(TestService, Family);
-    EXPECT_TRUE(listener);
+    ASSERT_TRUE(listener);
 
     std::thread clientThread([]() {
       gf::TcpSocket socket("localhost", TestService, Family);
-      EXPECT_TRUE(socket);
+      ASSERT_TRUE(socket);
 
       uint8_t buffer[4] = { 0x42, 0x69, 0xFF, 0x12 };
       auto res = socket.sendRawBytes(buffer);
@@ -65,7 +65,7 @@ namespace {
     });
 
     gf::TcpSocket socket = listener.accept();
-    EXPECT_TRUE(socket);
+    ASSERT_TRUE(socket);
 
     uint8_t buffer[10];
     auto res = socket.recvRawBytes(buffer);
@@ -87,12 +87,12 @@ namespace {
     static constexpr int ClientCount = 10;
 
     gf::TcpListener listener(TestService, Family);
-    EXPECT_TRUE(listener);
+    ASSERT_TRUE(listener);
 
     std::thread clientThread([]() {
       for (int i = 0; i < ClientCount; ++i) {
         gf::TcpSocket socket("localhost", TestService, Family);
-        EXPECT_TRUE(socket);
+        ASSERT_TRUE(socket);
 
         uint8_t buffer[4] = { 0x42, 0x69, 0xFF, 0x12 };
         auto res = socket.sendRawBytes(buffer);
@@ -103,6 +103,7 @@ namespace {
 
     for (int i = 0; i < ClientCount; ++i) {
       gf::TcpSocket socket = listener.accept();
+      ASSERT_TRUE(socket);
 
       uint8_t buffer[10];
       auto res = socket.recvRawBytes(buffer);
@@ -124,7 +125,7 @@ namespace {
   void testUdpSocketService() {
     gf::UdpSocket socket(TestService, Family);
 
-    EXPECT_TRUE(socket);
+    ASSERT_TRUE(socket);
 
     auto address = socket.getLocalAddress();
     std::cout << "host: " << address.getHost(gf::SocketAddressFormat::Numeric) << '\n';
@@ -135,7 +136,7 @@ namespace {
   void testUdpSocketAny() {
     gf::UdpSocket socket(gf::Any, Family);
 
-    EXPECT_TRUE(socket);
+    ASSERT_TRUE(socket);
 
     auto address = socket.getLocalAddress();
     std::cout << "host: " << address.getHost(gf::SocketAddressFormat::Numeric) << '\n';
@@ -145,11 +146,11 @@ namespace {
   template<gf::SocketFamily Family>
   void testUdpSocketOneWayCommunication() {
     gf::UdpSocket socket(TestService, Family);
-    EXPECT_TRUE(socket);
+    ASSERT_TRUE(socket);
 
     std::thread clientThread([]() {
       gf::UdpSocket socket(gf::Any, Family);
-      EXPECT_TRUE(socket);
+      ASSERT_TRUE(socket);
 
       auto actualFamily = socket.getLocalAddress().getFamily();
 
@@ -182,11 +183,11 @@ namespace {
   template<gf::SocketFamily Family>
   void testUdpSocketTwoWayCommunication() {
     gf::UdpSocket socket(TestService, Family);
-    EXPECT_TRUE(socket);
+    ASSERT_TRUE(socket);
 
     std::thread clientThread([]() {
       gf::UdpSocket socket(gf::Any, Family);
-      EXPECT_TRUE(socket);
+      ASSERT_TRUE(socket);
 
       auto actualFamily = socket.getLocalAddress().getFamily();
 

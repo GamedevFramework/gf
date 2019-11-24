@@ -41,13 +41,13 @@ namespace gf {
 inline namespace v1 {
 #endif
   TcpSocket::TcpSocket(const std::string& host, const std::string& service, SocketFamily family)
-  : Socket(nativeConnect(host, service, family))
   {
+    setHandle(nativeConnect(host, service, family));
   }
 
   TcpSocket::TcpSocket(SocketHandle handle)
-  : Socket(handle)
   {
+    setHandle(handle);
   }
 
   SocketAddress TcpSocket::getRemoteAddress() const {

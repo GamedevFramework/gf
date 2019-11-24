@@ -84,10 +84,8 @@ inline namespace v1 {
 
     }
 
-    Socket(SocketHandle handle)
-    : m_handle(handle)
-    {
-
+    void setHandle(SocketHandle handle) {
+      m_handle = handle;
     }
 
     SocketHandle getHandle() const {
