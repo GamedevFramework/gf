@@ -62,6 +62,22 @@ inline namespace v1 {
 
   /**
    * @ingroup core
+   * @brief Semantic type to represent "any"
+   *
+   * @sa gf::Any, gf::AllType, gf::NoneType
+   */
+  struct GF_API AnyType {  };
+
+  /**
+   * @ingroup core
+   * @brief Constant to represent "any"
+   *
+   * @sa gf::AnyType, gf::All, gf::None
+   */
+  constexpr AnyType Any = { };
+
+  /**
+   * @ingroup core
    * @brief Semantic type to represent "zero"
    *
    * @sa gf::Zero

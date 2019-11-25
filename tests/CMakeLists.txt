@@ -16,6 +16,7 @@ add_executable(gf_tests
   testRect.cc
   testSerialization.cc
   testSingleton.cc
+  testSocket.cc
   testSpatial.cc
   testStringRef.cc
   testVector.cc
@@ -34,5 +35,6 @@ target_include_directories(gf_tests
 target_link_libraries(gf_tests
   PRIVATE
     gf0
+    gfnet0
     Threads::Threads
 )

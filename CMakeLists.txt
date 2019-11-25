@@ -94,7 +94,7 @@ if (GF_BUILD_DOCUMENTATION)
 
   if(DOXYGEN_FOUND)
     configure_file("${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.cmake" "${CMAKE_CURRENT_BINARY_DIR}/Doxyfile" @ONLY)
-    add_custom_target(doc ${DOXYGEN_EXECUTABLE} "${CMAKE_CURRENT_BINARY_DIR}/Doxyfile")
+    add_custom_target(doc Doxygen::doxygen "${CMAKE_CURRENT_BINARY_DIR}/Doxyfile")
   endif(DOXYGEN_FOUND)
 
   add_subdirectory(docs/snippets)
