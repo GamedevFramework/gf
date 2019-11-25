@@ -411,10 +411,6 @@ if(WIN32 AND BUILD_SHARED_LIBS)
     TARGETS gfcore0 gf0 gfnet0
     RUNTIME DESTINATION "${CMAKE_INSTALL_DOCDIR}/examples"
   )
-  install(
-    TARGETS gfcore0  gf0 gfnet0
-    RUNTIME DESTINATION games
-  )
 endif()
 
 install(

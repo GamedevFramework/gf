@@ -26,7 +26,7 @@ target_link_libraries(islands gf0)
 
 install(
   TARGETS islands
-  RUNTIME DESTINATION games
+  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
 )
 
 install(

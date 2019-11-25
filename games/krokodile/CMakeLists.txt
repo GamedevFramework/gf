@@ -22,7 +22,7 @@ target_link_libraries(krokodile gf0)
 
 install(
   TARGETS krokodile
-  RUNTIME DESTINATION games
+  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
 )
 
 install(

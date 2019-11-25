@@ -25,7 +25,7 @@ target_link_libraries(gf_2048 gf0)
 
 install(
   TARGETS gf_2048
-  RUNTIME DESTINATION games
+  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
 )
 
 install(

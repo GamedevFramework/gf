@@ -28,7 +28,7 @@ target_link_libraries(huaca gf0)
 
 install(
   TARGETS huaca
-  RUNTIME DESTINATION games
+  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
 )
 
 install(

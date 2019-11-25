@@ -23,5 +23,5 @@ target_link_libraries(gf_pong gf0)
 
 install(
   TARGETS gf_pong
-  RUNTIME DESTINATION games
+  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
 )

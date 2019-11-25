@@ -32,7 +32,7 @@ target_link_libraries(lux gf0)
 
 install(
   TARGETS lux
-  RUNTIME DESTINATION games
+  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
 )
 
 install(
