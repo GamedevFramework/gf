@@ -279,7 +279,7 @@ target_compile_definitions(gfnet0
 
 if (UNIX)
   target_compile_definitions(gfnet0
-    PRIVATE
+    PUBLIC
       _POSIX_C_SOURCE=200809L
   )
 endif()
@@ -324,6 +324,7 @@ endif()
 
 target_link_libraries(gfcore0
   PUBLIC
+    Threads::Threads
     Boost::boost
     Boost::filesystem
   PRIVATE

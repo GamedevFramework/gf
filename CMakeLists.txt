@@ -39,6 +39,8 @@ find_package(Boost REQUIRED COMPONENTS filesystem system)
 find_package(Freetype REQUIRED)
 find_package(ZLIB REQUIRED)
 
+find_package(Threads REQUIRED)
+
 if(APPLE)
   # on macos, always use OpenGL 3.3
   set(GF_BUILD_WITH_OPENGL3 ON)
