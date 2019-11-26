@@ -22,7 +22,7 @@ before_build:
   - cmd: cmake -A x64 -DGF_DEBUG=OFF -DGF_BUILD_GAMES=ON -DGF_BUILD_TOOLS=ON -DGF_SINGLE_COMPILTATION_UNIT=ON -DGF_SHARED=OFF -DCMAKE_TOOLCHAIN_FILE=C:\Tools\vcpkg\scripts\buildsystems\vcpkg.cmake ..
 
 platform: x64
-configuration: Release
+configuration: Debug
 
 build:
   parallel: true

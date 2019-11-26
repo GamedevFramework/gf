@@ -9,6 +9,8 @@ addons:
       - libfreetype6-dev
       - libsdl2-dev
       - zlib1g-dev
+      - libsfml-dev
+      - libbox2d-dev
   homebrew:
     packages:
       - cmake
