@@ -122,6 +122,45 @@ namespace {
   }
 
   template<gf::SocketFamily Family>
+  void testTcpListenerNonBlocking(const std::string& host) {
+    gf::TcpListener listener(TestService, Family);
+    ASSERT_TRUE(listener);
+
+    std::thread clientThread([&host]() {
+      gf::TcpSocket socket(host, TestService, Family);
+      ASSERT_TRUE(socket);
+
+      socket.setNonBlocking();
+
+      uint8_t buffer[4] = { 0x42, 0x69, 0xFF, 0x12 };
+      auto res = socket.sendRawBytes(buffer);
+      EXPECT_EQ(res.status, gf::SocketStatus::Data);
+      EXPECT_EQ(res.length, 4u);
+
+      res = socket.recvRawBytes(buffer);
+      EXPECT_EQ(res.status, gf::SocketStatus::Block);
+      EXPECT_EQ(res.length, 0u);
+    });
+
+    gf::TcpSocket socket = listener.accept();
+    ASSERT_TRUE(socket);
+
+    uint8_t buffer[10];
+    auto res = socket.recvRawBytes(buffer);
+    EXPECT_EQ(res.status, gf::SocketStatus::Data);
+    EXPECT_EQ(res.length, 4u);
+    EXPECT_EQ(buffer[0], 0x42);
+    EXPECT_EQ(buffer[1], 0x69);
+    EXPECT_EQ(buffer[2], 0xFF);
+    EXPECT_EQ(buffer[3], 0x12);
+
+    res = socket.recvRawBytes(buffer);
+    EXPECT_EQ(res.status, gf::SocketStatus::Close);
+
+    clientThread.join();
+  }
+
+  template<gf::SocketFamily Family>
   void testUdpSocketService() {
     gf::UdpSocket socket(TestService, Family);
 
@@ -288,6 +327,18 @@ TEST(SocketTest, TcpListenerMultipleClientV4) {
 
 TEST(SocketTest, TcpListenerMultipleClientV6) {
   testTcpListenerMultipleClient<gf::SocketFamily::IPv6>("::1");
+}
+
+TEST(SocketTest, TcpListenerNonBlockingUnspec) {
+  testTcpListenerNonBlocking<gf::SocketFamily::Unspec>("localhost");
+}
+
+TEST(SocketTest, TcpListenerNonBlockingV4) {
+  testTcpListenerNonBlocking<gf::SocketFamily::IPv4>("localhost");
+}
+
+TEST(SocketTest, TcpListenerNonBlockingV6) {
+  testTcpListenerNonBlocking<gf::SocketFamily::IPv6>("::1");
 }
 
 TEST(SocketTest, UdpSocketDefault) {

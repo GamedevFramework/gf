@@ -76,6 +76,10 @@ inline namespace v1 {
     int res = ::send(getHandle(), sendBufferPointer(buffer), sendBufferLength(buffer), NoFlag);
 
     if (res == InvalidCommunication) {
+      if (nativeWouldBlock(getErrorCode())) {
+        return { SocketStatus::Block, 0u };
+      }
+
       gf::Log::error("Error while sending data. Reason: %s\n", getErrorString().c_str());
       return { SocketStatus::Error, 0u };
     }
@@ -87,6 +91,10 @@ inline namespace v1 {
     int res = ::recv(getHandle(), recvBufferPointer(buffer), recvBufferLength(buffer), NoFlag);
 
     if (res == InvalidCommunication) {
+      if (nativeWouldBlock(getErrorCode())) {
+        return { SocketStatus::Block, 0u };
+      }
+
       gf::Log::error("Error while receiving data. Reason: %s\n", getErrorString().c_str());
       return { SocketStatus::Error, 0u };
     }

@@ -32,9 +32,10 @@
 #else
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <errno.h>
+#include <fcntl.h>
 #include <netdb.h>
 #include <unistd.h>
-#include <errno.h>
 #endif
 
 #include <gf/Log.h>
@@ -69,77 +70,112 @@ inline namespace v1 {
     int err = ::getsockname(m_handle, reinterpret_cast<sockaddr*>(&address.m_storage), &address.m_length);
 
     if (err != 0) {
-      gf::Log::error("Could not get the local address: %i\n", getErrorCode());
+      gf::Log::error("Could not get the local address: %s\n", getErrorString().c_str());
     }
 
     return address;
   }
 
+  void Socket::setBlocking() {
+    if (!nativeSetBlockMode(m_handle, false)) {
+      gf::Log::error("Could not set the socket blocking: %s\n", getErrorString().c_str());
+    }
+  }
+
+  void Socket::setNonBlocking() {
+    if (!nativeSetBlockMode(m_handle, true)) {
+      gf::Log::error("Could not set the socket non-blocking: %s\n", getErrorString().c_str());
+    }
+  }
+
 #ifdef _WIN32
-    bool Socket::nativeCloseSocket(SocketHandle handle) {
-      return ::closesocket(handle) == 0;
-    }
+  bool Socket::nativeCloseSocket(SocketHandle handle) {
+    return ::closesocket(handle) == 0;
+  }
 
-    auto Socket::sendBufferLength(ArrayRef<uint8_t> buffer) -> SendBufferLengthType {
-      return static_cast<SendBufferLengthType>(buffer.getSize());
-    }
+  bool Socket::nativeSetBlockMode(SocketHandle handle, bool blocking) {
+    u_long mode = blocking ? 1 : 0;
+    return ::ioctlsocket(handle, FIONBIO, &mode) == 0;
+  }
 
-    auto Socket::sendBufferPointer(ArrayRef<uint8_t> buffer) -> SendBufferPointerType {
-      return reinterpret_cast<SendBufferPointerType>(buffer.getData());
-    }
+  bool Socket::nativeWouldBlock(int err) {
+    return getErrorCode() == WSAEWOULDBLOCK;
+  }
 
-    auto Socket::recvBufferLength(BufferRef<uint8_t> buffer) -> RecvBufferLengthType {
-      return static_cast<SendBufferLengthType>(buffer.getSize());
-    }
+  auto Socket::sendBufferLength(ArrayRef<uint8_t> buffer) -> SendBufferLengthType {
+    return static_cast<SendBufferLengthType>(buffer.getSize());
+  }
 
-    auto Socket::recvBufferPointer(BufferRef<uint8_t> buffer) -> RecvBufferPointerType {
-      return reinterpret_cast<RecvBufferPointerType>(buffer.getData());
-    }
+  auto Socket::sendBufferPointer(ArrayRef<uint8_t> buffer) -> SendBufferPointerType {
+    return reinterpret_cast<SendBufferPointerType>(buffer.getData());
+  }
 
-    int Socket::getErrorCode() {
-      return WSAGetLastError();
-    }
+  auto Socket::recvBufferLength(BufferRef<uint8_t> buffer) -> RecvBufferLengthType {
+    return static_cast<SendBufferLengthType>(buffer.getSize());
+  }
 
-    std::string Socket::getErrorString() {
-      static constexpr std::size_t BufferSize = 1024;
-      int err = getErrorCode();
-      char buffer[BufferSize];
-      ::FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, nullptr, err, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), buffer, BufferSize, nullptr);
-      return buffer;
-    }
+  auto Socket::recvBufferPointer(BufferRef<uint8_t> buffer) -> RecvBufferPointerType {
+    return reinterpret_cast<RecvBufferPointerType>(buffer.getData());
+  }
+
+  int Socket::getErrorCode() {
+    return WSAGetLastError();
+  }
+
+  std::string Socket::getErrorString() {
+    static constexpr std::size_t BufferSize = 1024;
+    int err = getErrorCode();
+    char buffer[BufferSize];
+    ::FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, nullptr, err, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), buffer, BufferSize, nullptr);
+    return buffer;
+  }
 
 #else
-    bool Socket::nativeCloseSocket(SocketHandle handle) {
-      return ::close(handle) == 0;
+  bool Socket::nativeCloseSocket(SocketHandle handle) {
+    return ::close(handle) == 0;
+  }
+
+  bool Socket::nativeSetBlockMode(SocketHandle handle, bool blocking) {
+    int flags = ::fcntl(handle, F_GETFL, 0);
+
+    if (flags == -1) {
+      return false;
     }
 
-    auto Socket::sendBufferLength(ArrayRef<uint8_t> buffer) -> SendBufferLengthType {
-      return buffer.getSize();
-    }
+    return ::fcntl(handle, F_SETFL, blocking ? (flags | O_NONBLOCK) : (flags & ~(O_NONBLOCK))) != -1;
+  }
 
-    auto Socket::sendBufferPointer(ArrayRef<uint8_t> buffer) -> SendBufferPointerType {
-      return static_cast<SendBufferPointerType>(buffer.getData());
-    }
+  bool Socket::nativeWouldBlock(int err) {
+    return err == EAGAIN || err == EWOULDBLOCK;
+  }
 
-    auto Socket::recvBufferLength(BufferRef<uint8_t> buffer) -> RecvBufferLengthType {
-      return buffer.getSize();
-    }
+  auto Socket::sendBufferLength(ArrayRef<uint8_t> buffer) -> SendBufferLengthType {
+    return buffer.getSize();
+  }
 
-    auto Socket::recvBufferPointer(BufferRef<uint8_t> buffer) -> RecvBufferPointerType {
-      return static_cast<RecvBufferPointerType>(buffer.getData());
-    }
+  auto Socket::sendBufferPointer(ArrayRef<uint8_t> buffer) -> SendBufferPointerType {
+    return static_cast<SendBufferPointerType>(buffer.getData());
+  }
 
-    int Socket::getErrorCode() {
-      return errno;
-    }
+  auto Socket::recvBufferLength(BufferRef<uint8_t> buffer) -> RecvBufferLengthType {
+    return buffer.getSize();
+  }
 
-    std::string Socket::getErrorString() {
-      static constexpr std::size_t BufferSize = 1024;
-      int err = getErrorCode();
-      char buffer[BufferSize];
-      ::strerror_r(err, buffer, BufferSize);
-      return buffer;
-    }
+  auto Socket::recvBufferPointer(BufferRef<uint8_t> buffer) -> RecvBufferPointerType {
+    return static_cast<RecvBufferPointerType>(buffer.getData());
+  }
+
+  int Socket::getErrorCode() {
+    return errno;
+  }
+
+  std::string Socket::getErrorString() {
+    static constexpr std::size_t BufferSize = 1024;
+    int err = getErrorCode();
+    char buffer[BufferSize];
+    ::strerror_r(err, buffer, BufferSize);
+    return buffer;
+  }
 
 #endif
 

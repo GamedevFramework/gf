@@ -53,6 +53,7 @@ inline namespace v1 {
   enum class SocketStatus {
     Data,
     Close,
+    Block,
     Error,
   };
 
@@ -77,6 +78,9 @@ inline namespace v1 {
 
     SocketAddress getLocalAddress() const;
 
+    void setBlocking();
+    void setNonBlocking();
+
   protected:
     Socket()
     : m_handle(InvalidSocketHandle)
@@ -93,6 +97,8 @@ inline namespace v1 {
     }
 
     static bool nativeCloseSocket(SocketHandle handle);
+    static bool nativeSetBlockMode(SocketHandle handle, bool blocking);
+    static bool nativeWouldBlock(int err);
 
 #ifdef _WIN32
     using SendBufferLengthType = int;
