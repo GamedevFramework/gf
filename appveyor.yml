@@ -28,3 +28,9 @@ build:
   parallel: true
   project: C:\projects\GF\build\GF.sln
   verbosity: normal
+
+test:
+  - cmd: test\gf_tests.exe --gtest_output=xml:tests.xml
+
+on_finish:
+  - ps: (new-object net.webclient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\tests.xml))
