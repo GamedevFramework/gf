@@ -30,7 +30,7 @@ build:
   verbosity: normal
 
 test_script:
-  - cmd: .\tests\Debug\gf_tests.exe --gtest_output=xml:tests.xml
+  - cmd: .\tests\Debug\gf_tests.exe --gtest_output=xml:tests.xml --gtest_filter=-Socket*
 
 on_finish:
   - ps: (new-object net.webclient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\tests.xml))
