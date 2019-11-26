@@ -29,7 +29,7 @@ build:
   project: C:\projects\GF\build\GF.sln
   verbosity: normal
 
-test:
+test_script:
   - cmd: test\gf_tests.exe --gtest_output=xml:tests.xml
 
 on_finish:
