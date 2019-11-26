@@ -277,7 +277,7 @@ target_compile_definitions(gfnet0
     GF_EXPORT_SYMBOLS
 )
 
-if (UNIX)
+if (UNIX AND NOT APPLE)
   target_compile_definitions(gfnet0
     PUBLIC
       _POSIX_C_SOURCE=200809L
