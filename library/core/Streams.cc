@@ -23,7 +23,7 @@
  */
 #include <gf/Streams.h>
 
-#include <cstring>
+#include <algorithm>
 #include <stdexcept>
 #include <string>
 
@@ -106,11 +106,15 @@ inline namespace v1 {
       return 0;
     }
 
-    std::size_t end = m_offset + buffer.getSize();
-    std::size_t count = end <= m_memory.getSize() ? buffer.getSize() : m_memory.getSize() - m_offset;
+    std::size_t count = buffer.getSize();
+    std::size_t available = m_memory.getSize() - m_offset;
+
+    if (count > available) {
+      count = available;
+    }
 
     if (count > 0) {
-      std::memcpy(buffer.getData(), m_memory.getData() + m_offset, count);
+      std::copy_n(m_memory.getData() + m_offset, count, buffer.getData());
       m_offset += count;
     }
 
@@ -275,7 +279,7 @@ inline namespace v1 {
   std::size_t MemoryOutputStream::write(ArrayRef<uint8_t> buffer) {
     std::size_t remaining = m_memory.getSize() - m_offset;
     std::size_t size = std::min(remaining, buffer.getSize());
-    std::memcpy(m_memory.getData() + m_offset, buffer.getData(), size);
+    std::copy_n(buffer.getData(), size, m_memory.getData() + m_offset);
     m_offset += size;
     return size;
   }

@@ -18,16 +18,46 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
+#ifndef GF_PACKET_H
+#define GF_PACKET_H
 
-/*
- * This file is meant for single compilation unit (a.k.a. unity build)
- * See: https://en.wikipedia.org/wiki/Single_Compilation_Unit
- */
+#include "Portability.h"
+#include "Stream.h"
 
-#include "Packet.cc"
-#include "SocketAddress.cc"
-#include "Socket.cc"
-#include "SocketGuard.cc"
-#include "TcpListener.cc"
-#include "TcpSocket.cc"
-#include "UdpSocket.cc"
+namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+inline namespace v1 {
+#endif
+
+  class GF_API InputPacket : public InputStream {
+  public:
+    InputPacket(std::size_t size);
+
+    BufferRef<uint8_t> asBuffer();
+
+    virtual std::size_t read(BufferRef<uint8_t> buffer) override;
+    virtual void seek(std::ptrdiff_t position) override;
+    virtual void skip(std::ptrdiff_t position) override;
+    virtual bool isFinished() override;
+  private:
+    std::vector<uint8_t> m_buffer;
+    std::size_t m_offset;
+  };
+
+  class GF_API OutputPacket : public OutputStream {
+  public:
+    ArrayRef<uint8_t> asBuffer();
+
+    virtual std::size_t write(ArrayRef<uint8_t> buffer) override;
+    virtual std::size_t getWrittenBytesCount() const override;
+
+  private:
+    std::vector<uint8_t> m_buffer;
+  };
+
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+}
+#endif
+}
+
+#endif // GF_PACKET_H

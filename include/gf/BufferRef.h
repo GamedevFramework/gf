@@ -186,6 +186,21 @@ inline namespace v1 {
   };
 
 
+  /**
+   * @ingroup core
+   * @brief Create a reference to a buffer
+   *
+   * @param data A pointer to the elements in the buffer
+   * @param size The number of elements in the buffer
+   * @returns A reference to a buffer
+   */
+  template<typename T>
+  constexpr
+  BufferRef<T> buffer(T *data, std::size_t size) {
+    return BufferRef<T>(data, size);
+  }
+
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif
