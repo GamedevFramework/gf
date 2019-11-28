@@ -26,7 +26,9 @@
 
 #include "ArrayRef.h"
 #include "BufferRef.h"
+#include "Packet.h"
 #include "Portability.h"
+#include "Serialization.h"
 #include "Socket.h"
 
 namespace gf {
@@ -51,6 +53,33 @@ inline namespace v1 {
 
     SocketDataResult sendRawBytes(ArrayRef<uint8_t> buffer);
     SocketDataResult recvRawBytes(BufferRef<uint8_t> buffer);
+
+    bool sendBytes(ArrayRef<uint8_t> buffer);
+    bool recvBytes(BufferRef<uint8_t> buffer);
+
+    bool sendPacket(const OutputPacket& packet);
+    bool recvPacket(InputPacket& packet);
+
+    template<typename T>
+    bool sendData(const T& data) {
+      OutputPacket packet;
+      gf::Serializer serializer(packet);
+      serializer | const_cast<T&>(data);
+      return sendPacket(packet);
+    }
+
+    template<typename T>
+    bool recvData(T& data) {
+      InputPacket packet;
+      bool res = recvPacket(packet);
+
+      if (res) {
+        gf::Deserializer deserializer(packet);
+        deserializer | data;
+      }
+
+      return res;
+    }
 
   private:
     TcpSocket(SocketHandle handle);

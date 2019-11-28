@@ -31,9 +31,10 @@ inline namespace v1 {
 
   class GF_API InputPacket : public InputStream {
   public:
-    InputPacket(std::size_t size);
+    InputPacket(std::size_t size = 0);
 
-    BufferRef<uint8_t> asBuffer();
+    void reset(std::size_t size);
+    BufferRef<uint8_t> getRef();
 
     virtual std::size_t read(BufferRef<uint8_t> buffer) override;
     virtual void seek(std::ptrdiff_t position) override;
@@ -46,7 +47,7 @@ inline namespace v1 {
 
   class GF_API OutputPacket : public OutputStream {
   public:
-    ArrayRef<uint8_t> asBuffer();
+    ArrayRef<uint8_t> getRef() const;
 
     virtual std::size_t write(ArrayRef<uint8_t> buffer) override;
     virtual std::size_t getWrittenBytesCount() const override;

@@ -30,13 +30,20 @@ namespace gf {
 inline namespace v1 {
 #endif
 
+  // InputPacket
+
   InputPacket::InputPacket(std::size_t size)
   : m_buffer(size)
   , m_offset(0)
   {
   }
 
-  BufferRef<uint8_t> InputPacket::asBuffer() {
+  void InputPacket::reset(std::size_t size) {
+    m_buffer.resize(size);
+    m_offset = 0;
+  }
+
+  BufferRef<uint8_t> InputPacket::getRef() {
     return gf::buffer(m_buffer.data(), m_buffer.size());
   }
 
@@ -83,7 +90,9 @@ inline namespace v1 {
     return m_offset == m_buffer.size();
   }
 
-  ArrayRef<uint8_t> OutputPacket::asBuffer() {
+  // OutputPacket
+
+  ArrayRef<uint8_t> OutputPacket::getRef() const {
     return gf::array(m_buffer.data(), m_buffer.size());
   }
 

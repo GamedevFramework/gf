@@ -22,6 +22,7 @@
 #define GF_SOCKET_H
 
 #include <cstddef>
+#include <cstdint>
 #include <string>
 
 #ifdef _WIN32
@@ -52,8 +53,8 @@ inline namespace v1 {
 
   enum class SocketStatus {
     Data,
-    Close,
     Block,
+    Close,
     Error,
   };
 
@@ -146,6 +147,32 @@ inline namespace v1 {
 
   private:
     static std::vector<SocketAddressInfo> getAddressInfoEx(const char *host, const char *service, int flags, SocketType type, SocketFamily family);
+
+  protected:
+    struct Header {
+      uint8_t data[8];
+    };
+
+    static constexpr Header encodeHeader(uint64_t size) {
+      Header header = {{ 0, 0, 0, 0, 0, 0, 0, 0 }};
+
+      for (int i = 0; i < 8; ++i) {
+        header.data[8 - i - 1] = static_cast<uint8_t>(size % 0x100);
+        size >>= 8;
+      }
+
+      return header;
+    }
+
+    static constexpr uint64_t decodeHeader(const Header& header) {
+      uint64_t size = 0;
+
+      for (uint64_t x : header.data) {
+        size = (size << 8) + x;
+      }
+
+      return size;
+    }
 
   private:
     SocketHandle m_handle;

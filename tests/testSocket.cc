@@ -27,8 +27,11 @@
 
 #include "gtest/gtest.h"
 
+#include <gf/SerializationOps.h>
+
 namespace {
   constexpr const char *TestService = "12345";
+  constexpr const char *Host = "localhost";
 
   template<gf::SocketFamily Family>
   void testTcpListenerService() {
@@ -42,12 +45,12 @@ namespace {
   }
 
   template<gf::SocketFamily Family>
-  void testTcpListenerOneClient(const std::string& host) {
+  void testTcpListenerOneClient() {
     gf::TcpListener listener(TestService, Family);
     ASSERT_TRUE(listener);
 
-    std::thread clientThread([&host]() {
-      gf::TcpSocket socket(host, TestService, Family);
+    std::thread clientThread([]() {
+      gf::TcpSocket socket(Host, TestService, Family);
       ASSERT_TRUE(socket);
 
       uint8_t buffer[4] = { 0x42, 0x69, 0xFF, 0x12 };
@@ -83,15 +86,15 @@ namespace {
   }
 
   template<gf::SocketFamily Family>
-  void testTcpListenerMultipleClient(const std::string& host) {
+  void testTcpListenerMultipleClient() {
     static constexpr int ClientCount = 10;
 
     gf::TcpListener listener(TestService, Family);
     ASSERT_TRUE(listener);
 
-    std::thread clientThread([&host]() {
+    std::thread clientThread([]() {
       for (int i = 0; i < ClientCount; ++i) {
-        gf::TcpSocket socket(host, TestService, Family);
+        gf::TcpSocket socket(Host, TestService, Family);
         ASSERT_TRUE(socket);
 
         uint8_t buffer[4] = { 0x42, 0x69, 0xFF, 0x12 };
@@ -122,12 +125,12 @@ namespace {
   }
 
   template<gf::SocketFamily Family>
-  void testTcpListenerNonBlocking(const std::string& host) {
+  void testTcpListenerNonBlocking() {
     gf::TcpListener listener(TestService, Family);
     ASSERT_TRUE(listener);
 
-    std::thread clientThread([&host]() {
-      gf::TcpSocket socket(host, TestService, Family);
+    std::thread clientThread([]() {
+      gf::TcpSocket socket(Host, TestService, Family);
       ASSERT_TRUE(socket);
 
       socket.setNonBlocking();
@@ -183,17 +186,17 @@ namespace {
   }
 
   template<gf::SocketFamily Family>
-  void testUdpSocketOneWayCommunication(const std::string& host) {
+  void testUdpSocketOneWayCommunication() {
     gf::UdpSocket socket(TestService, Family);
     ASSERT_TRUE(socket);
 
-    std::thread clientThread([&host]() {
+    std::thread clientThread([]() {
       gf::UdpSocket socket(gf::Any, Family);
       ASSERT_TRUE(socket);
 
       auto actualFamily = socket.getLocalAddress().getFamily();
 
-      gf::SocketAddress address = socket.getRemoteAddress(host, TestService);
+      gf::SocketAddress address = socket.getRemoteAddress(Host, TestService);
       EXPECT_EQ(address.getFamily(), actualFamily);
 
       uint8_t buffer[4] = { 0x42, 0x69, 0xFF, 0x12 };
@@ -220,17 +223,17 @@ namespace {
   }
 
   template<gf::SocketFamily Family>
-  void testUdpSocketTwoWayCommunication(const std::string& host) {
+  void testUdpSocketTwoWayCommunication() {
     gf::UdpSocket socket(TestService, Family);
     ASSERT_TRUE(socket);
 
-    std::thread clientThread([&host]() {
+    std::thread clientThread([]() {
       gf::UdpSocket socket(gf::Any, Family);
       ASSERT_TRUE(socket);
 
       auto actualFamily = socket.getLocalAddress().getFamily();
 
-      gf::SocketAddress address = socket.getRemoteAddress(host, TestService);
+      gf::SocketAddress address = socket.getRemoteAddress(Host, TestService);
       EXPECT_EQ(address.getFamily(), actualFamily);
 
       {
@@ -278,6 +281,46 @@ namespace {
 
     clientThread.join();
   }
+
+
+  struct Data {
+    std::string str;
+    double num;
+  };
+
+  template<typename Archive>
+  Archive& operator|(Archive& ar, Data& d) {
+    return ar | d.str | d.num;
+  }
+
+  template<gf::SocketFamily Family>
+  void testTcpData() {
+    gf::TcpListener listener(TestService, Family);
+    ASSERT_TRUE(listener);
+
+    std::thread clientThread([]() {
+      gf::TcpSocket socket(Host, TestService, Family);
+      ASSERT_TRUE(socket);
+
+      Data data = { "toto42", 3.14 };
+
+      auto success = socket.sendData(data);
+      EXPECT_TRUE(success);
+    });
+
+    gf::TcpSocket socket = listener.accept();
+    ASSERT_TRUE(socket);
+
+    Data data;
+    auto success = socket.recvData(data);
+
+    EXPECT_TRUE(success);
+    EXPECT_EQ(data.str, "toto42");
+    EXPECT_EQ(data.num, 3.14);
+
+    clientThread.join();
+  }
+
 }
 
 
@@ -306,39 +349,39 @@ TEST(SocketTest, TcpListenerServiceV6) {
 }
 
 TEST(SocketTest, TcpListenerOneClientUnspec) {
-  testTcpListenerOneClient<gf::SocketFamily::Unspec>("localhost");
+  testTcpListenerOneClient<gf::SocketFamily::Unspec>();
 }
 
 TEST(SocketTest, TcpListenerOneClientV4) {
-  testTcpListenerOneClient<gf::SocketFamily::IPv4>("localhost");
+  testTcpListenerOneClient<gf::SocketFamily::IPv4>();
 }
 
 TEST(SocketTest, TcpListenerOneClientV6) {
-  testTcpListenerOneClient<gf::SocketFamily::IPv6>("::1");
+  testTcpListenerOneClient<gf::SocketFamily::IPv6>();
 }
 
 TEST(SocketTest, TcpListenerMultipleClientUnspec) {
-  testTcpListenerMultipleClient<gf::SocketFamily::Unspec>("localhost");
+  testTcpListenerMultipleClient<gf::SocketFamily::Unspec>();
 }
 
 TEST(SocketTest, TcpListenerMultipleClientV4) {
-  testTcpListenerMultipleClient<gf::SocketFamily::IPv4>("localhost");
+  testTcpListenerMultipleClient<gf::SocketFamily::IPv4>();
 }
 
 TEST(SocketTest, TcpListenerMultipleClientV6) {
-  testTcpListenerMultipleClient<gf::SocketFamily::IPv6>("::1");
+  testTcpListenerMultipleClient<gf::SocketFamily::IPv6>();
 }
 
 TEST(SocketTest, TcpListenerNonBlockingUnspec) {
-  testTcpListenerNonBlocking<gf::SocketFamily::Unspec>("localhost");
+  testTcpListenerNonBlocking<gf::SocketFamily::Unspec>();
 }
 
 TEST(SocketTest, TcpListenerNonBlockingV4) {
-  testTcpListenerNonBlocking<gf::SocketFamily::IPv4>("localhost");
+  testTcpListenerNonBlocking<gf::SocketFamily::IPv4>();
 }
 
 TEST(SocketTest, TcpListenerNonBlockingV6) {
-  testTcpListenerNonBlocking<gf::SocketFamily::IPv6>("::1");
+  testTcpListenerNonBlocking<gf::SocketFamily::IPv6>();
 }
 
 TEST(SocketTest, UdpSocketDefault) {
@@ -372,25 +415,30 @@ TEST(SocketTest, UdpSocketAnyV6) {
 }
 
 TEST(SocketTest, UdpSocketOneWayCommunicationUnspec) {
-  testUdpSocketOneWayCommunication<gf::SocketFamily::Unspec>("localhost");
+  testUdpSocketOneWayCommunication<gf::SocketFamily::Unspec>();
 }
 
 TEST(SocketTest, UdpSocketOneWayCommunicationV4) {
-  testUdpSocketOneWayCommunication<gf::SocketFamily::IPv4>("localhost");
+  testUdpSocketOneWayCommunication<gf::SocketFamily::IPv4>();
 }
 
 TEST(SocketTest, UdpSocketOneWayCommunicationV6) {
-  testUdpSocketOneWayCommunication<gf::SocketFamily::IPv6>("::1");
+  testUdpSocketOneWayCommunication<gf::SocketFamily::IPv6>();
 }
 
 TEST(SocketTest, UdpSocketTwoWayCommunicationUnspec) {
-  testUdpSocketTwoWayCommunication<gf::SocketFamily::Unspec>("localhost");
+  testUdpSocketTwoWayCommunication<gf::SocketFamily::Unspec>();
 }
 
 TEST(SocketTest, UdpSocketTwoWayCommunicationV4) {
-  testUdpSocketTwoWayCommunication<gf::SocketFamily::IPv4>("localhost");
+  testUdpSocketTwoWayCommunication<gf::SocketFamily::IPv4>();
 }
 
 TEST(SocketTest, UdpSocketTwoWayCommunicationV6) {
-  testUdpSocketTwoWayCommunication<gf::SocketFamily::IPv6>("::1");
+  testUdpSocketTwoWayCommunication<gf::SocketFamily::IPv6>();
+}
+
+
+TEST(SocketTest, TcpData) {
+  testTcpData<gf::SocketFamily::Unspec>();
 }

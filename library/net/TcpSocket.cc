@@ -106,6 +106,63 @@ inline namespace v1 {
     return { SocketStatus::Data, static_cast<std::size_t>(res) };
   }
 
+  bool TcpSocket::sendBytes(ArrayRef<uint8_t> buffer) {
+    do {
+      auto res = sendRawBytes(buffer);
+
+      switch (res.status) {
+        case SocketStatus::Data:
+          buffer = buffer.sub(res.length);
+          break;
+        case SocketStatus::Block:
+          continue;
+        case SocketStatus::Close:
+        case SocketStatus::Error:
+          return false;
+      }
+
+    } while (!buffer.isEmpty());
+
+    return true;
+  }
+
+  bool TcpSocket::recvBytes(BufferRef<uint8_t> buffer) {
+    do {
+      auto res = recvRawBytes(buffer);
+
+      switch (res.status) {
+        case SocketStatus::Data:
+          buffer = buffer.sub(res.length);
+          break;
+        case SocketStatus::Block:
+          continue;
+        case SocketStatus::Close:
+        case SocketStatus::Error:
+          return false;
+      }
+
+    } while (!buffer.isEmpty());
+
+    return true;
+  }
+
+  bool TcpSocket::sendPacket(const OutputPacket& packet) {
+    auto size = static_cast<uint64_t>(packet.getWrittenBytesCount());
+    auto header = encodeHeader(size);
+    return sendBytes(header.data) && sendBytes(packet.getRef());
+  }
+
+  bool TcpSocket::recvPacket(InputPacket& packet) {
+    Header header;
+
+    if (!recvBytes(header.data)) {
+      return false;
+    }
+
+    auto size = decodeHeader(header);
+    packet.reset(static_cast<std::size_t>(size));
+    return recvBytes(packet.getRef());
+  }
 
   SocketHandle TcpSocket::nativeConnect(const std::string& host, const std::string& service, SocketFamily family) {
     auto addresses = getRemoteAddressInfo(host, service, SocketType::Tcp, family);

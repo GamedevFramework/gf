@@ -21,6 +21,7 @@
 #ifndef GF_BUFFER_REF_H
 #define GF_BUFFER_REF_H
 
+#include <cassert>
 #include <array>
 #include <vector>
 
@@ -144,6 +145,17 @@ inline namespace v1 {
      */
     constexpr bool isEmpty() const noexcept {
       return m_size == 0;
+    }
+
+    /**
+     * @brief Create a buffer starting at a specified index
+     *
+     * @param index The starting index of the new buffer
+     * @returns A sub-buffer starting at the new index
+     */
+    constexpr BufferRef<T> sub(std::size_t index) {
+      assert(index <= m_size);
+      return BufferRef<T>(m_data + index, m_size - index);
     }
 
     /**
