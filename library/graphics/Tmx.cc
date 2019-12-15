@@ -660,7 +660,7 @@ inline namespace v1 {
         std::string points = required_attribute(node.child("polygon"), "points").as_string();
         tmx->points = parsePoints(points);
 
-        return std::move(tmx);
+        return tmx;
       }
 
       if (node.child("polyline") != nullptr) {
@@ -672,7 +672,7 @@ inline namespace v1 {
         std::string points = required_attribute(node.child("polyline"), "points").as_string();
         tmx->points = parsePoints(points);
 
-        return std::move(tmx);
+        return tmx;
       }
 
       if (node.child("text") != nullptr) {
@@ -727,7 +727,7 @@ inline namespace v1 {
 
         tmx->text = text.child_value();
 
-        return std::move(tmx);
+        return tmx;
       }
 
       if (node.attribute("gid") != nullptr) {
@@ -741,7 +741,7 @@ inline namespace v1 {
         tmx->gid = cell.gid;
         tmx->flip = cell.flip;
 
-        return std::move(tmx);
+        return tmx;
       }
 
       if (node.child("point") != nullptr) {
@@ -750,7 +750,7 @@ inline namespace v1 {
 
         tmx->kind = TmxObject::Point;
 
-        return std::move(tmx);
+        return tmx;
       }
 
       if (node.child("ellipse") != nullptr) {
@@ -761,7 +761,7 @@ inline namespace v1 {
         tmx->size.width = node.attribute("width").as_float();
         tmx->size.height = node.attribute("height").as_float();
 
-        return std::move(tmx);
+        return tmx;
       }
 
       auto tmx = std::make_unique<TmxRectangle>();
@@ -771,7 +771,7 @@ inline namespace v1 {
       tmx->size.width = required_attribute(node, "width").as_float();
       tmx->size.height = required_attribute(node, "height").as_float();
 
-      return std::move(tmx);
+      return tmx;
     }
 
     std::unique_ptr<TmxObjectLayer> parseTmxObjectLayer(const pugi::xml_node node) {
