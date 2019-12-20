@@ -114,17 +114,6 @@ inline namespace v1 {
     }
 
     /**
-     * @brief Constructor from an initializer list
-     *
-     * @param values The list of elements
-     */
-    ArrayRef(std::initializer_list<T> values)
-    : m_data(values.size() == 0 ? nullptr : values.begin())
-    , m_size(values.size())
-    {
-    }
-
-    /**
      * @brief Get a pointer to the elements
      *
      * @returns A pointer to the first element in the array

@@ -829,10 +829,11 @@ int main() {
       views.processEvent(event);
     }
 
+    auto ratios = { 0.75f, 0.25f };
 
     ui.begin("Dungeons", gf::RectF::fromPositionSize(gf::Vector2f(Size, 0.0f), gf::Vector2f(ExtraSize, Size)), gf::UIWindow::Title | gf::UIWindow::Border);
 
-    ui.layoutRow(gf::UILayout::Dynamic, 20, { 0.75f, 0.25f });
+    ui.layoutRow(gf::UILayout::Dynamic, 20, gf::array(ratios.begin(), ratios.size()));
     ui.label("Size");
     ui.label(std::to_string(dungeonSize), gf::UIAlignment::Right);
     ui.layoutRowDynamic(20, 1);
@@ -855,7 +856,7 @@ int main() {
       case AlgorithmCellularAutomaton: {
         currentGenerator = &cellular;
 
-        ui.layoutRow(gf::UILayout::Dynamic, 20, { 0.75f, 0.25f });
+        ui.layoutRow(gf::UILayout::Dynamic, 20, gf::array(ratios.begin(), ratios.size()));
         ui.label("Initial Ratio");
         ui.label(gf::niceNum(cellular.threshold, 0.01f), gf::UIAlignment::Right);
         ui.layoutRowDynamic(20, 1);
@@ -876,7 +877,7 @@ int main() {
           currentGenerator->setPhase(DungeonGenerator::Phase::Iterate);
         }
 
-        ui.layoutRow(gf::UILayout::Dynamic, 20, { 0.75f, 0.25f });
+        ui.layoutRow(gf::UILayout::Dynamic, 20, gf::array(ratios.begin(), ratios.size()));
         ui.label("Survival Threshold");
         ui.label(std::to_string(cellular.survivalThreshold), gf::UIAlignment::Right);
         ui.layoutRowDynamic(20, 1);
@@ -884,7 +885,7 @@ int main() {
           currentGenerator->setPhase(DungeonGenerator::Phase::Iterate);
         }
 
-        ui.layoutRow(gf::UILayout::Dynamic, 20, { 0.75f, 0.25f });
+        ui.layoutRow(gf::UILayout::Dynamic, 20, gf::array(ratios.begin(), ratios.size()));
         ui.label("Birth Threshold");
         ui.label(std::to_string(cellular.birthThreshold), gf::UIAlignment::Right);
         ui.layoutRowDynamic(20, 1);
@@ -892,7 +893,7 @@ int main() {
           currentGenerator->setPhase(DungeonGenerator::Phase::Iterate);
         }
 
-        ui.layoutRow(gf::UILayout::Dynamic, 20, { 0.75f, 0.25f });
+        ui.layoutRow(gf::UILayout::Dynamic, 20, gf::array(ratios.begin(), ratios.size()));
         ui.label("Number of Iterations");
         ui.label(std::to_string(cellular.iterations), gf::UIAlignment::Right);
         ui.layoutRowDynamic(20, 1);
@@ -906,7 +907,7 @@ int main() {
       case AlgorithmDrunkardsMarch: {
         currentGenerator = &march;
 
-        ui.layoutRow(gf::UILayout::Dynamic, 20, { 0.75f, 0.25f });
+        ui.layoutRow(gf::UILayout::Dynamic, 20, gf::array(ratios.begin(), ratios.size()));
         ui.label("Fill Percentage Goal");
         ui.label(gf::niceNum(march.percentGoal, 0.01f), gf::UIAlignment::Right);
         ui.layoutRowDynamic(20, 1);
@@ -914,7 +915,7 @@ int main() {
           currentGenerator->setPhase(DungeonGenerator::Phase::Iterate);
         }
 
-        ui.layoutRow(gf::UILayout::Dynamic, 20, { 0.75f, 0.25f });
+        ui.layoutRow(gf::UILayout::Dynamic, 20, gf::array(ratios.begin(), ratios.size()));
         ui.label("Weight for Center");
         ui.label(gf::niceNum(march.weightForCenter, 0.01f), gf::UIAlignment::Right);
         ui.layoutRowDynamic(20, 1);
@@ -922,7 +923,7 @@ int main() {
           currentGenerator->setPhase(DungeonGenerator::Phase::Iterate);
         }
 
-        ui.layoutRow(gf::UILayout::Dynamic, 20, { 0.75f, 0.25f });
+        ui.layoutRow(gf::UILayout::Dynamic, 20, gf::array(ratios.begin(), ratios.size()));
         ui.label("Weight for Previous Direction");
         ui.label(gf::niceNum(march.weightForPreviousDirection, 0.01f), gf::UIAlignment::Right);
         ui.layoutRowDynamic(20, 1);
@@ -936,7 +937,7 @@ int main() {
       case AlgorithmTunneling: {
         currentGenerator = &tunneling;
 
-        ui.layoutRow(gf::UILayout::Dynamic, 20, { 0.75f, 0.25f });
+        ui.layoutRow(gf::UILayout::Dynamic, 20, gf::array(ratios.begin(), ratios.size()));
         ui.label("Maximum Number of Rooms");
         ui.label(std::to_string(tunneling.maxRooms), gf::UIAlignment::Right);
         ui.layoutRowDynamic(20, 1);
@@ -944,7 +945,7 @@ int main() {
           currentGenerator->setPhase(DungeonGenerator::Phase::Iterate);
         }
 
-        ui.layoutRow(gf::UILayout::Dynamic, 20, { 0.75f, 0.25f });
+        ui.layoutRow(gf::UILayout::Dynamic, 20, gf::array(ratios.begin(), ratios.size()));
         ui.label("Minimum Size of Rooms");
         ui.label(std::to_string(tunneling.roomSizeMinimum), gf::UIAlignment::Right);
         ui.layoutRowDynamic(20, 1);
@@ -956,7 +957,7 @@ int main() {
           currentGenerator->setPhase(DungeonGenerator::Phase::Iterate);
         }
 
-        ui.layoutRow(gf::UILayout::Dynamic, 20, { 0.75f, 0.25f });
+        ui.layoutRow(gf::UILayout::Dynamic, 20, gf::array(ratios.begin(), ratios.size()));
         ui.label("Maximum Size of Rooms");
         ui.label(std::to_string(tunneling.roomSizeMaximum), gf::UIAlignment::Right);
         ui.layoutRowDynamic(20, 1);
@@ -974,7 +975,7 @@ int main() {
       case AlgorithmBinarySpacePartitioningTree: {
         currentGenerator = &bsp;
 
-        ui.layoutRow(gf::UILayout::Dynamic, 20, { 0.75f, 0.25f });
+        ui.layoutRow(gf::UILayout::Dynamic, 20, gf::array(ratios.begin(), ratios.size()));
         ui.label("Minimum Size of Leafs");
         ui.label(std::to_string(bsp.leafSizeMinimum), gf::UIAlignment::Right);
         ui.layoutRowDynamic(20, 1);
@@ -990,7 +991,7 @@ int main() {
           currentGenerator->setPhase(DungeonGenerator::Phase::Iterate);
         }
 
-        ui.layoutRow(gf::UILayout::Dynamic, 20, { 0.75f, 0.25f });
+        ui.layoutRow(gf::UILayout::Dynamic, 20, gf::array(ratios.begin(), ratios.size()));
         ui.label("Maximum Size of Leafs");
         ui.label(std::to_string(bsp.leafSizeMaximum), gf::UIAlignment::Right);
         ui.layoutRowDynamic(20, 1);
@@ -1006,7 +1007,7 @@ int main() {
           currentGenerator->setPhase(DungeonGenerator::Phase::Iterate);
         }
 
-        ui.layoutRow(gf::UILayout::Dynamic, 20, { 0.75f, 0.25f });
+        ui.layoutRow(gf::UILayout::Dynamic, 20, gf::array(ratios.begin(), ratios.size()));
         ui.label("Minimum Size of Rooms");
         ui.label(std::to_string(bsp.roomSizeMinimum), gf::UIAlignment::Right);
         ui.layoutRowDynamic(20, 1);
@@ -1026,7 +1027,7 @@ int main() {
           currentGenerator->setPhase(DungeonGenerator::Phase::Iterate);
         }
 
-        ui.layoutRow(gf::UILayout::Dynamic, 20, { 0.75f, 0.25f });
+        ui.layoutRow(gf::UILayout::Dynamic, 20, gf::array(ratios.begin(), ratios.size()));
         ui.label("Maximum Size of Rooms");
         ui.label(std::to_string(bsp.roomSizeMaximum), gf::UIAlignment::Right);
         ui.layoutRowDynamic(20, 1);
