@@ -29,8 +29,8 @@ build:
   project: C:\projects\GF\build\GF.sln
   verbosity: normal
 
-test_script:
-  - cmd: .\tests\Debug\gf_tests.exe --gtest_output=xml:tests.xml --gtest_filter=-Socket*
+# test_script:
+  # - cmd: .\tests\Debug\gf_tests.exe --gtest_output=xml:tests.xml --gtest_filter=-Socket*
 
-on_finish:
-  - ps: (new-object net.webclient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\tests.xml))
+# on_finish:
+  # - ps: (new-object net.webclient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\tests.xml))
