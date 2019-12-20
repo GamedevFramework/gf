@@ -138,6 +138,15 @@ inline namespace v1 {
     }
 
     /**
+     * @brief Get the size of the string as an int
+     *
+     * @returns The size of the string as an int
+     */
+    constexpr int getISize() const noexcept {
+      return static_cast<int>(m_size);
+    }
+
+    /**
      * @brief Check if the string is empty
      *
      * An empty string is a string with size 0. So the null string is empty.

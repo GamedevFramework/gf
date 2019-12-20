@@ -21,6 +21,9 @@
 #ifndef GF_DICE_H
 #define GF_DICE_H
 
+#include <cassert>
+#include <climits>
+
 #include "Portability.h"
 #include "Random.h"
 #include "StringRef.h"
@@ -174,7 +177,8 @@ inline namespace v1 {
      * @sa [Dice notation - Wikipedia](https://en.wikipedia.org/wiki/Dice_notation)
      */
     constexpr gf::Dice operator"" _d4(unsigned long long int count) {
-      return gf::Dice(4, count);
+      assert(count <= INT_MAX);
+      return gf::Dice(4, static_cast<int>(count));
     }
 
     /**
@@ -184,7 +188,8 @@ inline namespace v1 {
      * @sa [Dice notation - Wikipedia](https://en.wikipedia.org/wiki/Dice_notation)
      */
     constexpr gf::Dice operator"" _d6(unsigned long long int count) {
-      return gf::Dice(6, count);
+      assert(count <= INT_MAX);
+      return gf::Dice(6, static_cast<int>(count));
     }
 
     /**
@@ -194,7 +199,8 @@ inline namespace v1 {
      * @sa [Dice notation - Wikipedia](https://en.wikipedia.org/wiki/Dice_notation)
      */
     constexpr gf::Dice operator"" _d8(unsigned long long int count) {
-      return gf::Dice(8, count);
+      assert(count <= INT_MAX);
+      return gf::Dice(8, static_cast<int>(count));
     }
 
     /**
@@ -204,7 +210,8 @@ inline namespace v1 {
      * @sa [Dice notation - Wikipedia](https://en.wikipedia.org/wiki/Dice_notation)
      */
     constexpr gf::Dice operator"" _d10(unsigned long long int count) {
-      return gf::Dice(10, count);
+      assert(count <= INT_MAX);
+      return gf::Dice(10, static_cast<int>(count));
     }
 
     /**
@@ -214,7 +221,8 @@ inline namespace v1 {
      * @sa [Dice notation - Wikipedia](https://en.wikipedia.org/wiki/Dice_notation)
      */
     constexpr gf::Dice operator"" _d12(unsigned long long int count) {
-      return gf::Dice(12, count);
+      assert(count <= INT_MAX);
+      return gf::Dice(12, static_cast<int>(count));
     }
 
      /**
@@ -224,7 +232,8 @@ inline namespace v1 {
      * @sa [Dice notation - Wikipedia](https://en.wikipedia.org/wiki/Dice_notation)
      */
     constexpr gf::Dice operator"" _d20(unsigned long long int count) {
-      return gf::Dice(20, count);
+      assert(count <= INT_MAX);
+      return gf::Dice(20, static_cast<int>(count));
     }
 
     /**
@@ -234,7 +243,8 @@ inline namespace v1 {
      * @sa [Dice notation - Wikipedia](https://en.wikipedia.org/wiki/Dice_notation)
      */
     constexpr gf::Dice operator"" _d100(unsigned long long int count) {
-      return gf::Dice(100, count);
+      assert(count <= INT_MAX);
+      return gf::Dice(100, static_cast<int>(count));
     }
  }
 
