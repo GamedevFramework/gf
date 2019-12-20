@@ -85,12 +85,3 @@ TEST(ArrayRefTest, StdArrayCtor) {
   EXPECT_EQ(8u, ref.getSize());
   EXPECT_EQ(&data[0], ref.getData());
 }
-
-TEST(ArrayRefTest, InitializerListCtor) {
-  auto data = { 1, 2, 3, 4, 5, 6, 7, 8 };
-
-  gf::ArrayRef<int> ref(data);
-
-  EXPECT_EQ(8u, ref.getSize());
-  EXPECT_EQ(data.begin(), ref.getData());
-}

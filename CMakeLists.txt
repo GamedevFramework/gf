@@ -109,7 +109,6 @@ if(GF_BUILD_GAMES)
   add_subdirectory(games/HOME)
   add_subdirectory(games/huaca)
   add_subdirectory(games/islands)
-  add_subdirectory(games/krokodile)
   add_subdirectory(games/lux)
 endif()
 
