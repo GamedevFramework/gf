@@ -32,13 +32,77 @@ namespace gf {
 inline namespace v1 {
 #endif
 
+  /**
+   * @ingroup net_sockets
+   * @brief A TCP listener
+   *
+   * A TCP listener is a network socket that can handle incoming connections
+   * from remote hosts. It can be used to create a TCP server.
+   *
+   * The listener is associated to a service. The service can be a port number.
+   *
+   * @snippet snippets/doc_class_tcp_listener.cc listener_port
+   *
+   * For well-known services, it can also be a name.
+   *
+   * @snippet snippets/doc_class_tcp_listener.cc listener_service
+   *
+   * A TCP listener is generally created oustide the main loop. Then, for a
+   * synchronous server that handles one connection at the time, the listener
+   * accept a connection and handle the client.
+   *
+   * @snippet snippets/doc_class_tcp_listener.cc listener_loop
+   *
+   * @sa gf::TcpSocket
+   */
   class GF_API TcpListener : public Socket {
   public:
+    /**
+     * @brief Default constructor
+     *
+     * This constructor creates an invalid listener.
+     */
     TcpListener() = default;
 
+    /**
+     * @brief Full constructor
+     *
+     * This constructor creates a valid listener with an associated service.
+     * The service can be a port number (in a string) or a well-known name
+     * (such as "http").
+     *
+     * @param service The service associated to the listener
+     * @param family The socket family of the listener
+     */
     TcpListener(const std::string& service, SocketFamily family = SocketFamily::Unspec);
 
+    /**
+     * @brief Accept a new connection from a remote client
+     *
+     * This member function blocks until a new connection arrives (unless the
+     * socket was made non-blocking). Then a socket is created for the remote
+     * client and returned. The returned socket can be used to communicate with
+     * the client.
+     *
+     * @returns A new socket representing the remote client
+     */
     TcpSocket accept();
+
+    /**
+     * @brief Accept a new connection from a remote client
+     *
+     * This member function blocks until a new connection arrives (unless the
+     * socket was made non-blocking). Then a socket is created for the remote
+     * client and returned. The returned socket can be used to communicate with
+     * the client.
+     *
+     * In addition, the caller can obtain the socket address of the remote
+     * client when it is accepted.
+     *
+     * @param address A reference to store the socket address of the remote client
+     * @returns A new socket representing the remote client
+     */
+    TcpSocket accept(SocketAddress& address);
 
   private:
     static SocketHandle nativeBindListen(const std::string& service, SocketFamily family);

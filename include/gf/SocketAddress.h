@@ -37,26 +37,86 @@ namespace gf {
 inline namespace v1 {
 #endif
 
+  /**
+   * @ingroup net_sockets
+   * @brief A socket family
+   *
+   * A socket family indicates the type of the socket. The family can be
+   * specified explicitly or unspecified, in which case the family is
+   * set automatically by the system.
+   *
+   * @sa gf::SocketAddress
+   */
   enum class SocketFamily : int {
-    Unspec  = AF_UNSPEC,
-    IPv4    = AF_INET,
-    IPv6    = AF_INET6,
+    Unspec  = AF_UNSPEC,  ///< Unspecified (either IPv4 or IPv6)
+    IPv4    = AF_INET,    ///< IPv4 (Internet Protocol version 4)
+    IPv6    = AF_INET6,   ///< IPv6 (Internet Protocol version 6)
   };
 
+  /**
+   * @ingroup net_sockets
+   * @brief A socket address format
+   *
+   * @sa gf::SocketAddress
+   */
   enum class SocketAddressFormat {
-    Unrestricted,
-    Numeric,
+    Unrestricted, ///< Allow name resolution for the address
+    Numeric,      ///< Use a numeric form for the address
   };
 
+  /**
+   * @ingroup net_sockets
+   * @brief A socket address
+   *
+   * A socket address is composed of an IP address (representing an hostname)
+   * and a port number (representing a service).
+   *
+   * You can not create a socket address directly.
+   *
+   * In other libraries, it can also be called "endpoint".
+   */
   class GF_API SocketAddress {
   public:
+    /**
+     * @brief Default constructor
+     */
+    SocketAddress() = default;
+
+    /**
+     * @brief Get the family of the socket address
+     */
+    SocketFamily getFamily() const;
+
+    /**
+     * @brief Get the hostname associated to the address
+     *
+     * @param format The format of the socket address
+     * @returns The hostname part of the address as a string
+     * @sa getService()
+     */
+    std::string getHostname(SocketAddressFormat format = SocketAddressFormat::Unrestricted) const;
+
+    /**
+     * @brief Get the service associated to the address
+     *
+     * @param format The format of the socket address
+     * @returns The service part of the address as a string
+     * @sa getHostname()
+     */
+    std::string getService(SocketAddressFormat format = SocketAddressFormat::Unrestricted) const;
+
+  private:
+    friend class Socket;
+    friend class TcpSocket;
+    friend class TcpListener;
+    friend class UdpSocket;
+
 #ifdef _WIN32
     using StorageLengthType = int;
 #else
     using StorageLengthType = socklen_t;
 #endif
 
-    SocketAddress() = default;
     SocketAddress(sockaddr *storage, StorageLengthType length);
 
     const sockaddr *getData() const {
@@ -66,17 +126,6 @@ inline namespace v1 {
     StorageLengthType getLength() const {
       return m_length;
     }
-
-    SocketFamily getFamily() const;
-
-    std::string getHost(SocketAddressFormat format = SocketAddressFormat::Unrestricted) const;
-
-    std::string getService(SocketAddressFormat format = SocketAddressFormat::Unrestricted) const;
-
-  private:
-    friend class Socket;
-    friend class TcpSocket;
-    friend class UdpSocket;
 
     sockaddr_storage m_storage;
     StorageLengthType m_length;

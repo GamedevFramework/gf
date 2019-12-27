@@ -29,6 +29,9 @@ namespace gf {
 inline namespace v1 {
 #endif
 
+  /**
+   * @ingroup net_sockets
+   */
   class GF_API InputPacket : public InputStream {
   public:
     InputPacket(std::size_t size = 0);
@@ -45,6 +48,9 @@ inline namespace v1 {
     std::size_t m_offset;
   };
 
+  /**
+   * @ingroup net_sockets
+   */
   class GF_API OutputPacket : public OutputStream {
   public:
     ArrayRef<uint8_t> getRef() const;

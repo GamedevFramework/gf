@@ -40,9 +40,9 @@ namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
 #endif
-  TcpSocket::TcpSocket(const std::string& host, const std::string& service, SocketFamily family)
+  TcpSocket::TcpSocket(const std::string& hostname, const std::string& service, SocketFamily family)
   {
-    setHandle(nativeConnect(host, service, family));
+    setHandle(nativeConnect(hostname, service, family));
   }
 
   TcpSocket::TcpSocket(SocketHandle handle)
@@ -73,7 +73,7 @@ inline namespace v1 {
   }
 
   SocketDataResult TcpSocket::sendRawBytes(ArrayRef<uint8_t> buffer) {
-    int res = ::send(getHandle(), sendBufferPointer(buffer), sendBufferLength(buffer), NoFlag);
+    int res = ::send(getHandle(), sendPointer(buffer), sendLength(buffer), NoFlag);
 
     if (res == InvalidCommunication) {
       if (nativeWouldBlock(getErrorCode())) {
@@ -88,7 +88,7 @@ inline namespace v1 {
   }
 
   SocketDataResult TcpSocket::recvRawBytes(BufferRef<uint8_t> buffer) {
-    int res = ::recv(getHandle(), recvBufferPointer(buffer), recvBufferLength(buffer), NoFlag);
+    int res = ::recv(getHandle(), recvPointer(buffer), recvLength(buffer), NoFlag);
 
     if (res == InvalidCommunication) {
       if (nativeWouldBlock(getErrorCode())) {
@@ -164,8 +164,8 @@ inline namespace v1 {
     return recvBytes(packet.getRef());
   }
 
-  SocketHandle TcpSocket::nativeConnect(const std::string& host, const std::string& service, SocketFamily family) {
-    auto addresses = getRemoteAddressInfo(host, service, SocketType::Tcp, family);
+  SocketHandle TcpSocket::nativeConnect(const std::string& hostname, const std::string& service, SocketFamily family) {
+    auto addresses = getRemoteAddressInfo(hostname, service, SocketType::Tcp, family);
 
     for (auto info : addresses) {
       SocketHandle sock = ::socket(static_cast<int>(info.family), static_cast<int>(info.type), 0);
@@ -182,7 +182,7 @@ inline namespace v1 {
       return sock;
     }
 
-    gf::Log::error("Unable to connect to '%s:%s'\n", host.c_str(), service.c_str());
+    gf::Log::error("Unable to connect to '%s:%s'\n", hostname.c_str(), service.c_str());
     return InvalidSocketHandle;
   }
 

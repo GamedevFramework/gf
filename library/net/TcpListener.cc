@@ -50,7 +50,22 @@ inline namespace v1 {
     SocketHandle handle = ::accept(getHandle(), nullptr, nullptr);
 
     if (handle == InvalidSocketHandle) {
-      gf::Log::error("Error while accepting. Reason: %s\n", getErrorString().c_str());
+      if (!nativeWouldBlock(getErrorCode())) {
+        gf::Log::error("Error while accepting. Reason: %s\n", getErrorString().c_str());
+      }
+    }
+
+    return TcpSocket(handle);
+  }
+
+  TcpSocket TcpListener::accept(SocketAddress& address) {
+    address.m_length = sizeof(sockaddr_storage);
+    SocketHandle handle = ::accept(getHandle(), reinterpret_cast<sockaddr*>(&address.m_storage), &address.m_length);
+
+    if (handle == InvalidSocketHandle) {
+      if (!nativeWouldBlock(getErrorCode())) {
+        gf::Log::error("Error while accepting. Reason: %s\n", getErrorString().c_str());
+      }
     }
 
     return TcpSocket(handle);

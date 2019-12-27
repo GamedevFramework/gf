@@ -28,11 +28,21 @@ namespace gf {
 inline namespace v1 {
 #endif
 
+  /**
+   * @ingroup net_sockets
+   * @brief A guard to handle library initialization
+   *
+   * This guard is used on Windows systems where the Winsock2 library must be
+   * initalized. Otherwise, this class has absolutely no use (and no code).
+   *
+   * You should not create an instance of this class.
+   *
+   * @sa gf::TcpListener, gf::TcpSocket, gf::UdpSocket
+   */
   class GF_API SocketGuard {
   public:
 
 #ifdef _WIN32
-
     /**
      * @brief Default constructor
      *

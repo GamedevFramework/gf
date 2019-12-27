@@ -44,6 +44,33 @@
 - Virtual console: gf::Console, gf::ConsoleFont, gf::ConsoleChar
 - Roguelike toolkit: gf::SquareMap, gf::SpaceTree
 
+@defgroup net Network
+@brief All the classes related to network
+
+## Using the `net` module
+
+All the types and functions of the net module are defined in `libgfnet0`. In order to use this library, you can use cmake and add the following in your `CMakeLists.txt`:
+
+~~~{.cmake}
+find_package(gfnet REQUIRED)
+
+# ...
+
+target_link_libraries(mygame
+  PRIVATE
+    gfnet::gfnet0
+)
+~~~
+
+
+@defgroup net_sockets Network sockets
+@ingroup net
+@brief The classes related to socket handling
+
+
+
+
+
 @mainpage
 
 @tableofcontents

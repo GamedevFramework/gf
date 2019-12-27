@@ -23,6 +23,7 @@
  */
 #include <gf/UdpSocket.h>
 
+#include <cassert>
 #include <cstring>
 
 #ifdef _WIN32
@@ -51,8 +52,8 @@ inline namespace v1 {
     setHandle(nativeBind("0", family));
   }
 
-  SocketAddress UdpSocket::getRemoteAddress(const std::string& host, const std::string& service) {
-    auto addresses = getRemoteAddressInfo(host, service, SocketType::Udp, getLocalAddress().getFamily());
+  SocketAddress UdpSocket::getRemoteAddress(const std::string& hostname, const std::string& service) {
+    auto addresses = getRemoteAddressInfo(hostname, service, SocketType::Udp, getLocalAddress().getFamily());
 
     if (!addresses.empty()) {
       return addresses.front().address;
@@ -63,7 +64,7 @@ inline namespace v1 {
 
 
   SocketDataResult UdpSocket::sendRawBytesTo(ArrayRef<uint8_t> buffer, const SocketAddress& address) {
-    auto res = ::sendto(getHandle(), sendBufferPointer(buffer), sendBufferLength(buffer), NoFlag, reinterpret_cast<const sockaddr*>(&address.m_storage), address.m_length);
+    auto res = ::sendto(getHandle(), sendPointer(buffer), sendLength(buffer), NoFlag, reinterpret_cast<const sockaddr*>(&address.m_storage), address.m_length);
 
     if (res == InvalidCommunication) {
       if (nativeWouldBlock(getErrorCode())) {
@@ -79,7 +80,7 @@ inline namespace v1 {
 
   SocketDataResult UdpSocket::recvRawBytesFrom(BufferRef<uint8_t> buffer, SocketAddress& address) {
     address.m_length = sizeof(sockaddr_storage);
-    auto res = ::recvfrom(getHandle(), recvBufferPointer(buffer), recvBufferLength(buffer), NoFlag, reinterpret_cast<sockaddr*>(&address.m_storage), &address.m_length);
+    auto res = ::recvfrom(getHandle(), recvPointer(buffer), recvLength(buffer), NoFlag, reinterpret_cast<sockaddr*>(&address.m_storage), &address.m_length);
 
     if (res == InvalidCommunication) {
       if (nativeWouldBlock(getErrorCode())) {
@@ -91,6 +92,39 @@ inline namespace v1 {
     }
 
     return { SocketStatus::Data, static_cast<std::size_t>(res) };
+  }
+
+
+  static std::size_t MaxDatagramSize = 65507;
+
+  bool UdpSocket::sendBytesTo(ArrayRef<uint8_t> buffer, const SocketAddress& address) {
+    if (buffer.getSize() > MaxDatagramSize) {
+      return false;
+    }
+
+    auto res = sendRawBytesTo(buffer, address);
+
+    if (res.status == SocketStatus::Data) {
+      return res.length == buffer.getSize();
+    }
+
+    assert(res.status != SocketStatus::Close);
+    return false;
+  }
+
+  bool UdpSocket::recvBytesFrom(BufferRef<uint8_t> buffer, SocketAddress& address) {
+    if (buffer.getSize() > MaxDatagramSize) {
+      return false;
+    }
+
+    auto res = recvRawBytesFrom(buffer, address);
+
+    if (res.status == SocketStatus::Data) {
+      return res.length == buffer.getSize();
+    }
+
+    assert(res.status != SocketStatus::Close);
+    return false;
   }
 
   SocketHandle UdpSocket::nativeBind(const std::string& service, SocketFamily family) {

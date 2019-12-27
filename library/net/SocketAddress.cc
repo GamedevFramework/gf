@@ -49,7 +49,7 @@ inline namespace v1 {
     return static_cast<SocketFamily>(m_storage.ss_family);
   }
 
-  std::string SocketAddress::getHost(SocketAddressFormat format) const {
+  std::string SocketAddress::getHostname(SocketAddressFormat format) const {
     char host[NI_MAXHOST];
     auto err = ::getnameinfo(getData(), m_length, host, NI_MAXHOST, nullptr, 0, format == SocketAddressFormat::Numeric ? NI_NUMERICHOST : 0);
 

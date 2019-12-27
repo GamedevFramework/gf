@@ -42,6 +42,7 @@ namespace gf {
 inline namespace v1 {
 #endif
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 #ifdef _WIN32
   using SocketHandle = SOCKET;
   constexpr SocketHandle InvalidSocketHandle = INVALID_SOCKET;
@@ -49,40 +50,128 @@ inline namespace v1 {
   using SocketHandle = int;
   constexpr SocketHandle InvalidSocketHandle = -1;
 #endif
+#else
+  /**
+   * @ingroup net_sockets
+   * @brief A native socket handle
+   *
+   * This type represents the native socket type. It is implementation-defined.
+   * Normally, you should not have to manipulate this type.
+   *
+   * @sa gf::TcpListener, gf::TcpSocket, gf::UdpSocket
+   */
+  using SocketHandle = implementation-defined;
 
+  /**
+   * @ingroup net_sockets
+   * @brief An invalid socket handle
+   *
+   * This constant is used internally to represent an invalid socket. It is
+   * implementation-defined. Normally, you should not have to manipulate this
+   * constant.
+   *
+   * @sa gf::SocketHandle, gf::Socket
+   */
+  constexpr SocketHandle InvalidSocketHandle = implemetation-defined;
+#endif
 
+  /**
+   * @ingroup net_sockets
+   * @brief The status of a socket operation
+   *
+   * @sa gf::SocketDataResult
+   */
   enum class SocketStatus {
-    Data,
-    Block,
-    Close,
-    Error,
+    Data,   ///< Some data has been sent or received
+    Block,  ///< The socket would have blocked
+    Close,  ///< The connection is closed
+    Error,  ///< An error occurred
   };
 
+  /**
+   * @ingroup net_sockets
+   * @brief The result of a socket operation
+   *
+   * @sa gf::SocketStatus
+   */
   struct SocketDataResult {
-    SocketStatus status;
-    std::size_t length;
+    SocketStatus status;  ///< The status of the operation
+    std::size_t length;   ///< The length of sent or received data
   };
 
+  /**
+   * @ingroup net_sockets
+   * @brief A network socket
+   *
+   *
+   * @sa gf::TcpListener, gf::TcpSocket, gf::UdpSocket
+   */
   class GF_API Socket : private SocketGuard {
   public:
+    /**
+     * @brief Destructor
+     *
+     * The socket is closed.
+     */
     ~Socket();
 
+    /**
+     * @brief Deleted copy constructor
+     */
     Socket(const Socket&) = delete;
+
+    /**
+     * @brief Deleted copy assignment
+     */
     Socket& operator=(const Socket&) = delete;
 
+    /**
+     * @brief Move constructor
+     *
+     * @param other The socket from which to move the socket handle
+     */
     Socket(Socket&& other) noexcept;
+
+    /**
+     * @brief Move assignment
+     *
+     * @param other The socket from which to move the socket handle
+     * @returns A reference to the socket
+     */
     Socket& operator=(Socket&& other) noexcept;
 
+    /**
+     * @brief Boolean conversion
+     *
+     * @returns True if the socket is valid
+     */
     operator bool () const noexcept {
       return m_handle != InvalidSocketHandle;
     }
 
+    /**
+     * @brief Get the local address of the socket
+     *
+     * @returns The local address of the socket
+     */
     SocketAddress getLocalAddress() const;
 
+    /**
+     * @brief Set the socket in blocking mode
+     *
+     * @sa setNonBlocking()
+     */
     void setBlocking();
+
+    /**
+     * @brief Set the socket in non-blocking mode
+     *
+     * @sa setBlocking()
+     */
     void setNonBlocking();
 
   protected:
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
     Socket()
     : m_handle(InvalidSocketHandle)
     {
@@ -102,22 +191,22 @@ inline namespace v1 {
     static bool nativeWouldBlock(int err);
 
 #ifdef _WIN32
-    using SendBufferLengthType = int;
-    using SendBufferPointerType = const char *;
-    using RecvBufferLengthType = int;
-    using RecvBufferPointerType = char *;
+    using SendLengthType = int;
+    using SendPointerType = const char *;
+    using RecvLengthType = int;
+    using RecvPointerType = char *;
 #else
-    using SendBufferLengthType = std::size_t;
-    using SendBufferPointerType = const void *;
-    using RecvBufferLengthType = std::size_t;
-    using RecvBufferPointerType = void *;
+    using SendLengthType = std::size_t;
+    using SendPointerType = const void *;
+    using RecvLengthType = std::size_t;
+    using RecvPointerType = void *;
 #endif
 
-    static SendBufferLengthType sendBufferLength(ArrayRef<uint8_t> buffer);
-    static SendBufferPointerType sendBufferPointer(ArrayRef<uint8_t> buffer);
+    static SendLengthType sendLength(ArrayRef<uint8_t> buffer);
+    static SendPointerType sendPointer(ArrayRef<uint8_t> buffer);
 
-    static RecvBufferLengthType recvBufferLength(BufferRef<uint8_t> buffer);
-    static RecvBufferPointerType recvBufferPointer(BufferRef<uint8_t> buffer);
+    static RecvLengthType recvLength(BufferRef<uint8_t> buffer);
+    static RecvPointerType recvPointer(BufferRef<uint8_t> buffer);
 
     static int getErrorCode();
     static std::string getErrorString();
@@ -142,13 +231,15 @@ inline namespace v1 {
 
     static constexpr int NoFlag = 0;
 
-    static std::vector<SocketAddressInfo> getRemoteAddressInfo(const std::string& host, const std::string& service, SocketType type, SocketFamily family = SocketFamily::Unspec);
+    static std::vector<SocketAddressInfo> getRemoteAddressInfo(const std::string& hostname, const std::string& service, SocketType type, SocketFamily family = SocketFamily::Unspec);
     static std::vector<SocketAddressInfo> getLocalAddressInfo(const std::string& service, SocketType type, SocketFamily family = SocketFamily::Unspec);
+#endif
 
   private:
-    static std::vector<SocketAddressInfo> getAddressInfoEx(const char *host, const char *service, int flags, SocketType type, SocketFamily family);
+    static std::vector<SocketAddressInfo> getAddressInfoEx(const char *hostname, const char *service, int flags, SocketType type, SocketFamily family);
 
   protected:
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
     struct Header {
       uint8_t data[8];
     };
@@ -173,7 +264,7 @@ inline namespace v1 {
 
       return size;
     }
-
+#endif
   private:
     SocketHandle m_handle;
   };

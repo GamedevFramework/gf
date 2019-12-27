@@ -36,16 +36,100 @@ namespace gf {
 inline namespace v1 {
 #endif
 
+  /**
+   * @ingroup net_sockets
+   * @brief A UDP socket
+   *
+   * A UDP socket is a socket for UDP (%User %Datagram %Protocol). UDP
+   * provides an unreliable communication between two hosts. UDP is
+   * connectionless i.e. no connection is established, the receiver must be
+   * set for each communication.
+   *
+   * @snippet snippets/doc_class_udp_socket.cc udp_socket
+   *
+   * @sa gf::TcpSocket
+   */
   class GF_API UdpSocket : public Socket {
   public:
+    /**
+     * @brief Default constructor
+     *
+     * This constructor creates an invalid socket
+     */
     UdpSocket() = default;
+
+    /**
+     * @brief Full constructor
+     *
+     * It creates a UDP socket that is not bound to a specific port. The port
+     * is chosen by the system. It may be used by a client that do not need a
+     * specific port.
+     *
+     * @param family The prefered socket family
+     */
     UdpSocket(AnyType, SocketFamily family = SocketFamily::Unspec);
+
+    /**
+     * @brief Full constructor
+     *
+     * It creates a UDP socket that is bound on a specific port. It must be
+     * used in case a server wants to be joined with UDP on a specific port.
+     *
+     * @param service The bound service
+     * @param family The prefered socket family
+     */
     UdpSocket(const std::string& service, SocketFamily family = SocketFamily::Unspec);
 
-    SocketAddress getRemoteAddress(const std::string& host, const std::string& service);
+    /**
+     * @brief Get a remote address for this socket
+     *
+     * This function provides a suitable socket address that can be used with
+     * the sending functions.
+     *
+     * @param hostname The name of the host to communicate with
+     * @param service The service on the host to communicate with
+     */
+    SocketAddress getRemoteAddress(const std::string& hostname, const std::string& service);
 
+    /**
+     * @brief Send some bytes over to the socket
+     *
+     * @param buffer The buffer that contains the bytes to send
+     * @param address The address of the host to communicate with
+     * @returns A result for the operation
+     */
     SocketDataResult sendRawBytesTo(ArrayRef<uint8_t> buffer, const SocketAddress& address);
+
+    /**
+     * @brief Receive some bytes from the socket
+     *
+     * @param buffer The buffer to store the received bytes
+     * @param address The address of the sending host
+     * @returns A result for the operation
+     */
     SocketDataResult recvRawBytesFrom(BufferRef<uint8_t> buffer, SocketAddress& address);
+
+    /**
+     * @brief Send a whole buffer to the socket
+     *
+     * This function ensures the buffer is sent in a single packet.
+     *
+     * @param buffer The buffer that contains the bytes to send
+     * @param address The address of the host to communicate with
+     * @returns True if no error occurred and the buffer was sent
+     */
+    bool sendBytesTo(ArrayRef<uint8_t> buffer, const SocketAddress& address);
+
+    /**
+     * @brief Receive a whole buffer from the socket
+     *
+     * This function ensures the buffer is received in a single packet.
+     *
+     * @param buffer The buffer to store the received bytes
+     * @param address The address of the sending host
+     * @returns True if no error occurred and the buffer was received
+     */
+    bool recvBytesFrom(BufferRef<uint8_t> buffer, SocketAddress& address);
 
   private:
     static SocketHandle nativeBind(const std::string& service, SocketFamily family);

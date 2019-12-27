@@ -102,20 +102,20 @@ inline namespace v1 {
     return getErrorCode() == WSAEWOULDBLOCK;
   }
 
-  auto Socket::sendBufferLength(ArrayRef<uint8_t> buffer) -> SendBufferLengthType {
-    return static_cast<SendBufferLengthType>(buffer.getSize());
+  auto Socket::sendLength(ArrayRef<uint8_t> buffer) -> SendLengthType {
+    return static_cast<SendLengthType>(buffer.getSize());
   }
 
-  auto Socket::sendBufferPointer(ArrayRef<uint8_t> buffer) -> SendBufferPointerType {
-    return reinterpret_cast<SendBufferPointerType>(buffer.getData());
+  auto Socket::sendPointer(ArrayRef<uint8_t> buffer) -> SendPointerType {
+    return reinterpret_cast<SendPointerType>(buffer.getData());
   }
 
-  auto Socket::recvBufferLength(BufferRef<uint8_t> buffer) -> RecvBufferLengthType {
-    return static_cast<SendBufferLengthType>(buffer.getSize());
+  auto Socket::recvLength(BufferRef<uint8_t> buffer) -> RecvLengthType {
+    return static_cast<SendLengthType>(buffer.getSize());
   }
 
-  auto Socket::recvBufferPointer(BufferRef<uint8_t> buffer) -> RecvBufferPointerType {
-    return reinterpret_cast<RecvBufferPointerType>(buffer.getData());
+  auto Socket::recvPointer(BufferRef<uint8_t> buffer) -> RecvPointerType {
+    return reinterpret_cast<RecvPointerType>(buffer.getData());
   }
 
   int Socket::getErrorCode() {
@@ -149,20 +149,20 @@ inline namespace v1 {
     return err == EAGAIN || err == EWOULDBLOCK;
   }
 
-  auto Socket::sendBufferLength(ArrayRef<uint8_t> buffer) -> SendBufferLengthType {
+  auto Socket::sendLength(ArrayRef<uint8_t> buffer) -> SendLengthType {
     return buffer.getSize();
   }
 
-  auto Socket::sendBufferPointer(ArrayRef<uint8_t> buffer) -> SendBufferPointerType {
-    return static_cast<SendBufferPointerType>(buffer.getData());
+  auto Socket::sendPointer(ArrayRef<uint8_t> buffer) -> SendPointerType {
+    return static_cast<SendPointerType>(buffer.getData());
   }
 
-  auto Socket::recvBufferLength(BufferRef<uint8_t> buffer) -> RecvBufferLengthType {
+  auto Socket::recvLength(BufferRef<uint8_t> buffer) -> RecvLengthType {
     return buffer.getSize();
   }
 
-  auto Socket::recvBufferPointer(BufferRef<uint8_t> buffer) -> RecvBufferPointerType {
-    return static_cast<RecvBufferPointerType>(buffer.getData());
+  auto Socket::recvPointer(BufferRef<uint8_t> buffer) -> RecvPointerType {
+    return static_cast<RecvPointerType>(buffer.getData());
   }
 
   int Socket::getErrorCode() {
@@ -179,15 +179,15 @@ inline namespace v1 {
 
 #endif
 
-  auto Socket::getRemoteAddressInfo(const std::string& host, const std::string& service, SocketType type, SocketFamily family) -> std::vector<SocketAddressInfo> {
-    return getAddressInfoEx(host.c_str(), service.c_str(), NoFlag, type, family);
+  auto Socket::getRemoteAddressInfo(const std::string& hostname, const std::string& service, SocketType type, SocketFamily family) -> std::vector<SocketAddressInfo> {
+    return getAddressInfoEx(hostname.c_str(), service.c_str(), NoFlag, type, family);
   }
 
   auto Socket::getLocalAddressInfo(const std::string& service, SocketType type, SocketFamily family) -> std::vector<SocketAddressInfo> {
     return getAddressInfoEx(nullptr, service.c_str(), AI_PASSIVE, type, family);
   }
 
-  auto Socket::getAddressInfoEx(const char *host, const char *service, int flags, SocketType type, SocketFamily family) -> std::vector<SocketAddressInfo> {
+  auto Socket::getAddressInfoEx(const char *hostname, const char *service, int flags, SocketType type, SocketFamily family) -> std::vector<SocketAddressInfo> {
     std::vector<SocketAddressInfo> result;
 
     struct addrinfo hints;
@@ -199,11 +199,11 @@ inline namespace v1 {
     hints.ai_protocol = 0;
     hints.ai_flags = flags;
 
-    int err = ::getaddrinfo(host, service, &hints, &first);
+    int err = ::getaddrinfo(hostname, service, &hints, &first);
 
     if (err != 0) {
-      if (host != nullptr) {
-        gf::Log::error("Error while getting an address for host '%s:%s': '%s'\n", host, service, ::gai_strerror(err));
+      if (hostname != nullptr) {
+        gf::Log::error("Error while getting an address for hostname '%s:%s': '%s'\n", hostname, service, ::gai_strerror(err));
       } else {
         gf::Log::error("Error while getting an address for service '%s': '%s'\n", service, ::gai_strerror(err));
       }

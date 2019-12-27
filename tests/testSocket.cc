@@ -40,7 +40,7 @@ namespace {
     ASSERT_TRUE(listener);
 
     auto address = listener.getLocalAddress();
-    std::cout << "host: " << address.getHost(gf::SocketAddressFormat::Numeric) << '\n';
+    std::cout << "host: " << address.getHostname(gf::SocketAddressFormat::Numeric) << '\n';
     std::cout << "service: " << address.getService(gf::SocketAddressFormat::Numeric) << '\n';
   }
 
@@ -59,11 +59,11 @@ namespace {
       EXPECT_EQ(res.length, 4u);
 
       auto local = socket.getLocalAddress();
-      std::cout << "local host: " << local.getHost(gf::SocketAddressFormat::Numeric) << '\n';
+      std::cout << "local host: " << local.getHostname(gf::SocketAddressFormat::Numeric) << '\n';
       std::cout << "local service: " << local.getService(gf::SocketAddressFormat::Numeric) << '\n';
 
       auto remote = socket.getRemoteAddress();
-      std::cout << "remote host: " << remote.getHost(gf::SocketAddressFormat::Numeric) << '\n';
+      std::cout << "remote host: " << remote.getHostname(gf::SocketAddressFormat::Numeric) << '\n';
       std::cout << "remote service: " << remote.getService(gf::SocketAddressFormat::Numeric) << '\n';
     });
 
@@ -170,7 +170,7 @@ namespace {
     ASSERT_TRUE(socket);
 
     auto address = socket.getLocalAddress();
-    std::cout << "host: " << address.getHost(gf::SocketAddressFormat::Numeric) << '\n';
+    std::cout << "host: " << address.getHostname(gf::SocketAddressFormat::Numeric) << '\n';
     std::cout << "service: " << address.getService(gf::SocketAddressFormat::Numeric) << '\n';
   }
 
@@ -181,7 +181,7 @@ namespace {
     ASSERT_TRUE(socket);
 
     auto address = socket.getLocalAddress();
-    std::cout << "host: " << address.getHost(gf::SocketAddressFormat::Numeric) << '\n';
+    std::cout << "host: " << address.getHostname(gf::SocketAddressFormat::Numeric) << '\n';
     std::cout << "service: " << address.getService(gf::SocketAddressFormat::Numeric) << '\n';
   }
 

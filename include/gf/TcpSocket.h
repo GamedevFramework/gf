@@ -36,30 +36,131 @@ namespace gf {
 inline namespace v1 {
 #endif
 
+  /**
+   * @ingroup net_sockets
+   * @brief A TCP socket
+   *
+   * A TCP socket is a socket for TCP (%Transmission %Control %Protocol). TCP
+   * provides a reliable communication between two hosts. TCP is
+   * connection-oriented i.e. once the connection is established, it can be used
+   * to send and/or receive data until it is shutdown.
+   *
+   * @snippet snippets/doc_class_tcp_socket.cc tcp_socket
+   *
+   * @sa gf::TcpListener, gf::UdpSocket
+   */
   class GF_API TcpSocket : public Socket {
   public:
+    /**
+     * @brief Default constructor
+     *
+     * This constructor creates an invalid socket
+     */
     TcpSocket() = default;
-    TcpSocket(const std::string& host, const std::string& service, SocketFamily family = SocketFamily::Unspec);
 
+    /**
+     * @brief Full constructor
+     *
+     * @param hostname The name of the host to connect
+     * @param service The service on the host to connect
+     * @param family The prefered socket family
+     */
+    TcpSocket(const std::string& hostname, const std::string& service, SocketFamily family = SocketFamily::Unspec);
+
+    /**
+     * @brief Deleted copy constructor
+     */
     TcpSocket(const TcpSocket&) = delete;
+
+    /**
+     * @brief Deleted copy assignment
+     */
     TcpSocket& operator=(const TcpSocket&) = delete;
 
+    /**
+     * @brief Default move constructor
+     */
     TcpSocket(TcpSocket&&) = default;
+
+    /**
+     * @brief Default move assignment
+     */
     TcpSocket& operator=(TcpSocket&&) = default;
 
+    /**
+     * @brief Destructor
+     *
+     * The destructor shutdowns the socket before closing it.
+     */
     ~TcpSocket();
 
+    /**
+     * @brief Get the remote address of the host
+     */
     SocketAddress getRemoteAddress() const;
 
+    /**
+     * @brief Send some bytes over to the socket
+     *
+     * @param buffer The buffer that contains the bytes to send
+     * @returns A result for the operation
+     */
     SocketDataResult sendRawBytes(ArrayRef<uint8_t> buffer);
+
+    /**
+     * @brief Receive some bytes from the socket
+     *
+     * @param buffer The buffer to store the received bytes
+     * @returns A result for the operation
+     */
     SocketDataResult recvRawBytes(BufferRef<uint8_t> buffer);
 
+    /**
+     * @brief Send a whole buffer to the socket
+     *
+     * This function ensures the whole buffer is sent unless an error occurs.
+     *
+     * @param buffer The buffer that contains the bytes to send
+     * @returns True if no error occurred and the buffer was sent
+     */
     bool sendBytes(ArrayRef<uint8_t> buffer);
+
+    /**
+     * @brief Receive a whole buffer from the socket
+     *
+     * This function ensures the whole buffer is received unless an error
+     * occurs.
+     *
+     * @param buffer The buffer to store the received bytes
+     * @returns True if no error occurred and the buffer was received
+     */
     bool recvBytes(BufferRef<uint8_t> buffer);
 
+    /**
+     * @brief Send a packet to the socket
+     *
+     * @param packet The packet that contains the bytes to send
+     * @returns True if no error occurred and the packet was sent
+     */
     bool sendPacket(const OutputPacket& packet);
+
+    /**
+     * @brief Receive a packet from the socket
+     *
+     * @param packet The packet to store the received bytes
+     * @returns True if no error occurred and the packet was received
+     */
     bool recvPacket(InputPacket& packet);
 
+    /**
+     * @brief Send arbitrary data to the socket
+     *
+     * The data is seralized in a packet.
+     *
+     * @tparam T The type of data to send
+     * @param data The data to send
+     * @returns True if no error occurred and data was sent
+     */
     template<typename T>
     bool sendData(const T& data) {
       OutputPacket packet;
@@ -68,6 +169,15 @@ inline namespace v1 {
       return sendPacket(packet);
     }
 
+    /**
+     * @brief Receive arbitrary data from the socket
+     *
+     * The data is deserialized from a packet.
+     *
+     * @tparam T The type of data to receive
+     * @param data The data to receive
+     * @returns True if no error occurred and data was received
+     */
     template<typename T>
     bool recvData(T& data) {
       InputPacket packet;
