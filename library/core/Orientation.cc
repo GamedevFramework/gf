@@ -83,8 +83,6 @@ inline namespace v1 {
   }
 
   float angle(Orientation orientation) {
-    static constexpr float Pi4 = Pi / 4.0f;
-
     switch (orientation) {
       case Orientation::Center:
         return std::numeric_limits<float>::quiet_NaN();
