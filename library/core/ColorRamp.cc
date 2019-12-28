@@ -20,73 +20,16 @@
  */
 #include <gf/ColorRamp.h>
 
-#include <cassert>
-#include <utility>
-
-#include <gf/Color.h>
-#include <gf/VectorOps.h>
-
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
 #endif
 
-  ColorRamp::ColorRamp()
-  : m_min(0.0f)
-  , m_max(0.0f)
-  {
-
-  }
-
-  bool ColorRamp::isEmpty() const {
-    return m_map.empty();
-  }
-
-  void ColorRamp::addColorStop(float offset, const Color4f& color) {
-    if (isEmpty()) {
-      m_min = m_max = offset;
-    } else {
-      if (offset < m_min) {
-        m_min = offset;
-      }
-
-      if (offset > m_max) {
-        m_max = offset;
-      }
-    }
-
-    m_map.insert(std::make_pair(offset, color));
-  }
-
-  Color4f ColorRamp::computeColor(float offset) const {
-    if (m_map.empty()) {
-      return Color::White;
-    }
-
-    if (offset < m_min) {
-      return m_map.begin()->second;
-    }
-
-    if (offset > m_max) {
-      return m_map.rbegin()->second;
-    }
-
-    auto it = m_map.lower_bound(offset);
-    assert(it != m_map.end());
-
-    float t2 = it->first;
-    Color4f c2 = it->second;
-
-    if (it == m_map.begin()) {
-      return c2;
-    }
-
-    --it;
-    float t1 = it->first;
-    Color4f c1 = it->second;
-
-    return gf::lerp(c1, c2, (offset - t1) / (t2 - t1));
-  }
+// MSVC does not like extern template
+#ifndef _MSC_VER
+  template struct ColorRampBase<float>;
+  template struct ColorRampBase<double>;
+#endif
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

@@ -21,10 +21,15 @@
 #ifndef GF_COLOR_RAMP_H
 #define GF_COLOR_RAMP_H
 
+#include <cassert>
 #include <map>
+#include <type_traits>
+#include <utility>
 
+#include "Color.h"
 #include "Portability.h"
 #include "Vector.h"
+#include "VectorOps.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -35,24 +40,23 @@ inline namespace v1 {
    * @ingroup graphics
    * @brief A color ramp
    *
+   * A color ramp (or color gradient) specifies a range of colors that depends
+   * on a position.
    *
    * @sa gf::Color4f
    */
-  struct GF_API ColorRamp {
+  template<typename T>
+  struct GF_API ColorRampBase {
+    static_assert(std::is_floating_point<T>::value, "T must be a floating point type.");
   public:
-    /**
-     * @brief Default constructor
-     *
-     * The color ramp is empty.
-     */
-    ColorRamp();
-
     /**
      * @brief Check if the color ramp is empty
      *
      * @return True if the ramp is empty
      */
-    bool isEmpty() const;
+    bool isEmpty() const {
+      return m_map.empty();
+    }
 
     /**
      * @brief Add a color stop
@@ -60,7 +64,21 @@ inline namespace v1 {
      * @param offset The offset of the color
      * @param color The color
      */
-    void addColorStop(float offset, const Color4f& color);
+    void addColorStop(T offset, const Color4<T>& color) {
+      if (isEmpty()) {
+        m_min = m_max = offset;
+      } else {
+        if (offset < m_min) {
+          m_min = offset;
+        }
+
+        if (offset > m_max) {
+          m_max = offset;
+        }
+      }
+
+      m_map.insert(std::make_pair(offset, color));
+    }
 
     /**
      * @brief Compute a color from an offset
@@ -68,14 +86,65 @@ inline namespace v1 {
      * @param offset The offset of the wanted color
      * @return A color
      */
-    Color4f computeColor(float offset) const;
+    Color4<T> computeColor(T offset) const {
+      if (m_map.empty()) {
+        return ColorBase<T>::White;
+      }
+
+      if (offset < m_min) {
+        return m_map.begin()->second;
+      }
+
+      if (offset > m_max) {
+        return m_map.rbegin()->second;
+      }
+
+      auto it = m_map.lower_bound(offset);
+      assert(it != m_map.end());
+
+      T t2 = it->first;
+      Color4<T> c2 = it->second;
+
+      if (it == m_map.begin()) {
+        return c2;
+      }
+
+      --it;
+      T t1 = it->first;
+      Color4<T> c1 = it->second;
+
+      return gf::lerp(c1, c2, (offset - t1) / (t2 - t1));
+    }
 
   private:
-    float m_min;
-    float m_max;
-    std::map<float, Color4f> m_map;
+    T m_min;
+    T m_max;
+    std::map<T, Color4<T>> m_map;
   };
 
+  /**
+   * @ingroup graphics
+   * @brief Instantiation of ColoRampBase for `float`
+   */
+  using ColorRampF = ColorRampBase<float>;
+
+  /**
+   * @ingroup graphics
+   * @brief Instantiation of ColoRampBase for `double`
+   */
+  using ColorRampD = ColorRampBase<double>;
+
+  /**
+   * @ingroup graphics
+   * @brief Instantiation of ColoRampBase for `float`
+   */
+  using ColorRamp = ColorRampF;
+
+// MSVC does not like extern template
+#ifndef _MSC_VER
+  extern template struct GF_API ColorRampBase<float>;
+  extern template struct GF_API ColorRampBase<double>;
+#endif
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

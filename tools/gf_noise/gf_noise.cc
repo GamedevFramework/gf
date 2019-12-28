@@ -109,16 +109,16 @@ static gf::Image generateImageFromArray(const RenderingParams& renderingParams, 
 
     case Rendering::Colored: {
       // see: http://www.blitzbasic.com/codearcs/codearcs.php?code=2415
-      gf::ColorRamp ramp;
-      ramp.addColorStop(0.000f, gf::Color::fromRgba32(  2,  43,  68)); // very dark blue: deep water
-      ramp.addColorStop(0.250f, gf::Color::fromRgba32(  9,  62,  92)); // dark blue: water
-      ramp.addColorStop(0.490f, gf::Color::fromRgba32( 17,  82, 112)); // blue: shallow water
-      ramp.addColorStop(0.500f, gf::Color::fromRgba32( 69, 108, 118)); // light blue: shore
-      ramp.addColorStop(0.501f, gf::Color::fromRgba32( 42, 102,  41)); // green: grass
-      ramp.addColorStop(0.750f, gf::Color::fromRgba32(115, 128,  77)); // light green: veld
-      ramp.addColorStop(0.850f, gf::Color::fromRgba32(153, 143,  92)); // brown: tundra
-      ramp.addColorStop(0.950f, gf::Color::fromRgba32(179, 179, 179)); // grey: rocks
-      ramp.addColorStop(1.000f, gf::Color::fromRgba32(255, 255, 255)); // white: snow
+      gf::ColorRampD ramp;
+      ramp.addColorStop(0.000, gf::ColorD::fromRgba32(  2,  43,  68)); // very dark blue: deep water
+      ramp.addColorStop(0.250, gf::ColorD::fromRgba32(  9,  62,  92)); // dark blue: water
+      ramp.addColorStop(0.490, gf::ColorD::fromRgba32( 17,  82, 112)); // blue: shallow water
+      ramp.addColorStop(0.500, gf::ColorD::fromRgba32( 69, 108, 118)); // light blue: shore
+      ramp.addColorStop(0.501, gf::ColorD::fromRgba32( 42, 102,  41)); // green: grass
+      ramp.addColorStop(0.750, gf::ColorD::fromRgba32(115, 128,  77)); // light green: veld
+      ramp.addColorStop(0.850, gf::ColorD::fromRgba32(153, 143,  92)); // brown: tundra
+      ramp.addColorStop(0.950, gf::ColorD::fromRgba32(179, 179, 179)); // grey: rocks
+      ramp.addColorStop(1.000, gf::ColorD::fromRgba32(255, 255, 255)); // white: snow
 
       gf::Heightmap::Render renderMode = renderingParams.shaded ? gf::Heightmap::Render::Shaded : gf::Heightmap::Render::Colored;
       return heightmap.copyToColoredImage(ramp, renderingParams.waterLevel, renderMode);
