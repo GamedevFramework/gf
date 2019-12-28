@@ -99,7 +99,7 @@ inline namespace v1 {
   }
 
   bool Socket::nativeWouldBlock(int err) {
-    return getErrorCode() == WSAEWOULDBLOCK;
+    return err == WSAEWOULDBLOCK;
   }
 
   auto Socket::sendLength(ArrayRef<uint8_t> buffer) -> SendLengthType {
