@@ -46,7 +46,7 @@ inline namespace v1 {
    * @sa gf::Color4f
    */
   template<typename T>
-  struct GF_API ColorRampBase {
+  struct ColorRampBase {
     static_assert(std::is_floating_point<T>::value, "T must be a floating point type.");
   public:
     /**
