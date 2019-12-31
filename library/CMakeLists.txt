@@ -336,7 +336,7 @@ target_link_libraries(gf0
   PUBLIC
     gfcore0
   PRIVATE
-    SDL2::Core
+    SDL2::SDL2
     Freetype::Freetype
     ZLIB::ZLIB
 )
