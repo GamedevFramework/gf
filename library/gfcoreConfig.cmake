@@ -4,6 +4,10 @@ include(CMakeFindDependencyMacro)
 find_dependency(Threads)
 find_dependency(Boost REQUIRED COMPONENTS filesystem)
 
+if (NOT BUILD_SHARED_LIBS)
+  find_dependency(ZLIB)
+endif()
+
 if(NOT TARGET gf::gfcore0)
     include("${GFCORE_CMAKE_DIR}/gfcoreTargets.cmake")
 endif()

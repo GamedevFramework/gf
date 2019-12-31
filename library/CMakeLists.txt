@@ -440,10 +440,10 @@ install(
 install(
   EXPORT gfnetTargets
   NAMESPACE gf::
-  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/gf"
+  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/gfnet"
 )
 
 install(
   FILES gfnetConfig.cmake
-  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/gf"
+  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/gfnet"
 )
