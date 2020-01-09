@@ -317,6 +317,12 @@ inline namespace v1 {
     void setDisabledSprite(const Texture& texture, const RectF& textureRect);
 
     /**
+     * @brief Unset the source texture of the disabled sprite
+     *
+     */
+    void unsetDisabledSprite();
+
+    /**
      * @brief Set the texture for default state
      *
      * @param texture The texture used for default state
@@ -325,12 +331,24 @@ inline namespace v1 {
     void setDefaultSprite(const Texture& texture, const RectF& textureRect);
 
     /**
+     * @brief Unset the source texture of the default sprite
+     *
+     */
+    void unsetDefaultSprite();
+
+    /**
      * @brief Set the texture for selected state
      *
      * @param texture The texture used for selected state
      * @param textureRect The rectangle in the texture used for selected state
      */
     void setSelectedSprite(const Texture& texture, const RectF& textureRect);
+
+    /**
+     * @brief Unset the source texture of the selected sprite
+     *
+     */
+    void unsetSelectedSprite();
 
     /**
      * @brief Get the local bounding rectangle of the entity

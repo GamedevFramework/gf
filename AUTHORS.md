@@ -8,3 +8,4 @@ Julien Bernard
 
 - Lilian Franchi (@Xeryko), game widgets
 - Sherjil Ozair (@sherjilozair), macos support
+- Simonin Remi (@NiiRoZz), widgets ui

@@ -315,6 +315,14 @@ inline namespace v1 {
     }
   }
 
+  void SpriteWidget::unsetDisabledSprite() {
+    m_disabledSprite.unsetTexture();
+
+    if (isDisabled()) {
+      updateGeometry();
+    }
+  }
+
   void SpriteWidget::setDefaultSprite(const Texture& texture, const RectF& textureRect) {
     m_defaultSprite.setTexture(texture);
     m_defaultSprite.setTextureRect(textureRect);
@@ -324,9 +332,25 @@ inline namespace v1 {
     }
   }
 
+  void SpriteWidget::unsetDefaultSprite() {
+    m_defaultSprite.unsetTexture();
+
+    if (isDefault()) {
+      updateGeometry();
+    }
+  }
+
   void SpriteWidget::setSelectedSprite(const Texture& texture, const RectF& textureRect) {
     m_selectedSprite.setTexture(texture);
     m_selectedSprite.setTextureRect(textureRect);
+
+    if (isSelected()) {
+      updateGeometry();
+    }
+  }
+
+  void SpriteWidget::unsetSelectedSprite() {
+    m_selectedSprite.unsetTexture();
 
     if (isSelected()) {
       updateGeometry();
