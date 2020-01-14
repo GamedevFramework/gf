@@ -84,6 +84,11 @@ inline namespace v1 {
     return isInsideBounds(coords, m_basic, *this);
   }
 
+  void TextWidget::setCharacterSize(unsigned characterSize) {
+    m_basic.setCharacterSize(characterSize);
+    updateGeometry();
+  }
+
   void TextWidget::setTextOutlineThickness(float thickness) {
     m_basic.setOutlineThickness(thickness);
     updateGeometry();

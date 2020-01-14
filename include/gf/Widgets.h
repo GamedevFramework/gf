@@ -59,6 +59,13 @@ inline namespace v1 {
     bool contains(Vector2f coords) override;
 
     /**
+     * @brief Set the character size
+     *
+     * @param characterSize New character size, in pixels
+     */
+    void setCharacterSize(unsigned characterSize);
+
+    /**
      * @brief Set the thickness of the outline.
      *
      * @param thickness The new value of the outline thickness.
