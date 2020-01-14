@@ -1,6 +1,6 @@
 # ChangeLog for gf
 
-## gf 0.15.0 (14 Jan 2019)
+## gf 0.15.0 (14 Jan 2020)
 
 - Core (gfcore)
   - Add a boolean parameter in SquareMap::setWalkable() and SquareMap::setTransparent()
