@@ -22,6 +22,7 @@
 #define GF_RESOURCE_MANAGER_H
 
 #include <functional>
+#include <initializer_list>
 #include <map>
 #include <memory>
 #include <stdexcept>
@@ -134,6 +135,11 @@ inline namespace v1 {
      * @brief Default constructor
      */
     ResourceManager();
+
+    /**
+     * @brief Constructor with a list of search directories
+     */
+    ResourceManager(std::initializer_list<Path> paths);
 
     /**
      * @brief Get a texture
