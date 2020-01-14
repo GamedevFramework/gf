@@ -142,26 +142,23 @@ inline namespace v1 {
     /**
      * @brief Constructor
      *
-     * @param size The size of the packet
+     * @param bytes The supplied external bytes to be read
      */
-    PacketInputStream(std::size_t size = 0);
+    PacketInputStream(std::vector<uint8_t> *bytes);
 
     /**
-     * @brief Reset the size of the packet
+     * @brief Get the underlying bytes
      */
-    void reset(std::size_t size);
-
-    /**
-     * @brief Get the internal buffer of the packet
-     */
-    BufferRef<uint8_t> getRef();
+    std::vector<uint8_t> *getBytes() {
+      return m_bytes;
+    }
 
     virtual std::size_t read(BufferRef<uint8_t> buffer) override;
     virtual void seek(std::ptrdiff_t position) override;
     virtual void skip(std::ptrdiff_t position) override;
     virtual bool isFinished() override;
   private:
-    std::vector<uint8_t> m_buffer;
+    std::vector<uint8_t> *m_bytes;
     std::size_t m_offset;
   };
 
@@ -269,15 +266,24 @@ inline namespace v1 {
   class GF_API PacketOutputStream : public OutputStream {
   public:
     /**
-     * @brief Get the internal buffer of the packet
+     * @brief Constructor
+     *
+     * @param bytes The supplied external bytes to be written
      */
-    ArrayRef<uint8_t> getRef() const;
+    PacketOutputStream(std::vector<uint8_t> *bytes);
+
+    /**
+     * @brief Get the underlying bytes
+     */
+    std::vector<uint8_t> *getBytes() {
+      return m_bytes;
+    }
 
     virtual std::size_t write(ArrayRef<uint8_t> buffer) override;
     virtual std::size_t getWrittenBytesCount() const override;
 
   private:
-    std::vector<uint8_t> m_buffer;
+    std::vector<uint8_t> *m_bytes;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

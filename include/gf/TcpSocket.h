@@ -142,7 +142,7 @@ inline namespace v1 {
      * @param packet The packet that contains the bytes to send
      * @returns True if no error occurred and the packet was sent
      */
-    bool sendPacket(const PacketOutputStream& packet);
+    bool sendPacket(PacketOutputStream& packet);
 
     /**
      * @brief Receive a packet from the socket
@@ -163,7 +163,8 @@ inline namespace v1 {
      */
     template<typename T>
     bool sendData(const T& data) {
-      PacketOutputStream packet;
+      std::vector<uint8_t> bytes;
+      PacketOutputStream packet(&bytes);
       gf::Serializer serializer(packet);
       serializer | const_cast<T&>(data);
       return sendPacket(packet);
@@ -180,7 +181,8 @@ inline namespace v1 {
      */
     template<typename T>
     bool recvData(T& data) {
-      PacketInputStream packet;
+      std::vector<uint8_t> bytes;
+      PacketInputStream packet(&bytes);
       bool res = recvPacket(packet);
 
       if (res) {

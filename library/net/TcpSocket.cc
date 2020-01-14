@@ -146,10 +146,10 @@ inline namespace v1 {
     return true;
   }
 
-  bool TcpSocket::sendPacket(const PacketOutputStream& packet) {
+  bool TcpSocket::sendPacket(PacketOutputStream& packet) {
     auto size = static_cast<uint64_t>(packet.getWrittenBytesCount());
     auto header = encodeHeader(size);
-    return sendBytes(header.data) && sendBytes(packet.getRef());
+    return sendBytes(header.data) && sendBytes(*packet.getBytes());
   }
 
   bool TcpSocket::recvPacket(PacketInputStream& packet) {
@@ -160,8 +160,8 @@ inline namespace v1 {
     }
 
     auto size = decodeHeader(header);
-    packet.reset(static_cast<std::size_t>(size));
-    return recvBytes(packet.getRef());
+    packet.getBytes()->resize(static_cast<std::size_t>(size));
+    return recvBytes(*packet.getBytes());
   }
 
   SocketHandle TcpSocket::nativeConnect(const std::string& hostname, const std::string& service, SocketFamily family) {
