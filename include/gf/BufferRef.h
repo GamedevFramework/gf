@@ -21,6 +21,7 @@
 #ifndef GF_BUFFER_REF_H
 #define GF_BUFFER_REF_H
 
+#include <cassert>
 #include <array>
 #include <vector>
 
@@ -147,6 +148,17 @@ inline namespace v1 {
     }
 
     /**
+     * @brief Create a buffer starting at a specified index
+     *
+     * @param index The starting index of the new buffer
+     * @returns A sub-buffer starting at the new index
+     */
+    constexpr BufferRef<T> sub(std::size_t index) {
+      assert(index <= m_size);
+      return BufferRef<T>(m_data + index, m_size - index);
+    }
+
+    /**
      * @brief Get an iterator to the first element
      *
      * @returns A pointer to the first element
@@ -184,6 +196,21 @@ inline namespace v1 {
     T *m_data;
     std::size_t m_size;
   };
+
+
+  /**
+   * @ingroup core
+   * @brief Create a reference to a buffer
+   *
+   * @param data A pointer to the elements in the buffer
+   * @param size The number of elements in the buffer
+   * @returns A reference to a buffer
+   */
+  template<typename T>
+  constexpr
+  BufferRef<T> buffer(T *data, std::size_t size) {
+    return BufferRef<T>(data, size);
+  }
 
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

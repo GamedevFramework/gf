@@ -72,6 +72,19 @@ inline namespace v1 {
   }
 
 
+  namespace {
+
+    Polygon computePolygonFromRectangle(RectF rectangle) {
+      Polygon polygon;
+
+      for (auto vec : { rectangle.getTopLeft(), rectangle.getBottomLeft(), rectangle.getBottomRight(), rectangle.getTopRight() }) {
+        polygon.addPoint(vec);
+      }
+
+      return polygon;
+    }
+  }
+
   PolygonGeometry::PolygonGeometry(Polygon polygon)
   : PhysicsGeometry(PhysicsGeometry::Type::Polygon)
   , m_polygon(std::move(polygon))
@@ -82,12 +95,7 @@ inline namespace v1 {
 
   PolygonGeometry::PolygonGeometry(Vector2f size)
   : PhysicsGeometry(PhysicsGeometry::Type::Polygon)
-  , m_polygon({
-      { -size.width / 2, -size.height / 2 },
-      {  size.width / 2, -size.height / 2 },
-      {  size.width / 2,  size.height / 2 },
-      { -size.width / 2,  size.height / 2 },
-  })
+  , m_polygon(computePolygonFromRectangle(RectF::fromCenterSize({ 0.0f, 0.0f}, size)))
   , m_boundingCircle({ 0.0f, 0.0f }, 0.0f)
   {
     computeBoundingCircle();
@@ -95,7 +103,7 @@ inline namespace v1 {
 
   PolygonGeometry::PolygonGeometry(RectF rectangle)
   : PhysicsGeometry(PhysicsGeometry::Type::Polygon)
-  , m_polygon({ rectangle.getTopLeft(), rectangle.getBottomLeft(), rectangle.getBottomRight(), rectangle.getTopRight() })
+  , m_polygon(computePolygonFromRectangle(rectangle))
   , m_boundingCircle({ 0.0f, 0.0f }, 0.0f)
   {
     computeBoundingCircle();

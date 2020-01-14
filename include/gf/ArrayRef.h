@@ -21,6 +21,7 @@
 #ifndef GF_ARRAY_REF_H
 #define GF_ARRAY_REF_H
 
+#include <cassert>
 #include <array>
 #include <vector>
 
@@ -113,17 +114,6 @@ inline namespace v1 {
     }
 
     /**
-     * @brief Constructor from an initializer list
-     *
-     * @param values The list of elements
-     */
-    ArrayRef(std::initializer_list<T> values)
-    : m_data(values.size() == 0 ? nullptr : values.begin())
-    , m_size(values.size())
-    {
-    }
-
-    /**
      * @brief Get a pointer to the elements
      *
      * @returns A pointer to the first element in the array
@@ -148,6 +138,17 @@ inline namespace v1 {
      */
     constexpr bool isEmpty() const noexcept {
       return m_size == 0;
+    }
+
+    /**
+     * @brief Create an array starting at a specified index
+     *
+     * @param index The starting index of the new array
+     * @returns A sub-array starting at the new index
+     */
+    constexpr ArrayRef<T> sub(std::size_t index) {
+      assert(index <= m_size);
+      return ArrayRef<T>(m_data + index, m_size - index);
     }
 
     /**

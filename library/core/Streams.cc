@@ -23,7 +23,7 @@
  */
 #include <gf/Streams.h>
 
-#include <cstring>
+#include <algorithm>
 #include <stdexcept>
 #include <string>
 
@@ -92,7 +92,9 @@ inline namespace v1 {
     return std::feof(m_file) != 0;
   }
 
-  // MemoryInputStream
+  /*
+   * MemoryInputStream
+   */
 
   MemoryInputStream::MemoryInputStream(ArrayRef<uint8_t> memory)
   : m_memory(memory)
@@ -106,11 +108,15 @@ inline namespace v1 {
       return 0;
     }
 
-    std::size_t end = m_offset + buffer.getSize();
-    std::size_t count = end <= m_memory.getSize() ? buffer.getSize() : m_memory.getSize() - m_offset;
+    std::size_t count = buffer.getSize();
+    std::size_t available = m_memory.getSize() - m_offset;
+
+    if (count > available) {
+      count = available;
+    }
 
     if (count > 0) {
-      std::memcpy(buffer.getData(), m_memory.getData() + m_offset, count);
+      std::copy_n(m_memory.getData() + m_offset, count, buffer.getData());
       m_offset += count;
     }
 
@@ -208,6 +214,61 @@ inline namespace v1 {
     return m_eof;
   }
 
+
+  /*
+   * BufferInputStream
+   */
+
+  BufferInputStream::BufferInputStream(std::vector<uint8_t> *bytes)
+  : m_bytes(bytes)
+  , m_offset(0)
+  {
+    assert(bytes != nullptr);
+  }
+
+  std::size_t BufferInputStream::read(BufferRef<uint8_t> buffer) {
+    if (buffer.getSize() == 0) {
+      return 0;
+    }
+
+    std::size_t count = buffer.getSize();
+    std::size_t available = m_bytes->size() - m_offset;
+
+    if (count > available) {
+      count = available;
+    }
+
+    if (count > 0) {
+      std::copy_n(m_bytes->data() + m_offset, count, buffer.getData());
+      m_offset += count;
+    }
+
+    return count;
+  }
+
+  void BufferInputStream::seek(std::ptrdiff_t position) {
+    if (position < 0) {
+      return;
+    }
+
+    std::size_t offset = static_cast<std::size_t>(position);
+    m_offset = std::min(offset, m_bytes->size());
+  }
+
+  void BufferInputStream::skip(std::ptrdiff_t position) {
+    if (position < 0) {
+      std::size_t offset = static_cast<std::size_t>(-position);
+      m_offset = offset < m_offset ? m_offset - offset : 0;
+    } else {
+      std::size_t offset = static_cast<std::size_t>(position);
+      m_offset = std::min(m_offset + offset, m_bytes->size());
+    }
+  }
+
+  bool BufferInputStream::isFinished() {
+    return m_offset == m_bytes->size();
+  }
+
   /*
    * FileOutputStream
    */
@@ -275,7 +336,7 @@ inline namespace v1 {
   std::size_t MemoryOutputStream::write(ArrayRef<uint8_t> buffer) {
     std::size_t remaining = m_memory.getSize() - m_offset;
     std::size_t size = std::min(remaining, buffer.getSize());
-    std::memcpy(m_memory.getData() + m_offset, buffer.getData(), size);
+    std::copy_n(buffer.getData(), size, m_memory.getData() + m_offset);
     m_offset += size;
     return size;
   }
@@ -312,7 +373,7 @@ inline namespace v1 {
       uInt written = BufferSize - m_stream.avail_out;
 
       if (written > 0) {
-        std::size_t flushed = m_compressed->write(ArrayRef<uint8_t>(m_buffer, written));
+        std::size_t flushed = m_compressed->write(gf::array(m_buffer, written));
         assert(flushed == written);
 
         m_stream.next_out = m_buffer;
@@ -336,7 +397,7 @@ inline namespace v1 {
       uInt written = BufferSize - m_stream.avail_out;
 
       if (written > 0) {
-        std::size_t flushed = m_compressed->write(ArrayRef<uint8_t>(m_buffer, written));
+        std::size_t flushed = m_compressed->write(gf::array(m_buffer, written));
         assert(flushed == written);
 
         m_stream.next_out = m_buffer;
@@ -351,6 +412,25 @@ inline namespace v1 {
 
   std::size_t CompressedOutputStream::getWrittenBytesCount() const {
     return m_compressed->getWrittenBytesCount();
+  }
+
+  /*
+   * BufferOutputStream
+   */
+
+  BufferOutputStream::BufferOutputStream(std::vector<uint8_t> *bytes)
+  : m_bytes(bytes)
+  {
+    assert(bytes != nullptr);
+  }
+
+  std::size_t BufferOutputStream::write(ArrayRef<uint8_t> buffer) {
+    std::copy_n(buffer.getData(), buffer.getSize(), std::back_inserter(*m_bytes));
+    return buffer.getSize();
+  }
+
+  std::size_t BufferOutputStream::getWrittenBytesCount() const {
+    return m_bytes->size();
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

@@ -80,6 +80,10 @@ if (GF_SINGLE_COMPILTATION_UNIT)
   add_library(gf0
     graphics/XUnityBuild.cc
   )
+
+  add_library(gfnet0
+    net/XUnityBuild.cc
+  )
 else()
   add_library(gfcore0
     core/Activities.cc
@@ -206,6 +210,15 @@ else()
     vendor/pugixml/src/pugixml.cpp
     ${GF_GLAD_SRC}
   )
+
+  add_library(gfnet0
+    net/Socket.cc
+    net/SocketAddress.cc
+    net/SocketGuard.cc
+    net/TcpListener.cc
+    net/TcpSocket.cc
+    net/UdpSocket.cc
+  )
 endif()
 
 add_dependencies(gf0
@@ -227,6 +240,10 @@ if (GF_DEBUG)
   target_compile_definitions(gf0
     PRIVATE GF_DEBUG
   )
+
+  target_compile_definitions(gfnet0
+    PRIVATE GF_DEBUG
+  )
 endif()
 
 if (GF_SHARED)
@@ -235,6 +252,10 @@ if (GF_SHARED)
   )
 
   target_compile_definitions(gf0
+    PUBLIC GF_SHARED
+  )
+
+  target_compile_definitions(gfnet0
     PUBLIC GF_SHARED
   )
 endif()
@@ -251,26 +272,45 @@ target_compile_definitions(gf0
     ZLIB_CONST
 )
 
+target_compile_definitions(gfnet0
+  PRIVATE
+    GF_EXPORT_SYMBOLS
+)
+
+if (UNIX AND NOT APPLE)
+  target_compile_definitions(gfnet0
+    PUBLIC
+      _POSIX_C_SOURCE=200809L
+  )
+endif()
+
+
 target_include_directories(gfcore0
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
-    ${Boost_INCLUDE_DIRS}
-    ${ZLIB_INCLUDE_DIRS}
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
   PRIVATE
-    ${CMAKE_CURRENT_BINARY_DIR}
+    "${CMAKE_CURRENT_BINARY_DIR}"
     "${CMAKE_CURRENT_SOURCE_DIR}/vendor/stb"
 )
 
 target_include_directories(gf0
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
   PRIVATE
-    ${SDL2_INCLUDE_DIR}
-    ${FREETYPE_INCLUDE_DIRS}
-    ${CMAKE_CURRENT_BINARY_DIR}
+    "${CMAKE_CURRENT_BINARY_DIR}"
     "${CMAKE_CURRENT_SOURCE_DIR}"
     "${CMAKE_CURRENT_SOURCE_DIR}/vendor/pugixml/src"
     "${CMAKE_CURRENT_SOURCE_DIR}/vendor/nuklear"
+)
+
+target_include_directories(gfnet0
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+  PRIVATE
+    "${CMAKE_CURRENT_BINARY_DIR}"
 )
 
 if (APPLE)
@@ -286,28 +326,39 @@ else()
 endif()
 
 target_link_libraries(gfcore0
-  ${Boost_LIBRARIES}
-  ${ZLIB_LIBRARIES}
+  PUBLIC
+    Threads::Threads
+    Boost::boost
+    Boost::filesystem
+  PRIVATE
+    ZLIB::ZLIB
 )
 
 target_link_libraries(gf0
-  ${SDL2_LIBRARY}
-  ${FREETYPE_LIBRARIES}
-  gfcore0
+  PUBLIC
+    gfcore0
+  PRIVATE
+    SDL2::SDL2
+    Freetype::Freetype
+    ZLIB::ZLIB
+)
+
+target_link_libraries(gfnet0
+  PUBLIC
+    gfcore0
 )
 
 if (APPLE)
   target_link_libraries(gf0
-    ${OPENGL_gl_LIBRARY}
+    PRIVATE
+      ${OPENGL_gl_LIBRARY}
   )
 endif()
 
-# workaround for Travis-CI
-# see: https://bugs.launchpad.net/ubuntu/+source/gcc-5/+bug/1568899
-if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-  target_link_libraries(gf0
-    gcc_s
-    gcc
+if (WIN32)
+  target_link_libraries(gfnet0
+    PUBLIC
+      ws2_32
   )
 endif()
 
@@ -323,9 +374,16 @@ set_target_properties(gf0
   SOVERSION ${PROJECT_VERSION_MAJOR}
 )
 
+set_target_properties(gfnet0
+  PROPERTIES
+  VERSION ${PROJECT_VERSION}
+  SOVERSION ${PROJECT_VERSION_MAJOR}
+)
+
 if(NOT GF_SHARED)
   set_property(TARGET gfcore0 PROPERTY POSITION_INDEPENDENT_CODE ON)
   set_property(TARGET gf0 PROPERTY POSITION_INDEPENDENT_CODE ON)
+  set_property(TARGET gfnet0 PROPERTY POSITION_INDEPENDENT_CODE ON)
 endif()
 
 install(
@@ -344,14 +402,18 @@ install(
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
+install(
+  TARGETS gfnet0
+  EXPORT gfnetTargets
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
+
 if(WIN32 AND BUILD_SHARED_LIBS)
   install(
-    TARGETS gfcore0 gf0
+    TARGETS gfcore0 gf0 gfnet0
     RUNTIME DESTINATION "${CMAKE_INSTALL_DOCDIR}/examples"
-  )
-  install(
-    TARGETS gfcore0  gf0
-    RUNTIME DESTINATION games
   )
 endif()
 
@@ -375,4 +437,15 @@ install(
 install(
   FILES gfConfig.cmake
   DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/gf"
+)
+
+install(
+  EXPORT gfnetTargets
+  NAMESPACE gf::
+  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/gfnet"
+)
+
+install(
+  FILES gfnetConfig.cmake
+  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/gfnet"
 )

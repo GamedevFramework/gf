@@ -9,6 +9,8 @@ addons:
       - libfreetype6-dev
       - libsdl2-dev
       - zlib1g-dev
+      - libsfml-dev
+      - libbox2d-dev
   homebrew:
     packages:
       - cmake
@@ -21,10 +23,10 @@ addons:
 matrix:
   include:
     - os: linux
-      dist: xenial
+      dist: bionic
       compiler: gcc
     - os: linux
-      dist: xenial
+      dist: bionic
       compiler: clang
     - os: osx
 
@@ -38,4 +40,4 @@ before_script:
   - cd build
   - cmake -DCMAKE_BUILD_TYPE=Release -DGF_DEBUG=OFF -DGF_BUILD_GAMES=ON -DGF_BUILD_TOOLS=ON -DGF_SINGLE_COMPILTATION_UNIT=ON ..
 script:
-  - make && ./tests/gf_tests
+  - make && ./tests/gf_tests --gtest_filter=-*V6

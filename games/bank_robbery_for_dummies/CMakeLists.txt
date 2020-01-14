@@ -26,7 +26,7 @@ target_link_libraries(bank_robbery_for_dummies gf0)
 
 install(
   TARGETS bank_robbery_for_dummies
-  RUNTIME DESTINATION games
+  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
 )
 
 install(

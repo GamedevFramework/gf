@@ -286,6 +286,7 @@ inline namespace v1 {
 
     void clear();
     void append(const UICharBuffer& other);
+    void append(const std::string& other);
 
   private:
     friend class UI;
@@ -1420,6 +1421,22 @@ inline namespace v1 {
      * @returns True if the mouse hovers the widget
      */
     bool isWidgetHovered();
+
+    /**
+     * @brief Get the current window bounds
+     *
+     * @returns The bounds of the window
+     */
+    RectF getWindowBounds();
+
+    /**
+     * @brief Check if the window is hovered by the mouse
+     *
+     * You must do this check just after the layout specification
+     *
+     * @returns True if the mouse hovers the window
+     */
+    bool isWindowHovered();
 
     /**
      * @brief Create a horizontal spacing to fill some columns

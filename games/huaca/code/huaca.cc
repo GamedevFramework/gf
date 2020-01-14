@@ -142,7 +142,7 @@ int main() {
   // handle messages
 
   huaca::gMessageManager().registerHandler<huaca::HeroPositionMessage>([&mainView](gf::Id id, gf::Message *msg) {
-    assert(id = huaca::HeroPositionMessage::type);
+    assert(id == huaca::HeroPositionMessage::type);
     gf::unused(id);
     auto heroPosition = static_cast<huaca::HeroPositionMessage*>(msg);
     mainView.setCenter(heroPosition->position);

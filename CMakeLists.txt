@@ -1,11 +1,11 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.10)
 
 project(GF
-  VERSION 0.14.0
+  VERSION 0.15.0
   LANGUAGES CXX C
 )
 
-if(NOT DEFINED CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL "")
+if(NOT MSVC AND (NOT DEFINED CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL ""))
   message(STATUS "Setting build type to 'RelWithDebInfo' as none was specified.")
   set(CMAKE_BUILD_TYPE "RelWithDebInfo")
 endif()
@@ -30,6 +30,7 @@ include(GNUInstallDirs)
 set(GF_DATADIR ${CMAKE_INSTALL_FULL_DATADIR})
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/sdl2")
 
 set(SDL2_BUILDING_LIBRARY TRUE)
 find_package(SDL2 REQUIRED)
@@ -37,6 +38,8 @@ find_package(SDL2 REQUIRED)
 find_package(Boost REQUIRED COMPONENTS filesystem system)
 find_package(Freetype REQUIRED)
 find_package(ZLIB REQUIRED)
+
+find_package(Threads REQUIRED)
 
 if(APPLE)
   # on macos, always use OpenGL 3.3
@@ -93,7 +96,7 @@ if (GF_BUILD_DOCUMENTATION)
 
   if(DOXYGEN_FOUND)
     configure_file("${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.cmake" "${CMAKE_CURRENT_BINARY_DIR}/Doxyfile" @ONLY)
-    add_custom_target(doc ${DOXYGEN_EXECUTABLE} "${CMAKE_CURRENT_BINARY_DIR}/Doxyfile")
+    add_custom_target(doc Doxygen::doxygen "${CMAKE_CURRENT_BINARY_DIR}/Doxyfile")
   endif(DOXYGEN_FOUND)
 
   add_subdirectory(docs/snippets)
@@ -106,7 +109,6 @@ if(GF_BUILD_GAMES)
   add_subdirectory(games/HOME)
   add_subdirectory(games/huaca)
   add_subdirectory(games/islands)
-  add_subdirectory(games/krokodile)
   add_subdirectory(games/lux)
 endif()
 

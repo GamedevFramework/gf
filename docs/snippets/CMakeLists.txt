@@ -19,8 +19,11 @@ add_executable(gfdev_doc
   doc_class_font.cc
   doc_class_image.cc
   doc_class_sprite.cc
+  doc_class_tcp_listener.cc
+  doc_class_tcp_socket.cc
   doc_class_text.cc
   doc_class_texture.cc
+  doc_class_udp_socket.cc
   doc_class_ui.cc
   doc_class_view_container.cc
   doc_class_window.cc
@@ -32,4 +35,4 @@ add_executable(gfdev_doc
   main.cc
 )
 
-target_link_libraries(gfdev_doc gf0)
+target_link_libraries(gfdev_doc gf0 gfnet0)

@@ -39,35 +39,35 @@ namespace {
 
   template<typename T>
   void saveAndLoad(T& in, T& out) {
-    gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
+    std::vector<uint8_t> bytes;
 
     {
-      gf::FileOutputStream stream(filename);
-      gf::Serializer ar(stream);
-      ar | in;
+      gf::BufferOutputStream ostream(&bytes);
+      gf::Serializer serializer(ostream);
+      serializer | in;
     }
 
     {
-      gf::FileInputStream stream(filename);
-      gf::Deserializer ar(stream);
-      ar | out;
+      gf::BufferInputStream istream(&bytes);
+      gf::Deserializer deserializer(istream);
+      deserializer | out;
     }
   }
 
   template<std::size_t N>
   void saveAndLoadString(const char *in, char (&out)[N]) {
-    gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
+    std::vector<uint8_t> bytes;
 
     {
-      gf::FileOutputStream stream(filename);
-      gf::Serializer ar(stream);
-      ar | in;
+      gf::BufferOutputStream ostream(&bytes);
+      gf::Serializer serializer(ostream);
+      serializer | in;
     }
 
     {
-      gf::FileInputStream stream(filename);
-      gf::Deserializer ar(stream);
-      ar | out;
+      gf::BufferInputStream istream(&bytes);
+      gf::Deserializer deserializer(istream);
+      deserializer | out;
     }
   }
 
@@ -75,18 +75,19 @@ namespace {
 
 
 TEST(SerialTest, Version) {
-  gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
-
   constexpr uint16_t Version = 42;
 
+  std::vector<uint8_t> bytes;
+
   {
-    gf::FileOutputStream stream(filename);
-    gf::Serializer ar(stream, Version);
+    gf::BufferOutputStream ostream(&bytes);
+    gf::Serializer serializer(ostream, Version);
   }
+
   {
-    gf::FileInputStream stream(filename);
-    gf::Deserializer ar(stream);
-    EXPECT_EQ(ar.getVersion(), Version);
+    gf::BufferInputStream istream(&bytes);
+    gf::Deserializer deserializer(istream);
+    EXPECT_EQ(deserializer.getVersion(), Version);
   }
 }
 
@@ -600,23 +601,23 @@ TEST(SerialTest, Path) {
 }
 
 TEST(SerialTest, Compressed) {
-  gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
-
   std::vector<int32_t> in1(10 * 1024);
   std::iota(in1.begin(), in1.end(), 1);
 
   std::vector<int32_t> out1;
 
+  std::vector<uint8_t> bytes;
+
   {
-    gf::FileOutputStream stream(filename);
-    gf::CompressedOutputStream compressed(stream);
+    gf::BufferOutputStream ostream(&bytes);
+    gf::CompressedOutputStream compressed(ostream);
     gf::Serializer ar(compressed);
     ar | in1;
   }
 
   {
-    gf::FileInputStream stream(filename);
-    gf::CompressedInputStream compressed(stream);
+    gf::BufferInputStream istream(&bytes);
+    gf::CompressedInputStream compressed(istream);
     gf::Deserializer ar(compressed);
     ar | out1;
   }

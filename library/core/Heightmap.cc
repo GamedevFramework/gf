@@ -423,13 +423,13 @@ inline namespace v1 {
 
   } // anonymous namespace
 
-  Image Heightmap::copyToColoredImage(const ColorRamp& ramp, double waterLevel, Render render) const {
+  Image Heightmap::copyToColoredImage(const ColorRampD& ramp, double waterLevel, Render render) const {
     Image image(m_data.getSize());
 
     for (auto pos : m_data.getPositionRange()) {
       double value = valueWithWaterLevel(m_data(pos), waterLevel);
-      Color4f color = ramp.computeColor(value);
-      image.setPixel(pos, Color::toRgba32(color));
+      Color4d color = ramp.computeColor(value);
+      image.setPixel(pos, ColorD::toRgba32(color));
     }
 
     if (render == Render::Shaded) {

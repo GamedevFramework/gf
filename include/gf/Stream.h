@@ -142,12 +142,12 @@ inline namespace v1 {
     /**
      * @brief Deleted copy constructor
      */
-    OutputStream(const InputStream&) = delete;
+    OutputStream(const OutputStream&) = delete;
 
     /**
      * @brief Deleted copy assignment
      */
-    OutputStream& operator=(const InputStream&) = delete;
+    OutputStream& operator=(const OutputStream&) = delete;
 
     /**
      * @brief Destructor

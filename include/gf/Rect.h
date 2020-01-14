@@ -41,18 +41,13 @@ inline namespace v1 {
    * @ingroup core
    * @brief Utility class for manipulating 2D axis aligned rectangles
    *
-   * A rectangle is defined by its top-left corner and its size.
-   * It is a very simple class defined for convenience, so
-   * its member variables (`left`, `top`, `width` and `height`) are public
-   * and can be accessed directly.
+   * A rectangle is defined by its top-left corner (called `min`) and
+   * its bottom-right corner (called `max').
    *
    * gf::Rect uses the usual rules for its boundaries:
    *
    * - The left and top edges are included in the rectangle's area
-   * - The right (left + width) and bottom (top + height) edges are excluded from the rectangle's area
-   *
-   * This means that gf::RectI(0, 0, 1, 1) and gf::RectI(1, 1, 1, 1)
-   * don't intersect.
+   * - The right and bottom edges are excluded from the rectangle's area
    *
    * gf::Rect is a template and may be used with any numeric type, but
    * for simplicity, some common typedef are defined:
@@ -90,31 +85,62 @@ inline namespace v1 {
     /**
      * @brief Default constructor
      *
-     * Creates an empty rectangle (it is equivalent to calling
-     * `Rect(0, 0, 0, 0)`).
+     * Creates an empty rectangle.
      */
     constexpr Rect() noexcept
     : Box<T, 2>({ T(0), T(0) })
     {
     }
 
+    /**
+     * @brief Constructor from a box
+     *
+     * @param box The orignal box
+     */
     constexpr Rect(const Box<T, 2>& box)
     : Box<T, 2>(box)
     {
     }
 
+    /**
+     * @brief Create a rectangle from a min point and a max point
+     *
+     * @param min The minimum point in the rectangle
+     * @param max The maximum point in the rectangle
+     * @returns A new rectangle
+     */
     static constexpr Rect<T> fromMinMax(Vector<T, 2> min, Vector<T, 2> max) noexcept {
       return Rect<T>(min, max);
     }
 
+    /**
+     * @brief Create a rectangle from a position (top-left) and a size
+     *
+     * @param position The top-left position of the rectangle
+     * @param size The size of the rectangle
+     * @returns A new rectangle
+     */
     static constexpr Rect<T> fromPositionSize(Vector<T, 2> position, Vector<T, 2> size) noexcept {
       return Rect<T>(position, position + size);
     }
 
+    /**
+     * @brief Create a rectangle from a center and a size
+     *
+     * @param center The center of the rectangle
+     * @param size The size of the rectangle
+     * @returns A new rectangle
+     */
     static constexpr Rect<T> fromCenterSize(Vector<T, 2> center, Vector<T, 2> size) noexcept {
       return Rect<T>(center - size / T(2), center + size / T(2));
     }
 
+    /**
+     * @brief Get a position from the rectangle and an anchor
+     *
+     * @param anchor An anchor
+     * @returns A position in the rectangle
+     */
     constexpr Vector<T, 2> getPositionFromAnchor(Anchor anchor) const noexcept {
       switch (anchor) {
         case Anchor::TopLeft:
@@ -176,10 +202,20 @@ inline namespace v1 {
       return getPositionFromAnchor(Anchor::BottomRight);
     }
 
+    /**
+     * @brief Get the width of the rectangle
+     *
+     * @returns The width of the rectangle
+     */
     constexpr T getWidth() const noexcept {
       return this->max.x - this->min.x;
     }
 
+    /**
+     * @brief Get the height of the rectangle
+     *
+     * @returns The height of the rectangle
+     */
     constexpr T getHeight() const noexcept {
       return this->max.y - this->min.y;
     }

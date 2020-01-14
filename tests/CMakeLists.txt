@@ -1,3 +1,4 @@
+find_package(Threads REQUIRED)
 
 add_executable(gf_tests
   main.cc
@@ -15,6 +16,7 @@ add_executable(gf_tests
   testRect.cc
   testSerialization.cc
   testSingleton.cc
+  testSocket.cc
   testSpatial.cc
   testStringRef.cc
   testVector.cc
@@ -30,4 +32,9 @@ target_include_directories(gf_tests
     ${CMAKE_CURRENT_SOURCE_DIR}/googletest/googletest
 )
 
-target_link_libraries(gf_tests gf0)
+target_link_libraries(gf_tests
+  PRIVATE
+    gf0
+    gfnet0
+    Threads::Threads
+)

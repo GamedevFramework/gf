@@ -265,7 +265,7 @@ inline namespace v1 {
      *
      * @sa copyToGrayscaleImage()
      */
-    Image copyToColoredImage(const ColorRamp& ramp, double waterLevel = 0.5, Render render = Render::Colored) const;
+    Image copyToColoredImage(const ColorRampD& ramp, double waterLevel = 0.5, Render render = Render::Colored) const;
 
     /**
      * @}

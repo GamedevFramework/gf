@@ -37,13 +37,6 @@ A steampunk pirate tries to recover enough coins to be able to repay your debt. 
 ![Bygone Islands](islands/islands.png)
 
 
-## Krokodile
-
-Mix the species to get a mighty krokodile!
-
-![Krokodile](krokodile/krokodile.png)
-
-
 ## Harvest Oxygen in the Maldoran Ecosystem (HOME)
 
 You crash on a unexplored planet, called Maldoran, you have to harvest oxygen to survive, metal and energy to repair your ship to be able to go home finally.

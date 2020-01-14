@@ -43,13 +43,19 @@ inline namespace v1 {
    * @ingroup core
    * @brief A multi-dimensional box
    *
+   * A box is defined by its minimum coordinates (included) and its
+   * maximum coordinates (excluded).
+   *
    * @sa gf::Rect
    */
   template<typename T, std::size_t N>
   struct Box {
-    Vector<T, N> min;
-    Vector<T, N> max;
+    Vector<T, N> min; ///< The minimum point of the box
+    Vector<T, N> max; ///< The maximum point of the box
 
+    /**
+     * @brief Default constructor
+     */
     constexpr Box() noexcept
     {
       for (std::size_t i = 0; i < N; ++i) {
@@ -58,6 +64,12 @@ inline namespace v1 {
       }
     }
 
+    /**
+     * @brief Constructor with two points
+     *
+     * @param p0 The first point in the box
+     * @param p1 The second point in the box
+     */
     constexpr Box(Vector<T, N> p0, Vector<T, N> p1) noexcept
     : min(gf::Zero)
     , max(gf::Zero)
@@ -73,6 +85,12 @@ inline namespace v1 {
       }
     }
 
+    /**
+     * @brief Constructor with two points (as arrays)
+     *
+     * @param p0 The first point in the box
+     * @param p1 The second point in the box
+     */
     constexpr Box(const T (&p0)[N], const T (&p1)[N]) noexcept
     : min(gf::Zero)
     , max(gf::Zero)
@@ -88,6 +106,11 @@ inline namespace v1 {
       }
     }
 
+    /**
+     * @brief Constructor with one point
+     *
+     * @param p The point in the box
+     */
     constexpr explicit Box(Vector<T, N> p) noexcept
     : min(p)
     , max(p)
@@ -95,14 +118,31 @@ inline namespace v1 {
 
     }
 
+    /**
+     * @brief Get the position of the box
+     *
+     * This is the same as `min`.
+     *
+     * @returns The position of the box
+     */
     constexpr Vector<T, N> getPosition() const noexcept {
       return min;
     }
 
+    /**
+     * @brief Get the size of the box
+     *
+     * @returns The size of the box
+     */
     constexpr Vector<T, N> getSize() const noexcept {
       return max - min;
     }
 
+    /**
+     * @brief Check if the box is empty
+     *
+     * @returns True if the box is empty
+     */
     constexpr bool isEmpty() const noexcept {
       for (std::size_t i = 0; i < N; ++i) {
         if (min[i] >= max[i]) {
@@ -113,10 +153,21 @@ inline namespace v1 {
       return false;
     }
 
+    /**
+     * @brief Get the center of the box
+     *
+     * @returns The center of the box
+     */
     constexpr Vector<T, N> getCenter() const noexcept {
-      return (min + max) / 2;
+      return min + (max - min) / 2;
     }
 
+    /**
+     * @brief Check if a point is inside the box
+     *
+     * @param point The point to test
+     * @returns True if the point is inside the box
+     */
     constexpr bool contains(Vector<T, N> point) const noexcept {
       for (std::size_t i = 0; i < N; ++i) {
         if (!(min[i] <= point[i] && point[i] < max[i])) {
@@ -127,6 +178,12 @@ inline namespace v1 {
       return true;
     }
 
+    /**
+     * @brief Check if a box is totally inside the box
+     *
+     * @param other Another box to test
+     * @returns True if the tested box is inside the current box
+     */
     constexpr bool contains(const Box<T, N>& other) const noexcept {
       for (std::size_t i = 0; i < N; ++i) {
         if (!(min[i] <= other.min[i] && other.max[i] <= max[i])) {
@@ -137,6 +194,12 @@ inline namespace v1 {
       return true;
     }
 
+    /**
+     * @brief Check if two boxes interset
+     *
+     * @param other Another box to test
+     * @returns True if the two boxes interset
+     */
     constexpr bool intersects(const Box<T, N>& other) const noexcept {
       for (std::size_t i = 0; i < N; ++i) {
         if (!(min[i] < other.max[i] && other.min[i] < max[i])) {
@@ -147,6 +210,13 @@ inline namespace v1 {
       return true;
     }
 
+    /**
+     * @brief Check if two boxes interset and get the intersetion box
+     *
+     * @param other Another box to test
+     * @param result A reference to put the result of the intersection (in case there is any)
+     * @returns True if the two boxes interset
+     */
     constexpr bool intersects(const Box<T, N>& other, Box<T, N>& result) const noexcept {
       if (!intersects(other)) {
         return false;
@@ -156,6 +226,12 @@ inline namespace v1 {
       return true;
     }
 
+    /**
+     * @brief Compute the intersection of two boxes
+     *
+     * @param other Another box to test
+     * @returns The result of the intersection
+     */
     constexpr Box<T, N> getIntersection(const Box<T, N>& other) const noexcept {
       Box<T, N> res;
 
@@ -167,6 +243,12 @@ inline namespace v1 {
       return res;
     }
 
+    /**
+     * @brief Get the volume of the intersection
+     *
+     * @param other Another box to test
+     * @returns The volume of the intersection or 0 in case there is no intersection
+     */
     constexpr T getIntersectionVolume(const Box<T, N>& other) const noexcept {
       T res = 1;
 
@@ -184,6 +266,12 @@ inline namespace v1 {
       return res;
     }
 
+    /**
+     * @brief Get the extent length of the intersection
+     *
+     * @param other Another box to test
+     * @returns The extent length of the intersection or 0 in case there is no intersection
+     */
     constexpr T getIntersectionExtentLength(const Box<T, N>& other) const noexcept {
       T res = 0;
 
@@ -201,6 +289,11 @@ inline namespace v1 {
       return res;
     }
 
+    /**
+     * @brief Extend the box with a point (as array)
+     *
+     * @param point The point of extension
+     */
     constexpr void extend(const T (&point)[N]) noexcept {
       for (std::size_t i = 0; i < N; ++i) {
         T axisMin = min[i];
@@ -209,6 +302,11 @@ inline namespace v1 {
       }
     }
 
+    /**
+     * @brief Extend the box with a point
+     *
+     * @param point The point of extension
+     */
     constexpr void extend(Vector<T, N> point) noexcept {
       for (std::size_t i = 0; i < N; ++i) {
         T axisMin = min[i];
@@ -217,6 +315,11 @@ inline namespace v1 {
       }
     }
 
+    /**
+     * @brief Extend the box with a box
+     *
+     * @param other The box of extension
+     */
     constexpr void extend(const Box<T, N>& other) noexcept {
       for (std::size_t i = 0; i < N; ++i) {
         min[i] = std::min(min[i], other.min[i]);
@@ -224,12 +327,22 @@ inline namespace v1 {
       }
     }
 
+    /**
+     * @brief Get the box extended by another box
+     *
+     * @param other The box of extension
+     */
     constexpr Box<T, N> getExtended(const Box<T, N>& other) const noexcept {
       Box<T, N> res(*this);
       res.extend(other);
       return res;
     }
 
+    /**
+     * @brief Get the volume of the box
+     *
+     * @returns The volume of the box
+     */
     constexpr T getVolume() const noexcept {
       T volume = 1;
 
@@ -240,6 +353,11 @@ inline namespace v1 {
       return volume;
     }
 
+    /**
+     * @brief Get the extent length of the box
+     *
+     * @returns The extent length of the box
+     */
     constexpr T getExtentLength() const noexcept {
       T distance = 0;
 
@@ -250,6 +368,11 @@ inline namespace v1 {
       return distance;
     }
 
+    /**
+     * @brief Get the minimum edge of the box
+     *
+     * @returns The length of the minimum edge of the box
+     */
     constexpr T getMinimumEdge() const noexcept {
       T minimum = max[0] - min[0];
 
@@ -261,10 +384,10 @@ inline namespace v1 {
     }
 
     /**
-     * @brief Grow the rectangle
+     * @brief Grow the box
      *
      * @param value The amount to grow
-     * @return A new extended rectangle
+     * @return A new extended box
      * @sa shrink()
      */
     constexpr Box<T, 2> grow(T value) const noexcept {
@@ -272,10 +395,10 @@ inline namespace v1 {
     }
 
     /**
-     * @brief Shrink the rectangle
+     * @brief Shrink the box
      *
      * @param value The amount to shrink
-     * @return A new shrinked rectangle
+     * @return A new shrinked box
      * @sa grow()
      */
     constexpr Box<T, 2> shrink(T value) const noexcept {

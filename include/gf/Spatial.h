@@ -587,10 +587,12 @@ inline namespace v1 {
       }
 
       Leaf *tryInsert(T&& value, const Box<U, N>& bounds) {
-        LeafEntry entry;
-        entry.bounds = bounds;
-        entry.value = std::move(value);
-        m_entries.push_back(std::move(entry));
+        {
+          LeafEntry entry;
+          entry.bounds = bounds;
+          entry.value = std::move(value);
+          m_entries.push_back(std::move(entry));
+        }
 
         if (m_entries.size() < Size) {
           return nullptr;
@@ -933,10 +935,12 @@ inline namespace v1 {
       }
 
       Branch *tryInsert(Node * node, const Box<U, N>& bounds) {
-        BranchEntry entry;
-        entry.bounds = bounds;
-        entry.child = node;
-        m_entries.push_back(std::move(entry));
+        {
+          BranchEntry entry;
+          entry.bounds = bounds;
+          entry.child = node;
+          m_entries.push_back(std::move(entry));
+        }
 
         if (m_entries.size() < Size) {
           return nullptr;

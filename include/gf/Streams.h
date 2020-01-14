@@ -133,6 +133,35 @@ inline namespace v1 {
   };
 
 
+  /**
+   * @ingroup core
+   * @brief Buffer input stream
+   */
+  class GF_API BufferInputStream : public InputStream {
+  public:
+    /**
+     * @brief Constructor
+     *
+     * @param bytes The supplied external bytes to be read
+     */
+    BufferInputStream(std::vector<uint8_t> *bytes);
+
+    /**
+     * @brief Get the underlying bytes
+     */
+    std::vector<uint8_t> *getBytes() {
+      return m_bytes;
+    }
+
+    virtual std::size_t read(BufferRef<uint8_t> buffer) override;
+    virtual void seek(std::ptrdiff_t position) override;
+    virtual void skip(std::ptrdiff_t position) override;
+    virtual bool isFinished() override;
+  private:
+    std::vector<uint8_t> *m_bytes;
+    std::size_t m_offset;
+  };
+
 
   /**
    * @ingroup core
@@ -230,6 +259,32 @@ inline namespace v1 {
   };
 
 
+  /**
+   * @ingroup core
+   * @brief Buffer output stream
+   */
+  class GF_API BufferOutputStream : public OutputStream {
+  public:
+    /**
+     * @brief Constructor
+     *
+     * @param bytes The supplied external bytes to be written
+     */
+    BufferOutputStream(std::vector<uint8_t> *bytes);
+
+    /**
+     * @brief Get the underlying bytes
+     */
+    std::vector<uint8_t> *getBytes() {
+      return m_bytes;
+    }
+
+    virtual std::size_t write(ArrayRef<uint8_t> buffer) override;
+    virtual std::size_t getWrittenBytesCount() const override;
+
+  private:
+    std::vector<uint8_t> *m_bytes;
+  };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

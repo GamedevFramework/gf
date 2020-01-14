@@ -42,7 +42,7 @@ target_link_libraries(HOME
 
 install(
   TARGETS HOME
-  RUNTIME DESTINATION games
+  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
 )
 
 install(

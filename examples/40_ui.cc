@@ -465,7 +465,8 @@ static void overview(gf::UI& ui) {
 
         static gf::UICharBuffer box(512);
 
-        ui.layoutRow(gf::UILayout::Static, 25, { 120.0f, 150.0f });
+        auto ratios = { 120.0f, 150.0f };
+        ui.layoutRow(gf::UILayout::Static, 25, gf::array(ratios.begin(), ratios.size()));
 
         ui.label("Default:");
         ui.edit(gf::UIEditType::Simple, text[0], gf::UIEditFilter::Default);
@@ -486,7 +487,7 @@ static void overview(gf::UI& ui) {
         ui.label("Box:");
         ui.layoutRowStatic(180.0f, 278, 1);
         ui.edit(gf::UIEditType::Box, box);
-        ui.layoutRow(gf::UILayout::Static, 25, { 120.0f, 150.0f });
+        ui.layoutRow(gf::UILayout::Static, 25, gf::array(ratios.begin(), ratios.size()));
         gf::UIEditEventFlags flags = ui.edit(gf::UIEditType::Field | gf::UIEdit::SigEnter, text[7], gf::UIEditFilter::Ascii);
 
         if (ui.buttonLabel("Submit") || flags.test(gf::UIEditEvent::Commited)) {
