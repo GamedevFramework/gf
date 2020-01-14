@@ -133,6 +133,38 @@ inline namespace v1 {
   };
 
 
+  /**
+   * @ingroup core
+   * @brief Packet input stream
+   */
+  class GF_API PacketInputStream : public InputStream {
+  public:
+    /**
+     * @brief Constructor
+     *
+     * @param size The size of the packet
+     */
+    PacketInputStream(std::size_t size = 0);
+
+    /**
+     * @brief Reset the size of the packet
+     */
+    void reset(std::size_t size);
+
+    /**
+     * @brief Get the internal buffer of the packet
+     */
+    BufferRef<uint8_t> getRef();
+
+    virtual std::size_t read(BufferRef<uint8_t> buffer) override;
+    virtual void seek(std::ptrdiff_t position) override;
+    virtual void skip(std::ptrdiff_t position) override;
+    virtual bool isFinished() override;
+  private:
+    std::vector<uint8_t> m_buffer;
+    std::size_t m_offset;
+  };
+
 
   /**
    * @ingroup core
@@ -230,6 +262,23 @@ inline namespace v1 {
   };
 
 
+  /**
+   * @ingroup core
+   * @brief Packet output stream
+   */
+  class GF_API PacketOutputStream : public OutputStream {
+  public:
+    /**
+     * @brief Get the internal buffer of the packet
+     */
+    ArrayRef<uint8_t> getRef() const;
+
+    virtual std::size_t write(ArrayRef<uint8_t> buffer) override;
+    virtual std::size_t getWrittenBytesCount() const override;
+
+  private:
+    std::vector<uint8_t> m_buffer;
+  };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

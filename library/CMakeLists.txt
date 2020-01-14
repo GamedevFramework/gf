@@ -212,7 +212,6 @@ else()
   )
 
   add_library(gfnet0
-    net/Packet.cc
     net/Socket.cc
     net/SocketAddress.cc
     net/SocketGuard.cc

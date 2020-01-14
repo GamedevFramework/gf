@@ -146,13 +146,13 @@ inline namespace v1 {
     return true;
   }
 
-  bool TcpSocket::sendPacket(const OutputPacket& packet) {
+  bool TcpSocket::sendPacket(const PacketOutputStream& packet) {
     auto size = static_cast<uint64_t>(packet.getWrittenBytesCount());
     auto header = encodeHeader(size);
     return sendBytes(header.data) && sendBytes(packet.getRef());
   }
 
-  bool TcpSocket::recvPacket(InputPacket& packet) {
+  bool TcpSocket::recvPacket(PacketInputStream& packet) {
     Header header;
 
     if (!recvBytes(header.data)) {

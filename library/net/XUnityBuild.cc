@@ -24,7 +24,6 @@
  * See: https://en.wikipedia.org/wiki/Single_Compilation_Unit
  */
 
-#include "Packet.cc"
 #include "SocketAddress.cc"
 #include "Socket.cc"
 #include "SocketGuard.cc"

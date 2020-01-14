@@ -26,9 +26,9 @@
 
 #include "ArrayRef.h"
 #include "BufferRef.h"
-#include "Packet.h"
 #include "Portability.h"
 #include "Serialization.h"
+#include "Streams.h"
 #include "Socket.h"
 
 namespace gf {
@@ -142,7 +142,7 @@ inline namespace v1 {
      * @param packet The packet that contains the bytes to send
      * @returns True if no error occurred and the packet was sent
      */
-    bool sendPacket(const OutputPacket& packet);
+    bool sendPacket(const PacketOutputStream& packet);
 
     /**
      * @brief Receive a packet from the socket
@@ -150,7 +150,7 @@ inline namespace v1 {
      * @param packet The packet to store the received bytes
      * @returns True if no error occurred and the packet was received
      */
-    bool recvPacket(InputPacket& packet);
+    bool recvPacket(PacketInputStream& packet);
 
     /**
      * @brief Send arbitrary data to the socket
@@ -163,7 +163,7 @@ inline namespace v1 {
      */
     template<typename T>
     bool sendData(const T& data) {
-      OutputPacket packet;
+      PacketOutputStream packet;
       gf::Serializer serializer(packet);
       serializer | const_cast<T&>(data);
       return sendPacket(packet);
@@ -180,7 +180,7 @@ inline namespace v1 {
      */
     template<typename T>
     bool recvData(T& data) {
-      InputPacket packet;
+      PacketInputStream packet;
       bool res = recvPacket(packet);
 
       if (res) {

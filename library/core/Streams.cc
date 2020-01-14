@@ -92,7 +92,9 @@ inline namespace v1 {
     return std::feof(m_file) != 0;
   }
 
-  // MemoryInputStream
+  /*
+   * MemoryInputStream
+   */
 
   MemoryInputStream::MemoryInputStream(ArrayRef<uint8_t> memory)
   : m_memory(memory)
@@ -210,6 +212,69 @@ inline namespace v1 {
 
   bool CompressedInputStream::isFinished() {
     return m_eof;
+  }
+
+
+  /*
+   * PacketInputStream
+   */
+
+  PacketInputStream::PacketInputStream(std::size_t size)
+  : m_buffer(size)
+  , m_offset(0)
+  {
+  }
+
+  void PacketInputStream::reset(std::size_t size) {
+    m_buffer.resize(size);
+    m_offset = 0;
+  }
+
+  BufferRef<uint8_t> PacketInputStream::getRef() {
+    return gf::buffer(m_buffer.data(), m_buffer.size());
+  }
+
+  std::size_t PacketInputStream::read(BufferRef<uint8_t> buffer) {
+    if (buffer.getSize() == 0) {
+      return 0;
+    }
+
+    std::size_t count = buffer.getSize();
+    std::size_t available = m_buffer.size() - m_offset;
+
+    if (count > available) {
+      count = available;
+    }
+
+    if (count > 0) {
+      std::copy_n(m_buffer.data() + m_offset, count, buffer.getData());
+      m_offset += count;
+    }
+
+    return count;
+  }
+
+  void PacketInputStream::seek(std::ptrdiff_t position) {
+    if (position < 0) {
+      return;
+    }
+
+    std::size_t offset = static_cast<std::size_t>(position);
+    m_offset = std::min(offset, m_buffer.size());
+  }
+
+  void PacketInputStream::skip(std::ptrdiff_t position) {
+    if (position < 0) {
+      std::size_t offset = static_cast<std::size_t>(-position);
+      m_offset = offset < m_offset ? m_offset - offset : 0;
+    } else {
+      std::size_t offset = static_cast<std::size_t>(position);
+      m_offset = std::min(m_offset + offset, m_buffer.size());
+    }
+  }
+
+  bool PacketInputStream::isFinished() {
+    return m_offset == m_buffer.size();
   }
 
   /*
@@ -355,6 +420,23 @@ inline namespace v1 {
 
   std::size_t CompressedOutputStream::getWrittenBytesCount() const {
     return m_compressed->getWrittenBytesCount();
+  }
+
+  /*
+   * PacketOutputStream
+   */
+
+  ArrayRef<uint8_t> PacketOutputStream::getRef() const {
+    return gf::array(m_buffer.data(), m_buffer.size());
+  }
+
+  std::size_t PacketOutputStream::write(ArrayRef<uint8_t> buffer) {
+    std::copy_n(buffer.getData(), buffer.getSize(), std::back_inserter(m_buffer));
+    return buffer.getSize();
+  }
+
+  std::size_t PacketOutputStream::getWrittenBytesCount() const {
+    return m_buffer.size();
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
