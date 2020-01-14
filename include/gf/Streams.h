@@ -135,16 +135,16 @@ inline namespace v1 {
 
   /**
    * @ingroup core
-   * @brief Packet input stream
+   * @brief Buffer input stream
    */
-  class GF_API PacketInputStream : public InputStream {
+  class GF_API BufferInputStream : public InputStream {
   public:
     /**
      * @brief Constructor
      *
      * @param bytes The supplied external bytes to be read
      */
-    PacketInputStream(std::vector<uint8_t> *bytes);
+    BufferInputStream(std::vector<uint8_t> *bytes);
 
     /**
      * @brief Get the underlying bytes
@@ -261,16 +261,16 @@ inline namespace v1 {
 
   /**
    * @ingroup core
-   * @brief Packet output stream
+   * @brief Buffer output stream
    */
-  class GF_API PacketOutputStream : public OutputStream {
+  class GF_API BufferOutputStream : public OutputStream {
   public:
     /**
      * @brief Constructor
      *
      * @param bytes The supplied external bytes to be written
      */
-    PacketOutputStream(std::vector<uint8_t> *bytes);
+    BufferOutputStream(std::vector<uint8_t> *bytes);
 
     /**
      * @brief Get the underlying bytes

@@ -26,6 +26,7 @@
 
 #include "ArrayRef.h"
 #include "BufferRef.h"
+#include "Packet.h"
 #include "Portability.h"
 #include "Serialization.h"
 #include "Streams.h"
@@ -142,7 +143,7 @@ inline namespace v1 {
      * @param packet The packet that contains the bytes to send
      * @returns True if no error occurred and the packet was sent
      */
-    bool sendPacket(PacketOutputStream& packet);
+    bool sendPacket(const Packet& packet);
 
     /**
      * @brief Receive a packet from the socket
@@ -150,7 +151,7 @@ inline namespace v1 {
      * @param packet The packet to store the received bytes
      * @returns True if no error occurred and the packet was received
      */
-    bool recvPacket(PacketInputStream& packet);
+    bool recvPacket(Packet& packet);
 
     /**
      * @brief Send arbitrary data to the socket
@@ -163,9 +164,9 @@ inline namespace v1 {
      */
     template<typename T>
     bool sendData(const T& data) {
-      std::vector<uint8_t> bytes;
-      PacketOutputStream packet(&bytes);
-      gf::Serializer serializer(packet);
+      Packet packet;
+      BufferOutputStream stream(&packet.bytes);
+      gf::Serializer serializer(stream);
       serializer | const_cast<T&>(data);
       return sendPacket(packet);
     }
@@ -181,12 +182,12 @@ inline namespace v1 {
      */
     template<typename T>
     bool recvData(T& data) {
-      std::vector<uint8_t> bytes;
-      PacketInputStream packet(&bytes);
+      Packet packet;
       bool res = recvPacket(packet);
 
       if (res) {
-        gf::Deserializer deserializer(packet);
+        BufferInputStream stream(&packet.bytes);
+        gf::Deserializer deserializer(stream);
         deserializer | data;
       }
 

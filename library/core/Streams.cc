@@ -216,17 +216,17 @@ inline namespace v1 {
 
 
   /*
-   * PacketInputStream
+   * BufferInputStream
    */
 
-  PacketInputStream::PacketInputStream(std::vector<uint8_t> *bytes)
+  BufferInputStream::BufferInputStream(std::vector<uint8_t> *bytes)
   : m_bytes(bytes)
   , m_offset(0)
   {
     assert(bytes != nullptr);
   }
 
-  std::size_t PacketInputStream::read(BufferRef<uint8_t> buffer) {
+  std::size_t BufferInputStream::read(BufferRef<uint8_t> buffer) {
     if (buffer.getSize() == 0) {
       return 0;
     }
@@ -246,7 +246,7 @@ inline namespace v1 {
     return count;
   }
 
-  void PacketInputStream::seek(std::ptrdiff_t position) {
+  void BufferInputStream::seek(std::ptrdiff_t position) {
     if (position < 0) {
       return;
     }
@@ -255,7 +255,7 @@ inline namespace v1 {
     m_offset = std::min(offset, m_bytes->size());
   }
 
-  void PacketInputStream::skip(std::ptrdiff_t position) {
+  void BufferInputStream::skip(std::ptrdiff_t position) {
     if (position < 0) {
       std::size_t offset = static_cast<std::size_t>(-position);
       m_offset = offset < m_offset ? m_offset - offset : 0;
@@ -265,7 +265,7 @@ inline namespace v1 {
     }
   }
 
-  bool PacketInputStream::isFinished() {
+  bool BufferInputStream::isFinished() {
     return m_offset == m_bytes->size();
   }
 
@@ -415,21 +415,21 @@ inline namespace v1 {
   }
 
   /*
-   * PacketOutputStream
+   * BufferOutputStream
    */
 
-  PacketOutputStream::PacketOutputStream(std::vector<uint8_t> *bytes)
+  BufferOutputStream::BufferOutputStream(std::vector<uint8_t> *bytes)
   : m_bytes(bytes)
   {
     assert(bytes != nullptr);
   }
 
-  std::size_t PacketOutputStream::write(ArrayRef<uint8_t> buffer) {
+  std::size_t BufferOutputStream::write(ArrayRef<uint8_t> buffer) {
     std::copy_n(buffer.getData(), buffer.getSize(), std::back_inserter(*m_bytes));
     return buffer.getSize();
   }
 
-  std::size_t PacketOutputStream::getWrittenBytesCount() const {
+  std::size_t BufferOutputStream::getWrittenBytesCount() const {
     return m_bytes->size();
   }
 
