@@ -1,5 +1,21 @@
 # ChangeLog for gf
 
+## gf 0.15.0 (14 Jan 2019)
+
+- Core (gfcore)
+  - Add a boolean parameter in SquareMap::setWalkable() and SquareMap::setTransparent()
+  - SquareMap::computeRoute() now returns an empty vector if no route exists
+  - Remove std::initializer constructor in gf::ArrayRef
+  - Templatize gf::ColorRamp
+  - Add gf::BufferInputStream and gf::BufferOutputStream
+- Graphics (gf)
+  - Add some useful methods to gf::UI
+- Network (gfnet)
+  - Creation of gfnet library
+  - Add gf::TcpSocket, gf::UdpSocket, gf::TcpListener
+- Tools and games
+- Misc
+
 ## gf 0.14.0 (14 Oct 2019)
 
 - Core (gfcore)
