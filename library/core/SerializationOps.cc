@@ -90,11 +90,6 @@ inline namespace v1 {
     return ar;
   }
 
-  Serializer& operator|(Serializer& ar, const char *str) {
-    ar.writeString(str, std::char_traits<char>::length(str));
-    return ar;
-  }
-
   Serializer& operator|(Serializer& ar, const std::string& str) {
     ar.writeString(str.data(), str.length());
     return ar;
@@ -168,26 +163,6 @@ inline namespace v1 {
 
   Deserializer& operator|(Deserializer& ar, double& data) {
     ar.readDouble(data);
-    return ar;
-  }
-
-  Deserializer& operator|(Deserializer& ar, BufferRef<char> str) {
-    std::size_t size;
-
-    if (!ar.readSizeHeader(size)) {
-      return ar;
-    }
-
-    if (size + 1 > str.getSize()) {
-      return ar;
-    }
-
-    if (!ar.readString(str.getData(), size)) {
-      return ar;
-    }
-
-    str[size] = '\0';
-
     return ar;
   }
 

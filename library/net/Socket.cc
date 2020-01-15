@@ -125,7 +125,7 @@ inline namespace v1 {
   std::string Socket::getErrorString() {
     static constexpr std::size_t BufferSize = 1024;
     int err = getErrorCode();
-    char buffer[BufferSize];
+    char buffer[BufferSize] = { '\0' };
     ::FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, nullptr, err, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), buffer, BufferSize, nullptr);
     return buffer;
   }
@@ -172,7 +172,7 @@ inline namespace v1 {
   std::string Socket::getErrorString() {
     static constexpr std::size_t BufferSize = 1024;
     int err = getErrorCode();
-    char buffer[BufferSize];
+    char buffer[BufferSize] = { '\0' };
     ::strerror_r(err, buffer, BufferSize);
     return buffer;
   }

@@ -126,9 +126,9 @@ inline namespace v1 {
 
   /**
    * @relates Serializer
-   * @brief Serialize a string object
+   * @brief Do not serialize a string object via a pointer
    */
-  GF_API Serializer& operator|(Serializer& ar, const char *str);
+  Serializer& operator|(Serializer& ar, const char *str) = delete;
 
   /**
    * @relates Serializer
@@ -335,12 +335,6 @@ inline namespace v1 {
    * @brief Deserialize a double precision float object
    */
   GF_API Deserializer& operator|(Deserializer& ar, double& data);
-
-  /**
-   * @relates Deserializer
-   * @brief Deserialize a string object
-   */
-  GF_API Deserializer& operator|(Deserializer& ar, BufferRef<char> str);
 
   /**
    * @relates Deserializer
