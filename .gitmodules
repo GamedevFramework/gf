@@ -9,7 +9,7 @@
 	url = https://github.com/google/googletest.git
 [submodule "library/vendor/nuklear"]
 	path = library/vendor/nuklear
-	url = https://github.com/vurtun/nuklear.git
+	url = https://github.com/Immediate-Mode-UI/Nuklear.git
 [submodule "library/vendor/pugixml"]
 	path = library/vendor/pugixml
 	url = https://github.com/zeux/pugixml.git
