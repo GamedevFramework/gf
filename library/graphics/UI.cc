@@ -703,9 +703,19 @@ inline namespace v1 {
     return ret != 0;
   }
 
+  bool UI::checkboxValue(StringRef title, bool active) {
+    setState(State::Setup);
+    return nk_check_text(&m_impl->ctx, title.getData(), title.getISize(), static_cast<int>(active)) != 0;
+  }
+
   bool UI::checkboxFlags(StringRef title, unsigned& flags, unsigned value) {
     setState(State::Setup);
     return nk_checkbox_flags_text(&m_impl->ctx, title.getData(), title.getISize(), &flags, value) != 0;
+  }
+
+  unsigned UI::checkboxValueFlags(StringRef title, unsigned flags, unsigned value) {
+    setState(State::Setup);
+    return nk_check_flags_text(&m_impl->ctx, title.getData(), title.getISize(), flags, value) != 0;
   }
 
   bool UI::option(StringRef title, bool active) {
@@ -727,6 +737,11 @@ inline namespace v1 {
     int ret = nk_selectable_text(&m_impl->ctx, title.getData(), title.getISize(), static_cast<nk_flags>(align), &localValue);
     value = (localValue != 0);
     return ret != 0;
+  }
+
+  bool UI::selectableValueLabel(StringRef title, UIAlignment align, bool value) {
+    setState(State::Setup);
+    return nk_select_text(&m_impl->ctx, title.getData(), title.getISize(), static_cast<nk_flags>(align), static_cast<int>(value)) != 0;
   }
 
   bool UI::sliderFloat(float min, float& val, float max, float step) {

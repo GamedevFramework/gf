@@ -849,9 +849,20 @@ inline namespace v1 {
      * @param active A reference to a boolean that indicates the state of the checkbox
      * @returns True if the checkbox has changed its state
      *
-     * @sa checkboxFlags()
+     * @sa checkboxFlags(), checkboxValue()
      */
     bool checkbox(StringRef title, bool& active);
+
+    /**
+     * @brief A checkbox with a title without state
+     *
+     * @param title The title of the checkbox
+     * @param active A value that indicates the state of the checkbox
+     * @returns The new state of the checkbox
+     *
+     * @sa checkbox()
+     */
+    bool checkboxValue(StringRef title, bool active);
 
     /**
      * @brief A checkbox with a title for flags
@@ -861,9 +872,21 @@ inline namespace v1 {
      * @param value The flag value for this checkbox
      * @returns True if the checkbox has changed its state
      *
-     * @sa checkbox()
+     * @sa checkbox(), checkboxValueFlags()
      */
     bool checkboxFlags(StringRef title, unsigned& flags, unsigned value);
+
+    /**
+     * @brief A checkbox with a title for flags without state
+     *
+     * @param title The title of the checkbox
+     * @param flags The state of flags
+     * @param value The flag value for this checkbox
+     * @returns The new state of flags
+     *
+     * @sa checkboxFlags()
+     */
+    unsigned checkboxValueFlags(StringRef title, unsigned flags, unsigned value);
 
     /**
      * @}
@@ -913,9 +936,21 @@ inline namespace v1 {
      * @param value A reference to the state of the selection
      * @returns True if the state has changed
      *
-     * @sa label()
+     * @sa label(), selectableValueLabel()
      */
     bool selectableLabel(StringRef title, UIAlignment align, bool& value);
+
+    /**
+     * @brief A selectable label without state
+     *
+     * @param title The title of the label
+     * @param align The alignment of the text in the label
+     * @param value The state of the selection
+     * @returns The new state of the selection
+     *
+     * @sa selectableLabel()
+     */
+    bool selectableValueLabel(StringRef title, UIAlignment align, bool value);
 
     /**
      * @}
