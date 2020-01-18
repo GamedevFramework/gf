@@ -67,7 +67,7 @@ inline namespace v1 {
      * @brief Default constructor
      *
      * This constructor is defaulted so that this type is
-     * [trivial](http://en.cppreference.com/w/cpp/concept/TrivialType).
+     * [trivial](https://en.cppreference.com/w/cpp/named_req/TrivialType).
      */
     Vector() = default;
 
@@ -137,7 +137,7 @@ inline namespace v1 {
      * @brief Default copy constructor
      *
      * This constructor is defaulted so that this type is
-     * [trivial](http://en.cppreference.com/w/cpp/concept/TrivialType).
+     * [trivial](https://en.cppreference.com/w/cpp/named_req/TrivialType).
      *
      * @param other The vector to copy from
      */
@@ -160,7 +160,7 @@ inline namespace v1 {
      * @brief Default copy assignment
      *
      * This operator is defaulted so that this type is
-     * [trivial](http://en.cppreference.com/w/cpp/concept/TrivialType).
+     * [trivial](https://en.cppreference.com/w/cpp/named_req/TrivialType).
      */
     Vector& operator=(const Vector& other) = default;
 
@@ -318,7 +318,7 @@ inline namespace v1 {
      * @brief Default constructor
      *
      * This constructor is defaulted so that this type is
-     * [trivial](http://en.cppreference.com/w/cpp/concept/TrivialType).
+     * [trivial](https://en.cppreference.com/w/cpp/named_req/TrivialType).
      */
     Vector() = default;
 
@@ -385,12 +385,11 @@ inline namespace v1 {
      * @brief Default copy constructor
      *
      * This constructor is defaulted so that this type is
-     * [trivial](http://en.cppreference.com/w/cpp/concept/TrivialType).
+     * [trivial](https://en.cppreference.com/w/cpp/named_req/TrivialType).
      *
      * @param other The vector to copy from
      */
     Vector(const Vector& other) = default;
-
 
     /**
      * @brief Converting copy constructor
@@ -404,6 +403,14 @@ inline namespace v1 {
     {
       static_assert(std::is_convertible<U,T>::value, "Non-convertible types");
     }
+
+    /**
+     * @brief Default copy assignment
+     *
+     * This operator is defaulted so that this type is
+     * [trivial](https://en.cppreference.com/w/cpp/named_req/TrivialType).
+     */
+    Vector& operator=(const Vector& other) = default;
 
     /**
      * @brief Access to the @f$ i @f$-th coordinate.
@@ -565,7 +572,7 @@ inline namespace v1 {
      * @brief Default constructor
      *
      * This constructor is defaulted so that this type is
-     * [trivial](http://en.cppreference.com/w/cpp/concept/TrivialType).
+     * [trivial](https://en.cppreference.com/w/cpp/named_req/TrivialType).
      */
     Vector() = default;
 
@@ -648,12 +655,11 @@ inline namespace v1 {
      * @brief Default copy constructor
      *
      * This constructor is defaulted so that this type is
-     * [trivial](http://en.cppreference.com/w/cpp/concept/TrivialType).
+     * [trivial](https://en.cppreference.com/w/cpp/named_req/TrivialType).
      *
      * @param other The vector to copy from
      */
     Vector(const Vector& other) = default;
-
 
     /**
      * @brief Converting copy constructor
@@ -668,6 +674,14 @@ inline namespace v1 {
     {
       static_assert(std::is_convertible<U,T>::value, "Non-convertible types");
     }
+
+    /**
+     * @brief Default copy assignment
+     *
+     * This operator is defaulted so that this type is
+     * [trivial](https://en.cppreference.com/w/cpp/named_req/TrivialType).
+     */
+    Vector& operator=(const Vector& other) = default;
 
     /**
      * @brief Access to the @f$ i @f$-th coordinate.
@@ -840,7 +854,7 @@ inline namespace v1 {
      * @brief Default constructor
      *
      * This constructor is defaulted so that this type is
-     * [trivial](http://en.cppreference.com/w/cpp/concept/TrivialType).
+     * [trivial](https://en.cppreference.com/w/cpp/named_req/TrivialType).
      */
     Vector() = default;
 
@@ -914,12 +928,11 @@ inline namespace v1 {
      * @brief Default copy constructor
      *
      * This constructor is defaulted so that this type is
-     * [trivial](http://en.cppreference.com/w/cpp/concept/TrivialType).
+     * [trivial](https://en.cppreference.com/w/cpp/named_req/TrivialType).
      *
      * @param other The vector to copy from
      */
     Vector(const Vector& other) = default;
-
 
     /**
      * @brief Converting copy constructor
@@ -935,6 +948,14 @@ inline namespace v1 {
     {
       static_assert(std::is_convertible<U,T>::value, "Non-convertible types");
     }
+
+    /**
+     * @brief Default copy assignment
+     *
+     * This operator is defaulted so that this type is
+     * [trivial](https://en.cppreference.com/w/cpp/named_req/TrivialType).
+     */
+    Vector& operator=(const Vector& other) = default;
 
     /**
      * @brief Access to the @f$ i @f$-th coordinate.
