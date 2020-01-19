@@ -266,6 +266,7 @@ inline namespace v1 {
     }
 #endif
   private:
+    friend class SocketSelector;
     SocketHandle m_handle;
   };
 

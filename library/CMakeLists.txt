@@ -215,6 +215,7 @@ else()
     net/Socket.cc
     net/SocketAddress.cc
     net/SocketGuard.cc
+    net/SocketSelector.cc
     net/TcpListener.cc
     net/TcpSocket.cc
     net/UdpSocket.cc
