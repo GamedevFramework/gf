@@ -124,11 +124,13 @@ inline namespace v1 {
    */
   GF_API Serializer& operator|(Serializer& ar, double data);
 
+#ifndef _MSC_VER
   /**
    * @relates Serializer
    * @brief Do not serialize a string object via a pointer
    */
   Serializer& operator|(Serializer& ar, const char *str) = delete;
+#endif
 
   /**
    * @relates Serializer
