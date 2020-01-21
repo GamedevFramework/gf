@@ -401,6 +401,7 @@ TEST(SocketTest, UdpSocketTwoWayCommunicationV6) {
   testUdpSocketTwoWayCommunication<gf::SocketFamily::IPv6>();
 }
 
+#if 0
 TEST(SocketTest, SocketSelector) {
     static constexpr int ClientCount = 10;
     static constexpr int ClientId = 3;
@@ -478,3 +479,4 @@ TEST(SocketTest, SocketSelector) {
 
     clientThread.join();
 }
+#endif
