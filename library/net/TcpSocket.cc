@@ -106,7 +106,7 @@ inline namespace v1 {
     return { SocketStatus::Data, static_cast<std::size_t>(res) };
   }
 
-  bool TcpSocket::sendBytes(ArrayRef<uint8_t> buffer) {
+  SocketStatus TcpSocket::sendBytes(ArrayRef<uint8_t> buffer) {
     do {
       auto res = sendRawBytes(buffer);
 
@@ -118,15 +118,15 @@ inline namespace v1 {
           continue;
         case SocketStatus::Close:
         case SocketStatus::Error:
-          return false;
+          return res.status;
       }
 
     } while (!buffer.isEmpty());
 
-    return true;
+    return SocketStatus::Data;
   }
 
-  bool TcpSocket::recvBytes(BufferRef<uint8_t> buffer) {
+  SocketStatus TcpSocket::recvBytes(BufferRef<uint8_t> buffer) {
     do {
       auto res = recvRawBytes(buffer);
 
@@ -138,25 +138,33 @@ inline namespace v1 {
           continue;
         case SocketStatus::Close:
         case SocketStatus::Error:
-          return false;
+          return res.status;
       }
 
     } while (!buffer.isEmpty());
 
-    return true;
+    return SocketStatus::Data;
   }
 
-  bool TcpSocket::sendPacket(const Packet& packet) {
+  SocketStatus TcpSocket::sendPacket(const Packet& packet) {
     auto size = static_cast<uint64_t>(packet.bytes.size());
     auto header = encodeHeader(size);
-    return sendBytes(header.data) && sendBytes(packet.bytes);
+
+    auto status = sendBytes(header.data);
+
+    if (status != SocketStatus::Data) {
+      return status;
+    }
+
+    return sendBytes(packet.bytes);
   }
 
-  bool TcpSocket::recvPacket(Packet& packet) {
+  SocketStatus TcpSocket::recvPacket(Packet& packet) {
     Header header;
+    auto status = recvBytes(header.data);
 
-    if (!recvBytes(header.data)) {
-      return false;
+    if (status != SocketStatus::Data) {
+      return status;
     }
 
     auto size = decodeHeader(header);

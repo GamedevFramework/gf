@@ -28,8 +28,6 @@
 #include "BufferRef.h"
 #include "Packet.h"
 #include "Portability.h"
-#include "Serialization.h"
-#include "Streams.h"
 #include "Socket.h"
 
 namespace gf {
@@ -122,9 +120,9 @@ inline namespace v1 {
      * This function ensures the whole buffer is sent unless an error occurs.
      *
      * @param buffer The buffer that contains the bytes to send
-     * @returns True if no error occurred and the buffer was sent
+     * @returns The status of the connection
      */
-    bool sendBytes(ArrayRef<uint8_t> buffer);
+    SocketStatus sendBytes(ArrayRef<uint8_t> buffer);
 
     /**
      * @brief Receive a whole buffer from the socket
@@ -133,66 +131,25 @@ inline namespace v1 {
      * occurs.
      *
      * @param buffer The buffer to store the received bytes
-     * @returns True if no error occurred and the buffer was received
+     * @returns The status of the connection
      */
-    bool recvBytes(BufferRef<uint8_t> buffer);
+    SocketStatus recvBytes(BufferRef<uint8_t> buffer);
 
     /**
      * @brief Send a packet to the socket
      *
      * @param packet The packet that contains the bytes to send
-     * @returns True if no error occurred and the packet was sent
+     * @returns The status of the connection
      */
-    bool sendPacket(const Packet& packet);
+    SocketStatus sendPacket(const Packet& packet);
 
     /**
      * @brief Receive a packet from the socket
      *
      * @param packet The packet to store the received bytes
-     * @returns True if no error occurred and the packet was received
+     * @returns The status of the connection
      */
-    bool recvPacket(Packet& packet);
-
-    /**
-     * @brief Send arbitrary data to the socket
-     *
-     * The data is seralized in a packet.
-     *
-     * @tparam T The type of data to send
-     * @param data The data to send
-     * @returns True if no error occurred and data was sent
-     */
-    template<typename T>
-    bool sendData(const T& data) {
-      Packet packet;
-      BufferOutputStream stream(&packet.bytes);
-      gf::Serializer serializer(stream);
-      serializer | const_cast<T&>(data);
-      return sendPacket(packet);
-    }
-
-    /**
-     * @brief Receive arbitrary data from the socket
-     *
-     * The data is deserialized from a packet.
-     *
-     * @tparam T The type of data to receive
-     * @param data The data to receive
-     * @returns True if no error occurred and data was received
-     */
-    template<typename T>
-    bool recvData(T& data) {
-      Packet packet;
-      bool res = recvPacket(packet);
-
-      if (res) {
-        BufferInputStream stream(&packet.bytes);
-        gf::Deserializer deserializer(stream);
-        deserializer | data;
-      }
-
-      return res;
-    }
+    SocketStatus recvPacket(Packet& packet);
 
   private:
     TcpSocket(SocketHandle handle);

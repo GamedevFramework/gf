@@ -35,7 +35,7 @@ inline namespace v1 {
   namespace {
 
     struct PollFdEqualTo {
-      PollFdEqualTo(pollfd reference)
+      explicit PollFdEqualTo(pollfd reference)
       : m_reference(reference)
       {
       }
@@ -66,7 +66,7 @@ inline namespace v1 {
 
   void SocketSelector::removeSocket(Socket& socket) {
     m_fds.erase(std::remove_if(m_fds.begin(), m_fds.end(), PollFdEqualTo(pollfd{ socket.m_handle, 0, 0 })), m_fds.end());
-    m_sorted = false;
+    // the vector is still sorted (or unsorted)
   }
 
   void SocketSelector::clear() {

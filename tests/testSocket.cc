@@ -284,45 +284,6 @@ namespace {
     clientThread.join();
   }
 
-
-  struct Data {
-    std::string str;
-    double num;
-  };
-
-  template<typename Archive>
-  Archive& operator|(Archive& ar, Data& d) {
-    return ar | d.str | d.num;
-  }
-
-  template<gf::SocketFamily Family>
-  void testTcpData() {
-    gf::TcpListener listener(TestService, Family);
-    ASSERT_TRUE(listener);
-
-    std::thread clientThread([]() {
-      gf::TcpSocket socket(Host, TestService, Family);
-      ASSERT_TRUE(socket);
-
-      Data data = { "toto42", 3.14 };
-
-      auto success = socket.sendData(data);
-      EXPECT_TRUE(success);
-    });
-
-    gf::TcpSocket socket = listener.accept();
-    ASSERT_TRUE(socket);
-
-    Data data;
-    auto success = socket.recvData(data);
-
-    EXPECT_TRUE(success);
-    EXPECT_EQ(data.str, "toto42");
-    EXPECT_EQ(data.num, 3.14);
-
-    clientThread.join();
-  }
-
 }
 
 
@@ -439,12 +400,6 @@ TEST(SocketTest, UdpSocketTwoWayCommunicationV4) {
 TEST(SocketTest, UdpSocketTwoWayCommunicationV6) {
   testUdpSocketTwoWayCommunication<gf::SocketFamily::IPv6>();
 }
-
-
-TEST(SocketTest, TcpData) {
-  testTcpData<gf::SocketFamily::Unspec>();
-}
-
 
 TEST(SocketTest, SocketSelector) {
     static constexpr int ClientCount = 10;
