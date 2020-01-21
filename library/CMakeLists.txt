@@ -160,6 +160,7 @@ else()
     graphics/GraphicsHandle.cc
     graphics/GraphicsInfo.cc
     graphics/Grid.cc
+    graphics/Hexagon.cc
     graphics/Keyboard.cc
     graphics/Library.cc
     graphics/Logo.cc

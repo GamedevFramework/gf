@@ -21,7 +21,11 @@
 #include <gf/Grid.h>
 
 #include <gf/RenderTarget.h>
+#include <gf/Stagger.h>
+#include <gf/Shapes.h>
 #include <gf/VectorOps.h>
+
+#include <gf/Log.h>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -101,6 +105,84 @@ inline namespace v1 {
       m_vertices.append(vertices[1]);
     }
 
+  }
+
+  HexagonGrid::HexagonGrid(Vector2i gridSize, float coordinateUnitLength, const Color4f& color, float lineWidth)
+  : m_gridSize(gridSize)
+  , m_helper(coordinateUnitLength)
+  , m_color(color)
+  , m_lineWidth(lineWidth)
+  , m_vertices(PrimitiveType::Lines)
+  {
+    updateGeometry();
+  }
+
+  void HexagonGrid::setGridSize(Vector2i gridSize) {
+    m_gridSize = gridSize;
+    updateGeometry();
+  }
+
+
+  void HexagonGrid::setCoordinateUnitLength(float coordinateUnitLength) {
+    m_helper.setCoordinateUnitLength(coordinateUnitLength);
+    updateGeometry();
+  }
+
+  void HexagonGrid::setColor(const Color4f& color) {
+    m_color = color;
+
+    for (std::size_t i = 0; i < m_vertices.getVertexCount(); ++i) {
+      m_vertices[i].color = m_color;
+    }
+  }
+
+  RectF HexagonGrid::getLocalBounds() const {
+    Vector2f size;
+    Vector2f hexagonSize = getHexagonSize();
+
+    size.x = 1.5f * hexagonSize.width * m_gridSize.width + hexagonSize.width * 0.25f;
+    size.y = 0.5f * hexagonSize.height * (m_gridSize.height + 1);
+    return RectF::fromPositionSize({ 0.0f, 0.0f }, size);
+  }
+
+  void HexagonGrid::setAnchor(Anchor anchor) {
+    setOriginFromAnchorAndBounds(anchor, getLocalBounds());
+  }
+
+  VertexBuffer HexagonGrid::commitGeometry() const {
+    return VertexBuffer(m_vertices.getVertexData(), m_vertices.getVertexCount(), m_vertices.getPrimitiveType());
+  }
+
+  void HexagonGrid::draw(RenderTarget& target, const RenderStates& states) {
+    RenderStates localStates = states;
+    localStates.transform *= getTransform();
+    localStates.lineWidth = m_lineWidth;
+    target.draw(m_vertices, localStates);
+  }
+
+  void HexagonGrid::updateGeometry() {
+    m_vertices.clear();
+
+    Vertex vertices[2];
+    vertices[0].color = vertices[1].color = m_color;
+
+    for (int i = 0; i < m_gridSize.width; ++i) {
+      for (int j = 0; j < m_gridSize.height; ++j) {
+        auto corners = m_helper.computeCorners({ i, j });
+
+        for (unsigned k = 0; k < corners.size() - 1; ++k) {
+          vertices[0].position = corners[k];
+          vertices[1].position = corners[k + 1];
+          m_vertices.append(vertices[0]);
+          m_vertices.append(vertices[1]);
+        }
+
+        vertices[0].position = corners[5];
+        vertices[1].position = corners[0];
+        m_vertices.append(vertices[0]);
+        m_vertices.append(vertices[1]);
+      }
+    }
   }
 
 
