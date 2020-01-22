@@ -612,8 +612,8 @@ inline namespace v1 {
     Vector2i tileSize;          ///< The size of the tiles
 
     int hexSideLength;          ///< The length of the side for hexagonal map
-    StaggerAxis staggerAxis;    ///< The stagger axis for hexagonal map
-    StaggerIndex staggerIndex;  ///< The stagger index for hexagonal map
+    MapCellAxis mapCellAxis;    ///< The stagger axis for hexagonal map
+    MapCellIndex mapCellIndex;  ///< The stagger index for hexagonal map
 
     Color4u backgroundColor;    ///< The background color
 

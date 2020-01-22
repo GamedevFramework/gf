@@ -1059,31 +1059,31 @@ inline namespace v1 {
 
       tmx.hexSideLength = node.attribute("hexsidelength").as_int(0);
 
-      tmx.staggerAxis = StaggerAxis::Y;
+      tmx.mapCellAxis = MapCellAxis::Y;
 
       if (node.attribute("staggeraxis") != nullptr) {
-        std::string staggerAxis = node.attribute("staggeraxis").as_string();
+        std::string mapCellAxis = node.attribute("staggeraxis").as_string();
 
-        if (staggerAxis == "x") {
-          tmx.staggerAxis = StaggerAxis::X;
-        } else if (staggerAxis == "y") {
-          tmx.staggerAxis = StaggerAxis::Y;
+        if (mapCellAxis == "x") {
+          tmx.mapCellAxis = MapCellAxis::X;
+        } else if (mapCellAxis == "y") {
+          tmx.mapCellAxis = MapCellAxis::Y;
         } else {
-          Log::error("Wrong stagger axis string: '%s'\n", staggerAxis.c_str());
+          Log::error("Wrong stagger axis string: '%s'\n", mapCellAxis.c_str());
         }
       }
 
-      tmx.staggerIndex = StaggerIndex::Odd;
+      tmx.mapCellIndex = MapCellIndex::Odd;
 
       if (node.attribute("staggerindex") != nullptr) {
-        std::string staggerIndex = node.attribute("staggerindex").as_string();
+        std::string mapCellIndex = node.attribute("staggerindex").as_string();
 
-        if (staggerIndex == "odd") {
-          tmx.staggerIndex = StaggerIndex::Odd;
-        } else if (staggerIndex == "even") {
-          tmx.staggerIndex = StaggerIndex::Even;
+        if (mapCellIndex == "odd") {
+          tmx.mapCellIndex = MapCellIndex::Odd;
+        } else if (mapCellIndex == "even") {
+          tmx.mapCellIndex = MapCellIndex::Even;
         } else {
-          Log::error("Wrong stagger index string: '%s'\n", staggerIndex.c_str());
+          Log::error("Wrong stagger index string: '%s'\n", mapCellIndex.c_str());
         }
       }
 

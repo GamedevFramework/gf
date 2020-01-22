@@ -172,12 +172,15 @@ inline namespace v1 {
     /**
      * @brief Constructor
      *
+     * @param axis The orientation of hexagon cells. X for pointy and Y for flat
      * @param gridSize The number of hexagonal cell in the grid
-     * @param coordinateUnitLength The coordinate system unit length to represent the hexagons
+     * @param radius The radius of hexagon
      * @param color The color of the grid frame
      * @param lineWidth The width of the grid frame
+     *
+     * @sa gf::MapCellAxis
      */
-    HexagonGrid(Vector2i gridSize, float coordinateUnitLength, const Color4f& color, float lineWidth = 1.0f);
+    HexagonGrid(MapCellAxis axis, Vector2i gridSize, float radius, const Color4f& color, float lineWidth = 1.0f);
 
     /**
      * @brief Set the grid size
@@ -196,19 +199,19 @@ inline namespace v1 {
     }
 
     /**
-     * @brief Set the coordinate system unit length
+     * @brief Set the radius of hexagon
      *
-     * @param coordinateUnitLength The new coordinate system unit length to represent the hexagons
+     * @param radius The new radius of hexagon
      */
-    void setCoordinateUnitLength(float coordinateUnitLength);
+    void setRadius(float radius);
 
     /**
-     * @brief Get the coordinate system unit length
+     * @brief Get the radius of hexagon
      *
-     * @returns The current coordinate system unit length
+     * @returns The current radius of hexagon
      */
-    float getCoordinateUnitLength() const noexcept {
-      return m_helper.getCoordinateUnitLength();
+    float getRadius() const noexcept {
+      return m_radius;
     }
 
     /**
@@ -217,7 +220,7 @@ inline namespace v1 {
      * @returns The current hexagon size
      */
     Vector2f getHexagonSize() const noexcept {
-      return m_helper.getHexagonSize();
+      return m_helper.getHexagonSize(m_radius);
     }
 
     /**
@@ -296,6 +299,7 @@ inline namespace v1 {
 
   private:
     Vector2i m_gridSize;
+    float m_radius;
     HexagonHelper m_helper;
     Color4f m_color;
     float m_lineWidth;

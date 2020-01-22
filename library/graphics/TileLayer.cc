@@ -38,8 +38,8 @@ inline namespace v1 {
 
   TileLayer::TileLayer(Vector2i layerSize, Type type)
   : m_type(type)
-  , m_staggerIndex(StaggerIndex::Odd)
-  , m_staggerAxis(StaggerAxis::Y)
+  , m_mapCellIndex(MapCellIndex::Odd)
+  , m_mapCellAxis(MapCellAxis::Y)
   , m_layerSize(layerSize)
   , m_tileSize(0, 0)
   , m_texture(nullptr)

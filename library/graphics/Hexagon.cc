@@ -27,33 +27,83 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  void HexagonHelper::setCoordinateUnitLength(float coordinateUnitLength) {
-    m_coordinateUnitLength = coordinateUnitLength;
-    m_hexagonSize = { coordinateUnitLength * 2.0f, coordinateUnitLength * Sqrt3 };
-  }
+  Vector2f HexagonHelper::getHexagonSize(float radius) const noexcept {
+    Vector2f size;
 
-  Vector2f HexagonHelper::computeCenter(Vector2i coords) const {
-    Vector2f base = { 1.5f * m_hexagonSize.width * coords.x, 0.5f * m_hexagonSize.height * coords.y };
-    if (coords.y % 2 == 1) {
-      base.x += m_hexagonSize.width * 0.75f;
+    switch (m_axis)
+    {
+    case MapCellAxis::X:
+      size = { radius * Sqrt3, radius * 2.0f };
+      break;
+
+    case MapCellAxis::Y:
+      size = { radius * 2.0f, radius * Sqrt3 };
+      break;
     }
 
-    base.x += m_hexagonSize.width / 2.0f;
-    base.y += m_hexagonSize.height / 2.0f;
-
-    return base;
+    return size;
   }
 
-  std::vector<Vector2f> HexagonHelper::computeCorners(Vector2i coords) const {
-    std::vector<Vector2f> corners(6);
-    Vector2f center = computeCenter(coords);
+  RectF HexagonHelper::computeBounds(Vector2i size, float radius) const noexcept {
+    Vector2f bottomRightCorner(0.0f, 0.0f);
+    Vector2f hexagonSize = getHexagonSize(radius);
 
-    corners[0] = { center.x - 0.25f * m_hexagonSize.width, center.y - 0.50f * m_hexagonSize.height };
-    corners[1] = { center.x + 0.25f * m_hexagonSize.width, center.y - 0.50f * m_hexagonSize.height };
-    corners[2] = { center.x + 0.50f * m_hexagonSize.width, center.y - 0.00f * m_hexagonSize.height };
-    corners[3] = { center.x + 0.25f * m_hexagonSize.width, center.y + 0.50f * m_hexagonSize.height };
-    corners[4] = { center.x - 0.25f * m_hexagonSize.width, center.y + 0.50f * m_hexagonSize.height };
-    corners[5] = { center.x - 0.50f * m_hexagonSize.width, center.y + 0.00f * m_hexagonSize.height };
+    switch (m_axis)
+    {
+    case MapCellAxis::X:
+      bottomRightCorner.x = hexagonSize.width * size.x;
+      if (size.width > 1) {
+        bottomRightCorner.x += 0.5f * hexagonSize.width;
+      }
+      bottomRightCorner.y = hexagonSize.height * (0.25f + 0.75f * size.y);
+      break;
+
+    case MapCellAxis::Y:
+      bottomRightCorner.x = hexagonSize.width * (0.25f + 0.75f * size.x);
+      bottomRightCorner.y = hexagonSize.height * size.y;
+      if (size.height > 1) {
+        bottomRightCorner.y += 0.5f * hexagonSize.height;
+      }
+      break;
+    }
+
+    return RectF::fromPositionSize({ 0.0f, 0.0f }, bottomRightCorner);
+  }
+
+  Vector2f HexagonHelper::computeCenter(Vector2i coords, float radius) const {
+    Vector2f center;
+    Vector2f hexagonSize = getHexagonSize(radius);
+
+    switch (m_axis)
+    {
+    case MapCellAxis::X:
+      center.x = hexagonSize.width * (0.5f + coords.x + 0.5f * (coords.y&1));
+      center.y = hexagonSize.height * (0.5f + 0.75f * coords.y);
+      break;
+
+    case MapCellAxis::Y:
+      center.x = hexagonSize.width * (0.5f + 0.75f * coords.x);
+      center.y = hexagonSize.height * (0.5f + coords.y + 0.5f * (coords.x&1));
+      break;
+    }
+
+    return center;
+  }
+
+  std::vector<Vector2f> HexagonHelper::computeCorners(Vector2i coords, float radius) const {
+    std::vector<Vector2f> corners(6);
+    Vector2f center = computeCenter(coords, radius);
+    auto hexagonSize = getHexagonSize(radius);
+
+    for (unsigned i = 0; i < corners.size(); ++i) {
+      float angle = i * Pi3;
+      if (m_axis == MapCellAxis::X) {
+        angle -= Pi6;
+      }
+
+      corners[i].x = center.x + radius * std::cos(angle);
+      corners[i].y = center.y + radius * std::sin(angle);
+    }
 
     return corners;
   }

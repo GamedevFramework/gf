@@ -21,8 +21,8 @@
 #include <gf/Grid.h>
 
 #include <gf/RenderTarget.h>
+
 #include <gf/Stagger.h>
-#include <gf/Shapes.h>
 #include <gf/VectorOps.h>
 
 #include <gf/Log.h>
@@ -107,9 +107,10 @@ inline namespace v1 {
 
   }
 
-  HexagonGrid::HexagonGrid(Vector2i gridSize, float coordinateUnitLength, const Color4f& color, float lineWidth)
+  HexagonGrid::HexagonGrid(MapCellAxis axis, Vector2i gridSize, float radius, const Color4f& color, float lineWidth)
   : m_gridSize(gridSize)
-  , m_helper(coordinateUnitLength)
+  , m_radius(radius)
+  , m_helper(axis)
   , m_color(color)
   , m_lineWidth(lineWidth)
   , m_vertices(PrimitiveType::Lines)
@@ -123,8 +124,8 @@ inline namespace v1 {
   }
 
 
-  void HexagonGrid::setCoordinateUnitLength(float coordinateUnitLength) {
-    m_helper.setCoordinateUnitLength(coordinateUnitLength);
+  void HexagonGrid::setRadius(float radius) {
+    m_radius = radius;
     updateGeometry();
   }
 
@@ -137,12 +138,8 @@ inline namespace v1 {
   }
 
   RectF HexagonGrid::getLocalBounds() const {
-    Vector2f size;
-    Vector2f hexagonSize = getHexagonSize();
-
-    size.x = 1.5f * hexagonSize.width * m_gridSize.width + hexagonSize.width * 0.25f;
-    size.y = 0.5f * hexagonSize.height * (m_gridSize.height + 1);
-    return RectF::fromPositionSize({ 0.0f, 0.0f }, size);
+    auto bounds = m_helper.computeBounds(m_gridSize, m_radius);
+    return RectF::fromPositionSize({ -m_lineWidth, -m_lineWidth }, bounds.getSize() + 2.0f * m_lineWidth);
   }
 
   void HexagonGrid::setAnchor(Anchor anchor) {
@@ -168,7 +165,7 @@ inline namespace v1 {
 
     for (int i = 0; i < m_gridSize.width; ++i) {
       for (int j = 0; j < m_gridSize.height; ++j) {
-        auto corners = m_helper.computeCorners({ i, j });
+        auto corners = m_helper.computeCorners({ i, j }, m_radius);
 
         for (unsigned k = 0; k < corners.size() - 1; ++k) {
           vertices[0].position = corners[k];

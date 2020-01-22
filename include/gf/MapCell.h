@@ -18,11 +18,8 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#ifndef GF_STAGGER_H
-#define GF_STAGGER_H
-
-#include "MapCell.h"
-#include "Vector.h"
+#ifndef GF_MAP_CELL_H
+#define GF_MAP_CELL_H
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -31,29 +28,24 @@ inline namespace v1 {
 
   /**
    * @ingroup game
-   * @brief A helper for computing coordinates in a staggered map
+   * @brief Map cell index in a map celled or hexagonal map.
+   *
+   * @sa gf::MapCellAxis
    */
-  class StaggerHelper {
-  public:
-    StaggerHelper(MapCellAxis axis, MapCellIndex index)
-    : m_axis(axis)
-    , m_index(index)
-    {
+  enum class MapCellIndex {
+    Odd,  ///< A odd map cell index
+    Even, ///< An even map cell index
+  };
 
-    }
-
-    /**
-     * @brief Compute the center of the tile
-     *
-     * @param coords The coordinates of the tile in the map
-     * @param size The size of the tile in the map
-     * @returns The position of the center
-     */
-    Vector2f computeCenter(Vector2i coords, Vector2f size) const;
-
-  private:
-    MapCellAxis m_axis;
-    MapCellIndex m_index;
+  /**
+   * @ingroup game
+   * @brief Map cell axis in a map celled
+   *
+   * @sa gf::MapCellIndex
+   */
+  enum class MapCellAxis {
+    X,  ///< The x map cell axis
+    Y,  ///< The y map cell axis
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -61,4 +53,4 @@ inline namespace v1 {
 #endif
 }
 
-#endif // GF_STAGGER_H
+#endif // GF_MAP_CELL_H

@@ -18,11 +18,13 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#ifndef GF_STAGGER_H
+#ifndef GF_HEXAGON_H
 #define GF_HEXAGON_H
 
-#include <gf/Math.h>
-#include <gf/Vector.h>
+#include "MapCell.h"
+#include "Math.h"
+#include "Rect.h"
+#include "Vector.h"
 
 #include <vector>
 
@@ -31,70 +33,67 @@ namespace gf {
 inline namespace v1 {
 #endif
 
+  // TODO: move radius to Grid
+
    /**
    * @ingroup game
    * @brief A helper for computing coordinates in a hexagonal map
-   *
-   * @param coordinateUnitLength The length of the unit of coordinate system to represent the hexagons
    */
-  class HexagonHelper {
+  class GF_API HexagonHelper {
   public:
 
     /**
      * @brief Constructor
      *
-     * @param coordinateUnitLength The coordinate system unit length to represent the hexagons
-     * */
-    HexagonHelper(float coordinateUnitLength)
-    : m_coordinateUnitLength(coordinateUnitLength)
-    , m_hexagonSize({ coordinateUnitLength * 2.0f, coordinateUnitLength * Sqrt3 }) {
-    }
-
-    /**
-     * @brief Set the coordinate system unit length
+     * @param axis The orientation of hexagon cells. X for pointy and Y for flat
      *
-     * @param coordinateUnitLength The new coordinate system unit length to represent the hexagons
+     * @sa gf::MapCellAxis
      */
-    void setCoordinateUnitLength(float coordinateUnitLength);
-
-    /**
-     * @brief Get the coordinate system unit length
-     *
-     * @returns The current coordinate system unit length
-     */
-    float getCoordinateUnitLength() const noexcept {
-      return m_coordinateUnitLength;
+    HexagonHelper(MapCellAxis axis)
+    : m_axis(axis) {
     }
 
     /**
      * @brief Get the hexagon size
      *
+     * @param radius Radius of hexagon
+     *
      * @returns The current hexagon size
      */
-    Vector2f getHexagonSize() const noexcept {
-      return m_hexagonSize;
-    }
+    Vector2f getHexagonSize(float radius) const noexcept;
 
+    /**
+     * @brief Get the bounds for hexagon cells
+     *
+     * @param size Number of cells
+     * @param radius Radius of hexagon
+     *
+     * @returns The current hexagon size
+     */
+    RectF computeBounds(Vector2i size, float radius) const noexcept;
 
     /**
      * @brief Compute the center of the hexagon
      *
      * @param coords The size of the hexagon in the map
+     * @param radius Radius of hexagon
+     *
      * @returns The position of the center
      */
-    Vector2f computeCenter(Vector2i coords) const;
+    Vector2f computeCenter(Vector2i coords, float radius) const;
 
     /**
      * @brief Compute the six corners of the hexagon
      *
      * @param coords The size of the hexagon in the map
+     * @param raduis Radius of hexagon
+     *
      * @returns The position of six corners
      */
-    std::vector<Vector2f> computeCorners(Vector2i coords) const;
+    std::vector<Vector2f> computeCorners(Vector2i coords, float radius) const;
 
   private:
-    float m_coordinateUnitLength;
-    Vector2f m_hexagonSize;
+    MapCellAxis m_axis;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

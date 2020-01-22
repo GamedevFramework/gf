@@ -347,8 +347,8 @@ inline namespace v1 {
 
   private:
     Type m_type;
-    StaggerIndex m_staggerIndex;
-    StaggerAxis m_staggerAxis;
+    MapCellIndex m_mapCellIndex;
+    MapCellAxis m_mapCellAxis;
 
     Vector2i m_layerSize;
     Vector2i m_tileSize;

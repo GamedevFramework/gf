@@ -25,32 +25,43 @@
 
 #include <gf/Clock.h>
 #include <gf/Color.h>
+#include <gf/Coordinates.h>
 #include <gf/Event.h>
 #include <gf/Grid.h>
 #include <gf/RenderWindow.h>
 #include <gf/Shapes.h>
+#include <gf/ViewContainer.h>
+#include <gf/Views.h>
 #include <gf/Window.h>
 
 int main() {
-  constexpr gf::Vector2i GridSize = { 5 , 10 };
-  constexpr float GridCellSize = 64.0f;
+  static constexpr gf::Vector2i ScreenSize(640, 480);
+  constexpr gf::Vector2i GridSize = { 7, 7 };
+  constexpr float HexagonRadius = 32.0f;
 
-  gf::HexagonGrid grid(GridSize, GridCellSize, gf::Color::Black);
-
-  gf::RectangleShape border;
-  border.setSize(grid.getLocalBounds().getSize());
-  border.setPosition({ 0.0f, 0.0f });
-  border.setColor(gf::Color::Gray(0.9f));
-
-  gf::Window window("29_hexagonal", grid.getLocalBounds().getSize(), ~gf::WindowHints::Resizable);
+  gf::Window window("29_hexagonal", ScreenSize, ~gf::WindowHints::Resizable);
   gf::RenderWindow renderer(window);
 
-  std::cout << grid.getLocalBounds().getSize().x << ", " << grid.getLocalBounds().getSize().y << std::endl;
+  gf::ViewContainer views;
+
+  gf::ScreenView screenView;
+  views.addView(screenView);
+  views.setInitialScreenSize(ScreenSize);
+
+  gf::HexagonGrid gridPointy(gf::MapCellAxis::X, GridSize, HexagonRadius, gf::Color::Black);
+  gf::HexagonGrid gridFlat(gf::MapCellAxis::Y, GridSize, HexagonRadius, gf::Color::Black);
+
+  gf::HexagonGrid *currentGrid = &gridPointy;
 
   std::cout << "Gamedev Framework (gf) example #29: Hexagonal\n";
   std::cout << "This example prints a hexagonal grid.\n";
+  std::cout << "How to use:\n";
+  std::cout << "\t1: Switch to Pointy grid\n";
+  std::cout << "\t2: Switch to Flat grid\n";
+  std::cout << "Current view: Pointy grid\n";
 
   renderer.clear(gf::Color::White);
+  renderer.setView(screenView);
 
   while (window.isOpen()) {
     gf::Event event;
@@ -62,19 +73,39 @@ int main() {
           break;
 
         case gf::EventType::KeyPressed:
-          if (event.key.scancode == gf::Scancode::Escape) {
-            window.close();
+          switch (event.key.scancode) {
+            case gf::Scancode::Num1:
+              std::cout << "Current view: Pointy grid\n";
+              currentGrid = &gridPointy;
+              break;
+
+            case gf::Scancode::Num2:
+              std::cout << "Current view: Flat grid\n";
+              currentGrid = &gridFlat;
+              break;
+
+            case gf::Scancode::Escape:
+              window.close();
+              break;
+
+            default:
+              break;
           }
           break;
 
         default:
           break;
       }
+
+      views.processEvent(event);
     }
 
+    gf::Coordinates coordinates(renderer);
+    currentGrid->setPosition(coordinates.getCenter());
+    currentGrid->setAnchor(gf::Anchor::Center);
+
     renderer.clear();
-    renderer.draw(border);
-    renderer.draw(grid);
+    renderer.draw(*currentGrid);
     renderer.display();
   }
 
