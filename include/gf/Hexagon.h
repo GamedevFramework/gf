@@ -33,8 +33,6 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  // TODO: move radius to Grid
-
    /**
    * @ingroup game
    * @brief A helper for computing coordinates in a hexagonal map
@@ -46,11 +44,13 @@ inline namespace v1 {
      * @brief Constructor
      *
      * @param axis The orientation of hexagon cells. X for pointy and Y for flat
+     * @param index The index of data storage. Odd or Even indicate on which col or row is the offset
      *
-     * @sa gf::MapCellAxis
+     * @sa gf::MapCellAxis and gf::MapCellIndex
      */
-    HexagonHelper(MapCellAxis axis)
-    : m_axis(axis) {
+    HexagonHelper(MapCellAxis axis, MapCellIndex index)
+    : m_axis(axis)
+    , m_index(index) {
     }
 
     /**
@@ -94,6 +94,7 @@ inline namespace v1 {
 
   private:
     MapCellAxis m_axis;
+    MapCellIndex m_index;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

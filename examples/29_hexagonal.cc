@@ -48,17 +48,21 @@ int main() {
   views.addView(screenView);
   views.setInitialScreenSize(ScreenSize);
 
-  gf::HexagonGrid gridPointy(gf::MapCellAxis::X, GridSize, HexagonRadius, gf::Color::Black);
-  gf::HexagonGrid gridFlat(gf::MapCellAxis::Y, GridSize, HexagonRadius, gf::Color::Black);
+  gf::HexagonGrid gridOddPointy(gf::MapCellAxis::X, gf::MapCellIndex::Odd, GridSize, HexagonRadius, gf::Color::Black);
+  gf::HexagonGrid gridOddFlat(gf::MapCellAxis::Y, gf::MapCellIndex::Odd, GridSize, HexagonRadius, gf::Color::Black);
+  gf::HexagonGrid gridEvenPointy(gf::MapCellAxis::X, gf::MapCellIndex::Even, GridSize, HexagonRadius, gf::Color::Black);
+  gf::HexagonGrid gridEvenFlat(gf::MapCellAxis::Y, gf::MapCellIndex::Even, GridSize, HexagonRadius, gf::Color::Black);
 
-  gf::HexagonGrid *currentGrid = &gridPointy;
+  gf::HexagonGrid *currentGrid = &gridOddPointy;
 
   std::cout << "Gamedev Framework (gf) example #29: Hexagonal\n";
   std::cout << "This example prints a hexagonal grid.\n";
   std::cout << "How to use:\n";
-  std::cout << "\t1: Switch to Pointy grid\n";
-  std::cout << "\t2: Switch to Flat grid\n";
-  std::cout << "Current view: Pointy grid\n";
+  std::cout << "\t1: Switch to Odd Pointy grid\n";
+  std::cout << "\t2: Switch to Odd Flat grid\n";
+  std::cout << "\t3: Switch to Even Pointy grid\n";
+  std::cout << "\t4: Switch to Even Flat grid\n";
+  std::cout << "Current grid: Odd Pointy grid\n";
 
   renderer.clear(gf::Color::White);
   renderer.setView(screenView);
@@ -75,13 +79,23 @@ int main() {
         case gf::EventType::KeyPressed:
           switch (event.key.scancode) {
             case gf::Scancode::Num1:
-              std::cout << "Current view: Pointy grid\n";
-              currentGrid = &gridPointy;
+              std::cout << "Current grid: Odd Pointy grid\n";
+              currentGrid = &gridOddPointy;
               break;
 
             case gf::Scancode::Num2:
-              std::cout << "Current view: Flat grid\n";
-              currentGrid = &gridFlat;
+              std::cout << "Current grid: Odd Flat grid\n";
+              currentGrid = &gridOddFlat;
+              break;
+
+            case gf::Scancode::Num3:
+              std::cout << "Current grid: Even Pointy grid\n";
+              currentGrid = &gridEvenPointy;
+              break;
+
+            case gf::Scancode::Num4:
+              std::cout << "Current grid: Even Flat grid\n";
+              currentGrid = &gridEvenFlat;
               break;
 
             case gf::Scancode::Escape:

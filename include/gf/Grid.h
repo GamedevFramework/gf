@@ -173,14 +173,15 @@ inline namespace v1 {
      * @brief Constructor
      *
      * @param axis The orientation of hexagon cells. X for pointy and Y for flat
+     * @param index The index of data storage. Odd or Even indicate on which col or row is the offset
      * @param gridSize The number of hexagonal cell in the grid
      * @param radius The radius of hexagon
      * @param color The color of the grid frame
      * @param lineWidth The width of the grid frame
      *
-     * @sa gf::MapCellAxis
+     * @sa gf::MapCellAxis and gf::MapCellIndex
      */
-    HexagonGrid(MapCellAxis axis, Vector2i gridSize, float radius, const Color4f& color, float lineWidth = 1.0f);
+    HexagonGrid(MapCellAxis axis, MapCellIndex index, Vector2i gridSize, float radius, const Color4f& color, float lineWidth = 1.0f);
 
     /**
      * @brief Set the grid size
