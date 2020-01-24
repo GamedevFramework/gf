@@ -51,6 +51,7 @@
 #include "GraphicsHandle.cc"
 #include "GraphicsInfo.cc"
 #include "Grid.cc"
+#include "Hexagon.cc"
 #include "Keyboard.cc"
 #include "Library.cc"
 #include "Logo.cc"
