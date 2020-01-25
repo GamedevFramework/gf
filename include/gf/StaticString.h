@@ -53,6 +53,14 @@ inline namespace v1 {
       return m_data;
     }
 
+    char *getData() {
+      return m_data;
+    }
+
+    std::size_t getSize() const {
+      return N;
+    }
+
     char& operator[](std::size_t i) {
       assert(i <= N);
       return m_data[i];
