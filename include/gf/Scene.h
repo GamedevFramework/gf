@@ -359,6 +359,8 @@ inline namespace v1 {
     virtual void doShow();
 
   private:
+    friend class SceneManager;
+
     bool m_active;
 
     enum class Status {

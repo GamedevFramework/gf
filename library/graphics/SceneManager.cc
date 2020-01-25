@@ -22,6 +22,7 @@ inline namespace v1 {
 
     while (!m_scenes.empty() && m_window.isOpen()) {
       Scene& currentScene = m_scenes.back();
+      currentScene.m_views.setInitialScreenSize(m_renderer.getSize());
       currentScene.show();
       currentScene.resume();
 
