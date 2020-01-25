@@ -58,7 +58,7 @@ inline namespace v1 {
 
     bool contains(Vector2f coords) override;
 
-	/**
+	  /**
      * @brief Set the text's string
      *
      * The text string is in UTF-8 format.
@@ -68,7 +68,7 @@ inline namespace v1 {
      */
     void setString(std::string string);
 
-	/**
+	  /**
      * @brief Set the alignement of the text
      *
      * By default, the text is not aligned.
@@ -78,13 +78,81 @@ inline namespace v1 {
      */
     void setAlignment(Alignment align);
 
-	/**
+	  /**
      * @brief Get the alignment of the text
      *
      * @return Current alignment of the text
      * @sa setAlignment()
      */
     Alignment getAlignment() const;
+
+    /**
+     * @brief Set the paragraph width for aligned text
+     *
+     * By default, the paragraph width is 0.
+     *
+     * @param paragraphWidth New paragraph width in pixels
+     * @sa getParagraphWidth()
+     */
+    void setParagraphWidth(float paragraphWidth);
+
+    /**
+     * @brief Get the paragraph width
+     *
+     * @return Paragraph width in pixels
+     * @sa setParagraphWidth()
+     */
+    float getParagraphWidth() const;
+
+    /**
+     * @brief Set the line spacing factor
+     *
+     * The default spacing between lines is defined by the font.
+     * This method enables you to set a factor for the spacing
+     * between lines. By default the line spacing factor is 1.
+     *
+     * @param spacingFactor New line spacing factor
+     *
+     * @see getLineSpacing()
+     *
+     */
+    void setLineSpacing(float spacingFactor);
+
+     /**
+     * @brief Get the size of the line spacing factor
+     *
+     * @return The size of the line spacing factor
+     *
+     * @see setLineSpacing
+     */
+    float getLineSpacing() const;
+
+    /**
+     * @brief Set the letter spacing factor
+     *
+     * The default spacing between letters is defined by the font.
+     * This factor doesn't directly apply to the existing
+     * spacing between each character, it rather adds a fixed
+     * space between them which is calculated from the font
+     * metrics and the character size.
+     * Note that factors below 1 (including negative numbers) bring
+     * characters closer to each other.
+     * By default the letter spacing factor is 1.
+     *
+     * @param spacingFactor New letter spacing factor
+     *
+     * @see getLetterSpacing()
+     */
+    void setLetterSpacing(float spacingFactor);
+
+     /**
+     * @brief Get the size of the letter spacing factor
+     *
+     * @returns The size of the letter spacing factor
+     *
+     * @see setLetterSpacing()
+     */
+    float getLetterSpacing() const;
 
     /**
      * @brief Set the character size
