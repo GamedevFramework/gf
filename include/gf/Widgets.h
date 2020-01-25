@@ -68,6 +68,17 @@ inline namespace v1 {
      */
     void setString(std::string string);
 
+    /**
+     * @brief Get the text's string
+     *
+     * The text string is in UTF-8 format.
+     *
+     * @return Text's string
+     *
+     * @sa setString()
+     */
+    const std::string& getString() const;
+
 	  /**
      * @brief Set the alignement of the text
      *
