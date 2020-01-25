@@ -101,6 +101,39 @@ inline namespace v1 {
 		return m_basic.getAlignment();
 	}
 
+  void TextWidget::setParagraphWidth(float paragraphWidth)
+	{
+		m_basic.setParagraphWidth(paragraphWidth);
+    updateGeometry();
+	}
+
+	float TextWidget::getParagraphWidth() const
+	{
+		return m_basic.getParagraphWidth();
+	}
+
+  void TextWidget::setLineSpacing(float spacingFactor)
+	{
+		m_basic.setLineSpacing(spacingFactor);
+    updateGeometry();
+	}
+
+	float TextWidget::getLineSpacing() const
+	{
+		return m_basic.getLineSpacing();
+	}
+
+  void TextWidget::setLetterSpacing(float spacingFactor)
+	{
+		m_basic.setLetterSpacing(spacingFactor);
+    updateGeometry();
+	}
+
+	float TextWidget::getLetterSpacing() const
+	{
+		return m_basic.getLetterSpacing();
+	}
+
   void TextWidget::setCharacterSize(unsigned characterSize) {
     m_basic.setCharacterSize(characterSize);
     updateGeometry();
