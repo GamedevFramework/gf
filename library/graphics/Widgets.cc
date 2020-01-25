@@ -84,53 +84,48 @@ inline namespace v1 {
     return isInsideBounds(coords, m_basic, *this);
   }
 	
-	void TextWidget::setString(std::string string)
-	{
+	void TextWidget::setString(std::string string) {
 		m_basic.setString(std::move(string));
     updateGeometry();
 	}
 
-	void TextWidget::setAlignment(Alignment align)
-	{
+  const std::string& TextWidget::getString() const {
+		return m_basic.getString();
+	}
+
+	void TextWidget::setAlignment(Alignment align) {
 		m_basic.setAlignment(align);
     updateGeometry();
 	}
 
-	Alignment TextWidget::getAlignment() const
-	{
+	Alignment TextWidget::getAlignment() const {
 		return m_basic.getAlignment();
 	}
 
-  void TextWidget::setParagraphWidth(float paragraphWidth)
-	{
+  void TextWidget::setParagraphWidth(float paragraphWidth) {
 		m_basic.setParagraphWidth(paragraphWidth);
     updateGeometry();
 	}
 
-	float TextWidget::getParagraphWidth() const
-	{
+	float TextWidget::getParagraphWidth() const {
 		return m_basic.getParagraphWidth();
 	}
 
-  void TextWidget::setLineSpacing(float spacingFactor)
-	{
+  void TextWidget::setLineSpacing(float spacingFactor) {
 		m_basic.setLineSpacing(spacingFactor);
     updateGeometry();
 	}
 
-	float TextWidget::getLineSpacing() const
-	{
+	float TextWidget::getLineSpacing() const {
 		return m_basic.getLineSpacing();
 	}
 
-  void TextWidget::setLetterSpacing(float spacingFactor)
-	{
+  void TextWidget::setLetterSpacing(float spacingFactor) {
 		m_basic.setLetterSpacing(spacingFactor);
     updateGeometry();
 	}
 
-	float TextWidget::getLetterSpacing() const
-	{
+	float TextWidget::getLetterSpacing() const {
 		return m_basic.getLetterSpacing();
 	}
 
