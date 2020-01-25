@@ -83,6 +83,23 @@ inline namespace v1 {
   bool TextWidget::contains(Vector2f coords) {
     return isInsideBounds(coords, m_basic, *this);
   }
+	
+	void TextWidget::setString(std::string string)
+	{
+		m_basic.setString(std::move(string));
+    updateGeometry();
+	}
+
+	void TextWidget::setAlignment(Alignment align)
+	{
+		m_basic.setAlignment(align);
+    updateGeometry();
+	}
+
+	Alignment TextWidget::getAlignment() const
+	{
+		return m_basic.getAlignment();
+	}
 
   void TextWidget::setCharacterSize(unsigned characterSize) {
     m_basic.setCharacterSize(characterSize);
