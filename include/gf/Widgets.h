@@ -58,6 +58,34 @@ inline namespace v1 {
 
     bool contains(Vector2f coords) override;
 
+	/**
+     * @brief Set the text's string
+     *
+     * The text string is in UTF-8 format.
+     * A text's string is empty by default.
+     *
+     * @param string New string in UTF-8 format
+     */
+    void setString(std::string string);
+
+	/**
+     * @brief Set the alignement of the text
+     *
+     * By default, the text is not aligned.
+     *
+     * @param align New alignement
+     * @sa getAlignment()
+     */
+    void setAlignment(Alignment align);
+
+	/**
+     * @brief Get the alignment of the text
+     *
+     * @return Current alignment of the text
+     * @sa setAlignment()
+     */
+    Alignment getAlignment() const;
+
     /**
      * @brief Set the character size
      *
