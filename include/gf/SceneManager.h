@@ -88,9 +88,16 @@ inline namespace v1 {
     }
 
     /**
+     * @brief Get the window associated to the scene
+     */
+    Window& getWindow() {
+      return m_window;
+    }
+
+    /**
      * @brief Get the renderer associated to the scene
      */
-    const RenderTarget& getRenderer() const {
+    RenderTarget& getRenderer() {
       return m_renderer;
     }
 
