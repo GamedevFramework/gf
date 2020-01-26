@@ -49,6 +49,10 @@ inline namespace v1 {
       return *this;
     }
 
+    void clear() {
+      m_data[0] = '\0';
+    }
+
     const char *getData() const {
       return m_data;
     }
