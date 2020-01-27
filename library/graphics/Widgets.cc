@@ -83,51 +83,51 @@ inline namespace v1 {
   bool TextWidget::contains(Vector2f coords) {
     return isInsideBounds(coords, m_basic, *this);
   }
-	
-	void TextWidget::setString(std::string string) {
-		m_basic.setString(std::move(string));
+
+  void TextWidget::setString(std::string string) {
+    m_basic.setString(std::move(string));
     updateGeometry();
-	}
+  }
 
   const std::string& TextWidget::getString() const {
-		return m_basic.getString();
-	}
+    return m_basic.getString();
+  }
 
-	void TextWidget::setAlignment(Alignment align) {
-		m_basic.setAlignment(align);
+  void TextWidget::setAlignment(Alignment align) {
+    m_basic.setAlignment(align);
     updateGeometry();
-	}
+  }
 
-	Alignment TextWidget::getAlignment() const {
-		return m_basic.getAlignment();
-	}
+  Alignment TextWidget::getAlignment() const {
+    return m_basic.getAlignment();
+  }
 
   void TextWidget::setParagraphWidth(float paragraphWidth) {
-		m_basic.setParagraphWidth(paragraphWidth);
+    m_basic.setParagraphWidth(paragraphWidth);
     updateGeometry();
-	}
+  }
 
-	float TextWidget::getParagraphWidth() const {
-		return m_basic.getParagraphWidth();
-	}
+  float TextWidget::getParagraphWidth() const {
+    return m_basic.getParagraphWidth();
+  }
 
   void TextWidget::setLineSpacing(float spacingFactor) {
-		m_basic.setLineSpacing(spacingFactor);
+    m_basic.setLineSpacing(spacingFactor);
     updateGeometry();
-	}
+  }
 
-	float TextWidget::getLineSpacing() const {
-		return m_basic.getLineSpacing();
-	}
+  float TextWidget::getLineSpacing() const {
+    return m_basic.getLineSpacing();
+  }
 
   void TextWidget::setLetterSpacing(float spacingFactor) {
-		m_basic.setLetterSpacing(spacingFactor);
+    m_basic.setLetterSpacing(spacingFactor);
     updateGeometry();
-	}
+  }
 
-	float TextWidget::getLetterSpacing() const {
-		return m_basic.getLetterSpacing();
-	}
+  float TextWidget::getLetterSpacing() const {
+    return m_basic.getLetterSpacing();
+  }
 
   void TextWidget::setCharacterSize(unsigned characterSize) {
     m_basic.setCharacterSize(characterSize);
