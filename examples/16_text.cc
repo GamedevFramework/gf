@@ -54,6 +54,14 @@ int main() {
   paragraph.setPosition({ 10.0f, 50.0f });
   paragraph.setAnchor(gf::Anchor::TopLeft);
 
+  gf::Text centered;
+  centered.setFont(font);
+  centered.setCharacterSize(16);
+  centered.setAlignment(gf::Alignment::Center);
+  centered.setString("A centered text with paragraph width = 0");
+  centered.setPosition({ 400.0f, 100.0f });
+  centered.setAnchor(gf::Anchor::TopCenter);
+
   std::cout << "Gamedev Framework (gf) example #16: Text\n";
   std::cout << "This example prints two text to show outlining and text justifying.\n";
 
@@ -82,6 +90,7 @@ int main() {
     renderer.clear();
     renderer.draw(text);
     renderer.draw(paragraph);
+    renderer.draw(centered);
     renderer.display();
   }
 
