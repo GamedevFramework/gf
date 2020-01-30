@@ -38,9 +38,9 @@ inline namespace v1 {
   namespace {
 
     template<typename T, typename U>
-    bool isInsideBounds(Vector2f coords, const T& basic, const U& widget) {
+    bool isInsideBounds(Vector2f coords, const T& basic, const U& widget, gf::Vector2f offset = { 0.0f, 0.0f }) {
       Vector2f local = gf::transform(widget.getInverseTransform(), coords);
-      return basic.getLocalBounds().contains(local);
+      return basic.getLocalBounds().contains(local + offset);
     }
 
   }
@@ -244,14 +244,21 @@ inline namespace v1 {
   }
 
   void TextButtonWidget::draw(RenderTarget &target, const RenderStates& states) {
-    m_rect.draw(target, states);
+    RectF bounds = getLocalBounds().grow(m_padding);
+    m_rect.setSize(bounds.getSize());
+    m_rect.setPosition(bounds.getPosition());
+
+    RenderStates localStates = states;
+    localStates.transform = getTransform();
+
+    m_rect.draw(target, localStates);
 
     // draw text over background
     TextWidget::draw(target, states);
   }
 
   bool TextButtonWidget::contains(Vector2f coords) {
-    return isInsideBounds(coords, m_rect, m_rect);
+    return isInsideBounds(coords, m_rect, *this, -m_rect.getPosition());
   }
 
   void TextButtonWidget::setBackgroundOutlineThickness(float thickness) {
@@ -300,16 +307,6 @@ inline namespace v1 {
         break;
     }
 
-    RectF bounds = getLocalBounds().grow(m_padding);
-    m_rect.setSize(bounds.getSize());
-    m_rect.setOrigin(getOrigin() + m_padding);
-
-    Vector2f position = getPosition();
-    Matrix3f matrix = gf::rotation(getRotation(), position) * gf::scaling(getScale(), position);
-
-    m_rect.setPosition(gf::transform(matrix, position + bounds.getPosition() + m_padding));
-    m_rect.setRotation(getRotation());
-    m_rect.setScale(getScale());
     m_rect.setRadius(m_radius);
   }
 
