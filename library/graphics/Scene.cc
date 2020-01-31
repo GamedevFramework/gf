@@ -49,12 +49,12 @@ inline namespace v1 {
     doUpdate(time);
   }
 
-  void Scene::render(RenderTarget& target) {
+  void Scene::render(RenderTarget& target, const RenderStates &states) {
     if (isHidden()) {
       return;
     }
 
-    doRender(target);
+    doRender(target, states);
   }
 
   void Scene::setActive(bool active) {
@@ -101,14 +101,14 @@ inline namespace v1 {
     m_worldView.setSize(size);
   }
 
-  void Scene::renderWorldEntities(RenderTarget& target) {
+  void Scene::renderWorldEntities(RenderTarget& target, const RenderStates &states) {
     target.setView(m_worldView);
-    m_worldEntities.render(target);
+    m_worldEntities.render(target, states);
   }
 
-  void Scene::renderHudEntities(RenderTarget& target) {
+  void Scene::renderHudEntities(RenderTarget& target, const RenderStates &states) {
     target.setView(m_hudView);
-    m_hudEntities.render(target);
+    m_hudEntities.render(target, states);
   }
 
   void Scene::doProcessEvent(Event& event) {
@@ -126,9 +126,9 @@ inline namespace v1 {
     // nothing
   }
 
-  void Scene::doRender(RenderTarget& target) {
-    renderWorldEntities(target);
-    renderHudEntities(target);
+  void Scene::doRender(RenderTarget& target, const RenderStates &states) {
+    renderWorldEntities(target, states);
+    renderHudEntities(target, states);
   }
 
 

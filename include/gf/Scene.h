@@ -27,6 +27,7 @@
 #include "ModelContainer.h"
 #include "Portability.h"
 #include "RenderWindow.h"
+#include "RenderStates.h"
 #include "Time.h"
 #include "ViewContainer.h"
 #include "Views.h"
@@ -137,10 +138,11 @@ inline namespace v1 {
      * entities (with a gf::ScreenView) through a call to renderHudEntities().
      *
      * @param target The target to render the scene
+     * @param states The render states to use for drawing
      *
      * @sa gf::EntityContainer::render()
      */
-    void render(RenderTarget& target);
+    void render(RenderTarget& target, const RenderStates &states = RenderStates());
 
     /**
      * @}
@@ -304,12 +306,12 @@ inline namespace v1 {
     /**
      * @brief Render the world entities
      */
-    void renderWorldEntities(RenderTarget& target);
+    void renderWorldEntities(RenderTarget& target, const RenderStates &states);
 
     /**
      * @brief Render the HUD entities
      */
-    void renderHudEntities(RenderTarget& target);
+    void renderHudEntities(RenderTarget& target, const RenderStates &states);
 
     /**
      * @brief Get the world view
@@ -336,7 +338,7 @@ inline namespace v1 {
     /**
      * @brief Customization point for render()
      */
-    virtual void doRender(RenderTarget& target);
+    virtual void doRender(RenderTarget& target, const RenderStates &states);
 
     /**
      * @brief Customization point for pause()
