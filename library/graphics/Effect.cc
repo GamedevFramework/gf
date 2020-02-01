@@ -18,14 +18,26 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
+#include <gf/Effect.h>
 
-#define GF_IMPLEMENTATION
+#include "config.h"
 
-#include "generated/color_matrix.frag.h"
-#include "generated/default_alpha.frag.h"
-#include "generated/default.frag.h"
-#include "generated/default.vert.h"
-#include "generated/edge.frag.h"
-#include "generated/fxaa.frag.h"
-#include "generated/fade.frag.h"
-#include "generated/slide.frag.h"
+namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+inline namespace v1 {
+#endif
+
+  TransitionEffect::TransitionEffect(const char *vertexShader, const char *fragmentShader)
+  : Effect(vertexShader, fragmentShader)
+  {
+    setUniform("u_progress", 0.0f);
+  }
+
+  void TransitionEffect::setProgress(float progress) {
+    setUniform("u_progress", progress);
+  }
+
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+}
+#endif
+}

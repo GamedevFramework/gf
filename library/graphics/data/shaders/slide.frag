@@ -18,14 +18,27 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
+#version 100
 
-#define GF_IMPLEMENTATION
+precision mediump float;
 
-#include "generated/color_matrix.frag.h"
-#include "generated/default_alpha.frag.h"
-#include "generated/default.frag.h"
-#include "generated/default.vert.h"
-#include "generated/edge.frag.h"
-#include "generated/fxaa.frag.h"
-#include "generated/fade.frag.h"
-#include "generated/slide.frag.h"
+varying vec4 v_color;
+varying vec2 v_texCoords;
+
+uniform sampler2D u_texture;
+uniform sampler2D u_texture2;
+uniform float u_progress;
+
+void main(void) {
+
+  if (u_progress < v_texCoords.x)
+  {
+    vec3 texel1 = texture2D(u_texture, v_texCoords).rgb;
+    gl_FragColor = vec4(texel1, 1.0f);
+  }
+  else
+  {
+    vec3 texel2 = texture2D(u_texture2, v_texCoords).rgb;
+    gl_FragColor = vec4(texel2, 1.0f);
+  }
+}

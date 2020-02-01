@@ -38,6 +38,8 @@ set(SHADER_SOURCES
   graphics/data/shaders/edge.frag
   graphics/data/shaders/fxaa.frag
 #   data/shaders/simple_fxaa.frag
+  graphics/data/shaders/fade.frag
+  graphics/data/shaders/slide.frag
 )
 
 set(SHADER_HEADERS "")
@@ -152,6 +154,7 @@ else()
     graphics/Curve.cc
     graphics/Curves.cc
     graphics/Drawable.cc
+    graphics/Effect.cc
     graphics/Effects.cc
     graphics/Entity.cc
     graphics/EntityContainer.cc
@@ -192,6 +195,7 @@ else()
     graphics/TileLayer.cc
     graphics/Tmx.cc
     graphics/Transformable.cc
+    graphics/Transition.cc
     graphics/UI.cc
     graphics/VertexArray.cc
     graphics/VertexBuffer.cc
@@ -451,3 +455,4 @@ install(
   FILES gfnetConfig.cmake
   DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/gfnet"
 )
+

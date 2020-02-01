@@ -25,6 +25,8 @@
 #include "generated/color_matrix.frag.h"
 #include "generated/edge.frag.h"
 #include "generated/fxaa.frag.h"
+#include "generated/fade.frag.h"
+#include "generated/slide.frag.h"
 
 #include "config.h"
 
@@ -238,6 +240,16 @@ inline namespace v1 {
 
   void EdgeEffect::setFramebufferSize(Vector2f size) {
     setUniform("u_framebufferSize", size);
+  }
+
+  FadeTransitionEffect::FadeTransitionEffect()
+  : TransitionEffect(default_vert, fade_frag)
+  {
+  }
+
+  SlideTransitionEffect::SlideTransitionEffect()
+  : TransitionEffect(default_vert, slide_frag)
+  {
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
