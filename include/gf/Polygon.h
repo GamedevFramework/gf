@@ -167,6 +167,7 @@ inline namespace v1 {
      */
     Winding getWinding() const;
 
+    bool contains(Vector2f point) const;
 
     /**
      * @brief Compute the area of the polygon
