@@ -82,7 +82,7 @@ inline namespace v1 {
   struct GF_API RenderStates {
     BlendMode mode = BlendAlpha; ///< The blending mode
     Matrix3f transform = identityTransform(); ///< The transform matrix
-    const BareTexture *texture = nullptr; ///< The texture
+    const BareTexture *texture [2] = { nullptr, nullptr }; ///< The texture
     Shader *shader = nullptr; ///< The shader
     float lineWidth = 0.0f; ///< The line width
   };

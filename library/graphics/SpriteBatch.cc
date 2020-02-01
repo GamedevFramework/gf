@@ -63,15 +63,15 @@ inline namespace v1 {
     if (m_count == 0) {
       m_currentRenderStates.mode = states.mode;
       m_currentRenderStates.transform = states.transform;
-      m_currentRenderStates.texture = &texture;
+      m_currentRenderStates.texture[0] = &texture;
       m_currentRenderStates.shader = states.shader;
     } else {
-      if (m_count == MaxSpriteCount || m_currentRenderStates.texture != &texture || !areStatesSimilar(m_currentRenderStates, states)) {
+      if (m_count == MaxSpriteCount || m_currentRenderStates.texture[0] != &texture || !areStatesSimilar(m_currentRenderStates, states)) {
         renderBatch();
 
         m_currentRenderStates.mode = states.mode;
         m_currentRenderStates.transform = states.transform;
-        m_currentRenderStates.texture = &texture;
+        m_currentRenderStates.texture[0] = &texture;
         m_currentRenderStates.shader = states.shader;
       }
     }

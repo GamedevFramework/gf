@@ -71,7 +71,7 @@ inline namespace v1 {
     RenderStates localStates = states;
 
     localStates.transform *= getTransform();
-    localStates.texture = m_basic.getFontTexture();
+    localStates.texture[0] = m_basic.getFontTexture();
 
     if (m_basic.getOutlineThickness() > 0) {
       target.draw(m_outlineVertices, localStates);
@@ -345,7 +345,7 @@ inline namespace v1 {
     RenderStates localStates = states;
 
     localStates.transform *= getTransform();
-    localStates.texture = &sprite.getTexture();
+    localStates.texture[0] = &sprite.getTexture();
     target.draw(m_vertices, 4, PrimitiveType::TriangleStrip, localStates);
   }
 
@@ -474,7 +474,7 @@ inline namespace v1 {
     RenderStates localStates = states;
 
     localStates.transform *= getTransform();
-    localStates.texture = &sprite.getTexture();
+    localStates.texture[0] = &sprite.getTexture();
     target.draw(m_vertices, 4, PrimitiveType::TriangleStrip, localStates);
   }
 

@@ -244,10 +244,15 @@ inline namespace v1 {
      * texture
      */
 
-    const BareTexture *texture = states.texture;
+    const BareTexture *texture1 = states.texture[0];
+    const BareTexture *texture2 = states.texture[1];
 
-    if (texture == nullptr) {
-      texture = &m_defaultTexture;
+    if (texture1 == nullptr) {
+      texture1 = &m_defaultTexture;
+    }
+
+    if (texture2 == nullptr) {
+      texture2 = &m_defaultTexture;
     }
 
     /*
@@ -257,7 +262,7 @@ inline namespace v1 {
     Shader *shader = states.shader;
 
     if (shader == nullptr) {
-      switch (texture->getFormat()) {
+      switch (texture1->getFormat()) {
         case BareTexture::Format::Alpha:
           shader = &m_defaultAlphaShader;
           break;
@@ -267,7 +272,8 @@ inline namespace v1 {
       }
     }
 
-    shader->setUniform("u_texture", *texture);
+    shader->setUniform("u_texture", *texture1);
+    shader->setUniform("u_texture2", *texture2);
 
     /*
      * transform

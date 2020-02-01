@@ -60,7 +60,7 @@ inline namespace v1 {
   void BufferedGeometry::draw(RenderTarget& target, const RenderStates& states) {
     RenderStates localStates = states;
 
-    localStates.texture = m_texture;
+    localStates.texture[0] = m_texture;
     localStates.transform *= getTransform();
 
     if (m_outlineBuffer != nullptr) {
