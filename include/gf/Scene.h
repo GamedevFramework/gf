@@ -322,6 +322,13 @@ inline namespace v1 {
 
     /**
      * @brief Customization point for processEvent()
+     *
+     * @returns True if the event should not be passed to the other actions
+     */
+    virtual bool doEarlyProcessEvent(Event& event);
+
+    /**
+     * @brief Customization point for processEvent()
      */
     virtual void doProcessEvent(Event& event);
 

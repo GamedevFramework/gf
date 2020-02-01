@@ -25,8 +25,11 @@ inline namespace v1 {
 
   void Scene::processEvent(Event& event) {
     m_views.processEvent(event);
-    m_actions.processEvent(event);
-    doProcessEvent(event);
+
+    if (!doEarlyProcessEvent(event)) {
+      m_actions.processEvent(event);
+      doProcessEvent(event);
+    }
   }
 
   void Scene::handleActions(Window& window) {
@@ -109,6 +112,12 @@ inline namespace v1 {
   void Scene::renderHudEntities(RenderTarget& target, const RenderStates &states) {
     target.setView(m_hudView);
     m_hudEntities.render(target, states);
+  }
+
+  bool Scene::doEarlyProcessEvent(Event& event) {
+    gf::unused(event);
+    // nothing
+    return false;
   }
 
   void Scene::doProcessEvent(Event& event) {
