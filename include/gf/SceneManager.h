@@ -23,8 +23,10 @@
 
 #include <vector>
 
+#include "Color.h"
 #include "Portability.h"
 #include "Ref.h"
+#include "RenderStates.h"
 #include "RenderWindow.h"
 #include "Scene.h"
 #include "Window.h"
@@ -60,8 +62,10 @@ inline namespace v1 {
 
     /**
      * @brief Run the scene manager until completion
+     *
+     * @param states The render states to use for drawing
      */
-    void run();
+    void run(const RenderStates &states = RenderStates());
 
     /**
      * @brief Add a scene on top of the stack
@@ -101,10 +105,19 @@ inline namespace v1 {
       return m_renderer;
     }
 
+    Color4f getClearColor() const {
+      return m_clearColor;
+    }
+
+    void setClearColor(const Color4f& color) {
+      m_clearColor = color;
+    }
+
   private:
     Window m_window;
     RenderWindow m_renderer;
     std::vector<Ref<Scene>> m_scenes;
+    Color4f m_clearColor;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

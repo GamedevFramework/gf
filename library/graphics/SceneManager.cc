@@ -12,13 +12,14 @@ inline namespace v1 {
   SceneManager::SceneManager(StringRef title, Vector2i size)
   : m_window(title, size)
   , m_renderer(m_window)
+  , m_clearColor(Color::White)
   {
 
   }
 
-  void SceneManager::run() {
+  void SceneManager::run(const RenderStates &states) {
     Clock clock;
-    m_renderer.clear(Color::White);
+    m_renderer.clear(m_clearColor);
 
     while (!m_scenes.empty() && m_window.isOpen()) {
       Scene& currentScene = m_scenes.back();
@@ -45,10 +46,10 @@ inline namespace v1 {
           scene.update(time);
         }
 
-        m_renderer.clear();
+        m_renderer.clear(m_clearColor);
 
         for (Scene& scene : m_scenes) {
-          scene.render(m_renderer);
+          scene.render(m_renderer, states);
         }
 
         m_renderer.display();
