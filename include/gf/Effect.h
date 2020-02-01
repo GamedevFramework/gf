@@ -61,6 +61,15 @@ inline namespace v1 {
 
   };
 
+  class GF_API TransitionEffect : public Effect {
+
+  protected:
+    TransitionEffect(const char *vertexShader, const char *fragmentShader);
+
+  public:
+    void setProgress(float progress);
+  };
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif
