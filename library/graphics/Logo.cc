@@ -704,7 +704,7 @@ inline namespace v1 {
 
     RenderStates localStates = states;
     localStates.transform *= getTransform();
-    localStates.texture = &m_texture;
+    localStates.texture[0] = &m_texture;
     target.draw(vertices, 4, PrimitiveType::TriangleStrip, localStates);
   }
 

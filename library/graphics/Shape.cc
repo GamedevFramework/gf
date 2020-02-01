@@ -95,11 +95,11 @@ inline namespace v1 {
     localStates.transform *= getTransform();
 
     if (m_outlineThickness > 0.0f) {
-      localStates.texture = nullptr;
+      localStates.texture[0] = nullptr;
       target.draw(m_outlineVertices, localStates);
     }
 
-    localStates.texture = m_texture;
+    localStates.texture[0] = m_texture;
     target.draw(m_vertices, localStates);
   }
 

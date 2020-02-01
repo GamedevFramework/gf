@@ -747,7 +747,7 @@ inline namespace v1 {
     localStates.transform *= getTransform();
     target.draw(backgroundVertices, localStates);
 
-    localStates.texture = m_font->getTexture();
+    localStates.texture[0] = m_font->getTexture();
     target.draw(foregroundVertices, localStates);
   }
 

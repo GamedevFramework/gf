@@ -1296,7 +1296,7 @@ inline namespace v1 {
         continue;
       }
 
-      localStates.texture = static_cast<const BareTexture*>(command->texture.ptr);
+      localStates.texture[0] = static_cast<const BareTexture*>(command->texture.ptr);
       target.setScissorBox(RectI::fromPositionSize( Vector2i(command->clip_rect.x, command->clip_rect.y), Vector2i(command->clip_rect.w, command->clip_rect.h)));
       target.draw(vertices, indices, command->elem_count, PrimitiveType::Triangles, localStates);
 
