@@ -28,8 +28,10 @@
 #include "Ref.h"
 #include "RenderStates.h"
 #include "RenderWindow.h"
+#include "RenderTexture.h"
 #include "Scene.h"
 #include "Window.h"
+#include "Transition.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -91,6 +93,8 @@ inline namespace v1 {
       pushScene(scene);
     }
 
+    void transitionToScene(Scene& scene, float time, TransitionEffect& effect);
+
     /**
      * @brief Get the window associated to the scene
      */
@@ -118,6 +122,12 @@ inline namespace v1 {
     RenderWindow m_renderer;
     std::vector<Ref<Scene>> m_scenes;
     Color4f m_clearColor;
+
+    // Transition
+    std::vector<Ref<Scene>> m_oldScenes;
+    RenderTexture* m_targetOldScenes;
+    RenderTexture* m_targetNewScenes;
+    Transition m_transition;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
