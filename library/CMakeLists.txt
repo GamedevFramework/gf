@@ -40,6 +40,7 @@ set(SHADER_SOURCES
 #   data/shaders/simple_fxaa.frag
   graphics/data/shaders/fade.frag
   graphics/data/shaders/slide.frag
+  graphics/data/shaders/glitch.frag
 )
 
 set(SHADER_HEADERS "")
