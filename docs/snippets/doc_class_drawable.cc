@@ -37,7 +37,7 @@ public:
 
     // ... or use the low-level API
     gf::RenderStates localStates = states;
-    localStates.texture = &m_texture;
+    localStates.texture[0] = &m_texture;
     target.draw(m_vertices, localStates);
   }
 
