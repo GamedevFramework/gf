@@ -208,6 +208,14 @@ inline namespace v1 {
     SlideTransitionEffect();
   };
 
+  class GF_API GlitchTransitionEffect : public TransitionEffect {
+  public:
+    /**
+     * @brief Default constructor
+     */
+    GlitchTransitionEffect();
+  };
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif

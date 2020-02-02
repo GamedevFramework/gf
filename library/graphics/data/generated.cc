@@ -29,3 +29,4 @@
 #include "generated/fxaa.frag.h"
 #include "generated/fade.frag.h"
 #include "generated/slide.frag.h"
+#include "generated/glitch.frag.h"
