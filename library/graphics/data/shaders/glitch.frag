@@ -25,8 +25,8 @@ precision mediump float;
 varying vec4 v_color;
 varying vec2 v_texCoords;
 
-uniform sampler2D u_texture;
-uniform sampler2D u_texture2;
+uniform sampler2D u_texture0;
+uniform sampler2D u_texture1;
 uniform float u_progress;
 uniform float u_intensity;
 
@@ -113,15 +113,15 @@ void main(void) {
 
   const int NUM_SAMPLES = 20;
   const float RCP_NUM_SAMPLES_F = 1.0 / float(NUM_SAMPLES);
-    
+
   vec4 sum = vec4(0.0);
   vec3 wsum = vec3(0.0);
   for( int i=0; i<NUM_SAMPLES; ++i )
   {
 	float t = float(i) * RCP_NUM_SAMPLES_F;
 	uv.x = sat( uv.x + ofs * t );
-	vec4 tex1 = texture2D( u_texture, uv ); // bias -10.0
-	vec4 tex2 = texture2D( u_texture2, uv ); // bias -10.0
+	vec4 tex1 = texture2D( u_texture0, uv ); // bias -10.0
+	vec4 tex2 = texture2D( u_texture1, uv ); // bias -10.0
 	vec4 samplecol = mix(tex1, tex2, u_progress); // bias -10.0
 	vec3 s = spectrum_offset( t );
 	samplecol.rgb = samplecol.rgb * s;

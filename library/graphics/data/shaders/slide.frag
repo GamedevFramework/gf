@@ -25,20 +25,14 @@ precision mediump float;
 varying vec4 v_color;
 varying vec2 v_texCoords;
 
-uniform sampler2D u_texture;
-uniform sampler2D u_texture2;
+uniform sampler2D u_texture0;
+uniform sampler2D u_texture1;
 uniform float u_progress;
 
 void main(void) {
-
-  if (u_progress < v_texCoords.x)
-  {
-    vec3 texel1 = texture2D(u_texture, v_texCoords).rgb;
-    gl_FragColor = vec4(texel1, 1.0f);
-  }
-  else
-  {
-    vec3 texel2 = texture2D(u_texture2, v_texCoords).rgb;
-    gl_FragColor = vec4(texel2, 1.0f);
+  if (u_progress < v_texCoords.x) {
+    gl_FragColor = texture2D(u_texture0, v_texCoords) * v_color;
+  } else {
+    gl_FragColor = texture2D(u_texture1, v_texCoords) * v_color;
   }
 }

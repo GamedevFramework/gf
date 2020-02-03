@@ -361,13 +361,13 @@ vec4 FxaaPixelShader(
 varying vec4 v_color;
 varying vec2 v_texCoords;
 
-uniform sampler2D u_texture;
+uniform sampler2D u_texture0;
 uniform vec2 u_framebufferSize;
 
 void main(void)
 {
     gl_FragColor = v_color * FxaaPixelShader(v_texCoords,
-        u_texture,         // sampler2D tex,
+        u_texture0,        // sampler2D tex,
         1.0 / u_framebufferSize, // vec2 fxaaQualityRcpFrame,
         0.75,              // float fxaaQualitySubpix,
         0.166,             // float fxaaQualityEdgeThreshold,
