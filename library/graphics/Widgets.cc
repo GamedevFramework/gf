@@ -134,6 +134,10 @@ inline namespace v1 {
     updateGeometry();
   }
 
+  unsigned TextWidget::getCharacterSize() const {
+    return m_basic.getCharacterSize();
+  }
+
   void TextWidget::setTextOutlineThickness(float thickness) {
     m_basic.setOutlineThickness(thickness);
     updateGeometry();

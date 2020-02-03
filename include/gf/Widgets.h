@@ -173,6 +173,15 @@ inline namespace v1 {
     void setCharacterSize(unsigned characterSize);
 
     /**
+     * @brief Get the character size
+     *
+     * @return Size of the characters, in pixels
+     *
+     * @sa setCharacterSize()
+     */
+    unsigned getCharacterSize() const;
+
+    /**
      * @brief Set the thickness of the outline.
      *
      * @param thickness The new value of the outline thickness.
