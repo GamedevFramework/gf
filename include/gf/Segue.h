@@ -18,12 +18,13 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#ifndef GF_TRANSITION_H
-#define GF_TRANSITION_H
+#ifndef GF_SEGUE_H
+#define GF_SEGUE_H
 
 #include "Drawable.h"
 #include "Portability.h"
 #include "Rect.h"
+#include "Time.h"
 #include "Vertex.h"
 
 namespace gf {
@@ -31,30 +32,29 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  class TransitionEffect;
+  class SegueEffect;
   class Texture;
 
-  class GF_API Transition : public Drawable {
+  class GF_API Segue : public Drawable {
   public:
+    Segue();
 
-    Transition();
-
-    void start(float time);
+    void start(Time time);
     void stop(void);
-    void update(float time);
+    void update(Time time);
 
     bool isActive() {
-      return m_time < m_totalTime;
+      return m_currentTime < m_totalTime;
     }
 
-    void setTextures(const Texture& texture1, const Texture& texture2);
+    void setTextures(const Texture& texture0, const Texture& texture1);
 
     /**
      * @brief Set the effect to apply
      *
      * @param effect The post-processing effect
      */
-    void setEffect(TransitionEffect& effect) {
+    void setEffect(SegueEffect& effect) {
       m_effect = &effect;
     }
 
@@ -65,14 +65,14 @@ inline namespace v1 {
     void updateTexCoords();
 
   private:
+    const Texture *m_texture0;
     const Texture *m_texture1;
-    const Texture *m_texture2;
     RectF m_textureRect;
-    TransitionEffect *m_effect;
+    SegueEffect *m_effect;
     Vertex m_vertices[4];
 
-    float m_totalTime;
-    float m_time;
+    Time m_totalTime;
+    Time m_currentTime;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -80,4 +80,4 @@ inline namespace v1 {
 #endif
 }
 
-#endif // GF_TRANSITION_H
+#endif // GF_SEGUE_H

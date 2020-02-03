@@ -192,30 +192,6 @@ inline namespace v1 {
     void setFramebufferSize(Vector2f size);
   };
 
-  class GF_API FadeTransitionEffect : public TransitionEffect {
-  public:
-    /**
-     * @brief Default constructor
-     */
-    FadeTransitionEffect();
-  };
-
-  class GF_API SlideTransitionEffect : public TransitionEffect {
-  public:
-    /**
-     * @brief Default constructor
-     */
-    SlideTransitionEffect();
-  };
-
-  class GF_API GlitchTransitionEffect : public TransitionEffect {
-  public:
-    /**
-     * @brief Default constructor
-     */
-    GlitchTransitionEffect();
-  };
-
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif

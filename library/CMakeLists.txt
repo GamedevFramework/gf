@@ -155,7 +155,6 @@ else()
     graphics/Curve.cc
     graphics/Curves.cc
     graphics/Drawable.cc
-    graphics/Effect.cc
     graphics/Effects.cc
     graphics/Entity.cc
     graphics/EntityContainer.cc
@@ -183,6 +182,9 @@ else()
     graphics/ResourceManager.cc
     graphics/Scene.cc
     graphics/SceneManager.cc
+    graphics/Segue.cc
+    graphics/SegueEffect.cc
+    graphics/SegueEffects.cc
     graphics/Shader.cc
     graphics/Shape.cc
     graphics/Shapes.cc
@@ -196,7 +198,6 @@ else()
     graphics/TileLayer.cc
     graphics/Tmx.cc
     graphics/Transformable.cc
-    graphics/Transition.cc
     graphics/UI.cc
     graphics/VertexArray.cc
     graphics/VertexBuffer.cc

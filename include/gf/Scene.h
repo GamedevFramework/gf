@@ -144,6 +144,16 @@ inline namespace v1 {
      */
     void render(RenderTarget& target, const RenderStates &states = RenderStates());
 
+    void setRendererSize(gf::Vector2i size);
+
+    void setClearColor(gf::Color4f color) {
+      m_clear = color;
+    }
+
+    gf::Color4f getClearColor() const {
+      return m_clear;
+    }
+
     /**
      * @}
      */
@@ -397,6 +407,8 @@ inline namespace v1 {
 
     EntityContainer m_worldEntities;
     EntityContainer m_hudEntities;
+
+    Color4f m_clear;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

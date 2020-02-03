@@ -1,5 +1,6 @@
 #include <gf/Scene.h>
 
+#include <gf/Color.h>
 #include <gf/Unused.h>
 
 namespace gf {
@@ -12,6 +13,7 @@ inline namespace v1 {
   , m_status(Status::Paused)
   , m_visibility(Visibility::Hidden)
   , m_closeWindowAction("Close")
+  , m_clear(Color::White)
   {
     m_views.addView(m_worldView);
     m_views.addView(m_hudView);
@@ -58,6 +60,10 @@ inline namespace v1 {
     }
 
     doRender(target, states);
+  }
+
+  void Scene::setRendererSize(gf::Vector2i size) {
+    m_views.setInitialScreenSize(size);
   }
 
   void Scene::setActive(bool active) {

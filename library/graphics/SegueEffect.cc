@@ -18,22 +18,20 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#include <gf/Effect.h>
-
-#include "config.h"
+#include <gf/SegueEffect.h>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
 #endif
 
-  TransitionEffect::TransitionEffect(const char *vertexShader, const char *fragmentShader)
-  : Effect(vertexShader, fragmentShader)
+  SegueEffect::SegueEffect(const char *vertexShader, const char *fragmentShader)
+  : Shader(vertexShader, fragmentShader)
   {
     setUniform("u_progress", 0.0f);
   }
 
-  void TransitionEffect::setProgress(float progress) {
+  void SegueEffect::setProgress(float progress) {
     setUniform("u_progress", progress);
   }
 

@@ -21,6 +21,7 @@
 #ifndef GF_SCENE_MANAGER_H
 #define GF_SCENE_MANAGER_H
 
+#include <memory>
 #include <vector>
 
 #include "Color.h"
@@ -30,8 +31,9 @@
 #include "RenderWindow.h"
 #include "RenderTexture.h"
 #include "Scene.h"
+#include "Segue.h"
+#include "SegueEffect.h"
 #include "Window.h"
-#include "Transition.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -82,6 +84,11 @@ inline namespace v1 {
     void popScene();
 
     /**
+     * @brief Remove all the scenes from the non-empty stack
+     */
+    void popAllScenes();
+
+    /**
      * @brief Replace the top scene with a new scene
      *
      * It is equivalent to popping the current top scene and pushing the new scene.
@@ -93,7 +100,14 @@ inline namespace v1 {
       pushScene(scene);
     }
 
-    void transitionToScene(Scene& scene, float time, TransitionEffect& effect);
+    void replaceAllScenes(Scene& scene) {
+      popAllScenes();
+      pushScene(scene);
+    }
+
+    void replaceScene(Scene& scene, SegueEffect& effect, Time duration);
+
+    void replaceAllScenes(Scene& scene, SegueEffect& effect, Time duration);
 
     /**
      * @brief Get the window associated to the scene
@@ -109,25 +123,25 @@ inline namespace v1 {
       return m_renderer;
     }
 
-    Color4f getClearColor() const {
-      return m_clearColor;
-    }
-
-    void setClearColor(const Color4f& color) {
-      m_clearColor = color;
-    }
+  private:
+    void setupSegue(SegueEffect& effect, Time duration);
 
   private:
     Window m_window;
     RenderWindow m_renderer;
     std::vector<Ref<Scene>> m_scenes;
-    Color4f m_clearColor;
 
-    // Transition
     std::vector<Ref<Scene>> m_oldScenes;
-    RenderTexture* m_targetOldScenes;
-    RenderTexture* m_targetNewScenes;
-    Transition m_transition;
+    std::unique_ptr<RenderTexture> m_targetOldScenes;
+    std::unique_ptr<RenderTexture> m_targetNewScenes;
+    Segue m_segue;
+
+    enum class Status {
+      Scene,
+      Segue,
+    };
+
+    Status m_status;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
