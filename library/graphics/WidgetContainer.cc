@@ -152,6 +152,10 @@ inline namespace v1 {
     getCurrent().setSelected();
   }
 
+  void WidgetContainer::clear() {
+    m_widgets.clear();
+  }
+
   void WidgetContainer::unselectCurrentlySelected() {
     if (m_widgetIsSelected) {
       assert(getCurrent().isSelected());
