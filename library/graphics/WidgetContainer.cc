@@ -154,6 +154,8 @@ inline namespace v1 {
 
   void WidgetContainer::clear() {
     m_widgets.clear();
+    m_selectedWidgetIndex = 0;
+    m_widgetIsSelected =false;
   }
 
   void WidgetContainer::unselectCurrentlySelected() {
