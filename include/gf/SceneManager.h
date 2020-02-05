@@ -60,9 +60,10 @@ inline namespace v1 {
      * @brief Constructor
      *
      * @param title The title of the window
-     * @param size The size of the window
+     * @param size The initial size of the window
+     * @param hints Some hints for the creation of the window
      */
-    SceneManager(StringRef title, Vector2i size);
+    SceneManager(StringRef title, Vector2i size, Flags<WindowHints> hints = All);
 
     /**
      * @brief Run the scene manager until completion

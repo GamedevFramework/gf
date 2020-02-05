@@ -29,8 +29,8 @@ inline namespace v1 {
 
   }
 
-  SceneManager::SceneManager(StringRef title, Vector2i size)
-  : m_window(title, size)
+  SceneManager::SceneManager(StringRef title, Vector2i size, Flags<WindowHints> hints)
+  : m_window(title, size, hints)
   , m_renderer(m_window)
   , m_targetOldScenes(nullptr)
   , m_targetNewScenes(nullptr)
