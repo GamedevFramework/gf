@@ -18,19 +18,29 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
+#version 100
 
-#define GF_IMPLEMENTATION
+precision mediump float;
 
-#include "generated/color_matrix.frag.h"
-#include "generated/default_alpha.frag.h"
-#include "generated/default.frag.h"
-#include "generated/default.vert.h"
-#include "generated/edge.frag.h"
-#include "generated/fxaa.frag.h"
-#include "generated/fade.frag.h"
-#include "generated/slide.frag.h"
-#include "generated/glitch.frag.h"
-#include "generated/checkerboard.frag.h"
-#include "generated/circle.frag.h"
-#include "generated/pixelate.frag.h"
+varying vec4 v_color;
+varying vec2 v_texCoords;
 
+uniform sampler2D u_texture0;
+uniform sampler2D u_texture1;
+uniform float u_progress;
+
+uniform ivec2 u_size;
+
+void main(void) {
+  vec2 pixel = vec2(100.0, 100.0);
+
+  if (u_progress < 0.5) {
+    vec2 factor = pixel * (u_progress + 0.001) / vec2(u_size);
+    vec2 coords = floor(v_texCoords / factor + 0.5) * factor;
+    gl_FragColor = mix(texture2D(u_texture0, coords), texture2D(u_texture1, coords), u_progress);
+  } else {
+    vec2 factor = pixel * ((1.0 - u_progress) + 0.001) / vec2(u_size);
+    vec2 coords = floor(v_texCoords / factor + 0.5) * factor;
+    gl_FragColor = mix(texture2D(u_texture0, coords), texture2D(u_texture1, coords), u_progress);
+  }
+}

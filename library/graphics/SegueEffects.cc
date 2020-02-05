@@ -21,10 +21,12 @@
 #include <gf/SegueEffects.h>
 
 #include "generated/checkerboard.frag.h"
+#include "generated/circle.frag.h"
 #include "generated/default.vert.h"
 #include "generated/fade.frag.h"
 #include "generated/glitch.frag.h"
 #include "generated/slide.frag.h"
+#include "generated/pixelate.frag.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -78,6 +80,38 @@ inline namespace v1 {
     setUniform("u_smoothness", smoothness);
   }
 
+  /*
+   * CircleSegueEffect
+   */
+
+  CircleSegueEffect::CircleSegueEffect()
+  : SegueEffect(default_vert, circle_frag)
+  {
+    setType(Open);
+    setFramebufferSize({ 16, 9 });
+  }
+
+  void CircleSegueEffect::setType(Type type) {
+    setUniform("u_direction", static_cast<int>(type));
+  }
+
+  void CircleSegueEffect::setFramebufferSize(Vector2i size) {
+    setUniform("u_ratio", static_cast<float>(size.width) / static_cast<float>(size.height));
+  }
+
+  /*
+   * PixelateSegueEffect
+   */
+
+  PixelateSegueEffect::PixelateSegueEffect()
+  : SegueEffect(default_vert, pixelate_frag)
+  {
+    setFramebufferSize({ 1, 1 });
+  }
+
+  void PixelateSegueEffect::setFramebufferSize(Vector2i size) {
+    setUniform("u_size", size);
+  }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

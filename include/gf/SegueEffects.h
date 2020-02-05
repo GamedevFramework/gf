@@ -66,6 +66,34 @@ inline namespace v1 {
     void setSmoothness(float smoothness);
   };
 
+  class GF_API CircleSegueEffect : public SegueEffect {
+  public:
+    enum Type {
+      Open  =  1,
+      Close = -1,
+    };
+
+    /**
+     * @brief Default constructor
+     */
+    CircleSegueEffect();
+
+    void setType(Type type);
+
+    void setFramebufferSize(Vector2i size);
+
+  };
+
+  class GF_API PixelateSegueEffect : public SegueEffect {
+  public:
+    /**
+     * @brief Default constructor
+     */
+    PixelateSegueEffect();
+
+    void setFramebufferSize(Vector2i size);
+  };
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif

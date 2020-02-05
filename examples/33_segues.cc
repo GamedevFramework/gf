@@ -34,7 +34,7 @@ using namespace gf::literals;
 
 namespace {
 
-  constexpr gf::Vector2i InitialSize = { 1280,  768 };
+  constexpr gf::Vector2i InitialSize = { 1280,  720 };
 
   constexpr gf::Vector2f ScreenshotSize = { 680,  520 };
 
@@ -62,6 +62,8 @@ namespace {
     Slide,
     Glitch,
     Checkerboard,
+    Circle,
+    Pixelate,
   };
 
   struct World;
@@ -79,6 +81,9 @@ namespace {
     , m_slideSegueAction("Slide")
     , m_glitchSegueAction("Glitch")
     , m_checkerboardSegueAction("Checkboard")
+    , m_circleOpenSegueAction("CircleOpen")
+    , m_circleCloseSegueAction("CircleClose")
+    , m_pixelateSegueAction("Pixelate")
     , m_entity("assets/fb_menu.png")
     , m_segue(SegueType::None)
     {
@@ -95,6 +100,13 @@ namespace {
       addAction(m_glitchSegueAction);
       m_checkerboardSegueAction.addKeycodeKeyControl(gf::Keycode::Num5);
       addAction(m_checkerboardSegueAction);
+      m_circleOpenSegueAction.addKeycodeKeyControl(gf::Keycode::Num6);
+      addAction(m_circleOpenSegueAction);
+      m_circleCloseSegueAction.addKeycodeKeyControl(gf::Keycode::Num7);
+      addAction(m_circleCloseSegueAction);
+      m_pixelateSegueAction.addKeycodeKeyControl(gf::Keycode::Num8);
+      addAction(m_pixelateSegueAction);
+
 
       addWorldEntity(m_entity);
 
@@ -104,38 +116,7 @@ namespace {
       setClearColor(gf::Color::fromRgba32(0x85, 0x00, 0x55));
     }
 
-    void doHandleActions(gf::Window& window) override {
-      gf::unused(window);
-
-      if (m_segueAction.isActive()) {
-        replaceScene(m_scenes, m_world, "Scene1"_id, m_segue);
-      }
-
-      if (m_noneSegueAction.isActive()) {
-        std::cout << "Current segue: None\n";
-        m_segue = SegueType::None;
-      }
-
-      if (m_fadeSegueAction.isActive()) {
-        std::cout << "Current segue: Fade\n";
-        m_segue = SegueType::Fade;
-      }
-
-      if (m_slideSegueAction.isActive()) {
-        std::cout << "Current segue: Slide\n";
-        m_segue = SegueType::Slide;
-      }
-
-      if (m_glitchSegueAction.isActive()) {
-        std::cout << "Current segue: Glitch\n";
-        m_segue = SegueType::Glitch;
-      }
-
-      if (m_checkerboardSegueAction.isActive()) {
-        std::cout << "Current segue: Checkerboard\n";
-        m_segue = SegueType::Checkerboard;
-      }
-    }
+    void doHandleActions(gf::Window& window) override;
 
   private:
     gf::SceneManager& m_scenes;
@@ -147,6 +128,9 @@ namespace {
     gf::Action m_slideSegueAction;
     gf::Action m_glitchSegueAction;
     gf::Action m_checkerboardSegueAction;
+    gf::Action m_circleOpenSegueAction;
+    gf::Action m_circleCloseSegueAction;
+    gf::Action m_pixelateSegueAction;
 
     SpriteEntity m_entity;
 
@@ -198,12 +182,15 @@ namespace {
     gf::SlideSegueEffect slide;
     gf::GlitchSegueEffect glitch;
     gf::CheckerboardSegueEffect checkerboard;
+    gf::CircleSegueEffect circle;
+    gf::PixelateSegueEffect pixelate;
 
     World(gf::SceneManager& scenes)
     : scene0(scenes, *this)
     , scene1(scenes, *this)
     {
-
+      circle.setFramebufferSize(InitialSize);
+      pixelate.setFramebufferSize(InitialSize);
     }
 
     gf::Scene& operator()(gf::Id id) {
@@ -219,6 +206,56 @@ namespace {
     }
 
   };
+
+  void Scene0::doHandleActions(gf::Window& window) {
+    gf::unused(window);
+
+    if (m_segueAction.isActive()) {
+      replaceScene(m_scenes, m_world, "Scene1"_id, m_segue);
+    }
+
+    if (m_noneSegueAction.isActive()) {
+      std::cout << "Current segue: None\n";
+      m_segue = SegueType::None;
+    }
+
+    if (m_fadeSegueAction.isActive()) {
+      std::cout << "Current segue: Fade\n";
+      m_segue = SegueType::Fade;
+    }
+
+    if (m_slideSegueAction.isActive()) {
+      std::cout << "Current segue: Slide\n";
+      m_segue = SegueType::Slide;
+    }
+
+    if (m_glitchSegueAction.isActive()) {
+      std::cout << "Current segue: Glitch\n";
+      m_segue = SegueType::Glitch;
+    }
+
+    if (m_checkerboardSegueAction.isActive()) {
+      std::cout << "Current segue: Checkerboard\n";
+      m_segue = SegueType::Checkerboard;
+    }
+
+    if (m_circleOpenSegueAction.isActive()) {
+      std::cout << "Current segue: CircleOpen\n";
+      m_segue = SegueType::Circle;
+      m_world.circle.setType(gf::CircleSegueEffect::Open);
+    }
+
+    if (m_circleCloseSegueAction.isActive()) {
+      std::cout << "Current segue: CircleClose\n";
+      m_segue = SegueType::Circle;
+      m_world.circle.setType(gf::CircleSegueEffect::Close);
+    }
+
+    if (m_pixelateSegueAction.isActive()) {
+      std::cout << "Current segue: Pixelate\n";
+      m_segue = SegueType::Pixelate;
+    }
+  }
 
   void replaceScene(gf::SceneManager& scenes, World& world, gf::Id id, SegueType type) {
     gf::Scene& scene = world(id);
@@ -239,6 +276,12 @@ namespace {
       case SegueType::Checkerboard:
         scenes.replaceScene(scene, world.checkerboard, gf::milliseconds(1000));
         break;
+      case SegueType::Circle:
+        scenes.replaceScene(scene, world.circle, gf::milliseconds(1000));
+        break;
+      case SegueType::Pixelate:
+        scenes.replaceScene(scene, world.pixelate, gf::milliseconds(1000));
+        break;
     }
   }
 
@@ -256,6 +299,8 @@ int main() {
   std::cout << "\t3: Slide\n";
   std::cout << "\t4: Glitch\n";
   std::cout << "\t5: Checkerboard\n";
+  std::cout << "\t6: Circle Open\n";
+  std::cout << "\t7: Circle Close\n";
 
   gf::SceneManager scenes("33_segues", InitialSize, ~gf::WindowHints::Resizable);
   World world(scenes);
