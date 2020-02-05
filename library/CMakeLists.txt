@@ -41,6 +41,7 @@ set(SHADER_SOURCES
   graphics/data/shaders/fade.frag
   graphics/data/shaders/slide.frag
   graphics/data/shaders/glitch.frag
+  graphics/data/shaders/checkerboard.frag
 )
 
 set(SHADER_HEADERS "")

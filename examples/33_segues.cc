@@ -28,12 +28,13 @@
 #include <gf/SegueEffects.h>
 #include <gf/Sprite.h>
 #include <gf/Texture.h>
+#include <gf/Unused.h>
 
 using namespace gf::literals;
 
 namespace {
 
-  constexpr gf::Vector2i InitialSize = { 1280,  978 };
+  constexpr gf::Vector2i InitialSize = { 1280,  768 };
 
   constexpr gf::Vector2f ScreenshotSize = { 680,  520 };
 
@@ -60,6 +61,7 @@ namespace {
     Fade,
     Slide,
     Glitch,
+    Checkerboard,
   };
 
   struct World;
@@ -76,6 +78,7 @@ namespace {
     , m_fadeSegueAction("Fade")
     , m_slideSegueAction("Slide")
     , m_glitchSegueAction("Glitch")
+    , m_checkerboardSegueAction("Checkboard")
     , m_entity("assets/fb_menu.png")
     , m_segue(SegueType::None)
     {
@@ -90,14 +93,20 @@ namespace {
       addAction(m_slideSegueAction);
       m_glitchSegueAction.addKeycodeKeyControl(gf::Keycode::Num4);
       addAction(m_glitchSegueAction);
+      m_checkerboardSegueAction.addKeycodeKeyControl(gf::Keycode::Num5);
+      addAction(m_checkerboardSegueAction);
 
       addWorldEntity(m_entity);
 
       setWorldViewSize(ScreenshotSize);
       setWorldViewCenter(ScreenshotSize / 2);
+
+      setClearColor(gf::Color::fromRgba32(0x85, 0x00, 0x55));
     }
 
     void doHandleActions(gf::Window& window) override {
+      gf::unused(window);
+
       if (m_segueAction.isActive()) {
         replaceScene(m_scenes, m_world, "Scene1"_id, m_segue);
       }
@@ -121,6 +130,11 @@ namespace {
         std::cout << "Current segue: Glitch\n";
         m_segue = SegueType::Glitch;
       }
+
+      if (m_checkerboardSegueAction.isActive()) {
+        std::cout << "Current segue: Checkerboard\n";
+        m_segue = SegueType::Checkerboard;
+      }
     }
 
   private:
@@ -132,6 +146,7 @@ namespace {
     gf::Action m_fadeSegueAction;
     gf::Action m_slideSegueAction;
     gf::Action m_glitchSegueAction;
+    gf::Action m_checkerboardSegueAction;
 
     SpriteEntity m_entity;
 
@@ -154,9 +169,13 @@ namespace {
 
       setWorldViewSize(ScreenshotSize);
       setWorldViewCenter(ScreenshotSize / 2);
+
+      setClearColor(gf::Color::fromRgba32(0xC0, 0xC1, 0xEF));
     }
 
     void doHandleActions(gf::Window& window) override {
+      gf::unused(window);
+
       if (m_backAction.isActive()) {
         replaceScene(m_scenes, m_world, "Scene0"_id, SegueType::None);
       }
@@ -178,6 +197,7 @@ namespace {
     gf::FadeSegueEffect fade;
     gf::SlideSegueEffect slide;
     gf::GlitchSegueEffect glitch;
+    gf::CheckerboardSegueEffect checkerboard;
 
     World(gf::SceneManager& scenes)
     : scene0(scenes, *this)
@@ -216,6 +236,9 @@ namespace {
       case SegueType::Glitch:
         scenes.replaceScene(scene, world.glitch, gf::milliseconds(500));
         break;
+      case SegueType::Checkerboard:
+        scenes.replaceScene(scene, world.checkerboard, gf::milliseconds(1000));
+        break;
     }
   }
 
@@ -232,6 +255,7 @@ int main() {
   std::cout << "\t2: Fade\n";
   std::cout << "\t3: Slide\n";
   std::cout << "\t4: Glitch\n";
+  std::cout << "\t5: Checkerboard\n";
 
   gf::SceneManager scenes("33_segues", InitialSize, ~gf::WindowHints::Resizable);
   World world(scenes);

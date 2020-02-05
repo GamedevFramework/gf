@@ -20,6 +20,7 @@
  */
 #include <gf/SegueEffects.h>
 
+#include "generated/checkerboard.frag.h"
 #include "generated/default.vert.h"
 #include "generated/fade.frag.h"
 #include "generated/glitch.frag.h"
@@ -58,6 +59,24 @@ inline namespace v1 {
     setUniform("u_intensity", 1.0f);
   }
 
+  /*
+   * CheckerboardSegueEffect
+   */
+
+  CheckerboardSegueEffect::CheckerboardSegueEffect()
+  : SegueEffect(default_vert, checkerboard_frag)
+  {
+    setBoardSize({ 32, 18 });
+    setSmoothness(0.0f);
+  }
+
+  void CheckerboardSegueEffect::setBoardSize(Vector2i size) {
+    setUniform("u_size", size);
+  }
+
+  void CheckerboardSegueEffect::setSmoothness(float smoothness) {
+    setUniform("u_smoothness", smoothness);
+  }
 
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

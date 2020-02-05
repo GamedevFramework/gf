@@ -18,16 +18,30 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
+#version 100
 
-#define GF_IMPLEMENTATION
+precision mediump float;
 
-#include "generated/color_matrix.frag.h"
-#include "generated/default_alpha.frag.h"
-#include "generated/default.frag.h"
-#include "generated/default.vert.h"
-#include "generated/edge.frag.h"
-#include "generated/fxaa.frag.h"
-#include "generated/fade.frag.h"
-#include "generated/slide.frag.h"
-#include "generated/glitch.frag.h"
-#include "generated/checkerboard.frag.h"
+varying vec4 v_color;
+varying vec2 v_texCoords;
+
+uniform sampler2D u_texture0;
+uniform sampler2D u_texture1;
+uniform float u_progress;
+
+uniform ivec2 u_size;
+uniform float u_smoothness;
+
+float rand(vec2 co) {
+  return fract(sin(dot(co.xy, vec2(12.9898, 78.233))) * 43758.5453);
+}
+
+void main(void) {
+  float r = rand(floor(vec2(u_size) * v_texCoords));
+  float m = smoothstep(0.0, - u_smoothness, r - (u_progress * (1.0 + u_smoothness)));
+
+  vec4 texel0 = texture2D(u_texture0, v_texCoords);
+  vec4 texel1 = texture2D(u_texture1, v_texCoords);
+
+  gl_FragColor = mix(texel0, texel1, m) * v_color;
+}

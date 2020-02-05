@@ -53,6 +53,19 @@ inline namespace v1 {
     GlitchSegueEffect();
   };
 
+
+  class GF_API CheckerboardSegueEffect : public SegueEffect {
+  public:
+    /**
+     * @brief Default constructor
+     */
+    CheckerboardSegueEffect();
+
+    void setBoardSize(Vector2i size);
+
+    void setSmoothness(float smoothness);
+  };
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif
