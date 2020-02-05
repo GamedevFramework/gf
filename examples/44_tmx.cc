@@ -131,7 +131,7 @@ int main() {
   gf::ExtendView view(gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 640.0f, 480.0f }));
   views.addView(view);
 
-  views.setInitialScreenSize(ScreenSize);
+  views.setInitialFramebufferSize(ScreenSize);
 
   gf::ZoomingViewAdaptor adaptor(renderer, view);
 

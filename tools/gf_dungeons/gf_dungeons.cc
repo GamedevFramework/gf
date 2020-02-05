@@ -750,7 +750,7 @@ int main() {
   gf::ScreenView uiView;
   views.addView(uiView);
 
-  views.setInitialScreenSize({ Size + ExtraSize, Size });
+  views.setInitialFramebufferSize({ Size + ExtraSize, Size });
 
   gf::ZoomingViewAdaptor adaptor(renderer, automatonView);
 

@@ -144,12 +144,31 @@ inline namespace v1 {
      */
     void render(RenderTarget& target, const RenderStates &states = RenderStates());
 
-    void setRendererSize(gf::Vector2i size);
+    /**
+     * @brief Update the framebuffer size
+     *
+     * This function is called to update the views in the scene.
+     *
+     * @param size The new size of the framebuffer
+     */
+    void setFramebufferSize(gf::Vector2i size);
 
+    /**
+     * @brief Set the new clear color
+     *
+     * @param color The new clear color
+     * @sa getClearColor()
+     */
     void setClearColor(gf::Color4f color) {
       m_clear = color;
     }
 
+    /**
+     * @brief Get the current clear color
+     *
+     * @returns The current clear color
+     * @sa setClearColor();
+     */
     gf::Color4f getClearColor() const {
       return m_clear;
     }

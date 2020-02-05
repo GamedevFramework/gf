@@ -46,7 +46,7 @@ int main() {
 
   gf::ScreenView screenView;
   views.addView(screenView);
-  views.setInitialScreenSize(ScreenSize);
+  views.setInitialFramebufferSize(ScreenSize);
 
   gf::HexagonGrid gridOddPointy(gf::MapCellAxis::X, gf::MapCellIndex::Odd, GridSize, HexagonRadius, gf::Color::Black);
   gf::HexagonGrid gridOddFlat(gf::MapCellAxis::Y, gf::MapCellIndex::Odd, GridSize, HexagonRadius, gf::Color::Black);

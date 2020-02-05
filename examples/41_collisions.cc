@@ -41,7 +41,7 @@ int main() {
   gf::RenderWindow renderer(window);
 
   gf::ExtendView view(World);
-  view.setInitialScreenSize(ScreenSize);
+  view.setInitialFramebufferSize(ScreenSize);
 
   renderer.setView(view);
 

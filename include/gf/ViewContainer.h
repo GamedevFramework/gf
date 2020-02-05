@@ -61,27 +61,27 @@ inline namespace v1 {
     /**
      * @brief Update the views thanks to the event
      *
-     * Internally it calls onScreenSizeChange() if a resize event occurs.
+     * Internally it calls onFramebufferSizeChange() if a resize event occurs.
      *
      * @param event An event
      */
     void processEvent(const Event& event);
 
     /**
-     * @brief Update the views with the new screen size
+     * @brief Update the views with the new framebuffer size
      *
-     * @param screenSize The new size of the screen
+     * @param framebufferSize The new size of the framebuffer
      *
-     * @sa gf::AdaptativeView::onScreenSizeChange()
+     * @sa gf::AdaptativeView::onFramebufferSizeChange()
      */
-    void onScreenSizeChange(Vector2i screenSize);
+    void onFramebufferSizeChange(Vector2i framebufferSize);
 
     /**
-     * @brief Set the initial screen size
+     * @brief Set the initial framebuffer size
      *
-     * @param screenSize The initial size of the screen
+     * @param framebufferSize The initial size of the framebuffer
      */
-    void setInitialScreenSize(Vector2i screenSize);
+    void setInitialFramebufferSize(Vector2i framebufferSize);
 
   private:
     std::vector<Ref<AdaptativeView>> m_views;

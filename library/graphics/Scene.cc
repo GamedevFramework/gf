@@ -17,7 +17,7 @@ inline namespace v1 {
   {
     m_views.addView(m_worldView);
     m_views.addView(m_hudView);
-    m_views.setInitialScreenSize(initialSize);
+    m_views.setInitialFramebufferSize(initialSize);
 
     m_closeWindowAction.addCloseControl();
     m_actions.addAction(m_closeWindowAction);
@@ -62,8 +62,8 @@ inline namespace v1 {
     doRender(target, states);
   }
 
-  void Scene::setRendererSize(gf::Vector2i size) {
-    m_views.setInitialScreenSize(size);
+  void Scene::setFramebufferSize(gf::Vector2i size) {
+    m_views.setInitialFramebufferSize(size);
   }
 
   void Scene::setActive(bool active) {

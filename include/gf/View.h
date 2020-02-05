@@ -38,7 +38,7 @@ inline namespace v1 {
 
   /**
    * @ingroup graphics
-   * @brief 2D camera that defines what region is shown on screen
+   * @brief 2D camera that defines what region is shown on framebuffer
    *
    * gf::View defines a camera in the 2D scene. This is a
    * very powerful concept: you can scroll, rotate or zoom
@@ -51,7 +51,7 @@ inline namespace v1 {
    * will be displayed on the render target (window or texture).
    *
    * The viewport allows to map the scene to a custom part
-   * of the render target, and can be used for split-screen
+   * of the render target, and can be used for split-framebuffer
    * or for displaying a minimap, for example. If the source
    * rectangle has not the same size as the viewport, its
    * contents will be stretched to fit in.
@@ -262,7 +262,7 @@ inline namespace v1 {
      * @brief Resize the view rectangle relatively to its current size
      *
      * Resizing the view simulates a zoom, as the zone displayed on
-     * screen grows or shrinks. `factor` is a multiplier:
+     * framebuffer grows or shrinks. `factor` is a multiplier:
      *
      * - @f$ = 1 @f$ keeps the size unchanged
      * - @f$ > 1 @f$ makes the view bigger (objects appear smaller)
@@ -278,7 +278,7 @@ inline namespace v1 {
      * @brief Resize the view rectangle relatively to its current size and a fixed point
      *
      * Resizing the view simulates a zoom, as the zone displayed on
-     * screen grows or shrinks. `factor` is a multiplier:
+     * framebuffer grows or shrinks. `factor` is a multiplier:
      *
      * - @f$ = 1 @f$ keeps the size unchanged
      * - @f$ > 1 @f$ makes the view bigger (objects appear smaller)
@@ -367,12 +367,12 @@ inline namespace v1 {
    * @ingroup graphics
    * @brief Adaptative view
    *
-   * An adaptative view is a view that adapts automatically to screen
+   * An adaptative view is a view that adapts automatically to framebuffer
    * resolution change.
    *
    * There are several kinds of adaptative views, according to the policy
    * that is adopted when the resolution changes. In the examples below,
-   * The screen is represented by the black rectangle and the world is
+   * The framebuffer is represented by the black rectangle and the world is
    * the red square. If red dashed lines appears, it means that the world
    * has been modified.
    *
@@ -424,18 +424,18 @@ inline namespace v1 {
     }
 
     /**
-     * @brief Set the initial screen size
+     * @brief Set the initial framebuffer size
      *
-     * @param screenSize The initial size of the screen
+     * @param framebufferSize The initial size of the framebuffer
      */
-    void setInitialScreenSize(Vector2i screenSize);
+    void setInitialFramebufferSize(Vector2i framebufferSize);
 
     /**
-     * @brief Callback when the screen has just been resized
+     * @brief Callback when the framebuffer has just been resized
      *
-     * @param screenSize The new size of the screen
+     * @param framebufferSize The new size of the framebuffer
      */
-    virtual void onScreenSizeChange(Vector2i screenSize) = 0;
+    virtual void onFramebufferSizeChange(Vector2i framebufferSize) = 0;
 
   };
 

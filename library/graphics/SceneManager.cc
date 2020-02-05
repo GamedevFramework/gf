@@ -45,7 +45,7 @@ inline namespace v1 {
 
     while (!m_scenes.empty() && m_window.isOpen()) {
       Scene& currentScene = m_scenes.back();
-      currentScene.setRendererSize(m_renderer.getSize());
+      currentScene.setFramebufferSize(m_renderer.getSize());
       currentScene.show();
       currentScene.resume();
 
