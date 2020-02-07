@@ -24,6 +24,7 @@ add_executable(gfdev_doc
   doc_class_tcp_socket.cc
   doc_class_text.cc
   doc_class_texture.cc
+  doc_class_time.cc
   doc_class_udp_socket.cc
   doc_class_ui.cc
   doc_class_view_container.cc
