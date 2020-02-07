@@ -50,7 +50,7 @@ inline namespace v1 {
      * @return True if a value was poped from the queue
      */
     bool poll(T& value) {
-      std::unique_lock<std::mutex> lock(m_mutex);
+      std::lock_guard<std::mutex> lock(m_mutex);
 
       if (m_queue.empty()) {
         return false;
@@ -79,7 +79,7 @@ inline namespace v1 {
      * @param value The value to push on the queue
      */
     void push(const T& value) {
-      std::unique_lock<std::mutex> lock(m_mutex);
+      std::lock_guard<std::mutex> lock(m_mutex);
       m_queue.push_back(value);
       m_condition.notify_one();
     }
@@ -90,7 +90,7 @@ inline namespace v1 {
      * @param value The value to push on the queue
      */
     void push(T&& value) {
-      std::unique_lock<std::mutex> lock(m_mutex);
+      std::lock_guard<std::mutex> lock(m_mutex);
       m_queue.push_back(std::move(value));
       m_condition.notify_one();
     }
@@ -99,7 +99,7 @@ inline namespace v1 {
      * @brief Clear the queue
      */
     void clear() {
-      std::unique_lock<std::mutex> lock(m_mutex);
+      std::lock_guard<std::mutex> lock(m_mutex);
       m_queue.clear();
     }
 
