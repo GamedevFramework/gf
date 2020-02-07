@@ -86,7 +86,7 @@ inline namespace v1 {
      * @brief Compute the six corners of the hexagon
      *
      * @param coords The size of the hexagon in the map
-     * @param raduis Radius of hexagon
+     * @param radius Radius of hexagon
      *
      * @returns The position of six corners
      */
