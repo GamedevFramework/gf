@@ -67,7 +67,7 @@ namespace {
   };
 
   struct World;
-  void replaceScene(gf::SceneManager& scenes, World& world, gf::Id id, SegueType type);
+  void replaceScene(gf::SceneManager& scenes, World& world, gf::Id id, SegueType type, gf::Easing easing = gf::Ease::smooth);
 
   class Scene0 : public gf::Scene {
   public:
@@ -257,7 +257,7 @@ namespace {
     }
   }
 
-  void replaceScene(gf::SceneManager& scenes, World& world, gf::Id id, SegueType type) {
+  void replaceScene(gf::SceneManager& scenes, World& world, gf::Id id, SegueType type, gf::Easing easing) {
     gf::Scene& scene = world(id);
 
     switch (type) {
@@ -265,22 +265,22 @@ namespace {
         scenes.replaceScene(scene);
         break;
       case SegueType::Fade:
-        scenes.replaceScene(scene, world.fade, gf::milliseconds(500));
+        scenes.replaceScene(scene, world.fade, gf::milliseconds(500), easing);
         break;
       case SegueType::Slide:
-        scenes.replaceScene(scene, world.slide, gf::milliseconds(500));
+        scenes.replaceScene(scene, world.slide, gf::milliseconds(500), easing);
         break;
       case SegueType::Glitch:
-        scenes.replaceScene(scene, world.glitch, gf::milliseconds(500));
+        scenes.replaceScene(scene, world.glitch, gf::milliseconds(500), easing);
         break;
       case SegueType::Checkerboard:
-        scenes.replaceScene(scene, world.checkerboard, gf::milliseconds(1000));
+        scenes.replaceScene(scene, world.checkerboard, gf::milliseconds(1000), easing);
         break;
       case SegueType::Circle:
-        scenes.replaceScene(scene, world.circle, gf::milliseconds(1000));
+        scenes.replaceScene(scene, world.circle, gf::milliseconds(1000), easing);
         break;
       case SegueType::Pixelate:
-        scenes.replaceScene(scene, world.pixelate, gf::milliseconds(1000));
+        scenes.replaceScene(scene, world.pixelate, gf::milliseconds(1000), easing);
         break;
     }
   }
@@ -301,6 +301,7 @@ int main() {
   std::cout << "\t5: Checkerboard\n";
   std::cout << "\t6: Circle Open\n";
   std::cout << "\t7: Circle Close\n";
+  std::cout << "\t8: Pixelate\n";
 
   gf::SceneManager scenes("33_segues", InitialSize);
   World world(scenes);

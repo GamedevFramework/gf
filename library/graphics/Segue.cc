@@ -34,6 +34,7 @@ inline namespace v1 {
   , m_texture1(nullptr)
   , m_textureRect(RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }))
   , m_effect(nullptr)
+  , m_easing(Ease::linear)
   , m_totalTime(Time::zero())
   , m_currentTime(Time::zero())
   {
@@ -53,7 +54,8 @@ inline namespace v1 {
     m_currentTime += time;
 
     if (m_effect) {
-      m_effect->setProgress(m_currentTime.asSeconds() / m_totalTime.asSeconds());
+      float progress = m_currentTime.asSeconds() / m_totalTime.asSeconds();
+      m_effect->setProgress(m_easing(progress));
     }
   }
 

@@ -22,6 +22,7 @@
 #define GF_SEGUE_H
 
 #include "Drawable.h"
+#include "Easings.h"
 #include "Portability.h"
 #include "Rect.h"
 #include "Time.h"
@@ -35,18 +36,53 @@ inline namespace v1 {
   class SegueEffect;
   class Texture;
 
+  /**
+   * @ingroup graphics
+   * @brief A transition between two scenes
+   *
+   * @sa [Segue - Wikipedia](https://en.wikipedia.org/wiki/Segue)
+   */
   class GF_API Segue : public Drawable {
   public:
+    /**
+     * @brief Contructor
+     */
     Segue();
 
+    /**
+     * @brief Start the segue for a specified time
+     *
+     * @param time The time of the segue
+     */
     void start(Time time);
-    void stop(void);
+
+    /**
+     * @brief Stop the segue
+     */
+    void stop();
+
+    /**
+     * @brief Update the segue
+     *
+     * @param time The time since the last update
+     */
     void update(Time time);
 
+    /**
+     * @brief Tell if the segue is still active
+     *
+     * @return True if the segue is not finished
+     */
     bool isActive() {
       return m_currentTime < m_totalTime;
     }
 
+    /**
+     * @brief Set the two texture for the segue
+     *
+     * @param texture0 The old scene
+     * @param texture1 The new scene
+     */
     void setTextures(const Texture& texture0, const Texture& texture1);
 
     /**
@@ -56,6 +92,15 @@ inline namespace v1 {
      */
     void setEffect(SegueEffect& effect) {
       m_effect = &effect;
+    }
+
+    /**
+     * @brief Set the easing for the segue
+     *
+     * @param easing The new easing
+     */
+    void setEasing(Easing easing) {
+      m_easing = easing;
     }
 
     virtual void draw(RenderTarget& target, const RenderStates& states) override;
@@ -69,6 +114,7 @@ inline namespace v1 {
     const Texture *m_texture1;
     RectF m_textureRect;
     SegueEffect *m_effect;
+    Easing m_easing;
     Vertex m_vertices[4];
 
     Time m_totalTime;

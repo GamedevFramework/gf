@@ -150,21 +150,22 @@ inline namespace v1 {
     }
   }
 
-  void SceneManager::replaceScene(Scene& scene, SegueEffect& effect, Time duration) {
-    setupSegue(effect, duration);
+  void SceneManager::replaceScene(Scene& scene, SegueEffect& effect, Time duration, Easing easing) {
+    setupSegue(effect, duration, easing);
     popScene();
     pushScene(scene);
   }
 
-  void SceneManager::replaceAllScenes(Scene& scene, SegueEffect& effect, Time duration) {
-    setupSegue(effect, duration);
+  void SceneManager::replaceAllScenes(Scene& scene, SegueEffect& effect, Time duration, Easing easing) {
+    setupSegue(effect, duration, easing);
     popAllScenes();
     pushScene(scene);
   }
 
-  void SceneManager::setupSegue(SegueEffect& effect, Time duration) {
+  void SceneManager::setupSegue(SegueEffect& effect, Time duration, Easing easing) {
     m_segue.setTextures(m_targetOldScenes.getTexture(), m_targetNewScenes.getTexture());
     m_segue.setEffect(effect);
+    m_segue.setEasing(easing);
     m_segue.start(duration);
 
     m_oldScenes = m_scenes;

@@ -24,6 +24,7 @@
 #include <vector>
 
 #include "Color.h"
+#include "Easings.h"
 #include "Portability.h"
 #include "Ref.h"
 #include "RenderStates.h"
@@ -105,9 +106,9 @@ inline namespace v1 {
       pushScene(scene);
     }
 
-    void replaceScene(Scene& scene, SegueEffect& effect, Time duration);
+    void replaceScene(Scene& scene, SegueEffect& effect, Time duration, Easing easing = Ease::linear);
 
-    void replaceAllScenes(Scene& scene, SegueEffect& effect, Time duration);
+    void replaceAllScenes(Scene& scene, SegueEffect& effect, Time duration, Easing easing = Ease::linear);
 
     /**
      * @brief Get the window associated to the scene
@@ -124,7 +125,7 @@ inline namespace v1 {
     }
 
   private:
-    void setupSegue(SegueEffect& effect, Time duration);
+    void setupSegue(SegueEffect& effect, Time duration, Easing easing);
 
   private:
     Window m_window;
