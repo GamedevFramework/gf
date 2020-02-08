@@ -153,6 +153,8 @@ inline namespace v1 {
   }
 
   void BareTexture::update(const uint8_t *data, const RectI& rect) {
+    assert(0 <= rect.min.x);
+    assert(0 <= rect.min.y);
     assert(rect.max.x <= m_size.width);
     assert(rect.max.y <= m_size.height);
 
@@ -173,6 +175,18 @@ inline namespace v1 {
       glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_A, GL_RED));
     }
 #endif
+  }
+
+  void BareTexture::resize(Vector2i size, const uint8_t *data) {
+    assert(size.width > 0 && size.height > 0);
+    m_size = size;
+
+    GLenum textureFormat = getEnum(m_format);
+
+    glCheck(glPixelStorei(GL_UNPACK_ALIGNMENT, getAlignment(m_format)));
+
+    glCheck(glBindTexture(GL_TEXTURE_2D, m_handle));
+    glCheck(glTexImage2D(GL_TEXTURE_2D, 0, textureFormat, m_size.width, m_size.height, 0, textureFormat, GL_UNSIGNED_BYTE, data));
   }
 
   RectF BareTexture::computeTextureCoords(const RectI& rect) const {

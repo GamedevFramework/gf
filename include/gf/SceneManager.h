@@ -21,7 +21,6 @@
 #ifndef GF_SCENE_MANAGER_H
 #define GF_SCENE_MANAGER_H
 
-#include <memory>
 #include <vector>
 
 #include "Color.h"
@@ -133,8 +132,9 @@ inline namespace v1 {
     std::vector<Ref<Scene>> m_scenes;
 
     std::vector<Ref<Scene>> m_oldScenes;
-    std::unique_ptr<RenderTexture> m_targetOldScenes;
-    std::unique_ptr<RenderTexture> m_targetNewScenes;
+    RenderTexture m_targetOldScenes;
+    RenderTexture m_targetNewScenes;
+    ScreenView m_view;
     Segue m_segue;
 
     enum class Status {

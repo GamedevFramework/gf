@@ -32,11 +32,11 @@ inline namespace v1 {
   SceneManager::SceneManager(StringRef title, Vector2i size, Flags<WindowHints> hints)
   : m_window(title, size, hints)
   , m_renderer(m_window)
-  , m_targetOldScenes(nullptr)
-  , m_targetNewScenes(nullptr)
+  , m_targetOldScenes(size)
+  , m_targetNewScenes(size)
   , m_status(Status::Scene)
   {
-
+    m_view.onFramebufferSizeChange(size);
   }
 
   void SceneManager::run(const RenderStates &states) {
@@ -55,6 +55,13 @@ inline namespace v1 {
         Event event;
 
         while (m_window.pollEvent(event)) {
+          if (event.type == EventType::Resized) {
+            m_targetOldScenes.resize(event.size);
+            m_targetNewScenes.resize(event.size);
+            m_view.onFramebufferSizeChange(event.size);
+            m_segue.setTextures(m_targetOldScenes.getTexture(), m_targetNewScenes.getTexture());
+          }
+
           for (Scene& scene : m_scenes) {
             scene.processEvent(event);
           }
@@ -85,18 +92,16 @@ inline namespace v1 {
 
           m_segue.update(time);
 
-          updateAndRenderScenes(time, m_oldScenes, *m_targetOldScenes, states);
-          updateAndRenderScenes(time, m_scenes, *m_targetNewScenes, states);
+          updateAndRenderScenes(time, m_oldScenes, m_targetOldScenes, states);
+          updateAndRenderScenes(time, m_scenes, m_targetNewScenes, states);
 
           m_renderer.setActive();
           m_renderer.clear(currentScene.getClearColor());
-//           m_renderer.setCanonicalScissorBox(Region{ 0, 0, m_renderer.getSize().x, m_renderer.getSize().y });
+          m_renderer.setView(m_view);
           m_renderer.draw(m_segue, states);
           m_renderer.display();
 
           if (!m_segue.isActive()) {
-            m_targetOldScenes = nullptr;
-            m_targetNewScenes = nullptr;
             m_status = Status::Scene;
           }
         }
@@ -158,10 +163,7 @@ inline namespace v1 {
   }
 
   void SceneManager::setupSegue(SegueEffect& effect, Time duration) {
-    m_targetOldScenes = std::make_unique<RenderTexture>(m_renderer.getSize());
-    m_targetNewScenes = std::make_unique<RenderTexture>(m_renderer.getSize());
-
-    m_segue.setTextures(m_targetOldScenes->getTexture(), m_targetNewScenes->getTexture());
+    m_segue.setTextures(m_targetOldScenes.getTexture(), m_targetNewScenes.getTexture());
     m_segue.setEffect(effect);
     m_segue.start(duration);
 

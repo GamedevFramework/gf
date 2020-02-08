@@ -50,6 +50,10 @@ inline namespace v1 {
     return m_texture.getSize();
   }
 
+  void RenderTexture::resize(Vector2i size) {
+    m_texture.resize(size);
+  }
+
   void RenderTexture::setActive() {
     if (m_framebuffer.isValid()) {
       glCheck(glBindFramebuffer(GL_FRAMEBUFFER, m_framebuffer));

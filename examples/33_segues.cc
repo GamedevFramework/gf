@@ -302,7 +302,7 @@ int main() {
   std::cout << "\t6: Circle Open\n";
   std::cout << "\t7: Circle Close\n";
 
-  gf::SceneManager scenes("33_segues", InitialSize, ~gf::WindowHints::Resizable);
+  gf::SceneManager scenes("33_segues", InitialSize);
   World world(scenes);
 
   scenes.pushScene(world.scene0);
