@@ -66,9 +66,9 @@ inline namespace v1 {
   namespace {
 
     constexpr RenderAttributeInfo PredefinedAttributes[] = {
-      { "a_position",   2,  RenderAttributeType::Float, offsetof(Vertex, position)  },
-      { "a_color",      4,  RenderAttributeType::Float, offsetof(Vertex, color)     },
-      { "a_texCoords",  2,  RenderAttributeType::Float, offsetof(Vertex, texCoords) },
+      { "a_position",   2,  RenderAttributeType::Float, false,  offsetof(Vertex, position)  },
+      { "a_color",      4,  RenderAttributeType::Float, false,  offsetof(Vertex, color)     },
+      { "a_texCoords",  2,  RenderAttributeType::Float, false,  offsetof(Vertex, texCoords) },
     };
 
     Image createWhitePixel() {
@@ -344,7 +344,7 @@ inline namespace v1 {
 
       glCheck(glEnableVertexAttribArray(loc));
       const void *pointer = reinterpret_cast<const void *>(info.offset);
-      glCheck(glVertexAttribPointer(loc, info.size, static_cast<GLenum>(info.type), GL_FALSE, size, pointer));
+      glCheck(glVertexAttribPointer(loc, info.size, static_cast<GLenum>(info.type), info.normalized ? GL_TRUE : GL_FALSE, size, pointer));
     }
   }
 

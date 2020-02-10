@@ -59,6 +59,7 @@ inline namespace v1 {
     const char *name;
     int size;
     RenderAttributeType type;
+    bool normalized;
     std::size_t offset;
   };
 
