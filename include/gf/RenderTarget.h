@@ -26,6 +26,7 @@
 
 #include <cstdint>
 
+#include "ArrayRef.h"
 #include "GraphicsHandle.h"
 #include "Image.h"
 #include "Matrix.h"
@@ -45,6 +46,21 @@ inline namespace v1 {
   class Drawable;
   class VertexBuffer;
   struct Vertex;
+
+  enum class RenderAttributeType {
+    Byte    = 0x1400,
+    UByte   = 0x1401,
+    Short   = 0x1402,
+    UShort  = 0x1403,
+    Float   = 0x1406,
+  };
+
+  struct RenderAttributeInfo {
+    const char *name;
+    int size;
+    RenderAttributeType type;
+    std::size_t offset;
+  };
 
   template<>
   struct GF_API GraphicsTrait<GraphicsTag::Framebuffer> {
@@ -208,6 +224,40 @@ inline namespace v1 {
      * @param states Render states to use for drawing
      */
     void draw(Drawable& drawable, const RenderStates& states = RenderStates());
+
+    /**
+     * @brief Draw primitives defined by an array of custom vertices
+     *
+     * @param vertices Pointer to the vertices
+     * @param size The size of one vertex
+     * @param count Number of vertices in the array
+     * @param type Type of primitives to draw
+     * @param attributes The attributes in the vertices
+     * @param states Render states to use for drawing
+     */
+    void customDraw(const void *vertices, std::size_t size, std::size_t count, PrimitiveType type, ArrayRef<RenderAttributeInfo> attributes, const RenderStates& states = RenderStates());
+
+    /**
+     * @brief Draw primitives defined by an array of custom vertices and their indices
+     *
+     * @param vertices Pointer to the vertices
+     * @param size The size of one vertex
+     * @param indices Pointer to the indices
+     * @param count Number of indices in the array
+     * @param type Type of primitives to draw
+     * @param attributes The attributes in the vertices
+     * @param states Render states to use for drawing
+     */
+    void customDraw(const void *vertices, std::size_t size, const uint16_t *indices, std::size_t count, PrimitiveType type, ArrayRef<RenderAttributeInfo> attributes, const RenderStates& states = RenderStates());
+
+    /**
+     * @brief Draw a custom vertex buffer to the render target
+     *
+     * @param buffer A vertex buffer containing a geometry
+     * @param attributes The attributes in the vertices
+     * @param states Render states to use for drawing
+     */
+    void customDraw(const VertexBuffer& buffer, ArrayRef<RenderAttributeInfo> attributes, const RenderStates& states = RenderStates());
 
     /** @} */
 
@@ -387,10 +437,12 @@ inline namespace v1 {
 
   private:
     struct Locations {
-      int data[3];
+      static constexpr std::size_t CountMax = 5;
+      int data[CountMax];
+      std::size_t count = 0;
     };
 
-    void drawStart(const RenderStates& states, Locations& locations);
+    void drawStart(const RenderStates& states, Locations& locations, std::size_t size, ArrayRef<RenderAttributeInfo> attributes);
     void drawFinish(const Locations& locations);
 
   private:

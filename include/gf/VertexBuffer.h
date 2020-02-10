@@ -119,7 +119,7 @@ inline namespace v1 {
      * @param count Number of indices in the array
      * @param type Type of primitives to draw
      */
-    VertexBuffer(const Vertex *vertices, std::size_t size, const uint16_t *indices, std::size_t count, PrimitiveType type);
+    VertexBuffer(const void *vertices, std::size_t size, const uint16_t *indices, std::size_t count, PrimitiveType type);
 
     /**
      * @brief Check if there is an array buffer
@@ -137,6 +137,15 @@ inline namespace v1 {
      */
     bool hasElementArrayBuffer() const {
       return m_ebo.isValid();
+    }
+
+    /**
+     * @brief Get the vertex size in the buffer
+     *
+     * @returns The size of one vertex (custom or not)
+     */
+    std::size_t getVertexSize() const {
+      return m_size;
     }
 
     /**
@@ -177,6 +186,7 @@ inline namespace v1 {
   private:
     GraphicsHandle<GraphicsTag::Buffer> m_vbo;
     GraphicsHandle<GraphicsTag::Buffer> m_ebo;
+    std::size_t m_size;
     std::size_t m_count;
     PrimitiveType m_type;
   };

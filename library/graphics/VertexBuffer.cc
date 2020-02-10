@@ -45,6 +45,7 @@ inline namespace v1 {
   VertexBuffer::VertexBuffer()
   : m_vbo(gf::None)
   , m_ebo(gf::None)
+  , m_size(0)
   , m_count(0)
   , m_type(PrimitiveType::Points)
   {
@@ -63,6 +64,7 @@ inline namespace v1 {
 
   VertexBuffer::VertexBuffer(const void *vertices, std::size_t size, std::size_t count, PrimitiveType type)
   : m_ebo(gf::None)
+  , m_size(size)
   , m_count(count)
   , m_type(type)
   {
@@ -89,8 +91,9 @@ inline namespace v1 {
   }
 
 
-  VertexBuffer::VertexBuffer(const Vertex *vertices, std::size_t size, const uint16_t *indices, std::size_t count, PrimitiveType type)
-  : m_count(count)
+  VertexBuffer::VertexBuffer(const void *vertices, std::size_t size, const uint16_t *indices, std::size_t count, PrimitiveType type)
+  : m_size(size)
+  , m_count(count)
   , m_type(type)
   {
     if (vertices == nullptr || indices == nullptr || count == 0) {

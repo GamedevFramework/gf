@@ -45,6 +45,16 @@ namespace gf {
 inline namespace v1 {
 #endif
 
+#define ENUM_CHECK(GF_VAL, GL_VAL) static_assert(static_cast<int>(GF_VAL) == (GL_VAL), "Problem with " #GL_VAL)
+
+  ENUM_CHECK(RenderAttributeType::Byte, GL_BYTE);
+  ENUM_CHECK(RenderAttributeType::UByte, GL_UNSIGNED_BYTE);
+  ENUM_CHECK(RenderAttributeType::Short, GL_SHORT);
+  ENUM_CHECK(RenderAttributeType::UShort, GL_UNSIGNED_SHORT);
+  ENUM_CHECK(RenderAttributeType::Float, GL_FLOAT);
+
+#undef ENUM_CHECK
+
   void GraphicsTrait<GraphicsTag::Framebuffer>::gen(int n, unsigned* resources) {
     glCheck(glGenFramebuffers(n, resources));
   }
@@ -55,16 +65,10 @@ inline namespace v1 {
 
   namespace {
 
-    struct AttributeInfo {
-      const char *name;
-      std::size_t offset;
-      GLint size;
-    };
-
-    constexpr AttributeInfo PredefinedAttributes[] = {
-      { "a_position",   offsetof(Vertex, position),   2 },
-      { "a_color",      offsetof(Vertex, color),      4 },
-      { "a_texCoords",  offsetof(Vertex, texCoords),  2 },
+    constexpr RenderAttributeInfo PredefinedAttributes[] = {
+      { "a_position",   2,  RenderAttributeType::Float, offsetof(Vertex, position)  },
+      { "a_color",      4,  RenderAttributeType::Float, offsetof(Vertex, color)     },
+      { "a_texCoords",  2,  RenderAttributeType::Float, offsetof(Vertex, texCoords) },
     };
 
     Image createWhitePixel() {
@@ -219,6 +223,28 @@ inline namespace v1 {
   }
 
   void RenderTarget::draw(const VertexBuffer& buffer, const RenderStates& states) {
+    customDraw(buffer, PredefinedAttributes, states);
+  }
+
+  void RenderTarget::customDraw(const void *vertices, std::size_t size, std::size_t count, PrimitiveType type, ArrayRef<RenderAttributeInfo> attributes, const RenderStates& states) {
+    if (vertices == nullptr || count == 0) {
+      return;
+    }
+
+    VertexBuffer buffer(vertices, size, count, type);
+    customDraw(buffer, attributes, states);
+  }
+
+  void RenderTarget::customDraw(const void *vertices, std::size_t size, const uint16_t *indices, std::size_t count, PrimitiveType type, ArrayRef<RenderAttributeInfo> attributes, const RenderStates& states) {
+    if (vertices == nullptr || indices == nullptr || count == 0) {
+      return;
+    }
+
+    VertexBuffer buffer(vertices, size, indices, count, type);
+    customDraw(buffer, attributes, states);
+  }
+
+  void RenderTarget::customDraw(const VertexBuffer& buffer, ArrayRef<RenderAttributeInfo> attributes, const RenderStates& states) {
     if (!buffer.hasArrayBuffer()) {
       return;
     }
@@ -226,7 +252,7 @@ inline namespace v1 {
     VertexBuffer::bind(&buffer);
 
     Locations locations;
-    drawStart(states, locations);
+    drawStart(states, locations, buffer.getVertexSize(), attributes);
 
     if (buffer.hasElementArrayBuffer()) {
       glCheck(glDrawElements(getEnum(buffer.getPrimitiveType()), buffer.getCount(), GL_UNSIGNED_SHORT, nullptr));
@@ -239,7 +265,9 @@ inline namespace v1 {
     VertexBuffer::bind(nullptr);
   }
 
-  void RenderTarget::drawStart(const RenderStates& states, Locations& locations) {
+  void RenderTarget::drawStart(const RenderStates& states, Locations& locations, std::size_t size, ArrayRef<RenderAttributeInfo> attributes) {
+    assert(attributes.getSize() <= Locations::CountMax);
+
     /*
      * texture
      */
@@ -305,11 +333,10 @@ inline namespace v1 {
      */
 
     Shader::bind(shader);
-    std::size_t index = 0;
 
-    for (auto info : PredefinedAttributes) {
+    for (auto info : attributes) {
       int loc = shader->getAttributeLocation(info.name);
-      locations.data[index++] = loc;
+      locations.data[locations.count++] = loc;
 
       if (loc == -1) {
         continue;
@@ -317,12 +344,14 @@ inline namespace v1 {
 
       glCheck(glEnableVertexAttribArray(loc));
       const void *pointer = reinterpret_cast<const void *>(info.offset);
-      glCheck(glVertexAttribPointer(loc, info.size, GL_FLOAT, GL_FALSE, sizeof(Vertex), pointer));
+      glCheck(glVertexAttribPointer(loc, info.size, static_cast<GLenum>(info.type), GL_FALSE, size, pointer));
     }
   }
 
   void RenderTarget::drawFinish(const Locations& locations) {
-    for (auto loc : locations.data) {
+    for (std::size_t i = 0; i < locations.count; ++i) {
+      auto loc = locations.data[i];
+
       if (loc != -1) {
         glCheck(glDisableVertexAttribArray(loc));
       }
@@ -332,6 +361,7 @@ inline namespace v1 {
   void RenderTarget::draw(Drawable& drawable, const RenderStates& states) {
     drawable.draw(*this, states);
   }
+
 
   void RenderTarget::setView(const View& view) {
     m_view = view;
