@@ -296,12 +296,30 @@ inline namespace v1 {
     }
 
     /**
+     * @brief Remove a world entity from the scene
+     *
+     * @param entity The entity
+     */
+    Entity* removeWorldEntity(Entity* entity) {
+      return m_worldEntities.removeEntity(entity);
+    }
+
+    /**
      * @brief Add a HUD entity to the scene
      *
      * @param entity The entity
      */
     void addHudEntity(Entity& entity) {
       m_hudEntities.addEntity(entity);
+    }
+
+    /**
+     * @brief Remove a HUD entity from the scene
+     *
+     * @param entity The entity
+     */
+    Entity* removeHudEntity(Entity* entity) {
+      return m_hudEntities.removeEntity(entity);
     }
 
     /**
