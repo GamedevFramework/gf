@@ -7,6 +7,7 @@ skip_tags: true
 image:
   - Visual Studio 2017
   - Visual Studio 2019
+platform: x64
 configuration:
   - Debug
   - Release
@@ -25,9 +26,6 @@ before_build:
   - cmd: mkdir build
   - cmd: cd build
   - cmd: cmake -A x64 -DGF_DEBUG=OFF -DGF_BUILD_GAMES=ON -DGF_BUILD_TOOLS=ON -DGF_SINGLE_COMPILTATION_UNIT=ON -DGF_SHARED=OFF -DCMAKE_TOOLCHAIN_FILE=C:\Tools\vcpkg\scripts\buildsystems\vcpkg.cmake ..
-
-platform: x64
-configuration: Debug
 
 build:
   parallel: true
