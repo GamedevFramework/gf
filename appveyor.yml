@@ -17,12 +17,15 @@ cache:
   - C:\Tools\vcpkg\installed\
 
 install:
-  - cmd: git submodule update --init
-
-before_build:
+  - cmd: cd C:\Tools\vcpkg
+  - cmd: git pull
+  - cmd: vcpkg integrate install
   - cmd: vcpkg remove --outdated --recurse
   - cmd: vcpkg install sdl2:x64-windows freetype:x64-windows zlib:x64-windows boost-algorithm:x64-windows boost-filesystem:x64-windows boost-heap:x64-windows boost-container:x64-windows box2d:x64-windows sfml:x64-windows
+
+before_build:
   - cmd: cd C:\projects\GF
+  - cmd: git submodule update --init
   - cmd: mkdir build
   - cmd: cd build
   - cmd: cmake -A x64 -DGF_DEBUG=OFF -DGF_BUILD_GAMES=ON -DGF_BUILD_TOOLS=ON -DGF_SINGLE_COMPILTATION_UNIT=ON -DGF_SHARED=OFF -DCMAKE_TOOLCHAIN_FILE=C:\Tools\vcpkg\scripts\buildsystems\vcpkg.cmake ..
