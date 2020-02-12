@@ -27,6 +27,7 @@
 #include "generated/glitch.frag.h"
 #include "generated/slide.frag.h"
 #include "generated/pixelate.frag.h"
+#include "generated/radial.frag.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -111,6 +112,15 @@ inline namespace v1 {
 
   void PixelateSegueEffect::setFramebufferSize(Vector2i size) {
     setUniform("u_size", size);
+  }
+
+  /*
+   * RadialSegueEffect
+   */
+
+  RadialSegueEffect::RadialSegueEffect()
+  : SegueEffect(default_vert, radial_frag)
+  {
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

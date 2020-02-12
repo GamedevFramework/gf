@@ -64,6 +64,7 @@ namespace {
     Checkerboard,
     Circle,
     Pixelate,
+    Radial,
   };
 
   struct World;
@@ -84,6 +85,7 @@ namespace {
     , m_circleOpenSegueAction("CircleOpen")
     , m_circleCloseSegueAction("CircleClose")
     , m_pixelateSegueAction("Pixelate")
+    , m_radialSegueAction("Radial")
     , m_entity("assets/fb_menu.png")
     , m_segue(SegueType::None)
     {
@@ -106,7 +108,8 @@ namespace {
       addAction(m_circleCloseSegueAction);
       m_pixelateSegueAction.addKeycodeKeyControl(gf::Keycode::Num8);
       addAction(m_pixelateSegueAction);
-
+      m_radialSegueAction.addKeycodeKeyControl(gf::Keycode::Num9);
+      addAction(m_radialSegueAction);
 
       addWorldEntity(m_entity);
 
@@ -131,6 +134,7 @@ namespace {
     gf::Action m_circleOpenSegueAction;
     gf::Action m_circleCloseSegueAction;
     gf::Action m_pixelateSegueAction;
+    gf::Action m_radialSegueAction;
 
     SpriteEntity m_entity;
 
@@ -184,6 +188,7 @@ namespace {
     gf::CheckerboardSegueEffect checkerboard;
     gf::CircleSegueEffect circle;
     gf::PixelateSegueEffect pixelate;
+    gf::RadialSegueEffect radial;
 
     World(gf::SceneManager& scenes)
     : scene0(scenes, *this)
@@ -255,6 +260,11 @@ namespace {
       std::cout << "Current segue: Pixelate\n";
       m_segue = SegueType::Pixelate;
     }
+
+    if (m_radialSegueAction.isActive()) {
+      std::cout << "Current segue: Radial\n";
+      m_segue = SegueType::Radial;
+    }
   }
 
   void replaceScene(gf::SceneManager& scenes, World& world, gf::Id id, SegueType type, gf::Easing easing) {
@@ -282,6 +292,9 @@ namespace {
       case SegueType::Pixelate:
         scenes.replaceScene(scene, world.pixelate, gf::milliseconds(1000), easing);
         break;
+      case SegueType::Radial:
+        scenes.replaceScene(scene, world.radial, gf::milliseconds(1000), easing);
+        break;
     }
   }
 
@@ -302,6 +315,7 @@ int main() {
   std::cout << "\t6: Circle Open\n";
   std::cout << "\t7: Circle Close\n";
   std::cout << "\t8: Pixelate\n";
+  std::cout << "\t9: Radial\n";
 
   gf::SceneManager scenes("33_segues", InitialSize);
   World world(scenes);

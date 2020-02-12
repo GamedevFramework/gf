@@ -94,6 +94,14 @@ inline namespace v1 {
     void setFramebufferSize(Vector2i size);
   };
 
+  class GF_API RadialSegueEffect : public SegueEffect {
+  public:
+    /**
+     * @brief Default constructor
+     */
+    RadialSegueEffect();
+  };
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif

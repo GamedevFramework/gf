@@ -44,6 +44,7 @@ set(SHADER_SOURCES
   graphics/data/shaders/checkerboard.frag
   graphics/data/shaders/circle.frag
   graphics/data/shaders/pixelate.frag
+  graphics/data/shaders/radial.frag
 )
 
 set(SHADER_HEADERS "")
