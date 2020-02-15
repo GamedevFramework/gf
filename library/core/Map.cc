@@ -47,11 +47,11 @@ inline namespace v1 {
     return m_cells.getPositionRange();
   }
 
-  void SquareMap::setCell(Vector2i pos, CellFlags flags) {
+  void SquareMap::setCell(Vector2i pos, Flags<CellProperty> flags) {
     m_cells(pos) = flags;
   }
 
-  void SquareMap::reset(CellFlags flags) {
+  void SquareMap::reset(Flags<CellProperty> flags) {
     for (auto& cell : m_cells) {
       cell = flags;
     }
@@ -103,7 +103,7 @@ inline namespace v1 {
 
   namespace {
 
-    void postProcessMap(Array2D<CellFlags, int>& cells, Vector2i q0, Vector2i q1, Vector2i step) {
+    void postProcessMap(Array2D<Flags<CellProperty>, int>& cells, Vector2i q0, Vector2i q1, Vector2i step) {
       int xLo, xHi, yLo, yHi;
       std::tie(xLo, xHi) = std::minmax(q0.x, q1.x);
       std::tie(yLo, yHi) = std::minmax(q0.y, q1.y);
@@ -148,7 +148,7 @@ inline namespace v1 {
       }
     }
 
-    void castRay(Array2D<CellFlags, int>& cells, Vector2i p0, Vector2i p1, int maxRadius2, FieldOfVisionLimit limit, CellFlags modification) {
+    void castRay(Array2D<Flags<CellProperty>, int>& cells, Vector2i p0, Vector2i p1, int maxRadius2, FieldOfVisionLimit limit, Flags<CellProperty> modification) {
       Bresenham bresenham(p0, p1);
       Vector2i curr;
       bool blocked = false;
@@ -178,7 +178,7 @@ inline namespace v1 {
       }
     }
 
-    void computeBasicFov(Array2D<CellFlags, int>& cells, Vector2i pos, int maxRadius, FieldOfVisionLimit limit, CellFlags modification) {
+    void computeBasicFov(Array2D<Flags<CellProperty>, int>& cells, Vector2i pos, int maxRadius, FieldOfVisionLimit limit, Flags<CellProperty> modification) {
       RangeI xRange = cells.getColRange();
       RangeI yRange = cells.getRowRange();
 
@@ -213,7 +213,7 @@ inline namespace v1 {
       }
     }
 
-    void computeGenericFieldOfVision(Array2D<CellFlags, int>& cells, Vector2i pos, int maxRadius, FieldOfVisionLimit limit, FieldOfVision algorithm, CellFlags modification) {
+    void computeGenericFieldOfVision(Array2D<Flags<CellProperty>, int>& cells, Vector2i pos, int maxRadius, FieldOfVisionLimit limit, FieldOfVision algorithm, Flags<CellProperty> modification) {
       switch (algorithm) {
         case FieldOfVision::Basic:
           computeBasicFov(cells, pos, maxRadius, limit, modification);
@@ -267,7 +267,7 @@ inline namespace v1 {
       DijkstraHeap::handle_type handle;
     };
 
-    std::vector<Vector2i> computeDijkstra(const Array2D<CellFlags, int>& cells, Vector2i origin, Vector2i target, float diagonalCost) {
+    std::vector<Vector2i> computeDijkstra(const Array2D<Flags<CellProperty>, int>& cells, Vector2i origin, Vector2i target, float diagonalCost) {
       DijkstraResultData defaultResult;
       defaultResult.distance = std::numeric_limits<float>::infinity();
       defaultResult.previous = { -1, -1 };
@@ -299,7 +299,7 @@ inline namespace v1 {
         for (auto position : cells.get8NeighborsRange(data.position)) {
           assert(position != data.position);
 
-          const CellFlags& value = cells(position);
+          const Flags<CellProperty>& value = cells(position);
 
           if (!value.test(CellProperty::Walkable)) {
             continue;
@@ -371,7 +371,7 @@ inline namespace v1 {
       AStarHeap::handle_type handle;
     };
 
-    std::vector<Vector2i> computeAStar(const Array2D<CellFlags, int>& cells, Vector2i origin, Vector2i target, float diagonalCost) {
+    std::vector<Vector2i> computeAStar(const Array2D<Flags<CellProperty>, int>& cells, Vector2i origin, Vector2i target, float diagonalCost) {
       AStarResultData defaultResult;
       defaultResult.distance = std::numeric_limits<float>::infinity();
       defaultResult.previous = { -1, -1 };
@@ -410,7 +410,7 @@ inline namespace v1 {
         for (auto position : cells.get8NeighborsRange(data.position)) {
           assert(position != data.position);
 
-          const CellFlags& value = cells(position);
+          const Flags<CellProperty>& value = cells(position);
 
           if (!value.test(CellProperty::Walkable)) {
             continue;

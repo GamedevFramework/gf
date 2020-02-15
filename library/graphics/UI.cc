@@ -537,7 +537,7 @@ inline namespace v1 {
   }
 
 
-  bool UI::begin(const std::string& title, const RectF& bounds, UIWindowFlags flags) {
+  bool UI::begin(const std::string& title, const RectF& bounds, Flags<UIWindow> flags) {
     setState(State::Setup);
     return nk_begin(&m_impl->ctx, title.c_str(), { bounds.min.x, bounds.min.y, bounds.getWidth(), bounds.getHeight() }, flags.getValue()) != 0;
   }
@@ -588,7 +588,7 @@ inline namespace v1 {
     nk_layout_row_dynamic(&m_impl->ctx, height, 0);
   }
 
-  bool UI::groupBegin(const std::string& title, UIWindowFlags flags) {
+  bool UI::groupBegin(const std::string& title, Flags<UIWindow> flags) {
     setState(State::Setup);
     return nk_group_begin(&m_impl->ctx, title.c_str(), flags.getValue()) != 0;
   }
@@ -598,7 +598,7 @@ inline namespace v1 {
     nk_group_end(&m_impl->ctx);
   }
 
-  bool UI::groupScrolledBegin(UIScroll& scroll, const std::string& title, UIWindowFlags flags) {
+  bool UI::groupScrolledBegin(UIScroll& scroll, const std::string& title, Flags<UIWindow> flags) {
     setState(State::Setup);
     return nk_group_scrolled_begin(&m_impl->ctx, reinterpret_cast<nk_scroll*>(&scroll), title.c_str(), flags.getValue()) != 0;
   }
@@ -805,16 +805,16 @@ inline namespace v1 {
     return nk_filter_default;
   }
 
-  const UIEditFlags UIEditType::Simple =
+  const Flags<UIEdit> UIEditType::Simple =
       UIEdit::AlwaysInsertMode;
 
-  const UIEditFlags UIEditType::Field = combineFlags(
+  const Flags<UIEdit> UIEditType::Field = combineFlags(
       UIEdit::AlwaysInsertMode,
       UIEdit::Selectable,
       UIEdit::Clipboard
   );
 
-  const UIEditFlags UIEditType::Box = combineFlags(
+  const Flags<UIEdit> UIEditType::Box = combineFlags(
       UIEdit::AlwaysInsertMode,
       UIEdit::Selectable,
       UIEdit::Multiline,
@@ -822,14 +822,14 @@ inline namespace v1 {
       UIEdit::Clipboard
   );
 
-  const UIEditFlags UIEditType::Editor = combineFlags(
+  const Flags<UIEdit> UIEditType::Editor = combineFlags(
       UIEdit::Selectable,
       UIEdit::Multiline,
       UIEdit::AllowTab,
       UIEdit::Clipboard
   );
 
-  UIEditEventFlags UI::edit(UIEditFlags flags, UICharBuffer& buffer, UIEditFilter filter) {
+  Flags<UIEditEvent> UI::edit(Flags<UIEdit> flags, UICharBuffer& buffer, UIEditFilter filter) {
     setState(State::Setup);
     int length = buffer.m_length;
     nk_flags ret = nk_edit_string(&m_impl->ctx, flags.getValue(), buffer.m_data, &length, buffer.m_capacity, getPluginFilter(filter));
@@ -914,7 +914,7 @@ inline namespace v1 {
     return true;
   }
 
-  bool UI::popupBegin(UIPopup type, const std::string& title, UIWindowFlags flags, const RectF& bounds) {
+  bool UI::popupBegin(UIPopup type, const std::string& title, Flags<UIWindow> flags, const RectF& bounds) {
     setState(State::Setup);
     return nk_popup_begin(&m_impl->ctx, static_cast<nk_popup_type>(type), title.c_str(), flags.getValue(), { bounds.min.x, bounds.min.y, bounds.getWidth(), bounds.getHeight() }) != 0;
   }
@@ -990,7 +990,7 @@ inline namespace v1 {
     nk_combo_end(&m_impl->ctx);
   }
 
-  bool UI::contextualBegin(UIWindowFlags flags, Vector2f size, const RectF& triggerBounds) {
+  bool UI::contextualBegin(Flags<UIWindow> flags, Vector2f size, const RectF& triggerBounds) {
     setState(State::Setup);
     return nk_contextual_begin(&m_impl->ctx, flags.getValue(), { size.width, size.height },
       { triggerBounds.min.x, triggerBounds.min.y, triggerBounds.getWidth(), triggerBounds.getHeight() }) != 0;

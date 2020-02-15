@@ -35,7 +35,7 @@ inline namespace v1 {
    * @ingroup game
    * @brief A property of a cell
    *
-   * @sa gf::CellFlags, gf::SquareMap
+   * @sa gf::SquareMap
    */
   enum class CellProperty : uint8_t {
     Transparent = 0x01, ///< The cell is transparent
@@ -46,21 +46,13 @@ inline namespace v1 {
 
   /**
    * @ingroup game
-   * @brief Flags composed of cell properties
-   *
-   * @sa gf::CellProperty
-   */
-  using CellFlags = Flags<CellProperty>;
-
-  /**
-   * @ingroup game
    * @brief An empty cell
    *
    * An empty cell is transparent and walkable.
    *
    * @sa gf::CellProperty, gf::SquareMap
    */
-  constexpr CellFlags EmptyCell = combineFlags(CellProperty::Transparent, CellProperty::Walkable);
+  constexpr Flags<CellProperty> EmptyCell = combineFlags(CellProperty::Transparent, CellProperty::Walkable);
 
   /**
    * @ingroup game
@@ -156,14 +148,14 @@ inline namespace v1 {
      *
      * @sa setTransparent(), setWalkable(), setEmpty()
      */
-    void setCell(Vector2i pos, CellFlags flags);
+    void setCell(Vector2i pos, Flags<CellProperty> flags);
 
     /**
      * @brief Initialize the cells with some properties
      *
      * @param flags The properties to set
      */
-    void reset(CellFlags flags);
+    void reset(Flags<CellProperty> flags);
 
     /**
      * @brief Make a cell transparent
@@ -325,7 +317,7 @@ inline namespace v1 {
      */
 
   private:
-    Array2D<CellFlags, int> m_cells;
+    Array2D<Flags<CellProperty>, int> m_cells;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

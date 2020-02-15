@@ -379,7 +379,7 @@ inline namespace v1 {
     return width;
   }
 
-  int Console::printInternal(const RectI& rect, ConsoleEffect effect, ConsoleAlignment alignment, const std::string& message, PrintOptionFlags flags) {
+  int Console::printInternal(const RectI& rect, ConsoleEffect effect, ConsoleAlignment alignment, const std::string& message, Flags<PrintOption> flags) {
     // checks
     Vector2i consoleSize = m_data.getSize();
 

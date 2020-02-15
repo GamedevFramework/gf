@@ -47,7 +47,6 @@ inline namespace v1 {
   /**
    * @ingroup window
    * @brief Hints for window creation
-   * @sa gf::WindowFlags
    */
   enum class WindowHints : uint32_t {
     Resizable = 0x0001, ///< Is the window resizable?
@@ -55,12 +54,6 @@ inline namespace v1 {
     Decorated = 0x0004, ///< Is the window decorated?
   };
 
-  /**
-   * @ingroup window
-   * @brief Flags for window creation
-   * @sa gf::Flags, gf::WindowHints
-   */
-  using WindowFlags = Flags<WindowHints>;
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 
@@ -100,7 +93,7 @@ inline namespace v1 {
      * @param hints Some hints for the creation of the window
      * @sa gf::WindowHints
      */
-    Window(StringRef title, Vector2i size, WindowFlags hints = WindowFlags(All));
+    Window(StringRef title, Vector2i size, Flags<WindowHints> hints = All);
 
     /**
      * @brief Destructor

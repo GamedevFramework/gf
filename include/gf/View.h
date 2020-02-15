@@ -439,7 +439,7 @@ inline namespace v1 {
      */
     [[deprecated("You should use setInitialFramebufferSize() instead")]]
     void setInitialScreenSize(Vector2i screenSize) {
-      setInitialFramebufferSize(screenSize)
+      setInitialFramebufferSize(screenSize);
     }
 
     /**
