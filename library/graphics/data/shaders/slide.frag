@@ -28,11 +28,23 @@ varying vec2 v_texCoords;
 uniform sampler2D u_texture0;
 uniform sampler2D u_texture1;
 uniform float u_progress;
+uniform int u_stripes;
+uniform int u_orientation; // 0 = horizontal, 1 = vertical
 
 void main(void) {
-  if (u_progress < v_texCoords.x) {
-    gl_FragColor = texture2D(u_texture0, v_texCoords) * v_color;
+  float width = 1.0 / float(u_stripes);
+
+  if (u_orientation == 0) {
+    if (u_progress < mod(1.0 - v_texCoords.y, width) / width) {
+      gl_FragColor = texture2D(u_texture0, v_texCoords) * v_color;
+    } else {
+      gl_FragColor = texture2D(u_texture1, v_texCoords) * v_color;
+    }
   } else {
-    gl_FragColor = texture2D(u_texture1, v_texCoords) * v_color;
+    if (u_progress < mod(v_texCoords.x, width) / width) {
+      gl_FragColor = texture2D(u_texture0, v_texCoords) * v_color;
+    } else {
+      gl_FragColor = texture2D(u_texture1, v_texCoords) * v_color;
+    }
   }
 }

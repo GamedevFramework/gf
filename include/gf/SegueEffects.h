@@ -39,10 +39,19 @@ inline namespace v1 {
 
   class GF_API SlideSegueEffect : public SegueEffect {
   public:
+    enum Orientation {
+      Horizontal  = 0,
+      Vertical    = 1,
+    };
+
     /**
      * @brief Default constructor
      */
     SlideSegueEffect();
+
+    void setStripes(int stripes);
+
+    void setStripeOrientation(Orientation orientation);
   };
 
   class GF_API GlitchSegueEffect : public SegueEffect {

@@ -50,6 +50,16 @@ inline namespace v1 {
   SlideSegueEffect::SlideSegueEffect()
   : SegueEffect(default_vert, slide_frag)
   {
+    setStripes(1);
+    setStripeOrientation(Vertical);
+  }
+
+  void SlideSegueEffect::setStripes(int stripes) {
+    setUniform("u_stripes", stripes);
+  }
+
+  void SlideSegueEffect::setStripeOrientation(Orientation orientation) {
+    setUniform("u_orientation", static_cast<int>(orientation));
   }
 
   /*
