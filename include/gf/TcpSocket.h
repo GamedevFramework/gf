@@ -26,7 +26,6 @@
 
 #include "ArrayRef.h"
 #include "BufferRef.h"
-#include "Packet.h"
 #include "Portability.h"
 #include "Socket.h"
 
@@ -34,6 +33,7 @@ namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
 #endif
+  struct Packet;
 
   /**
    * @ingroup net_sockets

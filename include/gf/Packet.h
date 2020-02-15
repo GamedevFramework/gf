@@ -21,10 +21,16 @@
 #ifndef GF_PACKET_H
 #define GF_PACKET_H
 
+#include <cassert>
 #include <cstdint>
 #include <vector>
 
+#include "Id.h"
+#include "Packet.h"
 #include "Portability.h"
+#include "Streams.h"
+#include "Serialization.h"
+#include "SerializationOps.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -36,7 +42,40 @@ inline namespace v1 {
    * @brief A packet of bytes
    */
   struct GF_API Packet {
+    Id type = InvalidId;
     std::vector<uint8_t> bytes;
+
+    Id getType() {
+      if (type != InvalidId) {
+        return type;
+      }
+
+      BufferInputStream stream(&bytes);
+      Deserializer deserializer(stream);
+      deserializer | type;
+      return type;
+    }
+
+    template<typename T>
+    T as() {
+      BufferInputStream stream(&bytes);
+      Deserializer deserializer(stream);
+
+      T data;
+      deserializer | type | data;
+      assert(T::type == type);
+      return data;
+    }
+
+    template<typename T>
+    void is(const T& data) {
+      bytes.clear();
+      type = T::type;
+      gf::BufferOutputStream stream(&bytes);
+      gf::Serializer serializer(stream);
+      serializer | type | const_cast<T&>(data);
+    }
+
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

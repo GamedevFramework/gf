@@ -35,6 +35,7 @@
 #endif
 
 #include <gf/Log.h>
+#include <gf/Packet.h>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
