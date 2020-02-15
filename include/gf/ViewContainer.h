@@ -83,6 +83,17 @@ inline namespace v1 {
      */
     void setInitialFramebufferSize(Vector2i framebufferSize);
 
+    /**
+     * @brief Set the initial screen size
+     *
+     * @param screenSize The initial size of the screen
+     *
+     * @deprecated You should use setInitialFramebufferSize() instead
+     */
+    [[deprecated("You should use setInitialFramebufferSize() instead")]]
+    void setInitialScreenSize(Vector2i screenSize) {
+      setInitialFramebufferSize(screenSize)
+    }
   private:
     std::vector<Ref<AdaptativeView>> m_views;
   };

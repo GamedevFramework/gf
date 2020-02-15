@@ -431,6 +431,18 @@ inline namespace v1 {
     void setInitialFramebufferSize(Vector2i framebufferSize);
 
     /**
+     * @brief Set the initial screen size
+     *
+     * @param screenSize The initial size of the screen
+     *
+     * @deprecated You should use setInitialFramebufferSize() instead
+     */
+    [[deprecated("You should use setInitialFramebufferSize() instead")]]
+    void setInitialScreenSize(Vector2i screenSize) {
+      setInitialFramebufferSize(screenSize)
+    }
+
+    /**
      * @brief Callback when the framebuffer has just been resized
      *
      * @param framebufferSize The new size of the framebuffer
