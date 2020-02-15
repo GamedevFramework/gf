@@ -29,6 +29,10 @@ namespace gf {
 inline namespace v1 {
 #endif
 
+  /**
+   * @ingroup graphics
+   * @brief A fade segue effect
+   */
   class GF_API FadeSegueEffect : public SegueEffect {
   public:
     /**
@@ -37,11 +41,21 @@ inline namespace v1 {
     FadeSegueEffect();
   };
 
+
+  /**
+   * @ingroup graphics
+   * @brief A slide segue effect
+   *
+   * By default, there is one vertical stripe.
+   */
   class GF_API SlideSegueEffect : public SegueEffect {
   public:
+    /**
+     * @brief The orientation of the stripes
+     */
     enum Orientation {
-      Horizontal  = 0,
-      Vertical    = 1,
+      Horizontal  = 0,  ///< The stripes are horizontal
+      Vertical    = 1,  ///< The stripes are vertical
     };
 
     /**
@@ -49,11 +63,26 @@ inline namespace v1 {
      */
     SlideSegueEffect();
 
+    /**
+     * @brief Set the number of stripes
+     *
+     * @param stripes The new number of stripes
+     */
     void setStripes(int stripes);
 
+    /**
+     * @brief Set the stripe orientation
+     *
+     * @param orientation The new orientation of the stripes
+     */
     void setStripeOrientation(Orientation orientation);
   };
 
+
+  /**
+   * @ingroup graphics
+   * @brief A glitch segue effect
+   */
   class GF_API GlitchSegueEffect : public SegueEffect {
   public:
     /**
@@ -63,6 +92,12 @@ inline namespace v1 {
   };
 
 
+  /**
+   * @ingroup graphics
+   * @brief A checkerboard segue effect
+   *
+   * By default, the board is @f$ 32 \times 18 @f$.
+   */
   class GF_API CheckerboardSegueEffect : public SegueEffect {
   public:
     /**
@@ -70,16 +105,36 @@ inline namespace v1 {
      */
     CheckerboardSegueEffect();
 
+    /**
+     * @brief Set the board size (number of cells)
+     *
+     * @param size The new size of the board
+     */
     void setBoardSize(Vector2i size);
 
+    /**
+     * @brief Set the smoothness
+     *
+     * @param smoothness The new smoothness
+     */
     void setSmoothness(float smoothness);
   };
 
+
+  /**
+   * @ingroup graphics
+   * @brief A circle segue effect
+   *
+   * By default, the circle opens.
+   */
   class GF_API CircleSegueEffect : public SegueEffect {
   public:
+    /**
+     * @brief The type of circle
+     */
     enum Type {
-      Open  =  1,
-      Close = -1,
+      Open  =  1, ///< The circle opens
+      Close = -1, ///< The circle closes
     };
 
     /**
@@ -87,12 +142,27 @@ inline namespace v1 {
      */
     CircleSegueEffect();
 
+    /**
+     * @brief Set the type of circle
+     *
+     * @param type The new type of circle
+     */
     void setType(Type type);
 
+    /**
+     * @brief Set the framebuffer size
+     *
+     * @param size The new size of the framebuffer
+     */
     void setFramebufferSize(Vector2i size);
 
   };
 
+
+  /**
+   * @ingroup graphics
+   * @brief A pixelate segue effect
+   */
   class GF_API PixelateSegueEffect : public SegueEffect {
   public:
     /**
@@ -100,9 +170,19 @@ inline namespace v1 {
      */
     PixelateSegueEffect();
 
+    /**
+     * @brief Set the framebuffer size
+     *
+     * @param size The new size of the framebuffer
+     */
     void setFramebufferSize(Vector2i size);
   };
 
+
+  /**
+   * @ingroup graphics
+   * @brief A radial segue effect
+   */
   class GF_API RadialSegueEffect : public SegueEffect {
   public:
     /**
