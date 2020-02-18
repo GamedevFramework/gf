@@ -10,8 +10,8 @@ inline namespace v1 {
 
   Scene::Scene(Vector2i initialSize)
   : m_active(false)
-  , m_status(Status::Paused)
-  , m_visibility(Visibility::Hidden)
+  , m_status(Status::Resumed)
+  , m_visibility(Visibility::Shown)
   , m_closeWindowAction("Close")
   , m_clear(Color::White)
   {
