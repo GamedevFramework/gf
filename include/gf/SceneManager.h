@@ -130,11 +130,13 @@ inline namespace v1 {
   private:
     Window m_window;
     RenderWindow m_renderer;
-    std::vector<Ref<Scene>> m_scenes;
+    bool m_scenesChanged;
 
-    std::vector<Ref<Scene>> m_oldScenes;
-    RenderTexture m_targetOldScenes;
-    RenderTexture m_targetNewScenes;
+    std::vector<Ref<Scene>> m_currScenes;
+    std::vector<Ref<Scene>> m_prevScenes;
+
+    RenderTexture m_targetCurrScenes;
+    RenderTexture m_targetPrevScenes;
     ScreenView m_view;
     Segue m_segue;
 

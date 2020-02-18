@@ -3,6 +3,7 @@
 #include <cassert>
 
 #include <gf/Color.h>
+#include <gf/Log.h>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -32,8 +33,9 @@ inline namespace v1 {
   SceneManager::SceneManager(StringRef title, Vector2i size, Flags<WindowHints> hints)
   : m_window(title, size, hints)
   , m_renderer(m_window)
-  , m_targetOldScenes(size)
-  , m_targetNewScenes(size)
+  , m_scenesChanged(false)
+  , m_targetCurrScenes(size)
+  , m_targetPrevScenes(size)
   , m_status(Status::Scene)
   {
     m_view.onFramebufferSizeChange(size);
@@ -43,57 +45,57 @@ inline namespace v1 {
     Clock clock;
     m_renderer.clear(Color::White);
 
-    while (!m_scenes.empty() && m_window.isOpen()) {
-      Scene& currentScene = m_scenes.back();
+    while (!m_currScenes.empty() && m_window.isOpen()) {
+      std::vector<Ref<Scene>> scenes = m_currScenes; // make a copy to avoid iterator invalidation
+      m_scenesChanged = false;
+
+      Scene& currentScene = scenes.back();
       currentScene.setFramebufferSize(m_renderer.getSize());
       currentScene.show();
       currentScene.resume();
 
       auto clearColor = currentScene.getClearColor();
 
-      while (currentScene.isActive() && m_window.isOpen()) {
+      while (!m_scenesChanged && m_window.isOpen()) {
+        bool transition = (m_status == Status::Segue);
         Event event;
 
         while (m_window.pollEvent(event)) {
           if (event.type == EventType::Resized) {
-            m_targetOldScenes.resize(event.size);
-            m_targetNewScenes.resize(event.size);
+            m_targetPrevScenes.resize(event.size);
+            m_targetCurrScenes.resize(event.size);
             m_view.onFramebufferSizeChange(event.size);
-            m_segue.setTextures(m_targetOldScenes.getTexture(), m_targetNewScenes.getTexture());
+            m_segue.setTextures(m_targetPrevScenes.getTexture(), m_targetCurrScenes.getTexture());
           }
 
-          for (Scene& scene : m_scenes) {
+          for (Scene& scene : scenes) {
             scene.processEvent(event);
           }
         }
 
-        for (Scene& scene : m_scenes) {
+        for (Scene& scene : scenes) {
           scene.handleActions(m_window);
         }
 
         Time time = clock.restart();
 
-        if (m_status == Status::Scene) {
-
-          for (Scene& scene : m_scenes) {
+        if (!transition) {
+          for (Scene& scene : scenes) {
             scene.update(time);
           }
 
           m_renderer.clear(clearColor);
 
-          for (Scene& scene : m_scenes) {
+          for (Scene& scene : scenes) {
             scene.render(m_renderer, states);
           }
 
           m_renderer.display();
-
         } else {
-          assert(m_status == Status::Segue);
-
           m_segue.update(time);
 
-          updateAndRenderScenes(time, m_oldScenes, m_targetOldScenes, states);
-          updateAndRenderScenes(time, m_scenes, m_targetNewScenes, states);
+          updateAndRenderScenes(time, m_prevScenes, m_targetPrevScenes, states);
+          updateAndRenderScenes(time, m_currScenes, m_targetCurrScenes, states);
 
           m_renderer.setActive();
           m_renderer.clear(currentScene.getClearColor());
@@ -122,31 +124,52 @@ inline namespace v1 {
   }
 
   void SceneManager::pushScene(Scene& scene) {
-    if (!m_scenes.empty()) {
-      desactivate(m_scenes.back());
+    if (m_status == Status::Segue) {
+      gf::Log::warning("You should not push a scene during a transition.\n");
+      return;
     }
 
-    m_scenes.push_back(scene);
-    activate(m_scenes.back());
+    m_scenesChanged = true;
+
+    if (!m_currScenes.empty()) {
+      desactivate(m_currScenes.back());
+    }
+
+    m_currScenes.push_back(scene);
+    activate(m_currScenes.back());
   }
 
   void SceneManager::popScene() {
-    assert(!m_scenes.empty());
-    desactivate(m_scenes.back());
-    m_scenes.pop_back();
+    if (m_status == Status::Segue) {
+      gf::Log::warning("You should not pop a scene during a transition.\n");
+      return;
+    }
 
-    if (!m_scenes.empty()) {
-      activate(m_scenes.back());
+    m_scenesChanged = true;
+
+    assert(!m_currScenes.empty());
+    desactivate(m_currScenes.back());
+    m_currScenes.pop_back();
+
+    if (!m_currScenes.empty()) {
+      activate(m_currScenes.back());
     }
   }
 
 
   void SceneManager::popAllScenes() {
-    assert(!m_scenes.empty());
+    if (m_status == Status::Segue) {
+      gf::Log::warning("You should not pop all scenes during a transition.\n");
+      return;
+    }
 
-    while (!m_scenes.empty()) {
-      desactivate(m_scenes.back());
-      m_scenes.pop_back();
+    m_scenesChanged = true;
+
+    assert(!m_currScenes.empty());
+
+    while (!m_currScenes.empty()) {
+      desactivate(m_currScenes.back());
+      m_currScenes.pop_back();
     }
   }
 
@@ -154,23 +177,23 @@ inline namespace v1 {
     setupSegue(effect, duration, easing);
     popScene();
     pushScene(scene);
+    m_status = Status::Segue;
   }
 
   void SceneManager::replaceAllScenes(Scene& scene, SegueEffect& effect, Time duration, Easing easing) {
     setupSegue(effect, duration, easing);
     popAllScenes();
     pushScene(scene);
+    m_status = Status::Segue;
   }
 
   void SceneManager::setupSegue(SegueEffect& effect, Time duration, Easing easing) {
-    m_segue.setTextures(m_targetOldScenes.getTexture(), m_targetNewScenes.getTexture());
+    m_segue.setTextures(m_targetPrevScenes.getTexture(), m_targetCurrScenes.getTexture());
     m_segue.setEffect(effect);
     m_segue.setEasing(easing);
     m_segue.start(duration);
 
-    m_oldScenes = m_scenes;
-
-    m_status = Status::Segue;
+    m_prevScenes = m_currScenes;
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
