@@ -18,12 +18,6 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#ifndef GF_SPATIAL_H
-#define GF_SPATIAL_H
+#include <gf/spatial/SimpleSpatialIndex.h>
 
-#include "spatial/Types.h"
-#include "spatial/QuadTree.h"
-#include "spatial/RStarTree.h"
-#include "spatial/SimpleSpatialIndex.h"
-
-#endif // GF_SPATIAL_H
+// just to check everything is included properly

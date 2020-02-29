@@ -18,16 +18,6 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#include <gf/Spatial.h>
+#include <gf/spatial/QuadTree.h>
 
-namespace gf {
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-inline namespace v1 {
-#endif
-
-  // just to check everything is included properly
-
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-}
-#endif
-}
+// just to check everything is included properly

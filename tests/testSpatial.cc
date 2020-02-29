@@ -28,47 +28,6 @@
 
 namespace {
 
-  template<typename T, typename U = float, std::size_t N = 2>
-  class NaiveSpatialIndex {
-  public:
-    bool insert(const T& value, const gf::Box<U, N>& bounds) {
-      m_entries.push_back({ value, bounds });
-      return true;
-    }
-
-    std::size_t query(const gf::Box<U, N>& bounds, gf::SpatialQueryCallback<T> callback, gf::SpatialQuery kind) {
-      std::size_t found = 0;
-
-      for (auto& entry : m_entries) {
-        switch (kind) {
-          case gf::SpatialQuery::Contain:
-            if (bounds.contains(entry.bounds)) {
-              callback(entry.value);
-              ++found;
-            }
-            break;
-
-          case gf::SpatialQuery::Intersect:
-            if (bounds.intersects(entry.bounds)) {
-              callback(entry.value);
-              ++found;
-            }
-            break;
-        }
-      }
-
-      return found;
-    }
-
-  private:
-    struct Entry {
-      T value;
-      gf::Box<U, N> bounds;
-    };
-
-    std::vector<Entry> m_entries;
-  };
-
   template<typename T>
   struct NullCallback {
     void operator()(const T& value) {
@@ -120,6 +79,10 @@ namespace {
 
 }
 
+/*
+ * QuadTree
+ */
+
 TEST(SpatialTest, QuadTreeMoveOnlyType) {
   gf::QuadTree<std::unique_ptr<std::size_t>, int> qtree(gf::Box2i({ 0, 0 }, { 100, 100 }));
 
@@ -132,7 +95,7 @@ TEST(SpatialTest, QuadTreeMoveOnlyType) {
 TEST(SpatialTest, QuadTreeQuery) {
   gf::Random random(42);
 
-  NaiveSpatialIndex<std::size_t, int> naive;
+  gf::SimpleSpatialIndex<std::size_t, int> naive;
   gf::QuadTree<std::size_t, int> qtree(gf::Box2i({ 0, 0 }, { 120, 120 }));
 
   auto boxes = getRandomBoxes<2>(random);
@@ -161,10 +124,23 @@ TEST(SpatialTest, QuadTreeQuery) {
   EXPECT_EQ(naiveResult.set, qtreeResult.set);
 }
 
+/*
+ * RStarTree
+ */
+
+TEST(SpatialTest, RStarTreeMoveOnlyType) {
+  gf::RStarTree<std::unique_ptr<std::size_t>, int> rstar;
+
+  rstar.insert(std::make_unique<std::size_t>(1), gf::Box2i({ 10, 10 }, { 20, 20 }));
+  std::size_t count = rstar.query(gf::Box2i({ 15, 15 }, { 25, 25 }), NullCallback<std::unique_ptr<std::size_t>>());
+
+  EXPECT_EQ(1u, count);
+}
+
 TEST(SpatialTest, RStarTreeQuery) {
   gf::Random random(42);
 
-  NaiveSpatialIndex<std::size_t, int> naive;
+  gf::SimpleSpatialIndex<std::size_t, int> naive;
   gf::RStarTree<std::size_t, int> rstar;
 
   auto boxes = getRandomBoxes<2>(random);
@@ -195,11 +171,3 @@ TEST(SpatialTest, RStarTreeQuery) {
   EXPECT_EQ(naiveResult.set, rstarResult.set);
 }
 
-TEST(SpatialTest, RStarTreeMoveOnlyType) {
-  gf::RStarTree<std::unique_ptr<std::size_t>, int> rstar;
-
-  rstar.insert(std::make_unique<std::size_t>(1), gf::Box2i({ 10, 10 }, { 20, 20 }));
-  std::size_t count = rstar.query(gf::Box2i({ 15, 15 }, { 25, 25 }), NullCallback<std::unique_ptr<std::size_t>>());
-
-  EXPECT_EQ(1u, count);
-}
