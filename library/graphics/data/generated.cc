@@ -34,4 +34,5 @@
 #include "generated/circle.frag.h"
 #include "generated/pixelate.frag.h"
 #include "generated/radial.frag.h"
+#include "generated/zoomblur.frag.h"
 

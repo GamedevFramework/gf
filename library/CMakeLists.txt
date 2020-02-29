@@ -45,6 +45,7 @@ set(SHADER_SOURCES
   graphics/data/shaders/circle.frag
   graphics/data/shaders/pixelate.frag
   graphics/data/shaders/radial.frag
+  graphics/data/shaders/zoomblur.frag
 )
 
 set(SHADER_HEADERS "")

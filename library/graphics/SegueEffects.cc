@@ -28,6 +28,7 @@
 #include "generated/slide.frag.h"
 #include "generated/pixelate.frag.h"
 #include "generated/radial.frag.h"
+#include "generated/zoomblur.frag.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -131,6 +132,20 @@ inline namespace v1 {
   RadialSegueEffect::RadialSegueEffect()
   : SegueEffect(default_vert, radial_frag)
   {
+  }
+
+  /*
+   * ZoomBlurSegueEffect
+   */
+
+  ZoomBlurSegueEffect::ZoomBlurSegueEffect()
+  : SegueEffect(default_vert, zoomblur_frag)
+  {
+    setStrength(1.0f);
+  }
+
+  void ZoomBlurSegueEffect::setStrength(float strength) {
+    setUniform("u_strength", strength);
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

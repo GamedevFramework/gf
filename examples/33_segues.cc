@@ -65,6 +65,7 @@ namespace {
     Circle,
     Pixelate,
     Radial,
+    ZoomBlur,
   };
 
   struct World;
@@ -86,6 +87,7 @@ namespace {
     , m_circleCloseSegueAction("CircleClose")
     , m_pixelateSegueAction("Pixelate")
     , m_radialSegueAction("Radial")
+    , m_zoomBlurSegueAction("ZoomBlur")
     , m_entity("assets/fb_menu.png")
     , m_segue(SegueType::None)
     {
@@ -110,6 +112,8 @@ namespace {
       addAction(m_pixelateSegueAction);
       m_radialSegueAction.addKeycodeKeyControl(gf::Keycode::Num9);
       addAction(m_radialSegueAction);
+      m_zoomBlurSegueAction.addKeycodeKeyControl(gf::Keycode::Num0);
+      addAction(m_zoomBlurSegueAction);
 
       addWorldEntity(m_entity);
 
@@ -135,6 +139,7 @@ namespace {
     gf::Action m_circleCloseSegueAction;
     gf::Action m_pixelateSegueAction;
     gf::Action m_radialSegueAction;
+    gf::Action m_zoomBlurSegueAction;
 
     SpriteEntity m_entity;
 
@@ -189,6 +194,7 @@ namespace {
     gf::CircleSegueEffect circle;
     gf::PixelateSegueEffect pixelate;
     gf::RadialSegueEffect radial;
+    gf::ZoomBlurSegueEffect zoom;
 
     World(gf::SceneManager& scenes)
     : scene0(scenes, *this)
@@ -265,6 +271,11 @@ namespace {
       std::cout << "Current segue: Radial\n";
       m_segue = SegueType::Radial;
     }
+
+    if (m_zoomBlurSegueAction.isActive()) {
+      std::cout << "Current segue: ZoomBlur\n";
+      m_segue = SegueType::ZoomBlur;
+    }
   }
 
   void replaceScene(gf::SceneManager& scenes, World& world, gf::Id id, SegueType type, gf::Easing easing) {
@@ -295,6 +306,9 @@ namespace {
       case SegueType::Radial:
         scenes.replaceScene(scene, world.radial, gf::milliseconds(1000), easing);
         break;
+      case SegueType::ZoomBlur:
+        scenes.replaceScene(scene, world.zoom, gf::milliseconds(1000), easing);
+        break;
     }
   }
 
@@ -316,6 +330,7 @@ int main() {
   std::cout << "\t7: Circle Close\n";
   std::cout << "\t8: Pixelate\n";
   std::cout << "\t9: Radial\n";
+  std::cout << "\t0: ZoomBlur\n";
 
   gf::SceneManager scenes("33_segues", InitialSize);
   World world(scenes);

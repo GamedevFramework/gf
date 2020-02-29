@@ -191,6 +191,27 @@ inline namespace v1 {
     RadialSegueEffect();
   };
 
+  /**
+   * @ingroup graphics
+   * @brief A zoom blur segue effect
+   *
+   * By default, the strength is @f$ 1.0 @f$
+   */
+  class GF_API ZoomBlurSegueEffect : public SegueEffect {
+  public:
+    /**
+     * @brief Default constructor
+     */
+    ZoomBlurSegueEffect();
+
+    /**
+     * @brief Set the strength of the zoom
+     *
+     * @param strength The new strength of the zoom
+     */
+    void setStrength(float strength);
+  };
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif
