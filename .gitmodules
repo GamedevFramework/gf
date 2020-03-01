@@ -10,3 +10,6 @@
 [submodule "library/vendor/pugixml"]
 	path = library/vendor/pugixml
 	url = https://github.com/zeux/pugixml.git
+[submodule "library/vendor/gamecontrollerdb2"]
+	path = library/vendor/gamecontrollerdb2
+	url = https://github.com/gabomdq/gamecontrollerdb.git

@@ -6,14 +6,12 @@ add_executable(gfdev_source_file graphics/tools/gfdev_source_file.cc)
 
 set(GCDB_SOURCES
   gamecontrollerdb.txt
-  older_releases/gamecontrollerdb_205.txt
-  older_releases/gamecontrollerdb_204.txt
 )
 
 set(GCDB_HEADERS "")
 
 foreach(GCDB_RELATIVE_SOURCE ${GCDB_SOURCES})
-  set(GCDB_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/vendor/gamecontrollerdb/${GCDB_RELATIVE_SOURCE}")
+  set(GCDB_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/vendor/gamecontrollerdb2/${GCDB_RELATIVE_SOURCE}")
   get_filename_component(GCDB_NAME ${GCDB_RELATIVE_SOURCE} NAME)
   string(REPLACE "." "_" GCDB_VARIABLE ${GCDB_NAME})
   set(GCDB_HEADER "${CMAKE_CURRENT_BINARY_DIR}/generated/${GCDB_NAME}.h")
