@@ -1,6 +1,3 @@
-[submodule "library/vendor/gamecontrollerdb"]
-	path = library/vendor/gamecontrollerdb
-	url = https://github.com/gabomdq/SDL_GameControllerDB.git
 [submodule "library/vendor/stb"]
 	path = library/vendor/stb
 	url = https://github.com/nothings/stb.git
