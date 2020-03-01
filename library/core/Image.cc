@@ -45,7 +45,7 @@ inline namespace v1 {
   namespace {
 
     std::size_t computeImageSize(Vector2i size) {
-      return 4 * size.width * size.height;
+      return 4 * static_cast<std::size_t>(size.width) * static_cast<std::size_t>(size.height);
     }
 
     void lower(std::string& str) {
