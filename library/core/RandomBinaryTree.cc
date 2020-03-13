@@ -23,6 +23,7 @@
 #include <cassert>
 #include <queue>
 #include <stack>
+#include <stdexcept>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
