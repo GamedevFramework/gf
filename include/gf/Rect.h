@@ -136,6 +136,15 @@ inline namespace v1 {
     }
 
     /**
+     * @brief Create an empty rectangle
+     *
+     * @returns An empty rectangle
+     */
+    static constexpr Rect<T> empty() noexcept {
+      return Rect<T>(Box<T,2>());
+    }
+
+    /**
      * @brief Get a position from the rectangle and an anchor
      *
      * @param anchor An anchor
