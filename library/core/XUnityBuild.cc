@@ -62,6 +62,7 @@
 #include "Serialization.cc"
 #include "SerializationOps.cc"
 #include "Sleep.cc"
+#include "Spatial_DynamicTree.cc"
 #include "Spatial_QuadTree.cc"
 #include "Spatial_RStarTree.cc"
 #include "Spatial_SimpleSpatialIndex.cc"
