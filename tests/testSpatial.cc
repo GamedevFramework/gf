@@ -20,7 +20,9 @@
  */
 #include <gf/Spatial.h>
 
-#include <gf/Log.h>
+#include <iostream>
+
+#include <gf/Clock.h>
 #include <gf/Random.h>
 #include <gf/Unused.h>
 
@@ -28,146 +30,319 @@
 
 namespace {
 
-  template<typename T>
   struct NullCallback {
-    void operator()(const T& value) {
-      gf::unused(value);
+    void operator()(const gf::Handle& handle) {
+      gf::unused(handle);
     }
   };
 
-  template<typename T>
   struct Callback {
-    void operator()(const T& value) {
-      set.insert(value);
+    void operator()(const gf::Handle& handle) {
+      set.insert(handle.asId());
     }
 
-    std::set<T> set;
+    std::set<gf::Id> set;
   };
 
+  constexpr gf::RectF Bounds = gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 100.0f, 100.0f });
   constexpr std::size_t SampleSize = 10000;
+  constexpr std::size_t QuerySize = 20;
 
+  gf::RectF getRandomBox(gf::Random& random) {
+    gf::RectF rect;
 
-  template<std::size_t N = 2>
-  std::vector<gf::Box<int, N>> getRandomBoxes(gf::Random& random) {
-    std::vector<gf::Box<int, N>> res;
+    for (std::size_t j = 0; j < 2; ++j) {
+      rect.min[j] = random.computeUniformFloat(0.0f, 90.0f);
+      rect.max[j] = rect.min[j] + random.computeUniformFloat(5.0f, 10.0f);
+    }
+
+    return rect;
+  }
+
+  std::vector<gf::RectF> getRandomBoxes(gf::Random& random) {
+    std::vector<gf::RectF> res;
 
     for (std::size_t i = 0; i < SampleSize; ++i) {
-      gf::Box<int, N> box;
-
-      for (std::size_t j = 0; j < N; ++j) {
-        box.min[j] = random.computeUniformInteger(0, 100);
-        box.max[j] = box.min[j] + random.computeUniformInteger(1, 20);
-      }
-
-      res.push_back(box);
+      res.push_back(getRandomBox(random));
     }
 
     return res;
   }
 
-  template<std::size_t N>
-  gf::Box<int, N> getRandomQueryBox(gf::Random& random) {
-    gf::Box<int, N> box;
+  gf::RectF getRandomQueryBox(gf::Random& random) {
+    gf::RectF rect;
 
-    for (std::size_t j = 0; j < N; ++j) {
-      box.min[j] = random.computeUniformInteger(0, 80);
-      box.max[j] = box.min[j] + random.computeUniformInteger(20, 40);
+    for (std::size_t j = 0; j < 2; ++j) {
+      rect.min[j] = random.computeUniformFloat(0.0f, 60.0f);
+      rect.max[j] = rect.min[j] + random.computeUniformFloat(20.0f, 40.0f);
     }
 
-    return box;
+    return rect;
   }
 
+  template<typename T>
+  void testInsertSimple(T& spatial) {
+    gf::RectF rect = gf::RectF::fromPositionSize({ 10.0f, 10.0f }, { 10.0f, 10.0f });
+    gf::Handle handle(1);
+    auto id = spatial.insert(handle, rect);
+
+    EXPECT_EQ(spatial[id].asId(), handle.asId());
+  }
+
+  template<typename T>
+  void testInsertRandom(T& spatial) {
+    gf::Random random(23);
+
+    auto boxes = getRandomBoxes(random);
+
+    std::map<gf::SpatialId, gf::Handle> handles;
+
+    gf::Clock clock;
+
+    for (std::size_t i = 0; i < SampleSize; ++i) {
+      auto id = spatial.insert(gf::Handle(i), boxes[i]);
+      handles[id] = gf::Handle(i);
+    }
+
+    gf::Time insertionTime = clock.restart();
+    std::cout << "Insertion time: " << insertionTime.asMilliseconds() << "ms\n";
+
+    EXPECT_EQ(handles.size(), SampleSize);
+
+    for (auto& kv : handles) {
+      ASSERT_EQ(spatial[kv.first].asId(), kv.second.asId());
+    }
+  }
+
+  template<typename T>
+  void testQueryRandom(T& spatial) {
+    gf::Random random(42);
+    gf::SimpleSpatialIndex reference;
+
+    auto boxes = getRandomBoxes(random);
+
+    for (std::size_t i = 0; i < SampleSize; ++i) {
+      reference.insert(gf::Handle(i), boxes[i]);
+    }
+
+    for (std::size_t i = 0; i < SampleSize; ++i) {
+      spatial.insert(gf::Handle(i), boxes[i]);
+    }
+
+    gf::Clock clock;
+
+    gf::Time queryIntersectTime = gf::Time::zero();
+
+    for (std::size_t i = 0; i < QuerySize; ++i) {
+      auto queryBox = getRandomQueryBox(random);
+
+      Callback referenceResult;
+      reference.query(queryBox, std::ref(referenceResult), gf::SpatialQuery::Intersect);
+
+      Callback spatialResult;
+      clock.restart();
+      spatial.query(queryBox, std::ref(spatialResult), gf::SpatialQuery::Intersect);
+      queryIntersectTime += clock.restart();
+
+      EXPECT_EQ(referenceResult.set.size(), spatialResult.set.size());
+      EXPECT_EQ(referenceResult.set, spatialResult.set);
+    }
+
+    std::cout << "Query time (Intersect): " << queryIntersectTime.asMicroseconds() / QuerySize << "us\n";
+
+    gf::Time queryContainTime = gf::Time::zero();
+
+    for (std::size_t i = 0; i < QuerySize; ++i) {
+      auto queryBox = getRandomQueryBox(random);
+
+      Callback referenceResult;
+      reference.query(queryBox, std::ref(referenceResult), gf::SpatialQuery::Contain);
+
+      Callback spatialResult;
+      clock.restart();
+      spatial.query(queryBox, std::ref(spatialResult), gf::SpatialQuery::Contain);
+      queryContainTime += clock.restart();
+
+      EXPECT_EQ(referenceResult.set.size(), spatialResult.set.size());
+      EXPECT_EQ(referenceResult.set, spatialResult.set);
+    }
+
+    std::cout << "Query time (Contain): " << queryContainTime.asMicroseconds() / QuerySize << "us\n";
+  }
+
+  template<typename T>
+  void testRemoveRandom(T& spatial) {
+    gf::Random random(69);
+
+    auto boxes = getRandomBoxes(random);
+
+    std::vector<gf::SpatialId> removed;
+
+    for (std::size_t i = 0; i < SampleSize; ++i) {
+      auto id = spatial.insert(gf::Handle(i), boxes[i]);
+
+      if (i % 3 == 1) {
+        removed.push_back(id);
+      }
+    }
+
+    std::size_t remaining = SampleSize - removed.size();
+
+    gf::Clock clock;
+
+    for (auto id : removed) {
+      spatial.remove(id);
+    }
+
+    gf::Time removalTime = clock.restart();
+    std::cout << "Remove time: " << removalTime.asMicroseconds() / removed.size() << "us\n";
+
+    Callback result;
+    spatial.query(Bounds, std::ref(result), gf::SpatialQuery::Contain);
+
+    EXPECT_EQ(result.set.size(), remaining);
+  }
+
+  template<typename T>
+  void testModifyRandom(T& spatial) {
+    gf::Random random(99);
+
+    auto boxes = getRandomBoxes(random);
+
+    std::vector<gf::SpatialId> modified;
+
+    for (std::size_t i = 0; i < SampleSize; ++i) {
+      auto id = spatial.insert(gf::Handle(i), boxes[i]);
+
+      if (i % 3 == 1) {
+        modified.push_back(id);
+      }
+    }
+
+    gf::Clock clock;
+
+    for (auto id : modified) {
+      auto box = getRandomBox(random);
+      spatial.modify(id, box);
+    }
+
+    gf::Time modifyTime = clock.restart();
+    std::cout << "Modify time: " << modifyTime.asMicroseconds() / modified.size() << "us\n";
+
+    Callback result;
+    spatial.query(Bounds, std::ref(result), gf::SpatialQuery::Contain);
+
+    EXPECT_EQ(result.set.size(), SampleSize);
+  }
+}
+
+/*
+ * SimpleSpatialIndex
+ */
+
+TEST(SpatialTest, SimpleSpatialIndexInsertSimple) {
+  gf::SimpleSpatialIndex spatial;
+  testInsertSimple(spatial);
+}
+
+TEST(SpatialTest, SimpleSpatialIndexInsertRandom) {
+  gf::SimpleSpatialIndex spatial;
+  testInsertRandom(spatial);
+}
+
+TEST(SpatialTest, SimpleSpatialIndexRemoveRandom) {
+  gf::SimpleSpatialIndex spatial;
+  testRemoveRandom(spatial);
+}
+
+TEST(SpatialTest, SimpleSpatialIndexModifyRandom) {
+  gf::SimpleSpatialIndex spatial;
+  testModifyRandom(spatial);
 }
 
 /*
  * QuadTree
  */
 
-TEST(SpatialTest, QuadTreeMoveOnlyType) {
-  gf::QuadTree<std::unique_ptr<std::size_t>, int> qtree(gf::Box2i({ 0, 0 }, { 100, 100 }));
-
-  qtree.insert(std::make_unique<std::size_t>(1), gf::Box2i({ 10, 10 }, { 20, 20 }));
-  std::size_t count = qtree.query(gf::Box2i({ 15, 15 }, { 25, 25 }), NullCallback<std::unique_ptr<std::size_t>>());
-
-  EXPECT_EQ(1u, count);
+TEST(SpatialTest, QuadtreeInsertSimple) {
+  gf::Quadtree spatial(Bounds);
+  testInsertSimple(spatial);
 }
 
-TEST(SpatialTest, QuadTreeQuery) {
-  gf::Random random(42);
+TEST(SpatialTest, QuadtreeInsertRandom) {
+  gf::Quadtree spatial(Bounds);
+  testInsertRandom(spatial);
+}
 
-  gf::SimpleSpatialIndex<std::size_t, int> naive;
-  gf::QuadTree<std::size_t, int> qtree(gf::Box2i({ 0, 0 }, { 120, 120 }));
+TEST(SpatialTest, QuadtreeQueryRandom) {
+  gf::Quadtree spatial(Bounds);
+  testQueryRandom(spatial);
+}
 
-  auto boxes = getRandomBoxes<2>(random);
+TEST(SpatialTest, QuadtreeRemoveRandom) {
+  gf::Quadtree spatial(Bounds);
+  testRemoveRandom(spatial);
+}
 
-  for (std::size_t i = 0; i < SampleSize; ++i) {
-    naive.insert(i, boxes[i]);
-    qtree.insert(i, boxes[i]);
-  }
-
-  auto queryBox = getRandomQueryBox<2>(random);
-
-  Callback<std::size_t> naiveResult;
-  Callback<std::size_t> qtreeResult;
-
-  naive.query(queryBox, std::ref(naiveResult), gf::SpatialQuery::Intersect);
-  qtree.query(queryBox, std::ref(qtreeResult), gf::SpatialQuery::Intersect);
-
-  EXPECT_EQ(naiveResult.set, qtreeResult.set);
-
-  naiveResult.set.clear();
-  qtreeResult.set.clear();
-
-  naive.query(queryBox, std::ref(naiveResult), gf::SpatialQuery::Contain);
-  qtree.query(queryBox, std::ref(qtreeResult), gf::SpatialQuery::Contain);
-
-  EXPECT_EQ(naiveResult.set, qtreeResult.set);
+TEST(SpatialTest, QuadtreeModifyRandom) {
+  gf::Quadtree spatial(Bounds);
+  testModifyRandom(spatial);
 }
 
 /*
- * RStarTree
+ * DynamicTree
  */
 
-TEST(SpatialTest, RStarTreeMoveOnlyType) {
-  gf::RStarTree<std::unique_ptr<std::size_t>, int> rstar;
-
-  rstar.insert(std::make_unique<std::size_t>(1), gf::Box2i({ 10, 10 }, { 20, 20 }));
-  std::size_t count = rstar.query(gf::Box2i({ 15, 15 }, { 25, 25 }), NullCallback<std::unique_ptr<std::size_t>>());
-
-  EXPECT_EQ(1u, count);
+TEST(SpatialTest, DynamicTreeInsertSimple) {
+  gf::DynamicTree spatial;
+  testInsertSimple(spatial);
 }
 
-TEST(SpatialTest, RStarTreeQuery) {
-  gf::Random random(42);
-
-  gf::SimpleSpatialIndex<std::size_t, int> naive;
-  gf::RStarTree<std::size_t, int> rstar;
-
-  auto boxes = getRandomBoxes<2>(random);
-
-  for (std::size_t i = 0; i < SampleSize; ++i) {
-    naive.insert(i, boxes[i]);
-    rstar.insert(i, boxes[i]);
-  }
-
-  auto queryBox = getRandomQueryBox<2>(random);
-
-  Callback<std::size_t> naiveResult;
-  Callback<std::size_t> rstarResult;
-
-  std::size_t foundNaiveIntersect = naive.query(queryBox, std::ref(naiveResult), gf::SpatialQuery::Intersect);
-  std::size_t foundRStarIntersect = rstar.query(queryBox, std::ref(rstarResult), gf::SpatialQuery::Intersect);
-
-  EXPECT_EQ(foundNaiveIntersect, foundRStarIntersect);
-  EXPECT_EQ(naiveResult.set, rstarResult.set);
-
-  naiveResult.set.clear();
-  rstarResult.set.clear();
-
-  std::size_t foundNaiveContain = naive.query(queryBox, std::ref(naiveResult), gf::SpatialQuery::Contain);
-  std::size_t foundRStarContain = rstar.query(queryBox, std::ref(rstarResult), gf::SpatialQuery::Contain);
-
-  EXPECT_EQ(foundNaiveContain, foundRStarContain);
-  EXPECT_EQ(naiveResult.set, rstarResult.set);
+TEST(SpatialTest, DynamicTreeInsertRandom) {
+  gf::DynamicTree spatial;
+  testInsertRandom(spatial);
 }
 
+TEST(SpatialTest, DynamicTreeQueryRandom) {
+  gf::DynamicTree spatial;
+  testQueryRandom(spatial);
+}
+
+TEST(SpatialTest, DynamicTreeRemoveRandom) {
+  gf::DynamicTree spatial;
+  testRemoveRandom(spatial);
+}
+
+TEST(SpatialTest, DynamicTreeModifyRandom) {
+  gf::DynamicTree spatial;
+  testModifyRandom(spatial);
+}
+
+/*
+ * RStartTree
+ */
+
+TEST(SpatialTest, RStarTreeInsertSimple) {
+  gf::RStarTree spatial;
+  testInsertSimple(spatial);
+}
+
+TEST(SpatialTest, RStarTreeInsertRandom) {
+  gf::RStarTree spatial;
+  testInsertRandom(spatial);
+}
+
+TEST(SpatialTest, RStarTreeQueryRandom) {
+  gf::RStarTree spatial;
+  testQueryRandom(spatial);
+}
+
+TEST(SpatialTest, RStarTreeRemoveRandom) {
+  gf::RStarTree spatial;
+  testRemoveRandom(spatial);
+}
+
+TEST(SpatialTest, RStarTreeModifyRandom) {
+  gf::RStarTree spatial;
+  testModifyRandom(spatial);
+}

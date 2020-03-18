@@ -26,11 +26,14 @@
 
 #include <cstddef>
 #include <algorithm>
+#include <limits>
+#include <tuple>
 
 #include "Anchor.h"
-#include "Box.h"
 #include "Portability.h"
+#include "Quarter.h"
 #include "Vector.h"
+#include "VectorOps.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -81,24 +84,15 @@ inline namespace v1 {
    * ~~~
    */
   template<typename T>
-  struct Rect : Box<T, 2> {
+  struct Rect {
     /**
      * @brief Default constructor
      *
-     * Creates an empty rectangle.
+     * Creates a rectangle of size zero located at the origin.
      */
     constexpr Rect() noexcept
-    : Box<T, 2>({ T(0), T(0) })
-    {
-    }
-
-    /**
-     * @brief Constructor from a box
-     *
-     * @param box The orignal box
-     */
-    constexpr Rect(const Box<T, 2>& box)
-    : Box<T, 2>(box)
+    : min(gf::Zero)
+    , max(gf::Zero)
     {
     }
 
@@ -141,7 +135,266 @@ inline namespace v1 {
      * @returns An empty rectangle
      */
     static constexpr Rect<T> empty() noexcept {
-      return Rect<T>(Box<T,2>());
+      return Rect<T>(Vector<T, 2>(std::numeric_limits<T>::max()), Vector<T, 2>(std::numeric_limits<T>::lowest()));
+    }
+
+    /**
+     * @brief Get the position of the rectangle
+     *
+     * This is the same as `min`.
+     *
+     * @returns The position of the rectangle
+     */
+    constexpr Vector<T, 2> getPosition() const noexcept {
+      return min;
+    }
+
+    /**
+     * @brief Get the size of the rectangle
+     *
+     * @returns The size of the rectangle
+     */
+    constexpr Vector<T, 2> getSize() const noexcept {
+      return max - min;
+    }
+
+    /**
+     * @brief Check if the rectangle is empty
+     *
+     * @returns True if the rectangle is empty
+     */
+    constexpr bool isEmpty() const noexcept {
+      return min.x >= max.x || min.y >= max.y;
+    }
+
+    /**
+     * @brief Get the center of the rectangle
+     *
+     * @returns The center of the rectangle
+     */
+    constexpr Vector<T, 2> getCenter() const noexcept {
+      return min + (max - min) / 2;
+    }
+
+    /**
+     * @brief Check if a point is inside the rectangle
+     *
+     * @param point The point to test
+     * @returns True if the point is inside the rectangle
+     */
+    constexpr bool contains(Vector<T, 2> point) const noexcept {
+      return min.x <= point.x && point.x < max.x && min.y <= point.y && point.y < max.y;
+    }
+
+    /**
+     * @brief Check if a rectangle is totally inside the rectangle
+     *
+     * @param other Another rectangle to test
+     * @returns True if the tested rectangle is inside the current rectangle
+     */
+    constexpr bool contains(const Rect& other) const noexcept {
+      return min.x <= other.min.x && other.max.x <= max.x && min.y <= other.min.y && other.max.y <= max.y;
+    }
+
+    /**
+     * @brief Check if two rectangles interset
+     *
+     * @param other Another rectangle to test
+     * @returns True if the two rectangles interset
+     */
+    constexpr bool intersects(const Rect& other) const noexcept {
+      return min.x < other.max.x && other.min.x < max.x && min.y < other.max.y && other.min.y < max.y;
+    }
+
+    /**
+     * @brief Check if two rectangles interset and get the intersetion rectangle
+     *
+     * @param other Another rectangle to test
+     * @param result A reference to put the result of the intersection (in case there is any)
+     * @returns True if the two rectangles interset
+     */
+    constexpr bool intersects(const Rect& other, Rect& result) const noexcept {
+      if (!intersects(other)) {
+        return false;
+      }
+
+      result = getIntersection(other);
+      return true;
+    }
+
+    /**
+     * @brief Compute the intersection of two rectangles
+     *
+     * @param other Another rectangle to test
+     * @returns The result of the intersection
+     */
+    constexpr Rect getIntersection(const Rect& other) const noexcept {
+      Rect res;
+
+      res.min.x = std::max(min.x, other.min.x);
+      res.min.y = std::max(min.y, other.min.y);
+      res.max.x = std::min(max.x, other.max.x);
+      res.max.y = std::min(max.y, other.max.y);
+
+      return res;
+    }
+
+    /**
+     * @brief Get the volume of the intersection
+     *
+     * @param other Another rectangle to test
+     * @returns The volume of the intersection or 0 in case there is no intersection
+     */
+    constexpr T getIntersectionVolume(const Rect& other) const noexcept {
+      auto xMin = std::max(min.x, other.min.x);
+      auto xMax = std::min(max.x, other.max.x);
+
+      if (xMin >= xMax) {
+        return T(0);
+      }
+
+      auto yMin = std::max(min.y, other.min.y);
+      auto yMax = std::min(max.y, other.max.y);
+
+      if (yMin >= yMax) {
+        return T(0);
+      }
+
+      return (xMax - xMin) * (yMax - yMin);
+    }
+
+    /**
+     * @brief Get the extent length of the intersection
+     *
+     * @param other Another rectangle to test
+     * @returns The extent length of the intersection or 0 in case there is no intersection
+     */
+    constexpr T getIntersectionExtentLength(const Rect& other) const noexcept {
+      auto xMin = std::max(min.x, other.min.x);
+      auto xMax = std::min(max.x, other.max.x);
+
+      if (xMin >= xMax) {
+        return T(0);
+      }
+
+      auto yMin = std::max(min.y, other.min.y);
+      auto yMax = std::min(max.y, other.max.y);
+
+      if (yMin >= yMax) {
+        return T(0);
+      }
+
+      return (xMax - xMin) + (yMax - yMin);
+    }
+
+    /**
+     * @brief Extend the rectangle with a point (as array)
+     *
+     * @param point The point of extension
+     */
+    constexpr void extend(const T (&point)[2]) noexcept {
+      auto xMin = min.x;
+      auto xMax = max.x;
+      std::tie(min.x, max.x) = std::minmax({ xMin, xMax, point[0] });
+
+      auto yMin = min.y;
+      auto yMax = max.y;
+      std::tie(min.y, max.y) = std::minmax({ yMin, yMax, point[1] });
+    }
+
+    /**
+     * @brief Extend the rectangle with a point
+     *
+     * @param point The point of extension
+     */
+    constexpr void extend(Vector<T, 2> point) noexcept {
+      auto xMin = min.x;
+      auto xMax = max.x;
+      std::tie(min.x, max.x) = std::minmax({ xMin, xMax, point.x });
+
+      auto yMin = min.y;
+      auto yMax = max.y;
+      std::tie(min.y, max.y) = std::minmax({ yMin, yMax, point.y });
+    }
+
+    /**
+     * @brief Extend the rectangle with a rectangle
+     *
+     * @param other The rectangle of extension
+     */
+    constexpr void extend(const Rect& other) noexcept {
+      min.x = std::min(min.x, other.min.x);
+      min.y = std::min(min.y, other.min.y);
+      max.x = std::max(max.x, other.max.x);
+      max.y = std::max(max.y, other.max.y);
+    }
+
+    /**
+     * @brief Get the rectangle extended by another rectangle
+     *
+     * @param other The rectangle of extension
+     */
+    constexpr Rect getExtended(const Rect& other) const noexcept {
+      Rect res(*this);
+      res.extend(other);
+      return res;
+    }
+
+    /**
+     * @brief Get the volume of the rectangle
+     *
+     * @returns The volume of the rectangle
+     */
+    constexpr T getVolume() const noexcept {
+      return (max.x - min.x) * (max.y - min.y);
+    }
+
+    /**
+     * @brief Get the extent length of the rectangle
+     *
+     * @returns The extent length of the rectangle
+     */
+    constexpr T getExtentLength() const noexcept {
+      return (max.x - min.x) + (max.y - min.y);
+    }
+
+    /**
+     * @brief Get the minimum edge of the rectangle
+     *
+     * @returns The length of the minimum edge of the rectangle
+     */
+    constexpr T getMinimumEdge() const noexcept {
+      return std::min(max.x - min.x, max.y - min.y);
+    }
+
+    /**
+     * @brief Grow the rectangle
+     *
+     * @param value The amount to grow
+     * @return A new extended rectangle
+     * @sa shrink()
+     */
+    constexpr Rect grow(T value) const noexcept {
+      return Rect(min - value, max + value);
+    }
+
+    /**
+     * @brief Shrink the rectangle
+     *
+     * @param value The amount to shrink
+     * @return A new shrinked rectangle
+     * @sa grow()
+     */
+    constexpr Rect shrink(T value) const noexcept {
+      return Rect(min + value, max - value);
+    }
+
+    /**
+     * @brief Ensures that min coordinates are less than max coordinates
+     */
+    constexpr void normalize() noexcept {
+      if (min.x > max.x) { std::swap(min.x, max.x); }
+      if (min.y > max.y) { std::swap(min.y, max.y); }
     }
 
     /**
@@ -229,9 +482,13 @@ inline namespace v1 {
       return this->max.y - this->min.y;
     }
 
+    Vector<T, 2> min; ///< The minimum point of the rectangle
+    Vector<T, 2> max; ///< The maximum point of the rectangle
+
   private:
     constexpr Rect(Vector<T, 2> min, Vector<T, 2> max) noexcept
-    : Box<T, 2>(min, max)
+    : min(min)
+    , max(max)
     {
     }
   };
@@ -310,6 +567,32 @@ inline namespace v1 {
   inline
   bool operator!=(const Rect<T>& lhs, const Rect<T>& rhs) {
     return !(lhs == rhs);
+  }
+
+  /**
+   * @ingroup core
+   * @brief Divide a rectangle in quarters
+   *
+   * @param other The rectangle to divide
+   * @param quarter The quarter to compute
+   */
+  template<typename T>
+  constexpr
+  Rect<T> computeBoxQuarter(const Rect<T>& other, Quarter quarter) {
+    Vector<T, 2> size = (other.max - other.min) / 2;
+
+    switch (quarter) {
+      case Quarter::UpperLeft:
+        return Rect<T>::fromMinMax(other.min, other.max - size);
+      case Quarter::UpperRight:
+        return Rect<T>::fromMinMax({ other.min.x + size.width, other.min.y }, { other.max.x, other.max.y - size.height });
+      case Quarter::LowerRight:
+        return Rect<T>::fromMinMax(other.min + size, other.max);
+      case Quarter::LowerLeft:
+        return Rect<T>::fromMinMax({ other.min.x, other.min.y + size.height }, { other.max.x - size.width, other.max.y });
+    }
+
+    return other;
   }
 
   /**

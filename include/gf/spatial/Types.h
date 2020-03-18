@@ -33,6 +33,14 @@ inline namespace v1 {
 
   /**
    * @ingroup core
+   * @brief A spatial id
+   *
+   * A spatial id refers to an object in a spatial index.
+   */
+  enum SpatialId : std::size_t { };
+
+  /**
+   * @ingroup core
    * @brief A type of spatial structure
    *
    * @sa gf::SpatialStructure

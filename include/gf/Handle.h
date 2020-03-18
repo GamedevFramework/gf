@@ -18,14 +18,58 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#ifndef GF_SPATIAL_H
-#define GF_SPATIAL_H
+#ifndef GF_HANDLE_H
+#define GF_HANDLE_H
 
-#include "spatial/Types.h"
+#include "Id.h"
 
-#include "spatial/DynamicTree.h"
-#include "spatial/QuadTree.h"
-#include "spatial/RStarTree.h"
-#include "spatial/SimpleSpatialIndex.h"
+#include "Log.h"
 
-#endif // GF_SPATIAL_H
+namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+inline namespace v1 {
+#endif
+
+  class Handle {
+  public:
+    Handle() = default;
+
+    explicit Handle(Id id)
+    : m_id(id)
+    {
+    }
+
+    template<typename T>
+    explicit Handle(T& object)
+    : m_ptr(&object)
+    {
+    }
+
+    Id asId() const {
+      return m_id;
+    }
+
+    template<typename T>
+    T& as() {
+      return *static_cast<T*>(m_ptr);
+    }
+
+    template<typename T>
+    const T& as() const {
+      return *static_cast<const T*>(m_ptr);
+    }
+
+  private:
+    union {
+      Id m_id;
+      void * m_ptr;
+    };
+  };
+
+
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+}
+#endif
+}
+
+#endif // GF_HANDLE_H

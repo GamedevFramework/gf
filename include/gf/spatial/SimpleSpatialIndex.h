@@ -23,6 +23,10 @@
 
 #include <vector>
 
+#include <gf/Handle.h>
+#include <gf/Portability.h>
+#include <gf/Rect.h>
+
 #include "Types.h"
 
 namespace gf {
@@ -34,48 +38,73 @@ inline namespace v1 {
    * @ingroup core
    * @brief An very simple spatial index
    *
-   * @sa gf::QuadTree, gf::RStarTree
-   * @sa [Quadtree - Wikipedia](https://en.wikipedia.org/wiki/Quadtree)
+   * @sa gf::Quadtree, gf::RStarTree
    */
-  template<typename T, typename U = float, std::size_t N = 2>
-  class SimpleSpatialIndex {
+  class GF_API SimpleSpatialIndex {
   public:
-    bool insert(T value, const gf::Box<U, N>& bounds) {
-      m_entries.push_back({ std::move(value), bounds });
-      return true;
-    }
+    /**
+     * @brief Constructor
+     */
+    SimpleSpatialIndex();
 
-    std::size_t query(const gf::Box<U, N>& bounds, gf::SpatialQueryCallback<T> callback, gf::SpatialQuery kind) {
-      std::size_t found = 0;
+     /**
+     * @brief Insert an object in the tree
+     *
+     * @param handle A handle that represents the object to insert
+     * @param bounds The bounds of the object
+     * @returns A spatial id
+     */
+    SpatialId insert(Handle handle, const RectF& bounds);
 
-      for (auto& entry : m_entries) {
-        switch (kind) {
-          case gf::SpatialQuery::Contain:
-            if (bounds.contains(entry.bounds)) {
-              callback(entry.value);
-              ++found;
-            }
-            break;
+    /**
+     * @brief Modify the bounds of an object
+     *
+     * @param id The spatial id of the object
+     * @param bounds The new bounds of the object
+     */
+    void modify(SpatialId id, RectF bounds);
 
-          case gf::SpatialQuery::Intersect:
-            if (bounds.intersects(entry.bounds)) {
-              callback(entry.value);
-              ++found;
-            }
-            break;
-        }
-      }
+    /**
+     * @brief Query objects in the tree
+     *
+     * @param bounds The bounds of the query
+     * @param callback The callback to apply to found objects
+     * @param kind The kind of spatial query
+     * @returns The number of objects found
+     */
+    std::size_t query(const RectF& bounds, SpatialQueryCallback<Handle> callback, SpatialQuery kind = SpatialQuery::Intersect);
 
-      return found;
-    }
+    /**
+     * @brief Remove an object from the tree
+     *
+     * @param id The spatial id of the object
+     */
+    void remove(SpatialId id);
+
+    /**
+     * @brief Remove all the objects from the tree
+     */
+    void clear();
+
+    /**
+     * @brief Get the handle associated to a spatial id
+     *
+     * @param id The spatial id of the object
+     */
+    Handle operator[](SpatialId id);
 
   private:
+    static constexpr std::size_t Null = -1;
+    static constexpr std::size_t Occupied = -2;
+
     struct Entry {
-      T value;
-      gf::Box<U, N> bounds;
+      Handle handle;
+      RectF bounds;
+      std::size_t next;
     };
 
     std::vector<Entry> m_entries;
+    std::size_t m_firstFreeEntry;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

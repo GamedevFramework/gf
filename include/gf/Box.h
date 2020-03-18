@@ -30,7 +30,6 @@
 #include <tuple>
 
 #include "Portability.h"
-#include "Quarter.h"
 #include "Vector.h"
 #include "VectorOps.h"
 
@@ -453,32 +452,6 @@ inline namespace v1 {
    */
   using Box3u = Box<unsigned, 3>;
 
-
-  /**
-   * @ingroup core
-   * @brief Divide a box in quarters
-   *
-   * @param box The box to divide
-   * @param quarter The quarter to compute
-   */
-  template<typename T>
-  constexpr
-  Box<T, 2> computeBoxQuarter(const Box<T, 2>& box, Quarter quarter) {
-    Vector<T, 2> size = (box.max - box.min) / 2;
-
-    switch (quarter) {
-      case Quarter::UpperLeft:
-        return Box<T,2>(box.min, box.max - size);
-      case Quarter::UpperRight:
-        return Box<T,2>({ box.min.x + size.width, box.min.y }, { box.max.x, box.max.y - size.height });
-      case Quarter::LowerRight:
-        return Box<T,2>(box.min + size, box.max);
-      case Quarter::LowerLeft:
-        return Box<T,2>({ box.min.x, box.min.y + size.height }, { box.max.x - size.width, box.max.y });
-    }
-
-    return box;
-  }
 
   /**
    * @relates Box

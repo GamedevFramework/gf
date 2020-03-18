@@ -130,6 +130,7 @@ else()
     core/Serialization.cc
     core/SerializationOps.cc
     core/Sleep.cc
+    core/Spatial_DynamicTree.cc
     core/Spatial_QuadTree.cc
     core/Spatial_RStarTree.cc
     core/Spatial_SimpleSpatialIndex.cc

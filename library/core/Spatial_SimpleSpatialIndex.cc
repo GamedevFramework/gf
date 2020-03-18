@@ -20,4 +20,93 @@
  */
 #include <gf/spatial/SimpleSpatialIndex.h>
 
-// just to check everything is included properly
+#include <cassert>
+
+namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+inline namespace v1 {
+#endif
+
+  SimpleSpatialIndex::SimpleSpatialIndex()
+  : m_firstFreeEntry(Null)
+  {
+  }
+
+  SpatialId SimpleSpatialIndex::insert(Handle handle, const RectF& bounds) {
+    std::size_t index = Null;
+
+    if (m_firstFreeEntry != Null) {
+      index = m_firstFreeEntry;
+      m_firstFreeEntry = m_entries[m_firstFreeEntry].next;
+    } else {
+      index = m_entries.size();
+      m_entries.push_back(Entry{});
+    }
+
+    assert(index < m_entries.size());
+    Entry& entry = m_entries[index];
+    entry.handle = handle;
+    entry.bounds = bounds;
+    entry.next = Occupied;
+
+    return static_cast<SpatialId>(index);
+  }
+
+  void SimpleSpatialIndex::modify(SpatialId id, RectF bounds) {
+    std::size_t index = static_cast<std::size_t>(id);
+    assert(index < m_entries.size());
+    m_entries[index].bounds = bounds;
+  }
+
+  std::size_t SimpleSpatialIndex::query(const RectF& bounds, SpatialQueryCallback<Handle> callback, SpatialQuery kind) {
+    std::size_t found = 0;
+
+    for (auto& entry : m_entries) {
+      if (entry.next != Occupied) {
+        continue;
+      }
+
+      switch (kind) {
+        case SpatialQuery::Contain:
+          if (bounds.contains(entry.bounds)) {
+            callback(entry.handle);
+            ++found;
+          }
+          break;
+
+        case SpatialQuery::Intersect:
+          if (bounds.intersects(entry.bounds)) {
+            callback(entry.handle);
+            ++found;
+          }
+          break;
+      }
+    }
+
+    return found;
+  }
+
+  void SimpleSpatialIndex::remove(SpatialId id) {
+    std::size_t index = static_cast<std::size_t>(id);
+    assert(index < m_entries.size());
+    Entry& entry = m_entries[index];
+    assert(entry.next == Occupied);
+    entry.next = m_firstFreeEntry;
+    m_firstFreeEntry = index;
+  }
+
+  void SimpleSpatialIndex::clear() {
+    m_entries.clear();
+    m_firstFreeEntry = Null;
+  }
+
+  Handle SimpleSpatialIndex::operator[](SpatialId id) {
+    std::size_t index = static_cast<std::size_t>(id);
+    assert(index < m_entries.size());
+    return m_entries[index].handle;
+  }
+
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+}
+#endif
+}
