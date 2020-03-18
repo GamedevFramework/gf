@@ -475,7 +475,7 @@ inline namespace v1 {
     m_entries[entryIndex].bounds = bounds;
 
     doInsert(entryIndex, bounds);
-    validate();
+//     validate();
 
     return static_cast<SpatialId>(entryIndex);
   }
@@ -486,10 +486,10 @@ inline namespace v1 {
     m_entries[entryIndex].bounds = bounds;
     doInsert(entryIndex, bounds);
 
-    validate();
+//     validate();
   }
 
-  std::size_t RStarTree::query(const RectF& bounds, SpatialQueryCallback<Handle> callback, SpatialQuery kind) {
+  std::size_t RStarTree::query(const RectF& bounds, SpatialQueryCallback callback, SpatialQuery kind) {
     return doQuery(m_root, bounds, callback, kind);
   }
 
@@ -498,7 +498,7 @@ inline namespace v1 {
     doRemove(entryIndex);
     m_entries.dispose(entryIndex);
 
-    validate();
+//     validate();
   }
 
   void RStarTree::clear() {
@@ -852,7 +852,7 @@ inline namespace v1 {
   }
 
 
-  std::size_t RStarTree::doQuery(std::size_t nodeIndex, const RectF& bounds, SpatialQueryCallback<Handle> callback, SpatialQuery kind) {
+  std::size_t RStarTree::doQuery(std::size_t nodeIndex, const RectF& bounds, SpatialQueryCallback callback, SpatialQuery kind) {
     std::size_t found = 0;
     Node& node = m_nodes[nodeIndex];
 

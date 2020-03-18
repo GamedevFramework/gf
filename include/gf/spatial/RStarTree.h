@@ -82,7 +82,7 @@ inline namespace v1 {
      * @param kind The kind of spatial query
      * @returns The number of objects found
      */
-    std::size_t query(const RectF& bounds, SpatialQueryCallback<Handle> callback, SpatialQuery kind = SpatialQuery::Intersect);
+    std::size_t query(const RectF& bounds, SpatialQueryCallback callback, SpatialQuery kind = SpatialQuery::Intersect);
 
     /**
      * @brief Remove an object from the tree
@@ -132,7 +132,7 @@ inline namespace v1 {
     std::size_t doInsertInLeaf(std::size_t nodeIndex, std::size_t entryIndex, const RectF& entryBounds);
     std::size_t doInsertInBranch(std::size_t nodeIndex, std::size_t childIndex, const RectF& childBounds);
 
-    std::size_t doQuery(std::size_t nodeIndex, const RectF& bounds, SpatialQueryCallback<Handle> callback, SpatialQuery kind);
+    std::size_t doQuery(std::size_t nodeIndex, const RectF& bounds, SpatialQueryCallback callback, SpatialQuery kind);
 
     void getEntriesAndDispose(std::size_t nodeIndex, std::vector<std::size_t>& eliminated);
     void doRemove(std::size_t entryIndex);

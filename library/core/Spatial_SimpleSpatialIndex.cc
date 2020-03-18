@@ -58,7 +58,7 @@ inline namespace v1 {
     m_entries[index].bounds = bounds;
   }
 
-  std::size_t SimpleSpatialIndex::query(const RectF& bounds, SpatialQueryCallback<Handle> callback, SpatialQuery kind) {
+  std::size_t SimpleSpatialIndex::query(const RectF& bounds, SpatialQueryCallback callback, SpatialQuery kind) {
     std::size_t found = 0;
 
     for (auto& entry : m_entries) {

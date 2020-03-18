@@ -55,7 +55,7 @@ inline namespace v1 {
     doInsert(entryIndex, m_root);
   }
 
-  std::size_t Quadtree::query(const RectF& bounds, SpatialQueryCallback<Handle> callback, SpatialQuery kind) {
+  std::size_t Quadtree::query(const RectF& bounds, SpatialQueryCallback callback, SpatialQuery kind) {
     return doQuery(m_root, bounds, callback, kind);
   }
 
@@ -141,7 +141,7 @@ inline namespace v1 {
     return true;
   }
 
-  std::size_t Quadtree::doQuery(std::size_t nodeIndex, const RectF& bounds, SpatialQueryCallback<Handle> callback, SpatialQuery kind) {
+  std::size_t Quadtree::doQuery(std::size_t nodeIndex, const RectF& bounds, SpatialQueryCallback callback, SpatialQuery kind) {
     if (nodeIndex == Null) {
       return 0;
     }

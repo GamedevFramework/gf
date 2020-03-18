@@ -49,7 +49,7 @@ inline namespace v1 {
     doInsert(index);
   }
 
-  std::size_t DynamicTree::query(const RectF& bounds, SpatialQueryCallback<Handle> callback, SpatialQuery kind) {
+  std::size_t DynamicTree::query(const RectF& bounds, SpatialQueryCallback callback, SpatialQuery kind) {
     std::size_t found = 0;
 
     std::stack<std::size_t> stack;

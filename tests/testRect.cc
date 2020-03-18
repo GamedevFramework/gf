@@ -49,6 +49,12 @@ TEST(RectTest, PositionSizeCtor) {
   EXPECT_EQ(30, ri.max.y);
 }
 
+TEST(RectTest, EmptyCtor) {
+  gf::RectI ri = gf::RectI::empty();
+
+  EXPECT_TRUE(ri.isEmpty());
+}
+
 TEST(RectTest, IsEmpty) {
   gf::RectI ri1 = gf::RectI::fromPositionSize({ 0, 5 }, { 10, 15 });
   EXPECT_FALSE(ri1.isEmpty());
@@ -137,4 +143,14 @@ TEST(RectTest, Intersects) {
   gf::RectI ri4 = gf::RectI::fromPositionSize({ 10, 20 }, { 10, 15 });
   EXPECT_FALSE(ri0.intersects(ri4));
   EXPECT_FALSE(ri4.intersects(ri0));
+}
+
+TEST(RectTest, Volume) {
+  gf::RectI ri = gf::RectI::fromMinMax({ 0, 5 }, { 10, 20 });
+  EXPECT_EQ(150, ri.getVolume());
+}
+
+TEST(RectTest, ExtentLength) {
+  gf::RectI ri = gf::RectI::fromMinMax({ 0, 5 }, { 10, 20 });
+  EXPECT_EQ(25, ri.getExtentLength());
 }

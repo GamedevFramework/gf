@@ -72,7 +72,7 @@ inline namespace v1 {
      * @param kind The kind of spatial query
      * @returns The number of objects found
      */
-    std::size_t query(const RectF& bounds, SpatialQueryCallback<Handle> callback, SpatialQuery kind = SpatialQuery::Intersect);
+    std::size_t query(const RectF& bounds, SpatialQueryCallback callback, SpatialQuery kind = SpatialQuery::Intersect);
 
     /**
      * @brief Remove an object from the tree

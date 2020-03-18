@@ -24,7 +24,6 @@
 #ifndef GF_CIRC_H
 #define GF_CIRC_H
 
-#include "Ball.h"
 #include "Portability.h"
 #include "Vector.h"
 #include "VectorOps.h"
@@ -59,7 +58,10 @@ inline namespace v1 {
    * @snippet snippets/doc_struct_circ.cc circ
    */
   template<typename T>
-  struct Circ : Ball<T, 2> {
+  struct Circ {
+    Vector<T, 2> center; ///< Center of the circle
+    T radius; ///< Radius of the circle
+
     /**
      * @brief Default constructor
      *
@@ -67,7 +69,8 @@ inline namespace v1 {
      * `Circ({ 0, 0 }, 0`).
      */
     constexpr Circ() noexcept
-    : Ball<T, 2>()
+    : center(gf::Zero)
+    , radius(T(0))
     {
     }
 
@@ -78,8 +81,66 @@ inline namespace v1 {
      * @param circRadius Radius of the circle
      */
     constexpr Circ(const Vector<T, 2>& circCenter, T circRadius) noexcept
-    : Ball<T, 2>(circCenter, circRadius)
+    : center(circCenter)
+    , radius(circRadius)
     {
+    }
+
+    /**
+     * @brief Get the center of the circle
+     *
+     * It is a synonym for the `center` member
+     *
+     * @return The center of the circle
+     * @sa getRadius()
+     */
+    constexpr Vector<T, 2> getCenter() const noexcept {
+      return center;
+    }
+
+    /**
+     * @brief Get the radius of the circle
+     *
+     * It is a synonym for the `radius` member
+     *
+     * @return The radius of the circle
+     * @sa getCenter()
+     */
+    constexpr T getRadius() const noexcept {
+      return radius;
+    }
+
+    /**
+     * @brief Check if the circle is empty
+     *
+     * An empty circle is a circle with a zero radius.
+     *
+     * @return True if the circle is empty
+     */
+    constexpr bool isEmpty() const noexcept {
+      return radius == T(0);
+    }
+
+    /**
+     * @brief Check if a point is insied a circle's area
+     *
+     * @param point The point to test
+     * @return True if the point is inside, false otherwise
+     * @sa intersects()
+     */
+    inline bool contains(const Vector<T, 2>& point) const noexcept {
+      return gf::squareDistance(center, point) <= gf::square(radius);
+    }
+
+    /**
+     * @brief Check the intersection between two circles
+     *
+     * @param other The circle to test
+     * @return True if circles overlap, false otherwise
+     * @sa contains()
+     */
+    inline bool intersects(const Circ& other) const noexcept {
+      return gf::squareDistance(center, other.center) <= gf::square(radius + other.radius);
     }
 
     /**
@@ -117,6 +178,7 @@ inline namespace v1 {
     constexpr Vector<T, 2> getRight() const noexcept {
       return this->center + gf::dirx(this->radius);
     }
+
 
   };
 

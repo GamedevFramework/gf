@@ -24,7 +24,8 @@
 #include <cstddef>
 #include <functional>
 
-#include <gf/Box.h>
+#include <gf/Handle.h>
+#include <gf/Rect.h>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -58,9 +59,8 @@ inline namespace v1 {
    *
    * @sa gf::QuadTree, gf::RStarTree
    */
-  template<typename U, std::size_t N>
   struct SpatialStructure {
-    Box<U, N> bounds;           ///< The bounds of the structure
+    RectF bounds;               ///< The bounds of the structure
     SpatialStructureType type;  ///< The type of the structure
     int level;                  ///< The level of the structure
   };
@@ -78,8 +78,7 @@ inline namespace v1 {
    * @ingroup core
    * @brief A callback for spatial query
    */
-  template<typename T>
-  using SpatialQueryCallback = std::function<void(const T&)>;
+  using SpatialQueryCallback = std::function<void(Handle)>;
 
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
