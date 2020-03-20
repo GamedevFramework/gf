@@ -24,8 +24,10 @@
 #include <vector>
 
 #include "ArrayRef.h"
+#include "GeometryTypes.h"
 #include "Heightmap.h"
 #include "Polygon.h"
+#include "Polyline.h"
 #include "Portability.h"
 #include "Random.h"
 #include "Vector.h"
@@ -183,6 +185,17 @@ inline namespace v1 {
    * @returns A new simplified sequence of points
    */
   GF_API std::vector<Vector2f> simplifyPoints(ArrayRef<Vector2f> points, float distance = Epsilon);
+
+
+  /**
+   * @ingroup core
+   * @brief Build a set of lines from a set of segments
+   *
+   * @param segments A set of segments
+   * @returns An array of polylines representing the lines
+   */
+  GF_API std::vector<Polyline> buildLines(ArrayRef<SegmentI> segments);
+
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
