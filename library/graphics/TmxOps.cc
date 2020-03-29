@@ -28,7 +28,9 @@ inline namespace v1 {
 #endif
 
   TileLayer makeTileLayer(const TmxLayers& map, const TmxTileLayer& layer, ResourceManager& resources) {
-    TileLayer tiles(map.mapSize);
+    TileLayer tiles(map.mapSize, map.orientation);
+    tiles.setTileSize(map.tileSize);
+
     const TmxTileset *uniqueTileset = nullptr;
     int k = 0;
 
@@ -51,7 +53,6 @@ inline namespace v1 {
           const gf::Texture& texture = resources.getTexture(tileset->image->source);
           tiles.setTexture(texture);
 
-          tiles.setTileSize(tileset->tileSize);
           tiles.setTilesetTileSize(tileset->tileSize);
           tiles.setOffset(tileset->offset);
           tiles.setMargin(tileset->margin);

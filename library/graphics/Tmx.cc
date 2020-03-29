@@ -1017,17 +1017,17 @@ inline namespace v1 {
       tmx.version =  node.attribute("version").as_string("1.0");
       tmx.tiledVersion = node.attribute("tiledversion").as_string("1.0");
 
-      tmx.orientation = TmxOrientation::Unknown;
+      tmx.orientation = TileOrientation::Unknown;
       std::string orientation = required_attribute(node, "orientation").as_string();
 
       if (orientation == "orthogonal") {
-        tmx.orientation = TmxOrientation::Orthogonal;
+        tmx.orientation = TileOrientation::Orthogonal;
       } else if (orientation == "isometric") {
-        tmx.orientation = TmxOrientation::Isometric;
+        tmx.orientation = TileOrientation::Isometric;
       } else if (orientation == "staggered") {
-        tmx.orientation = TmxOrientation::Staggered;
+        tmx.orientation = TileOrientation::Staggered;
       } else if (orientation == "hexagonal") {
-        tmx.orientation = TmxOrientation::Hexagonal;
+        tmx.orientation = TileOrientation::Hexagonal;
       } else {
         Log::error("Wrong orientation string: '%s'\n", orientation.c_str());
       }

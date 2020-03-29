@@ -143,7 +143,7 @@ namespace home {
           return;
         }
 
-        assert(map.orientation == gf::TmxOrientation::Staggered);
+        assert(map.orientation == gf::TileOrientation::Staggered);
         gf::Log::info("Parsing layer '%s'\n", layer.name.c_str());
 
         gf::Vector2i tileSize = map.tileSize;

@@ -37,8 +37,8 @@ inline namespace v1 {
 
   constexpr int TileLayer::NoTile;
 
-  TileLayer::TileLayer(Vector2i layerSize, Type type)
-  : m_type(type)
+  TileLayer::TileLayer(Vector2i layerSize, TileOrientation orientation)
+  : m_orientation(orientation)
   , m_mapCellIndex(MapCellIndex::Odd)
   , m_mapCellAxis(MapCellAxis::Y)
   , m_layerSize(layerSize)
@@ -129,7 +129,7 @@ inline namespace v1 {
 
     gf::Vector2i tileSize = m_tileSize;
 
-    if (m_type == Staggered) {
+    if (m_orientation == TileOrientation::Staggered) {
       tileSize.y /= 2;
     }
 
@@ -201,11 +201,11 @@ inline namespace v1 {
 
         Vector2f position, size;
 
-        if (m_type == Orthogonal) {
+        if (m_orientation == TileOrientation::Orthogonal) {
           size = m_tileSize;
           position = cell * m_tileSize + m_offset;
         } else {
-          assert(m_type == Staggered);
+          assert(m_orientation == TileOrientation::Staggered);
           size = tilesetTileSize;
 
           if (cell.y % 2 == 0) {

@@ -30,6 +30,20 @@ inline namespace v1 {
 
   /**
    * @ingroup graphics
+   * @brief The orientation of the tile
+   *
+   * @sa gf::TileLayer
+   */
+  enum class TileOrientation : uint8_t {
+    Unknown     = 0x00, ///< An unknown orientation
+    Orthogonal  = 0x01, ///< An orthogonal orientation
+    Isometric   = 0x02, ///< An isometric orientation
+    Staggered   = 0x03, ///< A staggered orientation
+    Hexagonal   = 0x04, ///< A hexagonal orientation
+  };
+
+  /**
+   * @ingroup graphics
    * @brief A flag to indicate how to flip a tile
    *
    * @sa gf::TileLayer

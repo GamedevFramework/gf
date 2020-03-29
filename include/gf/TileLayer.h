@@ -23,9 +23,9 @@
 
 #include "Array2D.h"
 #include "Flags.h"
-#include "Flip.h"
 #include "Portability.h"
 #include "Stagger.h"
+#include "TileTypes.h"
 #include "Transformable.h"
 #include "VertexArray.h"
 #include "VertexBuffer.h"
@@ -69,20 +69,12 @@ inline namespace v1 {
     static constexpr int NoTile = -1;
 
     /**
-     * @brief The type of tile layer
-     */
-    enum Type {
-      Orthogonal, ///< An orthogonal tile layer
-      Staggered,  ///< A staggered tile layer
-    };
-
-    /**
      * @brief Constructor
      *
      * @param layerSize The size of the layer, in number of tiles
-     * @param type The type of the layer
+     * @param orientation The orientation of the layer
      */
-    TileLayer(Vector2i layerSize, Type type = Orthogonal);
+    TileLayer(Vector2i layerSize, TileOrientation orientation = TileOrientation::Orthogonal);
 
     /**
      * @brief Get the size of the layer
@@ -346,7 +338,7 @@ inline namespace v1 {
     void updateGeometry();
 
   private:
-    Type m_type;
+    TileOrientation m_orientation;
     MapCellIndex m_mapCellIndex;
     MapCellAxis m_mapCellAxis;
 
