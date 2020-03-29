@@ -21,6 +21,7 @@
 #include <gf/TileLayer.h>
 
 #include <cassert>
+#include <cstdio>
 #include <algorithm>
 
 #include <gf/Log.h>
@@ -48,6 +49,7 @@ inline namespace v1 {
   , m_spacing(0, 0)
   , m_offset(0, 0)
   , m_tiles(layerSize)
+  , m_rect(RectI::empty())
   , m_vertices(PrimitiveType::Triangles)
   {
     clear();
@@ -155,7 +157,7 @@ inline namespace v1 {
     // build vertex array (if necessary)
 
     if (rect != m_rect) {
-      // std::printf("rect | position: %u,%u | size: %u,%u\n", rect.left, rect.top, rect.width, rect.height);
+//       std::printf("rect | min: %i,%i | max: %i,%i\n", rect.min.x, rect.min.y, rect.max.x, rect.max.y);
       m_rect = rect;
       updateGeometry();
     }
@@ -184,8 +186,8 @@ inline namespace v1 {
 
     Vector2i cell;
 
-    for (cell.y = rect.min.y; cell.y < rect.max.y; ++cell.y) {
-      for (cell.x = rect.min.x; cell.x < rect.max.x; ++cell.x) {
+    for (cell.y = rect.min.y; cell.y <= rect.max.y; ++cell.y) {
+      for (cell.x = rect.min.x; cell.x <= rect.max.x; ++cell.x) {
         assert(m_tiles.isValid(cell));
         int tile = m_tiles(cell).tile;
 
