@@ -85,6 +85,7 @@
 #include "Texture.cc"
 #include "TileLayer.cc"
 #include "Tmx.cc"
+#include "TmxOps.cc"
 #include "Transformable.cc"
 #include "UI.cc"
 #include "VertexArray.cc"

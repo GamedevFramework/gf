@@ -203,6 +203,7 @@ else()
     graphics/Texture.cc
     graphics/TileLayer.cc
     graphics/Tmx.cc
+    graphics/TmxOps.cc
     graphics/Transformable.cc
     graphics/UI.cc
     graphics/VertexArray.cc

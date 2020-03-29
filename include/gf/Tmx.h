@@ -328,7 +328,7 @@ inline namespace v1 {
    * @ingroup game
    * @brief A geometrical object
    *
-   * There are six kinds of objects:
+   * There are seven kinds of objects:
    *
    * - rectangles (see gf::TmxRectangle)
    * - ellipses (see gf::TmxEllipse)
@@ -336,6 +336,7 @@ inline namespace v1 {
    * - polygons (see gf::TmxPolygon)
    * - tiles (see gf::TmxTileObject)
    * - texts (see gf::TmxText)
+   * - points (see gf::TmxPoint)
    *
    * @sa gf::TmxObjectLayer
    */
