@@ -37,6 +37,22 @@ inline namespace v1 {
 
   constexpr int TileLayer::NoTile;
 
+  TileLayer::TileLayer()
+  : m_orientation(TileOrientation::Unknown)
+  , m_mapCellIndex(MapCellIndex::Odd)
+  , m_mapCellAxis(MapCellAxis::Y)
+  , m_layerSize(0, 0)
+  , m_tileSize(0, 0)
+  , m_texture(nullptr)
+  , m_tilesetTileSize(0, 0)
+  , m_margin(0, 0)
+  , m_spacing(0, 0)
+  , m_offset(0, 0)
+  , m_rect(RectI::empty())
+  , m_vertices(PrimitiveType::Triangles)
+  {
+  }
+
   TileLayer::TileLayer(Vector2i layerSize, TileOrientation orientation)
   : m_orientation(orientation)
   , m_mapCellIndex(MapCellIndex::Odd)
@@ -123,7 +139,7 @@ inline namespace v1 {
   }
 
   void TileLayer::draw(RenderTarget& target, const RenderStates& states) {
-    if (m_texture == nullptr) {
+    if (m_texture == nullptr || m_orientation == TileOrientation::Unknown) {
       return;
     }
 

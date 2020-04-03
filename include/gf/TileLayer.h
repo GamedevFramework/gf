@@ -70,6 +70,11 @@ inline namespace v1 {
 
     /**
      * @brief Constructor
+     */
+    TileLayer();
+
+    /**
+     * @brief Constructor
      *
      * @param layerSize The size of the layer, in number of tiles
      * @param orientation The orientation of the layer
