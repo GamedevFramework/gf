@@ -124,6 +124,20 @@ inline namespace v1 {
       return m_renderer;
     }
 
+    /**
+     * @brief Get the game coordinates from the window coordinates
+     *
+     * @sa RenderTarget::mapPixelToCoords()
+     */
+    Vector2f computeWindowToGameCoordinates(Vector2i coords, const View& view) const;
+
+    /**
+     * @brief Get the window coordinates from the game coordinates
+     *
+     * @sa RenderTarget::mapCoordsToPixel()
+     */
+    Vector2i computeGameToWindowCoordinates(Vector2f coords, const View& view) const;
+
   private:
     void setupSegue(SegueEffect& effect, Time duration, Easing easing);
 

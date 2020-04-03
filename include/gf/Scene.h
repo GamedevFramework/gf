@@ -368,6 +368,13 @@ inline namespace v1 {
     }
 
     /**
+     * @brief Get the HUD view
+     */
+    View& getHudView() {
+      return m_hudView;
+    }
+
+    /**
      * @brief Customization point for processEvent()
      *
      * @returns True if the event should not be passed to the other actions

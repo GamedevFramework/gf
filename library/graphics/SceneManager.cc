@@ -187,6 +187,14 @@ inline namespace v1 {
     m_status = Status::Segue;
   }
 
+  Vector2f SceneManager::computeWindowToGameCoordinates(Vector2i coords, const View& view) const {
+    return m_renderer.mapPixelToCoords(coords, view);
+  }
+
+  Vector2i SceneManager::computeGameToWindowCoordinates(Vector2f coords, const View& view) const {
+    return m_renderer.mapCoordsToPixel(coords, view);
+  }
+
   void SceneManager::setupSegue(SegueEffect& effect, Time duration, Easing easing) {
     m_segue.setTextures(m_targetPrevScenes.getTexture(), m_targetCurrScenes.getTexture());
     m_segue.setEffect(effect);
