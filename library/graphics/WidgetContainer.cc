@@ -87,6 +87,8 @@ inline namespace v1 {
 
     if (m_widgetIsSelected) {
       getCurrent().triggerCallback();
+      unselectCurrentlySelected();
+      m_widgetIsSelected = false;
     }
   }
 
