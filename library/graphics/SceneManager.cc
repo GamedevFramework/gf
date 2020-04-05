@@ -50,9 +50,14 @@ inline namespace v1 {
       m_scenesChanged = false;
 
       Scene& currentScene = scenes.back();
-      currentScene.setFramebufferSize(m_renderer.getSize());
       currentScene.show();
       currentScene.resume();
+
+      auto size = m_renderer.getSize();
+
+      for (Scene& scene : scenes) {
+        scene.setFramebufferSize(size);
+      }
 
       auto clearColor = currentScene.getClearColor();
 
