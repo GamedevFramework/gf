@@ -23,6 +23,7 @@
 
 #include <vector>
 
+#include "ArrayRef.h"
 #include "Color.h"
 #include "Easings.h"
 #include "Portability.h"
@@ -80,6 +81,13 @@ inline namespace v1 {
     void pushScene(Scene& scene);
 
     /**
+     * @brief Add multiple scenes on top of the stack
+     *
+     * @param scenes The scenes to add
+     */
+    void pushScenes(ArrayRef<Ref<Scene>> scenes);
+
+    /**
      * @brief Remove the top scene from the non-empty stack
      */
     void popScene();
@@ -101,14 +109,69 @@ inline namespace v1 {
       pushScene(scene);
     }
 
+    /**
+     * @brief Replace the top scene with many scenes
+     *
+     * It is equivalent to popping the current top scene and pushing the new scenes.
+     *
+     * @param scenes The scenes to add
+     */
+    void replaceScene(ArrayRef<Ref<Scene>> scenes) {
+      popScene();
+      pushScenes(scenes);
+    }
+
+    /**
+     * @brief Replace all the scenes with a new scene
+     *
+     * It is equivalent to popping all the scenes and pushing the new scene.
+     *
+     * @param scene The scene to add
+     */
     void replaceAllScenes(Scene& scene) {
       popAllScenes();
       pushScene(scene);
     }
 
+    /**
+     * @brief Replace all the scenes with many scenes
+     *
+     * It is equivalent to popping all the scenes and pushing the new scenes.
+     *
+     * @param scenes The scenes to add
+     */
+    void replaceAllScenes(ArrayRef<Ref<Scene>> scenes) {
+      popAllScenes();
+      pushScenes(scenes);
+    }
+
+    /**
+     * @brief Replace the top scene with a new scene and a transition
+     *
+     * @param scene The scene to add
+     */
     void replaceScene(Scene& scene, SegueEffect& effect, Time duration, Easing easing = Ease::linear);
 
+    /**
+     * @brief Replace the top scene with many scenes and a transition
+     *
+     * @param scenes The scenes to add
+     */
+    void replaceScene(ArrayRef<Ref<Scene>> scenes, SegueEffect& effect, Time duration, Easing easing = Ease::linear);
+
+    /**
+     * @brief Replace all the scenes with a new scene and a transition
+     *
+     * @param scene The scene to add
+     */
     void replaceAllScenes(Scene& scene, SegueEffect& effect, Time duration, Easing easing = Ease::linear);
+
+    /**
+     * @brief Replace all the scenes with many scenes and a transition
+     *
+     * @param scene The scenes to add
+     */
+    void replaceAllScenes(ArrayRef<Ref<Scene>> scenes, SegueEffect& effect, Time duration, Easing easing = Ease::linear);
 
     /**
      * @brief Get the window associated to the scene
