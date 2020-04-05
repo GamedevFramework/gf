@@ -22,6 +22,7 @@
 #define GF_REF_H
 
 #include <memory>
+#include <type_traits>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -59,9 +60,26 @@ inline namespace v1 {
     Ref(const Ref& other) noexcept = default;
 
     /**
+     * @brief Copy constructor
+     */
+    template<typename U, typename = std::enable_if_t<std::is_base_of<T, U>::value>>
+    Ref(const Ref<U>& other) noexcept
+    : m_ptr(std::addressof(other.get()))
+    {
+    }
+
+    /**
      * @brief Copy assignment
      */
     Ref& operator=(const Ref& other) noexcept = default;
+
+    /**
+     * @brief Copy assignment
+     */
+    template<typename U, typename = std::enable_if_t<std::is_base_of<T, U>::value>>
+    Ref& operator=(const Ref<U>& other) noexcept {
+      m_ptr = std::addressof(other.get());
+    }
 
     /**
      * @brief Get the reference
@@ -117,6 +135,20 @@ inline namespace v1 {
   constexpr bool operator==(const T& lhs, Ref<T> rhs) noexcept {
     return std::addressof(lhs) == std::addressof(rhs.get());
   }
+
+  /**
+   * @relates Ref
+   * @brief Reference creation
+   */
+  template<typename T>
+  Ref<T> ref(T& object) {
+    return Ref<T>(object);
+  }
+
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+  template<typename T>
+  Ref<T> ref(const T&&) = delete;
+#endif
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
