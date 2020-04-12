@@ -311,6 +311,18 @@ inline namespace v1 {
      */
     void updateGeometry();
 
+    /**
+     * @brief Set the bounds of the shape directly
+     *
+     * @param bounds The new bounds
+     */
+    void updateBounds(RectF bounds);
+
+    /**
+     * @brief Compute the bounds of the shape automatically
+     */
+    void updateAutoBounds();
+
   private:
     void updateColors();
     void updateTexCoords();

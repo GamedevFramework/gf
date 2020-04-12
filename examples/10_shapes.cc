@@ -58,6 +58,12 @@ int main() {
   roundedRectangleShape.setOutlineThickness(5.0f);
   roundedRectangleShape.setOutlineColor(gf::Color::darker(gf::Color::Orange));
 
+  gf::Pie pie(70.0f, 0.0f, gf::Pi / 3);
+  pie.setPosition({ 250.0f, 40.0f });
+  pie.setColor(gf::Color::Spring);
+  pie.setOutlineColor(gf::Color::darker(gf::Color::Spring));
+  pie.setOutlineThickness(3.0f);
+
   std::cout << "Gamedev Framework (gf) example #10: Shapes\n";
   std::cout << "This example prints various shapes.\n";
 
@@ -88,6 +94,7 @@ int main() {
     renderer.draw(circleShape);
     renderer.draw(starShape);
     renderer.draw(roundedRectangleShape);
+    renderer.draw(pie);
     renderer.display();
   }
 
