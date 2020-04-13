@@ -149,6 +149,9 @@ inline namespace v1 {
      * @brief Replace the top scene with a new scene and a transition
      *
      * @param scene The scene to add
+     * @param effect The effect during the transition
+     * @param duration The duration of the transition
+     * @param easing The easing of the transition
      */
     void replaceScene(Scene& scene, SegueEffect& effect, Time duration, Easing easing = Ease::linear);
 
@@ -156,6 +159,9 @@ inline namespace v1 {
      * @brief Replace the top scene with many scenes and a transition
      *
      * @param scenes The scenes to add
+     * @param effect The effect during the transition
+     * @param duration The duration of the transition
+     * @param easing The easing of the transition
      */
     void replaceScene(ArrayRef<Ref<Scene>> scenes, SegueEffect& effect, Time duration, Easing easing = Ease::linear);
 
@@ -163,13 +169,19 @@ inline namespace v1 {
      * @brief Replace all the scenes with a new scene and a transition
      *
      * @param scene The scene to add
+     * @param effect The effect during the transition
+     * @param duration The duration of the transition
+     * @param easing The easing of the transition
      */
     void replaceAllScenes(Scene& scene, SegueEffect& effect, Time duration, Easing easing = Ease::linear);
 
     /**
      * @brief Replace all the scenes with many scenes and a transition
      *
-     * @param scene The scenes to add
+     * @param scenes The scenes to add
+     * @param effect The effect during the transition
+     * @param duration The duration of the transition
+     * @param easing The easing of the transition
      */
     void replaceAllScenes(ArrayRef<Ref<Scene>> scenes, SegueEffect& effect, Time duration, Easing easing = Ease::linear);
 
