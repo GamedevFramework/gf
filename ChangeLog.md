@@ -44,6 +44,7 @@
   - Add gf-imgui repository (gf target for imgui)
   - Add gf-box2d repository (Box2D helpers for gf)
 - Misc
+  - Remove GF.h
   - Make flags explicit in the API
   - Thanks @ahugeat, @NiiRoZz, @magestik, @TheCubeOfFire for the contributions!
 
