@@ -228,6 +228,14 @@ inline namespace v1 {
     void update(const uint8_t *data, const RectI& rect);
 
     /**
+     * @brief Resize a texture
+     *
+     * @param size The new size of the texture
+     * @param data An array of pixels (may be `nullptr`)
+     */
+    void resize(Vector2i size, const uint8_t *data = nullptr);
+
+    /**
      * @brief Compute normalized texture coordinates
      *
      * @param rect The rectangle in the texture, in pixels

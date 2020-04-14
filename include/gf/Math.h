@@ -55,9 +55,21 @@ inline namespace v1 {
 
   /**
    * @ingroup core
+   * @brief The @f$ \frac{\pi}{3} @f$ constant
+   */
+  constexpr float Pi3 = Pi / 3;
+
+  /**
+   * @ingroup core
    * @brief The @f$ \frac{\pi}{4} @f$ constant
    */
   constexpr float Pi4 = Pi / 4;
+
+  /**
+   * @ingroup core
+   * @brief The @f$ \frac{\pi}{6} @f$ constant
+   */
+  constexpr float Pi6 = Pi / 6;
 
   /**
    * @ingroup core

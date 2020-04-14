@@ -56,7 +56,7 @@ inline namespace v1 {
     RenderStates localStates = states;
 
     localStates.shader = m_effect;
-    localStates.texture = m_texture;
+    localStates.texture[0] = m_texture;
     target.draw(m_vertices, 4, PrimitiveType::TriangleStrip, localStates);
   }
 

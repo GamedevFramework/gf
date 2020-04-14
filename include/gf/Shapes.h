@@ -100,8 +100,8 @@ inline namespace v1 {
       return m_size;
     }
 
-    virtual std::size_t getPointCount() const override;
-    virtual Vector2f getPoint(std::size_t index) const override;
+    std::size_t getPointCount() const override;
+    Vector2f getPoint(std::size_t index) const override;
 
   private:
     Vector2f m_size;
@@ -188,8 +188,8 @@ inline namespace v1 {
      */
     void setPointCount(std::size_t pointCount);
 
-    virtual std::size_t getPointCount() const override;
-    virtual Vector2f getPoint(std::size_t index) const override;
+    std::size_t getPointCount() const override;
+    Vector2f getPoint(std::size_t index) const override;
 
   private:
     float m_radius;
@@ -262,8 +262,8 @@ inline namespace v1 {
      */
     void setPoint(std::size_t index, Vector2f point);
 
-    virtual std::size_t getPointCount() const override;
-    virtual Vector2f getPoint(std::size_t index) const override;
+    std::size_t getPointCount() const override;
+    Vector2f getPoint(std::size_t index) const override;
 
   private:
     std::vector<Vector2f> m_points;
@@ -359,8 +359,8 @@ inline namespace v1 {
       return m_branches;
     }
 
-    virtual std::size_t getPointCount() const override;
-    virtual Vector2f getPoint(std::size_t index) const override;
+    std::size_t getPointCount() const override;
+    Vector2f getPoint(std::size_t index) const override;
 
   private:
     float m_minRadius;
@@ -464,8 +464,8 @@ inline namespace v1 {
      */
     void setCornerPointCount(std::size_t cornerPointCount);
 
-    virtual std::size_t getPointCount() const override;
-    virtual Vector2f getPoint(std::size_t index) const override;
+    std::size_t getPointCount() const override;
+    Vector2f getPoint(std::size_t index) const override;
 
   private:
     Vector2f m_size;
@@ -473,6 +473,38 @@ inline namespace v1 {
     std::size_t m_cornerPointCount;
   };
 
+
+  class GF_API Pie : public Shape {
+  public:
+    enum Variation {
+      Positive,
+      Negative,
+    };
+
+    Pie(float radius, float angle0, float angle1, Variation variation = Positive, std::size_t pointCount = 30);
+
+    void setRadius(float radius);
+
+    float getRadius() const {
+      return m_radius;
+    }
+
+    void setAngleRange(float angle0, float angle1, Variation variation);
+
+    void setPointCount(std::size_t pointCount);
+
+    std::size_t getPointCount() const override;
+    Vector2f getPoint(std::size_t index) const override;
+
+  private:
+    void adjustAngles(Variation variation);
+
+  private:
+    float m_radius;
+    float m_angle0;
+    float m_angle1;
+    std::size_t m_pointCount;
+  };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

@@ -27,6 +27,7 @@
 #include "ModelContainer.h"
 #include "Portability.h"
 #include "RenderWindow.h"
+#include "RenderStates.h"
 #include "Time.h"
 #include "ViewContainer.h"
 #include "Views.h"
@@ -137,10 +138,40 @@ inline namespace v1 {
      * entities (with a gf::ScreenView) through a call to renderHudEntities().
      *
      * @param target The target to render the scene
+     * @param states The render states to use for drawing
      *
      * @sa gf::EntityContainer::render()
      */
-    void render(RenderTarget& target);
+    void render(RenderTarget& target, const RenderStates &states = RenderStates());
+
+    /**
+     * @brief Update the framebuffer size
+     *
+     * This function is called to update the views in the scene.
+     *
+     * @param size The new size of the framebuffer
+     */
+    void setFramebufferSize(gf::Vector2i size);
+
+    /**
+     * @brief Set the new clear color
+     *
+     * @param color The new clear color
+     * @sa getClearColor()
+     */
+    void setClearColor(gf::Color4f color) {
+      m_clear = color;
+    }
+
+    /**
+     * @brief Get the current clear color
+     *
+     * @returns The current clear color
+     * @sa setClearColor();
+     */
+    gf::Color4f getClearColor() const {
+      return m_clear;
+    }
 
     /**
      * @}
@@ -265,12 +296,30 @@ inline namespace v1 {
     }
 
     /**
+     * @brief Remove a world entity from the scene
+     *
+     * @param entity The entity
+     */
+    Entity* removeWorldEntity(Entity* entity) {
+      return m_worldEntities.removeEntity(entity);
+    }
+
+    /**
      * @brief Add a HUD entity to the scene
      *
      * @param entity The entity
      */
     void addHudEntity(Entity& entity) {
       m_hudEntities.addEntity(entity);
+    }
+
+    /**
+     * @brief Remove a HUD entity from the scene
+     *
+     * @param entity The entity
+     */
+    Entity* removeHudEntity(Entity* entity) {
+      return m_hudEntities.removeEntity(entity);
     }
 
     /**
@@ -304,12 +353,12 @@ inline namespace v1 {
     /**
      * @brief Render the world entities
      */
-    void renderWorldEntities(RenderTarget& target);
+    void renderWorldEntities(RenderTarget& target, const RenderStates &states);
 
     /**
      * @brief Render the HUD entities
      */
-    void renderHudEntities(RenderTarget& target);
+    void renderHudEntities(RenderTarget& target, const RenderStates &states);
 
     /**
      * @brief Get the world view
@@ -317,6 +366,20 @@ inline namespace v1 {
     View& getWorldView() {
       return m_worldView;
     }
+
+    /**
+     * @brief Get the HUD view
+     */
+    View& getHudView() {
+      return m_hudView;
+    }
+
+    /**
+     * @brief Customization point for processEvent()
+     *
+     * @returns True if the event should not be passed to the other actions
+     */
+    virtual bool doEarlyProcessEvent(Event& event);
 
     /**
      * @brief Customization point for processEvent()
@@ -336,7 +399,7 @@ inline namespace v1 {
     /**
      * @brief Customization point for render()
      */
-    virtual void doRender(RenderTarget& target);
+    virtual void doRender(RenderTarget& target, const RenderStates &states);
 
     /**
      * @brief Customization point for pause()
@@ -359,6 +422,8 @@ inline namespace v1 {
     virtual void doShow();
 
   private:
+    friend class SceneManager;
+
     bool m_active;
 
     enum class Status {
@@ -386,6 +451,8 @@ inline namespace v1 {
 
     EntityContainer m_worldEntities;
     EntityContainer m_hudEntities;
+
+    Color4f m_clear;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

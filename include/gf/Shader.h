@@ -303,6 +303,30 @@ inline namespace v1 {
     void setUniform(StringRef name, const Vector4f& vec);
 
     /**
+     * @brief Specify value for a `ivec2` uniform
+     *
+     * @param name Name of the uniform variable in GLSL
+     * @param vec Value of the `ivec2` vector
+     */
+    void setUniform(StringRef name, const Vector2i& vec);
+
+    /**
+     * @brief Specify value for a `ivec3` uniform
+     *
+     * @param name Name of the uniform variable in GLSL
+     * @param vec Value of the `ivec3` vector
+     */
+    void setUniform(StringRef name, const Vector3i& vec);
+
+    /**
+     * @brief Specify value for a `ivec4` uniform
+     *
+     * @param name Name of the uniform variable in GLSL
+     * @param vec Value of the `ivec4` vector
+     */
+    void setUniform(StringRef name, const Vector4i& vec);
+
+    /**
      * @brief Specify value for a `mat3` uniform
      *
      * @param name Name of the uniform variable in GLSL

@@ -18,12 +18,14 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
+#include <gf/SocketSelector.h>
 #include <gf/TcpListener.h>
 #include <gf/TcpSocket.h>
 #include <gf/UdpSocket.h>
 
 #include <cstdint>
 #include <thread>
+#include <vector>
 
 #include "gtest/gtest.h"
 
@@ -282,45 +284,6 @@ namespace {
     clientThread.join();
   }
 
-
-  struct Data {
-    std::string str;
-    double num;
-  };
-
-  template<typename Archive>
-  Archive& operator|(Archive& ar, Data& d) {
-    return ar | d.str | d.num;
-  }
-
-  template<gf::SocketFamily Family>
-  void testTcpData() {
-    gf::TcpListener listener(TestService, Family);
-    ASSERT_TRUE(listener);
-
-    std::thread clientThread([]() {
-      gf::TcpSocket socket(Host, TestService, Family);
-      ASSERT_TRUE(socket);
-
-      Data data = { "toto42", 3.14 };
-
-      auto success = socket.sendData(data);
-      EXPECT_TRUE(success);
-    });
-
-    gf::TcpSocket socket = listener.accept();
-    ASSERT_TRUE(socket);
-
-    Data data;
-    auto success = socket.recvData(data);
-
-    EXPECT_TRUE(success);
-    EXPECT_EQ(data.str, "toto42");
-    EXPECT_EQ(data.num, 3.14);
-
-    clientThread.join();
-  }
-
 }
 
 
@@ -438,7 +401,82 @@ TEST(SocketTest, UdpSocketTwoWayCommunicationV6) {
   testUdpSocketTwoWayCommunication<gf::SocketFamily::IPv6>();
 }
 
+#if 0
+TEST(SocketTest, SocketSelector) {
+    static constexpr int ClientCount = 10;
+    static constexpr int ClientId = 3;
 
-TEST(SocketTest, TcpData) {
-  testTcpData<gf::SocketFamily::Unspec>();
+    gf::TcpListener listener(TestService, gf::SocketFamily::Unspec);
+    ASSERT_TRUE(listener);
+
+    std::thread clientThread([]() {
+      std::vector<gf::TcpSocket> sockets;
+
+      for (int i = 0; i < ClientCount; ++i) {
+        gf::TcpSocket socket(Host, TestService, gf::SocketFamily::Unspec);
+        ASSERT_TRUE(socket);
+
+        sockets.push_back(std::move(socket));
+      }
+
+      uint8_t buffer[4] = { 0x42, 0x69, 0xFF, 0x12 };
+      auto res = sockets[ClientId].sendRawBytes(buffer);
+      EXPECT_EQ(res.status, gf::SocketStatus::Data);
+      EXPECT_EQ(res.length, 4u);
+
+      sockets.pop_back();
+
+      res = sockets[ClientId].recvRawBytes(buffer);
+      EXPECT_EQ(res.status, gf::SocketStatus::Data);
+      EXPECT_EQ(res.length, 1u);
+    });
+
+    std::vector<gf::TcpSocket> sockets;
+
+    gf::SocketSelector selector;
+    selector.addSocket(listener);
+
+    bool endOfTest = false;
+
+    while (!endOfTest) {
+
+      if (selector.wait() == gf::SocketSelectorStatus::Event) {
+        for (auto& socket : sockets) {
+          if (selector.isReady(socket)) {
+            uint8_t buffer[10];
+            auto res = socket.recvRawBytes(buffer);
+
+            if (res.status == gf::SocketStatus::Data) {
+              EXPECT_EQ(res.status, gf::SocketStatus::Data);
+              EXPECT_EQ(res.length, 4u);
+              EXPECT_EQ(buffer[0], 0x42);
+              EXPECT_EQ(buffer[1], 0x69);
+              EXPECT_EQ(buffer[2], 0xFF);
+              EXPECT_EQ(buffer[3], 0x12);
+
+              uint8_t byte = 0;
+              socket.sendRawBytes(gf::array(&byte, 1));
+            } else if (res.status == gf::SocketStatus::Close) {
+              selector.removeSocket(socket);
+              endOfTest = true;
+            } else {
+              FAIL();
+            }
+          }
+        }
+
+        if (selector.isReady(listener)) {
+          gf::TcpSocket socket = listener.accept();
+          ASSERT_TRUE(socket);
+
+          sockets.push_back(std::move(socket));
+          selector.addSocket(sockets.back());
+        }
+      } else {
+        FAIL();
+      }
+    }
+
+    clientThread.join();
 }
+#endif

@@ -23,10 +23,17 @@
 
 #include <vector>
 
+#include "ArrayRef.h"
+#include "Color.h"
+#include "Easings.h"
 #include "Portability.h"
 #include "Ref.h"
+#include "RenderStates.h"
 #include "RenderWindow.h"
+#include "RenderTexture.h"
 #include "Scene.h"
+#include "Segue.h"
+#include "SegueEffect.h"
 #include "Window.h"
 
 namespace gf {
@@ -54,14 +61,17 @@ inline namespace v1 {
      * @brief Constructor
      *
      * @param title The title of the window
-     * @param size The size of the window
+     * @param size The initial size of the window
+     * @param hints Some hints for the creation of the window
      */
-    SceneManager(StringRef title, Vector2i size);
+    SceneManager(StringRef title, Vector2i size, Flags<WindowHints> hints = All);
 
     /**
      * @brief Run the scene manager until completion
+     *
+     * @param states The render states to use for drawing
      */
-    void run();
+    void run(const RenderStates &states = RenderStates());
 
     /**
      * @brief Add a scene on top of the stack
@@ -71,9 +81,21 @@ inline namespace v1 {
     void pushScene(Scene& scene);
 
     /**
+     * @brief Add multiple scenes on top of the stack
+     *
+     * @param scenes The scenes to add
+     */
+    void pushScenes(ArrayRef<Ref<Scene>> scenes);
+
+    /**
      * @brief Remove the top scene from the non-empty stack
      */
     void popScene();
+
+    /**
+     * @brief Remove all the scenes from the non-empty stack
+     */
+    void popAllScenes();
 
     /**
      * @brief Replace the top scene with a new scene
@@ -88,16 +110,131 @@ inline namespace v1 {
     }
 
     /**
+     * @brief Replace the top scene with many scenes
+     *
+     * It is equivalent to popping the current top scene and pushing the new scenes.
+     *
+     * @param scenes The scenes to add
+     */
+    void replaceScene(ArrayRef<Ref<Scene>> scenes) {
+      popScene();
+      pushScenes(scenes);
+    }
+
+    /**
+     * @brief Replace all the scenes with a new scene
+     *
+     * It is equivalent to popping all the scenes and pushing the new scene.
+     *
+     * @param scene The scene to add
+     */
+    void replaceAllScenes(Scene& scene) {
+      popAllScenes();
+      pushScene(scene);
+    }
+
+    /**
+     * @brief Replace all the scenes with many scenes
+     *
+     * It is equivalent to popping all the scenes and pushing the new scenes.
+     *
+     * @param scenes The scenes to add
+     */
+    void replaceAllScenes(ArrayRef<Ref<Scene>> scenes) {
+      popAllScenes();
+      pushScenes(scenes);
+    }
+
+    /**
+     * @brief Replace the top scene with a new scene and a transition
+     *
+     * @param scene The scene to add
+     * @param effect The effect during the transition
+     * @param duration The duration of the transition
+     * @param easing The easing of the transition
+     */
+    void replaceScene(Scene& scene, SegueEffect& effect, Time duration, Easing easing = Ease::linear);
+
+    /**
+     * @brief Replace the top scene with many scenes and a transition
+     *
+     * @param scenes The scenes to add
+     * @param effect The effect during the transition
+     * @param duration The duration of the transition
+     * @param easing The easing of the transition
+     */
+    void replaceScene(ArrayRef<Ref<Scene>> scenes, SegueEffect& effect, Time duration, Easing easing = Ease::linear);
+
+    /**
+     * @brief Replace all the scenes with a new scene and a transition
+     *
+     * @param scene The scene to add
+     * @param effect The effect during the transition
+     * @param duration The duration of the transition
+     * @param easing The easing of the transition
+     */
+    void replaceAllScenes(Scene& scene, SegueEffect& effect, Time duration, Easing easing = Ease::linear);
+
+    /**
+     * @brief Replace all the scenes with many scenes and a transition
+     *
+     * @param scenes The scenes to add
+     * @param effect The effect during the transition
+     * @param duration The duration of the transition
+     * @param easing The easing of the transition
+     */
+    void replaceAllScenes(ArrayRef<Ref<Scene>> scenes, SegueEffect& effect, Time duration, Easing easing = Ease::linear);
+
+    /**
+     * @brief Get the window associated to the scene
+     */
+    Window& getWindow() {
+      return m_window;
+    }
+
+    /**
      * @brief Get the renderer associated to the scene
      */
-    const RenderTarget& getRenderer() const {
+    RenderTarget& getRenderer() {
       return m_renderer;
     }
+
+    /**
+     * @brief Get the game coordinates from the window coordinates
+     *
+     * @sa RenderTarget::mapPixelToCoords()
+     */
+    Vector2f computeWindowToGameCoordinates(Vector2i coords, const View& view) const;
+
+    /**
+     * @brief Get the window coordinates from the game coordinates
+     *
+     * @sa RenderTarget::mapCoordsToPixel()
+     */
+    Vector2i computeGameToWindowCoordinates(Vector2f coords, const View& view) const;
+
+  private:
+    void setupSegue(SegueEffect& effect, Time duration, Easing easing);
 
   private:
     Window m_window;
     RenderWindow m_renderer;
-    std::vector<Ref<Scene>> m_scenes;
+    bool m_scenesChanged;
+
+    std::vector<Ref<Scene>> m_currScenes;
+    std::vector<Ref<Scene>> m_prevScenes;
+
+    RenderTexture m_targetCurrScenes;
+    RenderTexture m_targetPrevScenes;
+    ScreenView m_view;
+    Segue m_segue;
+
+    enum class Status {
+      Scene,
+      Segue,
+    };
+
+    Status m_status;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

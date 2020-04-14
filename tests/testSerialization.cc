@@ -54,23 +54,6 @@ namespace {
     }
   }
 
-  template<std::size_t N>
-  void saveAndLoadString(const char *in, char (&out)[N]) {
-    std::vector<uint8_t> bytes;
-
-    {
-      gf::BufferOutputStream ostream(&bytes);
-      gf::Serializer serializer(ostream);
-      serializer | in;
-    }
-
-    {
-      gf::BufferInputStream istream(&bytes);
-      gf::Deserializer deserializer(istream);
-      deserializer | out;
-    }
-  }
-
 }
 
 
@@ -293,9 +276,11 @@ TEST(SerialTest, Double) {
 }
 
 TEST(SerialTest, String) {
+  using namespace std::literals;
+
   std::string tests1[] = {
-    "",
-    "gf",
+    ""s,
+    "gf"s,
     std::string(32, 'a'),
     std::string(33, 'a'),
     std::string(UINT8_MAX + 1, 'a'),
@@ -309,24 +294,10 @@ TEST(SerialTest, String) {
     EXPECT_EQ(in1, out1);
   }
 
-  const char *tests2[] = {
-    "",
-    "gf",
-    "12345678901234567890123456789012",
-    "123456789012345678901234567890123"
-  };
+  char in3[256] = "unique";
+  char out3[256]; // same size as above
 
-  char out2[256]; // large enough for any strings above
-
-  for (auto in2 : tests2) {
-    saveAndLoadString(in2, out2);
-    EXPECT_TRUE(std::strcmp(in2, out2) == 0);
-  }
-
-  const char in3[] = "unique";
-  char out3[256]; // large enough for any strings above
-
-  saveAndLoadString(in3, out3);
+  saveAndLoad(in3, out3);
   EXPECT_TRUE(std::strcmp(in3, out3) == 0);
 }
 

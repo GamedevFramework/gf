@@ -157,6 +157,13 @@ inline namespace v1 {
     virtual Vector2i getSize() const override;
 
     /**
+     * @brief Resize the underlying texture
+     *
+     * @param size The new size
+     */
+    void resize(Vector2i size);
+
+    /**
      * @brief Activate the render-texture for rendering
      *
      * This function activates the render-texture so that all draw calls

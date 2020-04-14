@@ -32,8 +32,8 @@ inline namespace v1 {
    * StretchView
    */
 
-  void StretchView::onScreenSizeChange(Vector2i screenSize) {
-    gf::unused(screenSize);
+  void StretchView::onFramebufferSizeChange(Vector2i framebufferSize) {
+    gf::unused(framebufferSize);
     // nothing to do
   }
 
@@ -42,8 +42,8 @@ inline namespace v1 {
    * FitView
    */
 
-  void FitView::onScreenSizeChange(Vector2i screenSize) {
-    m_localScreenSize = screenSize;
+  void FitView::onFramebufferSizeChange(Vector2i framebufferSize) {
+    m_localFramebufferSize = framebufferSize;
     updateView();
   }
 
@@ -61,13 +61,13 @@ inline namespace v1 {
     const Vector2f worldSize = getSize();
     float worldRatio = worldSize.width / worldSize.height;
 
-    const Vector2f viewportSize = m_localScreenSize * m_localViewport.getSize();
-    float screenRatio = viewportSize.width / viewportSize.height;
+    const Vector2f viewportSize = m_localFramebufferSize * m_localViewport.getSize();
+    float framebufferRatio = viewportSize.width / viewportSize.height;
 
     Vector2f position, size;
 
-    if (screenRatio < worldRatio) {
-      float ratio = screenRatio / worldRatio;
+    if (framebufferRatio < worldRatio) {
+      float ratio = framebufferRatio / worldRatio;
 
       position.x = 0.0f;
       size.width = 1.0f;
@@ -75,7 +75,7 @@ inline namespace v1 {
       position.y = (1 - ratio) / 2;
       size.height = ratio;
     } else {
-      float ratio = worldRatio / screenRatio;
+      float ratio = worldRatio / framebufferRatio;
 
       position.y = 0.0f;
       size.height = 1.0f;
@@ -92,8 +92,8 @@ inline namespace v1 {
    * FillView
    */
 
-  void FillView::onScreenSizeChange(Vector2i screenSize) {
-    m_localScreenSize = screenSize;
+  void FillView::onFramebufferSizeChange(Vector2i framebufferSize) {
+    m_localFramebufferSize = framebufferSize;
     updateView();
   }
 
@@ -110,16 +110,16 @@ inline namespace v1 {
   void FillView::updateView() {
     float worldRatio = m_localSize.width / m_localSize.height;
 
-    const Vector2f viewportSize = m_localScreenSize * getViewport().getSize();
-    float screenRatio = viewportSize.width / viewportSize.height;
+    const Vector2f viewportSize = m_localFramebufferSize * getViewport().getSize();
+    float framebufferRatio = viewportSize.width / viewportSize.height;
 
     Vector2f actualSize = m_localSize;
 
-    if (screenRatio < worldRatio) {
-      float ratio = screenRatio / worldRatio;
+    if (framebufferRatio < worldRatio) {
+      float ratio = framebufferRatio / worldRatio;
       actualSize.width *= ratio;
     } else {
-      float ratio = worldRatio / screenRatio;
+      float ratio = worldRatio / framebufferRatio;
       actualSize.height *= ratio;
     }
 
@@ -131,8 +131,8 @@ inline namespace v1 {
    * ExtendView
    */
 
-  void ExtendView::onScreenSizeChange(Vector2i screenSize) {
-    m_localScreenSize = screenSize;
+  void ExtendView::onFramebufferSizeChange(Vector2i framebufferSize) {
+    m_localFramebufferSize = framebufferSize;
     updateView();
   }
 
@@ -149,16 +149,16 @@ inline namespace v1 {
   void ExtendView::updateView() {
     float worldRatio = m_localSize.width / m_localSize.height;
 
-    const Vector2f viewportSize = m_localScreenSize * getViewport().getSize();
-    float screenRatio = viewportSize.width / viewportSize.height;
+    const Vector2f viewportSize = m_localFramebufferSize * getViewport().getSize();
+    float framebufferRatio = viewportSize.width / viewportSize.height;
 
     Vector2f actualSize = m_localSize;
 
-    if (screenRatio < worldRatio) {
-      float ratio = screenRatio / worldRatio;
+    if (framebufferRatio < worldRatio) {
+      float ratio = framebufferRatio / worldRatio;
       actualSize.height /= ratio;
     } else {
-      float ratio = worldRatio / screenRatio;
+      float ratio = worldRatio / framebufferRatio;
       actualSize.width /= ratio;
     }
 
@@ -169,8 +169,8 @@ inline namespace v1 {
    * LockedView
    */
 
-  void LockedView::onScreenSizeChange(Vector2i screenSize) {
-    m_localScreenSize = screenSize;
+  void LockedView::onFramebufferSizeChange(Vector2i framebufferSize) {
+    m_localFramebufferSize = framebufferSize;
     updateView();
   }
 
@@ -187,7 +187,7 @@ inline namespace v1 {
   void LockedView::updateView() {
     Vector2f actualSize = m_localSize;
 
-    const Vector2f viewportSize = m_localScreenSize * m_localViewport.getSize();
+    const Vector2f viewportSize = m_localFramebufferSize * m_localViewport.getSize();
 
     Vector2f position, size;
 
@@ -220,8 +220,8 @@ inline namespace v1 {
    * ScreenView
    */
 
-  void ScreenView::onScreenSizeChange(Vector2i screenSize) {
-    m_localScreenSize = screenSize;
+  void ScreenView::onFramebufferSizeChange(Vector2i framebufferSize) {
+    m_localFramebufferSize = framebufferSize;
     updateView();
   }
 
@@ -231,8 +231,8 @@ inline namespace v1 {
   }
 
   void ScreenView::updateView() {
-    RectF screen = RectF::fromPositionSize({ 0.0f, 0.0f }, m_localScreenSize * getViewport().getSize());
-    reset(screen);
+    RectF framebuffer = RectF::fromPositionSize({ 0.0f, 0.0f }, m_localFramebufferSize * getViewport().getSize());
+    reset(framebuffer);
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

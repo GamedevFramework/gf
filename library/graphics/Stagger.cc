@@ -31,11 +31,11 @@ inline namespace v1 {
     Vector2f base = coords * size;
 
     switch (m_axis) {
-      case StaggerAxis::Y:
+      case MapCellAxis::Y:
         base.y /= 2;
 
         switch (m_index) {
-          case StaggerIndex::Odd:
+          case MapCellIndex::Odd:
             if (coords.y % 2 == 0) {
               base += size / 2;
             } else {
@@ -43,7 +43,7 @@ inline namespace v1 {
               base.y += size.height / 2;
             }
             break;
-          case StaggerIndex::Even:
+          case MapCellIndex::Even:
             if (coords.y % 2 == 0) {
               base.x += size.width;
               base.y += size.height / 2;
@@ -53,11 +53,11 @@ inline namespace v1 {
             break;
         }
         break;
-      case StaggerAxis::X:
+      case MapCellAxis::X:
         base.x /= 2;
 
         switch (m_index) {
-          case StaggerIndex::Odd:
+          case MapCellIndex::Odd:
             if (coords.x % 2 == 0) {
               base += size / 2;
             } else {
@@ -65,7 +65,7 @@ inline namespace v1 {
               base.x += size.width / 2;
             }
             break;
-          case StaggerIndex::Even:
+          case MapCellIndex::Even:
             if (coords.x % 2 == 0) {
               base.y += size.height;
               base.x += size.width / 2;

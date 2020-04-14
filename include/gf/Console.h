@@ -669,9 +669,7 @@ inline namespace v1 {
       CountOnly = 0x02,
     };
 
-    using PrintOptionFlags = Flags<PrintOption>;
-
-    int printInternal(const RectI& rect, ConsoleEffect effect, ConsoleAlignment alignment, const std::string& message, PrintOptionFlags flags = None);
+    int printInternal(const RectI& rect, ConsoleEffect effect, ConsoleAlignment alignment, const std::string& message, Flags<PrintOption> flags = None);
 
   private:
     struct Cell {

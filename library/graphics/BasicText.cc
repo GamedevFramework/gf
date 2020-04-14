@@ -333,7 +333,7 @@ inline namespace v1 {
 
     m_bounds = RectF::fromMinMax(min, max);
 
-    if (m_align != Alignment::None) {
+    if (m_align != Alignment::None && m_paragraphWidth > 0.0f) {
       m_bounds.min.x = 0;
       m_bounds.max.x = m_paragraphWidth;
     }

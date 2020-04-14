@@ -37,10 +37,12 @@ add_gf_example(25_activities)
 add_gf_example(26_map)
 add_gf_example(27_console)
 add_gf_example(28_widgets)
+add_gf_example(29_hexagonal)
 
 add_gf_example(30_postprocessing)
 add_gf_example(31_pipeline)
 add_gf_example(32_colorblind)
+add_gf_example(33_segues)
 
 add_gf_example(40_ui)
 add_gf_example(41_collisions)

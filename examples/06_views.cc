@@ -60,7 +60,7 @@ int main() {
   gf::ScreenView screenView;
   views.addView(screenView);
 
-  views.setInitialScreenSize(ScreenSize);
+  views.setInitialFramebufferSize(ScreenSize);
 
   gf::AdaptativeView *currentView = &stretchView;
 

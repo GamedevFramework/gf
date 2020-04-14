@@ -46,8 +46,6 @@ inline namespace v1 {
   /**
    * @ingroup graphics
    * @brief Properties for windows and window-like elements
-   *
-   * @sa gf::UIWindowFlags
    */
   enum class UIWindow : uint32_t {
     Border          = 0x0001, ///< The window has a border
@@ -62,14 +60,6 @@ inline namespace v1 {
     ScaleLeft       = 0x0200, ///< The window's scaler is on the left
     NoInput         = 0x0400, ///< The window can not scale, move or get focus
   };
-
-  /**
-   * @ingroup graphics
-   * @brief Flags composed of window properties
-   *
-   * @sa gf::UIWindow
-   */
-  using UIWindowFlags = Flags<UIWindow>;
 
   /**
    * @ingroup graphics
@@ -176,21 +166,13 @@ inline namespace v1 {
 
   /**
    * @ingroup graphics
-   * @brief Flags composed of edit properties
-   *
-   * @sa gf::UIEdit
-   */
-  using UIEditFlags = Flags<UIEdit>;
-
-  /**
-   * @ingroup graphics
    * @brief Predefined flags for edit
    */
   struct GF_API UIEditType {
-    static const UIEditFlags Simple;
-    static const UIEditFlags Field;
-    static const UIEditFlags Box;
-    static const UIEditFlags Editor;
+    static const Flags<UIEdit> Simple;
+    static const Flags<UIEdit> Field;
+    static const Flags<UIEdit> Box;
+    static const Flags<UIEdit> Editor;
   };
 
   /**
@@ -204,14 +186,6 @@ inline namespace v1 {
     Deactivated = 0x0008, ///< Edit widget went from state active to state inactive
     Commited    = 0x0010, ///< Edit widget has received an enter and lost focus
   };
-
-  /**
-   * @ingroup graphics
-   * @brief Flags composed of edit events properties
-   *
-   * @sa gf::UIEditEvent
-   */
-  using UIEditEventFlags = Flags<UIEditEvent>;
 
   /**
    * @ingroup graphics
@@ -517,7 +491,7 @@ inline namespace v1 {
      *
      * @sa end(), gf::UIWindow
      */
-    bool begin(const std::string& title, const RectF& bounds, UIWindowFlags flags = None);
+    bool begin(const std::string& title, const RectF& bounds, Flags<UIWindow> flags = None);
 
     /**
      * @brief Finish a window
@@ -635,7 +609,7 @@ inline namespace v1 {
      *
      * @sa groupEnd()
      */
-    bool groupBegin(const std::string& title, UIWindowFlags flags = None);
+    bool groupBegin(const std::string& title, Flags<UIWindow> flags = None);
 
     /**
      * @brief Finish a group
@@ -659,7 +633,7 @@ inline namespace v1 {
      *
      * @sa groupScrolledEnd()
      */
-    bool groupScrolledBegin(UIScroll& scroll, const std::string& title, UIWindowFlags flags = None);
+    bool groupScrolledBegin(UIScroll& scroll, const std::string& title, Flags<UIWindow> flags = None);
 
     /**
      * @brief Finish a scrolled group
@@ -849,9 +823,20 @@ inline namespace v1 {
      * @param active A reference to a boolean that indicates the state of the checkbox
      * @returns True if the checkbox has changed its state
      *
-     * @sa checkboxFlags()
+     * @sa checkboxFlags(), checkboxValue()
      */
     bool checkbox(StringRef title, bool& active);
+
+    /**
+     * @brief A checkbox with a title without state
+     *
+     * @param title The title of the checkbox
+     * @param active A value that indicates the state of the checkbox
+     * @returns The new state of the checkbox
+     *
+     * @sa checkbox()
+     */
+    bool checkboxValue(StringRef title, bool active);
 
     /**
      * @brief A checkbox with a title for flags
@@ -861,9 +846,21 @@ inline namespace v1 {
      * @param value The flag value for this checkbox
      * @returns True if the checkbox has changed its state
      *
-     * @sa checkbox()
+     * @sa checkbox(), checkboxValueFlags()
      */
     bool checkboxFlags(StringRef title, unsigned& flags, unsigned value);
+
+    /**
+     * @brief A checkbox with a title for flags without state
+     *
+     * @param title The title of the checkbox
+     * @param flags The state of flags
+     * @param value The flag value for this checkbox
+     * @returns The new state of flags
+     *
+     * @sa checkboxFlags()
+     */
+    unsigned checkboxValueFlags(StringRef title, unsigned flags, unsigned value);
 
     /**
      * @}
@@ -913,9 +910,21 @@ inline namespace v1 {
      * @param value A reference to the state of the selection
      * @returns True if the state has changed
      *
-     * @sa label()
+     * @sa label(), selectableValueLabel()
      */
     bool selectableLabel(StringRef title, UIAlignment align, bool& value);
+
+    /**
+     * @brief A selectable label without state
+     *
+     * @param title The title of the label
+     * @param align The alignment of the text in the label
+     * @param value The state of the selection
+     * @returns The new state of the selection
+     *
+     * @sa selectableLabel()
+     */
+    bool selectableValueLabel(StringRef title, UIAlignment align, bool value);
 
     /**
      * @}
@@ -1048,7 +1057,7 @@ inline namespace v1 {
      * @{
      */
 
-    UIEditEventFlags edit(UIEditFlags flags, UICharBuffer& buffer, UIEditFilter filter = UIEditFilter::Default);
+    Flags<UIEditEvent> edit(Flags<UIEdit> flags, UICharBuffer& buffer, UIEditFilter filter = UIEditFilter::Default);
 
     /**
      * @}
@@ -1089,7 +1098,7 @@ inline namespace v1 {
      *
      * @sa popupClose(), popupEnd()
      */
-    bool popupBegin(UIPopup type, const std::string& title, UIWindowFlags flags, const RectF& bounds);
+    bool popupBegin(UIPopup type, const std::string& title, Flags<UIWindow> flags, const RectF& bounds);
 
     /**
      * @brief Close a popup window
@@ -1236,7 +1245,7 @@ inline namespace v1 {
      *
      * @sa contextualClose(), contextualEnd()
      */
-    bool contextualBegin(UIWindowFlags flags, Vector2f size, const RectF& triggerBounds);
+    bool contextualBegin(Flags<UIWindow> flags, Vector2f size, const RectF& triggerBounds);
 
     /**
      * @brief A label inside the contextual window

@@ -21,6 +21,7 @@
 #include <gf/RenderTarget.h>
 #include <gf/Shapes.h>
 #include <gf/Tmx.h>
+#include <gf/TmxOps.h>
 
 #include "Singletons.h"
 
@@ -43,46 +44,10 @@ namespace home {
           return;
         }
 
-        assert(map.orientation == gf::TmxOrientation::Staggered);
-
-        gf::TileLayer tileLayer(map.mapSize, gf::TileLayer::Staggered);
-
         gf::Log::info("Parsing layer '%s'\n", layer.name.c_str());
+        assert(map.orientation == gf::TileOrientation::Staggered);
 
-        tileLayer.setTileSize(map.tileSize);
-
-        int k = 0;
-
-        for (auto& cell : layer.cells) {
-          int i = k % map.mapSize.width;
-          int j = k / map.mapSize.width;
-          assert(j < map.mapSize.height);
-
-          int gid = cell.gid;
-
-          if (gid != 0) {
-            auto tileset = map.getTileSetFromGID(gid);
-            assert(tileset);
-            tileLayer.setTilesetTileSize(tileset->tileSize);
-            tileLayer.setOffset(tileset->offset);
-
-            gid = gid - tileset->firstGid;
-            tileLayer.setTile({ i, j }, gid, cell.flip);
-
-            if (!tileLayer.hasTexture()) {
-              assert(tileset->image);
-              const gf::Texture& texture = gResourceManager().getTexture(tileset->image->source);
-              tileLayer.setTexture(texture);
-            } else {
-              assert(&gResourceManager().getTexture(tileset->image->source) == &tileLayer.getTexture());
-            }
-
-          }
-
-          k++;
-        }
-
-        m_layers.push_back(std::move(tileLayer));
+        m_layers.push_back(gf::makeTileLayer(map, layer, gResourceManager()));
       }
 
       virtual void visitObjectLayer(const gf::TmxLayers& map, const gf::TmxObjectLayer& layer) override {

@@ -27,3 +27,12 @@
 #include "generated/default.vert.h"
 #include "generated/edge.frag.h"
 #include "generated/fxaa.frag.h"
+#include "generated/fade.frag.h"
+#include "generated/slide.frag.h"
+#include "generated/glitch.frag.h"
+#include "generated/checkerboard.frag.h"
+#include "generated/circle.frag.h"
+#include "generated/pixelate.frag.h"
+#include "generated/radial.frag.h"
+#include "generated/zoomblur.frag.h"
+

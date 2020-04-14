@@ -101,7 +101,7 @@ inline namespace v1 {
     struct KeyEvent {
       Keycode keycode;      ///< Keycode of the key
       Scancode scancode;    ///< Scancode of the key
-      Modifiers modifiers;  ///< Modifiers that are pressed
+      Flags<Mod> modifiers;  ///< Modifiers that are pressed
     };
 
     /**

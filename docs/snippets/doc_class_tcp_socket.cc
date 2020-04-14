@@ -12,12 +12,13 @@ void dummyTcpSocketUsage1() {
 
   uint8_t bytes[] = { 0x42, 0x69, 0x13, 0x12 };
 
-  if (!socket.sendBytes(bytes)) {
+  if (socket.sendBytes(bytes) != gf::SocketStatus::Data) {
     // Handle error
     return;
   }
 
-  if (!socket.recvBytes(bytes)) {
+
+  if (socket.recvBytes(bytes) != gf::SocketStatus::Data) {
     // Handle error
     return;
   }

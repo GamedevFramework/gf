@@ -153,8 +153,8 @@ inline namespace v1 {
    * AdaptativeView
    */
 
-  void AdaptativeView::setInitialScreenSize(Vector2i screenSize) {
-    onScreenSizeChange(screenSize);
+  void AdaptativeView::setInitialFramebufferSize(Vector2i framebufferSize) {
+    onFramebufferSizeChange(framebufferSize);
   }
 
 
@@ -173,8 +173,8 @@ inline namespace v1 {
 
   namespace {
 
-    bool isCursorOnView(Vector2i cursor, Vector2i screenSize, const RectF& viewport) {
-      RectF visible = RectF::fromPositionSize(viewport.getPosition() * screenSize, viewport.getSize() * screenSize);
+    bool isCursorOnView(Vector2i cursor, Vector2i framebufferSize, const RectF& viewport) {
+      RectF visible = RectF::fromPositionSize(viewport.getPosition() * framebufferSize, viewport.getSize() * framebufferSize);
       return visible.contains(cursor);
     }
 

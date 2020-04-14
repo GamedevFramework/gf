@@ -5,7 +5,7 @@ precision mediump float;
 varying vec4 v_color;
 varying vec2 v_texCoords;
 
-uniform sampler2D u_texture;
+uniform sampler2D u_texture0;
 uniform vec2 u_framebufferSize;
 
 void main(void) {
@@ -13,11 +13,11 @@ void main(void) {
   const float FXAA_REDUCE_MUL = 1.0 / 8.0;
   const float FXAA_REDUCE_MIN = 1.0 / 128.0;
 
-  vec3 rgbNW = texture2D(u_texture, v_texCoords + (vec2(-1.0, -1.0) / u_framebufferSize)).xyz;
-  vec3 rgbNE = texture2D(u_texture, v_texCoords + (vec2( 1.0, -1.0) / u_framebufferSize)).xyz;
-  vec3 rgbSW = texture2D(u_texture, v_texCoords + (vec2(-1.0,  1.0) / u_framebufferSize)).xyz;
-  vec3 rgbSE = texture2D(u_texture, v_texCoords + (vec2( 1.0,  1.0) / u_framebufferSize)).xyz;
-  vec3 rgbM  = texture2D(u_texture, v_texCoords).xyz;
+  vec3 rgbNW = texture2D(u_texture0, v_texCoords + (vec2(-1.0, -1.0) / u_framebufferSize)).xyz;
+  vec3 rgbNE = texture2D(u_texture0, v_texCoords + (vec2( 1.0, -1.0) / u_framebufferSize)).xyz;
+  vec3 rgbSW = texture2D(u_texture0, v_texCoords + (vec2(-1.0,  1.0) / u_framebufferSize)).xyz;
+  vec3 rgbSE = texture2D(u_texture0, v_texCoords + (vec2( 1.0,  1.0) / u_framebufferSize)).xyz;
+  vec3 rgbM  = texture2D(u_texture0, v_texCoords).xyz;
 
   vec3 luma = vec3(0.299, 0.587, 0.114);
   float lumaNW = dot(rgbNW, luma);
@@ -44,12 +44,12 @@ void main(void) {
       dir * rcpDirMin)) / u_framebufferSize;
 
   vec3 rgbA = (1.0 / 2.0) * (
-      texture2D(u_texture, v_texCoords + dir * (1.0 / 3.0 - 0.5)).xyz +
-      texture2D(u_texture, v_texCoords + dir * (2.0 / 3.0 - 0.5)).xyz);
+      texture2D(u_texture0, v_texCoords + dir * (1.0 / 3.0 - 0.5)).xyz +
+      texture2D(u_texture0, v_texCoords + dir * (2.0 / 3.0 - 0.5)).xyz);
 
   vec3 rgbB = rgbA * (1.0 / 2.0) + (1.0 / 4.0) * (
-    texture2D(u_texture, v_texCoords + dir * (0.0 / 3.0 - 0.5)).xyz +
-    texture2D(u_texture, v_texCoords + dir * (3.0 / 3.0 - 0.5)).xyz);
+    texture2D(u_texture0, v_texCoords + dir * (0.0 / 3.0 - 0.5)).xyz +
+    texture2D(u_texture0, v_texCoords + dir * (3.0 / 3.0 - 0.5)).xyz);
 
   float lumaB = dot(rgbB, luma);
 

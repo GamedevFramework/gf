@@ -29,12 +29,12 @@
 #include <vector>
 
 #include "Flags.h"
-#include "Flip.h"
 #include "Id.h"
 #include "Path.h"
 #include "Portability.h"
 #include "Rect.h"
 #include "Stagger.h"
+#include "TileTypes.h"
 #include "Time.h"
 #include "Vector.h"
 
@@ -42,18 +42,6 @@ namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
 #endif
-  /**
-   * @ingroup game
-   * @brief The orientation of the map.
-   */
-  enum class TmxOrientation {
-    Unknown,    ///< An unknown orientation
-    Orthogonal, ///< An orthogonal orientation
-    Isometric,  ///< An isometric orientation
-    Staggered,  ///< A staggered orientation
-    Hexagonal,  ///< A hexagonal orientation
-  };
-
   /**
    * @ingroup game
    * @brief the render order of the tiles.
@@ -328,7 +316,7 @@ inline namespace v1 {
    * @ingroup game
    * @brief A geometrical object
    *
-   * There are six kinds of objects:
+   * There are seven kinds of objects:
    *
    * - rectangles (see gf::TmxRectangle)
    * - ellipses (see gf::TmxEllipse)
@@ -336,6 +324,7 @@ inline namespace v1 {
    * - polygons (see gf::TmxPolygon)
    * - tiles (see gf::TmxTileObject)
    * - texts (see gf::TmxText)
+   * - points (see gf::TmxPoint)
    *
    * @sa gf::TmxObjectLayer
    */
@@ -604,7 +593,7 @@ inline namespace v1 {
 
     std::string version;        ///< The version of the map
     std::string tiledVersion;   ///< The tiled version of the map
-    TmxOrientation orientation; ///< The orientation of the map
+    TileOrientation orientation;  ///< The orientation of the map
     TmxRenderOrder renderOrder; ///< The render order of the map
 
     bool infinite;              ///< Is the map infinite?
@@ -612,8 +601,8 @@ inline namespace v1 {
     Vector2i tileSize;          ///< The size of the tiles
 
     int hexSideLength;          ///< The length of the side for hexagonal map
-    StaggerAxis staggerAxis;    ///< The stagger axis for hexagonal map
-    StaggerIndex staggerIndex;  ///< The stagger index for hexagonal map
+    MapCellAxis mapCellAxis;    ///< The stagger axis for hexagonal map
+    MapCellIndex mapCellIndex;  ///< The stagger index for hexagonal map
 
     Color4u backgroundColor;    ///< The background color
 

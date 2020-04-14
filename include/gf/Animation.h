@@ -66,6 +66,20 @@ inline namespace v1 {
     void addFrame(const Texture& texture, const RectF& bounds, Time duration);
 
     /**
+     * @brief Add a entire tileset to the animation
+     *
+     * Take all frames of the entire tilset. Each frame is defined the
+     * texture rectangle (in texture coordinates) and an amount of time.
+     *
+     * @param texture The texture where the sprite is
+     * @param frameSize The frame texture normalized size
+     * @param layout Layout of frames
+     * @param nbFrames Number of frames included in tileset
+     * @param duration The amount of time to display the frame
+     */
+    void addTileset(const Texture& texture, const Vector2f& frameSize, const Vector2i& layout, int nbFrames, Time duration);
+
+    /**
      * @brief Get the current texture
      *
      * @return The current texture
@@ -88,6 +102,11 @@ inline namespace v1 {
      * @return True if the current frame has changed
      */
     bool update(Time time);
+
+    /**
+     * @brief Reset the animation
+     */
+    void reset();
 
   private:
     struct Frame {

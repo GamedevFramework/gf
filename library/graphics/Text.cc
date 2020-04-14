@@ -127,7 +127,7 @@ inline namespace v1 {
     RenderStates localStates = states;
 
     localStates.transform *= getTransform();
-    localStates.texture = m_basic.getFontTexture();
+    localStates.texture[0] = m_basic.getFontTexture();
 
     if (m_basic.getOutlineThickness() > 0) {
       target.draw(m_outlineVertices, localStates);

@@ -64,7 +64,7 @@ static void overview(gf::UI& ui) {
   static bool minimizable = true;
   static bool scaleLeft = false;
 
-  static gf::UIWindowFlags windowFlags = gf::None;
+  static gf::Flags<gf::UIWindow> windowFlags = gf::None;
 
 
   // popups
@@ -488,7 +488,7 @@ static void overview(gf::UI& ui) {
         ui.layoutRowStatic(180.0f, 278, 1);
         ui.edit(gf::UIEditType::Box, box);
         ui.layoutRow(gf::UILayout::Static, 25, gf::array(ratios.begin(), ratios.size()));
-        gf::UIEditEventFlags flags = ui.edit(gf::UIEditType::Field | gf::UIEdit::SigEnter, text[7], gf::UIEditFilter::Ascii);
+        gf::Flags<gf::UIEditEvent> flags = ui.edit(gf::UIEditType::Field | gf::UIEdit::SigEnter, text[7], gf::UIEditFilter::Ascii);
 
         if (ui.buttonLabel("Submit") || flags.test(gf::UIEditEvent::Commited)) {
           box.append(text[7]);
@@ -703,7 +703,7 @@ static void overview(gf::UI& ui) {
         static int groupWidth = 320;
         static int groupHeight = 200;
 
-        gf::UIWindowFlags groupFlags = gf::None;
+        gf::Flags<gf::UIWindow> groupFlags = gf::None;
 
         if (groupTitlebar) { groupFlags |= gf::UIWindow::Title; }
         if (groupBorder) { groupFlags |= gf::UIWindow::Border; }

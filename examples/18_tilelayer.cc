@@ -80,7 +80,7 @@ int main() {
   view.setSize({ 480.0f, 480.0f });
   views.addView(view);
 
-  views.setInitialScreenSize(ScreenSize);
+  views.setInitialFramebufferSize(ScreenSize);
 
   gf::ZoomingViewAdaptor adaptor(renderer, view);
 

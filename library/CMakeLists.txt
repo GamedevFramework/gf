@@ -6,14 +6,12 @@ add_executable(gfdev_source_file graphics/tools/gfdev_source_file.cc)
 
 set(GCDB_SOURCES
   gamecontrollerdb.txt
-  older_releases/gamecontrollerdb_205.txt
-  older_releases/gamecontrollerdb_204.txt
 )
 
 set(GCDB_HEADERS "")
 
 foreach(GCDB_RELATIVE_SOURCE ${GCDB_SOURCES})
-  set(GCDB_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/vendor/gamecontrollerdb/${GCDB_RELATIVE_SOURCE}")
+  set(GCDB_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/vendor/gamecontrollerdb2/${GCDB_RELATIVE_SOURCE}")
   get_filename_component(GCDB_NAME ${GCDB_RELATIVE_SOURCE} NAME)
   string(REPLACE "." "_" GCDB_VARIABLE ${GCDB_NAME})
   set(GCDB_HEADER "${CMAKE_CURRENT_BINARY_DIR}/generated/${GCDB_NAME}.h")
@@ -38,6 +36,14 @@ set(SHADER_SOURCES
   graphics/data/shaders/edge.frag
   graphics/data/shaders/fxaa.frag
 #   data/shaders/simple_fxaa.frag
+  graphics/data/shaders/fade.frag
+  graphics/data/shaders/slide.frag
+  graphics/data/shaders/glitch.frag
+  graphics/data/shaders/checkerboard.frag
+  graphics/data/shaders/circle.frag
+  graphics/data/shaders/pixelate.frag
+  graphics/data/shaders/radial.frag
+  graphics/data/shaders/zoomblur.frag
 )
 
 set(SHADER_HEADERS "")
@@ -124,7 +130,10 @@ else()
     core/Serialization.cc
     core/SerializationOps.cc
     core/Sleep.cc
-    core/Spatial.cc
+    core/Spatial_DynamicTree.cc
+    core/Spatial_QuadTree.cc
+    core/Spatial_RStarTree.cc
+    core/Spatial_SimpleSpatialIndex.cc
     core/Stream.cc
     core/Streams.cc
     core/StringUtils.cc
@@ -160,6 +169,7 @@ else()
     graphics/GraphicsHandle.cc
     graphics/GraphicsInfo.cc
     graphics/Grid.cc
+    graphics/Hexagon.cc
     graphics/Keyboard.cc
     graphics/Library.cc
     graphics/Logo.cc
@@ -178,6 +188,9 @@ else()
     graphics/ResourceManager.cc
     graphics/Scene.cc
     graphics/SceneManager.cc
+    graphics/Segue.cc
+    graphics/SegueEffect.cc
+    graphics/SegueEffects.cc
     graphics/Shader.cc
     graphics/Shape.cc
     graphics/Shapes.cc
@@ -190,6 +203,7 @@ else()
     graphics/Texture.cc
     graphics/TileLayer.cc
     graphics/Tmx.cc
+    graphics/TmxOps.cc
     graphics/Transformable.cc
     graphics/UI.cc
     graphics/VertexArray.cc
@@ -215,6 +229,7 @@ else()
     net/Socket.cc
     net/SocketAddress.cc
     net/SocketGuard.cc
+    net/SocketSelector.cc
     net/TcpListener.cc
     net/TcpSocket.cc
     net/UdpSocket.cc
@@ -449,3 +464,4 @@ install(
   FILES gfnetConfig.cmake
   DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/gfnet"
 )
+

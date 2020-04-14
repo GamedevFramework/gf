@@ -1,5 +1,6 @@
 #include <gf/Scene.h>
 
+#include <gf/Color.h>
 #include <gf/Unused.h>
 
 namespace gf {
@@ -9,13 +10,14 @@ inline namespace v1 {
 
   Scene::Scene(Vector2i initialSize)
   : m_active(false)
-  , m_status(Status::Paused)
-  , m_visibility(Visibility::Hidden)
+  , m_status(Status::Resumed)
+  , m_visibility(Visibility::Shown)
   , m_closeWindowAction("Close")
+  , m_clear(Color::White)
   {
     m_views.addView(m_worldView);
     m_views.addView(m_hudView);
-    m_views.setInitialScreenSize(initialSize);
+    m_views.setInitialFramebufferSize(initialSize);
 
     m_closeWindowAction.addCloseControl();
     m_actions.addAction(m_closeWindowAction);
@@ -25,8 +27,11 @@ inline namespace v1 {
 
   void Scene::processEvent(Event& event) {
     m_views.processEvent(event);
-    m_actions.processEvent(event);
-    doProcessEvent(event);
+
+    if (!doEarlyProcessEvent(event)) {
+      m_actions.processEvent(event);
+      doProcessEvent(event);
+    }
   }
 
   void Scene::handleActions(Window& window) {
@@ -49,12 +54,16 @@ inline namespace v1 {
     doUpdate(time);
   }
 
-  void Scene::render(RenderTarget& target) {
+  void Scene::render(RenderTarget& target, const RenderStates &states) {
     if (isHidden()) {
       return;
     }
 
-    doRender(target);
+    doRender(target, states);
+  }
+
+  void Scene::setFramebufferSize(gf::Vector2i size) {
+    m_views.setInitialFramebufferSize(size);
   }
 
   void Scene::setActive(bool active) {
@@ -101,14 +110,20 @@ inline namespace v1 {
     m_worldView.setSize(size);
   }
 
-  void Scene::renderWorldEntities(RenderTarget& target) {
+  void Scene::renderWorldEntities(RenderTarget& target, const RenderStates &states) {
     target.setView(m_worldView);
-    m_worldEntities.render(target);
+    m_worldEntities.render(target, states);
   }
 
-  void Scene::renderHudEntities(RenderTarget& target) {
+  void Scene::renderHudEntities(RenderTarget& target, const RenderStates &states) {
     target.setView(m_hudView);
-    m_hudEntities.render(target);
+    m_hudEntities.render(target, states);
+  }
+
+  bool Scene::doEarlyProcessEvent(Event& event) {
+    gf::unused(event);
+    // nothing
+    return false;
   }
 
   void Scene::doProcessEvent(Event& event) {
@@ -126,9 +141,9 @@ inline namespace v1 {
     // nothing
   }
 
-  void Scene::doRender(RenderTarget& target) {
-    renderWorldEntities(target);
-    renderHudEntities(target);
+  void Scene::doRender(RenderTarget& target, const RenderStates &states) {
+    renderWorldEntities(target, states);
+    renderHudEntities(target, states);
   }
 
 

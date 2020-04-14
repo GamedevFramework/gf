@@ -18,11 +18,13 @@ add_executable(gfdev_doc
   doc_class_flags.cc
   doc_class_font.cc
   doc_class_image.cc
+  doc_class_socket_selector.cc
   doc_class_sprite.cc
   doc_class_tcp_listener.cc
   doc_class_tcp_socket.cc
   doc_class_text.cc
   doc_class_texture.cc
+  doc_class_time.cc
   doc_class_udp_socket.cc
   doc_class_ui.cc
   doc_class_view_container.cc

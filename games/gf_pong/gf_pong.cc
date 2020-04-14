@@ -63,7 +63,7 @@ int main() {
   gf::FitView mainView;
   views.addView(mainView);
 
-  views.setInitialScreenSize(ScreenSize);
+  views.setInitialFramebufferSize(ScreenSize);
 
   mainView.setSize({ Ground::Width, Ground::Height });
 

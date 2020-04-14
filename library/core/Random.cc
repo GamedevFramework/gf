@@ -81,6 +81,10 @@ inline namespace v1 {
     return dist(m_engine);
   }
 
+  gf::Id Random::computeId() {
+    return computeUniformInteger(std::numeric_limits<gf::Id>::min() + 1, std::numeric_limits<gf::Id>::max());
+  }
+
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

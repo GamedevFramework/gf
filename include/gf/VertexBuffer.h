@@ -101,6 +101,27 @@ inline namespace v1 {
     VertexBuffer(const Vertex *vertices, const uint16_t *indices, std::size_t count, PrimitiveType type);
 
     /**
+     * @brief Load an array of custom vertices
+     *
+     * @param vertices Pointer to the vertices
+     * @param size The size of one vertex
+     * @param count Number of vertices in the array
+     * @param type Type of primitives to draw
+     */
+    VertexBuffer(const void *vertices, std::size_t size, std::size_t count, PrimitiveType type);
+
+    /**
+     * @brief Load an array of custom vertices and their indices
+     *
+     * @param vertices Pointer to the vertices
+     * @param size The size of one vertex
+     * @param indices Pointer to the indices
+     * @param count Number of indices in the array
+     * @param type Type of primitives to draw
+     */
+    VertexBuffer(const void *vertices, std::size_t size, const uint16_t *indices, std::size_t count, PrimitiveType type);
+
+    /**
      * @brief Check if there is an array buffer
      *
      * @return True if an array buffer is defined
@@ -119,10 +140,19 @@ inline namespace v1 {
     }
 
     /**
+     * @brief Get the vertex size in the buffer
+     *
+     * @returns The size of one vertex (custom or not)
+     */
+    std::size_t getVertexSize() const {
+      return m_size;
+    }
+
+    /**
      * @brief Get the count of vertices or indices
      *
      * This function returns the `count` parameter given in
-     * VertexBuffer::load().
+     * the constructor.
      *
      * @return The count of vertices or indices
      * @sa load()
@@ -135,7 +165,7 @@ inline namespace v1 {
      * @brief Get the primitive type of the data in the buffer
      *
      * This function returns the `type` parameter given in
-     * VertexBuffer::load().
+     * the constructor.
      *
      * @return The primitive type
      * @sa load()
@@ -156,6 +186,7 @@ inline namespace v1 {
   private:
     GraphicsHandle<GraphicsTag::Buffer> m_vbo;
     GraphicsHandle<GraphicsTag::Buffer> m_ebo;
+    std::size_t m_size;
     std::size_t m_count;
     PrimitiveType m_type;
   };

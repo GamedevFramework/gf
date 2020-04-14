@@ -48,7 +48,7 @@ inline namespace v1 {
 
   namespace {
 
-    Uint32 getFlagsFromHints(WindowFlags hints) {
+    Uint32 getFlagsFromHints(Flags<WindowHints> hints) {
       Uint32 flags = SDL_WINDOW_OPENGL;
 
       if (hints.test(WindowHints::Resizable)) {
@@ -102,7 +102,7 @@ inline namespace v1 {
     }
   }
 
-  Window::Window(StringRef title, Vector2i size, WindowFlags hints)
+  Window::Window(StringRef title, Vector2i size, Flags<WindowHints> hints)
   : m_window(nullptr)
   , m_context(nullptr)
   , m_shouldClose(false)
@@ -369,8 +369,8 @@ inline namespace v1 {
       return GamepadAxis::Invalid;
     }
 
-    Modifiers getModifiersFromMod(Uint16 mod) {
-      Modifiers modifiers(None);
+    Flags<Mod> getModifiersFromMod(Uint16 mod) {
+      Flags<Mod> modifiers(None);
 
       if ((mod & KMOD_SHIFT) != 0) {
         modifiers |= Mod::Shift;

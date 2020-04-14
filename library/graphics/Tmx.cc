@@ -1017,17 +1017,17 @@ inline namespace v1 {
       tmx.version =  node.attribute("version").as_string("1.0");
       tmx.tiledVersion = node.attribute("tiledversion").as_string("1.0");
 
-      tmx.orientation = TmxOrientation::Unknown;
+      tmx.orientation = TileOrientation::Unknown;
       std::string orientation = required_attribute(node, "orientation").as_string();
 
       if (orientation == "orthogonal") {
-        tmx.orientation = TmxOrientation::Orthogonal;
+        tmx.orientation = TileOrientation::Orthogonal;
       } else if (orientation == "isometric") {
-        tmx.orientation = TmxOrientation::Isometric;
+        tmx.orientation = TileOrientation::Isometric;
       } else if (orientation == "staggered") {
-        tmx.orientation = TmxOrientation::Staggered;
+        tmx.orientation = TileOrientation::Staggered;
       } else if (orientation == "hexagonal") {
-        tmx.orientation = TmxOrientation::Hexagonal;
+        tmx.orientation = TileOrientation::Hexagonal;
       } else {
         Log::error("Wrong orientation string: '%s'\n", orientation.c_str());
       }
@@ -1059,31 +1059,31 @@ inline namespace v1 {
 
       tmx.hexSideLength = node.attribute("hexsidelength").as_int(0);
 
-      tmx.staggerAxis = StaggerAxis::Y;
+      tmx.mapCellAxis = MapCellAxis::Y;
 
       if (node.attribute("staggeraxis") != nullptr) {
-        std::string staggerAxis = node.attribute("staggeraxis").as_string();
+        std::string mapCellAxis = node.attribute("staggeraxis").as_string();
 
-        if (staggerAxis == "x") {
-          tmx.staggerAxis = StaggerAxis::X;
-        } else if (staggerAxis == "y") {
-          tmx.staggerAxis = StaggerAxis::Y;
+        if (mapCellAxis == "x") {
+          tmx.mapCellAxis = MapCellAxis::X;
+        } else if (mapCellAxis == "y") {
+          tmx.mapCellAxis = MapCellAxis::Y;
         } else {
-          Log::error("Wrong stagger axis string: '%s'\n", staggerAxis.c_str());
+          Log::error("Wrong stagger axis string: '%s'\n", mapCellAxis.c_str());
         }
       }
 
-      tmx.staggerIndex = StaggerIndex::Odd;
+      tmx.mapCellIndex = MapCellIndex::Odd;
 
       if (node.attribute("staggerindex") != nullptr) {
-        std::string staggerIndex = node.attribute("staggerindex").as_string();
+        std::string mapCellIndex = node.attribute("staggerindex").as_string();
 
-        if (staggerIndex == "odd") {
-          tmx.staggerIndex = StaggerIndex::Odd;
-        } else if (staggerIndex == "even") {
-          tmx.staggerIndex = StaggerIndex::Even;
+        if (mapCellIndex == "odd") {
+          tmx.mapCellIndex = MapCellIndex::Odd;
+        } else if (mapCellIndex == "even") {
+          tmx.mapCellIndex = MapCellIndex::Even;
         } else {
-          Log::error("Wrong stagger index string: '%s'\n", staggerIndex.c_str());
+          Log::error("Wrong stagger index string: '%s'\n", mapCellIndex.c_str());
         }
       }
 

@@ -97,6 +97,11 @@ inline namespace v1 {
      */
     void selectPreviousWidget();
 
+    /**
+     * @brief Remove all widgets
+     */
+    void clear();
+
   private:
     void unselectCurrentlySelected();
 

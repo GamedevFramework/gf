@@ -33,8 +33,8 @@ inline namespace v1 {
    * @ingroup graphics
    * @brief Stretch view
    *
-   * This view assumes that the screen is always the same size as the world.
-   * The world will then be stretched to fit the screen. There are no black
+   * This view assumes that the framebuffer is always the same size as the world.
+   * The world will then be stretched to fit the framebuffer. There are no black
    * bars, but the aspect ratio may not be the same after the scaling took
    * place.
    *
@@ -75,7 +75,7 @@ inline namespace v1 {
     {
     }
 
-    void onScreenSizeChange(Vector2i screenSize) override;
+    void onFramebufferSizeChange(Vector2i framebufferSize) override;
   };
 
   /**
@@ -83,7 +83,7 @@ inline namespace v1 {
    * @brief Fit view
    *
    * This view will always maintain the aspect ratio of the world, while
-   * scaling it as much as possible to fit the screen. One disadvantage
+   * scaling it as much as possible to fit the framebuffer. One disadvantage
    * with this strategy is that there may appear black bars.
    *
    * ![Fit view](@ref fitview.png)
@@ -99,7 +99,7 @@ inline namespace v1 {
      */
     FitView()
     : AdaptativeView()
-    , m_localScreenSize(0, 0)
+    , m_localFramebufferSize(0, 0)
     , m_localViewport(gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }))
     {
     }
@@ -111,7 +111,7 @@ inline namespace v1 {
      */
     explicit FitView(const RectF& rect)
     : AdaptativeView(rect)
-    , m_localScreenSize(0, 0)
+    , m_localFramebufferSize(0, 0)
     , m_localViewport(gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }))
     {
     }
@@ -124,12 +124,12 @@ inline namespace v1 {
      */
     FitView(Vector2f center, Vector2f size)
     : AdaptativeView(center, size)
-    , m_localScreenSize(0, 0)
+    , m_localFramebufferSize(0, 0)
     , m_localViewport(gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }))
     {
     }
 
-    void onScreenSizeChange(Vector2i screenSize) override;
+    void onFramebufferSizeChange(Vector2i framebufferSize) override;
 
   protected:
     void onSizeChange(Vector2f size) override;
@@ -138,7 +138,7 @@ inline namespace v1 {
     void updateView();
 
   private:
-    Vector2i m_localScreenSize;
+    Vector2i m_localFramebufferSize;
     RectF m_localViewport;
   };
 
@@ -147,7 +147,7 @@ inline namespace v1 {
    * @brief Fill view
    *
    * This view keeps the aspect ratio of the world, but it will always fill
-   * the whole screen which might result in parts of the world being cut off.
+   * the whole framebuffer which might result in parts of the world being cut off.
    *
    * ![Fill view](@ref fillview.png)
    *
@@ -163,7 +163,7 @@ inline namespace v1 {
     FillView()
     : AdaptativeView()
     , m_localSize(1000.0f, 1000.0f)
-    , m_localScreenSize(0, 0)
+    , m_localFramebufferSize(0, 0)
     {
     }
 
@@ -175,7 +175,7 @@ inline namespace v1 {
     explicit FillView(const RectF& rect)
     : AdaptativeView(rect)
     , m_localSize(rect.getSize())
-    , m_localScreenSize(0, 0)
+    , m_localFramebufferSize(0, 0)
     {
     }
 
@@ -188,11 +188,11 @@ inline namespace v1 {
     FillView(Vector2f center, Vector2f size)
     : AdaptativeView(center, size)
     , m_localSize(size)
-    , m_localScreenSize(0, 0)
+    , m_localFramebufferSize(0, 0)
     {
     }
 
-    void onScreenSizeChange(Vector2i screenSize) override;
+    void onFramebufferSizeChange(Vector2i framebufferSize) override;
 
   protected:
     void onSizeChange(Vector2f size) override;
@@ -202,7 +202,7 @@ inline namespace v1 {
 
   private:
     Vector2f m_localSize;
-    Vector2i m_localScreenSize;
+    Vector2i m_localFramebufferSize;
   };
 
   /**
@@ -227,7 +227,7 @@ inline namespace v1 {
     ExtendView()
     : AdaptativeView()
     , m_localSize(1000.0f, 1000.0f)
-    , m_localScreenSize(0, 0)
+    , m_localFramebufferSize(0, 0)
     {
     }
 
@@ -239,7 +239,7 @@ inline namespace v1 {
     explicit ExtendView(const RectF& rect)
     : AdaptativeView(rect)
     , m_localSize(rect.getSize())
-    , m_localScreenSize(0, 0)
+    , m_localFramebufferSize(0, 0)
     {
     }
 
@@ -252,11 +252,11 @@ inline namespace v1 {
     ExtendView(Vector2f center, Vector2f size)
     : AdaptativeView(center, size)
     , m_localSize(size)
-    , m_localScreenSize(0, 0)
+    , m_localFramebufferSize(0, 0)
     {
     }
 
-    void onScreenSizeChange(Vector2i screenSize) override;
+    void onFramebufferSizeChange(Vector2i framebufferSize) override;
 
   protected:
     void onSizeChange(Vector2f size) override;
@@ -266,7 +266,7 @@ inline namespace v1 {
 
   private:
     Vector2f m_localSize;
-    Vector2i m_localScreenSize;
+    Vector2i m_localFramebufferSize;
   };
 
 
@@ -275,8 +275,8 @@ inline namespace v1 {
    * @brief Locked view
    *
    * This view keeps the world size constant and add black bars if the world
-   * is smaller than the screen size or make a zoom in the center of the
-   * world if the world is bigger than the screen size.
+   * is smaller than the framebuffer size or make a zoom in the center of the
+   * world if the world is bigger than the framebuffer size.
    *
    * ![Locked view](@ref lockedview.png)
    *
@@ -292,7 +292,7 @@ inline namespace v1 {
     LockedView()
     : AdaptativeView()
     , m_localSize(0.0f, 0.0f)
-    , m_localScreenSize(0, 0)
+    , m_localFramebufferSize(0, 0)
     , m_localViewport(gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }))
     {
     }
@@ -322,7 +322,7 @@ inline namespace v1 {
     {
     }
 
-    void onScreenSizeChange(Vector2i screenSize) override;
+    void onFramebufferSizeChange(Vector2i framebufferSize) override;
 
   protected:
     void onSizeChange(Vector2f size) override;
@@ -332,7 +332,7 @@ inline namespace v1 {
 
   private:
     Vector2f m_localSize;
-    Vector2i m_localScreenSize;
+    Vector2i m_localFramebufferSize;
     RectF m_localViewport;
   };
 
@@ -342,14 +342,14 @@ inline namespace v1 {
    *
    * This view will always match the window size which means that no scaling
    * happens and no black bars appear. As a disadvantage this means that the
-   * gameplay might change, because a player with a bigger screen might see
-   * more of the game, than a player with a smaller screen size.
+   * gameplay might change, because a player with a bigger framebuffer might see
+   * more of the game, than a player with a smaller framebuffer size.
    *
    * This view can be used to display [HUD](https://en.wikipedia.org/wiki/HUD_%28video_gaming%29).
    *
    * ![Screen view](@ref screenview.png)
    *
-   * @sa gf::AdaptativeView
+   * @sa gf::AdaptativeView, gf::Coordinates
    */
   class GF_API ScreenView : public AdaptativeView {
   public:
@@ -358,17 +358,17 @@ inline namespace v1 {
      */
     ScreenView()
     : AdaptativeView()
-    , m_localScreenSize(0, 0)
+    , m_localFramebufferSize(0, 0)
     {
     }
 
-    void onScreenSizeChange(Vector2i screenSize) override;
+    void onFramebufferSizeChange(Vector2i framebufferSize) override;
     void onViewportChange(const RectF& viewport) override;
 
     void updateView();
 
   private:
-    Vector2i m_localScreenSize;
+    Vector2i m_localFramebufferSize;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

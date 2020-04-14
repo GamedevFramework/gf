@@ -1,6 +1,54 @@
 # ChangeLog for gf
 
-## gf 0.15.0 (14 Jan 2019)
+## gf 0.16.0 (14 Apr 2020)
+
+- Core (gfcore)
+  - Add gf::HexagonHelper
+  - Add Random::computeId()
+  - Add gf::Polygon::contains()
+  - Add gf::Rect<T>::empty()
+  - Add gf::Handle
+  - Add gf::DynamicTree (spatial index)
+  - Rework all spatial indices
+  - Remove gf::Ball and gf::Box
+  - Add gf::TileOrientation
+  - Improve gf::Ref
+- Graphics (gf)
+  - Add gf::HexagonalGrid
+  - Add missing get/set functions to gf::TextWidget
+  - Add gf::Scene::{get,set}ClearColor()
+  - Add multi-texture support
+  - Add WidgetContainer::clear()
+  - Add gf::Segue and gf::SequeEffect
+  - Add gf::RenderTarget::customDraw() and gf::RenderAttributeInfo
+  - Add gf::Animation::addTileset()
+  - Add segue effects:
+    - gf::CheckerboardSegueEffect
+    - gf::CircleSegueEffect
+    - gf::FadeSegueEffect
+    - gf::GlitchSegueEffect
+    - gf::PixelateSegueEffect
+    - gf::RadialSegueEffect
+    - gf::SlideSegueEffect
+    - gf::ZoomBlurSegueEffect
+  - Add gf::buildLines()
+  - Add add gf::makeTileLayer()
+  - Add a default constructor to gf::TileLayer
+  - Unselect the widget when an action is triggered
+  - Add gf::SceneManager::computeWindowToGameCoordinates() and gf::SceneManager::computeGameToWindowCoordinates()
+  - Add gf::SceneManager::pushScenes()
+  - Add gf::Pie
+- Network (gfnet)
+  - Add gf::SocketSelector
+- Tools and games
+  - Add gf-imgui repository (gf target for imgui)
+  - Add gf-box2d repository (Box2D helpers for gf)
+- Misc
+  - Remove GF.h
+  - Make flags explicit in the API
+  - Thanks @ahugeat, @NiiRoZz, @magestik, @TheCubeOfFire for the contributions!
+
+## gf 0.15.0 (14 Jan 2020)
 
 - Core (gfcore)
   - Add a boolean parameter in SquareMap::setWalkable() and SquareMap::setTransparent()

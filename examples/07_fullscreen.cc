@@ -46,7 +46,7 @@ int main() {
   extendView.reset(world);
   views.addView(extendView);
 
-  views.setInitialScreenSize(ScreenSize);
+  views.setInitialFramebufferSize(ScreenSize);
 
   /*
    * some things to draw

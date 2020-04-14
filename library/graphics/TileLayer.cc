@@ -21,6 +21,7 @@
 #include <gf/TileLayer.h>
 
 #include <cassert>
+#include <cstdio>
 #include <algorithm>
 
 #include <gf/Log.h>
@@ -36,10 +37,26 @@ inline namespace v1 {
 
   constexpr int TileLayer::NoTile;
 
-  TileLayer::TileLayer(Vector2i layerSize, Type type)
-  : m_type(type)
-  , m_staggerIndex(StaggerIndex::Odd)
-  , m_staggerAxis(StaggerAxis::Y)
+  TileLayer::TileLayer()
+  : m_orientation(TileOrientation::Unknown)
+  , m_mapCellIndex(MapCellIndex::Odd)
+  , m_mapCellAxis(MapCellAxis::Y)
+  , m_layerSize(0, 0)
+  , m_tileSize(0, 0)
+  , m_texture(nullptr)
+  , m_tilesetTileSize(0, 0)
+  , m_margin(0, 0)
+  , m_spacing(0, 0)
+  , m_offset(0, 0)
+  , m_rect(RectI::empty())
+  , m_vertices(PrimitiveType::Triangles)
+  {
+  }
+
+  TileLayer::TileLayer(Vector2i layerSize, TileOrientation orientation)
+  : m_orientation(orientation)
+  , m_mapCellIndex(MapCellIndex::Odd)
+  , m_mapCellAxis(MapCellAxis::Y)
   , m_layerSize(layerSize)
   , m_tileSize(0, 0)
   , m_texture(nullptr)
@@ -48,6 +65,7 @@ inline namespace v1 {
   , m_spacing(0, 0)
   , m_offset(0, 0)
   , m_tiles(layerSize)
+  , m_rect(RectI::empty())
   , m_vertices(PrimitiveType::Triangles)
   {
     clear();
@@ -121,13 +139,13 @@ inline namespace v1 {
   }
 
   void TileLayer::draw(RenderTarget& target, const RenderStates& states) {
-    if (m_texture == nullptr) {
+    if (m_texture == nullptr || m_orientation == TileOrientation::Unknown) {
       return;
     }
 
     gf::Vector2i tileSize = m_tileSize;
 
-    if (m_type == Staggered) {
+    if (m_orientation == TileOrientation::Staggered) {
       tileSize.y /= 2;
     }
 
@@ -155,7 +173,7 @@ inline namespace v1 {
     // build vertex array (if necessary)
 
     if (rect != m_rect) {
-      // std::printf("rect | position: %u,%u | size: %u,%u\n", rect.left, rect.top, rect.width, rect.height);
+//       std::printf("rect | min: %i,%i | max: %i,%i\n", rect.min.x, rect.min.y, rect.max.x, rect.max.y);
       m_rect = rect;
       updateGeometry();
     }
@@ -165,7 +183,7 @@ inline namespace v1 {
     RenderStates localStates = states;
 
     localStates.transform *= getTransform();
-    localStates.texture = m_texture;
+    localStates.texture[0] = m_texture;
 
     target.draw(m_vertices, localStates);
   }
@@ -184,8 +202,8 @@ inline namespace v1 {
 
     Vector2i cell;
 
-    for (cell.y = rect.min.y; cell.y < rect.max.y; ++cell.y) {
-      for (cell.x = rect.min.x; cell.x < rect.max.x; ++cell.x) {
+    for (cell.y = rect.min.y; cell.y <= rect.max.y; ++cell.y) {
+      for (cell.x = rect.min.x; cell.x <= rect.max.x; ++cell.x) {
         assert(m_tiles.isValid(cell));
         int tile = m_tiles(cell).tile;
 
@@ -199,11 +217,11 @@ inline namespace v1 {
 
         Vector2f position, size;
 
-        if (m_type == Orthogonal) {
+        if (m_orientation == TileOrientation::Orthogonal) {
           size = m_tileSize;
           position = cell * m_tileSize + m_offset;
         } else {
-          assert(m_type == Staggered);
+          assert(m_orientation == TileOrientation::Staggered);
           size = tilesetTileSize;
 
           if (cell.y % 2 == 0) {

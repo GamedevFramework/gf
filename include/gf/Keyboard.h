@@ -44,14 +44,6 @@ inline namespace v1 {
 
   /**
    * @ingroup window
-   * @brief Flags for keyboard modifiers
-   *
-   * @sa gf::Mod
-   */
-  using Modifiers = Flags<Mod>;
-
-  /**
-   * @ingroup window
    * @brief Scancodes
    *
    * These codes corresponds to [USB key codes](http://www.usb.org/developers/hidpage/Hut1_12v2.pdf).
@@ -575,7 +567,7 @@ inline namespace v1 {
 }
 
 template<>
-struct EnableBitmaskOperators<Modifiers> {
+struct EnableBitmaskOperators<Mod> {
   static constexpr bool value = true;
 };
 

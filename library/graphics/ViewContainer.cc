@@ -37,17 +37,17 @@ inline namespace v1 {
       return;
     }
 
-    onScreenSizeChange(event.size);
+    onFramebufferSizeChange(event.size);
   }
 
-  void ViewContainer::onScreenSizeChange(Vector2i screenSize) {
+  void ViewContainer::onFramebufferSizeChange(Vector2i framebufferSize) {
     for (AdaptativeView& view : m_views) {
-      view.onScreenSizeChange(screenSize);
+      view.onFramebufferSizeChange(framebufferSize);
     }
   }
 
-  void ViewContainer::setInitialScreenSize(Vector2i screenSize) {
-    onScreenSizeChange(screenSize);
+  void ViewContainer::setInitialFramebufferSize(Vector2i framebufferSize) {
+    onFramebufferSizeChange(framebufferSize);
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

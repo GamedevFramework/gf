@@ -25,6 +25,7 @@
 #include <random>
 
 #include "Circ.h"
+#include "Id.h"
 #include "Portability.h"
 #include "Rect.h"
 #include "Vector.h"
@@ -160,6 +161,13 @@ inline namespace v1 {
      * @returns A valid angle
      */
     float computeAngle();
+
+    /**
+     * @brief Compute an id
+     *
+     * @returns An id, except gf::InvalidId
+     */
+    gf::Id computeId();
 
     /**
      * @brief Get the underlying engine

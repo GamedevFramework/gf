@@ -18,31 +18,33 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#ifndef GF_FLIP_H
-#define GF_FLIP_H
+#version 100
 
-#include <cstdint>
+precision mediump float;
 
-namespace gf {
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-inline namespace v1 {
-#endif
+varying vec4 v_color;
+varying vec2 v_texCoords;
 
-  /**
-   * @ingroup graphics
-   * @brief A flag to indicate how to flip a tile
-   *
-   * @sa gf::TileLayer
-   */
-  enum class Flip : uint8_t {
-    Horizontally  = 0x01, ///< The tile is flipped horizontally
-    Vertically    = 0x02, ///< The tile is flipped vertically
-    Diagonally    = 0x04, ///< The tile is flipped anti-diagonally
-  };
+uniform sampler2D u_texture0;
+uniform sampler2D u_texture1;
+uniform float u_progress;
+uniform int u_stripes;
+uniform int u_orientation; // 0 = horizontal, 1 = vertical
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+void main(void) {
+  float width = 1.0 / float(u_stripes);
+
+  if (u_orientation == 0) {
+    if (u_progress < mod(1.0 - v_texCoords.y, width) / width) {
+      gl_FragColor = texture2D(u_texture0, v_texCoords) * v_color;
+    } else {
+      gl_FragColor = texture2D(u_texture1, v_texCoords) * v_color;
+    }
+  } else {
+    if (u_progress < mod(v_texCoords.x, width) / width) {
+      gl_FragColor = texture2D(u_texture0, v_texCoords) * v_color;
+    } else {
+      gl_FragColor = texture2D(u_texture1, v_texCoords) * v_color;
+    }
+  }
 }
-#endif
-}
-
-#endif // GF_FLIP_H

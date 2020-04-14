@@ -58,16 +58,7 @@ inline namespace v1 {
    *
    * Usage example:
    *
-   * ~~~{.cc}
-   * gf::Time t1 = gf::seconds(0.1f);
-   * int32_t milli = t1.asMilliseconds(); // 100
-   *
-   * gf::Time t2 = gf::milliseconds(30);
-   * int64_t micro = t2.asMicroseconds(); // 30000
-   *
-   * gf::Time t3 = gf::microseconds(-800000);
-   * float sec = t3.asSeconds(); // -0.8
-   * ~~~
+   * @snippet snippets/doc_class_time.cc time
    *
    * @sa gf::Clock
    */
@@ -83,16 +74,6 @@ inline namespace v1 {
     {
 
     }
-
-    /**
-     * @brief Default copy constructor
-     */
-    Time(const Time&) = default;
-
-    /**
-     * @brief Default copy assignement
-     */
-    Time& operator=(const Time&) = default;
 
     /**
      * @brief Constructor with a duration
@@ -235,6 +216,53 @@ inline namespace v1 {
   Time microseconds(int64_t amount) {
     return Time(std::chrono::duration_cast<std::chrono::steady_clock::duration>(std::chrono::duration<int64_t, std::micro>(amount)));
   }
+
+  namespace literals {
+
+    /**
+     * @ingroup core
+     * @brief User defined operator for creating times in seconds
+     *
+     * To use it, you have to use the `gf::literals` namespace:
+     *
+     * @snippet snippets/doc_class_time.cc time_s
+     *
+     * @sa gf::seconds()
+     */
+    constexpr gf::Time operator"" _seconds(long double amount) {
+      return gf::seconds(static_cast<float>(amount));
+    }
+
+    /**
+     * @ingroup core
+     * @brief User defined operator for creating times in milliseconds
+     *
+     * To use it, you have to use the `gf::literals` namespace:
+     *
+     * @snippet snippets/doc_class_time.cc time_ms
+     *
+     * @sa gf::milliseconds()
+     */
+    constexpr gf::Time operator"" _milliseconds(unsigned long long int amount) {
+      return gf::milliseconds(static_cast<int32_t>(amount));
+    }
+
+    /**
+     * @ingroup core
+     * @brief User defined operator for creating times in microseconds
+     *
+     * To use it, you have to use the `gf::literals` namespace:
+     *
+     * @snippet snippets/doc_class_time.cc time_us
+     *
+     * @sa gf::microseconds()
+     */
+    constexpr gf::Time operator"" _microseconds(unsigned long long int amount) {
+      return gf::microseconds(static_cast<int64_t>(amount));
+    }
+
+  }
+
 
   /**
    * @relates Time

@@ -30,25 +30,12 @@
 #include <gf/Texture.h>
 #include <gf/TileLayer.h>
 #include <gf/Tmx.h>
+#include <gf/TmxOps.h>
 #include <gf/Unused.h>
 #include <gf/VectorOps.h>
 #include <gf/Views.h>
 #include <gf/ViewContainer.h>
 #include <gf/Window.h>
-
-gf::TileLayer::Type getTypeFromOrientation(gf::TmxOrientation orientation) {
-  switch (orientation) {
-    case gf::TmxOrientation::Orthogonal:
-      return gf::TileLayer::Orthogonal;
-    case gf::TmxOrientation::Staggered:
-      return gf::TileLayer::Staggered;
-    default:
-      break;
-  }
-
-  assert(false);
-  return gf::TileLayer::Orthogonal;
-}
 
 struct LayersMaker : public gf::TmxVisitor {
 
@@ -59,42 +46,7 @@ struct LayersMaker : public gf::TmxVisitor {
 
     std::cout << "Parsing layer '" << layer.name << "'\n";
 
-    gf::TileLayer tiles(map.mapSize, getTypeFromOrientation(map.orientation));
-    tiles.setTileSize(map.tileSize);
-
-    int k = 0;
-
-    for (auto& cell : layer.cells) {
-      int i = k % map.mapSize.width;
-      int j = k / map.mapSize.width;
-      assert(j < map.mapSize.height);
-      gf::unused(j);
-
-      int gid = cell.gid;
-
-      if (gid != 0) {
-        auto tileset = map.getTileSetFromGID(gid);
-        assert(tileset);
-        tiles.setTilesetTileSize(tileset->tileSize);
-        tiles.setOffset(tileset->offset);
-
-        gid = gid - tileset->firstGid;
-        tiles.setTile({ i, j }, gid, cell.flip);
-
-        if (!tiles.hasTexture()) {
-          assert(tileset->image);
-          const gf::Texture& texture = resources.getTexture(tileset->image->source);
-          tiles.setTexture(texture);
-        } else {
-          assert(&resources.getTexture(tileset->image->source) == &tiles.getTexture());
-        }
-
-      }
-
-      k++;
-    }
-
-    layers.push_back(std::move(tiles));
+    layers.emplace_back(gf::makeTileLayer(map, layer, resources));
   }
 
   virtual void visitObjectLayer(const gf::TmxLayers& map, const gf::TmxObjectLayer& layer) override {
@@ -131,7 +83,7 @@ int main() {
   gf::ExtendView view(gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 640.0f, 480.0f }));
   views.addView(view);
 
-  views.setInitialScreenSize(ScreenSize);
+  views.setInitialFramebufferSize(ScreenSize);
 
   gf::ZoomingViewAdaptor adaptor(renderer, view);
 
@@ -173,7 +125,7 @@ int main() {
 
   renderer.clear(gf::Color::White);
 
-  gf::TileLayer::Type type = gf::TileLayer::Orthogonal;
+  gf::TileOrientation orientation = gf::TileOrientation::Orthogonal;
 
   while (window.isOpen()) {
     gf::Event event;
@@ -187,10 +139,10 @@ int main() {
         case gf::EventType::KeyPressed:
           switch (event.key.scancode) {
             case gf::Scancode::Return:
-              if (type == gf::TileLayer::Orthogonal) {
-                type = gf::TileLayer::Staggered;
+              if (orientation == gf::TileOrientation::Orthogonal) {
+                orientation = gf::TileOrientation::Staggered;
               } else {
-                type = gf::TileLayer::Orthogonal;
+                orientation = gf::TileOrientation::Orthogonal;
               }
               break;
 
@@ -214,17 +166,20 @@ int main() {
     renderer.setView(view);
     renderer.clear();
 
-    switch (type) {
-      case gf::TileLayer::Orthogonal:
+    switch (orientation) {
+      case gf::TileOrientation::Orthogonal:
         for (auto& layer : orthogonalMaker.layers) {
           renderer.draw(layer);
         }
         break;
 
-      case gf::TileLayer::Staggered:
+      case gf::TileOrientation::Staggered:
         for (auto& layer : staggeredMaker.layers) {
           renderer.draw(layer);
         }
+        break;
+
+      default:
         break;
     }
 

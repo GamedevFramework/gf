@@ -41,7 +41,7 @@ int main() {
   gf::ScreenView screenView;
   views.addView(screenView);
 
-  views.setInitialScreenSize(InitialScreenSize);
+  views.setInitialFramebufferSize(InitialScreenSize);
 
   gf::Logo logo;
   logo.setAnchor(gf::Anchor::Center);

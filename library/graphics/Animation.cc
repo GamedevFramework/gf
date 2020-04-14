@@ -45,6 +45,23 @@ inline namespace v1 {
     m_frames.push_back({ &texture, bounds, duration });
   }
 
+  void Animation::addTileset(const Texture& texture, const Vector2f& frameSize, const Vector2i& layout, int nbFrames, Time duration) {
+    int index = 0;
+
+    for (int j = 0; j < layout.height; ++j) {
+      for (int i = 0; i < layout.width; ++i) {
+        // End of function to avoid to add emtpy frame
+        if (index >= nbFrames) {
+          return;
+        }
+
+        auto rectTexture = gf::RectF::fromPositionSize({ i * frameSize.width, j * frameSize.height }, frameSize);
+        addFrame(texture, rectTexture, duration);
+        index++;
+      }
+    }
+  }
+
   const Texture& Animation::getCurrentTexture() const {
     if (m_frames.empty()) {
       throw std::runtime_error("No frame in the animation");
@@ -75,6 +92,11 @@ inline namespace v1 {
     }
 
     return (prevFrame != m_currentFrame);
+  }
+
+  void Animation::reset() {
+    m_currentFrame = 0;
+    m_currentDurationInFrame = Time::zero();
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

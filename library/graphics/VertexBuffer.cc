@@ -45,13 +45,26 @@ inline namespace v1 {
   VertexBuffer::VertexBuffer()
   : m_vbo(gf::None)
   , m_ebo(gf::None)
+  , m_size(0)
   , m_count(0)
   , m_type(PrimitiveType::Points)
   {
   }
 
+
   VertexBuffer::VertexBuffer(const Vertex *vertices, std::size_t count, PrimitiveType type)
+  : VertexBuffer(vertices, sizeof(Vertex), count, type)
+  {
+  }
+
+  VertexBuffer::VertexBuffer(const Vertex *vertices, const uint16_t *indices, std::size_t count, PrimitiveType type)
+  : VertexBuffer(vertices, sizeof(Vertex), indices, count, type)
+  {
+  }
+
+  VertexBuffer::VertexBuffer(const void *vertices, std::size_t size, std::size_t count, PrimitiveType type)
   : m_ebo(gf::None)
+  , m_size(size)
   , m_count(count)
   , m_type(type)
   {
@@ -60,7 +73,7 @@ inline namespace v1 {
       throw std::runtime_error("Could not create the buffer, invalid input.");
     }
 
-    std::size_t vboSize = count * sizeof(Vertex);
+    std::size_t vboSize = count * size;
 
     glCheck(glBindBuffer(GL_ARRAY_BUFFER, m_vbo));
     glCheck(glBufferData(GL_ARRAY_BUFFER, vboSize, nullptr, GL_STATIC_DRAW));
@@ -77,8 +90,10 @@ inline namespace v1 {
     }
   }
 
-  VertexBuffer::VertexBuffer(const Vertex *vertices, const uint16_t *indices, std::size_t count, PrimitiveType type)
-  : m_count(count)
+
+  VertexBuffer::VertexBuffer(const void *vertices, std::size_t size, const uint16_t *indices, std::size_t count, PrimitiveType type)
+  : m_size(size)
+  , m_count(count)
   , m_type(type)
   {
     if (vertices == nullptr || indices == nullptr || count == 0) {
@@ -87,7 +102,7 @@ inline namespace v1 {
     }
 
     uint16_t maxIndex = *std::max_element(indices, indices + count);
-    std::size_t vboSize = (maxIndex + 1) * sizeof(Vertex);
+    std::size_t vboSize = (maxIndex + 1) * size;
 
     glCheck(glBindBuffer(GL_ARRAY_BUFFER, m_vbo));
     glCheck(glBufferData(GL_ARRAY_BUFFER, vboSize, nullptr, GL_STATIC_DRAW));

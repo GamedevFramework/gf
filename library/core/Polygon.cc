@@ -135,6 +135,47 @@ inline namespace v1 {
     return getSignedArea(m_points) > 0 ? Winding::Clockwise : Winding::Counterclockwise;
   }
 
+  namespace {
+    enum class LineSide {
+      Left,
+      Right,
+      None,
+    };
+
+    constexpr LineSide getSide(Vector2f a, Vector2f b) {
+      float x = cross(a, b);
+      if (x < 0) {
+        return LineSide::Left;
+      } else if (x > 0) {
+        return LineSide::Right;
+      }
+      return LineSide::None;
+    }
+  }
+
+  bool Polygon::contains(Vector2f point) const {
+    LineSide previousSide = LineSide::None;
+
+    for (std::size_t i = 0, n = getPointCount(); i < n; ++i) {
+      Vector2f a = getPoint(i);
+      Vector2f b = getPoint((i + 1) % n);
+
+      Vector2f segment = b - a;
+      Vector2f pointDirection = point - a;
+
+      LineSide currentSide = getSide(segment, pointDirection);
+      if (previousSide == LineSide::None) {
+        previousSide = currentSide;
+      }
+
+      if (previousSide != currentSide) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   float Polygon::getArea() const {
     return std::abs(getSignedArea(m_points) / 2);
   }

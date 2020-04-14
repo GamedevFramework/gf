@@ -1,6 +1,3 @@
-[submodule "library/vendor/gamecontrollerdb"]
-	path = library/vendor/gamecontrollerdb
-	url = https://github.com/gabomdq/SDL_GameControllerDB.git
 [submodule "library/vendor/stb"]
 	path = library/vendor/stb
 	url = https://github.com/nothings/stb.git
@@ -9,7 +6,10 @@
 	url = https://github.com/google/googletest.git
 [submodule "library/vendor/nuklear"]
 	path = library/vendor/nuklear
-	url = https://github.com/vurtun/nuklear.git
+	url = https://github.com/Immediate-Mode-UI/Nuklear.git
 [submodule "library/vendor/pugixml"]
 	path = library/vendor/pugixml
 	url = https://github.com/zeux/pugixml.git
+[submodule "library/vendor/gamecontrollerdb2"]
+	path = library/vendor/gamecontrollerdb2
+	url = https://github.com/gabomdq/gamecontrollerdb.git

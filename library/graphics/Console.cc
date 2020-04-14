@@ -379,7 +379,7 @@ inline namespace v1 {
     return width;
   }
 
-  int Console::printInternal(const RectI& rect, ConsoleEffect effect, ConsoleAlignment alignment, const std::string& message, PrintOptionFlags flags) {
+  int Console::printInternal(const RectI& rect, ConsoleEffect effect, ConsoleAlignment alignment, const std::string& message, Flags<PrintOption> flags) {
     // checks
     Vector2i consoleSize = m_data.getSize();
 
@@ -747,7 +747,7 @@ inline namespace v1 {
     localStates.transform *= getTransform();
     target.draw(backgroundVertices, localStates);
 
-    localStates.texture = m_font->getTexture();
+    localStates.texture[0] = m_font->getTexture();
     target.draw(foregroundVertices, localStates);
   }
 

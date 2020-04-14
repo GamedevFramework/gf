@@ -26,7 +26,7 @@
 #include <gf/Event.h>
 #include <gf/Window.h>
 
-std::ostream& operator<<(std::ostream& o, const gf::Modifiers& mods) {
+std::ostream& operator<<(std::ostream& o, const gf::Flags<gf::Mod>& mods) {
   return o << (mods.test(gf::Mod::Shift) ? " shift" : "")
            << (mods.test(gf::Mod::Control) ? " control" : "")
            << (mods.test(gf::Mod::Alt) ? " alt" : "")

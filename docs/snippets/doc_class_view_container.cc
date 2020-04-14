@@ -57,7 +57,7 @@ void dummyViewContainerUsage() {
   views.addView(screenView);
 
   // initialize the views with the initial screen size
-  views.setInitialScreenSize(ScreenSize);
+  views.setInitialFramebufferSize(ScreenSize);
 
   // ...
 

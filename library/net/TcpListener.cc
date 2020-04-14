@@ -94,7 +94,7 @@ inline namespace v1 {
       return sock;
     }
 
-    gf::Log::error("Unable to bind service '%s'. Reason: %s\n", service.c_str(), getErrorString().c_str());
+    gf::Log::error("Unable to bind service '%s'.\n", service.c_str());
     return InvalidSocketHandle;
   }
 

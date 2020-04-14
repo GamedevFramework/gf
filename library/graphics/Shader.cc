@@ -275,6 +275,24 @@ inline namespace v1 {
     glCheck(glUniform4f(loc, vec.x, vec.y, vec.z, vec.w));
   }
 
+  void Shader::setUniform(StringRef name, const Vector2i& vec) {
+    Guard guard(*this);
+    int loc = getUniformLocation(name);
+    glCheck(glUniform2i(loc, vec.x, vec.y));
+  }
+
+  void Shader::setUniform(StringRef name, const Vector3i& vec) {
+    Guard guard(*this);
+    int loc = getUniformLocation(name);
+    glCheck(glUniform3i(loc, vec.x, vec.y, vec.z));
+  }
+
+  void Shader::setUniform(StringRef name, const Vector4i& vec) {
+    Guard guard(*this);
+    int loc = getUniformLocation(name);
+    glCheck(glUniform4i(loc, vec.x, vec.y, vec.z, vec.w));
+  }
+
   void Shader::setUniform(StringRef name, const Matrix3f& mat) {
     Guard guard(*this);
     int loc = getUniformLocation(name);

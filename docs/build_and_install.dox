@@ -106,7 +106,7 @@ C:\Local\vcpkg> .\vcpkg integrate install
 Then, you can install the dependencies:
 
 ~~~{.bat}
-C:\Local\vcpkg> .\vcpkg install sdl2 freetype boost zlib
+C:\Local\vcpkg> .\vcpkg install sdl2:x64-windows freetype:x64-windows zlib:x64-windows boost-algorithm:x64-windows boost-filesystem:x64-windows boost-heap:x64-windows boost-container:x64-windows
 ~~~
 
 @subsection build_and_install_for_windows Build and install
@@ -119,7 +119,7 @@ C:\Local> cd gf
 C:\Local\gf> git submodule update --init
 C:\Local\gf> mkdir build
 C:\Local\gf> cd build
-C:\Local\gf\build> cmake ../ -DCMAKE_TOOLCHAIN_FILE=C:\Local\vcpkg\scripts\buildsystems\vcpkg.cmake -DCMAKE_INSTALL_PREFIX=C:\Local\vcpkg\installed\x86-windows -DGF_BUILD_GAMES=ON -DGF_BUILD_TOOLS=ON
+C:\Local\gf\build> cmake ../ -DCMAKE_TOOLCHAIN_FILE=C:\Local\vcpkg\scripts\buildsystems\vcpkg.cmake -DCMAKE_INSTALL_PREFIX=C:\Local\vcpkg\installed\x64-windows -DGF_BUILD_GAMES=ON -DGF_BUILD_TOOLS=ON
 ~~~
 
 Finally, open Visual Studio. Then, open the gf solution located at `C:\Local\gf\build\GF.sln`. Then, choose "Release" and build the solution (F7). Finally, build the "INSTALL" project. gf is installed as well as its tools and games.

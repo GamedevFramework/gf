@@ -87,6 +87,8 @@ inline namespace v1 {
 
     if (m_widgetIsSelected) {
       getCurrent().triggerCallback();
+      unselectCurrentlySelected();
+      m_widgetIsSelected = false;
     }
   }
 
@@ -150,6 +152,12 @@ inline namespace v1 {
     }
 
     getCurrent().setSelected();
+  }
+
+  void WidgetContainer::clear() {
+    m_widgets.clear();
+    m_selectedWidgetIndex = 0;
+    m_widgetIsSelected =false;
   }
 
   void WidgetContainer::unselectCurrentlySelected() {

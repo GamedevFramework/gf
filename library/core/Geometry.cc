@@ -21,6 +21,7 @@
 #include <gf/Geometry.h>
 
 #include <cassert>
+#include <set>
 
 #include <gf/Log.h>
 #include <gf/VectorOps.h>
@@ -437,6 +438,84 @@ inline namespace v1 {
     simplifyPointsRecursive(points, distance, result);
     result.push_back(points[points.getSize() - 1]);
     return result;
+  }
+
+
+  namespace {
+
+    template<typename Iterator>
+    Iterator findNextSegment(Iterator begin, Iterator end, gf::Vector2i endPoint, bool& needReverse) {
+      for (auto it = begin; it != end; ++it) {
+        if (it->p0 == endPoint) {
+          needReverse = false;
+          return it;
+        }
+
+        if (it->p1 == endPoint) {
+          needReverse = true;
+          return it;
+        }
+      }
+
+      return end;
+    }
+
+  } // anonymous namespace
+
+  bool operator<(const SegmentI& lhs, const SegmentI& rhs) {
+    return std::tie(lhs.p0.x, lhs.p0.y, lhs.p1.x, lhs.p1.y) < std::tie(rhs.p0.x, rhs.p0.y, rhs.p1.x, rhs.p1.y);
+  }
+
+  std::vector<Polyline> buildLines(ArrayRef<SegmentI> segments) {
+    std::vector<Polyline> lines;
+
+    std::multiset<SegmentI> remaining(segments.begin(), segments.end());
+
+     for (auto it = remaining.begin(); it != remaining.end(); /* not here */) {
+      // start a new line
+      Polyline polyline(gf::Polyline::Loop);
+
+      SegmentI first = *it;
+      polyline.addPoint(first.p0);
+
+      Vector2i endPoint = first.p1;
+
+      for (;;) {
+        polyline.addPoint(endPoint);
+
+        bool needReverse;
+        auto next = findNextSegment(std::next(it), remaining.end(), endPoint, needReverse);
+
+        if (next == remaining.end()) {
+          // the line is a chain
+          polyline.setType(gf::Polyline::Chain);
+          break;
+        }
+
+        SegmentI chosen = *next;
+        remaining.erase(next);
+
+        if (needReverse) {
+          std::swap(chosen.p0, chosen.p1);
+        }
+
+        assert(chosen.p0 == endPoint);
+        endPoint = chosen.p1;
+
+        if (endPoint == first.p0) {
+          // the line is a loop
+          break;
+        }
+      }
+
+      auto prev = it++;
+      remaining.erase(prev);
+
+      polyline.simplify();
+      lines.push_back(std::move(polyline));
+    }
+
+    return lines;
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

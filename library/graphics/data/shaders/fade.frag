@@ -18,16 +18,20 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#include <gf/Spatial.h>
+#version 100
 
-namespace gf {
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-inline namespace v1 {
-#endif
+precision mediump float;
 
-  // just to check everything is included properly
+varying vec4 v_color;
+varying vec2 v_texCoords;
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-}
-#endif
+uniform sampler2D u_texture0;
+uniform sampler2D u_texture1;
+uniform float u_progress;
+
+void main(void) {
+  vec4 texel0 = texture2D(u_texture0, v_texCoords);
+  vec4 texel1 = texture2D(u_texture1, v_texCoords);
+
+  gl_FragColor = mix(texel0, texel1, u_progress) * v_color;
 }

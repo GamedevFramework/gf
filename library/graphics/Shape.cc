@@ -24,6 +24,7 @@
 #include <gf/Shape.h>
 
 #include <cassert>
+#include <limits>
 
 #include <gf/Color.h>
 #include <gf/RenderTarget.h>
@@ -58,7 +59,7 @@ inline namespace v1 {
 
   void Shape::unsetTexture() {
     m_texture = nullptr;
-    m_bounds = RectF();
+    m_textureRect = RectF();
   }
 
   void Shape::setTextureRect(const RectF& rect) {
@@ -95,11 +96,11 @@ inline namespace v1 {
     localStates.transform *= getTransform();
 
     if (m_outlineThickness > 0.0f) {
-      localStates.texture = nullptr;
+      localStates.texture[0] = nullptr;
       target.draw(m_outlineVertices, localStates);
     }
 
-    localStates.texture = m_texture;
+    localStates.texture[0] = m_texture;
     target.draw(m_vertices, localStates);
   }
 
@@ -109,16 +110,18 @@ inline namespace v1 {
 
     m_vertices.resize(count + 2);
 
+    Vector2f min = gf::vec(std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
+    Vector2f max = gf::vec(std::numeric_limits<float>::lowest(), std::numeric_limits<float>::lowest());
+
     for (std::size_t i = 0; i < count; ++i) {
-      m_vertices[i + 1].position = getPoint(i);
+      auto point = getPoint(i);
+      m_vertices[i + 1].position = point;
+      min = gf::min(min, point);
+      max = gf::max(max, point);
     }
 
     m_vertices[count + 1].position = m_vertices[1].position;
-
-    m_vertices[0].position = m_vertices[1].position;
-    m_bounds = m_vertices.getBounds();
-
-    m_vertices[0].position = m_bounds.getCenter();
+    m_vertices[0].position = (min + max) / 2;
 
     updateColors();
     updateTexCoords();
@@ -126,6 +129,16 @@ inline namespace v1 {
     if (m_outlineThickness > 0.0f) {
       updateOutline();
     }
+  }
+
+  void Shape::updateBounds(RectF bounds) {
+    m_bounds = bounds;
+    updateTexCoords();
+  }
+
+  void Shape::updateAutoBounds() {
+    m_bounds = m_vertices.getBounds();
+    updateTexCoords();
   }
 
   void Shape::updateColors() {

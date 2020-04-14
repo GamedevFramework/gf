@@ -88,7 +88,7 @@ int main() {
   gf::ScreenView hudView;
   views.addView(hudView);
 
-  views.setInitialScreenSize(ScreenSize);
+  views.setInitialFramebufferSize(ScreenSize);
 
   bi::gMessageManager().registerHandler<bi::HeroPosition>([&mainView](gf::Id id, gf::Message *msg) {
     assert(id == bi::HeroPosition::type);

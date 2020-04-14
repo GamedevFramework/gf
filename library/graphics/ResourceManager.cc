@@ -44,6 +44,14 @@ inline namespace v1 {
 
   }
 
+  ResourceManager::ResourceManager(std::initializer_list<Path> paths)
+  : ResourceManager()
+  {
+    for (auto path : paths) {
+      addSearchDir(path);
+    }
+  }
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif
