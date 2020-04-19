@@ -68,7 +68,7 @@ inline namespace v1 {
   Vector2f Random::computePosition(const CircF& area) {
     float angle = computeAngle();
     float radius = computeRadius(0.0f, area.radius);
-    return radius * gf::unit(angle);
+    return area.center + radius * gf::unit(angle);
   }
 
   float Random::computeRadius(float radiusMin, float radiusMax) {
