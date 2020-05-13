@@ -38,7 +38,8 @@ inline namespace v1 {
   }
 
   ResourceManager::ResourceManager()
-  : m_textures(ResourceLoader<Texture>())
+  : m_images(ResourceLoader<Image>())
+  , m_textures(ResourceLoader<Texture>())
   , m_fonts(ResourceLoader<Font>())
   {
 

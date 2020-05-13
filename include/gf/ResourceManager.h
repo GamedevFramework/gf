@@ -28,6 +28,7 @@
 #include <stdexcept>
 
 #include "AssetManager.h"
+#include "Image.h"
 #include "Font.h"
 #include "Portability.h"
 #include "Texture.h"
@@ -150,6 +151,18 @@ inline namespace v1 {
      */
     ResourceManager(std::initializer_list<Path> paths);
 
+
+    /**
+     * @brief Get an image
+     *
+     * @param path A path to the image
+     * @return A reference to the image
+     * @throw std::runtime_error If the font is not found
+     */
+    Image& getImage(const Path& path) {
+      return m_images.getResource(*this, path);
+    }
+
     /**
      * @brief Get a texture
      *
@@ -173,6 +186,7 @@ inline namespace v1 {
     }
 
   private:
+    ResourceCache<Image> m_images;
     ResourceCache<Texture> m_textures;
     ResourceCache<Font> m_fonts;
   };
