@@ -87,7 +87,16 @@ inline namespace v1 {
      * @return A reference to the resource
      * @throw std::runtime_error If the resource is not found
      */
-    T& getResource(AssetManager& assetManager, const Path& filename) {
+    T& getResource(AssetManager& assets, Path filename) {
+      // try to find a known prefix
+      if (filename.is_absolute()) {
+        Path relativePath = assets.getRelativePath(filename);
+
+        if (!relativePath.empty()) {
+          filename = relativePath;
+        }
+      }
+
       std::size_t h = boost::filesystem::hash_value(filename);
 
       auto it = m_cache.find(h);
@@ -96,7 +105,7 @@ inline namespace v1 {
         return *it->second;
       }
 
-      Path absolutePath = assetManager.getAbsolutePath(filename);
+      Path absolutePath = assets.getAbsolutePath(filename);
 
       if (absolutePath.empty()) {
         throw std::runtime_error("Path not found");

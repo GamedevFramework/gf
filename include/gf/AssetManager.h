@@ -67,6 +67,19 @@ inline namespace v1 {
      */
     Path getAbsolutePath(const Path& relativePath) const;
 
+    /**
+     * @brief Search a file in the search directories
+     *
+     * This function tries to build a relative path by finding a prefix that is
+     * a known search directory.
+     *
+     * If the provided path is relative, then it is returned as is.
+     *
+     * @param absolutePath A path to the file
+     * @return The relative path to the file if possible or an empty path otherwise
+     */
+    Path getRelativePath(const Path& absolutePath) const;
+
   private:
     std::vector<Path> m_searchdirs;
   };
