@@ -391,7 +391,7 @@ inline namespace v1 {
       return modifiers;
     }
 
-    bool translateEvent(Uint32 windowId, const SDL_Event *in, Event& out) {
+    bool translateEvent(Uint32 windowId, Vector2i size, const SDL_Event *in, Event& out) {
       switch (in->type) {
         case SDL_WINDOWEVENT:
           if (windowId != in->window.windowID) {
@@ -540,6 +540,27 @@ inline namespace v1 {
           std::strncpy(out.text.rune.data, in->text.text, Rune::Size);
           break;
 
+        case SDL_FINGERDOWN:
+          out.type = EventType::TouchBegan;
+          out.touch.finger = in->tfinger.fingerId;
+          out.touch.coords.x = static_cast<int>(in->tfinger.x * size.width);
+          out.touch.coords.y = static_cast<int>(in->tfinger.y * size.height);
+          break;
+
+        case SDL_FINGERMOTION:
+          out.type = EventType::TouchMoved;
+          out.touch.finger = in->tfinger.fingerId;
+          out.touch.coords.x = static_cast<int>(in->tfinger.x * size.width);
+          out.touch.coords.y = static_cast<int>(in->tfinger.y * size.height);
+          break;
+
+        case SDL_FINGERUP:
+          out.type = EventType::TouchEnded;
+          out.touch.finger = in->tfinger.fingerId;
+          out.touch.coords.x = static_cast<int>(in->tfinger.x * size.width);
+          out.touch.coords.y = static_cast<int>(in->tfinger.y * size.height);
+          break;
+
         default:
           return false;
       }
@@ -561,7 +582,7 @@ inline namespace v1 {
       if (status == 0) {
         return false;
       }
-    } while (!translateEvent(windowId, &ev, event));
+    } while (!translateEvent(windowId, getSize(), &ev, event));
 
     return true;
   }
@@ -578,7 +599,7 @@ inline namespace v1 {
       if (status == 0) {
         return false;
       }
-    } while (!translateEvent(windowId, &ev, event));
+    } while (!translateEvent(windowId, getSize(), &ev, event));
 
     return true;
   }

@@ -66,6 +66,10 @@ inline namespace v1 {
     GamepadDisconnected,    ///< A gamepad was disconnected (data in event.gamepadDisconnection)
 
     TextEntered,  ///< A text was entered (data in event.text)
+
+    TouchBegan, ///< A touch began
+    TouchMoved, ///< A touch moved
+    TouchEnded, ///< A touch ended
   };
 
 
@@ -164,6 +168,14 @@ inline namespace v1 {
       GamepadId id; ///< Id of the gamepad
     };
 
+    /**
+     * @brief Touch event parameters (EventType::TouchBegan, EventType::TouchMoved, EventType::TouchEnded)
+     */
+    struct TouchEvent {
+      int64_t finger; ///< Finger that touched
+      Vector2i coords; ///< Position of the touch
+    };
+
     EventType type; ///< Type of the event
 
     union {
@@ -177,6 +189,7 @@ inline namespace v1 {
       GamepadAxisEvent gamepadAxis; ///< Gamepad axis event parameters (EventType::GamepadAxisMoved)
       GamepadConnection gamepadConnection; ///< Gamepad connection event parameters (EventType::GamepadConnected)
       GamepadDisconnection gamepadDisconnection; ///< Gamepad disconnection event parameters (EventType::GamepadDisconnected)
+      TouchEvent touch; ///< Touch event parameters (EventType::TouchBegan, EventType::Moved, EventType::Ended)
     };
 
   };
