@@ -24,6 +24,7 @@
 #include <vector>
 
 #include "Curve.h"
+#include "Polyline.h"
 #include "Portability.h"
 
 namespace gf {
@@ -114,6 +115,53 @@ inline namespace v1 {
   };
 
   /**
+   * @brief A Catmull–Rom spline
+   *
+   * @sa [Centripetal Catmull–Rom spline - Wikipedia](https://en.wikipedia.org/wiki/Centripetal_Catmull%E2%80%93Rom_spline)
+   */
+  class GF_API SplineCurve : public Curve {
+  public:
+    /**
+     * @brief The type of the spline
+     *
+     * It determines the how the knot sequence is computed. For two points
+     * @f$ P_0 @f$ and @f$ P_1 @f$ with a euclidean distance of @f$ D @f$, and
+     * corresponding knots @f$ t_0 @f$ and @f$ t_1 @f$, the general formula is
+     * given by @f$ t_1 = t_0 + D^{\alpha} @f$. The type determines the value
+     * of @f$ \alpha @f$.
+     */
+    enum Type {
+      Uniform, ///< A uniform spline (@f$ \alpha = 0.0 @f$)
+      Chordal, ///< A uniform spline (@f$ \alpha = 1.0 @f$)
+      Centripetal, ///< A uniform spline (@f$ \alpha = 0.5 @f$)
+    };
+
+    /**
+     * @brief Constructor
+     *
+     * @param type The type of spline
+     * @param pointCount The number of points between two control points
+     */
+    SplineCurve(Type type = Centripetal, std::size_t pointCount = 30);
+
+    /**
+     * @brief Set the control points of the spline
+     *
+     * @param line The polyline that contains the points
+     */
+    void setControlPoints(const Polyline& line);
+
+    virtual std::size_t getPointCount() const override;
+
+    virtual Vector2f getPoint(std::size_t index) const override;
+
+  private:
+    Type m_type;
+    std::size_t m_pointCount;
+    std::vector<Vector2f> m_points;
+  };
+
+  /**
    * @brief A compound curve
    *
    * A compound curve is a curve composed of several continuous curves. It is
@@ -185,6 +233,8 @@ inline namespace v1 {
   private:
     std::vector<Vector2f> m_points;
   };
+
+
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

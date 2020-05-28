@@ -31,7 +31,7 @@
 #include <gf/Window.h>
 
 int main() {
-  gf::Window window("11_curves", { 640, 480 }, ~gf::WindowHints::Resizable);
+  gf::Window window("11_curves", { 800, 600 }, ~gf::WindowHints::Resizable);
   gf::RenderWindow renderer(window);
 
   /*
@@ -96,6 +96,27 @@ int main() {
   closed.setPosition({ 50.0f, 300.0f });
   closed.rotate(gf::Pi / 8);
 
+
+  /*
+   * A spline
+   */
+
+  gf::Polyline polyline(gf::Polyline::Loop);
+  polyline.addPoint({ 50.0f, 500.0f });
+  polyline.addPoint({ 150.0f, 550.0f });
+  polyline.addPoint({ 150.0f, 450.0f });
+  polyline.addPoint({ 300.0f, 500.0f });
+  polyline.addPoint({ 700.0f, 500.0f });
+  polyline.addPoint({ 700.0f, 200.0f });
+  polyline.addPoint({ 600.0f, 500.0f });
+
+  gf::SplineCurve spline;
+  spline.setControlPoints(polyline);
+  spline.setColor(gf::Color::Orange);
+  spline.setWidth(8.0f);
+  spline.setOutlineColor(gf::Color::darker(gf::Color::Orange));
+  spline.setOutlineThickness(2.0f);
+
   std::cout << "Gamedev Framework (gf) example #11: Curves\n";
   std::cout << "This example prints various curves.\n";
 
@@ -127,6 +148,7 @@ int main() {
     renderer.draw(cubic);
     renderer.draw(compound);
     renderer.draw(closed);
+    renderer.draw(spline);
     renderer.display();
   }
 

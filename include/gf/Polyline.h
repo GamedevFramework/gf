@@ -169,6 +169,17 @@ inline namespace v1 {
     Vector2f getPrevPoint(std::size_t i) const;
 
     /**
+     * @brief Get the previous extension point of the first point
+     *
+     * When the line is a chain, the line can be extended with an extension
+     * point that is the symmetric of point at index 1 relative to the point
+     * at index 0. It may be useful for the computation of splines.
+     *
+     * @return The previous extension point
+     */
+    Vector2f getPrevExtensionPoint() const;
+
+    /**
      * @brief Check if there is a point after the i-th point
      *
      * @param i The index of the current point
@@ -187,6 +198,18 @@ inline namespace v1 {
      * @sa hasNextPoint()
      */
     Vector2f getNextPoint(std::size_t i) const;
+
+    /**
+     * @brief Get the next extension point of the last point
+     *
+     * When the line is a chain, the line can be extended with an extension
+     * point that is the symmetric of point at index @f$ (n-2) @f$ relative to
+     * the point at index @f$ (n-1) @f$. It may be useful for the computation
+     * of splines.
+     *
+     * @return The next extension point
+     */
+    Vector2f getNextExtensionPoint() const;
 
     /**
      * @brief Set the type of the polyline
