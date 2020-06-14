@@ -202,6 +202,7 @@ else()
     graphics/TextureAtlas.cc
     graphics/Texture.cc
     graphics/TileLayer.cc
+    graphics/Tileset.cc
     graphics/Tmx.cc
     graphics/TmxOps.cc
     graphics/Transformable.cc

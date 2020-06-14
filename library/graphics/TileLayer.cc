@@ -43,11 +43,6 @@ inline namespace v1 {
   , m_mapCellAxis(MapCellAxis::Y)
   , m_layerSize(0, 0)
   , m_tileSize(0, 0)
-  , m_texture(nullptr)
-  , m_tilesetTileSize(0, 0)
-  , m_margin(0, 0)
-  , m_spacing(0, 0)
-  , m_offset(0, 0)
   , m_rect(RectI::empty())
   , m_vertices(PrimitiveType::Triangles)
   {
@@ -59,40 +54,11 @@ inline namespace v1 {
   , m_mapCellAxis(MapCellAxis::Y)
   , m_layerSize(layerSize)
   , m_tileSize(0, 0)
-  , m_texture(nullptr)
-  , m_tilesetTileSize(0, 0)
-  , m_margin(0, 0)
-  , m_spacing(0, 0)
-  , m_offset(0, 0)
   , m_tiles(layerSize)
   , m_rect(RectI::empty())
   , m_vertices(PrimitiveType::Triangles)
   {
     clear();
-  }
-
-  void TileLayer::setTexture(const Texture& texture) {
-    m_texture = &texture;
-  }
-
-  void TileLayer::unsetTexture() {
-    m_texture = nullptr;
-  }
-
-  void TileLayer::setTilesetTileSize(Vector2i tileSize) {
-    m_tilesetTileSize = tileSize;
-  }
-
-  void TileLayer::setMargin(Vector2i margin) {
-    m_margin = margin;
-  }
-
-  void TileLayer::setSpacing(Vector2i spacing) {
-    m_spacing = spacing;
-  }
-
-  void TileLayer::setOffset(Vector2i offset) {
-    m_offset = offset;
   }
 
   void TileLayer::setTileSize(Vector2i tileSize) {
@@ -139,7 +105,7 @@ inline namespace v1 {
   }
 
   void TileLayer::draw(RenderTarget& target, const RenderStates& states) {
-    if (m_texture == nullptr || m_orientation == TileOrientation::Unknown) {
+    if (!m_tileset.hasTexture() || m_orientation == TileOrientation::Unknown) {
       return;
     }
 
@@ -183,7 +149,7 @@ inline namespace v1 {
     RenderStates localStates = states;
 
     localStates.transform *= getTransform();
-    localStates.texture[0] = m_texture;
+    localStates.texture[0] = &m_tileset.getTexture();
 
     target.draw(m_vertices, localStates);
   }
@@ -191,14 +157,6 @@ inline namespace v1 {
 
   void TileLayer::fillVertexArray(VertexArray& array, RectI rect) const {
     array.reserve(static_cast<std::size_t>(rect.getWidth()) * static_cast<std::size_t>(rect.getHeight()) * 6);
-
-    gf::Vector2i tilesetTileSize = m_tilesetTileSize;
-
-    if (tilesetTileSize.width == 0 || tilesetTileSize.height == 0) {
-      tilesetTileSize = m_tileSize;
-    }
-
-    Vector2i tilesetSize = (m_texture->getSize() - 2 * m_margin + m_spacing) / (tilesetTileSize + m_spacing);
 
     Vector2i cell;
 
@@ -219,10 +177,10 @@ inline namespace v1 {
 
         if (m_orientation == TileOrientation::Orthogonal) {
           size = m_tileSize;
-          position = cell * m_tileSize + m_offset;
+          position = cell * m_tileSize + m_tileset.getOffset();
         } else {
           assert(m_orientation == TileOrientation::Staggered);
-          size = tilesetTileSize;
+          size = m_tileset.getTileSize();
 
           if (cell.y % 2 == 0) {
             position = cell * m_tileSize;
@@ -233,18 +191,14 @@ inline namespace v1 {
             position.x += m_tileSize.width / 2;
           }
 
-          position += m_offset;
+          position += m_tileset.getOffset();
         }
 
         RectF box = RectF::fromPositionSize(position, size);
 
         // texture coords
 
-        Vector2i tileCoords(tile % tilesetSize.width, tile / tilesetSize.width);
-        assert(tileCoords.y < tilesetSize.height);
-
-        RectI textureRect = RectI::fromPositionSize(tileCoords * tilesetTileSize + tileCoords * m_spacing + m_margin, tilesetTileSize);
-        RectF textureCoords = m_texture->computeTextureCoords(textureRect);
+        RectF textureCoords = m_tileset.computeTextureCoords(tile);
 
         // vertices
 
@@ -298,7 +252,7 @@ inline namespace v1 {
   void TileLayer::updateGeometry() {
     m_vertices.clear();
 
-    if (m_texture == nullptr || m_tileSize.width == 0 || m_tileSize.height == 0) {
+    if (!m_tileset.hasTexture() || m_tileSize.width == 0 || m_tileSize.height == 0) {
       return;
     }
 
