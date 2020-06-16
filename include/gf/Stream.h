@@ -25,6 +25,7 @@
 #define GF_STREAM_H
 
 #include <cstddef>
+#include <cstdint>
 
 #include "ArrayRef.h"
 #include "BufferRef.h"
