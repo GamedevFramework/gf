@@ -20,6 +20,15 @@
  */
 #include <gf/ResourceManager.h>
 
+#include <thread>
+
+#include <SDL.h>
+
+#include <gf/Log.h>
+#include <gf/Sleep.h>
+
+#include "priv/OpenGLFwd.h"
+
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
@@ -51,6 +60,45 @@ inline namespace v1 {
     for (auto path : paths) {
       addSearchDir(path);
     }
+  }
+
+  void ResourceManager::asynchronousLoading(Window& window, std::function<void()> function) {
+    m_sharedContext = window.getSharedGLContext();
+
+    std::hash<std::thread::id> hasher;
+    Log::debug("main thread id %lu\n", hasher(std::this_thread::get_id()));
+
+    m_loadingThread = std::thread([this, function, hasher]{
+      // Attach the context to the new thread
+      SDL_GL_MakeCurrent(m_sharedContext.sdlWindow, m_sharedContext.sdlContext);
+      Log::debug("loading thread id %lu\n", hasher(std::this_thread::get_id()));
+
+      // Call the code wich loading something
+      function();
+
+      glFlush();
+      // // Syncronize OpenGL contexts -- Unable to link to opengl
+      // GLsync fenceId = glFenceSync( GL_SYNC_GPU_COMMANDS_COMPLETE, 0 );
+      // for (;;) {
+      //   // 5 Second timeout
+      //   GLenum result = glClientWaitSync(fenceId, GL_SYNC_FLUSH_COMMANDS_BIT, GLuint64(5000000000));
+
+      //   // Ignore timeouts and wait until all OpenGL commands are processed
+      //   if(result != GL_TIMEOUT_EXPIRED) {
+      //     break;
+      //   }
+      // }
+
+      // Unbind the context from the thread
+      SDL_GL_MakeCurrent(m_sharedContext.sdlWindow, nullptr);
+    });
+  }
+
+  void ResourceManager::waitLoading() {
+    m_loadingThread.join();
+
+    // SDL_GL_DeleteContext(m_sharedContext.sdlContext);
+    // m_sharedContext.sdlContext = nullptr;
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

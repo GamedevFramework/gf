@@ -26,12 +26,14 @@
 #include <map>
 #include <memory>
 #include <stdexcept>
+#include <thread>
 
 #include "AssetManager.h"
 #include "Image.h"
 #include "Font.h"
 #include "Portability.h"
 #include "Texture.h"
+#include "Window.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -185,10 +187,16 @@ inline namespace v1 {
       return m_fonts.getResource(*this, path);
     }
 
+    void asynchronousLoading(Window& window, std::function<void()> function);
+
+    void waitLoading();
+
   private:
     ResourceCache<Image> m_images;
     ResourceCache<Texture> m_textures;
     ResourceCache<Font> m_fonts;
+    std::thread m_loadingThread;
+    SharedContext m_sharedContext;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

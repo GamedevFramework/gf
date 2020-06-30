@@ -65,6 +65,16 @@ struct EnableBitmaskOperators<WindowHints> {
 inline namespace v1 {
 #endif
 
+  struct SharedContext {
+    SharedContext() {
+      sdlWindow = nullptr;
+      sdlContext = nullptr;
+    }
+
+    SDL_Window* sdlWindow;
+    void* sdlContext;
+  };
+
   /**
    * @ingroup window
    * @brief An OS window
@@ -466,6 +476,8 @@ inline namespace v1 {
      * @param cursor Native system cursor type to display
      */
     void setMouseCursor(const Cursor& cursor);
+
+    SharedContext getSharedGLContext();
 
     /** @} */
 
