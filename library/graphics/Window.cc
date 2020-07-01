@@ -105,14 +105,22 @@ inline namespace v1 {
   Window::Window(StringRef title, Vector2i size, Flags<WindowHints> hints)
   : m_window(nullptr)
   , m_context(nullptr)
+  , m_sharedContext(nullptr)
   , m_shouldClose(false)
   , m_isFullscreen(false)
   , m_vao(0)
   {
     auto flags = getFlagsFromHints(hints);
     m_window = SDL_CreateWindow(title.getData(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, size.width, size.height, flags);
+
     SDL_GL_SetAttribute(SDL_GL_SHARE_WITH_CURRENT_CONTEXT, 1);
     m_context = createContextFromWindow(m_window);
+    m_sharedContext = SDL_GL_CreateContext(m_window);
+
+    if (m_sharedContext == nullptr) {
+      Log::error("Failed to create a shared context: %s\n", SDL_GetError());
+      m_sharedContext = nullptr;
+    }
 
     if (m_context != nullptr) {
       glCheck(glEnable(GL_BLEND));
@@ -129,6 +137,10 @@ inline namespace v1 {
   }
 
   Window::~Window() {
+    if (m_sharedContext != nullptr) {
+      SDL_GL_DeleteContext(m_sharedContext);
+    }
+
     if (m_context != nullptr) {
 #ifdef GF_OPENGL3
       glCheck(glBindVertexArray(0));
@@ -651,16 +663,12 @@ inline namespace v1 {
     SDL_SetCursor(cursor.m_cursor);
   }
 
-  SharedContext Window::getSharedGLContext() {
-    SharedContext sharedContext;
-    sharedContext.sdlWindow = m_window;
-    sharedContext.sdlContext = SDL_GL_CreateContext(m_window);
+  void Window::attachGLContext() {
+    SDL_GL_MakeCurrent(m_window, m_sharedContext);
+  }
 
-    if (sharedContext.sdlContext == nullptr) {
-      Log::error("Failed to create a shared context: %s\n", SDL_GetError());
-    }
-
-    return sharedContext;
+  void Window::detachGLContext() {
+    SDL_GL_MakeCurrent(m_window, nullptr);
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

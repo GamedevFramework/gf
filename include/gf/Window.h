@@ -65,16 +65,6 @@ struct EnableBitmaskOperators<WindowHints> {
 inline namespace v1 {
 #endif
 
-  struct SharedContext {
-    SharedContext() {
-      sdlWindow = nullptr;
-      sdlContext = nullptr;
-    }
-
-    SDL_Window* sdlWindow;
-    void* sdlContext;
-  };
-
   /**
    * @ingroup window
    * @brief An OS window
@@ -477,7 +467,9 @@ inline namespace v1 {
      */
     void setMouseCursor(const Cursor& cursor);
 
-    SharedContext getSharedGLContext();
+    void attachGLContext();
+
+    void detachGLContext();
 
     /** @} */
 
@@ -488,6 +480,7 @@ inline namespace v1 {
   private:
     SDL_Window *m_window;
     void *m_context;
+    void *m_sharedContext;
     bool m_shouldClose;
     bool m_isFullscreen;
 
