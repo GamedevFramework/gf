@@ -104,7 +104,7 @@ inline namespace v1 {
 
   Window::Window(StringRef title, Vector2i size, Flags<WindowHints> hints)
   : m_window(nullptr)
-  , m_context(nullptr)
+  , m_mainContext(nullptr)
   , m_sharedContext(nullptr)
   , m_shouldClose(false)
   , m_isFullscreen(false)
@@ -115,14 +115,14 @@ inline namespace v1 {
 
     SDL_GL_SetAttribute(SDL_GL_SHARE_WITH_CURRENT_CONTEXT, 1);
     m_sharedContext = SDL_GL_CreateContext(m_window);
-    m_context = createContextFromWindow(m_window);
+    m_mainContext = createContextFromWindow(m_window);
 
     if (m_sharedContext == nullptr) {
       Log::error("Failed to create a shared context: %s\n", SDL_GetError());
       m_sharedContext = nullptr;
     }
 
-    if (m_context != nullptr) {
+    if (m_mainContext != nullptr) {
       glCheck(glEnable(GL_BLEND));
       glCheck(glEnable(GL_SCISSOR_TEST));
       glCheck(glClear(GL_COLOR_BUFFER_BIT));
@@ -141,12 +141,12 @@ inline namespace v1 {
       SDL_GL_DeleteContext(m_sharedContext);
     }
 
-    if (m_context != nullptr) {
+    if (m_mainContext != nullptr) {
 #ifdef GF_OPENGL3
       glCheck(glBindVertexArray(0));
       glCheck(glDeleteVertexArrays(1, &m_vao));
 #endif
-      SDL_GL_DeleteContext(m_context);
+      SDL_GL_DeleteContext(m_mainContext);
     }
 
     if (m_window != nullptr) {

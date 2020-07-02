@@ -18,44 +18,23 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#include <gf/ResourceManager.h>
-
-#include <SDL.h>
-
-#include "priv/OpenGLFwd.h"
+#include <gf/SharedGLContext.h>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
 #endif
 
-  namespace {
-
-    template<typename T>
-    class ResourceLoader {
-    public:
-      std::unique_ptr<T> operator()(const Path& filename) {
-        return std::make_unique<T>(filename);
-      }
-    };
-
-  }
-
-  ResourceManager::ResourceManager()
-  : m_images(ResourceLoader<Image>())
-  , m_textures(ResourceLoader<Texture>())
-  , m_fonts(ResourceLoader<Font>())
+  SharedGLContext::SharedGLContext(Window& window)
+  : m_window(window)
   {
-
+    m_window.attachGLContext();
   }
 
-  ResourceManager::ResourceManager(std::initializer_list<Path> paths)
-  : ResourceManager()
-  {
-    for (auto path : paths) {
-      addSearchDir(path);
-    }
+  SharedGLContext::~SharedGLContext() {
+    m_window.detachGLContext();
   }
+
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

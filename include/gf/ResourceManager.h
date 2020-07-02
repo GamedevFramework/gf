@@ -190,10 +190,6 @@ inline namespace v1 {
       return m_fonts.getResource(*this, path);
     }
 
-    void asynchronousLoading(Window& window, std::function<void()> function);
-
-    bool waitLoading(Time timeout = milliseconds(100)); // Less than 60Hz
-
   private:
     ResourceCache<Image> m_images;
     ResourceCache<Texture> m_textures;
