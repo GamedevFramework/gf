@@ -114,8 +114,8 @@ inline namespace v1 {
     m_window = SDL_CreateWindow(title.getData(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, size.width, size.height, flags);
 
     SDL_GL_SetAttribute(SDL_GL_SHARE_WITH_CURRENT_CONTEXT, 1);
-    m_context = createContextFromWindow(m_window);
     m_sharedContext = SDL_GL_CreateContext(m_window);
+    m_context = createContextFromWindow(m_window);
 
     if (m_sharedContext == nullptr) {
       Log::error("Failed to create a shared context: %s\n", SDL_GetError());
