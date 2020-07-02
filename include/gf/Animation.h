@@ -80,6 +80,13 @@ inline namespace v1 {
     void addTileset(const Texture& texture, const Vector2f& frameSize, const Vector2i& layout, int nbFrames, Time duration);
 
     /**
+     * @brief Enable or disable the animation repeation
+     *
+     * @param enabled True to enable the repeation otherwise false
+     */
+    void setRepeat(bool enabled);
+
+    /**
      * @brief Get the current texture
      *
      * @return The current texture
@@ -118,6 +125,7 @@ inline namespace v1 {
     std::size_t m_currentFrame;
     Time m_currentDurationInFrame;
     std::vector<Frame> m_frames;
+    bool m_reapeat;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
