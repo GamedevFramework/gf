@@ -194,7 +194,6 @@ inline namespace v1 {
     ResourceCache<Image> m_images;
     ResourceCache<Texture> m_textures;
     ResourceCache<Font> m_fonts;
-    std::future<void> m_loadingThreadReturn;
     std::mutex m_mutex;
   };
 
