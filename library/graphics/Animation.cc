@@ -32,7 +32,7 @@ inline namespace v1 {
   Animation::Animation()
   : m_currentFrame(0)
   , m_currentDurationInFrame(Time::zero())
-  , m_reapeat(true)
+  , m_loop(true)
   {
 
   }
@@ -63,8 +63,8 @@ inline namespace v1 {
     }
   }
 
-  void Animation::setRepeat(bool enabled) {
-    m_reapeat = enabled;
+  void Animation::setLoop(bool enabled) {
+    m_loop = enabled;
   }
 
   const Texture& Animation::getCurrentTexture() const {
@@ -92,7 +92,7 @@ inline namespace v1 {
     m_currentDurationInFrame -= time;
 
     while (m_currentDurationInFrame < Time::zero()) {
-      if (m_currentFrame + 1 >= m_frames.size() && !m_reapeat) {
+      if (m_currentFrame + 1 >= m_frames.size() && !m_loop) {
         return false;
       }
       m_currentFrame = (m_currentFrame + 1) % m_frames.size();
