@@ -381,18 +381,21 @@ endif()
 
 set_target_properties(gfcore0
   PROPERTIES
+  EXPORT_NAME "core"
   VERSION ${PROJECT_VERSION}
   SOVERSION ${PROJECT_VERSION_MAJOR}
 )
 
 set_target_properties(gf0
   PROPERTIES
+  EXPORT_NAME "graphics"
   VERSION ${PROJECT_VERSION}
   SOVERSION ${PROJECT_VERSION_MAJOR}
 )
 
 set_target_properties(gfnet0
   PROPERTIES
+  EXPORT_NAME "net"
   VERSION ${PROJECT_VERSION}
   SOVERSION ${PROJECT_VERSION_MAJOR}
 )
@@ -404,24 +407,8 @@ if(NOT GF_SHARED)
 endif()
 
 install(
-  TARGETS gfcore0
-  EXPORT gfcoreTargets
-  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-)
-
-install(
-  TARGETS gf0
+  TARGETS gfcore0 gf0 gfnet0
   EXPORT gfTargets
-  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-)
-
-install(
-  TARGETS gfnet0
-  EXPORT gfnetTargets
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
@@ -435,17 +422,6 @@ if(WIN32 AND BUILD_SHARED_LIBS)
 endif()
 
 install(
-  EXPORT gfcoreTargets
-  NAMESPACE gf::
-  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/gfcore"
-)
-
-install(
-  FILES gfcoreConfig.cmake
-  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/gfcore"
-)
-
-install(
   EXPORT gfTargets
   NAMESPACE gf::
   DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/gf"
@@ -456,13 +432,14 @@ install(
   DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/gf"
 )
 
-install(
-  EXPORT gfnetTargets
-  NAMESPACE gf::
-  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/gfnet"
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+  "${CMAKE_CURRENT_BINARY_DIR}/gfConfigVersion.cmake"
+  VERSION ${PROJECT_VERSION}
+  COMPATIBILITY SameMajorVersion
 )
 
 install(
-  FILES gfnetConfig.cmake
-  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/gfnet"
+  FILES "${CMAKE_CURRENT_BINARY_DIR}/gfConfigVersion.cmake"
+  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/gf"
 )
