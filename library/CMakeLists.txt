@@ -29,6 +29,7 @@ add_custom_target(gf0_gamecontrollerdb ALL DEPENDS ${GCDB_HEADERS})
 # process shader files
 
 set(SHADER_SOURCES
+  graphics/data/shaders/blackout.frag
   graphics/data/shaders/color_matrix.frag
   graphics/data/shaders/default_alpha.frag
   graphics/data/shaders/default.frag

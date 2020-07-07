@@ -20,6 +20,7 @@
  */
 #include <gf/SegueEffects.h>
 
+#include "generated/blackout.frag.h"
 #include "generated/checkerboard.frag.h"
 #include "generated/circle.frag.h"
 #include "generated/default.vert.h"
@@ -34,6 +35,15 @@ namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
 #endif
+
+  /*
+   * FadeSegueEffect
+   */
+
+  BlackoutSegueEffect::BlackoutSegueEffect()
+  : SegueEffect(default_vert, blackout_frag)
+  {
+  }
 
   /*
    * FadeSegueEffect
@@ -152,8 +162,3 @@ inline namespace v1 {
 }
 #endif
 }
-
-
-
-
-

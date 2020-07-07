@@ -18,21 +18,24 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
+#version 100
 
-#define GF_IMPLEMENTATION
+precision mediump float;
 
-#include "generated/blackout.frag.h"
-#include "generated/color_matrix.frag.h"
-#include "generated/default_alpha.frag.h"
-#include "generated/default.frag.h"
-#include "generated/default.vert.h"
-#include "generated/edge.frag.h"
-#include "generated/fxaa.frag.h"
-#include "generated/fade.frag.h"
-#include "generated/slide.frag.h"
-#include "generated/glitch.frag.h"
-#include "generated/checkerboard.frag.h"
-#include "generated/circle.frag.h"
-#include "generated/pixelate.frag.h"
-#include "generated/radial.frag.h"
-#include "generated/zoomblur.frag.h"
+varying vec4 v_color;
+varying vec2 v_texCoords;
+
+uniform sampler2D u_texture0;
+uniform sampler2D u_texture1;
+uniform float u_progress;
+
+void main(void) {
+  vec4 texel0 = texture2D(u_texture0, v_texCoords);
+  vec4 texel1 = texture2D(u_texture1, v_texCoords);
+  vec4 blackPix = vec4(0.0, 0.0, 0.0, 1.0);
+
+  float progress0 = clamp(u_progress - 0.5, -0.5, 0.0) * -2.0;
+  float progress1 = clamp(u_progress - 0.5, 0.0, 0.5) * 2.0;
+
+  gl_FragColor = (mix(blackPix, texel0, progress0) + mix(blackPix, texel1, progress1)) * v_color;
+}
