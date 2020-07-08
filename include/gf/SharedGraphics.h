@@ -18,25 +18,58 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#include <gf/SharedGLContext.h>
+
+#ifndef GF_SHARED_GRAPHICS_H
+#define GF_SHARED_GRAPHICS_H
+
+#include <gf/Window.h>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
 #endif
 
-  SharedGLContext::SharedGLContext(Window& window)
-  : m_window(window)
-  {
-    m_window.attachGLContext();
-  }
+  /**
+   * @ingroup game
+   * @brief A shared OpenGL context with the main thread
+   *
+   * This class is useful for load textures asynchronously.
+   * The context will automatically attached to the current
+   * thread at object instantiation and will detached at its
+   * destruction.
+   */
+  class GF_API SharedGraphics {
+  public:
+    /**
+     * @brief Create a shared OpenGL context
+     *
+     * Attach a OpenGL context to the current thread.
+     *
+     * @param window A reference to the main window
+     */
+    SharedGraphics(Window& window);
 
-  SharedGLContext::~SharedGLContext() {
-    m_window.detachGLContext();
-  }
+    /**
+     * @brief Destructor
+     *
+     * Detach the OpenGL context from the current thread
+     */
+    ~SharedGraphics();
 
+    SharedGraphics(const SharedGraphics&) = delete;
+    SharedGraphics(SharedGraphics&&) = delete;
+
+    SharedGraphics& operator=(const SharedGraphics&) = delete;
+    SharedGraphics& operator=(SharedGraphics&&) = delete;
+
+  private:
+    Window& m_window;
+  };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif
 }
+
+
+#endif // GF_SHARED_GRAPHICS_H

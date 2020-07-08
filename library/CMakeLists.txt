@@ -195,7 +195,7 @@ else()
     graphics/Shader.cc
     graphics/Shape.cc
     graphics/Shapes.cc
-    graphics/SharedGLContext.cc
+    graphics/SharedGraphics.cc
     graphics/SpriteBatch.cc
     graphics/Sprite.cc
     graphics/Stagger.cc
