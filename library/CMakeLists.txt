@@ -11,7 +11,7 @@ set(GCDB_SOURCES
 set(GCDB_HEADERS "")
 
 foreach(GCDB_RELATIVE_SOURCE ${GCDB_SOURCES})
-  set(GCDB_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/vendor/gamecontrollerdb2/${GCDB_RELATIVE_SOURCE}")
+  set(GCDB_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/vendor/SDL_GameControllerDB/${GCDB_RELATIVE_SOURCE}")
   get_filename_component(GCDB_NAME ${GCDB_RELATIVE_SOURCE} NAME)
   string(REPLACE "." "_" GCDB_VARIABLE ${GCDB_NAME})
   set(GCDB_HEADER "${CMAKE_CURRENT_BINARY_DIR}/generated/${GCDB_NAME}.h")
@@ -29,6 +29,7 @@ add_custom_target(gf0_gamecontrollerdb ALL DEPENDS ${GCDB_HEADERS})
 # process shader files
 
 set(SHADER_SOURCES
+  graphics/data/shaders/blackout.frag
   graphics/data/shaders/color_matrix.frag
   graphics/data/shaders/default_alpha.frag
   graphics/data/shaders/default.frag
@@ -194,7 +195,7 @@ else()
     graphics/Shader.cc
     graphics/Shape.cc
     graphics/Shapes.cc
-    graphics/SharedGLContext.cc
+    graphics/SharedGraphics.cc
     graphics/SpriteBatch.cc
     graphics/Sprite.cc
     graphics/Stagger.cc

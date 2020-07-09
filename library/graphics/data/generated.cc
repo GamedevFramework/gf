@@ -21,6 +21,7 @@
 
 #define GF_IMPLEMENTATION
 
+#include "generated/blackout.frag.h"
 #include "generated/color_matrix.frag.h"
 #include "generated/default_alpha.frag.h"
 #include "generated/default.frag.h"
@@ -35,4 +36,3 @@
 #include "generated/pixelate.frag.h"
 #include "generated/radial.frag.h"
 #include "generated/zoomblur.frag.h"
-

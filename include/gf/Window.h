@@ -469,7 +469,7 @@ inline namespace v1 {
 
     /** @} */
 
-    friend class SharedGLContext;
+    friend class SharedGraphics;
 
   private:
     void attachGLContext();
