@@ -76,6 +76,7 @@
 #include "Shader.cc"
 #include "Shape.cc"
 #include "Shapes.cc"
+#include "SharedGraphics.cc"
 #include "SpriteBatch.cc"
 #include "Sprite.cc"
 #include "Stagger.cc"

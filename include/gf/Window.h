@@ -469,13 +469,19 @@ inline namespace v1 {
 
     /** @} */
 
+    friend class SharedGraphics;
+
+  private:
+    void attachGLContext();
+    void detachGLContext();
 
   private:
     Library m_lib; // to automatically initialize SDL
 
   private:
     SDL_Window *m_window;
-    void *m_context;
+    void *m_mainContext;
+    void *m_sharedContext;
     bool m_shouldClose;
     bool m_isFullscreen;
 

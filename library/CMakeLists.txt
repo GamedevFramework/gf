@@ -195,6 +195,7 @@ else()
     graphics/Shader.cc
     graphics/Shape.cc
     graphics/Shapes.cc
+    graphics/SharedGraphics.cc
     graphics/SpriteBatch.cc
     graphics/Sprite.cc
     graphics/Stagger.cc
@@ -466,4 +467,3 @@ install(
   FILES gfnetConfig.cmake
   DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/gfnet"
 )
-

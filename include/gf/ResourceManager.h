@@ -22,6 +22,7 @@
 #define GF_RESOURCE_MANAGER_H
 
 #include <functional>
+#include <future>
 #include <initializer_list>
 #include <map>
 #include <memory>
@@ -32,6 +33,7 @@
 #include "Font.h"
 #include "Portability.h"
 #include "Texture.h"
+#include "Window.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -160,6 +162,7 @@ inline namespace v1 {
      * @throw std::runtime_error If the font is not found
      */
     Image& getImage(const Path& path) {
+      std::lock_guard<std::mutex> lock(m_mutex);
       return m_images.getResource(*this, path);
     }
 
@@ -171,6 +174,7 @@ inline namespace v1 {
      * @throw std::runtime_error If the texture is not found
      */
     Texture& getTexture(const Path& path) {
+      std::lock_guard<std::mutex> lock(m_mutex);
       return m_textures.getResource(*this, path);
     }
 
@@ -182,6 +186,7 @@ inline namespace v1 {
      * @throw std::runtime_error If the font is not found
      */
     Font& getFont(const Path& path) {
+      std::lock_guard<std::mutex> lock(m_mutex);
       return m_fonts.getResource(*this, path);
     }
 
@@ -189,6 +194,7 @@ inline namespace v1 {
     ResourceCache<Image> m_images;
     ResourceCache<Texture> m_textures;
     ResourceCache<Font> m_fonts;
+    std::mutex m_mutex;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
