@@ -103,7 +103,9 @@
 
 #include "priv/Debug.cc"
 
+#ifdef GF_USE_EMBEDDED_LIBS
 #include <pugixml.cpp>
+#endif
 
 #ifndef __APPLE__
 #ifdef GF_OPENGL3

@@ -224,7 +224,7 @@ else()
     # priv
     graphics/priv/Debug.cc
     # vendor
-    vendor/pugixml/src/pugixml.cpp
+    ${GF_PUGIXML_SRC}
     ${GF_GLAD_SRC}
   )
 
@@ -247,6 +247,12 @@ add_dependencies(gf0
 if (GF_BUILD_WITH_OPENGL3)
   target_compile_definitions(gf0
     PRIVATE GF_OPENGL3
+  )
+endif()
+
+if (GF_USE_EMBEDDED_LIBS)
+  target_compile_definitions(gf0
+    PRIVATE GF_USE_EMBEDDED_LIBS
   )
 endif()
 
@@ -309,7 +315,7 @@ target_include_directories(gfcore0
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
   PRIVATE
     "${CMAKE_CURRENT_BINARY_DIR}"
-    "${CMAKE_CURRENT_SOURCE_DIR}/vendor/stb"
+    ${GF_STB_INCLUDE_DIR}
 )
 
 target_include_directories(gf0
@@ -319,8 +325,8 @@ target_include_directories(gf0
   PRIVATE
     "${CMAKE_CURRENT_BINARY_DIR}"
     "${CMAKE_CURRENT_SOURCE_DIR}"
-    "${CMAKE_CURRENT_SOURCE_DIR}/vendor/pugixml/src"
-    "${CMAKE_CURRENT_SOURCE_DIR}/vendor/nuklear"
+    ${GF_PUGIXML_INCLUDE_DIR}
+    ${GF_NUKLEAR_INCLUDE_DIR}
 )
 
 target_include_directories(gfnet0
@@ -359,6 +365,7 @@ target_link_libraries(gf0
     SDL2::SDL2
     Freetype::Freetype
     ZLIB::ZLIB
+    ${GF_PUGIXML_LIBRARY}
 )
 
 target_link_libraries(gfnet0
