@@ -1,5 +1,5 @@
 if (NOT gf_FIND_COMPONENTS)
-  message(FATAL_ERROR "find_package(gf) called with no component")
+  set (gf_FIND_COMPONENTS "graphics")
 endif()
 
 include (CMakeFindDependencyMacro)
