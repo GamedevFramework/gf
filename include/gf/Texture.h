@@ -162,7 +162,7 @@ inline namespace v1 {
      * @brief Enable or disable repeating
      *
      * Repeating is involved when using texture coordinates
-     * outside the texture rectangle @f$ [0, 1] @times [0, 1] @f$.
+     * outside the texture rectangle @f$ [0, 1] \times [0, 1] @f$.
      * In this case, if repeat mode is enabled, the whole texture
      * will be repeated as many times as needed to reach the
      * coordinate (for example, if the @f$ u @f$ texture coordinate is
