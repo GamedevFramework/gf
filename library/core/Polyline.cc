@@ -31,95 +31,53 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  void Polyline::addPoint(Vector2f point) {
-    m_points.push_back(point);
-  }
-
-  std::size_t Polyline::getPointCount() const {
-    return m_points.size();
-  }
-
-  Vector2f Polyline::getPoint(std::size_t index) const {
-    assert(index < m_points.size());
-    return m_points[index];
-  }
-
-  const Vector2f *Polyline::begin() const {
-    return m_points.data();
-  }
-
-  const Vector2f *Polyline::end() const {
-    return m_points.data() + m_points.size();
-  }
-
-  Vector2f *Polyline::begin() {
-    return m_points.data();
-  }
-
-  Vector2f *Polyline::end() {
-    return m_points.data() + m_points.size();
-  }
-
   bool Polyline::hasPrevPoint(std::size_t i) const {
-    assert(i < m_points.size());
+    assert(i < getPointCount());
     return (m_type == Loop) || (i > 0);
   }
 
   Vector2f Polyline::getPrevPoint(std::size_t i) const {
-    assert(i < m_points.size());
+    assert(i < getPointCount());
 
     if (i > 0) {
-      return m_points[i - 1];
+      return getPoint(i - 1);
     }
 
     assert(m_type == Loop);
-    return m_points.back();
+    return getLastPoint();
   }
 
   Vector2f Polyline::getPrevExtensionPoint() const {
-    assert(m_points.size() >= 2);
-    return 2 * m_points[0] - m_points[1]; // == p_0 - (p_1 - p_0);
+    assert(getPointCount() >= 2);
+    return 2 * getPoint(0) - getPoint(1); // == p_0 - (p_1 - p_0);
   }
 
   bool Polyline::hasNextPoint(std::size_t i) const {
-    assert(i < m_points.size());
-    return (m_type == Loop) || (i < m_points.size() - 1);
+    assert(i < getPointCount());
+    return (m_type == Loop) || (i < getPointCount() - 1);
   }
 
   Vector2f Polyline::getNextPoint(std::size_t i) const {
-    assert(i < m_points.size());
+    assert(i < getPointCount());
 
-    if (i < m_points.size() - 1) {
-      return m_points[i + 1];
+    if (i < getPointCount() - 1) {
+      return getPoint(i + 1);
     }
 
     assert(m_type == Loop);
-    return m_points.front();
+    return getFirstPoint();
   }
 
   Vector2f Polyline::getNextExtensionPoint() const {
-    assert(m_points.size() >= 2);
-    std::size_t sz = m_points.size();
-    return 2 * m_points[sz - 1] - m_points[sz - 2]; // = p_{n-1} - (p_{n-2} - p_{n-1})
-  }
-
-  void Polyline::simplify(float distance) {
-    m_points = gf::simplifyPoints(m_points, distance);
+    assert(getPointCount() >= 2);
+    std::size_t sz = getPointCount();
+    return 2 * getPoint(sz - 1) - getPoint(sz - 2); // = p_{n-1} - (p_{n-2} - p_{n-1})
   }
 
 
   Serializer& operator|(Serializer& ar, const Polyline& polyline) {
     ar | polyline.getType();
-
-    uint64_t size = polyline.getPointCount();
-    ar | size;
-
-    for (uint64_t i = 0; i < size; ++i) {
-      Vector2f point = polyline.getPoint(i);
-      ar | point;
-    }
-
-    return ar;
+    return ar | static_cast<const PointSequence&>(polyline);
   }
 
   Deserializer& operator|(Deserializer& ar, Polyline& polyline) {
@@ -127,19 +85,8 @@ inline namespace v1 {
     ar | type;
 
     polyline = Polyline(type);
-
-    uint64_t size = 0;
-    ar | size;
-
-    for (uint64_t i = 0; i < size; ++i) {
-      Vector2f point;
-      ar | point;
-      polyline.addPoint(point);
-    }
-
-    return ar;
+    return ar | static_cast<PointSequence&>(polyline);
   }
-
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

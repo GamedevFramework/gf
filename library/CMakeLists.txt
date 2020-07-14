@@ -124,6 +124,7 @@ else()
     core/Path.cc
     core/Polygon.cc
     core/Polyline.cc
+    core/PointSequence.cc
     core/RandomBinaryTree.cc
     core/Random.cc
     core/Range.cc
