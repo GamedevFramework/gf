@@ -25,9 +25,9 @@
  */
 
 #include "SocketAddress.cc"
-#include "SocketSelector.cc"
 #include "Socket.cc"
 #include "SocketGuard.cc"
+#include "SocketSelector.cc"
 #include "TcpListener.cc"
 #include "TcpSocket.cc"
 #include "UdpSocket.cc"
