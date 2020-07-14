@@ -74,7 +74,7 @@ inline namespace v1 {
   class TriangleRef {
   public:
     /**
-     * @brief Constructor with two points
+     * @brief Constructor with three points
      *
      * The address of the points must not change while the triangle is alive.
      *

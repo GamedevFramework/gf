@@ -30,6 +30,12 @@ namespace gf {
 inline namespace v1 {
 #endif
 
+  /**
+   * @ingroup graphics
+   * @brief A tileset
+   *
+   * @sa gf::TileLayer
+   */
   class GF_API Tileset {
   public:
     Tileset();
