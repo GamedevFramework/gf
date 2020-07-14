@@ -16,7 +16,6 @@ option(GF_BUILD_EXAMPLES "Build examples" ON)
 option(GF_BUILD_TESTS "Build tests" ON)
 option(GF_BUILD_DOCUMENTATION "Build documentation (needs Doxygen)" ON)
 option(GF_BUILD_GAMES "Build games" OFF)
-option(GF_BUILD_TOOLS "Build tools" OFF)
 option(GF_SINGLE_COMPILTATION_UNIT "Build the library in a single file (unity build)" OFF)
 option(GF_SHARED "Build the library as a shared library" ON)
 option(GF_USE_EMBEDDED_LIBS "Build the library with the submodule libraries" ON)
@@ -129,13 +128,4 @@ if(GF_BUILD_GAMES)
   add_subdirectory(games/lux)
 endif()
 
-if(GF_BUILD_TOOLS)
-  add_subdirectory(tools/gf_info)
-  add_subdirectory(tools/gf_noise)
-  add_subdirectory(tools/gf_dungeons)
-
-  install(
-    DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/data/gf_tools"
-    DESTINATION ${CMAKE_INSTALL_DATADIR}
-  )
-endif()
+add_subdirectory(tools/gf_info)
