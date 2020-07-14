@@ -82,6 +82,11 @@ inline namespace v1 {
   {
   }
 
+  Cursor::Cursor(const Path& path, Vector2i hotspot)
+  : Cursor(Image(path), hotspot)
+  {
+  }
+
   namespace {
 
     SDL_SystemCursor getSDLSystemCursor(Cursor::Type type) {

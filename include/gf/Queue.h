@@ -41,7 +41,7 @@ inline namespace v1 {
    * messages from the network and the main loop that handles the messages.
    */
   template<typename T>
-  class GF_API Queue {
+  class Queue {
   public:
     /**
      * @brief Poll a value from the queue, if possible

@@ -18,46 +18,58 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#include <gf/ResourceManager.h>
 
-#include <SDL.h>
+#ifndef GF_SHARED_GRAPHICS_H
+#define GF_SHARED_GRAPHICS_H
 
-#include "priv/OpenGLFwd.h"
+#include <gf/Window.h>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
 #endif
 
-  namespace {
+  /**
+   * @ingroup game
+   * @brief A shared OpenGL context with the main thread
+   *
+   * This class is useful for load textures asynchronously.
+   * The context will automatically attached to the current
+   * thread at object instantiation and will detached at its
+   * destruction.
+   */
+  class GF_API SharedGraphics {
+  public:
+    /**
+     * @brief Create a shared OpenGL context
+     *
+     * Attach a OpenGL context to the current thread.
+     *
+     * @param window A reference to the main window
+     */
+    SharedGraphics(Window& window);
 
-    template<typename T>
-    class ResourceLoader {
-    public:
-      std::unique_ptr<T> operator()(const Path& filename) {
-        return std::make_unique<T>(filename);
-      }
-    };
+    /**
+     * @brief Destructor
+     *
+     * Detach the OpenGL context from the current thread
+     */
+    ~SharedGraphics();
 
-  }
+    SharedGraphics(const SharedGraphics&) = delete;
+    SharedGraphics(SharedGraphics&&) = delete;
 
-  ResourceManager::ResourceManager()
-  : m_images(ResourceLoader<Image>())
-  , m_textures(ResourceLoader<Texture>())
-  , m_fonts(ResourceLoader<Font>())
-  {
+    SharedGraphics& operator=(const SharedGraphics&) = delete;
+    SharedGraphics& operator=(SharedGraphics&&) = delete;
 
-  }
-
-  ResourceManager::ResourceManager(std::initializer_list<Path> paths)
-  : ResourceManager()
-  {
-    for (auto path : paths) {
-      addSearchDir(path);
-    }
-  }
+  private:
+    Window& m_window;
+  };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif
 }
+
+
+#endif // GF_SHARED_GRAPHICS_H

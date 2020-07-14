@@ -68,6 +68,7 @@ inline namespace v1 {
 
   void Scene::setActive(bool active) {
     m_active = active;
+    onActivityChange(m_active);
   }
 
   bool Scene::isActive() const {
@@ -164,6 +165,10 @@ inline namespace v1 {
     // nothing
   }
 
+  void Scene::onActivityChange(bool active) {
+    gf::unused(active);
+    // nothing
+  }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

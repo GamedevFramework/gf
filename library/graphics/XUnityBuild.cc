@@ -76,6 +76,7 @@
 #include "Shader.cc"
 #include "Shape.cc"
 #include "Shapes.cc"
+#include "SharedGraphics.cc"
 #include "SpriteBatch.cc"
 #include "Sprite.cc"
 #include "Stagger.cc"
@@ -84,6 +85,7 @@
 #include "TextureAtlas.cc"
 #include "Texture.cc"
 #include "TileLayer.cc"
+#include "Tileset.cc"
 #include "Tmx.cc"
 #include "TmxOps.cc"
 #include "Transformable.cc"
@@ -101,7 +103,9 @@
 
 #include "priv/Debug.cc"
 
+#ifdef GF_USE_EMBEDDED_LIBS
 #include <pugixml.cpp>
+#endif
 
 #ifndef __APPLE__
 #ifdef GF_OPENGL3

@@ -31,6 +31,18 @@ inline namespace v1 {
 
   /**
    * @ingroup graphics
+   * @brief A fade to black segue effect
+   */
+  class GF_API BlackoutSegueEffect : public SegueEffect {
+  public:
+    /**
+     * @brief Default constructor
+     */
+    BlackoutSegueEffect();
+  };
+
+  /**
+   * @ingroup graphics
    * @brief A fade segue effect
    */
   class GF_API FadeSegueEffect : public SegueEffect {

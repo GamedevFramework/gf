@@ -421,6 +421,13 @@ inline namespace v1 {
      */
     virtual void doShow();
 
+    /**
+     * @brief Callback when the scene becomes active or inactive
+     *
+     * @param active The new status of the scene
+     */
+    virtual void onActivityChange(bool active);
+
   private:
     friend class SceneManager;
 

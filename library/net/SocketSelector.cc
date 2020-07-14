@@ -82,6 +82,7 @@ inline namespace v1 {
 
     if (!m_sorted) {
       std::sort(m_fds.begin(), m_fds.end(), pollfdLess);
+      m_sorted = true;
     }
 
     return nativePoll(m_fds, duration);
@@ -100,7 +101,13 @@ inline namespace v1 {
 
   std::vector<pollfd>::iterator SocketSelector::find(Socket& socket) {
     if (m_sorted) {
-      return std::lower_bound(m_fds.begin(), m_fds.end(), pollfd{ socket.m_handle, 0, 0 }, pollfdLess);
+      auto it = std::lower_bound(m_fds.begin(), m_fds.end(), pollfd{ socket.m_handle, 0, 0 }, pollfdLess);
+
+      if (it != m_fds.end() && it->fd == socket.m_handle) {
+        return it;
+      }
+
+      return m_fds.end();
     }
 
     return std::find_if(m_fds.begin(), m_fds.end(), PollFdEqualTo(pollfd{ socket.m_handle, 0, 0 }));

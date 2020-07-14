@@ -25,6 +25,7 @@
 #include "Flags.h"
 #include "Portability.h"
 #include "Stagger.h"
+#include "Tileset.h"
 #include "TileTypes.h"
 #include "Transformable.h"
 #include "VertexArray.h"
@@ -107,7 +108,9 @@ inline namespace v1 {
      * @param texture New texture
      * @sa getTexture()
      */
-    void setTexture(const Texture& texture);
+    void setTexture(const Texture& texture) {
+      m_tileset.setTexture(texture);
+    }
 
     /**
      * @brief Get the source texture of the tileset
@@ -119,7 +122,7 @@ inline namespace v1 {
      * @sa setTexture()
      */
     const Texture& getTexture() const {
-      return *m_texture;
+      return m_tileset.getTexture();
     }
 
     /**
@@ -130,7 +133,7 @@ inline namespace v1 {
      * @sa setTexture(), getTexture()
      */
     bool hasTexture() const {
-      return m_texture != nullptr;
+      return m_tileset.hasTexture();
     }
 
     /**
@@ -140,7 +143,9 @@ inline namespace v1 {
      *
      * @sa setTexture()
      */
-    void unsetTexture();
+    void unsetTexture() {
+      m_tileset.unsetTexture();
+    }
 
     /**
      * @brief Set the tile size in the tileset
@@ -148,7 +153,9 @@ inline namespace v1 {
      * @param tileSize The new tile size, in pixels
      * @sa getTileSize()
      */
-    void setTilesetTileSize(Vector2i tileSize);
+    void setTilesetTileSize(Vector2i tileSize) {
+      m_tileset.setTileSize(tileSize);
+    }
 
     /**
      * @brief Get the tile size in the tileset
@@ -157,7 +164,7 @@ inline namespace v1 {
      * @sa setTileSize()
      */
     Vector2i getTilesetTileSize() const {
-      return m_tilesetTileSize;
+      return m_tileset.getTileSize();
     }
 
     /**
@@ -167,7 +174,7 @@ inline namespace v1 {
      * @sa getMargin()
      */
     void setMargin(int margin) {
-      setMargin({ margin, margin });
+      m_tileset.setMargin(margin);
     }
 
     /**
@@ -176,7 +183,9 @@ inline namespace v1 {
      * @param margin The margin, in pixels
      * @sa getMargin()
      */
-    void setMargin(Vector2i margin);
+    void setMargin(Vector2i margin) {
+      m_tileset.setMargin(margin);
+    }
 
     /**
      * @brief Get the margin of the tileset
@@ -185,7 +194,7 @@ inline namespace v1 {
      * @sa setMargin()
      */
     Vector2i getMargin() const {
-      return m_margin;
+      return m_tileset.getMargin();
     }
 
     /**
@@ -195,7 +204,7 @@ inline namespace v1 {
      * @sa getSpacing()
      */
     void setSpacing(int spacing) {
-      setSpacing({ spacing, spacing });
+      m_tileset.setSpacing(spacing);
     }
 
     /**
@@ -204,7 +213,9 @@ inline namespace v1 {
      * @param spacing The spacing, in pixels
      * @sa getSpacing()
      */
-    void setSpacing(Vector2i spacing);
+    void setSpacing(Vector2i spacing) {
+      m_tileset.setSpacing(spacing);
+    }
 
     /**
      * @brief Get the spacing of the tileset
@@ -213,7 +224,7 @@ inline namespace v1 {
      * @sa setSpacing()
      */
     Vector2i getSpacing() const {
-      return m_spacing;
+      return m_tileset.getSpacing();
     }
 
     /**
@@ -222,7 +233,9 @@ inline namespace v1 {
      * @param offset The offset, in pixels
      * @sa getOffset();
      */
-    void setOffset(Vector2i offset);
+    void setOffset(Vector2i offset) {
+      m_tileset.setOffset(offset);
+    }
 
     /**
      * @brief Get the offset of the tileset
@@ -231,7 +244,7 @@ inline namespace v1 {
      * @sa setOffset()
      */
     Vector2i getOffset() const {
-      return m_offset;
+      return m_tileset.getOffset();
     }
 
     /** @} */
@@ -350,11 +363,7 @@ inline namespace v1 {
     Vector2i m_layerSize;
     Vector2i m_tileSize;
 
-    const Texture *m_texture;
-    Vector2i m_tilesetTileSize;
-    Vector2i m_margin;
-    Vector2i m_spacing;
-    Vector2i m_offset;
+    Tileset m_tileset;
 
     Array2D<Cell> m_tiles;
 

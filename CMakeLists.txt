@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 project(GF
-  VERSION 0.16.0
+  VERSION 0.17.0
   LANGUAGES CXX C
 )
 
@@ -16,9 +16,9 @@ option(GF_BUILD_EXAMPLES "Build examples" ON)
 option(GF_BUILD_TESTS "Build tests" ON)
 option(GF_BUILD_DOCUMENTATION "Build documentation (needs Doxygen)" ON)
 option(GF_BUILD_GAMES "Build games" OFF)
-option(GF_BUILD_TOOLS "Build tools" OFF)
 option(GF_SINGLE_COMPILTATION_UNIT "Build the library in a single file (unity build)" OFF)
 option(GF_SHARED "Build the library as a shared library" ON)
+option(GF_USE_EMBEDDED_LIBS "Build the library with the submodule libraries" ON)
 
 if(UNIX)
   option(GF_DEV_ENABLE_ASAN "Enable Address Sanitizer" OFF)
@@ -40,6 +40,22 @@ find_package(Freetype REQUIRED)
 find_package(ZLIB REQUIRED)
 
 find_package(Threads REQUIRED)
+
+if(GF_USE_EMBEDDED_LIBS)
+  message(STATUS "Build with embedded libraries")
+
+  set(GF_PUGIXML_SRC "${CMAKE_CURRENT_SOURCE_DIR}/library/vendor/pugixml/src/pugixml.cpp")
+  set(GF_PUGIXML_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/library/vendor/pugixml/src/")
+
+  set(GF_STB_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/library/vendor/stb")
+
+  set(GF_NUKLEAR_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/library/vendor/nuklear")
+else()
+  find_package(pugixml REQUIRED)
+  set(GF_PUGIXML_LIBRARY "pugixml")
+  find_package(stb REQUIRED)
+  # For nuklear: nothing to do
+endif()
 
 if(APPLE)
   # on macos, always use OpenGL 3.3
@@ -112,13 +128,4 @@ if(GF_BUILD_GAMES)
   add_subdirectory(games/lux)
 endif()
 
-if(GF_BUILD_TOOLS)
-  add_subdirectory(tools/gf_info)
-  add_subdirectory(tools/gf_noise)
-  add_subdirectory(tools/gf_dungeons)
-
-  install(
-    DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/data/gf_tools"
-    DESTINATION ${CMAKE_INSTALL_DATADIR}
-  )
-endif()
+add_subdirectory(tools/gf_info)

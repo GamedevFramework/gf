@@ -11,7 +11,7 @@ set(GCDB_SOURCES
 set(GCDB_HEADERS "")
 
 foreach(GCDB_RELATIVE_SOURCE ${GCDB_SOURCES})
-  set(GCDB_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/vendor/gamecontrollerdb2/${GCDB_RELATIVE_SOURCE}")
+  set(GCDB_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/vendor/SDL_GameControllerDB/${GCDB_RELATIVE_SOURCE}")
   get_filename_component(GCDB_NAME ${GCDB_RELATIVE_SOURCE} NAME)
   string(REPLACE "." "_" GCDB_VARIABLE ${GCDB_NAME})
   set(GCDB_HEADER "${CMAKE_CURRENT_BINARY_DIR}/generated/${GCDB_NAME}.h")
@@ -29,6 +29,7 @@ add_custom_target(gf0_gamecontrollerdb ALL DEPENDS ${GCDB_HEADERS})
 # process shader files
 
 set(SHADER_SOURCES
+  graphics/data/shaders/blackout.frag
   graphics/data/shaders/color_matrix.frag
   graphics/data/shaders/default_alpha.frag
   graphics/data/shaders/default.frag
@@ -194,6 +195,7 @@ else()
     graphics/Shader.cc
     graphics/Shape.cc
     graphics/Shapes.cc
+    graphics/SharedGraphics.cc
     graphics/SpriteBatch.cc
     graphics/Sprite.cc
     graphics/Stagger.cc
@@ -202,6 +204,7 @@ else()
     graphics/TextureAtlas.cc
     graphics/Texture.cc
     graphics/TileLayer.cc
+    graphics/Tileset.cc
     graphics/Tmx.cc
     graphics/TmxOps.cc
     graphics/Transformable.cc
@@ -221,7 +224,7 @@ else()
     # priv
     graphics/priv/Debug.cc
     # vendor
-    vendor/pugixml/src/pugixml.cpp
+    ${GF_PUGIXML_SRC}
     ${GF_GLAD_SRC}
   )
 
@@ -244,6 +247,12 @@ add_dependencies(gf0
 if (GF_BUILD_WITH_OPENGL3)
   target_compile_definitions(gf0
     PRIVATE GF_OPENGL3
+  )
+endif()
+
+if (GF_USE_EMBEDDED_LIBS)
+  target_compile_definitions(gf0
+    PRIVATE GF_USE_EMBEDDED_LIBS
   )
 endif()
 
@@ -306,7 +315,7 @@ target_include_directories(gfcore0
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
   PRIVATE
     "${CMAKE_CURRENT_BINARY_DIR}"
-    "${CMAKE_CURRENT_SOURCE_DIR}/vendor/stb"
+    ${GF_STB_INCLUDE_DIR}
 )
 
 target_include_directories(gf0
@@ -316,8 +325,8 @@ target_include_directories(gf0
   PRIVATE
     "${CMAKE_CURRENT_BINARY_DIR}"
     "${CMAKE_CURRENT_SOURCE_DIR}"
-    "${CMAKE_CURRENT_SOURCE_DIR}/vendor/pugixml/src"
-    "${CMAKE_CURRENT_SOURCE_DIR}/vendor/nuklear"
+    ${GF_PUGIXML_INCLUDE_DIR}
+    ${GF_NUKLEAR_INCLUDE_DIR}
 )
 
 target_include_directories(gfnet0
@@ -356,6 +365,7 @@ target_link_libraries(gf0
     SDL2::SDL2
     Freetype::Freetype
     ZLIB::ZLIB
+    ${GF_PUGIXML_LIBRARY}
 )
 
 target_link_libraries(gfnet0
@@ -379,18 +389,21 @@ endif()
 
 set_target_properties(gfcore0
   PROPERTIES
+  EXPORT_NAME "core"
   VERSION ${PROJECT_VERSION}
   SOVERSION ${PROJECT_VERSION_MAJOR}
 )
 
 set_target_properties(gf0
   PROPERTIES
+  EXPORT_NAME "graphics"
   VERSION ${PROJECT_VERSION}
   SOVERSION ${PROJECT_VERSION_MAJOR}
 )
 
 set_target_properties(gfnet0
   PROPERTIES
+  EXPORT_NAME "net"
   VERSION ${PROJECT_VERSION}
   SOVERSION ${PROJECT_VERSION_MAJOR}
 )
@@ -402,24 +415,8 @@ if(NOT GF_SHARED)
 endif()
 
 install(
-  TARGETS gfcore0
-  EXPORT gfcoreTargets
-  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-)
-
-install(
-  TARGETS gf0
+  TARGETS gfcore0 gf0 gfnet0
   EXPORT gfTargets
-  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-)
-
-install(
-  TARGETS gfnet0
-  EXPORT gfnetTargets
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
@@ -433,17 +430,6 @@ if(WIN32 AND BUILD_SHARED_LIBS)
 endif()
 
 install(
-  EXPORT gfcoreTargets
-  NAMESPACE gf::
-  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/gfcore"
-)
-
-install(
-  FILES gfcoreConfig.cmake
-  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/gfcore"
-)
-
-install(
   EXPORT gfTargets
   NAMESPACE gf::
   DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/gf"
@@ -454,14 +440,14 @@ install(
   DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/gf"
 )
 
-install(
-  EXPORT gfnetTargets
-  NAMESPACE gf::
-  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/gfnet"
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+  "${CMAKE_CURRENT_BINARY_DIR}/gfConfigVersion.cmake"
+  VERSION ${PROJECT_VERSION}
+  COMPATIBILITY SameMajorVersion
 )
 
 install(
-  FILES gfnetConfig.cmake
-  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/gfnet"
+  FILES "${CMAKE_CURRENT_BINARY_DIR}/gfConfigVersion.cmake"
+  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/gf"
 )
-

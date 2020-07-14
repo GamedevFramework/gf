@@ -76,6 +76,11 @@ inline namespace v1 {
     return m_points.back();
   }
 
+  Vector2f Polyline::getPrevExtensionPoint() const {
+    assert(m_points.size() >= 2);
+    return 2 * m_points[0] - m_points[1]; // == p_0 - (p_1 - p_0);
+  }
+
   bool Polyline::hasNextPoint(std::size_t i) const {
     assert(i < m_points.size());
     return (m_type == Loop) || (i < m_points.size() - 1);
@@ -90,6 +95,12 @@ inline namespace v1 {
 
     assert(m_type == Loop);
     return m_points.front();
+  }
+
+  Vector2f Polyline::getNextExtensionPoint() const {
+    assert(m_points.size() >= 2);
+    std::size_t sz = m_points.size();
+    return 2 * m_points[sz - 1] - m_points[sz - 2]; // = p_{n-1} - (p_{n-2} - p_{n-1})
   }
 
   void Polyline::simplify(float distance) {

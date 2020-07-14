@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2019 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -18,9 +18,24 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#ifndef GF_CONFIG_H
-#define GF_CONFIG_H
+#version 100
 
-#define GF_DATADIR R"PATH(@GF_DATADIR@/gf_tools)PATH"
+precision mediump float;
 
-#endif // GF_CONFIG_H
+varying vec4 v_color;
+varying vec2 v_texCoords;
+
+uniform sampler2D u_texture0;
+uniform sampler2D u_texture1;
+uniform float u_progress;
+
+void main(void) {
+  vec4 texel0 = texture2D(u_texture0, v_texCoords);
+  vec4 texel1 = texture2D(u_texture1, v_texCoords);
+  vec4 blackPix = vec4(0.0, 0.0, 0.0, 1.0);
+
+  float progress0 = clamp(u_progress - 0.5, -0.5, 0.0) * -2.0;
+  float progress1 = clamp(u_progress - 0.5, 0.0, 0.5) * 2.0;
+
+  gl_FragColor = (mix(blackPix, texel0, progress0) + mix(blackPix, texel1, progress1)) * v_color;
+}

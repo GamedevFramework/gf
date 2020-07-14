@@ -26,6 +26,7 @@
 
 #include <cstdint>
 
+#include "Path.h"
 #include "Portability.h"
 #include "Vector.h"
 
@@ -118,6 +119,14 @@ inline namespace v1 {
      * @param hotspot THe location of the hotspot
      */
     Cursor(const Image& image, Vector2i hotspot);
+
+    /**
+     * @brief Create a cursor from an image stored in a file
+     *
+     * @param path The path to the image
+     * @param hotspot THe location of the hotspot
+     */
+    Cursor(const Path& path, Vector2i hotspot);
 
     /**
      * @brief Create a native system cursor

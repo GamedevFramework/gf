@@ -32,6 +32,7 @@ inline namespace v1 {
   Animation::Animation()
   : m_currentFrame(0)
   , m_currentDurationInFrame(Time::zero())
+  , m_loop(true)
   {
 
   }
@@ -62,6 +63,10 @@ inline namespace v1 {
     }
   }
 
+  void Animation::setLoop(bool enabled) {
+    m_loop = enabled;
+  }
+
   const Texture& Animation::getCurrentTexture() const {
     if (m_frames.empty()) {
       throw std::runtime_error("No frame in the animation");
@@ -87,6 +92,9 @@ inline namespace v1 {
     m_currentDurationInFrame -= time;
 
     while (m_currentDurationInFrame < Time::zero()) {
+      if (m_currentFrame + 1 >= m_frames.size() && !m_loop) {
+        return false;
+      }
       m_currentFrame = (m_currentFrame + 1) % m_frames.size();
       m_currentDurationInFrame += m_frames[m_currentFrame].duration;
     }

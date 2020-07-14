@@ -69,6 +69,12 @@ std::ostream& operator<<(std::ostream& o, const gf::Event::GamepadAxisEvent& eve
   return o;
 }
 
+std::ostream& operator<<(std::ostream& o, const gf::Event::TouchEvent& event) {
+  o << "\tfinger: " << event.finger << '\n';
+  o << "\tcoordinates: " << event.coords.x << 'x' << event.coords.y;
+  return o;
+}
+
 int main() {
   bool cursorVisible = true;
   bool cursorGrabbed = false;
@@ -172,6 +178,18 @@ int main() {
 
         case gf::EventType::TextEntered:
           std::cout << "TextEntered: '" << event.text.rune.data << "'\n";
+          break;
+
+        case gf::EventType::TouchBegan:
+          std::cout << "TouchBegan:\n" << event.touch << '\n';
+          break;
+
+        case gf::EventType::TouchMoved:
+          std::cout << "TouchMoved:\n" << event.touch << '\n';
+          break;
+
+        case gf::EventType::TouchEnded:
+          std::cout << "TouchEnded:\n" << event.touch << '\n';
           break;
 
         default:

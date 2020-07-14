@@ -42,7 +42,7 @@ inline namespace v1 {
   Path AssetManager::getAbsolutePath(const Path& relativePath) const {
     if (relativePath.is_absolute()) {
       assert(fs::is_regular_file(relativePath));
-      Log::info("Found a resource file: %s\n", relativePath.string().c_str());
+      Log::info("Found a resource file: '%s'\n", relativePath.string().c_str());
       return relativePath;
     }
 
@@ -50,12 +50,29 @@ inline namespace v1 {
       Path absolutePath = base / relativePath;
 
       if (fs::is_regular_file(absolutePath)) {
-        Log::info("Found a resource file: %s\n", absolutePath.string().c_str());
+        Log::info("Found a resource file ['%s']: '%s'\n", base.string().c_str(), relativePath.string().c_str());
         return absolutePath;
       }
     }
 
     Log::error("File not found: %s\n", relativePath.string().c_str());
+    return Path();
+  }
+
+  Path AssetManager::getRelativePath(const Path& absolutePath) const {
+    if (!absolutePath.is_absolute()) {
+      return absolutePath;
+    }
+
+    for (const Path& base : m_searchdirs) {
+      auto relativePath = absolutePath.lexically_proximate(base);
+
+      if (relativePath != absolutePath) {
+        assert(!relativePath.is_absolute());
+        return relativePath;
+      }
+    }
+
     return Path();
   }
 

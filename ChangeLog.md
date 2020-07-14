@@ -1,5 +1,30 @@
 # ChangeLog for gf
 
+## gf 0.17.0 (14 Jul 2020)
+
+- Core (gf::core)
+  - Add default constructor for gf::Heightmap
+  - Fix a bug in gf::Random::computePosition(const CircF&)
+- Graphics (gf::graphics)
+  - Add a constructor for gf::Cursor with a path
+  - Add gf::Scene::onActivityChange()
+  - Add gf::ResourceManager::getImage()
+  - Add gf::TouchEvent
+  - Add gf::SplineCurve
+  - Add gf::Tileset
+  - Add gf::Animation::setLoop()
+  - Add gf::BlackoutSegueEffect
+  - Add gf::SharedGraphics
+- Network (gf::net)
+  - Fix a bug in gf::SocketSelector
+- Tools and games
+  - Remove tools from repository and convert to Imgui (see gf-tools)
+  - Games may be removed soon too
+- Misc
+  - SDL_GameControllerDB is now copied manually, not as a submodule
+  - GF_USE_EMBEDDED_LIBS cmake options to use submodules or not
+  - CMake targets were changed in components
+
 ## gf 0.16.0 (14 Apr 2020)
 
 - Core (gfcore)

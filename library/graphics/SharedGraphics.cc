@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2019 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -18,9 +18,25 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#ifndef GF_CONFIG_H
-#define GF_CONFIG_H
+#include <gf/SharedGraphics.h>
 
-#define GF_DATADIR R"PATH(@GF_DATADIR@/gf_tools)PATH"
+namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+inline namespace v1 {
+#endif
 
-#endif // GF_CONFIG_H
+  SharedGraphics::SharedGraphics(Window& window)
+  : m_window(window)
+  {
+    m_window.attachGLContext();
+  }
+
+  SharedGraphics::~SharedGraphics() {
+    m_window.detachGLContext();
+  }
+
+
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+}
+#endif
+}

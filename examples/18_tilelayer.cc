@@ -89,6 +89,7 @@ int main() {
 
   gf::TileLayer tileLayer({ MapWidth, MapHeight });
   tileLayer.setTileSize({ TileSize, TileSize });
+  tileLayer.setTilesetTileSize({ TileSize, TileSize });
   tileLayer.setSpacing(2);
   tileLayer.setTexture(texture);
   tileLayer.setOrigin({ TileSize * MapWidth / 2, TileSize * MapHeight / 2 });

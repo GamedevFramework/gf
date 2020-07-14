@@ -44,6 +44,11 @@ inline namespace v1 {
   class GF_API Heightmap {
   public:
     /**
+     * @brief Default constructor
+     */
+    Heightmap() = default;
+
+    /**
      * @brief Constructor
      *
      * @param size The size of the heightmap
