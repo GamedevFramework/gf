@@ -102,7 +102,7 @@ See the [documentation](http://gamedevframework.github.io/latest/build_and_insta
 
 ## Screenshots
 
-These screenshots are from games and tools included in the repository.
+These screenshots are from games included in the repository.
 
 ### Games
 
@@ -113,11 +113,6 @@ These screenshots are from games and tools included in the repository.
 ![Bygone Islands](games/islands/islands.png)
 ![HOME](games/HOME/HOME.png)
 ![Lux](games/lux/lux.png)
-
-### Tools
-
-![gf Noise](tools/gf_noise/gf_noise.png)
-![gf Dungeons](tools/gf_dungeons/gf_dungeons.png)
 
 ## Code Quality
 
