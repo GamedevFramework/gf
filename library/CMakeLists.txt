@@ -384,7 +384,7 @@ if (WIN32)
   if (NOT GF_SHARED)
     target_link_libraries(gf0
       INTERFACE
-        SDL2::SDL2main
+        SDL2::Main
     )
   endif()
 
