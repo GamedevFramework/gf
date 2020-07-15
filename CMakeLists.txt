@@ -65,7 +65,7 @@ endif()
 
 if(MSVC)
   message(STATUS "Using MSVC compiler")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /DNOMINMAX /W4 /utf-8 /std:c++14 /permissive-")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /DNOMINMAX /W4 /utf-8")
   link_directories(${Boost_LIBRARY_DIRS})
   # for more information on the last two switches:
   # - https://blogs.msdn.microsoft.com/vcblog/2016/06/07/standards-version-switches-in-the-compiler/
@@ -73,7 +73,7 @@ if(MSVC)
 else()
   message(STATUS "Using GCC or Clang compiler")
   # assume it's a GNU-like compiler (GCC, clang)
-  set(CMAKE_CXX_FLAGS                 "-Wall -Wextra -std=c++14 -pedantic -fvisibility=hidden")
+  set(CMAKE_CXX_FLAGS                 "-Wall -Wextra -pedantic -fvisibility=hidden")
   set(CMAKE_CXX_FLAGS_DEBUG           "-O0 -g")
   set(CMAKE_CXX_FLAGS_MINSIZEREL      "-Os -DNDEBUG")
   set(CMAKE_CXX_FLAGS_RELEASE         "-O3 -DNDEBUG")
