@@ -197,38 +197,36 @@ find_library(SDL2_LIBRARY
 
 set(SDL2_LIBRARIES "${SDL2_LIBRARY}")
 
-if(NOT SDL2_BUILDING_LIBRARY)
-  if(NOT SDL2_INCLUDE_DIR MATCHES ".framework")
-    # Non-OS X framework versions expect you to also dynamically link to
-    # SDL2main. This is mainly for Windows and OS X. Other (Unix) platforms
-    # seem to provide SDL2main for compatibility even though they don't
-    # necessarily need it.
+if(NOT SDL2_INCLUDE_DIR MATCHES ".framework")
+  # Non-OS X framework versions expect you to also dynamically link to
+  # SDL2main. This is mainly for Windows and OS X. Other (Unix) platforms
+  # seem to provide SDL2main for compatibility even though they don't
+  # necessarily need it.
 
-    if(SDL2_PATH)
-      set(SDL2MAIN_LIBRARY_PATHS "${SDL2_PATH}")
-    endif()
-
-    if(NOT SDL2_NO_DEFAULT_PATH)
-      set(SDL2MAIN_LIBRARY_PATHS
-            /sw
-            /opt/local
-            /opt/csw
-            /opt
-            "${SDL2MAIN_LIBRARY_PATHS}"
-      )
-    endif()
-
-    find_library(SDL2MAIN_LIBRARY
-      NAMES SDL2main
-      HINTS
-        ENV SDL2DIR
-        ${SDL2_NO_DEFAULT_PATH_CMD}
-      PATH_SUFFIXES lib ${VC_LIB_PATH_SUFFIX}
-      PATHS ${SDL2MAIN_LIBRARY_PATHS}
-      DOC "Where the SDL2main library can be found"
-    )
-    unset(SDL2MAIN_LIBRARY_PATHS)
+  if(SDL2_PATH)
+    set(SDL2MAIN_LIBRARY_PATHS "${SDL2_PATH}")
   endif()
+
+  if(NOT SDL2_NO_DEFAULT_PATH)
+    set(SDL2MAIN_LIBRARY_PATHS
+          /sw
+          /opt/local
+          /opt/csw
+          /opt
+          "${SDL2MAIN_LIBRARY_PATHS}"
+    )
+  endif()
+
+  find_library(SDL2MAIN_LIBRARY
+    NAMES SDL2main
+    HINTS
+      ENV SDL2DIR
+      ${SDL2_NO_DEFAULT_PATH_CMD}
+    PATH_SUFFIXES lib ${VC_LIB_PATH_SUFFIX} lib/manual-link
+    PATHS ${SDL2MAIN_LIBRARY_PATHS}
+    DOC "Where the SDL2main library can be found"
+  )
+  unset(SDL2MAIN_LIBRARY_PATHS)
 endif()
 
 # SDL2 may require threads on your system.
@@ -355,7 +353,7 @@ if(SDL2_FOUND)
   # SDL2::Main target
   # Applications should link to SDL2::Main instead of SDL2::SDL2
   # For more details, please see above.
-  if(NOT SDL2_BUILDING_LIBRARY AND NOT TARGET SDL2::Main)
+  if(NOT TARGET SDL2::Main)
 
     if(SDL2_INCLUDE_DIR MATCHES ".framework" OR NOT SDL2MAIN_LIBRARY)
       add_library(SDL2::Main INTERFACE IMPORTED)
