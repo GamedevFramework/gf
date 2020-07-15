@@ -53,7 +53,7 @@ if(GF_USE_EMBEDDED_LIBS)
 else()
   find_package(pugixml REQUIRED)
   set(GF_PUGIXML_LIBRARY "pugixml")
-  find_package(stb REQUIRED)
+  find_package(Stb REQUIRED)
   # For nuklear: nothing to do
 endif()
 
