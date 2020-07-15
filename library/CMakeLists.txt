@@ -381,6 +381,13 @@ if (APPLE)
 endif()
 
 if (WIN32)
+  if (NOT GF_SHARED)
+    target_link_libraries(gf0
+      INTERFACE
+        SDL2main
+    )
+  endif()
+
   target_link_libraries(gfnet0
     PUBLIC
       ws2_32
