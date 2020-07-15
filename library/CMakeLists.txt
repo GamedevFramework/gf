@@ -385,6 +385,7 @@ if (WIN32)
     target_link_libraries(gf0
       INTERFACE
         SDL2::Main
+        SDL2::SDL2-static
     )
   endif()
 
