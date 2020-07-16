@@ -362,7 +362,7 @@ target_link_libraries(gf0
   PUBLIC
     gfcore0
   PRIVATE
-    SDL2::SDL2
+    SDL2GF::SDL2
     Freetype::Freetype
     ZLIB::ZLIB
     ${GF_PUGIXML_LIBRARY}
@@ -381,14 +381,6 @@ if (APPLE)
 endif()
 
 if (WIN32)
-  if (NOT GF_SHARED)
-    target_link_libraries(gf0
-      INTERFACE
-        SDL2::SDL2main
-        SDL2::SDL2-static
-    )
-  endif()
-
   target_link_libraries(gfnet0
     PUBLIC
       ws2_32

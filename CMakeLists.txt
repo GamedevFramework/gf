@@ -30,10 +30,31 @@ include(GNUInstallDirs)
 set(GF_DATADIR ${CMAKE_INSTALL_FULL_DATADIR})
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/sdl2")
 
 set(SDL2_BUILDING_LIBRARY TRUE)
 find_package(SDL2 REQUIRED)
+
+# Handle SDL2 with and without vcpkg
+add_library(SDL2GF::SDL2 INTERFACE IMPORTED)
+
+if(DEFINED GF_VCPKG)
+  if(GF_SHARED)
+    set_target_properties(SDL2GF::SDL2
+      PROPERTIES
+        INTERFACE_LINK_LIBRARIES SDL2::SDL2
+    )
+  else()
+    set_target_properties(SDL2GF::SDL2
+      PROPERTIES
+        INTERFACE_LINK_LIBRARIES SDL2::SDL2-static
+    )
+  endif()
+else()
+  set_target_properties(SDL2GF::SDL2
+    PROPERTIES
+      INTERFACE_LINK_LIBRARIES SDL2::SDL2
+  )
+endif()
 
 find_package(Boost REQUIRED COMPONENTS filesystem system)
 find_package(Freetype REQUIRED)
