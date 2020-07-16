@@ -362,11 +362,20 @@ target_link_libraries(gf0
   PUBLIC
     gfcore0
   PRIVATE
-    SDL2GF::SDL2
     Freetype::Freetype
     ZLIB::ZLIB
     ${GF_PUGIXML_LIBRARY}
 )
+
+if(DEFINED GF_VCPKG)
+  if(GF_SHARED)
+    target_link_libraries(gf0 PRIVATE SDL2::SDL2)
+  else()
+    target_link_libraries(gf0 PRIVATE SDL2::SDL2-static)
+  endif()
+else()
+  target_link_libraries(gf0 PRIVATE SDL2::SDL2)
+endif()
 
 target_link_libraries(gfnet0
   PUBLIC
