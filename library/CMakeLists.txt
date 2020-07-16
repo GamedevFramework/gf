@@ -360,7 +360,6 @@ target_link_libraries(gfcore0
 target_link_libraries(gf0
   PUBLIC
     gfcore0
-  PRIVATE
     Freetype::Freetype
     ZLIB::ZLIB
     pugixml
