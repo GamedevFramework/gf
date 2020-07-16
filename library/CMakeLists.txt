@@ -315,7 +315,7 @@ target_include_directories(gfcore0
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
   PRIVATE
     "${CMAKE_CURRENT_BINARY_DIR}"
-    ${GF_STB_INCLUDE_DIR}
+    "${Stb_INCLUDE_DIR}"
 )
 
 target_include_directories(gf0
@@ -325,7 +325,6 @@ target_include_directories(gf0
   PRIVATE
     "${CMAKE_CURRENT_BINARY_DIR}"
     "${CMAKE_CURRENT_SOURCE_DIR}"
-    ${GF_PUGIXML_INCLUDE_DIR}
     ${GF_NUKLEAR_INCLUDE_DIR}
 )
 
@@ -364,7 +363,7 @@ target_link_libraries(gf0
   PRIVATE
     Freetype::Freetype
     ZLIB::ZLIB
-    ${GF_PUGIXML_LIBRARY}
+    pugixml
 )
 
 if(DEFINED GF_VCPKG)

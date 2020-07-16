@@ -45,15 +45,18 @@ find_package(Threads REQUIRED)
 if(GF_USE_EMBEDDED_LIBS)
   message(STATUS "Build with embedded libraries")
 
-  set(GF_PUGIXML_SRC "${CMAKE_CURRENT_SOURCE_DIR}/library/vendor/pugixml/src/pugixml.cpp")
-  set(GF_PUGIXML_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/library/vendor/pugixml/src/")
+  add_library(pugixml STATIC EXCLUDE_FROM_ALL "${CMAKE_CURRENT_SOURCE_DIR}/library/vendor/pugixml/src/pugixml.cpp")
+  target_include_directories(pugixml
+    PUBLIC
+      "${CMAKE_CURRENT_SOURCE_DIR}/library/vendor/pugixml/src/"
+  )
+  set_property(TARGET pugixml PROPERTY POSITION_INDEPENDENT_CODE ON)
 
-  set(GF_STB_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/library/vendor/stb")
+  set(Stb_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/library/vendor/stb")
 
   set(GF_NUKLEAR_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/library/vendor/nuklear")
 else()
   find_package(pugixml REQUIRED)
-  set(GF_PUGIXML_LIBRARY "pugixml")
   find_package(Stb REQUIRED)
   # For nuklear: nothing to do
 endif()
