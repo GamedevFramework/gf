@@ -38,7 +38,7 @@ branches:
     - develop
 
 before_script:
-  - sudo ln -s /usr/share/libpugixml-dev/cmake /usr/lib/x86_64-linux-gnu/cmake/pugixml
+  - test "$TRAVIS_OS_NAME" = "linux" && sudo ln -s /usr/share/libpugixml-dev/cmake /usr/lib/x86_64-linux-gnu/cmake/pugixml
   - mkdir build
   - cd build
   - cmake -DCMAKE_BUILD_TYPE=Release -DGF_DEBUG=OFF -DGF_BUILD_GAMES=ON -DGF_SINGLE_COMPILTATION_UNIT=ON ..
