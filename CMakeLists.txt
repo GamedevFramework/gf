@@ -45,13 +45,10 @@ find_package(Threads REQUIRED)
 
 if(GF_USE_EMBEDDED_LIBS)
   message(STATUS "Build with embedded libraries")
-
   set(Stb_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/library/vendor/stb")
-
-  set(GF_NUKLEAR_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/library/vendor/nuklear")
 else()
+  # works on vcpkg
   find_package(Stb REQUIRED)
-  # For nuklear: nothing to do
 endif()
 
 if(APPLE)
