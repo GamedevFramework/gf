@@ -33,6 +33,10 @@ if(NOT DEFINED GF_VCPKG)
   list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 endif()
 
+if(DEFINED ENV{TRAVIS})
+  list(APPEND CMAKE_MODULE_PATH "/usr/share/libpugixml-dev/cmake/")
+endif()
+
 set(SDL2_BUILDING_LIBRARY TRUE)
 find_package(SDL2 REQUIRED)
 
