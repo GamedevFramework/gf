@@ -315,7 +315,7 @@ target_include_directories(gfcore0
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
   PRIVATE
     "${CMAKE_CURRENT_BINARY_DIR}"
-    ${GF_STB_INCLUDE_DIR}
+    "${Stb_INCLUDE_DIR}"
 )
 
 target_include_directories(gf0
@@ -325,7 +325,6 @@ target_include_directories(gf0
   PRIVATE
     "${CMAKE_CURRENT_BINARY_DIR}"
     "${CMAKE_CURRENT_SOURCE_DIR}"
-    ${GF_PUGIXML_INCLUDE_DIR}
     ${GF_NUKLEAR_INCLUDE_DIR}
 )
 
@@ -361,12 +360,20 @@ target_link_libraries(gfcore0
 target_link_libraries(gf0
   PUBLIC
     gfcore0
-  PRIVATE
-    SDL2::SDL2
     Freetype::Freetype
     ZLIB::ZLIB
-    ${GF_PUGIXML_LIBRARY}
+    pugixml
 )
+
+if(DEFINED GF_VCPKG)
+  if(GF_SHARED)
+    target_link_libraries(gf0 PRIVATE SDL2::SDL2)
+  else()
+    target_link_libraries(gf0 PRIVATE SDL2::SDL2-static)
+  endif()
+else()
+  target_link_libraries(gf0 PRIVATE SDL2::SDL2)
+endif()
 
 target_link_libraries(gfnet0
   PUBLIC
@@ -387,22 +394,40 @@ if (WIN32)
   )
 endif()
 
+target_compile_features(gfcore0
+  PUBLIC
+    cxx_std_14
+)
+
 set_target_properties(gfcore0
   PROPERTIES
+  CXX_EXTENSIONS OFF
   EXPORT_NAME "core"
   VERSION ${PROJECT_VERSION}
   SOVERSION ${PROJECT_VERSION_MAJOR}
 )
 
+target_compile_features(gf0
+  PUBLIC
+    cxx_std_14
+)
+
 set_target_properties(gf0
   PROPERTIES
+  CXX_EXTENSIONS OFF
   EXPORT_NAME "graphics"
   VERSION ${PROJECT_VERSION}
   SOVERSION ${PROJECT_VERSION_MAJOR}
 )
 
+target_compile_features(gfnet0
+  PUBLIC
+    cxx_std_14
+)
+
 set_target_properties(gfnet0
   PROPERTIES
+  CXX_EXTENSIONS OFF
   EXPORT_NAME "net"
   VERSION ${PROJECT_VERSION}
   SOVERSION ${PROJECT_VERSION_MAJOR}
