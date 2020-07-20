@@ -2,6 +2,16 @@ file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/generated")
 
 add_executable(gfdev_source_file graphics/tools/gfdev_source_file.cc)
 
+target_compile_features(gfdev_source_file
+  PUBLIC
+    cxx_std_14
+)
+
+set_target_properties(gfdev_source_file
+  PROPERTIES
+  CXX_EXTENSIONS OFF
+)
+
 # process gamecontrollerdb
 
 set(GCDB_SOURCES
