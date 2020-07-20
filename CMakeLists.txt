@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 project(GF
-  VERSION 0.17.0
+  VERSION 0.17.1
   LANGUAGES CXX C
 )
 
@@ -29,8 +29,9 @@ set(BUILD_SHARED_LIBS ${GF_SHARED})
 include(GNUInstallDirs)
 set(GF_DATADIR ${CMAKE_INSTALL_FULL_DATADIR})
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/sdl2")
+if(NOT DEFINED GF_VCPKG)
+  list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+endif()
 
 set(SDL2_BUILDING_LIBRARY TRUE)
 find_package(SDL2 REQUIRED)
@@ -44,16 +45,19 @@ find_package(Threads REQUIRED)
 if(GF_USE_EMBEDDED_LIBS)
   message(STATUS "Build with embedded libraries")
 
-  set(GF_PUGIXML_SRC "${CMAKE_CURRENT_SOURCE_DIR}/library/vendor/pugixml/src/pugixml.cpp")
-  set(GF_PUGIXML_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/library/vendor/pugixml/src/")
+  add_library(pugixml STATIC EXCLUDE_FROM_ALL "${CMAKE_CURRENT_SOURCE_DIR}/library/vendor/pugixml/src/pugixml.cpp")
+  target_include_directories(pugixml
+    PUBLIC
+      "${CMAKE_CURRENT_SOURCE_DIR}/library/vendor/pugixml/src/"
+  )
+  set_property(TARGET pugixml PROPERTY POSITION_INDEPENDENT_CODE ON)
 
-  set(GF_STB_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/library/vendor/stb")
+  set(Stb_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/library/vendor/stb")
 
   set(GF_NUKLEAR_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/library/vendor/nuklear")
 else()
   find_package(pugixml REQUIRED)
-  set(GF_PUGIXML_LIBRARY "pugixml")
-  find_package(stb REQUIRED)
+  find_package(Stb REQUIRED)
   # For nuklear: nothing to do
 endif()
 
@@ -65,7 +69,7 @@ endif()
 
 if(MSVC)
   message(STATUS "Using MSVC compiler")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /DNOMINMAX /W4 /utf-8 /std:c++14 /permissive-")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /DNOMINMAX /W4 /utf-8")
   link_directories(${Boost_LIBRARY_DIRS})
   # for more information on the last two switches:
   # - https://blogs.msdn.microsoft.com/vcblog/2016/06/07/standards-version-switches-in-the-compiler/
@@ -73,7 +77,7 @@ if(MSVC)
 else()
   message(STATUS "Using GCC or Clang compiler")
   # assume it's a GNU-like compiler (GCC, clang)
-  set(CMAKE_CXX_FLAGS                 "-Wall -Wextra -std=c++14 -pedantic -fvisibility=hidden")
+  set(CMAKE_CXX_FLAGS                 "-Wall -Wextra -pedantic -fvisibility=hidden")
   set(CMAKE_CXX_FLAGS_DEBUG           "-O0 -g")
   set(CMAKE_CXX_FLAGS_MINSIZEREL      "-Os -DNDEBUG")
   set(CMAKE_CXX_FLAGS_RELEASE         "-O3 -DNDEBUG")

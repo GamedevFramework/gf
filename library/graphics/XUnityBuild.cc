@@ -103,10 +103,6 @@
 
 #include "priv/Debug.cc"
 
-#ifdef GF_USE_EMBEDDED_LIBS
-#include <pugixml.cpp>
-#endif
-
 #ifndef __APPLE__
 #ifdef GF_OPENGL3
 #include "vendor/glad/gl33/src/glad.cc"
