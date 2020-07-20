@@ -38,6 +38,7 @@ find_package(SDL2 REQUIRED)
 
 find_package(Boost REQUIRED COMPONENTS filesystem system)
 find_package(Freetype REQUIRED)
+find_package(pugixml REQUIRED)
 find_package(ZLIB REQUIRED)
 
 find_package(Threads REQUIRED)
@@ -45,18 +46,10 @@ find_package(Threads REQUIRED)
 if(GF_USE_EMBEDDED_LIBS)
   message(STATUS "Build with embedded libraries")
 
-  add_library(pugixml STATIC EXCLUDE_FROM_ALL "${CMAKE_CURRENT_SOURCE_DIR}/library/vendor/pugixml/src/pugixml.cpp")
-  target_include_directories(pugixml
-    PUBLIC
-      "${CMAKE_CURRENT_SOURCE_DIR}/library/vendor/pugixml/src/"
-  )
-  set_property(TARGET pugixml PROPERTY POSITION_INDEPENDENT_CODE ON)
-
   set(Stb_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/library/vendor/stb")
 
   set(GF_NUKLEAR_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/library/vendor/nuklear")
 else()
-  find_package(pugixml REQUIRED)
   find_package(Stb REQUIRED)
   # For nuklear: nothing to do
 endif()
