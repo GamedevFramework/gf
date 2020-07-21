@@ -7,6 +7,7 @@ addons:
       - libboost-filesystem-dev
       - libboost-dev
       - libfreetype6-dev
+      - libpugixml-dev
       - libsdl2-dev
       - zlib1g-dev
       - libsfml-dev
@@ -16,6 +17,7 @@ addons:
       - cmake
       - boost
       - freetype
+      - pugixml
       - sdl2
       - zlib
     update: true
@@ -36,8 +38,9 @@ branches:
     - develop
 
 before_script:
+  - test "$TRAVIS_OS_NAME" = "linux" && sudo ln -s /usr/share/libpugixml-dev/cmake /usr/lib/x86_64-linux-gnu/cmake/pugixml || true
   - mkdir build
   - cd build
-  - cmake -DCMAKE_BUILD_TYPE=Release -DGF_DEBUG=OFF -DGF_BUILD_GAMES=ON -DGF_BUILD_TOOLS=ON -DGF_SINGLE_COMPILTATION_UNIT=ON ..
+  - cmake -DCMAKE_BUILD_TYPE=Release -DGF_DEBUG=OFF -DGF_BUILD_GAMES=ON -DGF_SINGLE_COMPILTATION_UNIT=ON ..
 script:
   - make && ./tests/gf_tests --gtest_filter=-*V6:SpatialTest*

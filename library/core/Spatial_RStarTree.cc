@@ -22,7 +22,7 @@
 
 #include <numeric>
 
-#include <iostream>
+#include <gf/Unused.h>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -178,8 +178,8 @@ inline namespace v1 {
     };
 
     struct SplitResult {
-      std::size_t index = -1;
-      std::size_t axis = -1;
+      std::size_t index = static_cast<std::size_t>(-1);
+      std::size_t axis = static_cast<std::size_t>(-1);
       SplitOrder order;
     };
 
@@ -946,14 +946,15 @@ inline namespace v1 {
       currentIndex = parentIndex;
     }
 
-    for (auto entryIndex : eliminated) {
-      doInsert(entryIndex, m_entries[entryIndex].bounds);
+    for (auto index : eliminated) {
+      doInsert(index, m_entries[index].bounds);
     }
   }
 
   void RStarTree::validate() const {
     std::size_t entries = validateNode(m_root);
     assert(entries == m_entries.getAllocated());
+    gf::unused(entries);
   }
 
   std::size_t RStarTree::validateNode(std::size_t nodeIndex) const {
@@ -969,13 +970,16 @@ inline namespace v1 {
         const Entry& entry = m_entries[member.index];
         assert(entry.bounds == member.bounds);
         assert(entry.node == nodeIndex);
+        gf::unused(entry);
       }
     } else {
       assert(node.type == Node::Branch);
+
       for (auto& member : node.members) {
         const Node& child = m_nodes[member.index];
         assert(child.bounds == member.bounds);
         assert(child.parent == nodeIndex);
+        gf::unused(child);
         entries += validateNode(member.index);
       }
     }

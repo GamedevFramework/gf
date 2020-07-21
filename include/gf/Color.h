@@ -81,17 +81,17 @@ inline namespace v1 {
 
       if ((max - min) > std::numeric_limits<T>::epsilon()) {
         if (max == color.r) {
-          hue = std::fmod(60 * (color.g - color.b) / (max - min) + 360, 360);
+          hue = std::fmod(T(60) * (color.g - color.b) / (max - min) + T(360), T(360));
         } else if (max == color.g) {
-          hue = 60 * (color.b - color.r) / (max - min) + 120;
+          hue = T(60) * (color.b - color.r) / (max - min) + T(120);
         } else if (max == color.b) {
-          hue = 60 * (color.r - color.g) / (max - min) + 240;
+          hue = T(60) * (color.r - color.g) / (max - min) + T(240);
         } else {
           assert(false);
         }
       }
 
-      T sat = (max < std::numeric_limits<T>::epsilon()) ? 0 : (1 - min / max);
+      T sat = (max < std::numeric_limits<T>::epsilon()) ? T(0) : (T(1) - min / max);
       T val = max;
 
       return { hue, sat, val, color.a };
@@ -101,18 +101,18 @@ inline namespace v1 {
      * @brief Convert a HSV color to a RGB color
      */
     static constexpr Color4<T> convertHsvToRgb(HSV hsv) {
-      T hue = hsv.h / 60;
+      T hue = hsv.h / T(60);
       T sat = hsv.s;
       T val = hsv.v;
 
       int i = static_cast<int>(hue) % 6;
       assert(0 <= i && i < 6);
 
-      T f = hue - i;
+      T f = hue - static_cast<T>(i);
 
-      T x = val * (1 - sat);
-      T y = val * (1 - (f * sat));
-      T z = val * (1 - ((1 - f) * sat));
+      T x = val * (T(1) - sat);
+      T y = val * (T(1) - (f * sat));
+      T z = val * (T(1) - ((T(1) - f) * sat));
 
       Color4<T> color = Zero;
       color.a = hsv.a;

@@ -26,6 +26,7 @@
 #include "ArrayRef.h"
 #include "Math.h"
 #include "Matrix.h"
+#include "PointSequence.h"
 #include "Portability.h"
 #include "SerializationFwd.h"
 #include "Vector.h"
@@ -42,7 +43,7 @@ inline namespace v1 {
    * A polyline is a set of consecutive segments. It is defined by the points
    * ending the segments. A polyline can be open (chain) or closed (loop).
    */
-  class GF_API Polyline {
+  class GF_API Polyline : public PointSequence {
   public:
     /**
      * @brief The type of polyline
@@ -60,7 +61,6 @@ inline namespace v1 {
     Polyline(Type type = Chain)
     : m_type(type)
     {
-
     }
 
     /**
@@ -70,10 +70,9 @@ inline namespace v1 {
      * @param type The type of polyline (default: chain)
      */
     Polyline(ArrayRef<Vector2f> points, Type type = Chain)
-    : m_points(points.begin(), points.end())
+    : PointSequence(points)
     , m_type(type)
     {
-
     }
 
     /**
@@ -85,68 +84,11 @@ inline namespace v1 {
      */
     template<typename Iterator>
     Polyline(Iterator first, Iterator last, Type type = Chain)
-    : m_points(first, last)
+    : PointSequence(first, last)
     , m_type(type)
     {
 
     }
-
-    /**
-     * @brief Add a point to the polyline
-     *
-     * @param point The point to add to the polyline
-     */
-    void addPoint(Vector2f point);
-
-    /**
-     * @brief Get the number of points of the polyline
-     *
-     * @returns The number of points of the polyline
-     */
-    std::size_t getPointCount() const;
-
-    /**
-     * @brief Get the i-th point of the polyline
-     *
-     * @param index The index of the point
-     */
-    Vector2f getPoint(std::size_t index) const;
-
-    /**
-     * @brief Get an iterator to the first point
-     *
-     * @returns A pointer to the first point
-     *
-     * @sa end()
-     */
-    const Vector2f *begin() const;
-
-    /**
-     * @brief Get an iterator past the last point
-     *
-     * @returns A pointer past the last point
-     *
-     * @sa begin()
-     */
-    const Vector2f *end() const;
-
-    /**
-     * @brief Get an iterator to the first point
-     *
-     * @returns A pointer to the first point
-     *
-     * @sa end()
-     */
-    Vector2f *begin();
-
-    /**
-     * @brief Get an iterator past the last point
-     *
-     * @returns A pointer past the last point
-     *
-     * @sa begin()
-     */
-    Vector2f *end();
 
     /**
      * @brief Check if there is a point before the i-th point
@@ -251,15 +193,7 @@ inline namespace v1 {
       return m_type == Chain;
     }
 
-    /**
-     * @brief Simplify the polyline
-     *
-     * @param distance The maximum authorized distance between the original points and the simplified points
-     */
-    void simplify(float distance = Epsilon);
-
   private:
-    std::vector<Vector2f> m_points;
     Type m_type;
   };
 

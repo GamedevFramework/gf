@@ -22,6 +22,8 @@
 
 #include <algorithm>
 
+#include <gf/Unused.h>
+
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
@@ -42,6 +44,7 @@ inline namespace v1 {
     assert(m_root != Null);
     bool inserted = doInsert(index, m_root);
     assert(inserted);
+    gf::unused(inserted);
 
     return static_cast<SpatialId>(index);
   }
@@ -98,8 +101,7 @@ inline namespace v1 {
   }
 
   void Quadtree::disposeNode(std::size_t index) {
-    Node& node = m_nodes[index];
-    assert(node.entries.empty());
+    assert(m_nodes[index].entries.empty());
     m_nodes.dispose(index);
   }
 

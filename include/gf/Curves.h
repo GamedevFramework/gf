@@ -47,9 +47,9 @@ inline namespace v1 {
      */
     Line(Vector2f p0, Vector2f p1);
 
-    virtual std::size_t getPointCount() const override;
+    std::size_t getPointCount() const override;
 
-    virtual Vector2f getPoint(std::size_t index) const override;
+    Vector2f getPoint(std::size_t index) const override;
 
   private:
     Vector2f m_p0;
@@ -73,9 +73,9 @@ inline namespace v1 {
      */
     QuadraticBezierCurve(Vector2f p0, Vector2f p1, Vector2f p2, std::size_t pointCount = 20);
 
-    virtual std::size_t getPointCount() const override;
+    std::size_t getPointCount() const override;
 
-    virtual Vector2f getPoint(std::size_t index) const override;
+    Vector2f getPoint(std::size_t index) const override;
 
   private:
     std::size_t m_pointCount;
@@ -102,9 +102,9 @@ inline namespace v1 {
      */
     CubicBezierCurve(Vector2f p0, Vector2f p1, Vector2f p2, Vector2f p3, std::size_t pointCount = 30);
 
-    virtual std::size_t getPointCount() const override;
+    std::size_t getPointCount() const override;
 
-    virtual Vector2f getPoint(std::size_t index) const override;
+    Vector2f getPoint(std::size_t index) const override;
 
   private:
     std::size_t m_pointCount;
@@ -151,9 +151,9 @@ inline namespace v1 {
      */
     void setControlPoints(const Polyline& line);
 
-    virtual std::size_t getPointCount() const override;
+    std::size_t getPointCount() const override;
 
-    virtual Vector2f getPoint(std::size_t index) const override;
+    Vector2f getPoint(std::size_t index) const override;
 
   private:
     Type m_type;
@@ -226,9 +226,9 @@ inline namespace v1 {
      */
     CompoundCurve& clear(Vector2f origin = Vector2f(0, 0));
 
-    virtual std::size_t getPointCount() const override;
+    std::size_t getPointCount() const override;
 
-    virtual Vector2f getPoint(std::size_t index) const override;
+    Vector2f getPoint(std::size_t index) const override;
 
   private:
     std::vector<Vector2f> m_points;

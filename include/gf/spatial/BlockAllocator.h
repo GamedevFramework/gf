@@ -29,7 +29,7 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  constexpr std::size_t NullIndex = -1;
+  constexpr std::size_t NullIndex = static_cast<std::size_t>(-1);
 
   template<typename T>
   class BlockAllocator {

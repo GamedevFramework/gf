@@ -85,7 +85,7 @@ inline namespace v1 {
      * Otherwise, it is searched thanks to an asset manager and put in the
      * cache. If the resource is not found, an exception is thrown.
      *
-     * @param assetManager An asset manager
+     * @param assets An asset manager
      * @param filename The filename of the resource
      * @return A reference to the resource
      * @throw std::runtime_error If the resource is not found

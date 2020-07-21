@@ -53,6 +53,7 @@
 #include "Noises.cc"
 #include "Orientation.cc"
 #include "Path.cc"
+#include "PointSequence.cc"
 #include "Polygon.cc"
 #include "Polyline.cc"
 #include "RandomBinaryTree.cc"

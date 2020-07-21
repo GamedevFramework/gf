@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 project(GF
-  VERSION 0.17.1
+  VERSION 0.17.2
   LANGUAGES CXX C
 )
 
@@ -10,6 +10,8 @@ if(NOT MSVC AND (NOT DEFINED CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL ""))
   set(CMAKE_BUILD_TYPE "RelWithDebInfo")
 endif()
 
+option(BUILD_SHARED_LIBS "Build the library as a shared library" ON)
+
 option(GF_DEBUG "Activate debug build" ON)
 option(GF_BUILD_WITH_OPENGL3 "Build with OpenGL 3.3 instead of OpenGL ES 2.0" OFF)
 option(GF_BUILD_EXAMPLES "Build examples" ON)
@@ -17,14 +19,13 @@ option(GF_BUILD_TESTS "Build tests" ON)
 option(GF_BUILD_DOCUMENTATION "Build documentation (needs Doxygen)" ON)
 option(GF_BUILD_GAMES "Build games" OFF)
 option(GF_SINGLE_COMPILTATION_UNIT "Build the library in a single file (unity build)" OFF)
-option(GF_SHARED "Build the library as a shared library" ON)
 option(GF_USE_EMBEDDED_LIBS "Build the library with the submodule libraries" ON)
 
 if(UNIX)
   option(GF_DEV_ENABLE_ASAN "Enable Address Sanitizer" OFF)
 endif()
 
-set(BUILD_SHARED_LIBS ${GF_SHARED})
+set(GF_SHARED ${BUILD_SHARED_LIBS})
 
 include(GNUInstallDirs)
 set(GF_DATADIR ${CMAKE_INSTALL_FULL_DATADIR})
@@ -38,27 +39,17 @@ find_package(SDL2 REQUIRED)
 
 find_package(Boost REQUIRED COMPONENTS filesystem system)
 find_package(Freetype REQUIRED)
+find_package(pugixml REQUIRED)
 find_package(ZLIB REQUIRED)
 
 find_package(Threads REQUIRED)
 
 if(GF_USE_EMBEDDED_LIBS)
   message(STATUS "Build with embedded libraries")
-
-  add_library(pugixml STATIC EXCLUDE_FROM_ALL "${CMAKE_CURRENT_SOURCE_DIR}/library/vendor/pugixml/src/pugixml.cpp")
-  target_include_directories(pugixml
-    PUBLIC
-      "${CMAKE_CURRENT_SOURCE_DIR}/library/vendor/pugixml/src/"
-  )
-  set_property(TARGET pugixml PROPERTY POSITION_INDEPENDENT_CODE ON)
-
   set(Stb_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/library/vendor/stb")
-
-  set(GF_NUKLEAR_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/library/vendor/nuklear")
 else()
-  find_package(pugixml REQUIRED)
+  # works on vcpkg
   find_package(Stb REQUIRED)
-  # For nuklear: nothing to do
 endif()
 
 if(APPLE)

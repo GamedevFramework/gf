@@ -6,7 +6,6 @@ This file is a list of ideas for gf. Some of them will eventually be in gf. Othe
 
 - (vocabulary) merge `ArrayRef` and `BufferRef` in `Span`
 - (vocabulary) rename `StringRef` in `ZStringView`
-- (geometry) make a common ancestor to `Polygon` and `Polyline`: `PointContainer`
 - (geometry) add more algorithms from [here](http://geomalgorithms.com/algorithms.html)
 - (spatial) add linear and quadratic RTree
 - (color) color interpolation (and color space)

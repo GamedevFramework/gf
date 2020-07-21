@@ -112,7 +112,7 @@ inline namespace v1 {
 
   private:
     static constexpr std::size_t Size = 16;
-    static constexpr std::size_t Null = -1;
+    static constexpr std::size_t Null = static_cast<std::size_t>(-1);
 
     struct Entry {
       Handle handle;

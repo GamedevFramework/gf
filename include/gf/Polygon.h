@@ -26,6 +26,7 @@
 #include "ArrayRef.h"
 #include "Math.h"
 #include "Matrix.h"
+#include "PointSequence.h"
 #include "Portability.h"
 #include "SerializationFwd.h"
 #include "Vector.h"
@@ -43,7 +44,7 @@ inline namespace v1 {
    * @brief A convex polygon
    *
    */
-  class GF_API Polygon {
+  class GF_API Polygon : public PointSequence {
   public:
     /**
      * @brief Default constructor
@@ -55,7 +56,10 @@ inline namespace v1 {
      *
      * @param points The array of points
      */
-    Polygon(ArrayRef<Vector2f> points);
+    Polygon(ArrayRef<Vector2f> points)
+    : PointSequence(points)
+    {
+    }
 
     /**
      * @brief Constructor from points
@@ -65,49 +69,9 @@ inline namespace v1 {
      */
     template<typename Iterator>
     Polygon(Iterator first, Iterator last)
-    : m_points(first, last)
+    : PointSequence(first, last)
     {
-
     }
-
-    /**
-     * @brief Check if the polygon is empty
-     *
-     * An empty polygon has no points.
-     *
-     * @returns True if the polygon is empty
-     */
-    bool isEmpty() const;
-
-    /**
-     * @brief Add a point to the polygon
-     *
-     * @param point The point to add to the polygon
-     */
-    void addPoint(Vector2f point);
-
-    /**
-     * @brief Get the number of points of the polygon
-     *
-     * @returns The number of points of the polygon
-     */
-    std::size_t getPointCount() const;
-
-    /**
-     * @brief Get the i-th point of the polygon
-     *
-     * @param index The index of the point
-     */
-    Vector2f getPoint(std::size_t index) const;
-
-    /**
-     * @brief Get the center of the polygon
-     *
-     * As the polygon is convex, the center is inside the polygon
-     *
-     * @returns The center of the polygon
-     */
-    Vector2f getCenter() const;
 
     /**
      * @brief Get the farthest point in a direction
@@ -125,24 +89,6 @@ inline namespace v1 {
      * @returns The farthest point of the polygon in the given direction
      */
     Vector2f getSupport(Vector2f direction) const;
-
-    /**
-     * @brief Get an iterator to the first point
-     *
-     * @returns A pointer to the first point
-     *
-     * @sa end()
-     */
-    const Vector2f *begin() const;
-
-    /**
-     * @brief Get an iterator past the last point
-     *
-     * @returns A pointer past the last point
-     *
-     * @sa begin()
-     */
-    const Vector2f *end() const;
 
     /**
      * @brief Check if the polygon is convex
@@ -167,6 +113,12 @@ inline namespace v1 {
      */
     Winding getWinding() const;
 
+    /**
+     * @brief Test if a point is inside the (convex) polygon
+     *
+     * @param point The point to test
+     * @returns True if the point is inside the polygon
+     */
     bool contains(Vector2f point) const;
 
     /**
@@ -177,36 +129,25 @@ inline namespace v1 {
      * @returns The area of the polygon
      */
     float getArea() const;
-
-    /**
-     * @brief Apply a transformation to the polygon
-     *
-     * @param mat The transformation matrix
-     */
-    void applyTransform(const Matrix3f& mat);
-
-    /**
-     * @brief Simplify the polygon
-     *
-     * @param distance The maximum authorized distance between the original points and the simplified points
-     */
-    void simplify(float distance = Epsilon);
-
-  private:
-    std::vector<Vector2f> m_points;
   };
 
   /**
    * @relates Serializer
    * @brief Serialize a polygon
    */
-  GF_API Serializer& operator|(Serializer& ar, const Polygon& polygon);
+  inline
+  Serializer& operator|(Serializer& ar, const Polygon& polygon) {
+    return ar | static_cast<const PointSequence&>(polygon);
+  }
 
   /**
    * @relates Deserializer
    * @brief Deserialize a polygon
    */
-  GF_API Deserializer& operator|(Deserializer& ar, Polygon& polygon);
+  inline
+  Deserializer& operator|(Deserializer& ar, Polygon& polygon) {
+    return ar | static_cast<PointSequence&>(polygon);
+  }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

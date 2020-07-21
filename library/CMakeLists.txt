@@ -2,6 +2,16 @@ file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/generated")
 
 add_executable(gfdev_source_file graphics/tools/gfdev_source_file.cc)
 
+target_compile_features(gfdev_source_file
+  PUBLIC
+    cxx_std_14
+)
+
+set_target_properties(gfdev_source_file
+  PROPERTIES
+  CXX_EXTENSIONS OFF
+)
+
 # process gamecontrollerdb
 
 set(GCDB_SOURCES
@@ -124,6 +134,7 @@ else()
     core/Path.cc
     core/Polygon.cc
     core/Polyline.cc
+    core/PointSequence.cc
     core/RandomBinaryTree.cc
     core/Random.cc
     core/Range.cc
@@ -208,7 +219,6 @@ else()
     graphics/Tmx.cc
     graphics/TmxOps.cc
     graphics/Transformable.cc
-    graphics/UI.cc
     graphics/VertexArray.cc
     graphics/VertexBuffer.cc
     graphics/Vertex.cc
@@ -224,7 +234,6 @@ else()
     # priv
     graphics/priv/Debug.cc
     # vendor
-    ${GF_PUGIXML_SRC}
     ${GF_GLAD_SRC}
   )
 
@@ -325,7 +334,6 @@ target_include_directories(gf0
   PRIVATE
     "${CMAKE_CURRENT_BINARY_DIR}"
     "${CMAKE_CURRENT_SOURCE_DIR}"
-    ${GF_NUKLEAR_INCLUDE_DIR}
 )
 
 target_include_directories(gfnet0
@@ -360,10 +368,12 @@ target_link_libraries(gfcore0
 target_link_libraries(gf0
   PUBLIC
     gfcore0
+  PRIVATE
     Freetype::Freetype
     ZLIB::ZLIB
     pugixml
 )
+
 
 if(DEFINED GF_VCPKG)
   if(GF_SHARED)

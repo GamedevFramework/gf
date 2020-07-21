@@ -94,8 +94,8 @@ inline namespace v1 {
     Handle operator[](SpatialId id);
 
   private:
-    static constexpr std::size_t Null = -1;
-    static constexpr std::size_t Occupied = -2;
+    static constexpr std::size_t Null = static_cast<std::size_t>(-1);
+    static constexpr std::size_t Occupied = static_cast<std::size_t>(-2);
 
     struct Entry {
       Handle handle;
