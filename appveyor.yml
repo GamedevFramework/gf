@@ -31,7 +31,7 @@ before_build:
   - cmd: git submodule update --init
   - cmd: mkdir build
   - cmd: cd build
-  - cmd: cmake -A x64 -DGF_DEBUG=OFF -DGF_BUILD_GAMES=OFF -DGF_SINGLE_COMPILTATION_UNIT=ON -DGF_SHARED=OFF -DCMAKE_TOOLCHAIN_FILE=C:\Tools\vcpkg\scripts\buildsystems\vcpkg.cmake ..
+  - cmd: cmake -DGF_DEBUG=OFF -DGF_BUILD_GAMES=OFF -DGF_SINGLE_COMPILTATION_UNIT=ON -DBUILD_SHARED_LIBS=OFF -DCMAKE_TOOLCHAIN_FILE=C:\Tools\vcpkg\scripts\buildsystems\vcpkg.cmake ..
 
 build:
   parallel: true

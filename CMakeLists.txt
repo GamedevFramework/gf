@@ -10,6 +10,8 @@ if(NOT MSVC AND (NOT DEFINED CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL ""))
   set(CMAKE_BUILD_TYPE "RelWithDebInfo")
 endif()
 
+option(BUILD_SHARED_LIBS "Build the library as a shared library" ON)
+
 option(GF_DEBUG "Activate debug build" ON)
 option(GF_BUILD_WITH_OPENGL3 "Build with OpenGL 3.3 instead of OpenGL ES 2.0" OFF)
 option(GF_BUILD_EXAMPLES "Build examples" ON)
@@ -17,14 +19,13 @@ option(GF_BUILD_TESTS "Build tests" ON)
 option(GF_BUILD_DOCUMENTATION "Build documentation (needs Doxygen)" ON)
 option(GF_BUILD_GAMES "Build games" OFF)
 option(GF_SINGLE_COMPILTATION_UNIT "Build the library in a single file (unity build)" OFF)
-option(GF_SHARED "Build the library as a shared library" ON)
 option(GF_USE_EMBEDDED_LIBS "Build the library with the submodule libraries" ON)
 
 if(UNIX)
   option(GF_DEV_ENABLE_ASAN "Enable Address Sanitizer" OFF)
 endif()
 
-set(BUILD_SHARED_LIBS ${GF_SHARED})
+set(GF_SHARED ${BUILD_SHARED_LIBS})
 
 include(GNUInstallDirs)
 set(GF_DATADIR ${CMAKE_INSTALL_FULL_DATADIR})
