@@ -234,7 +234,6 @@ else()
     # priv
     graphics/priv/Debug.cc
     # vendor
-    ${GF_PUGIXML_SRC}
     ${GF_GLAD_SRC}
   )
 
@@ -335,7 +334,6 @@ target_include_directories(gf0
   PRIVATE
     "${CMAKE_CURRENT_BINARY_DIR}"
     "${CMAKE_CURRENT_SOURCE_DIR}"
-    ${GF_NUKLEAR_INCLUDE_DIR}
 )
 
 target_include_directories(gfnet0
