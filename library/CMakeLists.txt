@@ -386,6 +386,7 @@ target_link_libraries(gfcore0
     Boost::filesystem
   PRIVATE
     ZLIB::ZLIB
+    pugixml
 )
 
 target_link_libraries(gf0
