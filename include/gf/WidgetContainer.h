@@ -24,6 +24,7 @@
 
 #include <vector>
 
+#include "GraphicsApi.h"
 #include "Ref.h"
 #include "RenderStates.h"
 
@@ -41,7 +42,7 @@ inline namespace v1 {
    *
    * @sa gf::Widget
    */
-  class GF_API WidgetContainer {
+  class GF_GRAPHICS_API WidgetContainer {
   public:
     /**
      * @brief Construct a widget wontainer with a given view.

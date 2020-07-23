@@ -24,7 +24,7 @@
 #include <cstddef>
 #include <vector>
 
-#include "Portability.h"
+#include "GraphicsApi.h"
 #include "Rect.h"
 #include "Time.h"
 
@@ -46,7 +46,7 @@ inline namespace v1 {
    *
    * @sa gf::AnimatedSprite
    */
-  class GF_API Animation {
+  class GF_GRAPHICS_API Animation {
   public:
     /**
      * @brief Default constructor

@@ -27,11 +27,10 @@
 #include <functional>
 #include <vector>
 
+#include "CoreApi.h"
 #include "Math.h"
 #include "Noise.h"
-#include "Portability.h"
 #include "Vector.h"
-
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -47,7 +46,7 @@ inline namespace v1 {
    * [Value noise](https://en.wikipedia.org/wiki/Value_noise) is a
    * lattice-based noise based on values.
    */
-  class GF_API ValueNoise2D : public Noise2D {
+  class GF_CORE_API ValueNoise2D : public Noise2D {
   public:
     /**
      * @brief Constructor
@@ -77,7 +76,7 @@ inline namespace v1 {
    * [Gradient noise](https://en.wikipedia.org/wiki/Gradient_noise) is a
    * lattice-based noise based on gradients.
    */
-  class GF_API GradientNoise2D : public Noise2D {
+  class GF_CORE_API GradientNoise2D : public Noise2D {
   public:
     /**
      * @brief Constructor
@@ -106,7 +105,7 @@ inline namespace v1 {
    * [Gradient noise](https://en.wikipedia.org/wiki/Gradient_noise) is a
    * lattice-based noise based on gradients.
    */
-  class GF_API GradientNoise3D : public Noise3D {
+  class GF_CORE_API GradientNoise3D : public Noise3D {
   public:
     /**
      * @brief Constructor
@@ -138,7 +137,7 @@ inline namespace v1 {
    *
    * @sa [Better Gradient Noise. A. Kensler, A. Knoll, P. Shirley. 2008](https://www.cs.utah.edu/~aek/research/noise.pdf)
    */
-  class GF_API BetterGradientNoise2D : public Noise2D {
+  class GF_CORE_API BetterGradientNoise2D : public Noise2D {
   public:
     /**
      * @brief Constructor
@@ -165,7 +164,7 @@ inline namespace v1 {
    * in adding several octaves of a basic noise at different amplitudes.
    *
    */
-  class GF_API FractalNoise2D : public Noise2D {
+  class GF_CORE_API FractalNoise2D : public Noise2D {
   public:
     /**
      * @brief Constructor
@@ -200,7 +199,7 @@ inline namespace v1 {
    * in adding several octaves of a basic noise at different amplitudes.
    *
    */
-  class GF_API FractalNoise3D : public Noise3D {
+  class GF_CORE_API FractalNoise3D : public Noise3D {
   public:
     /**
      * @brief Constructor
@@ -235,7 +234,7 @@ inline namespace v1 {
    *
    * @sa gf::GradientNoise2D, gf::FractalNoise2D
    */
-  class GF_API PerlinNoise2D : public Noise2D {
+  class GF_CORE_API PerlinNoise2D : public Noise2D {
   public:
     /**
      * @brief Constructor
@@ -262,7 +261,7 @@ inline namespace v1 {
    *
    * @sa gf::GradientNoise3D, gf::FractalNoise3D
    */
-  class GF_API PerlinNoise3D : public Noise3D {
+  class GF_CORE_API PerlinNoise3D : public Noise3D {
   public:
     /**
      * @brief Constructor
@@ -293,7 +292,7 @@ inline namespace v1 {
    *
    * @sa gf::GradientNoise2D
    */
-  class GF_API SimplexNoise2D : public Noise2D {
+  class GF_CORE_API SimplexNoise2D : public Noise2D {
   public:
     /**
      * @brief Constructor
@@ -320,7 +319,7 @@ inline namespace v1 {
    *
    * @sa gf::SimplexNoise2D
    */
-  class GF_API OpenSimplexNoise2D : public Noise2D {
+  class GF_CORE_API OpenSimplexNoise2D : public Noise2D {
   public:
     /**
      * @brief Constructor
@@ -346,7 +345,7 @@ inline namespace v1 {
    *
    * @sa gf::SimplexNoise
    */
-  class GF_API OpenSimplexNoise3D : public Noise3D {
+  class GF_CORE_API OpenSimplexNoise3D : public Noise3D {
   public:
     /**
      * @brief Constructor
@@ -369,7 +368,7 @@ inline namespace v1 {
    *
    * @sa [Wavelet Noise. Robert L. Cook, Tony DeRose, Pixar Animation Studios.](https://graphics.pixar.com/library/WaveletNoise/paper.pdf)
    */
-  class GF_API WaveletNoise3D : public Noise3D {
+  class GF_CORE_API WaveletNoise3D : public Noise3D {
   public:
     /**
      * @brief Constructor
@@ -394,7 +393,7 @@ inline namespace v1 {
    * based noise. It is also known as Voronoi noise or cellular noise or
    * simply cell noise.
    */
-  class GF_API WorleyNoise2D : public Noise2D {
+  class GF_CORE_API WorleyNoise2D : public Noise2D {
   public:
     /**
      * @brief Constructor
@@ -421,7 +420,7 @@ inline namespace v1 {
    * @brief Multi Fractal 2D noise
    *
    */
-  class GF_API Multifractal2D : public Noise2D {
+  class GF_CORE_API Multifractal2D : public Noise2D {
   public:
     /**
      * @brief Constructor
@@ -452,7 +451,7 @@ inline namespace v1 {
    * @brief Hetero Terrain 2D noise
    *
    */
-  class GF_API HeteroTerrain2D : public Noise2D {
+  class GF_CORE_API HeteroTerrain2D : public Noise2D {
   public:
     /**
      * @brief Constructor
@@ -484,7 +483,7 @@ inline namespace v1 {
    * @brief Hybrid Multifractal 2D noise
    *
    */
-  class GF_API HybridMultifractal2D : public Noise2D {
+  class GF_CORE_API HybridMultifractal2D : public Noise2D {
   public:
     /**
      * @brief Constructor
@@ -516,7 +515,7 @@ inline namespace v1 {
    * @brief Ridged Multifractal 2D noise
    *
    */
-  class GF_API RidgedMultifractal2D : public Noise2D {
+  class GF_CORE_API RidgedMultifractal2D : public Noise2D {
   public:
     /**
      * @brief Constructor
@@ -555,7 +554,7 @@ inline namespace v1 {
    *
    * By default, the @f$ z = 0 @f$ plane is used.
    */
-  class GF_API Noise3DTo2DAdapter : public Noise2D {
+  class GF_CORE_API Noise3DTo2DAdapter : public Noise2D {
   public:
     /**
      * @brief Constructor

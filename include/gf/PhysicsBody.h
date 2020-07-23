@@ -24,6 +24,7 @@
 #include <memory>
 
 #include "Circ.h"
+#include "GraphicsApi.h"
 #include "PhysicsGeometry.h"
 #include "Polygon.h"
 #include "Rect.h"
@@ -53,7 +54,7 @@ inline namespace v1 {
    *
    * @sa gf::PhysicsGeometry, gf::PhysicsModel
    */
-  class GF_API PhysicsBody {
+  class GF_GRAPHICS_API PhysicsBody {
   public:
     /**
      * @brief Type of body

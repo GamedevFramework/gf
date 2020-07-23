@@ -22,6 +22,7 @@
 #define GF_PHYSICS_GEOMETRY_H
 
 #include "Circ.h"
+#include "GraphicsApi.h"
 #include "Polygon.h"
 #include "Rect.h"
 #include "Vector.h"
@@ -43,7 +44,7 @@ inline namespace v1 {
    *
    * @sa gf::PhysicsBody
    */
-  class GF_API PhysicsGeometry {
+  class GF_GRAPHICS_API PhysicsGeometry {
   public:
     /**
      * @brief The type of geometry
@@ -109,7 +110,7 @@ inline namespace v1 {
   /**
    * @brief A circle physics geometry
    */
-  class GF_API CircleGeometry : public PhysicsGeometry {
+  class GF_GRAPHICS_API CircleGeometry : public PhysicsGeometry {
   public:
     /**
      * @brief Constructor
@@ -147,7 +148,7 @@ inline namespace v1 {
    *
    * This geometry includes rectangles.
    */
-  class GF_API PolygonGeometry : public PhysicsGeometry {
+  class GF_GRAPHICS_API PolygonGeometry : public PhysicsGeometry {
   public:
     /**
      * @brief Constructor

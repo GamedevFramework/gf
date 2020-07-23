@@ -23,7 +23,7 @@
 
 #include <cstdint>
 
-#include "Portability.h"
+#include "CoreApi.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -50,7 +50,7 @@ inline namespace v1 {
    *
    * @return @f$ -1 @f$, @f$ 0 @f$ or @f$ 1 @f$ with respect to the move
    */
-  GF_API float angularFactor(AngularMove move);
+  GF_CORE_API float angularFactor(AngularMove move);
 
   /**
    * @ingroup core
@@ -72,7 +72,7 @@ inline namespace v1 {
    *
    * @return @f$ -1 @f$, @f$ 0 @f$ or @f$ 1 @f$ with respect to the move
    */
-  GF_API float linearFactor(LinearMove move);
+  GF_CORE_API float linearFactor(LinearMove move);
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

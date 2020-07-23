@@ -21,7 +21,7 @@
 #ifndef GF_SOCKET_GUARD_H
 #define GF_SOCKET_GUARD_H
 
-#include "Portability.h"
+#include "NetApi.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -39,7 +39,7 @@ inline namespace v1 {
    *
    * @sa gf::TcpListener, gf::TcpSocket, gf::UdpSocket
    */
-  class GF_API SocketGuard {
+  class GF_NET_API SocketGuard {
   public:
 
 #ifdef _WIN32

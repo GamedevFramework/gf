@@ -21,7 +21,7 @@
 #ifndef GF_DIRECTION_H
 #define GF_DIRECTION_H
 
-#include "Portability.h"
+#include "CoreApi.h"
 #include "Vector.h"
 
 namespace gf {
@@ -53,7 +53,7 @@ inline namespace v1 {
    * @param direction The direction
    * @returns A unit vector representing the direction
    */
-  GF_API Vector2f unit(Direction direction);
+  GF_CORE_API Vector2f unit(Direction direction);
 
   /**
    * @ingroup core
@@ -66,7 +66,7 @@ inline namespace v1 {
    * @param direction The direction
    * @returns A vector representing the direction
    */
-  GF_API Vector2i displacement(Direction direction);
+  GF_CORE_API Vector2i displacement(Direction direction);
 
   /**
    * @ingroup core
@@ -77,7 +77,7 @@ inline namespace v1 {
    * @param direction The direction
    * @returns an angle (in radians) representing the direction
    */
-  GF_API float angle(Direction direction);
+  GF_CORE_API float angle(Direction direction);
 
   /**
    * @ingroup core
@@ -86,7 +86,7 @@ inline namespace v1 {
    * @param direction The direction
    * @return The opposite direction
    */
-  GF_API Direction opposite(Direction direction);
+  GF_CORE_API Direction opposite(Direction direction);
 
   /**
    * @ingroup core
@@ -95,7 +95,7 @@ inline namespace v1 {
    * @param direction The direction
    * @return The orthogonal direction clockwise
    */
-  GF_API Direction orthogonalCW(Direction direction);
+  GF_CORE_API Direction orthogonalCW(Direction direction);
 
   /**
    * @ingroup core
@@ -104,7 +104,7 @@ inline namespace v1 {
    * @param direction The direction
    * @return The orthogonal direction counter-clockwise
    */
-  GF_API Direction orthogonalCCW(Direction direction);
+  GF_CORE_API Direction orthogonalCCW(Direction direction);
 
   /**
    * @ingroup core
@@ -113,7 +113,7 @@ inline namespace v1 {
    * @param direction The direction
    * @return The next direction clockwise
    */
-  GF_API Direction nextCW(Direction direction);
+  GF_CORE_API Direction nextCW(Direction direction);
 
   /**
    * @ingroup core
@@ -122,7 +122,7 @@ inline namespace v1 {
    * @param direction The direction
    * @return The next direction counter-clockwise
    */
-  GF_API Direction nextCCW(Direction direction);
+  GF_CORE_API Direction nextCCW(Direction direction);
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

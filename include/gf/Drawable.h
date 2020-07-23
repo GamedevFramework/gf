@@ -24,7 +24,7 @@
 #ifndef GF_DRAWABLE_H
 #define GF_DRAWABLE_H
 
-#include "Portability.h"
+#include "GraphicsApi.h"
 #include "RenderStates.h"
 
 namespace gf {
@@ -54,7 +54,7 @@ inline namespace v1 {
    * @snippet snippets/doc_class_drawable.cc mydrawable
    *
    */
-  class GF_API Drawable {
+  class GF_GRAPHICS_API Drawable {
   public:
     /**
      * @brief Virtual desctructor

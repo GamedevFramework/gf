@@ -24,7 +24,7 @@
 #include <cassert>
 #include <climits>
 
-#include "Portability.h"
+#include "CoreApi.h"
 #include "Random.h"
 #include "StringRef.h"
 
@@ -40,7 +40,7 @@ inline namespace v1 {
    * The set of dice is composed of several dice with the same number of faces.
    * After a roll a modifier can be added to the sum.
    */
-  class GF_API Dice {
+  class GF_CORE_API Dice {
   public:
     /**
      * @brief Constructor

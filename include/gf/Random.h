@@ -25,8 +25,8 @@
 #include <random>
 
 #include "Circ.h"
+#include "CoreApi.h"
 #include "Id.h"
-#include "Portability.h"
 #include "Rect.h"
 #include "Vector.h"
 
@@ -44,7 +44,7 @@ inline namespace v1 {
    * above this engine.
    *
    */
-  class GF_API Random {
+  class GF_CORE_API Random {
   public:
     /**
      * @brief Default constructor with complex initialization

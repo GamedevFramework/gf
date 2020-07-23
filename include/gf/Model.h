@@ -21,7 +21,7 @@
 #ifndef GF_MODEL_H
 #define GF_MODEL_H
 
-#include "Portability.h"
+#include "CoreApi.h"
 #include "Time.h"
 
 namespace gf {
@@ -43,7 +43,7 @@ inline namespace v1 {
    *
    * @sa gf::ModelContainer, gf::Entity
    */
-  class GF_API Model {
+  class GF_CORE_API Model {
   public:
     /**
      * @brief Destructor

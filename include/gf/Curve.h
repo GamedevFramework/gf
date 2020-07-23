@@ -23,7 +23,7 @@
 
 #include <cstddef>
 
-#include "Portability.h"
+#include "GraphicsApi.h"
 #include "Rect.h"
 #include "Transformable.h"
 #include "Vector.h"
@@ -49,7 +49,7 @@ inline namespace v1 {
    *
    * @sa gf::Line, gf::QuadraticBezierCurve, gf::CubicBezierCurve, gf::CompoundCurve
    */
-  class GF_API Curve : public Transformable {
+  class GF_GRAPHICS_API Curve : public Transformable {
   public:
     /**
      * @brief The type of the curve

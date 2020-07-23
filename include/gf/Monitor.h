@@ -24,8 +24,8 @@
 #include <string>
 #include <vector>
 
+#include "GraphicsApi.h"
 #include "Library.h"
-#include "Portability.h"
 #include "Vector.h"
 
 namespace gf {
@@ -38,7 +38,7 @@ inline namespace v1 {
    * @brief A video mode
    *
    */
-  struct GF_API VideoMode {
+  struct GF_GRAPHICS_API VideoMode {
     Vector2i size; ///< Video mode size, in pixels
     unsigned bitsPerPixel; ///< Video mode pixel depth, in bits per pixel
     int refreshRate; ///< Video mode refresh rate, in Hz
@@ -48,7 +48,7 @@ inline namespace v1 {
    * @ingroup window
    * @brief A monitor
    */
-  class GF_API Monitor {
+  class GF_GRAPHICS_API Monitor {
   public:
     /**
      * @brief Get the primary monitor

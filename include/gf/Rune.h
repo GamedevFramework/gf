@@ -23,7 +23,7 @@
 
 #include <cstddef>
 
-#include "Portability.h"
+#include "GraphicsApi.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -34,7 +34,7 @@ inline namespace v1 {
    * @ingroup window
    * @brief A character encoded in UTF-8
    */
-  struct GF_API Rune {
+  struct GF_GRAPHICS_API Rune {
     /**
      * @brief The maximum size of the data
      */

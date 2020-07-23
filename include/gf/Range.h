@@ -24,6 +24,7 @@
 #include <cstddef>
 #include <iterator>
 
+#include "CoreApi.h"
 #include "Math.h"
 #include "Vector.h"
 
@@ -260,9 +261,9 @@ inline namespace v1 {
 
 // MSVC does not like extern template
 #ifndef _MSC_VER
-  extern template struct GF_API Range<float>;
-  extern template struct GF_API Range<int>;
-  extern template struct GF_API Range<unsigned>;
+  extern template struct GF_CORE_API Range<float>;
+  extern template struct GF_CORE_API Range<int>;
+  extern template struct GF_CORE_API Range<unsigned>;
 #endif
 
 

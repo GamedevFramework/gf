@@ -25,6 +25,7 @@
 #include <cstdlib>
 #include <map>
 
+#include "CoreApi.h"
 #include "Portability.h"
 
 namespace gf {
@@ -56,7 +57,7 @@ inline namespace v1 {
    * ~~~
    *
    */
-  class GF_API Log {
+  class GF_CORE_API Log {
   public:
     /**
      * @brief Deleted constructor

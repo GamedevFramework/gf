@@ -21,7 +21,7 @@
 #ifndef GF_ENTITY_H
 #define GF_ENTITY_H
 
-#include "Portability.h"
+#include "GraphicsApi.h"
 #include "Time.h"
 
 namespace gf {
@@ -50,7 +50,7 @@ inline namespace v1 {
    *
    * @sa gf::EntityContainer
    */
-  class GF_API Entity {
+  class GF_GRAPHICS_API Entity {
   public:
     /**
      * @brief Contructor

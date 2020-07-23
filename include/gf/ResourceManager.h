@@ -29,9 +29,9 @@
 #include <stdexcept>
 
 #include "AssetManager.h"
+#include "GraphicsApi.h"
 #include "Image.h"
 #include "Font.h"
-#include "Portability.h"
 #include "Texture.h"
 #include "Window.h"
 
@@ -141,7 +141,7 @@ inline namespace v1 {
    *
    * @sa gf::ResourceCache
    */
-  class GF_API ResourceManager : public AssetManager {
+  class GF_GRAPHICS_API ResourceManager : public AssetManager {
   public:
     /**
      * @brief Default constructor

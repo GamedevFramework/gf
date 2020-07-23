@@ -21,7 +21,7 @@
 #ifndef GF_LIBRARY_H
 #define GF_LIBRARY_H
 
-#include "Portability.h"
+#include "GraphicsApi.h"
 
 #include <tuple>
 
@@ -41,7 +41,7 @@ inline namespace v1 {
    * Internally, the class uses reference couting to avoid multiple
    * initializations.
    */
-  class GF_API Library {
+  class GF_GRAPHICS_API Library {
   public:
     /**
      * @brief Default constructor

@@ -24,7 +24,7 @@
 #include <string>
 #include <vector>
 
-#include "Portability.h"
+#include "GraphicsApi.h"
 #include "Vector.h"
 
 namespace gf {
@@ -43,7 +43,7 @@ inline namespace v1 {
    * @sa [glGetString() - docs.gl](://docs.gl/es2/glGetString)
    * @sa [glGetIntegerv() - docs.gl](http://docs.gl/es2/glGet)
    */
-  class GF_API GraphicsInfo {
+  class GF_GRAPHICS_API GraphicsInfo {
   public:
     /**
      * @brief Deleted default constructor

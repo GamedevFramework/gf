@@ -24,7 +24,7 @@
 #ifndef GF_CIRC_H
 #define GF_CIRC_H
 
-#include "Portability.h"
+#include "CoreApi.h"
 #include "Vector.h"
 #include "VectorOps.h"
 
@@ -225,10 +225,10 @@ inline namespace v1 {
 
 // MSVC does not like extern template
 #ifndef _MSC_VER
-  extern template struct GF_API Circ<float>;
-  extern template struct GF_API Circ<double>;
-  extern template struct GF_API Circ<int>;
-  extern template struct GF_API Circ<unsigned>;
+  extern template struct GF_CORE_API Circ<float>;
+  extern template struct GF_CORE_API Circ<double>;
+  extern template struct GF_CORE_API Circ<int>;
+  extern template struct GF_CORE_API Circ<unsigned>;
 #endif
 
   /**

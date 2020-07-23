@@ -21,7 +21,7 @@
 #ifndef GF_ANIMATED_SPRITE_H
 #define GF_ANIMATED_SPRITE_H
 
-#include "Portability.h"
+#include "GraphicsApi.h"
 #include "Sprite.h"
 #include "Time.h"
 
@@ -40,7 +40,7 @@ inline namespace v1 {
    *
    * @sa gf::Sprite, gf::Animation
    */
-  class GF_API AnimatedSprite : public Sprite {
+  class GF_GRAPHICS_API AnimatedSprite : public Sprite {
   public:
     /**
      * @brief Constructor

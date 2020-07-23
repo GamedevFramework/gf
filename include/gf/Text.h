@@ -28,7 +28,7 @@
 
 #include "Alignment.h"
 #include "BasicText.h"
-#include "Portability.h"
+#include "GraphicsApi.h"
 #include "Transformable.h"
 #include "Vector.h"
 #include "VertexArray.h"
@@ -77,7 +77,7 @@ inline namespace v1 {
    *
    * @sa gf::Font
    */
-  class GF_API Text : public Transformable {
+  class GF_GRAPHICS_API Text : public Transformable {
   public:
     /**
      * @brief Default constructor

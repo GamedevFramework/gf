@@ -29,7 +29,7 @@
 
 #include "ArrayRef.h"
 #include "BufferRef.h"
-#include "Portability.h"
+#include "CoreApi.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -52,7 +52,7 @@ inline namespace v1 {
    *
    * @sa gf::OutputStream
    */
-  class GF_API InputStream {
+  class GF_CORE_API InputStream {
   public:
     /**
      * @brief Default constructor
@@ -133,7 +133,7 @@ inline namespace v1 {
    *
    * @sa gf::InputStream
    */
-  class GF_API OutputStream {
+  class GF_CORE_API OutputStream {
   public:
     /**
      * @brief Default constructor

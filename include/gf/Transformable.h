@@ -26,8 +26,8 @@
 
 #include "Anchor.h"
 #include "Drawable.h"
+#include "GraphicsApi.h"
 #include "Matrix.h"
-#include "Portability.h"
 #include "Rect.h"
 #include "Vector.h"
 
@@ -92,7 +92,7 @@ inline namespace v1 {
    *
    * @sa gf::Matrix3f
    */
-  class GF_API Transformable : public Drawable {
+  class GF_GRAPHICS_API Transformable : public Drawable {
   public:
     /**
      * @brief Default constructor

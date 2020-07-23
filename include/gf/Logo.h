@@ -21,7 +21,7 @@
 #ifndef GF_LOGO_H
 #define GF_LOGO_H
 
-#include "Portability.h"
+#include "GraphicsApi.h"
 #include "Texture.h"
 #include "Transformable.h"
 
@@ -40,7 +40,7 @@ inline namespace v1 {
    * If you use `gf` and like it, do not hesitate to show this logo in your
    * game, e.g. on the splash screen. Of course, it is *not* mandatory.
    */
-  class GF_API Logo : public Transformable {
+  class GF_GRAPHICS_API Logo : public Transformable {
   public:
     /**
      * @brief Constructor

@@ -21,8 +21,8 @@
 #ifndef GF_MODELS_H
 #define GF_MODELS_H
 
+#include "CoreApi.h"
 #include "Model.h"
-#include "Portability.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -37,7 +37,7 @@ inline namespace v1 {
    * it event if the original timestep is not fixed. This may be useful for
    * physics model, for example.
    */
-  class GF_API FixedTimestepModel : public Model {
+  class GF_CORE_API FixedTimestepModel : public Model {
   public:
     /**
      * @brief Constructor

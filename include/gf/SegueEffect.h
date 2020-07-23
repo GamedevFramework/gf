@@ -21,7 +21,7 @@
 #ifndef GF_SEGUE_EFFECT_H
 #define GF_SEGUE_EFFECT_H
 
-#include "Portability.h"
+#include "GraphicsApi.h"
 #include "Shader.h"
 
 namespace gf {
@@ -35,7 +35,7 @@ inline namespace v1 {
    *
    * @sa gf::Segue
    */
-  class GF_API SegueEffect : public Shader {
+  class GF_GRAPHICS_API SegueEffect : public Shader {
   public:
     /**
      * @brief Set the progress in the effect

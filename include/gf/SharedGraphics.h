@@ -22,7 +22,8 @@
 #ifndef GF_SHARED_GRAPHICS_H
 #define GF_SHARED_GRAPHICS_H
 
-#include <gf/Window.h>
+#include "GraphicsApi.h"
+#include "Window.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -38,7 +39,7 @@ inline namespace v1 {
    * thread at object instantiation and will detached at its
    * destruction.
    */
-  class GF_API SharedGraphics {
+  class GF_GRAPHICS_API SharedGraphics {
   public:
     /**
      * @brief Create a shared OpenGL context

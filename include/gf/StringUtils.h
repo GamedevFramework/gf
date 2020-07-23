@@ -27,8 +27,9 @@
 #include <vector>
 #include <string>
 
-#include "Portability.h"
+#include "CoreApi.h"
 #include "StringRef.h"
+#include "Portability.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -45,7 +46,7 @@ inline namespace v1 {
    * @param precision The precision to use for display
    * @returns A string representing the number
    */
-  GF_API std::string niceNum(float num, float precision);
+  GF_CORE_API std::string niceNum(float num, float precision);
 
   /**
    * @ingroup core
@@ -53,7 +54,7 @@ inline namespace v1 {
    *
    * @param fmt The [format string](http://en.cppreference.com/w/cpp/io/c/fprintf)
    */
-  GF_API std::string formatString(const char *fmt, ...) GF_FORMAT(1, 2);
+  GF_CORE_API std::string formatString(const char *fmt, ...) GF_FORMAT(1, 2);
 
   /**
    * @ingroup core
@@ -62,7 +63,7 @@ inline namespace v1 {
    * @param fmt The [format string](http://en.cppreference.com/w/cpp/io/c/fprintf)
    * @param ap The arguments of the format string
    */
-  GF_API std::string formatString(const char *fmt, va_list ap);
+  GF_CORE_API std::string formatString(const char *fmt, va_list ap);
 
   /**
    * @ingroup core
@@ -75,7 +76,7 @@ inline namespace v1 {
    * @param str The input string
    * @returns An escaped string
    */
-  GF_API std::string escapeString(StringRef str);
+  GF_CORE_API std::string escapeString(StringRef str);
 
   /**
    * @ingroup core
@@ -86,7 +87,7 @@ inline namespace v1 {
    * @param str The input string
    * @returns A vector of strings containing the paragraphs
    */
-  GF_API std::vector<StringRef> splitInParagraphs(StringRef str);
+  GF_CORE_API std::vector<StringRef> splitInParagraphs(StringRef str);
 
   /**
    * @ingroup core
@@ -97,7 +98,7 @@ inline namespace v1 {
    * @param str The input string
    * @returns A vector of strings containing the words
    */
-  GF_API std::vector<StringRef> splitInWords(StringRef str);
+  GF_CORE_API std::vector<StringRef> splitInWords(StringRef str);
 
 
   /**
@@ -106,7 +107,7 @@ inline namespace v1 {
    *
    * @sa gf::codepoints
    */
-  struct GF_API CodepointRange {
+  struct GF_CORE_API CodepointRange {
     StringRef ref;
 
     struct Iterator {

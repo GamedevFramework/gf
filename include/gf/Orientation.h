@@ -21,7 +21,7 @@
 #ifndef GF_ORIENTATION_H
 #define GF_ORIENTATION_H
 
-#include "Portability.h"
+#include "CoreApi.h"
 #include "Vector.h"
 
 namespace gf {
@@ -59,7 +59,7 @@ inline namespace v1 {
    * @param orientation The orientation
    * @returns A unit vector representing the orientation
    */
-  GF_API Vector2f unit(Orientation orientation);
+  GF_CORE_API Vector2f unit(Orientation orientation);
 
   /**
    * @ingroup core
@@ -72,7 +72,7 @@ inline namespace v1 {
    * @param orientation The orientation
    * @returns A vector representing the orientation
    */
-  GF_API Vector2i displacement(Orientation orientation);
+  GF_CORE_API Vector2i displacement(Orientation orientation);
 
   /**
    * @ingroup core
@@ -84,7 +84,7 @@ inline namespace v1 {
    * @returns An angle (in radians) representing the orientation
    * @sa gf::orientation()
    */
-  GF_API float angle(Orientation orientation);
+  GF_CORE_API float angle(Orientation orientation);
 
   /**
    * @ingroup core
@@ -96,7 +96,7 @@ inline namespace v1 {
    * @returns An orientation for the angle
    * @sa gf::angle()
    */
-  GF_API Orientation orientation(float angle);
+  GF_CORE_API Orientation orientation(float angle);
 
   /**
    * @ingroup core
@@ -105,7 +105,7 @@ inline namespace v1 {
    * @param orientation The orientation
    * @return The opposite orientation
    */
-  GF_API Orientation opposite(Orientation orientation);
+  GF_CORE_API Orientation opposite(Orientation orientation);
 
   /**
    * @ingroup core
@@ -114,7 +114,7 @@ inline namespace v1 {
    * @param orientation The orientation
    * @return The orthogonal orientation clockwise
    */
-  GF_API Orientation orthogonalCW(Orientation orientation);
+  GF_CORE_API Orientation orthogonalCW(Orientation orientation);
 
   /**
    * @ingroup core
@@ -123,7 +123,7 @@ inline namespace v1 {
    * @param orientation The orientation
    * @return The orthogonal orientation counter-clockwise
    */
-  GF_API Orientation orthogonalCCW(Orientation orientation);
+  GF_CORE_API Orientation orthogonalCCW(Orientation orientation);
 
   /**
    * @ingroup core
@@ -132,7 +132,7 @@ inline namespace v1 {
    * @param orientation The orientation
    * @return The next orientation clockwise
    */
-  GF_API Orientation nextCW(Orientation orientation);
+  GF_CORE_API Orientation nextCW(Orientation orientation);
 
   /**
    * @ingroup core
@@ -141,7 +141,7 @@ inline namespace v1 {
    * @param orientation The orientation
    * @return The next orientation counter-clockwise
    */
-  GF_API Orientation nextCCW(Orientation orientation);
+  GF_CORE_API Orientation nextCCW(Orientation orientation);
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

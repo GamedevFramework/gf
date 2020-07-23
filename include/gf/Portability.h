@@ -21,38 +21,6 @@
 #ifndef GF_PORTABILITY_H
 #define GF_PORTABILITY_H
 
-
-
-#if defined(_WIN32) || defined(__CYGWIN__)
-  #ifdef GF_SHARED
-    #ifdef __GNUC__
-      #define GF_API_EXPORT __attribute__ ((dllexport))
-      #define GF_API_IMPORT __attribute__ ((dllimport))
-    #else
-      #define GF_API_EXPORT __declspec(dllexport)
-      #define GF_API_IMPORT __declspec(dllimport)
-    #endif
-  #else
-    #define GF_API_EXPORT
-    #define GF_API_IMPORT
-  #endif
-#else
-  #if __GNUC__ >= 4
-    #define GF_API_EXPORT __attribute__ ((visibility("default")))
-    #define GF_API_IMPORT __attribute__ ((visibility("default")))
-  #else
-    #define GF_API_EXPORT
-    #define GF_API_IMPORT
-  #endif
-#endif
-
-#ifdef GF_EXPORT_SYMBOLS
-  #define GF_API GF_API_EXPORT
-#else
-  #define GF_API GF_API_IMPORT
-#endif
-
-
 #ifdef __GNUC__
   #define GF_FORMAT(X, Y) __attribute__ ((format (printf, X, Y)))
 #else

@@ -22,8 +22,8 @@
 #define GF_COLLISION_H
 
 #include "Circ.h"
+#include "CoreApi.h"
 #include "Polygon.h"
-#include "Portability.h"
 #include "Rect.h"
 #include "Vector.h"
 
@@ -40,7 +40,7 @@ inline namespace v1 {
    *
    * @sa [How to Create a Custom Physics Engine](http://gamedevelopment.tutsplus.com/series/how-to-create-a-custom-physics-engine--gamedev-12715)
    */
-  struct GF_API Penetration {
+  struct GF_CORE_API Penetration {
     Vector2f normal; ///< Collision normal
     float depth; ///< Penetration depth
   };
@@ -56,7 +56,7 @@ inline namespace v1 {
    * @param p Data to fill if there is a collision
    * @return True if there is a collision
    */
-  GF_API bool collides(const CircF& lhs, const Transform& lhsTrans, const CircF& rhs, const Transform& rhsTrans, Penetration& p);
+  GF_CORE_API bool collides(const CircF& lhs, const Transform& lhsTrans, const CircF& rhs, const Transform& rhsTrans, Penetration& p);
 
   /**
    * @relates Penetration
@@ -67,7 +67,7 @@ inline namespace v1 {
    * @param p Data to fill if there is a collision
    * @return True if there is a collision
    */
-  GF_API bool collides(const CircF& lhs, const CircF& rhs, Penetration& p);
+  GF_CORE_API bool collides(const CircF& lhs, const CircF& rhs, Penetration& p);
 
   /**
    * @relates Penetration
@@ -78,7 +78,7 @@ inline namespace v1 {
    * @param p Data to fill if there is a collision
    * @return True if there is a collision
    */
-  GF_API bool collides(const RectF& lhs, const CircF& rhs, Penetration& p);
+  GF_CORE_API bool collides(const RectF& lhs, const CircF& rhs, Penetration& p);
 
   /**
    * @relates Penetration
@@ -89,7 +89,7 @@ inline namespace v1 {
    * @param p Data to fill if there is a collision
    * @return True if there is a collision
    */
-  GF_API bool collides(const CircF& lhs, const RectF& rhs, Penetration& p);
+  GF_CORE_API bool collides(const CircF& lhs, const RectF& rhs, Penetration& p);
 
   /**
    * @relates Penetration
@@ -100,7 +100,7 @@ inline namespace v1 {
    * @param p Data to fill if there is a collision
    * @return True if there is a collision
    */
-  GF_API bool collides(const RectF& lhs, const RectF& rhs, Penetration& p);
+  GF_CORE_API bool collides(const RectF& lhs, const RectF& rhs, Penetration& p);
 
   /**
    * @relates Penetration
@@ -113,7 +113,7 @@ inline namespace v1 {
    * @param p Data to fill if there is a collision
    * @return True if there is a collision
    */
-  GF_API bool collides(const CircF& lhs, const Transform& lhsTrans, const Polygon& rhs, const Transform& rhsTrans, Penetration& p);
+  GF_CORE_API bool collides(const CircF& lhs, const Transform& lhsTrans, const Polygon& rhs, const Transform& rhsTrans, Penetration& p);
 
   /**
    * @relates Penetration
@@ -124,7 +124,7 @@ inline namespace v1 {
    * @param p Data to fill if there is a collision
    * @return True if there is a collision
    */
-  GF_API bool collides(const CircF& lhs, const Polygon& rhs, Penetration& p);
+  GF_CORE_API bool collides(const CircF& lhs, const Polygon& rhs, Penetration& p);
 
   /**
    * @relates Penetration
@@ -137,7 +137,7 @@ inline namespace v1 {
    * @param p Data to fill if there is a collision
    * @return True if there is a collision
    */
-  GF_API bool collides(const Polygon& lhs, const Transform& lhsTrans, const CircF& rhs, const Transform& rhsTrans, Penetration& p);
+  GF_CORE_API bool collides(const Polygon& lhs, const Transform& lhsTrans, const CircF& rhs, const Transform& rhsTrans, Penetration& p);
 
   /**
    * @relates Penetration
@@ -148,7 +148,7 @@ inline namespace v1 {
    * @param p Data to fill if there is a collision
    * @return True if there is a collision
    */
-  GF_API bool collides(const Polygon& lhs, const CircF& rhs, Penetration& p);
+  GF_CORE_API bool collides(const Polygon& lhs, const CircF& rhs, Penetration& p);
 
   /**
    * @relates Penetration
@@ -161,7 +161,7 @@ inline namespace v1 {
    * @param p Data to fill if there is a collision
    * @return True if there is a collision
    */
-  GF_API bool collides(const Polygon& lhs, const Transform& lhsTrans, const Polygon& rhs, const Transform& rhsTrans, Penetration& p);
+  GF_CORE_API bool collides(const Polygon& lhs, const Transform& lhsTrans, const Polygon& rhs, const Transform& rhsTrans, Penetration& p);
 
   /**
    * @relates Penetration
@@ -172,7 +172,7 @@ inline namespace v1 {
    * @param p Data to fill if there is a collision
    * @return True if there is a collision
    */
-  GF_API bool collides(const Polygon& lhs, const Polygon& rhs, Penetration& p);
+  GF_CORE_API bool collides(const Polygon& lhs, const Polygon& rhs, Penetration& p);
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

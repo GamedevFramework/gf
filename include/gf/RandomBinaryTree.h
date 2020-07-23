@@ -24,7 +24,7 @@
 #include <functional>
 #include <memory>
 
-#include "Portability.h"
+#include "CoreApi.h"
 #include "Random.h"
 #include "Rect.h"
 #include "Vector.h"
@@ -38,7 +38,7 @@ inline namespace v1 {
    * @ingroup game
    * @brief A random binary space partionning tree
    */
-  class GF_API RandomBinaryTree {
+  class GF_CORE_API RandomBinaryTree {
   public:
 
     /**

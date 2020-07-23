@@ -25,7 +25,7 @@
 #include <vector>
 
 #include "Activity.h"
-#include "Portability.h"
+#include "CoreApi.h"
 #include "Ref.h"
 #include "Tween.h"
 #include "Vector.h"
@@ -41,7 +41,7 @@ inline namespace v1 {
    *
    * @sa gf::Tween
    */
-  class GF_API ValueActivity : public Activity {
+  class GF_CORE_API ValueActivity : public Activity {
   public:
     /**
      * @brief Constructor
@@ -124,7 +124,7 @@ inline namespace v1 {
    *
    * @sa gf::Tween
    */
-  class GF_API RotateToActivity : public Activity {
+  class GF_CORE_API RotateToActivity : public Activity {
   public:
     /**
      * @brief Constructor
@@ -210,7 +210,7 @@ inline namespace v1 {
    *
    * @sa gf::Tween
    */
-  class GF_API MoveToActivity : public Activity {
+  class GF_CORE_API MoveToActivity : public Activity {
   public:
     /**
      * @brief Constructor
@@ -291,7 +291,7 @@ inline namespace v1 {
    *
    * @sa gf::Tween
    */
-  class GF_API ColorActivity : public Activity {
+  class GF_CORE_API ColorActivity : public Activity {
   public:
     /**
      * @brief Constructor
@@ -370,7 +370,7 @@ inline namespace v1 {
    * @ingroup game
    * @brief An activity for calling a function once
    */
-  class GF_API CallbackActivity : public Activity {
+  class GF_CORE_API CallbackActivity : public Activity {
   public:
     /**
      * @brief Constructor
@@ -392,7 +392,7 @@ inline namespace v1 {
    * @ingroup game
    * @brief An activity to wait for a predefined duration
    */
-  class GF_API DelayActivity : public Activity {
+  class GF_CORE_API DelayActivity : public Activity {
   public:
     /**
      * @brief Constructor
@@ -414,7 +414,7 @@ inline namespace v1 {
    * @ingroup game
    * @brief An activity to run several activities sequentially
    */
-  class GF_API SequenceActivity : public Activity {
+  class GF_CORE_API SequenceActivity : public Activity {
   public:
     /**
      * @brief Constructor
@@ -446,7 +446,7 @@ inline namespace v1 {
    * @ingroup game
    * @brief An activity to run an activity several times
    */
-  class GF_API RepeatActivity : public Activity {
+  class GF_CORE_API RepeatActivity : public Activity {
   public:
     /**
      * @brief Constructor
@@ -473,7 +473,7 @@ inline namespace v1 {
    * This is a convenient combination of gf::SequenceActivity and
    * gf::RepeatActivity.
    */
-  class GF_API RepeatedSequenceActivity : public Activity {
+  class GF_CORE_API RepeatedSequenceActivity : public Activity {
   public:
     /**
      * @brief Constructor
@@ -495,7 +495,7 @@ inline namespace v1 {
    * @ingroup game
    * @brief An activity to run several activities in parallel
    */
-  class GF_API ParallelActivity : public Activity {
+  class GF_CORE_API ParallelActivity : public Activity {
   public:
     /**
      * @brief The type of finish for the activity

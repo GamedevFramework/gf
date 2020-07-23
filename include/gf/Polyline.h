@@ -24,10 +24,10 @@
 #include <vector>
 
 #include "ArrayRef.h"
+#include "CoreApi.h"
 #include "Math.h"
 #include "Matrix.h"
 #include "PointSequence.h"
-#include "Portability.h"
 #include "SerializationFwd.h"
 #include "Vector.h"
 
@@ -43,7 +43,7 @@ inline namespace v1 {
    * A polyline is a set of consecutive segments. It is defined by the points
    * ending the segments. A polyline can be open (chain) or closed (loop).
    */
-  class GF_API Polyline : public PointSequence {
+  class GF_CORE_API Polyline : public PointSequence {
   public:
     /**
      * @brief The type of polyline
@@ -201,13 +201,13 @@ inline namespace v1 {
    * @relates Serializer
    * @brief Serialize a polyline
    */
-  GF_API Serializer& operator|(Serializer& ar, const Polyline& polyline);
+  GF_CORE_API Serializer& operator|(Serializer& ar, const Polyline& polyline);
 
   /**
    * @relates Deserializer
    * @brief Deserialize a polyline
    */
-  GF_API Deserializer& operator|(Deserializer& ar, Polyline& polyline);
+  GF_CORE_API Deserializer& operator|(Deserializer& ar, Polyline& polyline);
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

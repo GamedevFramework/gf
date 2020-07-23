@@ -28,8 +28,8 @@
 #include <vector>
 
 #include "Circ.h"
+#include "GraphicsApi.h"
 #include "Polygon.h"
-#include "Portability.h"
 #include "Rect.h"
 #include "Shape.h"
 #include "Vector.h"
@@ -61,7 +61,7 @@ inline namespace v1 {
    *
    * @sa gf::Shape
    */
-  class GF_API RectangleShape : public Shape {
+  class GF_GRAPHICS_API RectangleShape : public Shape {
   public:
     /**
      * @brief Default constructor
@@ -138,7 +138,7 @@ inline namespace v1 {
    *
    * @sa gf::Shape
    */
-  class GF_API CircleShape : public Shape {
+  class GF_GRAPHICS_API CircleShape : public Shape {
   public:
     /**
      * @brief Default constructor
@@ -226,7 +226,7 @@ inline namespace v1 {
    *
    * @sa gf::Shape
    */
-  class GF_API ConvexShape : public Shape {
+  class GF_GRAPHICS_API ConvexShape : public Shape {
   public:
     /**
      * @brief Default constructor
@@ -294,7 +294,7 @@ inline namespace v1 {
    *
    * @sa gf::Shape
    */
-  class GF_API StarShape : public Shape {
+  class GF_GRAPHICS_API StarShape : public Shape {
   public:
     /**
      * @brief Default constructor
@@ -392,7 +392,7 @@ inline namespace v1 {
    *
    * @sa gf::Shape
    */
-  class GF_API RoundedRectangleShape : public Shape {
+  class GF_GRAPHICS_API RoundedRectangleShape : public Shape {
   public:
     /**
      * @brief Default constructor
@@ -474,7 +474,7 @@ inline namespace v1 {
   };
 
 
-  class GF_API Pie : public Shape {
+  class GF_GRAPHICS_API Pie : public Shape {
   public:
     enum Variation {
       Positive,

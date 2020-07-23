@@ -21,11 +21,11 @@
 #ifndef GF_SPATIAL_H
 #define GF_SPATIAL_H
 
-#include "spatial/Types.h"
+#include "SpatialTypes.h"
 
-#include "spatial/DynamicTree.h"
-#include "spatial/QuadTree.h"
-#include "spatial/RStarTree.h"
-#include "spatial/SimpleSpatialIndex.h"
+#include "Spatial_DynamicTree.h"
+#include "Spatial_Quadtree.h"
+#include "Spatial_RStarTree.h"
+#include "Spatial_SimpleSpatialIndex.h"
 
 #endif // GF_SPATIAL_H

@@ -24,7 +24,7 @@
 #ifndef GF_BLEND_H
 #define GF_BLEND_H
 
-#include "Portability.h"
+#include "GraphicsApi.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -123,7 +123,7 @@ inline namespace v1 {
    * @sa gf::BlendFactor, gf::BlendEquation, gf::RenderStates, gf::RenderWindow
    *
    */
-  struct GF_API BlendMode {
+  struct GF_GRAPHICS_API BlendMode {
 
     /**
      * @brief Default constructor

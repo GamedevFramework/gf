@@ -23,7 +23,7 @@
 
 #include <vector>
 
-#include "Portability.h"
+#include "CoreApi.h"
 #include "Ref.h"
 #include "Time.h"
 
@@ -51,7 +51,7 @@ inline namespace v1 {
    *
    * @sa gf::Model
    */
-  class GF_API ModelContainer {
+  class GF_CORE_API ModelContainer {
   public:
 
     /**

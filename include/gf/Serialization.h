@@ -25,7 +25,7 @@
 #include <cstdint>
 
 #include "BufferRef.h"
-#include "Portability.h"
+#include "CoreApi.h"
 #include "Stream.h"
 #include "StringRef.h"
 
@@ -42,7 +42,7 @@ inline namespace v1 {
    *
    * @sa gf::Deserializer
    */
-  class GF_API Serializer {
+  class GF_CORE_API Serializer {
   public:
 
     /**
@@ -150,7 +150,7 @@ inline namespace v1 {
    *
    * @sa gf::Serializer
    */
-  class GF_API Deserializer {
+  class GF_CORE_API Deserializer {
   public:
     /**
      * @brief Constructor

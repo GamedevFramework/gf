@@ -22,7 +22,7 @@
 #define GF_PARTICLES_H
 
 #include "Circ.h"
-#include "Portability.h"
+#include "GraphicsApi.h"
 #include "Rect.h"
 #include "Transformable.h"
 #include "VertexArray.h"
@@ -38,7 +38,7 @@ inline namespace v1 {
    * @ingroup graphics
    * @brief A class to display a high number of points
    */
-  class GF_API PointParticles : public Transformable {
+  class GF_GRAPHICS_API PointParticles : public Transformable {
   public:
     /**
      * @brief Default constructor
@@ -64,7 +64,7 @@ inline namespace v1 {
    * @ingroup graphics
    * @brief A class to display a high number of small simple shapes
    */
-  class GF_API ShapeParticles : public Transformable {
+  class GF_GRAPHICS_API ShapeParticles : public Transformable {
   public:
     /**
      * @brief Default constructor
@@ -119,7 +119,7 @@ inline namespace v1 {
    *
    * @sa gf::SpriteBatch
    */
-  class GF_API SpriteParticles : public Transformable {
+  class GF_GRAPHICS_API SpriteParticles : public Transformable {
   public:
     /**
      * @brief Default constructor

@@ -23,7 +23,7 @@
 
 #include "Drawable.h"
 #include "Easings.h"
-#include "Portability.h"
+#include "GraphicsApi.h"
 #include "Rect.h"
 #include "Time.h"
 #include "Vertex.h"
@@ -42,7 +42,7 @@ inline namespace v1 {
    *
    * @sa [Segue - Wikipedia](https://en.wikipedia.org/wiki/Segue)
    */
-  class GF_API Segue : public Drawable {
+  class GF_GRAPHICS_API Segue : public Drawable {
   public:
     /**
      * @brief Contructor

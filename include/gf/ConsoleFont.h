@@ -22,8 +22,8 @@
 #define GF_CONSOLE_FONT_H
 
 #include "ArrayRef.h"
+#include "GraphicsApi.h"
 #include "Path.h"
-#include "Portability.h"
 #include "StringRef.h"
 #include "Texture.h"
 #include "Vector.h"
@@ -39,7 +39,7 @@ inline namespace v1 {
    *
    * @sa gf::ConsoleFont, gf::PredefinedConsoleFontFormat
    */
-  struct GF_API ConsoleFontFormat {
+  struct GF_GRAPHICS_API ConsoleFontFormat {
     /**
      * @brief A transparency method
      */
@@ -80,7 +80,7 @@ inline namespace v1 {
    *
    * @sa gf::ConsoleFont
    */
-  struct GF_API ConsoleFontElement {
+  struct GF_GRAPHICS_API ConsoleFontElement {
     char16_t character; ///< The represented character
     uint8_t index;      ///< The index in the font
   };
@@ -89,7 +89,7 @@ inline namespace v1 {
    * @ingroup game
    * @brief Predefined console font formats
    */
-  struct GF_API PredefinedConsoleFontFormat {
+  struct GF_GRAPHICS_API PredefinedConsoleFontFormat {
     /**
      * @brief The libtcod format
      */
@@ -107,7 +107,7 @@ inline namespace v1 {
    *
    * @sa gf::Console, gf::ConsoleFontFormat, gf::ConsoleFontElement
    */
-  class GF_API ConsoleFont {
+  class GF_GRAPHICS_API ConsoleFont {
   public:
     /**
      * @brief Constructor
@@ -291,7 +291,7 @@ inline namespace v1 {
    *
    * @sa gf::ConsoleFont
    */
-  class GF_API BitmapConsoleFont : public ConsoleFont {
+  class GF_GRAPHICS_API BitmapConsoleFont : public ConsoleFont {
   public:
     /**
      * @brief Load a console font from an image
@@ -324,7 +324,7 @@ inline namespace v1 {
    * This class handles colored fonts such as the fonts created for
    * [Dwarf Fortress](http://dwarffortresswiki.org/Tileset_repository).
    */
-  class GF_API ColoredConsoleFont : public ConsoleFont {
+  class GF_GRAPHICS_API ColoredConsoleFont : public ConsoleFont {
   public:
     /**
      * @brief Load a console font from an image

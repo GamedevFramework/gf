@@ -26,7 +26,7 @@
 
 #include <chrono>
 
-#include "Portability.h"
+#include "CoreApi.h"
 #include "Time.h"
 
 namespace gf {
@@ -58,7 +58,7 @@ inline namespace v1 {
    *
    * @sa gf::Time
    */
-  class GF_API Clock {
+  class GF_CORE_API Clock {
   public:
     /**
      * @brief Default constructor

@@ -25,7 +25,7 @@
 #define GF_BASIC_SPRITE_H
 
 #include "BufferRef.h"
-#include "Portability.h"
+#include "GraphicsApi.h"
 #include "Rect.h"
 
 namespace gf {
@@ -43,7 +43,7 @@ inline namespace v1 {
    *
    * @sa gf::Sprite
    */
-  class GF_API BasicSprite {
+  class GF_GRAPHICS_API BasicSprite {
   public:
     /**
      * @brief Default constructor

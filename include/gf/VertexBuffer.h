@@ -24,8 +24,8 @@
 #include <cstddef>
 #include <cstdint>
 
+#include "GraphicsApi.h"
 #include "GraphicsHandle.h"
-#include "Portability.h"
 #include "PrimitiveType.h"
 
 namespace gf {
@@ -36,7 +36,7 @@ inline namespace v1 {
   struct Vertex;
 
   template<>
-  struct GF_API GraphicsTrait<GraphicsTag::Buffer> {
+  struct GF_GRAPHICS_API GraphicsTrait<GraphicsTag::Buffer> {
     static void gen(int n, unsigned* resources);
     static void del(int n, const unsigned* resources);
   };
@@ -74,7 +74,7 @@ inline namespace v1 {
    *
    * @sa gf::BufferedGeometry
    */
-  class GF_API VertexBuffer {
+  class GF_GRAPHICS_API VertexBuffer {
   public:
     /**
      * @brief Default constructor

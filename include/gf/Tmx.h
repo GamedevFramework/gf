@@ -28,10 +28,10 @@
 #include <string>
 #include <vector>
 
+#include "CoreApi.h"
 #include "Flags.h"
 #include "Id.h"
 #include "Path.h"
-#include "Portability.h"
 #include "Rect.h"
 #include "Stagger.h"
 #include "TileTypes.h"
@@ -58,7 +58,7 @@ inline namespace v1 {
    * @brief The properties for TMX entities
    *
    */
-  class GF_API TmxProperties {
+  class GF_CORE_API TmxProperties {
   public:
     /**
      * @brief Default constructor
@@ -200,7 +200,7 @@ inline namespace v1 {
    * @sa gf::TmxLayer::accept()
    * @sa [Wikipedia - Visitor pattern](https://en.wikipedia.org/wiki/Visitor_pattern)
    */
-  class GF_API TmxVisitor {
+  class GF_CORE_API TmxVisitor {
   public:
     /**
      * @brief Destructor
@@ -249,7 +249,7 @@ inline namespace v1 {
    *
    * @sa gf::TmxTileLayer, gf::TmxImageLayer, gf::TmxObjectLayer, gf::TmxGroupLayer
    */
-  struct GF_API TmxLayer {
+  struct GF_CORE_API TmxLayer {
     /**
      * @brief Destructor
      */
@@ -276,7 +276,7 @@ inline namespace v1 {
    * @ingroup game
    * @brief A cell in a tile layer
    */
-  struct GF_API TmxCell {
+  struct GF_CORE_API TmxCell {
     int gid;             ///< The global id of the tile
     Flags<Flip> flip = None;  ///< The flip properties of the tile
   };
@@ -285,7 +285,7 @@ inline namespace v1 {
    * @ingroup game
    * @brief A chunk in a tile layer (for infinite maps)
    */
-  struct GF_API TmxChunk {
+  struct GF_CORE_API TmxChunk {
     Vector2i position;
     Vector2i size;
     std::vector<TmxCell> cells;
@@ -295,7 +295,7 @@ inline namespace v1 {
    * @ingroup game
    * @brief A layer with tiles in cells
    */
-  struct GF_API TmxTileLayer : public TmxLayer {
+  struct GF_CORE_API TmxTileLayer : public TmxLayer {
     std::vector<TmxCell> cells; ///< The cells of the layer
     std::vector<TmxChunk> chunks; ///< The chunks of the layer
 
@@ -328,7 +328,7 @@ inline namespace v1 {
    *
    * @sa gf::TmxObjectLayer
    */
-  struct GF_API TmxObject {
+  struct GF_CORE_API TmxObject {
     /**
      * @brief Destructor
      */
@@ -363,7 +363,7 @@ inline namespace v1 {
    * @ingroup game
    * @brief A rectangle object
    */
-  struct GF_API TmxRectangle : public TmxObject {
+  struct GF_CORE_API TmxRectangle : public TmxObject {
     Vector2f size;  ///< The size of the rectangle
   };
 
@@ -371,7 +371,7 @@ inline namespace v1 {
    * @ingroup game
    * @brief An ellipse object
    */
-  struct GF_API TmxEllipse : public TmxObject {
+  struct GF_CORE_API TmxEllipse : public TmxObject {
     Vector2f size;  ///< The size of the ellipse
   };
 
@@ -379,7 +379,7 @@ inline namespace v1 {
    * @ingroup game
    * @brief An image put in the map identified by its global id
    */
-  struct GF_API TmxTileObject : public TmxObject {
+  struct GF_CORE_API TmxTileObject : public TmxObject {
     int gid;
     Flags<Flip> flip;
   };
@@ -390,7 +390,7 @@ inline namespace v1 {
    *
    * A polyline is an open set of lines
    */
-  struct GF_API TmxPolyline : public TmxObject {
+  struct GF_CORE_API TmxPolyline : public TmxObject {
     std::vector<Vector2f> points; ///< The points of the polyline
   };
 
@@ -400,7 +400,7 @@ inline namespace v1 {
    *
    * A polygon is a closed set of lines
    */
-  struct GF_API TmxPolygon : public TmxObject {
+  struct GF_CORE_API TmxPolygon : public TmxObject {
     std::vector<Vector2f> points; ///< The points of the polygon
   };
 
@@ -408,7 +408,7 @@ inline namespace v1 {
    * @ingroup game
    * @brief A text object
    */
-  struct GF_API TmxText : public TmxObject {
+  struct GF_CORE_API TmxText : public TmxObject {
     std::string text;       ///< The text of the object
 
     std::string fontFamily; ///< The font family
@@ -448,14 +448,14 @@ inline namespace v1 {
    * @ingroup game
    * @brief A point object
    */
-  struct GF_API TmxPoint : public TmxObject {
+  struct GF_CORE_API TmxPoint : public TmxObject {
   };
 
   /**
    * @ingroup game
    * @brief A layer with objects
    */
-  struct GF_API TmxObjectLayer : public TmxLayer {
+  struct GF_CORE_API TmxObjectLayer : public TmxLayer {
     Color4u color;  ///< The color of the objects
     TmxDrawOrder drawOrder; ///< The draw order of the objects
     std::vector<std::unique_ptr<TmxObject>> objects;  ///< The objects of the layer
@@ -467,7 +467,7 @@ inline namespace v1 {
    * @ingroup game
    * @brief A reference to an image
    */
-  struct GF_API TmxImage {
+  struct GF_CORE_API TmxImage {
     std::string format;   ///< The format of the image
     Path source;          ///< The path to the image
     Color4u transparent;  ///< The transparent color
@@ -478,7 +478,7 @@ inline namespace v1 {
    * @ingroup game
    * @brief A layer with an image
    */
-  struct GF_API TmxImageLayer : public TmxLayer {
+  struct GF_CORE_API TmxImageLayer : public TmxLayer {
     std::unique_ptr<TmxImage> image;  ///< The image of the layer
 
     void accept(const TmxLayers& map, TmxVisitor& visitor) const override;
@@ -489,7 +489,7 @@ inline namespace v1 {
    * @ingroup game
    * @brief A layer with other layers
    */
-  struct GF_API TmxGroupLayer : public TmxLayer {
+  struct GF_CORE_API TmxGroupLayer : public TmxLayer {
     std::vector<std::unique_ptr<TmxLayer>> layers;  ///< The other layers
 
     void accept(const TmxLayers& map, TmxVisitor& visitor) const override;
@@ -501,7 +501,7 @@ inline namespace v1 {
    *
    * @sa gf::TmxAnimation
    */
-  struct GF_API TmxFrame {
+  struct GF_CORE_API TmxFrame {
     int tileId;
     Time duration;
   };
@@ -510,7 +510,7 @@ inline namespace v1 {
    * @ingroup game
    * @brief A tile animation
    */
-  struct GF_API TmxAnimation {
+  struct GF_CORE_API TmxAnimation {
     std::vector<TmxFrame> frames; ///< The frames of the animation
   };
 
@@ -520,7 +520,7 @@ inline namespace v1 {
    *
    * @sa gf::TmxTileset
    */
-  struct GF_API TmxTerrain {
+  struct GF_CORE_API TmxTerrain {
     TmxProperties properties; ///< The properties of the terrain
     std::string name;         ///< The name of the terrain
     int tile;                 ///< The representing tile for the terrain
@@ -532,7 +532,7 @@ inline namespace v1 {
    *
    * @sa gf::TmxTileset
    */
-  struct GF_API TmxTile {
+  struct GF_CORE_API TmxTile {
     TmxProperties properties; ///< The properties of the tile
     int id;                   ///< The local id of the tile
     std::string type;         ///< The type of the tile
@@ -548,7 +548,7 @@ inline namespace v1 {
    * @ingroup game
    * @brief A set of tiles in a single file (image or TSX file)
    */
-  struct GF_API TmxTileset {
+  struct GF_CORE_API TmxTileset {
     TmxProperties properties; ///< The properties of the tileset
 
     int firstGid;             ///< The first global id of the tileset
@@ -588,7 +588,7 @@ inline namespace v1 {
    * @ingroup game
    * @brief A TMX map
    */
-  struct GF_API TmxLayers {
+  struct GF_CORE_API TmxLayers {
     TmxProperties properties;   ///< The properties of the map
 
     std::string version;        ///< The version of the map

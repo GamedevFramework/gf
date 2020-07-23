@@ -23,7 +23,7 @@
 
 #include <string>
 
-#include "Portability.h"
+#include "NetApi.h"
 #include "Socket.h"
 #include "TcpSocket.h"
 
@@ -55,7 +55,7 @@ inline namespace v1 {
    *
    * @sa gf::TcpSocket
    */
-  class GF_API TcpListener : public Socket {
+  class GF_NET_API TcpListener : public Socket {
   public:
     /**
      * @brief Default constructor

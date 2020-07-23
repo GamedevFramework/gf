@@ -26,7 +26,7 @@
 
 #include <string>
 
-#include "Portability.h"
+#include "GraphicsApi.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -64,7 +64,7 @@ inline namespace v1 {
    * @endcode
    *
    */
-  class GF_API Clipboard {
+  class GF_GRAPHICS_API Clipboard {
   public:
 
     /**

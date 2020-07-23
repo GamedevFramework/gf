@@ -24,7 +24,7 @@
 #include <type_traits>
 #include <vector>
 
-#include "Portability.h"
+#include "GraphicsApi.h"
 #include "Ref.h"
 #include "RenderStates.h"
 #include "Time.h"
@@ -57,7 +57,7 @@ inline namespace v1 {
    *
    * @sa gf::Entity
    */
-  class GF_API EntityContainer {
+  class GF_GRAPHICS_API EntityContainer {
   public:
 
     /**

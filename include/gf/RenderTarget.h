@@ -27,10 +27,10 @@
 #include <cstdint>
 
 #include "ArrayRef.h"
+#include "GraphicsApi.h"
 #include "GraphicsHandle.h"
 #include "Image.h"
 #include "Matrix.h"
-#include "Portability.h"
 #include "PrimitiveType.h"
 #include "Range.h"
 #include "Region.h"
@@ -55,7 +55,7 @@ inline namespace v1 {
     Float   = 0x1406,
   };
 
-  struct RenderAttributeInfo {
+  struct GF_GRAPHICS_API RenderAttributeInfo {
     const char *name;
     int size;
     RenderAttributeType type;
@@ -64,7 +64,7 @@ inline namespace v1 {
   };
 
   template<>
-  struct GF_API GraphicsTrait<GraphicsTag::Framebuffer> {
+  struct GF_GRAPHICS_API GraphicsTrait<GraphicsTag::Framebuffer> {
     static void gen(int n, unsigned* resources);
     static void del(int n, const unsigned* resources);
   };
@@ -87,7 +87,7 @@ inline namespace v1 {
    *
    * @sa gf::RenderWindow, gf::RenderTexture, gf::View
    */
-  class GF_API RenderTarget {
+  class GF_GRAPHICS_API RenderTarget {
   public:
 
     /**

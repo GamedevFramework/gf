@@ -24,8 +24,8 @@
 #include <vector>
 
 #include "Curve.h"
+#include "GraphicsApi.h"
 #include "Polyline.h"
-#include "Portability.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -37,7 +37,7 @@ inline namespace v1 {
    *
    * A line is a straight curve. It is defined by two end points.
    */
-  class GF_API Line : public Curve {
+  class GF_GRAPHICS_API Line : public Curve {
   public:
     /**
      * @brief Constructor
@@ -61,7 +61,7 @@ inline namespace v1 {
    *
    * A quadratic Bézier curve is a Bézier curve with two end points and one control point.
    */
-  class GF_API QuadraticBezierCurve : public Curve {
+  class GF_GRAPHICS_API QuadraticBezierCurve : public Curve {
   public:
     /**
      * @brief Constructor
@@ -89,7 +89,7 @@ inline namespace v1 {
    *
    * A cubic Bézier curve is a Bézier curve with two end points and two control points.
    */
-  class GF_API CubicBezierCurve : public Curve {
+  class GF_GRAPHICS_API CubicBezierCurve : public Curve {
   public:
     /**
      * @brief Constructor
@@ -119,7 +119,7 @@ inline namespace v1 {
    *
    * @sa [Centripetal Catmull–Rom spline - Wikipedia](https://en.wikipedia.org/wiki/Centripetal_Catmull%E2%80%93Rom_spline)
    */
-  class GF_API SplineCurve : public Curve {
+  class GF_GRAPHICS_API SplineCurve : public Curve {
   public:
     /**
      * @brief The type of the spline
@@ -167,7 +167,7 @@ inline namespace v1 {
    * A compound curve is a curve composed of several continuous curves. It is
    * sometimes called a path in vector graphics software.
    */
-  class GF_API CompoundCurve : public Curve {
+  class GF_GRAPHICS_API CompoundCurve : public Curve {
   public:
     /**
      * @brief Constructor

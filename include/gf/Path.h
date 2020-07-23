@@ -24,7 +24,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/functional/hash.hpp>
 
-#include "Portability.h"
+#include "CoreApi.h"
 #include "SerializationFwd.h"
 
 namespace gf {
@@ -47,13 +47,13 @@ inline namespace v1 {
    * @relates Serializer
    * @brief Serialize a path
    */
-  GF_API Serializer& operator|(Serializer& ar, const Path& path);
+  GF_CORE_API Serializer& operator|(Serializer& ar, const Path& path);
 
   /**
    * @relates Deserializer
    * @brief Deserialize a path
    */
-  GF_API Deserializer& operator|(Deserializer& ar, Path& path);
+  GF_CORE_API Deserializer& operator|(Deserializer& ar, Path& path);
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

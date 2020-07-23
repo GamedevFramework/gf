@@ -23,8 +23,8 @@
 
 #include <vector>
 
+#include "CoreApi.h"
 #include "Path.h"
-#include "Portability.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -41,7 +41,7 @@ inline namespace v1 {
    *
    * @sa ResourceManager
    */
-  class GF_API AssetManager {
+  class GF_CORE_API AssetManager {
   public:
     /**
      * @brief Add a search directory

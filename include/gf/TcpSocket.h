@@ -26,7 +26,7 @@
 
 #include "ArrayRef.h"
 #include "BufferRef.h"
-#include "Portability.h"
+#include "NetApi.h"
 #include "Socket.h"
 
 namespace gf {
@@ -48,7 +48,7 @@ inline namespace v1 {
    *
    * @sa gf::TcpListener, gf::UdpSocket
    */
-  class GF_API TcpSocket : public Socket {
+  class GF_NET_API TcpSocket : public Socket {
   public:
     /**
      * @brief Default constructor

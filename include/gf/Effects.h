@@ -22,7 +22,7 @@
 #define GF_EFFECTS_H
 
 #include "Effect.h"
-#include "Portability.h"
+#include "GraphicsApi.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -35,7 +35,7 @@ inline namespace v1 {
    *
    * This post-processing effect does nothing
    */
-  class GF_API DefaultEffect : public Effect {
+  class GF_GRAPHICS_API DefaultEffect : public Effect {
   public:
     /**
      * @brief Default constructor
@@ -50,7 +50,7 @@ inline namespace v1 {
    *
    * This effect uses [Fast Approximate Anti-Aliasing (FXAA)](https://en.wikipedia.org/wiki/Fast_approximate_anti-aliasing).
    */
-  class GF_API AntiAliasingEffect : public Effect {
+  class GF_GRAPHICS_API AntiAliasingEffect : public Effect {
   public:
     /**
      * @brief Default constructor
@@ -75,7 +75,7 @@ inline namespace v1 {
    *
    * @sa gf::ColorEffect, gf::ColorBlindEffect
    */
-  class GF_API ColorMatrixEffect : public Effect {
+  class GF_GRAPHICS_API ColorMatrixEffect : public Effect {
   public:
     /**
      * @brief Default constructor
@@ -98,7 +98,7 @@ inline namespace v1 {
    * @ingroup graphics
    * @brief Simple color effects
    */
-  class GF_API ColorEffect : public ColorMatrixEffect {
+  class GF_GRAPHICS_API ColorEffect : public ColorMatrixEffect {
   public:
     /**
      * @brief Type of color effect
@@ -137,7 +137,7 @@ inline namespace v1 {
    *
    * This effect simulate different types of color blindness.
    */
-  class GF_API ColorBlindEffect : public ColorMatrixEffect {
+  class GF_GRAPHICS_API ColorBlindEffect : public ColorMatrixEffect {
   public:
     /**
      * @brief Type of color blindness
@@ -177,7 +177,7 @@ inline namespace v1 {
    * This effect uses a [Sobel filter](https://en.wikipedia.org/wiki/Sobel_operator).
    *
    */
-  class GF_API EdgeEffect : public Effect {
+  class GF_GRAPHICS_API EdgeEffect : public Effect {
   public:
     /**
      * @brief Default constructor

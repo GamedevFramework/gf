@@ -29,12 +29,13 @@
 #include <gf/Color.h>
 #include <gf/ConsoleChar.h>
 #include <gf/Image.h>
+#include <gf/Log.h>
 #include <gf/RenderTarget.h>
 #include <gf/StringUtils.h>
+#include <gf/Unused.h>
 #include <gf/VectorOps.h>
 #include <gf/VertexArray.h>
 
-#include <gf/Unused.h>
 
 namespace gf {
 

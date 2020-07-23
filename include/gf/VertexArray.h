@@ -28,7 +28,7 @@
 #include <vector>
 
 #include "Drawable.h"
-#include "Portability.h"
+#include "GraphicsApi.h"
 #include "PrimitiveType.h"
 #include "Rect.h"
 #include "Vertex.h"
@@ -62,7 +62,7 @@ inline namespace v1 {
    *
    * @sa gf::Vertex
    */
-  class GF_API VertexArray : public Drawable {
+  class GF_GRAPHICS_API VertexArray : public Drawable {
   public:
     /**
      * @brief Default constructor

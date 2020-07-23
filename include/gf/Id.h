@@ -24,7 +24,6 @@
 #include <cstdint>
 #include <string>
 
-#include "Portability.h"
 #include "StringRef.h"
 
 namespace gf {

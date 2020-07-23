@@ -24,9 +24,9 @@
 #include <vector>
 
 #include "ArrayRef.h"
+#include "CoreApi.h"
 #include "Math.h"
 #include "Matrix.h"
-#include "Portability.h"
 #include "SerializationFwd.h"
 #include "Vector.h"
 
@@ -41,7 +41,7 @@ inline namespace v1 {
    *
    * @sa gf::Polygon, gf::Polyline
    */
-  class GF_API PointSequence {
+  class GF_CORE_API PointSequence {
   public:
     /**
      * @brief Default constructor
@@ -211,13 +211,13 @@ inline namespace v1 {
    * @relates Serializer
    * @brief Serialize a sequence
    */
-  GF_API Serializer& operator|(Serializer& ar, const PointSequence& sequence);
+  GF_CORE_API Serializer& operator|(Serializer& ar, const PointSequence& sequence);
 
   /**
    * @relates Deserializer
    * @brief Deserialize a sequence
    */
-  GF_API Deserializer& operator|(Deserializer& ar, PointSequence& sequence);
+  GF_CORE_API Deserializer& operator|(Deserializer& ar, PointSequence& sequence);
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

@@ -27,7 +27,7 @@
 #include <utility>
 
 #include "Color.h"
-#include "Portability.h"
+#include "CoreApi.h"
 #include "Vector.h"
 #include "VectorOps.h"
 
@@ -37,7 +37,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup graphics
+   * @ingroup core
    * @brief A color ramp
    *
    * A color ramp (or color gradient) specifies a range of colors that depends
@@ -142,8 +142,8 @@ inline namespace v1 {
 
 // MSVC does not like extern template
 #ifndef _MSC_VER
-  extern template struct GF_API ColorRampBase<float>;
-  extern template struct GF_API ColorRampBase<double>;
+  extern template struct GF_CORE_API ColorRampBase<float>;
+  extern template struct GF_CORE_API ColorRampBase<double>;
 #endif
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

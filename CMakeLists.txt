@@ -1,9 +1,14 @@
 cmake_minimum_required(VERSION 3.10)
 
 project(GF
-  VERSION 0.17.2
+  VERSION 0.17.3
   LANGUAGES CXX C
 )
+
+include(GenerateExportHeader)
+
+set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 if(NOT MSVC AND (NOT DEFINED CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL ""))
   message(STATUS "Setting build type to 'RelWithDebInfo' as none was specified.")
@@ -68,8 +73,8 @@ if(MSVC)
 else()
   message(STATUS "Using GCC or Clang compiler")
   # assume it's a GNU-like compiler (GCC, clang)
-  set(CMAKE_CXX_FLAGS                 "-Wall -Wextra -pedantic -fvisibility=hidden")
-  set(CMAKE_CXX_FLAGS_DEBUG           "-O0 -g")
+  set(CMAKE_CXX_FLAGS                 "-Wall -Wextra -pedantic")
+  set(CMAKE_CXX_FLAGS_DEBUG           "-O1 -g")
   set(CMAKE_CXX_FLAGS_MINSIZEREL      "-Os -DNDEBUG")
   set(CMAKE_CXX_FLAGS_RELEASE         "-O3 -DNDEBUG")
   set(CMAKE_CXX_FLAGS_RELWITHDEBINFO  "-O2 -g")

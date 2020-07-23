@@ -25,9 +25,9 @@
 #define GF_EVENT_H
 
 #include "Gamepad.h"
+#include "GraphicsApi.h"
 #include "Keyboard.h"
 #include "Mouse.h"
-#include "Portability.h"
 #include "Rune.h"
 #include "Vector.h"
 
@@ -98,7 +98,7 @@ inline namespace v1 {
    *
    * @sa gf::EventType
    */
-  struct GF_API Event {
+  struct GF_GRAPHICS_API Event {
     /**
      * @brief Keyboard event parameters (EventType::KeyPressed, EventType::KeyReleased, EventType::KeyRepeated)
      */

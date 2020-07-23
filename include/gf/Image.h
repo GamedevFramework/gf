@@ -29,8 +29,8 @@
 #include <vector>
 
 #include "ArrayRef.h"
+#include "CoreApi.h"
 #include "Path.h"
-#include "Portability.h"
 #include "Vector.h"
 
 namespace gf {
@@ -77,7 +77,7 @@ inline namespace v1 {
    *
    * @sa gf::Texture
    */
-  class GF_API Image {
+  class GF_CORE_API Image {
   public:
     /**
      * @brief Default constructor

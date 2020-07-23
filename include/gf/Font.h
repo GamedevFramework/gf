@@ -27,8 +27,8 @@
 #include <cstdint>
 #include <map>
 
+#include "GraphicsApi.h"
 #include "Path.h"
-#include "Portability.h"
 #include "Texture.h"
 
 namespace gf {
@@ -54,7 +54,7 @@ inline namespace v1 {
    *
    * @sa gf::Font, gf::Text
    */
-  struct GF_API Glyph {
+  struct GF_GRAPHICS_API Glyph {
     RectF bounds;         ///< Bouding rectangle of the glyph, in coordinates relative to the baseline
     RectF textureRect;    ///< Texture coordinates of the glyph inside the font's texture
     float advance = 0.0f; ///< Offset to move horizontally to the next character
@@ -106,7 +106,7 @@ inline namespace v1 {
    * with this class. However, it may be useful to access the
    * font metrics or rasterized glyphs for advanced usage.
    */
-  class GF_API Font {
+  class GF_GRAPHICS_API Font {
   public:
     /**
      * @brief Default constructor

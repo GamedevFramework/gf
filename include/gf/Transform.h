@@ -23,8 +23,8 @@
 
 #include <cmath>
 
+#include "CoreApi.h"
 #include "Matrix.h"
-#include "Portability.h"
 #include "Rect.h"
 #include "Vector.h"
 
@@ -38,7 +38,7 @@ inline namespace v1 {
    *
    * @sa gf::Translation, gf::Transform
    */
-  struct GF_API Rotation {
+  struct GF_CORE_API Rotation {
     float cos; ///< The cosine of the rotation angle
     float sin; ///< The sine of the rotation angle
 
@@ -119,7 +119,7 @@ inline namespace v1 {
    *
    * @sa gf::Rotation, gf::Transform
    */
-  struct GF_API Translation {
+  struct GF_CORE_API Translation {
     Vector2f offset; ///< The offset of the translation
 
     /**
@@ -197,7 +197,7 @@ inline namespace v1 {
    *
    * @sa gf::Matrix3f, gf::Rotation, gf::Translation
    */
-  struct GF_API Transform {
+  struct GF_CORE_API Transform {
     Rotation rotation; ///< The rotation of the transformation
     Translation translation; ///< The translation of the transformation
 
@@ -334,7 +334,7 @@ inline namespace v1 {
    * @param rect The rectangle to transform
    * @return The transformed rectangle
    */
-  GF_API RectF transform(const Matrix3f& mat, const RectF& rect);
+  GF_CORE_API RectF transform(const Matrix3f& mat, const RectF& rect);
 
 
   /**
@@ -370,7 +370,7 @@ inline namespace v1 {
    * @param mat The current transform
    * @param offset The offset of the translation
    */
-  GF_API void translate(Matrix3f& mat, Vector2f offset);
+  GF_CORE_API void translate(Matrix3f& mat, Vector2f offset);
 
   /**
    * @ingroup core
@@ -416,7 +416,7 @@ inline namespace v1 {
    * @param mat The current transform
    * @param angle The angle of the rotation (in radians)
    */
-  GF_API void rotate(Matrix3f& mat, float angle);
+  GF_CORE_API void rotate(Matrix3f& mat, float angle);
 
   /**
    * @ingroup core
@@ -426,7 +426,7 @@ inline namespace v1 {
    * @param angle The angle of the rotation (in radians)
    * @param center The center of the rotation
    */
-  GF_API void rotate(Matrix3f& mat, float angle, Vector2f center);
+  GF_CORE_API void rotate(Matrix3f& mat, float angle, Vector2f center);
 
   /**
    * @ingroup core
@@ -468,7 +468,7 @@ inline namespace v1 {
    * @param mat The current transform
    * @param factor The scaling factor
    */
-  GF_API void scale(Matrix3f& mat, Vector2f factor);
+  GF_CORE_API void scale(Matrix3f& mat, Vector2f factor);
 
   /**
    * @ingroup core
@@ -478,7 +478,7 @@ inline namespace v1 {
    * @param factor The scaling factor
    * @param center The center of the scaling
    */
-  GF_API void scale(Matrix3f& mat, Vector2f factor, Vector2f center);
+  GF_CORE_API void scale(Matrix3f& mat, Vector2f factor, Vector2f center);
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

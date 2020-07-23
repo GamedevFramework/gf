@@ -23,8 +23,8 @@
 
 #include <cmath>
 
+#include "CoreApi.h"
 #include "Math.h"
-#include "Portability.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -233,7 +233,7 @@ inline namespace v1 {
    * @sa [Robert Penner's Easing Functions](http://robertpenner.com/easing/)
    * @sa [Easing Functions Cheat Sheet](http://easings.net/)
    */
-  class GF_API Ease {
+  class GF_CORE_API Ease {
   public:
 
     /**

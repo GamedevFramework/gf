@@ -18,20 +18,17 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#ifndef GF_SPATIAL_R_STAR_TREE_H
-#define GF_SPATIAL_R_STAR_TREE_H
+#ifndef GF_SPATIAL_DYNAMIC_TREE_H
+#define GF_SPATIAL_DYNAMIC_TREE_H
 
 #include <cassert>
 #include <vector>
 
-#include <boost/container/static_vector.hpp>
-
-#include <gf/Handle.h>
-#include <gf/Portability.h>
-#include <gf/Rect.h>
-
 #include "BlockAllocator.h"
-#include "Types.h"
+#include "CoreApi.h"
+#include "Handle.h"
+#include "Rect.h"
+#include "SpatialTypes.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -40,22 +37,14 @@ inline namespace v1 {
 
   /**
    * @ingroup core
-   * @brief An implemntation of a R* tree
-   *
-   * More precisely, this class implements the [Revised R* tree](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.367.7273&rep=rep1&type=pdf).
-   *
-   * @sa gf::QuadTree
-   * @sa [R* tree - Wikipedia](https://en.wikipedia.org/wiki/R*_tree)
+   * @brief An implementation of dynamic tree
    */
-  class GF_API RStarTree {
+  class GF_CORE_API DynamicTree {
   public:
-    static constexpr std::size_t MaxSize = 16;
-    static constexpr std::size_t MinSize = 4;
-
     /**
      * @brief Constructor
      */
-    RStarTree();
+    DynamicTree();
 
     /**
      * @brief Insert an object in the tree
@@ -104,71 +93,30 @@ inline namespace v1 {
     Handle operator[](SpatialId id);
 
   private:
-    std::size_t allocateEntry();
-    void disposeEntry(std::size_t index);
-
     std::size_t allocateNode();
     void disposeNode(std::size_t index);
 
-    RectF computeBounds(std::size_t nodeIndex);
-    void updateBoundsForChild(std::size_t parentIndex, const RectF& bounds, std::size_t childIndex);
+    void doInsert(std::size_t leaf);
+    void doRemove(std::size_t leaf);
 
-    void doInsert(std::size_t entryIndex, const RectF& bounds);
-
-    std::size_t chooseSubtree(std::size_t nodeIndex, const RectF& bounds);
-    std::size_t chooseNode(std::size_t nodeIndex, const RectF& bounds);
-    std::size_t searchForCoveringNode(std::size_t nodeIndex, const RectF& bounds);
-    bool existsEmptyVolumeExtension(std::size_t nodeIndex, const RectF& bounds);
-
-    struct Candidate {
-      std::size_t index;
-      float overlap;
-      bool isCandidate;
-    };
-
-    template<typename OverlapEnlargement>
-    std::size_t findCandidates(std::size_t nodeIndex, std::size_t t, std::size_t p, const RectF& bounds, std::vector<Candidate>& candidates);
-
-    std::size_t doInsertInLeaf(std::size_t nodeIndex, std::size_t entryIndex, const RectF& entryBounds);
-    std::size_t doInsertInBranch(std::size_t nodeIndex, std::size_t childIndex, const RectF& childBounds);
-
-    std::size_t doQuery(std::size_t nodeIndex, const RectF& bounds, SpatialQueryCallback callback, SpatialQuery kind);
-
-    void getEntriesAndDispose(std::size_t nodeIndex, std::vector<std::size_t>& eliminated);
-    void doRemove(std::size_t entryIndex);
-
-    void validate() const;
-    std::size_t validateNode(std::size_t nodeIndex) const;
+    std::size_t balance(std::size_t iA);
 
   private:
-    static constexpr std::size_t Size = MaxSize + 1;
-
-    struct Entry {
+    struct Node {
       Handle handle;
       RectF bounds;
-      std::size_t node;
-    };
-
-    BlockAllocator<Entry> m_entries;
-
-    struct Node {
-      enum NodeType {
-        Branch,
-        Leaf,
-      };
-
-      struct Member {
-        RectF bounds;
-        std::size_t index;
-      };
-
-      RectF bounds;
       std::size_t parent;
-      NodeType type;
-      boost::container::static_vector<Member, Size> members;
+      std::size_t child1;
+      std::size_t child2;
+      int32_t height;
+
+      bool isLeaf() const {
+        return child1 == NullIndex;
+      }
     };
 
     BlockAllocator<Node> m_nodes;
+
     std::size_t m_root;
   };
 
@@ -177,4 +125,4 @@ inline namespace v1 {
 #endif
 }
 
-#endif // GF_SPATIAL_R_STAR_TREE_H
+#endif // GF_SPATIAL_DYNAMIC_TREE_H

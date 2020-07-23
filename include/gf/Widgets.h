@@ -24,6 +24,7 @@
 
 #include "BasicSprite.h"
 #include "BasicText.h"
+#include "GraphicsApi.h"
 #include "Shapes.h"
 #include "Vector.h"
 #include "VertexArray.h"
@@ -43,7 +44,7 @@ inline namespace v1 {
    *
    * @sa gf::Text
    */
-  class GF_API TextWidget : public Widget {
+  class GF_GRAPHICS_API TextWidget : public Widget {
   public:
     /**
      * @brief Constructor
@@ -290,7 +291,7 @@ inline namespace v1 {
    *
    * @sa gf::Text, gf::RoundedRectangleShape
    */
-  class GF_API TextButtonWidget : public TextWidget {
+  class GF_GRAPHICS_API TextButtonWidget : public TextWidget {
   public:
     /**
      * @brief Construct a text button widget.
@@ -401,7 +402,7 @@ inline namespace v1 {
    * @ingroup graphics
    * @brief A widget with a set of sprites
    */
-  class GF_API SpriteWidget : public Widget {
+  class GF_GRAPHICS_API SpriteWidget : public Widget {
   public:
     /**
      * @brief Constructor with no texture
@@ -522,7 +523,7 @@ inline namespace v1 {
    *
    * A choice widget may be used to represent a checkbox or a radio button.
    */
-  class GF_API ChoiceSpriteWidget : public Widget {
+  class GF_GRAPHICS_API ChoiceSpriteWidget : public Widget {
   public:
     /**
      * @brief Constructor

@@ -33,7 +33,7 @@
 #include <vector>
 
 #include "BufferRef.h"
-#include "Portability.h"
+#include "CoreApi.h"
 #include "Serialization.h"
 
 namespace gf {
@@ -45,61 +45,61 @@ inline namespace v1 {
    * @relates Serializer
    * @brief Serialize a boolean object
    */
-  GF_API Serializer& operator|(Serializer& ar, bool data);
+  GF_CORE_API Serializer& operator|(Serializer& ar, bool data);
 
   /**
    * @relates Serializer
    * @brief Serialize a char object
    */
-  GF_API Serializer& operator|(Serializer& ar, char data);
+  GF_CORE_API Serializer& operator|(Serializer& ar, char data);
 
   /**
    * @relates Serializer
    * @brief Serialize an unsigned integer object
    */
-  GF_API Serializer& operator|(Serializer& ar, uint8_t data);
+  GF_CORE_API Serializer& operator|(Serializer& ar, uint8_t data);
 
   /**
    * @relates Serializer
    * @brief Serialize an unsigned integer object
    */
-  GF_API Serializer& operator|(Serializer& ar, uint16_t data);
+  GF_CORE_API Serializer& operator|(Serializer& ar, uint16_t data);
 
   /**
    * @relates Serializer
    * @brief Serialize an unsigned integer object
    */
-  GF_API Serializer& operator|(Serializer& ar, uint32_t data);
+  GF_CORE_API Serializer& operator|(Serializer& ar, uint32_t data);
 
   /**
    * @relates Serializer
    * @brief Serialize an unsigned integer object
    */
-  GF_API Serializer& operator|(Serializer& ar, uint64_t data);
+  GF_CORE_API Serializer& operator|(Serializer& ar, uint64_t data);
 
   /**
    * @relates Serializer
    * @brief Serialize a signed integer object
    */
-  GF_API Serializer& operator|(Serializer& ar, int8_t data);
+  GF_CORE_API Serializer& operator|(Serializer& ar, int8_t data);
 
   /**
    * @relates Serializer
    * @brief Serialize a signed integer object
    */
-  GF_API Serializer& operator|(Serializer& ar, int16_t data);
+  GF_CORE_API Serializer& operator|(Serializer& ar, int16_t data);
 
   /**
    * @relates Serializer
    * @brief Serialize a signed integer object
    */
-  GF_API Serializer& operator|(Serializer& ar, int32_t data);
+  GF_CORE_API Serializer& operator|(Serializer& ar, int32_t data);
 
   /**
    * @relates Serializer
    * @brief Serialize a signed integer object
    */
-  GF_API Serializer& operator|(Serializer& ar, int64_t data);
+  GF_CORE_API Serializer& operator|(Serializer& ar, int64_t data);
 
   /**
    * @relates Serializer
@@ -116,13 +116,13 @@ inline namespace v1 {
    * @relates Serializer
    * @brief Serialize a single precision float object
    */
-  GF_API Serializer& operator|(Serializer& ar, float data);
+  GF_CORE_API Serializer& operator|(Serializer& ar, float data);
 
   /**
    * @relates Serializer
    * @brief Serialize a double precision float object
    */
-  GF_API Serializer& operator|(Serializer& ar, double data);
+  GF_CORE_API Serializer& operator|(Serializer& ar, double data);
 
 #ifndef _MSC_VER
   /**
@@ -136,7 +136,7 @@ inline namespace v1 {
    * @relates Serializer
    * @brief Serialize a string object
    */
-  GF_API Serializer& operator|(Serializer& ar, const std::string& str);
+  GF_CORE_API Serializer& operator|(Serializer& ar, const std::string& str);
 
   /**
    * @relates Serializer
@@ -256,61 +256,61 @@ inline namespace v1 {
    * @relates Deserializer
    * @brief Deserialize a bool object
    */
-  GF_API Deserializer& operator|(Deserializer& ar, bool& data);
+  GF_CORE_API Deserializer& operator|(Deserializer& ar, bool& data);
 
   /**
    * @relates Deserializer
    * @brief Deserialize a char object
    */
-  GF_API Deserializer& operator|(Deserializer& ar, char& data);
+  GF_CORE_API Deserializer& operator|(Deserializer& ar, char& data);
 
   /**
    * @relates Deserializer
    * @brief Deserialize an unsigned integer object
    */
-  GF_API Deserializer& operator|(Deserializer& ar, uint8_t& data);
+  GF_CORE_API Deserializer& operator|(Deserializer& ar, uint8_t& data);
 
   /**
    * @relates Deserializer
    * @brief Deserialize an unsigned integer object
    */
-  GF_API Deserializer& operator|(Deserializer& ar, uint16_t& data);
+  GF_CORE_API Deserializer& operator|(Deserializer& ar, uint16_t& data);
 
   /**
    * @relates Deserializer
    * @brief Deserialize an unsigned integer object
    */
-  GF_API Deserializer& operator|(Deserializer& ar, uint32_t& data);
+  GF_CORE_API Deserializer& operator|(Deserializer& ar, uint32_t& data);
 
   /**
    * @relates Deserializer
    * @brief Deserialize an unsigned integer object
    */
-  GF_API Deserializer& operator|(Deserializer& ar, uint64_t& data);
+  GF_CORE_API Deserializer& operator|(Deserializer& ar, uint64_t& data);
 
   /**
    * @relates Deserializer
    * @brief Deserialize a signed integer object
    */
-  GF_API Deserializer& operator|(Deserializer& ar, int8_t& data);
+  GF_CORE_API Deserializer& operator|(Deserializer& ar, int8_t& data);
 
   /**
    * @relates Deserializer
    * @brief Deserialize a signed integer object
    */
-  GF_API Deserializer& operator|(Deserializer& ar, int16_t& data);
+  GF_CORE_API Deserializer& operator|(Deserializer& ar, int16_t& data);
 
   /**
    * @relates Deserializer
    * @brief Deserialize a signed integer object
    */
-  GF_API Deserializer& operator|(Deserializer& ar, int32_t& data);
+  GF_CORE_API Deserializer& operator|(Deserializer& ar, int32_t& data);
 
   /**
    * @relates Deserializer
    * @brief Deserialize a signed integer object
    */
-  GF_API Deserializer& operator|(Deserializer& ar, int64_t& data);
+  GF_CORE_API Deserializer& operator|(Deserializer& ar, int64_t& data);
 
   /**
    * @relates Deserializer
@@ -330,19 +330,19 @@ inline namespace v1 {
    * @relates Deserializer
    * @brief Deserialize a single precision float object
    */
-  GF_API Deserializer& operator|(Deserializer& ar, float& data);
+  GF_CORE_API Deserializer& operator|(Deserializer& ar, float& data);
 
   /**
    * @relates Deserializer
    * @brief Deserialize a double precision float object
    */
-  GF_API Deserializer& operator|(Deserializer& ar, double& data);
+  GF_CORE_API Deserializer& operator|(Deserializer& ar, double& data);
 
   /**
    * @relates Deserializer
    * @brief Deserialize a string object
    */
-  GF_API Deserializer& operator|(Deserializer& ar, std::string& str);
+  GF_CORE_API Deserializer& operator|(Deserializer& ar, std::string& str);
 
   /**
    * @relates Deserializer

@@ -23,8 +23,8 @@
 
 #include <functional>
 
+#include "CoreApi.h"
 #include "Id.h"
-#include "Portability.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -50,7 +50,7 @@ inline namespace v1 {
    *
    * @sa gf::MessageManager, gf::MessageHandler
    */
-  struct GF_API Message {
+  struct GF_CORE_API Message {
     /**
      * @brief The default (invalid) type
      *

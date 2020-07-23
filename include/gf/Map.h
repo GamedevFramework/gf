@@ -22,8 +22,8 @@
 #define GF_MAP_H
 
 #include "Array2D.h"
+#include "CoreApi.h"
 #include "Flags.h"
-#include "Portability.h"
 #include "Vector.h"
 
 namespace gf {
@@ -105,7 +105,7 @@ inline namespace v1 {
    *
    * @sa gf::CellProperty
    */
-  class GF_API SquareMap {
+  class GF_CORE_API SquareMap {
   public:
 
 

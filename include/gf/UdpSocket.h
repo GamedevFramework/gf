@@ -26,7 +26,7 @@
 
 #include "ArrayRef.h"
 #include "BufferRef.h"
-#include "Portability.h"
+#include "NetApi.h"
 #include "Socket.h"
 #include "SocketAddress.h"
 #include "Types.h"
@@ -49,7 +49,7 @@ inline namespace v1 {
    *
    * @sa gf::TcpSocket
    */
-  class GF_API UdpSocket : public Socket {
+  class GF_NET_API UdpSocket : public Socket {
   public:
     /**
      * @brief Default constructor

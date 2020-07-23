@@ -18,7 +18,7 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#include <gf/spatial/RStarTree.h>
+#include <gf/Spatial_RStarTree.h>
 
 #include <numeric>
 
@@ -119,7 +119,7 @@ inline namespace v1 {
     };
 
     template<typename Member>
-    class GF_API OverlapExtentLengthEnlargement {
+    class OverlapExtentLengthEnlargement {
     public:
       OverlapExtentLengthEnlargement(const RectF& bounds, const Member& reference)
       : m_bounds(bounds)
@@ -144,7 +144,7 @@ inline namespace v1 {
     };
 
     template<typename Member>
-    class GF_API OverlapVolumeEnlargement {
+    class OverlapVolumeEnlargement {
     public:
       OverlapVolumeEnlargement(const RectF& bounds, const Member& reference)
       : m_bounds(bounds)

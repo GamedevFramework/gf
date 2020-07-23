@@ -22,7 +22,7 @@
 #define GF_POST_PROCESSING_H
 
 #include "Drawable.h"
-#include "Portability.h"
+#include "GraphicsApi.h"
 #include "Rect.h"
 #include "Vertex.h"
 
@@ -43,7 +43,7 @@ inline namespace v1 {
    *
    * @sa gf::RenderTexture
    */
-  class GF_API PostProcessing : public Drawable {
+  class GF_GRAPHICS_API PostProcessing : public Drawable {
   public:
     /**
      * @brief Default constructor

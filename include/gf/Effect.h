@@ -21,7 +21,7 @@
 #ifndef GF_EFFECT_H
 #define GF_EFFECT_H
 
-#include "Portability.h"
+#include "GraphicsApi.h"
 #include "Shader.h"
 
 namespace gf {
@@ -35,7 +35,7 @@ inline namespace v1 {
    *
    * @sa gf::PostProcessing
    */
-  class GF_API Effect : public Shader {
+  class GF_GRAPHICS_API Effect : public Shader {
 
   protected:
     /**
@@ -61,7 +61,7 @@ inline namespace v1 {
 
   };
 
-  class GF_API TransitionEffect : public Effect {
+  class GF_GRAPHICS_API TransitionEffect : public Effect {
 
   protected:
     TransitionEffect(const char *vertexShader, const char *fragmentShader);

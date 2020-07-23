@@ -23,9 +23,9 @@
 
 #include "Control.h"
 #include "Gamepad.h"
+#include "GraphicsApi.h"
 #include "Keyboard.h"
 #include "Mouse.h"
-#include "Portability.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -36,7 +36,7 @@ inline namespace v1 {
    * @ingroup window
    * @brief A key control based on keycode.
    */
-  class GF_API KeycodeKeyControl : public Control {
+  class GF_GRAPHICS_API KeycodeKeyControl : public Control {
   public:
     /**
      * @brief Construct a key control.
@@ -55,7 +55,7 @@ inline namespace v1 {
    * @ingroup window
    * @brief A key control based on scancode.
    */
-  class GF_API ScancodeKeyControl : public Control {
+  class GF_GRAPHICS_API ScancodeKeyControl : public Control {
   public:
     /**
      * @brief Construct a key control.
@@ -74,7 +74,7 @@ inline namespace v1 {
    * @ingroup window
    * @brief A mouse button control.
    */
-  class GF_API MouseButtonControl : public Control {
+  class GF_GRAPHICS_API MouseButtonControl : public Control {
   public:
     /**
      * @brief Construct a mouse button control.
@@ -93,7 +93,7 @@ inline namespace v1 {
    * @ingroup window
    * @brief A gamepad button control
    */
-  class GF_API GamepadButtonControl : public Control {
+  class GF_GRAPHICS_API GamepadButtonControl : public Control {
   public:
     /**
      * @brief Contruct a gamepad button control.
@@ -115,7 +115,7 @@ inline namespace v1 {
    * @ingroup window
    * @brief A gamepad axis control
    */
-  class GF_API GamepadAxisControl : public Control {
+  class GF_GRAPHICS_API GamepadAxisControl : public Control {
   public:
     /**
      * @brief Construct a gamepad axis control
@@ -141,7 +141,7 @@ inline namespace v1 {
    * @brief A close control.
    *
    */
-  class GF_API CloseControl : public Control {
+  class GF_GRAPHICS_API CloseControl : public Control {
   public:
     /**
      * @brief Construct a close control.
@@ -158,7 +158,7 @@ inline namespace v1 {
    * @sa gf::KonamiGamepadControl
    * @sa [Konami Code - Wikipedia](https://en.wikipedia.org/wiki/Konami_Code)
    */
-  class GF_API KonamiKeyboardControl : public Control {
+  class GF_GRAPHICS_API KonamiKeyboardControl : public Control {
   public:
     /**
      * @brief Construct a Konami control
@@ -179,7 +179,7 @@ inline namespace v1 {
    * @sa gf::KonamiKeyboardControl
    * @sa [Konami Code - Wikipedia](https://en.wikipedia.org/wiki/Konami_Code)
    */
-  class GF_API KonamiGamepadControl : public Control {
+  class GF_GRAPHICS_API KonamiGamepadControl : public Control {
   public:
     /**
      * @brief Construct a Konami control

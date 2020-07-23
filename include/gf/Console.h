@@ -28,6 +28,7 @@
 #include "Blend.h"
 #include "ConsoleFont.h"
 #include "Flags.h"
+#include "GraphicsApi.h"
 #include "Path.h"
 #include "Portability.h"
 #include "StringRef.h"
@@ -123,7 +124,7 @@ inline namespace v1 {
    *
    * @sa gf::Console
    */
-  class GF_API ConsoleEffect {
+  class GF_GRAPHICS_API ConsoleEffect {
   public:
 
     /**
@@ -221,7 +222,7 @@ inline namespace v1 {
    *
    * @sa gf::ConsoleFont
    */
-  class GF_API Console : public Transformable {
+  class GF_GRAPHICS_API Console : public Transformable {
   public:
     /**
      * @brief An action when printing
