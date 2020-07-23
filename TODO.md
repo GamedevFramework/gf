@@ -47,6 +47,8 @@ This file is a list of ideas for gf. Some of them will eventually be in gf. Othe
 
 ## meta
 
+- (docs) split gf_dev_doc by modules (core, graphics, net)
+- (tests) split gf_tests by modules (core, net)
 - (docs) reorganize documentation in finer modules
 - (portability) consider using [hedley](https://nemequ.github.io/hedley/)
   - blocking bug: nemequ/hedley#35
