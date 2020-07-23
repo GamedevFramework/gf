@@ -152,6 +152,7 @@ else()
     core/Streams.cc
     core/StringUtils.cc
     core/Time.cc
+    core/Tmx.cc
     core/Transform.cc
     core/Triangulation.cc
     core/Vector.cc
@@ -216,7 +217,6 @@ else()
     graphics/Texture.cc
     graphics/TileLayer.cc
     graphics/Tileset.cc
-    graphics/Tmx.cc
     graphics/TmxOps.cc
     graphics/Transformable.cc
     graphics/VertexArray.cc

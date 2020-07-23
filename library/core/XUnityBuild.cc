@@ -73,6 +73,7 @@
 #include "Streams.cc"
 #include "StringUtils.cc"
 #include "Time.cc"
+#include "Tmx.cc"
 #include "Transform.cc"
 #include "Triangulation.cc"
 #include "Vector.cc"
