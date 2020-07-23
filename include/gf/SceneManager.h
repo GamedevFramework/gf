@@ -26,7 +26,7 @@
 #include "ArrayRef.h"
 #include "Color.h"
 #include "Easings.h"
-#include "Portability.h"
+#include "GraphicsApi.h"
 #include "Ref.h"
 #include "RenderStates.h"
 #include "RenderWindow.h"
@@ -55,7 +55,7 @@ inline namespace v1 {
    *
    * @sa gf::Scene
    */
-  class GF_API SceneManager {
+  class GF_GRAPHICS_API SceneManager {
   public:
     /**
      * @brief Constructor

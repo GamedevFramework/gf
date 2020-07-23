@@ -27,9 +27,9 @@
 #include <string>
 #include <map>
 
+#include "GraphicsApi.h"
 #include "Matrix.h"
 #include "Path.h"
-#include "Portability.h"
 #include "StringRef.h"
 #include "Texture.h"
 #include "Vector.h"
@@ -117,7 +117,7 @@ inline namespace v1 {
    * arbitrary order; thus, texture lookups on pixels other than the
    * current one may not give you the expected result.
    */
-  class GF_API Shader {
+  class GF_GRAPHICS_API Shader {
   public:
     /**
      * @brief Type of shaders

@@ -118,6 +118,7 @@ else()
     core/Flags.cc
     core/Geometry.cc
     core/Heightmap.cc
+    core/Hexagon.cc
     core/Image.cc
     core/Log.cc
     core/Map.cc
@@ -132,9 +133,9 @@ else()
     core/Noises.cc
     core/Orientation.cc
     core/Path.cc
+    core/PointSequence.cc
     core/Polygon.cc
     core/Polyline.cc
-    core/PointSequence.cc
     core/RandomBinaryTree.cc
     core/Random.cc
     core/Range.cc
@@ -146,6 +147,7 @@ else()
     core/Spatial_QuadTree.cc
     core/Spatial_RStarTree.cc
     core/Spatial_SimpleSpatialIndex.cc
+    core/Stagger.cc
     core/Stream.cc
     core/Streams.cc
     core/StringUtils.cc
@@ -181,7 +183,6 @@ else()
     graphics/GraphicsHandle.cc
     graphics/GraphicsInfo.cc
     graphics/Grid.cc
-    graphics/Hexagon.cc
     graphics/Keyboard.cc
     graphics/Library.cc
     graphics/Logo.cc
@@ -209,7 +210,6 @@ else()
     graphics/SharedGraphics.cc
     graphics/SpriteBatch.cc
     graphics/Sprite.cc
-    graphics/Stagger.cc
     graphics/SystemInfo.cc
     graphics/Text.cc
     graphics/TextureAtlas.cc
@@ -248,6 +248,30 @@ else()
   )
 endif()
 
+generate_export_header(gfcore0
+  BASE_NAME core
+  EXPORT_MACRO_NAME CORE_API
+  EXPORT_FILE_NAME CoreApi.h
+  STATIC_DEFINE STATIC
+  PREFIX_NAME GF_
+)
+
+generate_export_header(gf0
+  BASE_NAME graphics
+  EXPORT_MACRO_NAME GRAPHICS_API
+  EXPORT_FILE_NAME GraphicsApi.h
+  STATIC_DEFINE STATIC
+  PREFIX_NAME GF_
+)
+
+generate_export_header(gfnet0
+  BASE_NAME net
+  EXPORT_MACRO_NAME NET_API
+  EXPORT_FILE_NAME NetApi.h
+  STATIC_DEFINE STATIC
+  PREFIX_NAME GF_
+)
+
 add_dependencies(gf0
   gf0_shader_headers
   gf0_gamecontrollerdb
@@ -279,35 +303,35 @@ if (GF_DEBUG)
   )
 endif()
 
-if (GF_SHARED)
+if (NOT BUILD_SHARED_LIBS)
   target_compile_definitions(gfcore0
-    PUBLIC GF_SHARED
+    PUBLIC GF_STATIC
   )
 
   target_compile_definitions(gf0
-    PUBLIC GF_SHARED
+    PUBLIC GF_STATIC
   )
 
   target_compile_definitions(gfnet0
-    PUBLIC GF_SHARED
+    PUBLIC GF_STATIC
   )
 endif()
 
 target_compile_definitions(gfcore0
   PRIVATE
-    GF_EXPORT_SYMBOLS
+    gfcore0_EXPORTS
     ZLIB_CONST
 )
 
 target_compile_definitions(gf0
   PRIVATE
-    GF_EXPORT_SYMBOLS
+    gf0_EXPORTS
     ZLIB_CONST
 )
 
 target_compile_definitions(gfnet0
   PRIVATE
-    GF_EXPORT_SYMBOLS
+    gfnet0_EXPORTS
 )
 
 if (UNIX AND NOT APPLE)
@@ -321,27 +345,26 @@ endif()
 target_include_directories(gfcore0
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
   PRIVATE
-    "${CMAKE_CURRENT_BINARY_DIR}"
     "${Stb_INCLUDE_DIR}"
 )
 
 target_include_directories(gf0
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
   PRIVATE
-    "${CMAKE_CURRENT_BINARY_DIR}"
     "${CMAKE_CURRENT_SOURCE_DIR}"
 )
 
 target_include_directories(gfnet0
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
-  PRIVATE
-    "${CMAKE_CURRENT_BINARY_DIR}"
 )
 
 if (APPLE)
@@ -376,7 +399,7 @@ target_link_libraries(gf0
 
 
 if(DEFINED GF_VCPKG)
-  if(GF_SHARED)
+  if(BUILD_SHARED_LIBS)
     target_link_libraries(gf0 PRIVATE SDL2::SDL2)
   else()
     target_link_libraries(gf0 PRIVATE SDL2::SDL2-static)
@@ -411,7 +434,6 @@ target_compile_features(gfcore0
 
 set_target_properties(gfcore0
   PROPERTIES
-  CXX_EXTENSIONS OFF
   EXPORT_NAME "core"
   VERSION ${PROJECT_VERSION}
   SOVERSION ${PROJECT_VERSION_MAJOR}
@@ -424,7 +446,6 @@ target_compile_features(gf0
 
 set_target_properties(gf0
   PROPERTIES
-  CXX_EXTENSIONS OFF
   EXPORT_NAME "graphics"
   VERSION ${PROJECT_VERSION}
   SOVERSION ${PROJECT_VERSION_MAJOR}
@@ -437,17 +458,24 @@ target_compile_features(gfnet0
 
 set_target_properties(gfnet0
   PROPERTIES
-  CXX_EXTENSIONS OFF
   EXPORT_NAME "net"
   VERSION ${PROJECT_VERSION}
   SOVERSION ${PROJECT_VERSION_MAJOR}
 )
 
-if(NOT GF_SHARED)
+if(NOT BUILD_SHARED_LIBS)
   set_property(TARGET gfcore0 PROPERTY POSITION_INDEPENDENT_CODE ON)
   set_property(TARGET gf0 PROPERTY POSITION_INDEPENDENT_CODE ON)
   set_property(TARGET gfnet0 PROPERTY POSITION_INDEPENDENT_CODE ON)
 endif()
+
+install(
+  FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/CoreApi.h"
+    "${CMAKE_CURRENT_BINARY_DIR}/GraphicsApi.h"
+    "${CMAKE_CURRENT_BINARY_DIR}/NetApi.h"
+  DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/gf"
+)
 
 install(
   TARGETS gfcore0 gf0 gfnet0
@@ -476,6 +504,7 @@ install(
 )
 
 include(CMakePackageConfigHelpers)
+
 write_basic_package_version_file(
   "${CMAKE_CURRENT_BINARY_DIR}/gfConfigVersion.cmake"
   VERSION ${PROJECT_VERSION}

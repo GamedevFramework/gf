@@ -28,7 +28,7 @@
 #include <initializer_list>
 #include <type_traits>
 
-#include "Portability.h"
+#include "CoreApi.h"
 #include "Types.h"
 
 namespace gf {
@@ -1322,28 +1322,28 @@ inline namespace v1 {
 
 // MSVC does not like extern template
 #ifndef _MSC_VER
-  extern template struct GF_API Vector<float, 2>;
-  extern template struct GF_API Vector<float, 3>;
-  extern template struct GF_API Vector<float, 4>;
+  extern template struct GF_CORE_API Vector<float, 2>;
+  extern template struct GF_CORE_API Vector<float, 3>;
+  extern template struct GF_CORE_API Vector<float, 4>;
 
-  extern template struct GF_API Vector<double, 2>;
-  extern template struct GF_API Vector<double, 3>;
-  extern template struct GF_API Vector<double, 4>;
+  extern template struct GF_CORE_API Vector<double, 2>;
+  extern template struct GF_CORE_API Vector<double, 3>;
+  extern template struct GF_CORE_API Vector<double, 4>;
 
-  extern template struct GF_API Vector<int, 2>;
-  extern template struct GF_API Vector<int, 3>;
-  extern template struct GF_API Vector<int, 4>;
+  extern template struct GF_CORE_API Vector<int, 2>;
+  extern template struct GF_CORE_API Vector<int, 3>;
+  extern template struct GF_CORE_API Vector<int, 4>;
 
-  extern template struct GF_API Vector<unsigned, 2>;
-  extern template struct GF_API Vector<unsigned, 3>;
-  extern template struct GF_API Vector<unsigned, 4>;
+  extern template struct GF_CORE_API Vector<unsigned, 2>;
+  extern template struct GF_CORE_API Vector<unsigned, 3>;
+  extern template struct GF_CORE_API Vector<unsigned, 4>;
 
-  extern template struct GF_API Vector<bool, 2>;
-  extern template struct GF_API Vector<bool, 3>;
-  extern template struct GF_API Vector<bool, 4>;
+  extern template struct GF_CORE_API Vector<bool, 2>;
+  extern template struct GF_CORE_API Vector<bool, 3>;
+  extern template struct GF_CORE_API Vector<bool, 4>;
 
-  extern template struct GF_API Vector<uint8_t, 3>;
-  extern template struct GF_API Vector<uint8_t, 4>;
+  extern template struct GF_CORE_API Vector<uint8_t, 3>;
+  extern template struct GF_CORE_API Vector<uint8_t, 4>;
 #endif
 
   /**

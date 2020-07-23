@@ -21,7 +21,7 @@
 #ifndef GF_SEGUE_EFFECTS_H
 #define GF_SEGUE_EFFECTS_H
 
-#include "Portability.h"
+#include "GraphicsApi.h"
 #include "SegueEffect.h"
 
 namespace gf {
@@ -33,7 +33,7 @@ inline namespace v1 {
    * @ingroup graphics
    * @brief A fade to black segue effect
    */
-  class GF_API BlackoutSegueEffect : public SegueEffect {
+  class GF_GRAPHICS_API BlackoutSegueEffect : public SegueEffect {
   public:
     /**
      * @brief Default constructor
@@ -45,7 +45,7 @@ inline namespace v1 {
    * @ingroup graphics
    * @brief A fade segue effect
    */
-  class GF_API FadeSegueEffect : public SegueEffect {
+  class GF_GRAPHICS_API FadeSegueEffect : public SegueEffect {
   public:
     /**
      * @brief Default constructor
@@ -60,7 +60,7 @@ inline namespace v1 {
    *
    * By default, there is one vertical stripe.
    */
-  class GF_API SlideSegueEffect : public SegueEffect {
+  class GF_GRAPHICS_API SlideSegueEffect : public SegueEffect {
   public:
     /**
      * @brief The orientation of the stripes
@@ -95,7 +95,7 @@ inline namespace v1 {
    * @ingroup graphics
    * @brief A glitch segue effect
    */
-  class GF_API GlitchSegueEffect : public SegueEffect {
+  class GF_GRAPHICS_API GlitchSegueEffect : public SegueEffect {
   public:
     /**
      * @brief Default constructor
@@ -110,7 +110,7 @@ inline namespace v1 {
    *
    * By default, the board is @f$ 32 \times 18 @f$.
    */
-  class GF_API CheckerboardSegueEffect : public SegueEffect {
+  class GF_GRAPHICS_API CheckerboardSegueEffect : public SegueEffect {
   public:
     /**
      * @brief Default constructor
@@ -139,7 +139,7 @@ inline namespace v1 {
    *
    * By default, the circle opens.
    */
-  class GF_API CircleSegueEffect : public SegueEffect {
+  class GF_GRAPHICS_API CircleSegueEffect : public SegueEffect {
   public:
     /**
      * @brief The type of circle
@@ -175,7 +175,7 @@ inline namespace v1 {
    * @ingroup graphics
    * @brief A pixelate segue effect
    */
-  class GF_API PixelateSegueEffect : public SegueEffect {
+  class GF_GRAPHICS_API PixelateSegueEffect : public SegueEffect {
   public:
     /**
      * @brief Default constructor
@@ -195,7 +195,7 @@ inline namespace v1 {
    * @ingroup graphics
    * @brief A radial segue effect
    */
-  class GF_API RadialSegueEffect : public SegueEffect {
+  class GF_GRAPHICS_API RadialSegueEffect : public SegueEffect {
   public:
     /**
      * @brief Default constructor
@@ -209,7 +209,7 @@ inline namespace v1 {
    *
    * By default, the strength is @f$ 1.0 @f$
    */
-  class GF_API ZoomBlurSegueEffect : public SegueEffect {
+  class GF_GRAPHICS_API ZoomBlurSegueEffect : public SegueEffect {
   public:
     /**
      * @brief Default constructor

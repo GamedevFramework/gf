@@ -21,7 +21,7 @@
 #ifndef GF_TMX_OPS_H
 #define GF_TMX_OPS_H
 
-#include "Portability.h"
+#include "GraphicsApi.h"
 #include "ResourceManager.h"
 #include "TileLayer.h"
 #include "Tmx.h"
@@ -31,7 +31,7 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  GF_API TileLayer makeTileLayer(const TmxLayers& map, const TmxTileLayer& layer, ResourceManager& resources);
+  GF_GRAPHICS_API TileLayer makeTileLayer(const TmxLayers& map, const TmxTileLayer& layer, ResourceManager& resources);
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

@@ -24,8 +24,8 @@
 #ifndef GF_VIEW_H
 #define GF_VIEW_H
 
+#include "GraphicsApi.h"
 #include "Matrix.h"
-#include "Portability.h"
 #include "Rect.h"
 #include "Vector.h"
 
@@ -91,7 +91,7 @@ inline namespace v1 {
    *
    * @sa gf::RenderTarget, gf::AdaptativeView
    */
-  class GF_API View {
+  class GF_GRAPHICS_API View {
   public:
     /**
      * @brief Default constructor
@@ -387,7 +387,7 @@ inline namespace v1 {
    *
    * @sa gf::ViewContainer
    */
-  class GF_API AdaptativeView : public View {
+  class GF_GRAPHICS_API AdaptativeView : public View {
   public:
     /**
      * @brief Default constructor
@@ -455,7 +455,7 @@ inline namespace v1 {
    * @ingroup graphics
    * @brief A view adaptor for zooming/moving with the mouse
    */
-  class GF_API ZoomingViewAdaptor {
+  class GF_GRAPHICS_API ZoomingViewAdaptor {
   public:
     /**
      * @brief Constructor

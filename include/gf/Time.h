@@ -28,7 +28,7 @@
 #include <chrono>
 #include <ratio>
 
-#include "Portability.h"
+#include "CoreApi.h"
 #include "SerializationFwd.h"
 
 namespace gf {
@@ -62,7 +62,7 @@ inline namespace v1 {
    *
    * @sa gf::Clock
    */
-  class GF_API Time {
+  class GF_CORE_API Time {
   public:
     /**
      * @brief Default constructor
@@ -398,13 +398,13 @@ inline namespace v1 {
    * @relates Serializer
    * @brief Serialize a time
    */
-  GF_API Serializer& operator|(Serializer& ar, Time time);
+  GF_CORE_API Serializer& operator|(Serializer& ar, Time time);
 
   /**
    * @relates Deserializer
    * @brief Deserialize a time
    */
-  GF_API Deserializer& operator|(Deserializer& ar, Time& time);
+  GF_CORE_API Deserializer& operator|(Deserializer& ar, Time& time);
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

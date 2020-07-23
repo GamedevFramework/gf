@@ -22,7 +22,7 @@
 #define GF_KEYBOARD_H
 
 #include "Flags.h"
-#include "Portability.h"
+#include "GraphicsApi.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -495,7 +495,7 @@ inline namespace v1 {
    * @ingroup window
    * @brief Some keyboard related functions
    */
-  struct GF_API Keyboard {
+  struct GF_GRAPHICS_API Keyboard {
     /**
      * @brief Get the representation of a scancode
      *

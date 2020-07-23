@@ -27,7 +27,7 @@
 #include <string>
 
 #include "Alignment.h"
-#include "Portability.h"
+#include "GraphicsApi.h"
 #include "Vector.h"
 #include "VertexArray.h"
 
@@ -47,7 +47,7 @@ inline namespace v1 {
    *
    * @sa gf::Text
    */
-  class GF_API BasicText {
+  class GF_GRAPHICS_API BasicText {
   public:
     /**
      * @brief Default constructor

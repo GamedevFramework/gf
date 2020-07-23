@@ -21,7 +21,7 @@
 #ifndef GF_CONSOLE_CHAR_H
 #define GF_CONSOLE_CHAR_H
 
-#include "Portability.h"
+#include "GraphicsApi.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -36,7 +36,7 @@ inline namespace v1 {
    *
    * @sa gf::Console
    */
-  struct GF_API ConsoleChar final {
+  struct GF_GRAPHICS_API ConsoleChar final {
     /**
      * @brief Deleted copy constructor
      */

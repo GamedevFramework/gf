@@ -23,6 +23,7 @@
 
 #include <vector>
 
+#include "GraphicsApi.h"
 #include "Model.h"
 #include "Ref.h"
 #include "Vector.h"
@@ -40,7 +41,7 @@ inline namespace v1 {
    *
    * @sa gf::PhysicsBody, gf::FixedTimestepModel
    */
-  class GF_API PhysicsModel : public gf::Model {
+  class GF_GRAPHICS_API PhysicsModel : public gf::Model {
   public:
     /**
      * @brief Constructor

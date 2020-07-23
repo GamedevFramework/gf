@@ -28,7 +28,6 @@
 #include <type_traits>
 
 #include "Math.h"
-#include "Portability.h"
 #include "Vector.h"
 
 namespace gf {
@@ -37,7 +36,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup graphics
+   * @ingroup core
    * @brief Predefined colors and utilities
    *
    * This class does not contain anything but predefined colors. All the

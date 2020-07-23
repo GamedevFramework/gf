@@ -28,8 +28,8 @@
 
 #include "Clock.h"
 #include "Flags.h"
+#include "GraphicsApi.h"
 #include "Library.h"
-#include "Portability.h"
 #include "StringRef.h"
 #include "Time.h"
 #include "Vector.h"
@@ -78,7 +78,7 @@ inline namespace v1 {
    *
    * @sa gf::RenderWindow
    */
-  class GF_API Window {
+  class GF_GRAPHICS_API Window {
   public:
 
     /**

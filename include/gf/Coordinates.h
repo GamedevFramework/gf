@@ -22,7 +22,7 @@
 #define GF_COORDINATES_H
 
 #include "Anchor.h"
-#include "Portability.h"
+#include "GraphicsApi.h"
 #include "Vector.h"
 
 namespace gf {
@@ -36,7 +36,7 @@ inline namespace v1 {
    * @ingroup graphics
    * @brief Helper to compute coordinates in HUD
    */
-  class GF_API Coordinates {
+  class GF_GRAPHICS_API Coordinates {
   public:
     /**
      * @brief Constructor with size

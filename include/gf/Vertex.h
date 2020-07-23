@@ -25,7 +25,7 @@
 #define GF_VERTEX_H
 
 #include "Color.h"
-#include "Portability.h"
+#include "GraphicsApi.h"
 #include "Vector.h"
 
 namespace gf {
@@ -72,7 +72,7 @@ inline namespace v1 {
    *
    * @sa gf::PrimitiveType, gf::RenderTarget::draw
    */
-  struct GF_API Vertex {
+  struct GF_GRAPHICS_API Vertex {
     Vector2f position; ///< Position of the vertex in world coordinates
     Color4f color = Color::White; ///< %Color of the vertex (default: white)
     Vector2f texCoords = Vector2f{ 0.0f, 0.0f }; ///< Coordinates of the texture

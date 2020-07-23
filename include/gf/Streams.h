@@ -29,9 +29,9 @@
 
 #include <zlib.h>
 
+#include "CoreApi.h"
 #include "Stream.h"
 #include "Path.h"
-#include "Portability.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -42,7 +42,7 @@ inline namespace v1 {
    * @ingroup core
    * @brief File based input stream
    */
-  class GF_API FileInputStream : public InputStream {
+  class GF_CORE_API FileInputStream : public InputStream {
   public:
     /**
      * @brief Constructor
@@ -75,7 +75,7 @@ inline namespace v1 {
    * @ingroup core
    * @brief Memory based input stream
    */
-  class GF_API MemoryInputStream : public InputStream {
+  class GF_CORE_API MemoryInputStream : public InputStream {
   public:
     /**
      * @brief Constructor
@@ -102,7 +102,7 @@ inline namespace v1 {
    * @ingroup core
    * @brief Compressed input stream
    */
-  class GF_API CompressedInputStream : public InputStream {
+  class GF_CORE_API CompressedInputStream : public InputStream {
   public:
     /**
      * @brief Constructor
@@ -137,7 +137,7 @@ inline namespace v1 {
    * @ingroup core
    * @brief Buffer input stream
    */
-  class GF_API BufferInputStream : public InputStream {
+  class GF_CORE_API BufferInputStream : public InputStream {
   public:
     /**
      * @brief Constructor
@@ -167,7 +167,7 @@ inline namespace v1 {
    * @ingroup core
    * @brief File based output stream
    */
-  class GF_API FileOutputStream : public OutputStream {
+  class GF_CORE_API FileOutputStream : public OutputStream {
   public:
     /**
      * @brief Open mode for the file
@@ -208,7 +208,7 @@ inline namespace v1 {
    * @ingroup core
    * @brief Memory based output stream
    */
-  class GF_API MemoryOutputStream : public OutputStream {
+  class GF_CORE_API MemoryOutputStream : public OutputStream {
   public:
     /**
      * @brief Constructor
@@ -233,7 +233,7 @@ inline namespace v1 {
    * @ingroup core
    * @brief Compressed output stream
    */
-  class GF_API CompressedOutputStream : public OutputStream {
+  class GF_CORE_API CompressedOutputStream : public OutputStream {
   public:
     /**
      * @brief Constructor
@@ -263,7 +263,7 @@ inline namespace v1 {
    * @ingroup core
    * @brief Buffer output stream
    */
-  class GF_API BufferOutputStream : public OutputStream {
+  class GF_CORE_API BufferOutputStream : public OutputStream {
   public:
     /**
      * @brief Constructor

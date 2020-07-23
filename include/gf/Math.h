@@ -24,8 +24,6 @@
 #include <cmath>
 #include <limits>
 
-#include "Portability.h"
-
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {

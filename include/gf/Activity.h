@@ -21,7 +21,7 @@
 #ifndef GF_ACTIVITY_H
 #define GF_ACTIVITY_H
 
-#include "Portability.h"
+#include "CoreApi.h"
 #include "Time.h"
 
 namespace gf {
@@ -59,7 +59,7 @@ inline namespace v1 {
    * - gf::RepeatActivity
    * - gf::ParallelActivity
    */
-  class GF_API Activity {
+  class GF_CORE_API Activity {
   public:
     /**
      * @brief Destructor

@@ -21,6 +21,7 @@
 #ifndef GF_HEXAGON_H
 #define GF_HEXAGON_H
 
+#include "CoreApi.h"
 #include "MapCell.h"
 #include "Math.h"
 #include "Rect.h"
@@ -37,7 +38,7 @@ inline namespace v1 {
    * @ingroup game
    * @brief A helper for computing coordinates in a hexagonal map
    */
-  class GF_API HexagonHelper {
+  class GF_CORE_API HexagonHelper {
   public:
 
     /**

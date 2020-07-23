@@ -21,7 +21,7 @@
 #ifndef GF_VIEWS_H
 #define GF_VIEWS_H
 
-#include "Portability.h"
+#include "GraphicsApi.h"
 #include "View.h"
 
 namespace gf {
@@ -42,7 +42,7 @@ inline namespace v1 {
    *
    * @sa gf::AdaptativeView
    */
-  class GF_API StretchView : public AdaptativeView {
+  class GF_GRAPHICS_API StretchView : public AdaptativeView {
   public:
     /**
      * @brief Default constructor
@@ -90,7 +90,7 @@ inline namespace v1 {
    *
    * @sa gf::AdaptativeView
    */
-  class GF_API FitView : public AdaptativeView {
+  class GF_GRAPHICS_API FitView : public AdaptativeView {
   public:
     /**
      * @brief Default constructor
@@ -153,7 +153,7 @@ inline namespace v1 {
    *
    * @sa gf::AdaptativeView
    */
-  class GF_API FillView : public AdaptativeView {
+  class GF_GRAPHICS_API FillView : public AdaptativeView {
   public:
     /**
      * @brief Default constructor
@@ -217,7 +217,7 @@ inline namespace v1 {
    *
    * @sa gf::AdaptativeView
    */
-  class GF_API ExtendView : public AdaptativeView {
+  class GF_GRAPHICS_API ExtendView : public AdaptativeView {
   public:
     /**
      * @brief Default constructor
@@ -282,7 +282,7 @@ inline namespace v1 {
    *
    * @sa gf::AdaptativeView
    */
-  class GF_API LockedView : public AdaptativeView {
+  class GF_GRAPHICS_API LockedView : public AdaptativeView {
   public:
     /**
      * @brief Default constructor
@@ -351,7 +351,7 @@ inline namespace v1 {
    *
    * @sa gf::AdaptativeView, gf::Coordinates
    */
-  class GF_API ScreenView : public AdaptativeView {
+  class GF_GRAPHICS_API ScreenView : public AdaptativeView {
   public:
     /**
      * @brief Default constructor

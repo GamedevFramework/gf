@@ -24,7 +24,7 @@
 #include <cstddef>
 #include <algorithm>
 
-#include "Portability.h"
+#include "CoreApi.h"
 #include "Vector.h"
 #include "Types.h"
 
@@ -655,13 +655,13 @@ inline namespace v1 {
 
 // MSVC does not like extern template
 #ifndef _MSC_VER
-  extern template struct GF_API Matrix<float, 2, 2>;
-  extern template struct GF_API Matrix<float, 3, 3>;
-  extern template struct GF_API Matrix<float, 4, 4>;
+  extern template struct GF_CORE_API Matrix<float, 2, 2>;
+  extern template struct GF_CORE_API Matrix<float, 3, 3>;
+  extern template struct GF_CORE_API Matrix<float, 4, 4>;
 
-  extern template struct GF_API Matrix<double, 2, 2>;
-  extern template struct GF_API Matrix<double, 3, 3>;
-  extern template struct GF_API Matrix<double, 4, 4>;
+  extern template struct GF_CORE_API Matrix<double, 2, 2>;
+  extern template struct GF_CORE_API Matrix<double, 3, 3>;
+  extern template struct GF_CORE_API Matrix<double, 4, 4>;
 #endif
 
   /*

@@ -21,7 +21,7 @@
 #ifndef GF_REGION_H
 #define GF_REGION_H
 
-#include "Portability.h"
+#include "GraphicsApi.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -37,7 +37,7 @@ inline namespace v1 {
    *
    * @sa gf::RectI, gf::RenderTarget
    */
-  struct GF_API Region {
+  struct GF_GRAPHICS_API Region {
     int left;   ///< Left coordinate of the region
     int bottom; ///< Bottom coordinate of the region
     int width;  ///< Width of the region

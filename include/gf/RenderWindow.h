@@ -24,7 +24,7 @@
 #ifndef GF_RENDER_WINDOW_H
 #define GF_RENDER_WINDOW_H
 
-#include "Portability.h"
+#include "GraphicsApi.h"
 #include "RenderTarget.h"
 
 namespace gf {
@@ -36,7 +36,7 @@ inline namespace v1 {
 
   /**
    * @ingroup graphics
-   * \brief A window that can serve as a target for 2D drawing
+   * @brief A window that can serve as a target for 2D drawing
    *
    * gf::RenderWindow is the main class of the graphics module.
    * It defines an OS window that can be painted using the other
@@ -74,10 +74,10 @@ inline namespace v1 {
    * }
    * ~~~
    *
-   * \see gf::Window, gf::RenderTarget, gf::RenderTexture, gf::View
+   * @see gf::Window, gf::RenderTarget, gf::RenderTexture, gf::View
    *
    */
-  class GF_API RenderWindow : public RenderTarget {
+  class GF_GRAPHICS_API RenderWindow : public RenderTarget {
   public:
 
     /**

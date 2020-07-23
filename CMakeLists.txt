@@ -5,6 +5,11 @@ project(GF
   LANGUAGES CXX C
 )
 
+include(GenerateExportHeader)
+
+set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 if(NOT MSVC AND (NOT DEFINED CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL ""))
   message(STATUS "Setting build type to 'RelWithDebInfo' as none was specified.")
   set(CMAKE_BUILD_TYPE "RelWithDebInfo")

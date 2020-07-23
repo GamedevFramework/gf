@@ -24,6 +24,7 @@
 
 #include <functional>
 
+#include "GraphicsApi.h"
 #include "Transformable.h"
 #include "Vector.h"
 
@@ -51,7 +52,7 @@ inline namespace v1 {
    * @ingroup graphics
    * @brief The widgets abstract class
    */
-  class GF_API Widget : public Transformable {
+  class GF_GRAPHICS_API Widget : public Transformable {
   public:
     /**
      * @brief Constructor

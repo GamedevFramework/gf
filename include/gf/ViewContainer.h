@@ -23,7 +23,7 @@
 
 #include <vector>
 
-#include "Portability.h"
+#include "GraphicsApi.h"
 #include "Ref.h"
 #include "Vector.h"
 
@@ -49,7 +49,7 @@ inline namespace v1 {
    *
    * @sa gf::AdaptativeView
    */
-  class GF_API ViewContainer {
+  class GF_GRAPHICS_API ViewContainer {
   public:
     /**
      * @brief Add a view to the container

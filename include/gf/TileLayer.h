@@ -23,7 +23,7 @@
 
 #include "Array2D.h"
 #include "Flags.h"
-#include "Portability.h"
+#include "GraphicsApi.h"
 #include "Stagger.h"
 #include "Tileset.h"
 #include "TileTypes.h"
@@ -62,7 +62,7 @@ inline namespace v1 {
    * gf::TileLayer::NoTile can be used.
    *
    */
-  class GF_API TileLayer : public Transformable {
+  class GF_GRAPHICS_API TileLayer : public Transformable {
   public:
     /**
      * @brief A constant meaning that there is no tile

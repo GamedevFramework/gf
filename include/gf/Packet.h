@@ -26,8 +26,8 @@
 #include <vector>
 
 #include "Id.h"
+#include "NetApi.h"
 #include "Packet.h"
-#include "Portability.h"
 #include "Streams.h"
 #include "Serialization.h"
 #include "SerializationOps.h"
@@ -41,7 +41,7 @@ inline namespace v1 {
    * @ingroup net_sockets
    * @brief A packet of bytes
    */
-  struct GF_API Packet {
+  struct GF_NET_API Packet {
     Id type = InvalidId;
     std::vector<uint8_t> bytes;
 

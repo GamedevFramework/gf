@@ -24,8 +24,8 @@
 #include "Action.h"
 #include "EntityContainer.h"
 #include "Event.h"
+#include "GraphicsApi.h"
 #include "ModelContainer.h"
-#include "Portability.h"
 #include "RenderWindow.h"
 #include "RenderStates.h"
 #include "Time.h"
@@ -63,7 +63,7 @@ inline namespace v1 {
    *
    * @sa gf::SceneManager
    */
-  class GF_API Scene {
+  class GF_GRAPHICS_API Scene {
   public:
     /**
      * @brief Constructor

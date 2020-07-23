@@ -23,7 +23,7 @@
 
 #include <string>
 
-#include "Portability.h"
+#include "GraphicsApi.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -43,7 +43,7 @@ inline namespace v1 {
    *
    * @sa gf::Paths
    */
-  class GF_API SystemInfo {
+  class GF_GRAPHICS_API SystemInfo {
   public:
     /**
      * @brief Deleted default constructor

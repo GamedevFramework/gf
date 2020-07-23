@@ -24,8 +24,9 @@
 #include <cstddef>
 #include <functional>
 
-#include <gf/Handle.h>
-#include <gf/Rect.h>
+#include "CoreApi.h"
+#include "Handle.h"
+#include "Rect.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -59,7 +60,7 @@ inline namespace v1 {
    *
    * @sa gf::QuadTree, gf::RStarTree
    */
-  struct SpatialStructure {
+  struct GF_CORE_API SpatialStructure {
     RectF bounds;               ///< The bounds of the structure
     SpatialStructureType type;  ///< The type of the structure
     int level;                  ///< The level of the structure

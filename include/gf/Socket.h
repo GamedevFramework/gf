@@ -33,7 +33,7 @@
 
 #include "ArrayRef.h"
 #include "BufferRef.h"
-#include "Portability.h"
+#include "NetApi.h"
 #include "SocketAddress.h"
 #include "SocketGuard.h"
 
@@ -94,7 +94,7 @@ inline namespace v1 {
    *
    * @sa gf::SocketStatus
    */
-  struct SocketDataResult {
+  struct GF_NET_API SocketDataResult {
     SocketStatus status;  ///< The status of the operation
     std::size_t length;   ///< The length of sent or received data
   };
@@ -106,7 +106,7 @@ inline namespace v1 {
    *
    * @sa gf::TcpListener, gf::TcpSocket, gf::UdpSocket
    */
-  class GF_API Socket : private SocketGuard {
+  class GF_NET_API Socket : private SocketGuard {
   public:
     /**
      * @brief Destructor

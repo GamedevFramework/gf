@@ -24,7 +24,7 @@
 #ifndef GF_SHAPE_H
 #define GF_SHAPE_H
 
-#include "Portability.h"
+#include "GraphicsApi.h"
 #include "Transformable.h"
 #include "VertexArray.h"
 #include "VertexBuffer.h"
@@ -70,7 +70,7 @@ inline namespace v1 {
    * @sa gf::RectangleShape, gf::CircleShape, gf::ConvexShape
    * @sa gf::Transformable
    */
-  class GF_API Shape : public Transformable {
+  class GF_GRAPHICS_API Shape : public Transformable {
   public:
     /**
      * @brief Default constructor

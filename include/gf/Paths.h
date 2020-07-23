@@ -21,8 +21,8 @@
 #ifndef GF_PATHS_H
 #define GF_PATHS_H
 
+#include "GraphicsApi.h"
 #include "Path.h"
-#include "Portability.h"
 #include "StringRef.h"
 
 namespace gf {
@@ -36,7 +36,7 @@ inline namespace v1 {
    *
    * @sa gf::SystemInfo
    */
-  struct GF_API Paths {
+  struct GF_GRAPHICS_API Paths {
     /**
      * @brief Deleted constructor
      */

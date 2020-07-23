@@ -30,7 +30,7 @@
 #include <tuple>
 
 #include "Anchor.h"
-#include "Portability.h"
+#include "CoreApi.h"
 #include "Quarter.h"
 #include "Vector.h"
 #include "VectorOps.h"
@@ -535,10 +535,10 @@ inline namespace v1 {
 
 // MSVC does not like extern template
 #ifndef _MSC_VER
-  extern template struct GF_API Rect<float>;
-  extern template struct GF_API Rect<double>;
-  extern template struct GF_API Rect<int>;
-  extern template struct GF_API Rect<unsigned>;
+  extern template struct GF_CORE_API Rect<float>;
+  extern template struct GF_CORE_API Rect<double>;
+  extern template struct GF_CORE_API Rect<int>;
+  extern template struct GF_CORE_API Rect<unsigned>;
 #endif
 
   /**

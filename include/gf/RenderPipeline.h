@@ -24,7 +24,7 @@
 #include <vector>
 
 #include "Effects.h"
-#include "Portability.h"
+#include "GraphicsApi.h"
 #include "RenderTarget.h"
 #include "Ref.h"
 
@@ -67,7 +67,7 @@ inline namespace v1 {
    *
    * @sa gf::Effect
    */
-  class GF_API RenderPipeline : public RenderTarget {
+  class GF_GRAPHICS_API RenderPipeline : public RenderTarget {
   public:
     /**
      * @brief Constructor

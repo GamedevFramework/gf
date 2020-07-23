@@ -24,7 +24,7 @@
 #ifndef GF_RENDER_TEXTURE_H
 #define GF_RENDER_TEXTURE_H
 
-#include "Portability.h"
+#include "GraphicsApi.h"
 #include "RenderTarget.h"
 
 namespace gf {
@@ -95,7 +95,7 @@ inline namespace v1 {
    *
    * @sa gf::RenderTarget, gf::RenderWindow, gf::View, gf::Texture
    */
-  class GF_API RenderTexture : public RenderTarget {
+  class GF_GRAPHICS_API RenderTexture : public RenderTarget {
   public:
     /**
      * @brief Create the render-texture

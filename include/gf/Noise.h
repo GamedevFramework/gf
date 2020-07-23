@@ -21,7 +21,7 @@
 #ifndef GF_NOISE_H
 #define GF_NOISE_H
 
-#include "Portability.h"
+#include "CoreApi.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -32,7 +32,7 @@ inline namespace v1 {
    * @ingroup core
    * @brief 2D A noise function
    */
-  class GF_API Noise2D {
+  class GF_CORE_API Noise2D {
   public:
     /**
      * @brief Virtual destructor
@@ -68,7 +68,7 @@ inline namespace v1 {
    * @ingroup core
    * @brief 3D A noise function
    */
-  class GF_API Noise3D {
+  class GF_CORE_API Noise3D {
   public:
     /**
      * @brief Virtual destructor

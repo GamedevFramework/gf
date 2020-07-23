@@ -24,7 +24,7 @@
 #include <cstdint>
 #include <vector>
 
-#include "Portability.h"
+#include "GraphicsApi.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -141,7 +141,7 @@ inline namespace v1 {
    * @ingroup window
    * @brief Some gamepad related functions
    */
-  class GF_API Gamepad {
+  class GF_GRAPHICS_API Gamepad {
   public:
     /**
      * @brief Get the axis name
@@ -242,7 +242,7 @@ inline namespace v1 {
    *
    * @sa gf::Gamepad
    */
-  class GF_API GamepadTracker {
+  class GF_GRAPHICS_API GamepadTracker {
   public:
     /**
      * @brief Constructor

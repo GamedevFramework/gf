@@ -27,8 +27,8 @@
 #include <vector>
 
 #include "ArrayRef.h"
+#include "CoreApi.h"
 #include "Message.h"
-#include "Portability.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -72,7 +72,7 @@ inline namespace v1 {
    *
    * @sa gf::Message, gf::MessageHandler, gf::Id
    */
-  class GF_API MessageManager {
+  class GF_CORE_API MessageManager {
   public:
     /**
      * @brief Constructor

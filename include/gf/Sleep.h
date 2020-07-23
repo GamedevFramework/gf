@@ -24,7 +24,7 @@
 #ifndef GF_SLEEP_H
 #define GF_SLEEP_H
 
-#include "Portability.h"
+#include "CoreApi.h"
 #include "Time.h"
 
 namespace gf {
@@ -41,7 +41,7 @@ inline namespace v1 {
    *
    * @param duration The time to sleep
    */
-  GF_API void sleep(Time duration);
+  GF_CORE_API void sleep(Time duration);
 
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

@@ -27,10 +27,8 @@
 #include <utility>
 #include <vector>
 
-#include "Log.h"
-
+#include "CoreApi.h"
 #include "Math.h"
-#include "Portability.h"
 #include "Range.h"
 #include "SerializationFwd.h"
 #include "Vector.h"
@@ -277,8 +275,8 @@ inline namespace v1 {
 
 // MSVC does not like extern template
 #ifndef _MSC_VER
-  extern template class GF_API Index2D<unsigned>;
-  extern template class GF_API Index2D<int>;
+  extern template class GF_CORE_API Index2D<unsigned>;
+  extern template class GF_CORE_API Index2D<int>;
 #endif
 
   /**

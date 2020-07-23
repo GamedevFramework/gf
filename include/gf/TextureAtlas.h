@@ -24,8 +24,8 @@
 #include <map>
 #include <string>
 
+#include "GraphicsApi.h"
 #include "Path.h"
-#include "Portability.h"
 #include "Rect.h"
 
 namespace gf {
@@ -62,7 +62,7 @@ inline namespace v1 {
    * @sa gf::Texture
    * @sa [Texture Atlas (wikipedia)](https://en.wikipedia.org/wiki/Texture_atlas)
    */
-  class GF_API TextureAtlas {
+  class GF_GRAPHICS_API TextureAtlas {
   public:
     /**
      * @brief Default constructor

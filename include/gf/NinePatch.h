@@ -21,7 +21,7 @@
 #ifndef GF_NINE_PATCH_H
 #define GF_NINE_PATCH_H
 
-#include "Portability.h"
+#include "GraphicsApi.h"
 #include "Transformable.h"
 #include "Vertex.h"
 #include "VertexBuffer.h"
@@ -43,7 +43,7 @@ inline namespace v1 {
    * @sa [Android Developers: Draw 9-patch](http://developer.android.com/tools/help/draw9patch.html)
    * @sa [Android Developers: Nine-patch](http://developer.android.com/guide/topics/graphics/2d-graphics.html#nine-patch)
    */
-  class GF_API NinePatch : public Transformable {
+  class GF_GRAPHICS_API NinePatch : public Transformable {
   public:
     /**
      * @brief Default constructor

@@ -23,11 +23,10 @@
 
 #include <vector>
 
-#include <gf/Handle.h>
-#include <gf/Portability.h>
-#include <gf/Rect.h>
-
-#include "Types.h"
+#include "CoreApi.h"
+#include "Handle.h"
+#include "Rect.h"
+#include "SpatialTypes.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -40,7 +39,7 @@ inline namespace v1 {
    *
    * @sa gf::Quadtree, gf::RStarTree
    */
-  class GF_API SimpleSpatialIndex {
+  class GF_CORE_API SimpleSpatialIndex {
   public:
     /**
      * @brief Constructor

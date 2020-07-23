@@ -27,9 +27,9 @@
 #include <cstdint>
 
 #include "ArrayRef.h"
+#include "GraphicsApi.h"
 #include "GraphicsHandle.h"
 #include "Path.h"
-#include "Portability.h"
 #include "Rect.h"
 #include "Vector.h"
 
@@ -42,7 +42,7 @@ inline namespace v1 {
   class InputStream;
 
   template<>
-  struct GF_API GraphicsTrait<GraphicsTag::Texture> {
+  struct GF_GRAPHICS_API GraphicsTrait<GraphicsTag::Texture> {
     static void gen(int n, unsigned* resources);
     static void del(int n, const unsigned* resources);
   };
@@ -72,7 +72,7 @@ inline namespace v1 {
    *
    * @sa gf::Texture, gf::AlphaTexture
    */
-  class GF_API BareTexture {
+  class GF_GRAPHICS_API BareTexture {
   public:
     /**
      * @brief Format of the texture
@@ -306,7 +306,7 @@ inline namespace v1 {
    *
    * @sa gf::Sprite, gf::Image, gf::RenderTexture
    */
-  class GF_API Texture : public BareTexture {
+  class GF_GRAPHICS_API Texture : public BareTexture {
   public:
     /**
      * @brief Constructor
@@ -388,7 +388,7 @@ inline namespace v1 {
    *
    * This texture is used internally by gf::Font
    */
-  class GF_API AlphaTexture : public BareTexture {
+  class GF_GRAPHICS_API AlphaTexture : public BareTexture {
   public:
     /**
      * @brief Constructor

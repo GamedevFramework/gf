@@ -30,7 +30,7 @@
 #include <sys/socket.h>
 #endif
 
-#include "Portability.h"
+#include "NetApi.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -75,7 +75,7 @@ inline namespace v1 {
    *
    * In other libraries, it can also be called "endpoint".
    */
-  class GF_API SocketAddress {
+  class GF_NET_API SocketAddress {
   public:
     /**
      * @brief Default constructor

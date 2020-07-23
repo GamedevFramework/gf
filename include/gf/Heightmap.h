@@ -25,9 +25,9 @@
 
 #include "Array2D.h"
 #include "ColorRamp.h"
+#include "CoreApi.h"
 #include "Image.h"
 #include "Noise.h"
-#include "Portability.h"
 #include "Rect.h"
 
 namespace gf {
@@ -41,7 +41,7 @@ inline namespace v1 {
    *
    * @sa gf::midpointDisplacement2D(), gf::diamondSquare2D()
    */
-  class GF_API Heightmap {
+  class GF_CORE_API Heightmap {
   public:
     /**
      * @brief Default constructor

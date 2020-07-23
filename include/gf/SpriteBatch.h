@@ -24,7 +24,7 @@
 #include <cstddef>
 #include <array>
 
-#include "Portability.h"
+#include "GraphicsApi.h"
 #include "RenderStates.h"
 #include "Vertex.h"
 
@@ -59,7 +59,7 @@ inline namespace v1 {
    *
    * @sa gf::Sprite
    */
-  class GF_API SpriteBatch {
+  class GF_GRAPHICS_API SpriteBatch {
   public:
     /**
      * @brief Constructor

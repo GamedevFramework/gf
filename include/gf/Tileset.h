@@ -21,7 +21,7 @@
 #ifndef GF_TILESET_H
 #define GF_TILESET_H
 
-#include "Portability.h"
+#include "GraphicsApi.h"
 #include "Texture.h"
 #include "Vector.h"
 
@@ -36,7 +36,7 @@ inline namespace v1 {
    *
    * @sa gf::TileLayer
    */
-  class GF_API Tileset {
+  class GF_GRAPHICS_API Tileset {
   public:
     Tileset();
 

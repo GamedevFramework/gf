@@ -21,16 +21,15 @@
 #ifndef GF_HANDLE_H
 #define GF_HANDLE_H
 
+#include "CoreApi.h"
 #include "Id.h"
-
-#include "Log.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
 #endif
 
-  class Handle {
+  class GF_CORE_API Handle {
   public:
     Handle() = default;
 

@@ -21,7 +21,7 @@
 #ifndef GF_TYPES_H
 #define GF_TYPES_H
 
-#include "Portability.h"
+#include "CoreApi.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -34,7 +34,7 @@ inline namespace v1 {
    *
    * @sa gf::None, gf::AllType
    */
-  struct GF_API NoneType { };
+  struct GF_CORE_API NoneType { };
 
   /**
    * @ingroup core
@@ -50,7 +50,7 @@ inline namespace v1 {
    *
    * @sa gf::All, gf::NoneType
    */
-  struct GF_API AllType {  };
+  struct GF_CORE_API AllType {  };
 
   /**
    * @ingroup core
@@ -66,7 +66,7 @@ inline namespace v1 {
    *
    * @sa gf::Any, gf::AllType, gf::NoneType
    */
-  struct GF_API AnyType {  };
+  struct GF_CORE_API AnyType {  };
 
   /**
    * @ingroup core
@@ -82,7 +82,7 @@ inline namespace v1 {
    *
    * @sa gf::Zero
    */
-  struct GF_API ZeroType { };
+  struct GF_CORE_API ZeroType { };
 
   /**
    * @ingroup core

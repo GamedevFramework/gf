@@ -21,7 +21,7 @@
 #ifndef GF_BUFFERED_GEOMETRY_H
 #define GF_BUFFERED_GEOMETRY_H
 
-#include "Portability.h"
+#include "GraphicsApi.h"
 #include "Rect.h"
 #include "Texture.h"
 #include "Transformable.h"
@@ -52,7 +52,7 @@ inline namespace v1 {
    *
    * @sa gf::VertexBuffer
    */
-  class GF_API BufferedGeometry : public Transformable {
+  class GF_GRAPHICS_API BufferedGeometry : public Transformable {
   public:
     /**
      * @brief Default constructor

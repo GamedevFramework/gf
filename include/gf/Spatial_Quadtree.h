@@ -24,12 +24,11 @@
 #include <cassert>
 #include <vector>
 
-#include <gf/Handle.h>
-#include <gf/Portability.h>
-#include <gf/Rect.h>
-
 #include "BlockAllocator.h"
-#include "Types.h"
+#include "CoreApi.h"
+#include "Handle.h"
+#include "Rect.h"
+#include "SpatialTypes.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -43,7 +42,7 @@ inline namespace v1 {
    * @sa gf::RStarTree
    * @sa [Quadtree - Wikipedia](https://en.wikipedia.org/wiki/Quadtree)
    */
-  class GF_API Quadtree {
+  class GF_CORE_API Quadtree {
   public:
     /**
      * @brief Constructor

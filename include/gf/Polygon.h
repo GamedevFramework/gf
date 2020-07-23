@@ -24,10 +24,10 @@
 #include <vector>
 
 #include "ArrayRef.h"
+#include "CoreApi.h"
 #include "Math.h"
 #include "Matrix.h"
 #include "PointSequence.h"
-#include "Portability.h"
 #include "SerializationFwd.h"
 #include "Vector.h"
 #include "Winding.h"
@@ -44,7 +44,7 @@ inline namespace v1 {
    * @brief A convex polygon
    *
    */
-  class GF_API Polygon : public PointSequence {
+  class GF_CORE_API Polygon : public PointSequence {
   public:
     /**
      * @brief Default constructor

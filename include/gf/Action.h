@@ -27,9 +27,9 @@
 
 #include "Control.h"
 #include "Gamepad.h"
+#include "GraphicsApi.h"
 #include "Keyboard.h"
 #include "Mouse.h"
-#include "Portability.h"
 #include "Ref.h"
 
 namespace gf {
@@ -50,7 +50,7 @@ inline namespace v1 {
    *
    * @sa gf::Control
    */
-  class GF_API Action {
+  class GF_GRAPHICS_API Action {
   public:
     /**
      * @brief Construct an action with a name.
@@ -237,7 +237,7 @@ inline namespace v1 {
    * @brief A set of actions.
    *
    */
-  class GF_API ActionContainer {
+  class GF_GRAPHICS_API ActionContainer {
   public:
     /**
      * @brief Add an action.

@@ -21,6 +21,7 @@
 #ifndef GF_STAGGER_H
 #define GF_STAGGER_H
 
+#include "CoreApi.h"
 #include "MapCell.h"
 #include "Vector.h"
 
@@ -33,7 +34,7 @@ inline namespace v1 {
    * @ingroup game
    * @brief A helper for computing coordinates in a staggered map
    */
-  class StaggerHelper {
+  class GF_CORE_API StaggerHelper {
   public:
     StaggerHelper(MapCellAxis axis, MapCellIndex index)
     : m_axis(axis)

@@ -29,7 +29,7 @@
 #include <poll.h>
 #endif
 
-#include "Portability.h"
+#include "NetApi.h"
 #include "Socket.h"
 #include "SocketGuard.h"
 #include "Time.h"
@@ -56,7 +56,7 @@ inline namespace v1 {
    * @snippet snippets/doc_class_socket_selector.cc socket_selector
    *
    */
-  class GF_API SocketSelector : private SocketGuard {
+  class GF_NET_API SocketSelector : private SocketGuard {
   public:
     /**
      * @brief Constructor

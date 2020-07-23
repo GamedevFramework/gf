@@ -26,8 +26,8 @@
 
 #include <cstdint>
 
+#include "GraphicsApi.h"
 #include "Path.h"
-#include "Portability.h"
 #include "Vector.h"
 
 struct SDL_Cursor;
@@ -60,7 +60,7 @@ inline namespace v1 {
    *
    * @see gf::Window::setMouseCursor()
    */
-  class GF_API Cursor {
+  class GF_GRAPHICS_API Cursor {
   public:
 
     /**

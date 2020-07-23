@@ -25,8 +25,8 @@
 #define GF_RENDER_STATES_H
 
 #include "Blend.h"
+#include "GraphicsApi.h"
 #include "Matrix.h"
-#include "Portability.h"
 #include "Transform.h"
 
 namespace gf {
@@ -79,7 +79,7 @@ inline namespace v1 {
    *
    * @sa gf::RenderTarget, gf::Drawable
    */
-  struct GF_API RenderStates {
+  struct GF_GRAPHICS_API RenderStates {
     BlendMode mode = BlendAlpha; ///< The blending mode
     Matrix3f transform = identityTransform(); ///< The transform matrix
     const BareTexture *texture [2] = { nullptr, nullptr }; ///< The texture

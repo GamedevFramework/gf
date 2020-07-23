@@ -25,8 +25,8 @@
 #define GF_SPRITE_H
 
 #include "BasicSprite.h"
+#include "GraphicsApi.h"
 #include "Transformable.h"
-#include "Portability.h"
 #include "Vertex.h"
 #include "VertexBuffer.h"
 
@@ -72,7 +72,7 @@ inline namespace v1 {
    *
    * @sa gf::Texture, gf::Transformable, gf::SpriteBatch
    */
-  class GF_API Sprite : public Transformable {
+  class GF_GRAPHICS_API Sprite : public Transformable {
   public:
     /**
      * @brief Default constructor

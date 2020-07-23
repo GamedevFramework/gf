@@ -23,7 +23,6 @@
 
 #include <utility>
 
-#include "Portability.h"
 #include "Types.h"
 
 namespace gf {

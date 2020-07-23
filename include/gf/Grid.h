@@ -21,8 +21,8 @@
 #ifndef GF_GRID_H
 #define GF_GRID_H
 
+#include "GraphicsApi.h"
 #include "Hexagon.h"
-#include "Portability.h"
 #include "Transformable.h"
 #include "Vector.h"
 #include "VertexArray.h"
@@ -37,7 +37,7 @@ inline namespace v1 {
    * @ingroup graphics
    * @brief A square grid
    */
-  class GF_API SquareGrid : public gf::Transformable {
+  class GF_GRAPHICS_API SquareGrid : public gf::Transformable {
   public:
     /**
      * @brief Constructor
@@ -167,7 +167,7 @@ inline namespace v1 {
    * @ingroup graphics
    * @brief A hexagonal grid
    */
-  class GF_API HexagonGrid : public gf::Transformable {
+  class GF_GRAPHICS_API HexagonGrid : public gf::Transformable {
   public:
     /**
      * @brief Constructor
