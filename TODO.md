@@ -5,7 +5,7 @@ This file is a list of ideas for gf. Some of them will eventually be in gf. Othe
 ## core
 
 - (vocabulary) merge `ArrayRef` and `BufferRef` in `Span`
-- (vocabulary) rename `StringRef` in `ZStringView`
+- (vocabulary) rename `StringRef` in `StringView`
 - (geometry) add more algorithms from [here](http://geomalgorithms.com/algorithms.html)
 - (spatial) add linear and quadratic RTree
 - (color) color interpolation (and color space)
@@ -37,7 +37,6 @@ This file is a list of ideas for gf. Some of them will eventually be in gf. Othe
   - rename `Effect` in `PostProcEffect`
 - (scene) create `GameManager` = `SceneManager` with `Random`, `ResourceManager`, `MessageManager`, etc.
 - (console) make style a class and remove internal style state
-- (ui) remove `UI`
 - (physics) remove `PhysicsModel`, `PhysicsGeometry`, `PhysicsBody`
 - (drawable) Remove `Drawable`, make it a named requirement (or a concept in the future)
 
@@ -52,7 +51,6 @@ This file is a list of ideas for gf. Some of them will eventually be in gf. Othe
 
 - (docs) split gf_dev_doc by modules (core, graphics, net)
 - (tests) split gf_tests by modules (core, net)
-- (docs) reorganize documentation in finer modules
 - (portability) consider using [hedley](https://nemequ.github.io/hedley/)
   - blocking bug: nemequ/hedley#35
 - (versions) go with C++17
