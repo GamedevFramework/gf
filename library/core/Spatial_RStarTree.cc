@@ -637,9 +637,9 @@ inline namespace v1 {
       return coveringIndex;
     }
 
-    std::sort(node.members.begin(), node.members.end(), ExtentLengthEnlargement<Node::Member>(bounds));
+    std::sort(node.members.begin(), node.members.end(), ExtentLengthEnlargement<Member>(bounds));
 
-    OverlapExtentLengthEnlargement<Node::Member> extentDistanceEnlargement(bounds, node.members.front());
+    OverlapExtentLengthEnlargement<Member> extentDistanceEnlargement(bounds, node.members.front());
 
     std::size_t p;
 
@@ -657,9 +657,9 @@ inline namespace v1 {
     std::size_t candidateIndex = NullIndex;
 
     if (existsEmptyVolumeExtension(nodeIndex, bounds)) {
-      candidateIndex = findCandidates<OverlapExtentLengthEnlargement<Node::Member>>(nodeIndex, 0, p, bounds, candidates);
+      candidateIndex = findCandidates<OverlapExtentLengthEnlargement<Member>>(nodeIndex, 0, p, bounds, candidates);
     } else {
-      candidateIndex = findCandidates<OverlapVolumeEnlargement<Node::Member>>(nodeIndex, 0, p, bounds, candidates);
+      candidateIndex = findCandidates<OverlapVolumeEnlargement<Member>>(nodeIndex, 0, p, bounds, candidates);
     }
 
     if (candidateIndex != NullIndex) {
@@ -783,10 +783,10 @@ inline namespace v1 {
 
     switch (split.order) {
       case SplitOrder::Min:
-        std::sort(node.members.begin(), node.members.end(), MemberMinAxisComparator<Node::Member>(split.axis));
+        std::sort(node.members.begin(), node.members.end(), MemberMinAxisComparator<Member>(split.axis));
         break;
       case SplitOrder::Max:
-        std::sort(node.members.begin(), node.members.end(), MemberMaxAxisComparator<Node::Member>(split.axis));
+        std::sort(node.members.begin(), node.members.end(), MemberMaxAxisComparator<Member>(split.axis));
         break;
     }
 
@@ -826,10 +826,10 @@ inline namespace v1 {
 
     switch (split.order) {
       case SplitOrder::Min:
-        std::sort(node.members.begin(), node.members.end(), MemberMinAxisComparator<Node::Member>(split.axis));
+        std::sort(node.members.begin(), node.members.end(), MemberMinAxisComparator<Member>(split.axis));
         break;
       case SplitOrder::Max:
-        std::sort(node.members.begin(), node.members.end(), MemberMaxAxisComparator<Node::Member>(split.axis));
+        std::sort(node.members.begin(), node.members.end(), MemberMaxAxisComparator<Member>(split.axis));
         break;
     }
 

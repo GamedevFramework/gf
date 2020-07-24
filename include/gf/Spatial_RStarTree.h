@@ -150,15 +150,15 @@ inline namespace v1 {
 
     BlockAllocator<Entry> m_entries;
 
+    struct Member {
+      RectF bounds;
+      std::size_t index;
+    };
+
     struct Node {
       enum NodeType {
         Branch,
         Leaf,
-      };
-
-      struct Member {
-        RectF bounds;
-        std::size_t index;
       };
 
       RectF bounds;
