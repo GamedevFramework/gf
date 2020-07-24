@@ -30,7 +30,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_renderers
    * @brief Kind of primitives to render
    *
    * gf::PrimitiveType represents a kind of primitive to render. The primitives

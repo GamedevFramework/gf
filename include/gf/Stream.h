@@ -37,7 +37,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup core
+   * @ingroup core_streams
    * @brief Abstract class for custom file input streams
    *
    * This class allows users to define their own stream input sources from
@@ -125,7 +125,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup core
+   * @ingroup core_streams
    * @brief Abstract class for custom file output streams
    *
    * This class allows users to define their own stream output sinks to

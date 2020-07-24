@@ -31,6 +31,15 @@ namespace gf {
 inline namespace v1 {
 #endif
 
+  /**
+   * @ingroup graphics_tiles
+   * @brief Create a tile layer object from a TMX tile layer
+   *
+   * @param map The TMX map
+   * @param layer The TMX tile layer
+   * @param resources The resource manager
+   * @returns A tile layer object
+   */
   GF_GRAPHICS_API TileLayer makeTileLayer(const TmxLayers& map, const TmxTileLayer& layer, ResourceManager& resources);
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

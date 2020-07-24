@@ -34,7 +34,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief General purpose math matrix
    *
    * gf::Matrix represents a matrix with `ROWS` rows and `COLS` columns. The
@@ -128,7 +128,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief A 2x2 matrix
    *
    * This specialization of gf::Matrix handles linear transformation of 2D
@@ -248,7 +248,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief A 3x3 matrix
    *
    * This specialization of gf::Matrix handles affine transformation of 2D
@@ -404,7 +404,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief A 4x4 matrix
    *
    * This specialization of gf::Matrix handles affine transformation of 3D
@@ -606,7 +606,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief A float square matrix of size 2
    *
    * @sa gf::Matrix, gf::Matrix<T, 2, 2>
@@ -614,7 +614,7 @@ inline namespace v1 {
   using Matrix2f = Matrix<float, 2, 2>;
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief A double square matrix of size 2
    *
    * @sa gf::Matrix, gf::Matrix<T, 2, 2>
@@ -622,7 +622,7 @@ inline namespace v1 {
   using Matrix2d = Matrix<double, 2, 2>;
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief A float square matrix of size 3
    *
    * @sa gf::Matrix, gf::Matrix<T, 3, 3>
@@ -630,7 +630,7 @@ inline namespace v1 {
   using Matrix3f = Matrix<float, 3, 3>;
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief A double square matrix of size 3
    *
    * @sa gf::Matrix, gf::Matrix<T, 3, 3>
@@ -638,7 +638,7 @@ inline namespace v1 {
   using Matrix3d = Matrix<double, 3, 3>;
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief A float square matrix of size 4
    *
    * @sa gf::Matrix, gf::Matrix<T, 4, 4>
@@ -646,7 +646,7 @@ inline namespace v1 {
   using Matrix4f = Matrix<float, 4, 4>;
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief A double square matrix of size 4
    *
    * @sa gf::Matrix, gf::Matrix<T, 4, 4>

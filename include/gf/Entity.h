@@ -33,7 +33,7 @@ inline namespace v1 {
   class RenderTarget;
 
   /**
-   * @ingroup game
+   * @ingroup graphics_entities
    * @brief A game entity
    *
    * gf::Entity represents a game entity, i.e. an object that is updated
@@ -61,7 +61,7 @@ inline namespace v1 {
      */
     Entity(int priority = 0)
     : m_priority(priority)
-    , m_liveness(Liveness::ALIVE)
+    , m_liveness(Liveness::Alive)
     {
     }
 
@@ -100,7 +100,7 @@ inline namespace v1 {
      * @sa setAlive(), kill();
      */
     bool isAlive() const {
-      return m_liveness == Liveness::ALIVE;
+      return m_liveness == Liveness::Alive;
     }
 
     /**
@@ -109,7 +109,7 @@ inline namespace v1 {
      * This function can be called to revive an entity that has been killed.
      */
     void setAlive() {
-      m_liveness = Liveness::ALIVE;
+      m_liveness = Liveness::Alive;
     }
 
     /**
@@ -119,7 +119,7 @@ inline namespace v1 {
      * not be updated or rendered.
      */
     void kill() {
-      m_liveness = Liveness::DEAD;
+      m_liveness = Liveness::Dead;
     }
 
     /** @} */
@@ -147,8 +147,8 @@ inline namespace v1 {
 
   private:
     enum class Liveness : int {
-      ALIVE,
-      DEAD,
+      Alive,
+      Dead,
     };
 
     int m_priority;

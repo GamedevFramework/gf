@@ -30,7 +30,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup window
+   * @ingroup graphics_devices
    * @brief Modifier enumeration
    *
    * @sa gf::Modifiers
@@ -43,7 +43,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup window
+   * @ingroup graphics_devices
    * @brief Scancodes
    *
    * These codes corresponds to [USB key codes](http://www.usb.org/developers/hidpage/Hut1_12v2.pdf).
@@ -274,7 +274,7 @@ inline namespace v1 {
 #endif // DOXYGEN_SHOULD_SKIP_THIS
 
   /**
-   * @ingroup window
+   * @ingroup graphics_devices
    * @brief Keycodes
    */
   enum class Keycode : int {
@@ -492,7 +492,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup window
+   * @ingroup graphics_devices
    * @brief Some keyboard related functions
    */
   struct GF_GRAPHICS_API Keyboard {

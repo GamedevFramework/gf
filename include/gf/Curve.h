@@ -36,7 +36,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_curves
    * @brief A curve is a one dimension object
    *
    * A curve is similar to a shape but for one dimension objects like lines,

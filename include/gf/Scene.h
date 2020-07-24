@@ -39,7 +39,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_scenes
    * @brief A scene in the game
    *
    * A scene is a set of entities that are handled together in the game. A

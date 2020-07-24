@@ -34,9 +34,8 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup window
-   * @brief gf::Clipboard provides an interface for getting and setting the
-   * contents of the system clipboard.
+   * @ingroup graphics_window_monitor
+   * @brief An interface for getting and setting the contents of the system clipboard.
    *
    * Usage example:
    * @code

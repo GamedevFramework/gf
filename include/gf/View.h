@@ -37,7 +37,7 @@ inline namespace v1 {
   class RenderTarget;
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_views
    * @brief 2D camera that defines what region is shown on framebuffer
    *
    * gf::View defines a camera in the 2D scene. This is a
@@ -364,7 +364,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_views
    * @brief Adaptative view
    *
    * An adaptative view is a view that adapts automatically to framebuffer
@@ -452,7 +452,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_views
    * @brief A view adaptor for zooming/moving with the mouse
    */
   class GF_GRAPHICS_API ZoomingViewAdaptor {

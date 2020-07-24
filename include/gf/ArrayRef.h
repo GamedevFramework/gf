@@ -31,7 +31,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup core
+   * @ingroup core_vocabulary
    * @brief A constant reference to an array and its size
    *
    * This class stores a pointer to some data and its size. It can be built
@@ -192,7 +192,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup core
+   * @ingroup core_vocabulary
    * @brief Create a constant reference to an array
    *
    * @param data A pointer to the elements in the array

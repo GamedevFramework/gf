@@ -36,7 +36,7 @@ inline namespace v1 {
   struct Event;
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_views
    * @brief A container of views
    *
    * A view manager handles several adaptive views. It can update all the

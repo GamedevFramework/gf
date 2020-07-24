@@ -31,7 +31,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup game
+   * @ingroup graphics_window_monitor
    * @brief A shared OpenGL context with the main thread
    *
    * This class is useful for load textures asynchronously.

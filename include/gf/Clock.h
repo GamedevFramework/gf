@@ -35,7 +35,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup core
+   * @ingroup core_system
    * @brief Utility class that measures the elapsed time
    *
    * gf::Clock is a lightweight class for measuring time.

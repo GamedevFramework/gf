@@ -36,7 +36,7 @@ inline namespace v1 {
   struct Vertex;
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_sprite
    * @brief A basic sprite
    *
    * You should use gf::Sprite instead.

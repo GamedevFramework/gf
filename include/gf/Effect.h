@@ -30,7 +30,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_post_proc
    * @brief A post-processing effect
    *
    * @sa gf::PostProcessing
@@ -59,15 +59,6 @@ inline namespace v1 {
     {
     }
 
-  };
-
-  class GF_GRAPHICS_API TransitionEffect : public Effect {
-
-  protected:
-    TransitionEffect(const char *vertexShader, const char *fragmentShader);
-
-  public:
-    void setProgress(float progress);
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

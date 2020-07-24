@@ -33,7 +33,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_renderers
    * @brief Target for off-screen 2D rendering into a texture
    *
    * gf::RenderTexture is the little brother of gf::RenderWindow.

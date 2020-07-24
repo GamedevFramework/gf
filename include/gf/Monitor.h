@@ -34,7 +34,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup window
+   * @ingroup graphics_window_monitor
    * @brief A video mode
    *
    */
@@ -45,7 +45,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup window
+   * @ingroup graphics_window_monitor
    * @brief A monitor
    */
   class GF_GRAPHICS_API Monitor {

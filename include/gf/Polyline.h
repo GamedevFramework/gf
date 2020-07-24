@@ -37,7 +37,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief A polyline
    *
    * A polyline is a set of consecutive segments. It is defined by the points

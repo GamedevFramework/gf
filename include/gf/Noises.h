@@ -40,7 +40,7 @@ inline namespace v1 {
   class Random;
 
   /**
-   * @ingroup core
+   * @ingroup core_procedural_generation
    * @brief Value 2D noise
    *
    * [Value noise](https://en.wikipedia.org/wiki/Value_noise) is a
@@ -70,7 +70,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup core
+   * @ingroup core_procedural_generation
    * @brief Gradient 2D noise
    *
    * [Gradient noise](https://en.wikipedia.org/wiki/Gradient_noise) is a
@@ -99,7 +99,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup core
+   * @ingroup core_procedural_generation
    * @brief Gradient 3D noise
    *
    * [Gradient noise](https://en.wikipedia.org/wiki/Gradient_noise) is a
@@ -128,7 +128,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup core
+   * @ingroup core_procedural_generation
    * @brief Better gradient 2D noise
    *
    * An implementation of the better gradient noise of Kensler et al.,
@@ -157,7 +157,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup core
+   * @ingroup core_procedural_generation
    * @brief Fractal 2D noise
    *
    * Fractal noise is based of fractional Brownian motion (fBm). It consists
@@ -192,7 +192,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup core
+   * @ingroup core_procedural_generation
    * @brief Fractal 3D noise
    *
    * Fractal noise is based of fractional Brownian motion (fBm). It consists
@@ -226,7 +226,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup core
+   * @ingroup core_procedural_generation
    * @brief Perlin 2D noise
    *
    * [Perlin noise](https://en.wikipedia.org/wiki/Perlin_noise) is the
@@ -253,7 +253,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup core
+   * @ingroup core_procedural_generation
    * @brief Perlin 3D noise
    *
    * [Perlin noise](https://en.wikipedia.org/wiki/Perlin_noise) is the
@@ -281,7 +281,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup core
+   * @ingroup core_procedural_generation
    * @brief Simplex 2D noise
    *
    * [Simplex noise](https://en.wikipedia.org/wiki/Simplex_noise) is a lattice
@@ -311,7 +311,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup core
+   * @ingroup core_procedural_generation
    * @brief OpenSimplex 2D noise
    *
    * [OpenSimplex noise](https://en.wikipedia.org/wiki/OpenSimplex_noise) is a lattice
@@ -337,7 +337,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup core
+   * @ingroup core_procedural_generation
    * @brief OpenSimplex3D noise
    *
    * [OpenSimplex noise](https://en.wikipedia.org/wiki/OpenSimplex_noise) is a lattice
@@ -363,7 +363,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup core
+   * @ingroup core_procedural_generation
    * @brief Wavelet 3D noise
    *
    * @sa [Wavelet Noise. Robert L. Cook, Tony DeRose, Pixar Animation Studios.](https://graphics.pixar.com/library/WaveletNoise/paper.pdf)
@@ -386,7 +386,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup core
+   * @ingroup core_procedural_generation
    * @brief Worley 2D noise
    *
    * [Worley noise](https://en.wikipedia.org/wiki/Worley_noise) is a point
@@ -416,7 +416,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup core
+   * @ingroup core_procedural_generation
    * @brief Multi Fractal 2D noise
    *
    */
@@ -447,7 +447,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup core
+   * @ingroup core_procedural_generation
    * @brief Hetero Terrain 2D noise
    *
    */
@@ -479,7 +479,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup core
+   * @ingroup core_procedural_generation
    * @brief Hybrid Multifractal 2D noise
    *
    */
@@ -511,7 +511,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup core
+   * @ingroup core_procedural_generation
    * @brief Ridged Multifractal 2D noise
    *
    */
@@ -545,7 +545,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup core
+   * @ingroup core_procedural_generation
    * @brief An adapter that make a 2D noise from a 3D noise
    *
    * The 3D point is taken on a plane defined by a normal and a point. The

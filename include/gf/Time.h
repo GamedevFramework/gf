@@ -37,7 +37,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup core
+   * @ingroup core_system
    * @brief Represents a time value
    *
    * gf::Time encapsulates a time value in a flexible way.
@@ -220,7 +220,7 @@ inline namespace v1 {
   namespace literals {
 
     /**
-     * @ingroup core
+     * @ingroup core_system
      * @brief User defined operator for creating times in seconds
      *
      * To use it, you have to use the `gf::literals` namespace:
@@ -234,7 +234,7 @@ inline namespace v1 {
     }
 
     /**
-     * @ingroup core
+     * @ingroup core_system
      * @brief User defined operator for creating times in milliseconds
      *
      * To use it, you have to use the `gf::literals` namespace:
@@ -248,7 +248,7 @@ inline namespace v1 {
     }
 
     /**
-     * @ingroup core
+     * @ingroup core_system
      * @brief User defined operator for creating times in microseconds
      *
      * To use it, you have to use the `gf::literals` namespace:

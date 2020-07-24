@@ -30,7 +30,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_segues
    * @brief A fade to black segue effect
    */
   class GF_GRAPHICS_API BlackoutSegueEffect : public SegueEffect {
@@ -42,7 +42,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_segues
    * @brief A fade segue effect
    */
   class GF_GRAPHICS_API FadeSegueEffect : public SegueEffect {
@@ -55,7 +55,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_segues
    * @brief A slide segue effect
    *
    * By default, there is one vertical stripe.
@@ -92,7 +92,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_segues
    * @brief A glitch segue effect
    */
   class GF_GRAPHICS_API GlitchSegueEffect : public SegueEffect {
@@ -105,7 +105,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_segues
    * @brief A checkerboard segue effect
    *
    * By default, the board is @f$ 32 \times 18 @f$.
@@ -134,7 +134,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_segues
    * @brief A circle segue effect
    *
    * By default, the circle opens.
@@ -172,7 +172,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_segues
    * @brief A pixelate segue effect
    */
   class GF_GRAPHICS_API PixelateSegueEffect : public SegueEffect {
@@ -192,7 +192,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_segues
    * @brief A radial segue effect
    */
   class GF_GRAPHICS_API RadialSegueEffect : public SegueEffect {
@@ -204,7 +204,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_segues
    * @brief A zoom blur segue effect
    *
    * By default, the strength is @f$ 1.0 @f$

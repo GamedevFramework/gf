@@ -33,7 +33,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup core
+   * @ingroup core_filesystem
    * @brief A path in the filesystem
    *
    * gf::Path is a simple typedef for `boost::filesystem::path`.

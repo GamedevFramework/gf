@@ -42,7 +42,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_scenes
    * @brief A scene manager
    *
    * A scene manager handles several scenes, organised into a stack. It has a

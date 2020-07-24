@@ -32,7 +32,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup window
+   * @ingroup graphics_devices
    * @brief The gamepad buttons
    *
    * The buttons are named after the
@@ -60,7 +60,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup window
+   * @ingroup graphics_devices
    * @brief The gamepad axis
    *
    * The axis are named after the
@@ -79,7 +79,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup window
+   * @ingroup graphics_devices
    * @brief A gamepad axis direction
    *
    * The positive direction is right with a X axis and down with a Y axis.
@@ -93,7 +93,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup window
+   * @ingroup graphics_devices
    * @brief A gamepad hardware identifier
    *
    * This identifier is given when a gamepad has just been connected. It must
@@ -109,7 +109,7 @@ inline namespace v1 {
   ;
 
   /**
-   * @ingroup window
+   * @ingroup graphics_devices
    * @brief A gamepad identifier
    *
    * This identifier is the representation of a connected gamepad that has
@@ -126,7 +126,7 @@ inline namespace v1 {
   ;
 
   /**
-   * @ingroup window
+   * @ingroup graphics_devices
    * @brief A special identifier for all gamepads
    *
    * This identifier can be used in controls for specifying any gamepad. This
@@ -138,7 +138,7 @@ inline namespace v1 {
   constexpr GamepadId AnyGamepad = static_cast<GamepadId>(INT32_C(-1));
 
   /**
-   * @ingroup window
+   * @ingroup graphics_devices
    * @brief Some gamepad related functions
    */
   class GF_GRAPHICS_API Gamepad {
@@ -235,7 +235,7 @@ inline namespace v1 {
   struct Event;
 
   /**
-   * @ingroup window
+   * @ingroup graphics_devices
    * @brief A tracker for the connection/disconnection of gamepads
    *
    * This class calls Gamepad::initialize()

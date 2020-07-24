@@ -36,7 +36,7 @@ inline namespace v1 {
   class PhysicsBody;
 
   /**
-   * @ingroup game
+   * @ingroup core_physics
    * @brief A model for physics simulation
    *
    * @sa gf::PhysicsBody, gf::FixedTimestepModel

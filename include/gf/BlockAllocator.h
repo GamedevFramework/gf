@@ -29,17 +29,35 @@ namespace gf {
 inline namespace v1 {
 #endif
 
+  /**
+   * @ingroup core_container
+   * @brief A null index in a block allocator
+   *
+   * @sa gf::BlockAllocator
+   */
   constexpr std::size_t NullIndex = static_cast<std::size_t>(-1);
 
+  /**
+   * @ingroup core_container
+   * @brief An allocator of objects referenced by an index
+   */
   template<typename T>
   class BlockAllocator {
   public:
+    /**
+     * @brief Default constructor
+     */
     BlockAllocator()
     : m_firstFreeBlock(NullIndex)
     , m_allocated(0)
     {
     }
 
+    /**
+     * @brief Allocate an object
+     *
+     * @returns The index representing the object
+     */
     std::size_t allocate() {
       std::size_t index = NullIndex;
 
@@ -59,6 +77,13 @@ inline namespace v1 {
       return index;
     }
 
+    /**
+     * @brief Deallocate the object at the given index
+     *
+     * After this function call, the index is not valid anymore.
+     *
+     * @param index A valid index
+     */
     void dispose(std::size_t index) {
       assert(index < m_blocks.size());
       m_blocks[index].next = m_firstFreeBlock;
@@ -66,23 +91,41 @@ inline namespace v1 {
       --m_allocated;
     }
 
+    /**
+     * @brief Access the object at a given index
+     *
+     * @param index A valid index
+     */
     T& operator[](std::size_t index) {
       assert(index < m_blocks.size());
       assert(m_blocks[index].next == NullIndex);
       return m_blocks[index].data;
     }
 
+    /**
+     * @brief Access the object at a given index
+     *
+     * @param index A valid index
+     */
     const T& operator[](std::size_t index) const {
       assert(index < m_blocks.size());
       assert(m_blocks[index].next == NullIndex);
       return m_blocks[index].data;
     }
 
+    /**
+     * @brief Remove all objects at once
+     */
     void clear() {
       m_firstFreeBlock = NullIndex;
       m_blocks.clear();
     }
 
+    /**
+     * @brief Get the number of allocated objects
+     *
+     * @returns The number of allocated objects
+     */
     std::size_t getAllocated() const {
       return m_allocated;
     }

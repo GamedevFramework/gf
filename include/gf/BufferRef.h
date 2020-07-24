@@ -31,7 +31,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup core
+   * @ingroup core_vocabulary
    * @brief A reference to a modifiable buffer and its size
    *
    * This class stores a pointer to a buffer and its size. It can be built
@@ -199,7 +199,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup core
+   * @relates BufferRef
    * @brief Create a reference to a buffer
    *
    * @param data A pointer to the elements in the buffer

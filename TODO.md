@@ -13,6 +13,7 @@ This file is a list of ideas for gf. Some of them will eventually be in gf. Othe
   - ideas: [blog post](https://www.alanzucconi.com/2016/01/06/colour-interpolation/)
   - ideas: [chroma.js](https://github.com/gka/chroma.js)
   - ideas: [gurki/vivid](https://github.com/gurki/vivid)
+- (activity) find a simple syntax for creating activities (templates spotted)
 
 ## graphics
 
@@ -33,10 +34,12 @@ This file is a list of ideas for gf. Some of them will eventually be in gf. Othe
 - (tilelayer) handle multiple tileset in `TileLayer`
 - (scene) integrate post-processing in `Scene`/`SceneManager`
   - remove `RenderPipeline`
+  - rename `Effect` in `PostProcEffect`
 - (scene) create `GameManager` = `SceneManager` with `Random`, `ResourceManager`, `MessageManager`, etc.
 - (console) make style a class and remove internal style state
 - (ui) remove `UI`
 - (physics) remove `PhysicsModel`, `PhysicsGeometry`, `PhysicsBody`
+- (drawable) Remove `Drawable`, make it a named requirement (or a concept in the future)
 
 ## net
 

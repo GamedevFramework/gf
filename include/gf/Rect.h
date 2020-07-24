@@ -41,7 +41,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief Utility class for manipulating 2D axis aligned rectangles
    *
    * A rectangle is defined by its top-left corner (called `min`) and
@@ -494,7 +494,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief A `float` rectangle
    *
    * @sa gf::Rect
@@ -502,7 +502,7 @@ inline namespace v1 {
   using RectF = Rect<float>;
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief A `double` rectangle
    *
    * @sa gf::Rect
@@ -510,7 +510,7 @@ inline namespace v1 {
   using RectD = Rect<double>;
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief A `int` rectangle
    *
    * @sa gf::Rect
@@ -518,7 +518,7 @@ inline namespace v1 {
   using RectI = Rect<int>;
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief A `unsigned` rectangle
    *
    * @sa gf::Rect
@@ -526,7 +526,7 @@ inline namespace v1 {
   using RectU = Rect<unsigned>;
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief A `std::size_t` rectangle
    *
    * @sa gf::Rect
@@ -570,7 +570,7 @@ inline namespace v1 {
   }
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief Divide a rectangle in quarters
    *
    * @param other The rectangle to divide

@@ -39,7 +39,7 @@ inline namespace v1 {
   class InputStream;
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_resources
    * @brief A glyph
    *
    * A glyph is the visual representation of a character.
@@ -61,7 +61,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_resources
    * @brief A character font
    *
    * Fonts can be loaded from a file, from memory or from a custom

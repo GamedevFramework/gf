@@ -39,7 +39,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup core
+   * @ingroup core_streams
    * @brief File based input stream
    */
   class GF_CORE_API FileInputStream : public InputStream {
@@ -72,7 +72,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup core
+   * @ingroup core_streams
    * @brief Memory based input stream
    */
   class GF_CORE_API MemoryInputStream : public InputStream {
@@ -99,7 +99,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup core
+   * @ingroup core_streams
    * @brief Compressed input stream
    */
   class GF_CORE_API CompressedInputStream : public InputStream {
@@ -134,7 +134,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup core
+   * @ingroup core_streams
    * @brief Buffer input stream
    */
   class GF_CORE_API BufferInputStream : public InputStream {
@@ -164,7 +164,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup core
+   * @ingroup core_streams
    * @brief File based output stream
    */
   class GF_CORE_API FileOutputStream : public OutputStream {
@@ -205,7 +205,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup core
+   * @ingroup core_streams
    * @brief Memory based output stream
    */
   class GF_CORE_API MemoryOutputStream : public OutputStream {
@@ -230,7 +230,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup core
+   * @ingroup core_streams
    * @brief Compressed output stream
    */
   class GF_CORE_API CompressedOutputStream : public OutputStream {
@@ -260,7 +260,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup core
+   * @ingroup core_streams
    * @brief Buffer output stream
    */
   class GF_CORE_API BufferOutputStream : public OutputStream {

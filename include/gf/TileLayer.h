@@ -39,7 +39,7 @@ inline namespace v1 {
   class Texture;
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_tiles
    * @brief A tile layer
    *
    * A tile layer represents a map made of tiles. gf::TileLayer makes it easy

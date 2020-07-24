@@ -38,7 +38,7 @@ inline namespace v1 {
   class Shader;
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_renderers
    * @brief Define the states used for drawing to a RenderTarget
    *
    * There are four global states that can be applied to
@@ -88,7 +88,6 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup graphics
    * @relates RenderStates
    * @brief Check render states equality
    *

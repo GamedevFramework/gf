@@ -37,7 +37,7 @@ inline namespace v1 {
   class Texture;
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_segues
    * @brief A transition between two scenes
    *
    * @sa [Segue - Wikipedia](https://en.wikipedia.org/wiki/Segue)

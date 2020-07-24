@@ -47,6 +47,10 @@ inline namespace v1 {
   class VertexBuffer;
   struct Vertex;
 
+  /**
+   * @ingroup graphics_renderers
+   * @brief The type of an attribute
+   */
   enum class RenderAttributeType {
     Byte    = 0x1400,
     UByte   = 0x1401,
@@ -55,14 +59,22 @@ inline namespace v1 {
     Float   = 0x1406,
   };
 
+  /**
+   * @ingroup graphics_renderers
+   * @brief Attribute info
+   */
   struct GF_GRAPHICS_API RenderAttributeInfo {
-    const char *name;
-    int size;
-    RenderAttributeType type;
-    bool normalized;
-    std::size_t offset;
+    const char *name; ///< Name of the attribute
+    int size; ///< Size of the attribute
+    RenderAttributeType type; ///< Type of the attribute
+    bool normalized; ///< Is the attribute normalized?
+    std::size_t offset; ///< Offset of the attribute in the vertex
   };
 
+  /**
+   * @ingroup graphics_gpu
+   * @brief Trait for framebuffer
+   */
   template<>
   struct GF_GRAPHICS_API GraphicsTrait<GraphicsTag::Framebuffer> {
     static void gen(int n, unsigned* resources);
@@ -70,7 +82,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_renderers
    * @brief Base class for all render targets (window, texture, ...)
    *
    * gf::RenderTarget defines the common behavior of all the

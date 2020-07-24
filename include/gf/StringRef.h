@@ -30,7 +30,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup core
+   * @ingroup core_vocabulary
    * @brief A constant reference to a string and its size
    *
    * This class stores a pointer to a string and its size. It can be built

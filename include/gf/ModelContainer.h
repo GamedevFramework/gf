@@ -35,7 +35,7 @@ inline namespace v1 {
   class Model;
 
   /**
-   * @ingroup game
+   * @ingroup core_models
    * @brief A collection of models
    *
    * gf::ModelContainer represents a collection of models that are updated

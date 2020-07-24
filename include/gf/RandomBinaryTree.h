@@ -35,7 +35,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup game
+   * @ingroup core_roguelike
    * @brief A random binary space partionning tree
    */
   class GF_CORE_API RandomBinaryTree {

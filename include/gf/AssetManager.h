@@ -32,7 +32,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup game
+   * @ingroup core_filesystem
    * @brief An asset manager
    *
    * gf::AssetManager is a base class for searching files in some seach

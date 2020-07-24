@@ -35,7 +35,7 @@ inline namespace v1 {
   class Texture;
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_post_proc
    * @brief A post-processing drawable
    *
    * This class is a light-weight object to apply a post-processing effect to

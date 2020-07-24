@@ -6,59 +6,214 @@
 @namespace gf::literals
 @brief The namespace for literals
 
-@defgroup core Core classes and functions
+@defgroup core Core
 @brief All the core generic classes and functions.
 
-- Math: gf::Vector, gf::Matrix, gf::Range, gf::Direction, gf::Orientation, gf::Array2D
-- Geometry: gf::Rect, gf::Circ, gf::Polygon, gf::Polyline
-- Stream: gf::InputStream, gf::FileInputStream, gf::MemoryInputStream
-- Utility: gf::Clock, gf::Time, gf::Random, gf::SystemInfo, gf::Singleton, gf::Flags
-- Noise: gf::Noise2D / gf::Noise3D, gf::GradientNoise2D / gf::GradientNoise3D, gf::FractalNoise2D / gf::FractalNoise3D, gf::PerlinNoise2D / gf::PerlinNoise3D, gf::SimplexNoise2D, gf::OpenSimplexNoise2D / gf::OpenSimplexNoise3D, gf::WorleyNoise2D
+## Using the `core` module
 
-@defgroup window Window classes
-@brief All the classes related to window management.
+All the types and functions of the `core` module are defined in `libgfcore0`. In order to use this library, you should use `cmake` and add the following in your `CMakeLists.txt`:
 
-- Monitor management: gf::Monitor, gf::VideoMode
-- Window management: gf::Window, gf::WindowHints, gf::Coordinates
-- Input: gf::Event, gf::Control, gf::Action
-- Device: gf::Keyboard, gf::Gamepad, gf::Modifiers
+~~~{.cmake}
+find_package(gf REQUIRED COMPONENTS core)
 
-@defgroup graphics Graphics classes
-@brief All the classes related to graphics.
+# ...
 
-- GPU Resources: gf::Shader, gf::Texture, gf::BlendMode, gf::VertexBuffer
-- Resources: gf::Image, gf::Font, gf::Animation
-- Drawables: gf::Drawable, gf::VertexArray, gf::PostProcessing, gf::Transformable, gf::Shape, gf::Curve, gf::Sprite, gf::Text, gf::NinePatch, gf::BufferedGeometry, gf::TileLayer, gf::Logo
-- Targets: gf::RenderTarget, gf::RenderWindow, gf::RenderTexture, gf::RenderPipeline, gf::View
-- Utility: gf::SpriteBatch, gf::Color, gf::ColorRamp, gf::UI, gf::GraphicsInfo
+target_link_libraries(mygame
+  PRIVATE
+    gf::core
+)
+~~~
 
-@defgroup game Game classes
-@brief All the classes related to game systems and game entities
+@defgroup core_vocabulary Vocabulary
+@ingroup core
+@brief Vocabulary classes
 
-- Entities and models: gf::Entity, gf::EntityContainer, gf::Model, gf::ModelContainer
-- Application messages: gf::MessageManager, gf::Message
-- Resources: gf::AssetManager, gf::ResourceCache, gf::ResourceManager, gf::TextureAtlas
-- Physics: gf::PhysicsBody, gf::PhysicsGeometry, gf::PhysicsModel
-- Animations: gf::Activity, gf::Tween
-- Geometry: gf::generateLine(), gf::midpointDisplacement1D()
-- Virtual console: gf::Console, gf::ConsoleFont, gf::ConsoleChar
-- Roguelike toolkit: gf::SquareMap, gf::SpaceTree
+@defgroup core_container Container
+@ingroup core
+@brief Various containers
+
+@defgroup core_maths Maths
+@ingroup core
+@brief Maths classes and functions
+
+@defgroup core_geometry Geometry
+@ingroup core
+@brief Geometry classes and functions
+
+@defgroup core_color Colors
+@ingroup core
+@brief Colors handling
+
+@defgroup core_models Models
+@ingroup core
+@brief Models
+
+@defgroup core_messages Messages
+@ingroup core
+@brief Application messages
+
+@defgroup core_procedural_generation Procedural Generation
+@ingroup core
+@brief Procedural generation utilities
+
+@defgroup core_spatial Spatial
+@ingroup core
+@brief Spatial indexes
+
+@defgroup core_physics Physics
+@ingroup core
+@brief Physics
+
+@defgroup core_animation Animation
+@ingroup core
+@brief Animation and tweening
+
+@defgroup core_roguelike Roguelike Toolkit
+@ingroup core
+@brief Roguelike toolkit
+
+@defgroup core_system System
+@ingroup core
+@brief System abstractions
+
+@defgroup core_filesystem Filesystem
+@ingroup core
+@brief Filesystem related classes
+
+@defgroup core_streams Streams
+@ingroup core
+@brief Input and output streams
+
+@defgroup core_serialization Serialization
+@ingroup core
+@brief Serialization
+
+@defgroup core_utilities Utilities
+@ingroup core
+@brief Various game-related utilities
+
+@defgroup core_strings String Utilities
+@ingroup core
+@brief String utilities
+
+@defgroup core_tmx TMX (Tiled) Support
+@ingroup core
+@brief TMX (Tiled) support
+
+@defgroup graphics Graphics
+@brief All the classes related to graphics
+
+## Using the `graphics` module
+
+All the types and functions of the `graphics` module are defined in `libgf0`. In order to use this library, you should use `cmake` and add the following in your `CMakeLists.txt`:
+
+~~~{.cmake}
+find_package(gf REQUIRED COMPONENTS graphics)
+
+# ...
+
+target_link_libraries(mygame
+  PRIVATE
+    gf::graphics
+)
+~~~
+
+@defgroup graphics_events Input events
+@ingroup graphics
+@brief Input events and related classes
+
+@defgroup graphics_window_monitor Window and monitor
+@ingroup graphics
+@brief Window and monitor
+
+@defgroup graphics_devices Devices
+@ingroup graphics
+@brief Devices
+
+@defgroup graphics_gpu GPU Resources
+@ingroup graphics
+@brief GPU Resources
+
+@defgroup graphics_renderers Renderers
+@ingroup graphics
+@brief Renderers
+
+@defgroup graphics_views Views
+@ingroup graphics
+@brief Views (cameras)
+
+@defgroup graphics_drawables Drawables
+@ingroup graphics
+@brief Drawable objects
+
+@defgroup graphics_sprite Sprite display
+@ingroup graphics
+@brief Sprite display
+
+@defgroup graphics_text Text display
+@ingroup graphics
+@brief Text display
+
+@defgroup graphics_shapes Shapes
+@ingroup graphics
+@brief Shapes
+
+@defgroup graphics_curves Curves
+@ingroup graphics
+@brief Curves
+
+@defgroup graphics_tiles Tiles and Tilelayers
+@ingroup graphics
+@brief Tiles and tilelayers
+
+@defgroup graphics_particles Particles
+@ingroup graphics
+@brief Particles
+
+@defgroup graphics_console Virtual console
+@ingroup graphics
+@brief Virtual console
+
+@defgroup graphics_widgets Widgets
+@ingroup graphics
+@brief Widgets
+
+@defgroup graphics_resources Resources
+@ingroup graphics
+@brief Resources and resource management
+
+@defgroup graphics_entities Entities
+@ingroup graphics
+@brief Entities
+
+@defgroup graphics_scenes Scenes
+@ingroup graphics
+@brief Scene creation and management
+
+@defgroup graphics_post_proc Post-processing
+@ingroup graphics
+@brief Post-processing effects
+
+@defgroup graphics_segues Segues
+@ingroup graphics
+@brief Segue effects
+
 
 @defgroup net Network
 @brief All the classes related to network
 
 ## Using the `net` module
 
-All the types and functions of the net module are defined in `libgfnet0`. In order to use this library, you can use cmake and add the following in your `CMakeLists.txt`:
+All the types and functions of the `net` module are defined in `libgfnet0`. In order to use this library, you should use `cmake` and add the following in your `CMakeLists.txt`:
 
 ~~~{.cmake}
-find_package(gfnet REQUIRED)
+find_package(gf REQUIRED COMPONENTS net)
 
 # ...
 
 target_link_libraries(mygame
   PRIVATE
-    gfnet::gfnet0
+    gf::net
 )
 ~~~
 
@@ -66,9 +221,6 @@ target_link_libraries(mygame
 @defgroup net_sockets Network sockets
 @ingroup net
 @brief The classes related to socket handling
-
-
-
 
 
 @mainpage

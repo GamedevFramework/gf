@@ -33,7 +33,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief A reference to an edge (two points)
    */
   template<typename T>
@@ -67,7 +67,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief A reference to a triangle (three points)
    */
   template<typename T>
@@ -111,7 +111,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief Compute a Delaunay triangulation of a set of points
    *
    * @param points The set of points

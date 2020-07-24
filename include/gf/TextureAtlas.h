@@ -37,7 +37,7 @@ inline namespace v1 {
   class ResourceManager;
 
   /**
-   * @ingroup game
+   * @ingroup graphics_resources
    * @brief A collection of sub-texture
    *
    * A texture atlas is a collection of sub-texture that have been packed

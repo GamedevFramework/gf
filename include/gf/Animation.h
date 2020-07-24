@@ -36,7 +36,7 @@ inline namespace v1 {
   class Texture;
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_sprite
    * @brief An animation
    *
    * An animation is a collection of frames that are displayed

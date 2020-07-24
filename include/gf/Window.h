@@ -45,7 +45,7 @@ inline namespace v1 {
   class Cursor;
 
   /**
-   * @ingroup window
+   * @ingroup graphics_window_monitor
    * @brief Hints for window creation
    */
   enum class WindowHints : uint32_t {
@@ -66,7 +66,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup window
+   * @ingroup graphics_window_monitor
    * @brief An OS window
    *
    * The gf::Window class provides a simple interface for manipulating

@@ -33,7 +33,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup core
+   * @ingroup core_system
    * @brief Make the current thread sleep for a given duration
    *
    * gf::sleep is the best way to block a program or one of its threads, as it

@@ -39,7 +39,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup core
+   * @ingroup core_container
    * @brief A two-dimensional array with no data
    *
    * You probably want to use gf::Array2D
@@ -280,7 +280,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup core
+   * @ingroup core_container
    * @brief A two-dimensional array
    *
    * gf::Array represents a two-dimensional array, organized in row-major order.
@@ -542,7 +542,7 @@ inline namespace v1 {
   }
 
   /**
-   * @relates Serializer
+   * @relates Array2D
    * @brief Serialize a 2D array
    */
   template<typename T, typename I>
@@ -558,7 +558,7 @@ inline namespace v1 {
   }
 
   /**
-   * @relates Deserializer
+   * @relates Array2D
    * @brief Deserialize a 2D array
    */
   template<typename T, typename I>

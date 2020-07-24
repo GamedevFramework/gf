@@ -38,7 +38,7 @@ inline namespace v1 {
   class Texture;
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_sprite
    * @brief A sprite batch
    *
    * A sprite batch is responsible for minimizing the number of draw calls by

@@ -32,7 +32,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup game
+   * @ingroup core_messages
    * @brief The base class for all messages
    *
    * gf::Message is the base class for all the messages that are sent to
@@ -60,7 +60,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup game
+   * @ingroup core_messages
    * @brief A message status
    *
    * gf::MessageStatus indicates if a handler should be kept by the message
@@ -74,7 +74,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup game
+   * @ingroup core_messages
    * @brief A message handler
    *
    * gf::MessageHandler is a function that can be called when a message is

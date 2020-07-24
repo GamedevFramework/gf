@@ -41,7 +41,7 @@ inline namespace v1 {
   class InputStream;
 
   /**
-   * @ingroup core
+   * @ingroup core_color
    * @brief Pixel format
    */
   enum PixelFormat {
@@ -50,7 +50,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup graphics
+   * @ingroup core_color
    * @brief Class for loading, manipulating and saving images
    *
    * gf::Image is an abstraction to manipulate images

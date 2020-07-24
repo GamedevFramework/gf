@@ -31,7 +31,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup game
+   * @ingroup core_animation
    * @brief An interpolation between two values
    *
    * @sa [Inbetweening - Wikipedia](https://en.wikipedia.org/wiki/Inbetweening)

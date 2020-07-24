@@ -40,7 +40,7 @@ inline namespace v1 {
   struct Transform;
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief A convex polygon
    *
    */

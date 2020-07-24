@@ -31,7 +31,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup core
+   * @ingroup graphics_resources
    * @brief Special paths
    *
    * @sa gf::SystemInfo

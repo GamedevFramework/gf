@@ -34,7 +34,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup core
+   * @ingroup core_spatial
    * @brief A spatial id
    *
    * A spatial id refers to an object in a spatial index.
@@ -42,7 +42,7 @@ inline namespace v1 {
   enum SpatialId : std::size_t { };
 
   /**
-   * @ingroup core
+   * @ingroup core_spatial
    * @brief A type of spatial structure
    *
    * @sa gf::SpatialStructure
@@ -53,7 +53,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup core
+   * @ingroup core_spatial
    * @brief A spatial structure
    *
    * A spatial structure reflects the internal states of a spatial index.
@@ -67,7 +67,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup core
+   * @ingroup core_spatial
    * @brief A kind of spatial query
    */
   enum class SpatialQuery {
@@ -76,7 +76,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup core
+   * @ingroup core_spatial
    * @brief A callback for spatial query
    */
   using SpatialQueryCallback = std::function<void(Handle)>;

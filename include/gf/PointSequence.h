@@ -36,7 +36,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief A sequence of points
    *
    * @sa gf::Polygon, gf::Polyline

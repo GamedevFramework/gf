@@ -34,7 +34,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief Utility class for manipulating circles
    *
    * A circle is defined by its center and its radius.
@@ -184,7 +184,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief A `float` circle
    *
    * @sa gf::Circ
@@ -192,7 +192,7 @@ inline namespace v1 {
   using CircF = Circ<float>;
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief A `double` circle
    *
    * @sa gf::Circ
@@ -200,7 +200,7 @@ inline namespace v1 {
   using CircD = Circ<double>;
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief A `int` circle
    *
    * @sa gf::Circ
@@ -208,7 +208,7 @@ inline namespace v1 {
   using CircI = Circ<int>;
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief A `unsigned` circle
    *
    * @sa gf::Circ
@@ -216,7 +216,7 @@ inline namespace v1 {
   using CircU = Circ<unsigned>;
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief A `std::size_t` circle
    *
    * @sa gf::Circ

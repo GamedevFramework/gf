@@ -31,7 +31,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup core
+   * @ingroup core_system
    * @brief A simple concurrent queue
    *
    * This is a simple concurrent queue that can be used in a multi-threaded

@@ -39,7 +39,7 @@ inline namespace v1 {
   class RenderTarget;
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_widgets
    * @brief A simple text widget
    *
    * @sa gf::Text
@@ -286,7 +286,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_widgets
    * @brief A text within a rounded rectangle widget
    *
    * @sa gf::Text, gf::RoundedRectangleShape
@@ -399,7 +399,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_widgets
    * @brief A widget with a set of sprites
    */
   class GF_GRAPHICS_API SpriteWidget : public Widget {
@@ -518,7 +518,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_widgets
    * @brief A choice sprite widget
    *
    * A choice widget may be used to represent a checkbox or a radio button.

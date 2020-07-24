@@ -32,19 +32,19 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup core
+   * @ingroup core_vocabulary
    * @brief An identifier
    */
   using Id = uint64_t;
 
   /**
-   * @ingroup core
+   * @ingroup core_vocabulary
    * @brief The invalid id (which is 0)
    */
   constexpr Id InvalidId = 0;
 
   /**
-   * @ingroup core
+   * @ingroup core_vocabulary
    * @brief Get an identifier from a string
    *
    * The hash is a Fowler–Noll–Vo 1a hash. This function is mainly for
@@ -71,7 +71,7 @@ inline namespace v1 {
   }
 
   /**
-   * @ingroup core
+   * @ingroup core_vocabulary
    * @brief Get an idenfitier from a string
    *
    * The hash is a Fowler–Noll–Vo 1a hash. This function can be used
@@ -88,7 +88,7 @@ inline namespace v1 {
   namespace literals {
 
     /**
-     * @ingroup core
+     * @ingroup core_vocabulary
      * @brief User defined operator for creating compile time ids from strings
      *
      * To use it, you have to use the `gf::literals` namespace:

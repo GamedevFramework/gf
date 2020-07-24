@@ -32,7 +32,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_renderer
    * @brief Enumeration of the blending equations
    *
    * The equations are mapped directly to their OpenGL equivalents,
@@ -48,7 +48,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_renderer
    * @brief Enumeration of the blending factors
    *
    * The factors are mapped directly to their OpenGL equivalents,
@@ -71,7 +71,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_renderer
    * @brief Blending modes for drawing.
    *
    * gf::BlendMode is a class that represents a
@@ -193,7 +193,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_renderer
    * @brief Alpha blend mode
    *
    * Blend source and dest according to dest alpha. Also known as
@@ -211,7 +211,7 @@ inline namespace v1 {
   ;
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_renderer
    * @brief Additive blend mode
    *
    * Add source to dest.
@@ -228,7 +228,7 @@ inline namespace v1 {
   ;
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_renderer
    * @brief Multiplicative blend mode
    *
    * Multiply source and dest.
@@ -242,7 +242,7 @@ inline namespace v1 {
   ;
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_renderer
    * @brief No blend mode
    *
    * Overwrite dest with source.

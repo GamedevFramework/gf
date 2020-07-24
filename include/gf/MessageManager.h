@@ -36,7 +36,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup game
+   * @ingroup core_messages
    * @brief An identifier for a message handler
    *
    * @sa gf::MessageHandler
@@ -44,7 +44,7 @@ inline namespace v1 {
   using MessageHandlerId = uint64_t;
 
   /**
-   * @ingroup game
+   * @ingroup core_messages
    * @brief A message manager
    *
    * A message manager is responsible for passing messages synchronously

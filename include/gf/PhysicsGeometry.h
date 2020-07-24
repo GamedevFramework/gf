@@ -37,7 +37,7 @@ inline namespace v1 {
   class RenderTarget;
 
   /**
-   * @ingroup game
+   * @ingroup core_physics
    * @brief The geometry of a physics body
    *
    * The geometry is defined in model coordinates.
@@ -108,6 +108,7 @@ inline namespace v1 {
   };
 
   /**
+   * @ingroup core_physics
    * @brief A circle physics geometry
    */
   class GF_GRAPHICS_API CircleGeometry : public PhysicsGeometry {
@@ -144,6 +145,7 @@ inline namespace v1 {
   };
 
   /**
+   * @ingroup core_physics
    * @brief A polygon physics geometry
    *
    * This geometry includes rectangles.

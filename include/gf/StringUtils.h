@@ -37,7 +37,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup core
+   * @ingroup core_strings
    * @brief Create a string representation of a floating point number
    *
    * It is based on [Python niceNum](https://mail.python.org/pipermail/python-list/1999-October/005748.html).
@@ -49,7 +49,7 @@ inline namespace v1 {
   GF_CORE_API std::string niceNum(float num, float precision);
 
   /**
-   * @ingroup core
+   * @ingroup core_strings
    * @brief Format a string like printf
    *
    * @param fmt The [format string](http://en.cppreference.com/w/cpp/io/c/fprintf)
@@ -57,7 +57,7 @@ inline namespace v1 {
   GF_CORE_API std::string formatString(const char *fmt, ...) GF_FORMAT(1, 2);
 
   /**
-   * @ingroup core
+   * @ingroup core_strings
    * @brief Format a string like vprintf
    *
    * @param fmt The [format string](http://en.cppreference.com/w/cpp/io/c/fprintf)
@@ -66,7 +66,7 @@ inline namespace v1 {
   GF_CORE_API std::string formatString(const char *fmt, va_list ap);
 
   /**
-   * @ingroup core
+   * @ingroup core_strings
    * @brief Escape a string
    *
    * This function replaces characters with their escaped equivalent. For
@@ -79,7 +79,7 @@ inline namespace v1 {
   GF_CORE_API std::string escapeString(StringRef str);
 
   /**
-   * @ingroup core
+   * @ingroup core_strings
    * @brief Split a string in multiples paragraphs
    *
    * The paragraphs are separated by '\\n'.
@@ -90,7 +90,7 @@ inline namespace v1 {
   GF_CORE_API std::vector<StringRef> splitInParagraphs(StringRef str);
 
   /**
-   * @ingroup core
+   * @ingroup core_strings
    * @brief Split a string in multiples words
    *
    * The words are separated by ' ' (space) or '\\t' (tabulation).
@@ -102,7 +102,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup core
+   * @ingroup core_strings
    * @brief A range over a sequence of codepoints in UTF-8
    *
    * @sa gf::codepoints
@@ -110,6 +110,10 @@ inline namespace v1 {
   struct GF_CORE_API CodepointRange {
     StringRef ref;
 
+    /**
+     * @ingroup core_strings
+     * @brief Iterator for a range of codepoints
+     */
     struct Iterator {
       using difference_type = std::ptrdiff_t;
       using value_type = char32_t;
@@ -237,7 +241,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup core
+   * @relates CodepointRange
    * @brief Create a range over codepoints from a string
    */
   inline

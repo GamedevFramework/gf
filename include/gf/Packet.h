@@ -42,9 +42,12 @@ inline namespace v1 {
    * @brief A packet of bytes
    */
   struct GF_NET_API Packet {
-    Id type = InvalidId;
-    std::vector<uint8_t> bytes;
+    Id type = InvalidId; ///< The type of the packet
+    std::vector<uint8_t> bytes; ///< The bytes representing the object
 
+    /**
+     * @brief Get the type of the underlying bytes
+     */
     Id getType() {
       if (type != InvalidId) {
         return type;
@@ -56,6 +59,9 @@ inline namespace v1 {
       return type;
     }
 
+    /**
+     * @brief Deserialize the underlying bytes into an object
+     */
     template<typename T>
     T as() {
       BufferInputStream stream(&bytes);
@@ -67,6 +73,9 @@ inline namespace v1 {
       return data;
     }
 
+    /**
+     * @brief Serialize the object into bytes
+     */
     template<typename T>
     void is(const T& data) {
       bytes.clear();

@@ -37,7 +37,7 @@ inline namespace v1 {
   class RenderTarget;
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_widgets
    * @brief State of a widget
    *
    * @sa gf::Widget
@@ -49,7 +49,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_widgets
    * @brief The widgets abstract class
    */
   class GF_GRAPHICS_API Widget : public Transformable {

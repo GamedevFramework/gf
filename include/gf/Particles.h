@@ -35,7 +35,7 @@ inline namespace v1 {
   class Texture;
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_particles
    * @brief A class to display a high number of points
    */
   class GF_GRAPHICS_API PointParticles : public Transformable {
@@ -61,7 +61,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_particles
    * @brief A class to display a high number of small simple shapes
    */
   class GF_GRAPHICS_API ShapeParticles : public Transformable {
@@ -114,7 +114,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_particles
    * @brief A class to display a high number of sprites
    *
    * @sa gf::SpriteBatch

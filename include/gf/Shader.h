@@ -42,7 +42,7 @@ inline namespace v1 {
   class InputStream;
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_gpu
    * @brief An OpenGL vertex and/or fragment shader
    *
    * Shaders are programs written using a specific language,

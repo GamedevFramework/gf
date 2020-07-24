@@ -37,7 +37,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup window
+   * @ingroup graphics_events
    * @brief Enumeration of the different types of events
    */
   enum class EventType {
@@ -74,7 +74,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup window
+   * @ingroup graphics_events
    * @brief Defines a system event and its parameters
    *
    * gf::Event holds all the informations about a system event

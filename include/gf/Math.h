@@ -30,7 +30,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief Templated value of @f$ \pi @f$
    */
   template<typename T>
@@ -40,61 +40,61 @@ inline namespace v1 {
   }
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief The @f$ \pi @f$ constant
    */
   constexpr float Pi = pi<float>();
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief The @f$ \frac{\pi}{2} @f$ constant
    */
   constexpr float Pi2 = Pi / 2;
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief The @f$ \frac{\pi}{3} @f$ constant
    */
   constexpr float Pi3 = Pi / 3;
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief The @f$ \frac{\pi}{4} @f$ constant
    */
   constexpr float Pi4 = Pi / 4;
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief The @f$ \frac{\pi}{6} @f$ constant
    */
   constexpr float Pi6 = Pi / 6;
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief The @f$ \sqrt{2} @f$ constant
    */
   constexpr float Sqrt2 = 1.41421356237309504880f;
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief The @f$ \frac{1}{\sqrt{2}} @f$ constant
    */
   constexpr float InvSqrt2 = 1 / Sqrt2;
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief The @f$ \sqrt{3} @f$ constant
    */
   constexpr float Sqrt3 = 1.7320508075688772935f;
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief Machine epsilon
    */
   constexpr float Epsilon = std::numeric_limits<float>::epsilon();
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief Compare two floats
    *
    * @param a The first float
@@ -123,7 +123,7 @@ inline namespace v1 {
   }
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief Convert degrees to radians
    *
    * @param degrees An angle in degrees
@@ -137,7 +137,7 @@ inline namespace v1 {
   }
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief Convert radians to degrees
    *
    * @param radians An angle in radians
@@ -151,7 +151,7 @@ inline namespace v1 {
   }
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief A step is a function with special features.
    *
    * A step @f$ f @f$ is a (mathematical) function which has the following properties:
@@ -177,7 +177,7 @@ inline namespace v1 {
   using Step = T (*)(T);
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief Linear step
    *
    * @f[ f(t) = t @f]
@@ -191,7 +191,7 @@ inline namespace v1 {
   }
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief Cubic step (smoothstep)
    *
    * @f[ f(t) = -2 * t^3 + 3 * t^2 @f]
@@ -212,7 +212,7 @@ inline namespace v1 {
   }
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief Quintic step (smootherstep)
    *
    * @f[ f(t) = 6 * t^5 - 15 * t^4 + 10 * t^3 @f]
@@ -235,7 +235,7 @@ inline namespace v1 {
   }
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief Cosine step
    *
    * @f[ f(t) = (1 - \cos(\pi * t)) * 0.5 @f]
@@ -249,7 +249,7 @@ inline namespace v1 {
   }
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief Linear interpolation function
    *
    * This functions returns an interpolated value between two values `lhs` and
@@ -268,7 +268,7 @@ inline namespace v1 {
   }
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief Clamping function
    *
    * This function takes a value and returns it if it is in a specified range.
@@ -286,7 +286,7 @@ inline namespace v1 {
   }
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief Square function
    *
    * For a value @f$ x @f$, the square value is @f$ x^2 @f$.
@@ -301,7 +301,7 @@ inline namespace v1 {
   }
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief Cube function
    *
    * For a value @f$ x @f$, the cube value is @f$ x^3 @f$.
@@ -316,7 +316,7 @@ inline namespace v1 {
   }
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief Sign function
    *
    * The sign function of @f$ x @f$ is:
@@ -336,7 +336,7 @@ inline namespace v1 {
   }
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief Absolute difference of two values
    *
    * This function is defined as:

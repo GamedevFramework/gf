@@ -33,7 +33,7 @@ inline namespace v1 {
   class SingletonStorage;
 
   /**
-   * @ingroup core
+   * @ingroup core_vocabulary
    * @brief A singleton that wraps a pointer provided by a storage.
    *
    * This class should be used with a global variable. It acts as an access to
@@ -123,7 +123,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup core
+   * @ingroup core_vocabulary
    * @brief A storage for a singleton.
    *
    * This class is a wrapper around an object of class `T` that should be

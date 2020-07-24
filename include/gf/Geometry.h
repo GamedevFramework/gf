@@ -38,7 +38,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief State for the Bresenham's line algorithm
    *
    * @sa gf::generateLine()
@@ -71,7 +71,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief Generate a line between two positions
    *
    * This function uses [Bresenham's line algorithm](https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm).
@@ -85,7 +85,7 @@ inline namespace v1 {
   GF_CORE_API std::vector<Vector2i> generateLine(Vector2i p0, Vector2i p1);
 
   /**
-   * @ingroup core
+   * @ingroup core_procedural_generation
    * @brief 1D midpoint displacement
    *
    * @param p0 The first end point
@@ -99,7 +99,7 @@ inline namespace v1 {
   GF_CORE_API std::vector<Vector2f> midpointDisplacement1D(Vector2f p0, Vector2f p1, Random& random, unsigned iterations, Vector2f direction, float initialFactor = 1.0f, float reductionFactor = 0.5f);
 
   /**
-   * @ingroup core
+   * @ingroup core_procedural_generation
    * @brief 1D midpoint displacement
    *
    * The direction is perpendicular to the segment @f$ [P_0 P_1] @f$
@@ -115,7 +115,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup core
+   * @ingroup core_procedural_generation
    * @brief 2D midpoint displacement
    *
    * The size can be anything. If the size is not a power of two plus one,
@@ -138,7 +138,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup core
+   * @ingroup core_procedural_generation
    * @brief 2D diamond square
    *
    * The size can be anything. If the size is not a power of two plus one,
@@ -161,7 +161,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief Compute the convex hull of a set of points
    *
    * This function uses the [Quickhull algorithm](https://en.wikipedia.org/wiki/Quickhull).
@@ -175,7 +175,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief Simplify a sequence of points
    *
    * This function uses the [Douglas–Peucker algorithm](https://en.wikipedia.org/wiki/Ramer%E2%80%93Douglas%E2%80%93Peucker_algorithm).
@@ -188,7 +188,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief Build a set of lines from a set of segments
    *
    * @param segments A set of segments

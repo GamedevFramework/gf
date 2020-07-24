@@ -43,7 +43,7 @@ namespace gf {
 inline namespace v1 {
 #endif
   /**
-   * @ingroup game
+   * @ingroup core_tmx
    * @brief the render order of the tiles.
    */
   enum class TmxRenderOrder {
@@ -54,7 +54,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup game
+   * @ingroup core_tmx
    * @brief The properties for TMX entities
    *
    */
@@ -194,7 +194,7 @@ inline namespace v1 {
   struct TmxGroupLayer;
 
   /**
-   * @ingroup game
+   * @ingroup core_tmx
    * @brief A visitor for layers in the visitor pattern
    *
    * @sa gf::TmxLayer::accept()
@@ -241,7 +241,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup game
+   * @ingroup core_tmx
    * @brief A layer in the whole map
    *
    * The are four kinds of layers: tile layers, image layers, object layers and
@@ -273,7 +273,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup game
+   * @ingroup core_tmx
    * @brief A cell in a tile layer
    */
   struct GF_CORE_API TmxCell {
@@ -282,7 +282,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup game
+   * @ingroup core_tmx
    * @brief A chunk in a tile layer (for infinite maps)
    */
   struct GF_CORE_API TmxChunk {
@@ -292,7 +292,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup game
+   * @ingroup core_tmx
    * @brief A layer with tiles in cells
    */
   struct GF_CORE_API TmxTileLayer : public TmxLayer {
@@ -303,7 +303,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup game
+   * @ingroup core_tmx
    * @brief The draw order of the objects
    */
   enum class TmxDrawOrder {
@@ -313,7 +313,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup game
+   * @ingroup core_tmx
    * @brief A geometrical object
    *
    * There are seven kinds of objects:
@@ -360,7 +360,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup game
+   * @ingroup core_tmx
    * @brief A rectangle object
    */
   struct GF_CORE_API TmxRectangle : public TmxObject {
@@ -368,7 +368,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup game
+   * @ingroup core_tmx
    * @brief An ellipse object
    */
   struct GF_CORE_API TmxEllipse : public TmxObject {
@@ -376,7 +376,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup game
+   * @ingroup core_tmx
    * @brief An image put in the map identified by its global id
    */
   struct GF_CORE_API TmxTileObject : public TmxObject {
@@ -385,7 +385,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup game
+   * @ingroup core_tmx
    * @brief A polyline object
    *
    * A polyline is an open set of lines
@@ -395,7 +395,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup game
+   * @ingroup core_tmx
    * @brief A polygon object
    *
    * A polygon is a closed set of lines
@@ -405,7 +405,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup game
+   * @ingroup core_tmx
    * @brief A text object
    */
   struct GF_CORE_API TmxText : public TmxObject {
@@ -445,14 +445,14 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup game
+   * @ingroup core_tmx
    * @brief A point object
    */
   struct GF_CORE_API TmxPoint : public TmxObject {
   };
 
   /**
-   * @ingroup game
+   * @ingroup core_tmx
    * @brief A layer with objects
    */
   struct GF_CORE_API TmxObjectLayer : public TmxLayer {
@@ -464,7 +464,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup game
+   * @ingroup core_tmx
    * @brief A reference to an image
    */
   struct GF_CORE_API TmxImage {
@@ -475,7 +475,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup game
+   * @ingroup core_tmx
    * @brief A layer with an image
    */
   struct GF_CORE_API TmxImageLayer : public TmxLayer {
@@ -486,7 +486,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup game
+   * @ingroup core_tmx
    * @brief A layer with other layers
    */
   struct GF_CORE_API TmxGroupLayer : public TmxLayer {
@@ -496,7 +496,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup game
+   * @ingroup core_tmx
    * @brief A frame in a tile animation
    *
    * @sa gf::TmxAnimation
@@ -507,7 +507,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup game
+   * @ingroup core_tmx
    * @brief A tile animation
    */
   struct GF_CORE_API TmxAnimation {
@@ -515,7 +515,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup game
+   * @ingroup core_tmx
    * @brief A description of a kind of terrain on the map
    *
    * @sa gf::TmxTileset
@@ -527,7 +527,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup game
+   * @ingroup core_tmx
    * @brief A rectangular part of a tileset
    *
    * @sa gf::TmxTileset
@@ -545,7 +545,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup game
+   * @ingroup core_tmx
    * @brief A set of tiles in a single file (image or TSX file)
    */
   struct GF_CORE_API TmxTileset {
@@ -585,7 +585,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup game
+   * @ingroup core_tmx
    * @brief A TMX map
    */
   struct GF_CORE_API TmxLayers {
