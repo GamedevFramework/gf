@@ -460,7 +460,7 @@ inline namespace v1 {
     void restart() override;
 
   private:
-    Activity& m_activity;
+    Ref<Activity> m_activity;
     unsigned m_count;
     unsigned m_repeat;
   };
