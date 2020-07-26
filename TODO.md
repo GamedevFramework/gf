@@ -13,7 +13,7 @@ This file is a list of ideas for gf. Some of them will eventually be in gf. Othe
   - ideas: [blog post](https://www.alanzucconi.com/2016/01/06/colour-interpolation/)
   - ideas: [chroma.js](https://github.com/gka/chroma.js)
   - ideas: [gurki/vivid](https://github.com/gurki/vivid)
-- (activity) find a simple syntax for creating activities (templates spotted)
+- (activity) find a simple syntax for creating activities (templates spotted, wait for C++17)
 
 ## graphics
 
