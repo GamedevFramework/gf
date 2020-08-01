@@ -303,7 +303,7 @@ inline namespace v1 {
     m_mapping[element.character] = element.index;
   }
 
-  void ConsoleFont::mapElements(ArrayRef<ConsoleFontElement> elements) {
+  void ConsoleFont::mapElements(Span<const ConsoleFontElement> elements) {
     for (auto element : elements) {
       m_mapping[element.character] = element.index;
     }

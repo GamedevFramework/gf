@@ -37,7 +37,7 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  PointSequence::PointSequence(ArrayRef<Vector2f> points)
+  PointSequence::PointSequence(Span<const Vector2f> points)
   : m_points(points.begin(), points.end())
   {
 

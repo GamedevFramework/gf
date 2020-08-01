@@ -168,7 +168,7 @@ inline namespace v1 {
     m_face = face;
   }
 
-  Font::Font(ArrayRef<uint8_t> content)
+  Font::Font(Span<const uint8_t> content)
   : Font()
   {
     FT_Library library = static_cast<FT_Library>(m_library);

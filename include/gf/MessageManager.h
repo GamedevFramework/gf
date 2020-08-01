@@ -26,9 +26,9 @@
 #include <type_traits>
 #include <vector>
 
-#include "ArrayRef.h"
 #include "CoreApi.h"
 #include "Message.h"
+#include "Span.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -218,7 +218,7 @@ inline namespace v1 {
      *
      * @param ids The list of handler ids
      */
-    void removeHandlers(ArrayRef<MessageHandlerId> ids) {
+    void removeHandlers(Span<const MessageHandlerId> ids) {
       for (auto id : ids) {
         removeHandler(id);
       }

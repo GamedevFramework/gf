@@ -24,11 +24,11 @@
 #include <cstdint>
 #include <string>
 
-#include "ArrayRef.h"
 #include "BufferRef.h"
 #include "NetApi.h"
 #include "Socket.h"
 #include "SocketAddress.h"
+#include "Span.h"
 #include "Types.h"
 
 namespace gf {
@@ -98,7 +98,7 @@ inline namespace v1 {
      * @param address The address of the host to communicate with
      * @returns A result for the operation
      */
-    SocketDataResult sendRawBytesTo(ArrayRef<uint8_t> buffer, const SocketAddress& address);
+    SocketDataResult sendRawBytesTo(Span<const uint8_t> buffer, const SocketAddress& address);
 
     /**
      * @brief Receive some bytes from the socket
@@ -118,7 +118,7 @@ inline namespace v1 {
      * @param address The address of the host to communicate with
      * @returns True if no error occurred and the buffer was sent
      */
-    bool sendBytesTo(ArrayRef<uint8_t> buffer, const SocketAddress& address);
+    bool sendBytesTo(Span<const uint8_t> buffer, const SocketAddress& address);
 
     /**
      * @brief Receive a whole buffer from the socket

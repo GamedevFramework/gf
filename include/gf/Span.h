@@ -71,7 +71,6 @@ inline namespace v1 {
      * Data is `nullptr`.
      */
     constexpr
-    explicit
     StaticSpan(std::nullptr_t) noexcept
     : m_data(nullptr)
     {
@@ -401,7 +400,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup core
+   * @ingroup core_vocabulary
    * @brief A span
    *
    * A span is a non-owning reference to a contiguous sequence of objects.
@@ -434,7 +433,6 @@ inline namespace v1 {
      * Data is `nullptr` and size is 0.
      */
     constexpr
-    explicit
     Span(std::nullptr_t)
     : m_data(nullptr)
     , m_size(0)
@@ -461,6 +459,18 @@ inline namespace v1 {
      */
     template<typename U, typename = std::enable_if_t<std::is_convertible<U(*)[], T(*)[]>::value>>
     Span(std::vector<U>& values)
+    : m_data(values.data())
+    , m_size(values.size())
+    {
+    }
+
+    /**
+     * @brief Constructor from a `std::vector`
+     *
+     * @param values The vector of elements
+     */
+    template<typename U, typename = std::enable_if_t<std::is_convertible<U(*)[], T(*)[]>::value && std::is_const<T>::value>>
+    Span(const std::vector<U>& values)
     : m_data(values.data())
     , m_size(values.size())
     {

@@ -73,7 +73,7 @@ inline namespace v1 {
     return address;
   }
 
-  SocketDataResult TcpSocket::sendRawBytes(ArrayRef<uint8_t> buffer) {
+  SocketDataResult TcpSocket::sendRawBytes(Span<const uint8_t> buffer) {
     int res = ::send(getHandle(), sendPointer(buffer), sendLength(buffer), NoFlag);
 
     if (res == InvalidCommunication) {
@@ -107,13 +107,13 @@ inline namespace v1 {
     return { SocketStatus::Data, static_cast<std::size_t>(res) };
   }
 
-  SocketStatus TcpSocket::sendBytes(ArrayRef<uint8_t> buffer) {
+  SocketStatus TcpSocket::sendBytes(Span<const uint8_t> buffer) {
     do {
       auto res = sendRawBytes(buffer);
 
       switch (res.status) {
         case SocketStatus::Data:
-          buffer = buffer.sub(res.length);
+          buffer = buffer.lastExcept(res.length);
           break;
         case SocketStatus::Block:
           continue;

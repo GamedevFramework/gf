@@ -166,7 +166,7 @@ inline namespace v1 {
     stbi_image_free(pixels);
   }
 
-  Image::Image(ArrayRef<uint8_t> content)
+  Image::Image(Span<const uint8_t> content)
   : m_size({ 0, 0 })
   {
     int n = 0;

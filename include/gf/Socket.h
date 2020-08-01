@@ -31,11 +31,11 @@
 #include <unistd.h>
 #endif
 
-#include "ArrayRef.h"
 #include "BufferRef.h"
 #include "NetApi.h"
 #include "SocketAddress.h"
 #include "SocketGuard.h"
+#include "Span.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -202,8 +202,8 @@ inline namespace v1 {
     using RecvPointerType = void *;
 #endif
 
-    static SendLengthType sendLength(ArrayRef<uint8_t> buffer);
-    static SendPointerType sendPointer(ArrayRef<uint8_t> buffer);
+    static SendLengthType sendLength(Span<const uint8_t> buffer);
+    static SendPointerType sendPointer(Span<const uint8_t> buffer);
 
     static RecvLengthType recvLength(BufferRef<uint8_t> buffer);
     static RecvPointerType recvPointer(BufferRef<uint8_t> buffer);

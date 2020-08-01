@@ -85,7 +85,7 @@ inline namespace v1 {
      *
      * @param memory The source memory
      */
-    explicit MemoryInputStream(ArrayRef<uint8_t> memory);
+    explicit MemoryInputStream(Span<const uint8_t> memory);
 
     std::size_t read(BufferRef<uint8_t> buffer) override;
     void seek(std::ptrdiff_t position) override;
@@ -93,7 +93,7 @@ inline namespace v1 {
     bool isFinished() override;
 
   private:
-    ArrayRef<uint8_t> m_memory;
+    Span<const uint8_t> m_memory;
     std::size_t m_offset;
   };
 
@@ -195,7 +195,7 @@ inline namespace v1 {
      */
     ~FileOutputStream();
 
-    std::size_t write(ArrayRef<uint8_t> buffer) override;
+    std::size_t write(Span<const uint8_t> buffer) override;
 
     std::size_t getWrittenBytesCount() const override;
 
@@ -220,7 +220,7 @@ inline namespace v1 {
      */
     explicit MemoryOutputStream(BufferRef<uint8_t> memory);
 
-    std::size_t write(ArrayRef<uint8_t> buffer) override;
+    std::size_t write(Span<const uint8_t> buffer) override;
 
     std::size_t getWrittenBytesCount() const override;
   private:
@@ -247,7 +247,7 @@ inline namespace v1 {
      */
     ~CompressedOutputStream();
 
-    std::size_t write(ArrayRef<uint8_t> buffer) override;
+    std::size_t write(Span<const uint8_t> buffer) override;
 
     std::size_t getWrittenBytesCount() const override;
   private:
@@ -279,7 +279,7 @@ inline namespace v1 {
       return m_bytes;
     }
 
-    virtual std::size_t write(ArrayRef<uint8_t> buffer) override;
+    virtual std::size_t write(Span<const uint8_t> buffer) override;
     virtual std::size_t getWrittenBytesCount() const override;
 
   private:

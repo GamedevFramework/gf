@@ -24,10 +24,10 @@
 #include <cstdint>
 #include <string>
 
-#include "ArrayRef.h"
 #include "BufferRef.h"
 #include "NetApi.h"
 #include "Socket.h"
+#include "Span.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -104,7 +104,7 @@ inline namespace v1 {
      * @param buffer The buffer that contains the bytes to send
      * @returns A result for the operation
      */
-    SocketDataResult sendRawBytes(ArrayRef<uint8_t> buffer);
+    SocketDataResult sendRawBytes(Span<const uint8_t> buffer);
 
     /**
      * @brief Receive some bytes from the socket
@@ -122,7 +122,7 @@ inline namespace v1 {
      * @param buffer The buffer that contains the bytes to send
      * @returns The status of the connection
      */
-    SocketStatus sendBytes(ArrayRef<uint8_t> buffer);
+    SocketStatus sendBytes(Span<const uint8_t> buffer);
 
     /**
      * @brief Receive a whole buffer from the socket

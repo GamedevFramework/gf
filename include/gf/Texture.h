@@ -26,11 +26,11 @@
 
 #include <cstdint>
 
-#include "ArrayRef.h"
 #include "GraphicsApi.h"
 #include "GraphicsHandle.h"
 #include "Path.h"
 #include "Rect.h"
+#include "Span.h"
 #include "Vector.h"
 
 namespace gf {
@@ -352,7 +352,7 @@ inline namespace v1 {
      *
      * @param content Content of the file data in memory
      */
-    Texture(ArrayRef<uint8_t> content);
+    Texture(Span<const uint8_t> content);
 
     /**
      * @brief Update the texture from an image

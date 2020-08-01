@@ -158,7 +158,7 @@ inline namespace v1 {
      *
      * @param content Content of the file data in memory
      */
-    Font(ArrayRef<uint8_t> content);
+    Font(Span<const uint8_t> content);
 
     /**
      * @brief Destructor

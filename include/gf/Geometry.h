@@ -23,13 +23,13 @@
 
 #include <vector>
 
-#include "ArrayRef.h"
 #include "CoreApi.h"
 #include "GeometryTypes.h"
 #include "Heightmap.h"
 #include "Polygon.h"
 #include "Polyline.h"
 #include "Random.h"
+#include "Span.h"
 #include "Vector.h"
 
 namespace gf {
@@ -134,7 +134,7 @@ inline namespace v1 {
    *
    * @sa gf::diamondSquare2D()
    */
-  GF_CORE_API Heightmap midpointDisplacement2D(Vector2i size, Random& random, ArrayRef<double> initialValues = nullptr);
+  GF_CORE_API Heightmap midpointDisplacement2D(Vector2i size, Random& random, Span<const double> initialValues = nullptr);
 
 
   /**
@@ -157,7 +157,7 @@ inline namespace v1 {
    *
    * @sa gf::midpointDisplacement2D()
    */
-  GF_CORE_API Heightmap diamondSquare2D(Vector2i size, Random& random, ArrayRef<double> initialValues = nullptr);
+  GF_CORE_API Heightmap diamondSquare2D(Vector2i size, Random& random, Span<const double> initialValues = nullptr);
 
 
   /**
@@ -171,7 +171,7 @@ inline namespace v1 {
    * @param points The set of points
    * @returns A (convex) polygon that contains the points
    */
-  GF_CORE_API Polygon convexHull(ArrayRef<Vector2f> points);
+  GF_CORE_API Polygon convexHull(Span<const Vector2f> points);
 
 
   /**
@@ -184,7 +184,7 @@ inline namespace v1 {
    * @param distance The maximum authorized distance between the original points and the simplified points
    * @returns A new simplified sequence of points
    */
-  GF_CORE_API std::vector<Vector2f> simplifyPoints(ArrayRef<Vector2f> points, float distance = Epsilon);
+  GF_CORE_API std::vector<Vector2f> simplifyPoints(Span<const Vector2f> points, float distance = Epsilon);
 
 
   /**
@@ -194,7 +194,7 @@ inline namespace v1 {
    * @param segments A set of segments
    * @returns An array of polylines representing the lines
    */
-  GF_CORE_API std::vector<Polyline> buildLines(ArrayRef<SegmentI> segments);
+  GF_CORE_API std::vector<Polyline> buildLines(Span<const SegmentI> segments);
 
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

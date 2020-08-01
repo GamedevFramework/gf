@@ -144,7 +144,7 @@ inline namespace v1 {
     activate(m_currScenes.back());
   }
 
-  void SceneManager::pushScenes(ArrayRef<Ref<Scene>> scenes) {
+  void SceneManager::pushScenes(Span<const Ref<Scene>> scenes) {
     if (m_status == Status::Segue) {
       gf::Log::warning("You should not push scenes during a transition.\n");
       return;
@@ -204,7 +204,7 @@ inline namespace v1 {
     m_status = Status::Segue;
   }
 
-  void SceneManager::replaceScene(ArrayRef<Ref<Scene>> scenes, SegueEffect& effect, Time duration, Easing easing) {
+  void SceneManager::replaceScene(Span<const Ref<Scene>> scenes, SegueEffect& effect, Time duration, Easing easing) {
     setupSegue(effect, duration, easing);
     popScene();
     pushScenes(scenes);
@@ -218,7 +218,7 @@ inline namespace v1 {
     m_status = Status::Segue;
   }
 
-  void SceneManager::replaceAllScenes(ArrayRef<Ref<Scene>> scenes, SegueEffect& effect, Time duration, Easing easing) {
+  void SceneManager::replaceAllScenes(Span<const Ref<Scene>> scenes, SegueEffect& effect, Time duration, Easing easing) {
     setupSegue(effect, duration, easing);
     popAllScenes();
     pushScenes(scenes);

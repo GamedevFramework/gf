@@ -27,9 +27,9 @@
 #include <cstddef>
 #include <cstdint>
 
-#include "ArrayRef.h"
 #include "BufferRef.h"
 #include "CoreApi.h"
+#include "Span.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -162,7 +162,7 @@ inline namespace v1 {
      *
      * @return The number of bytes actually written
      */
-    virtual std::size_t write(ArrayRef<uint8_t> buffer) = 0;
+    virtual std::size_t write(Span<const uint8_t> buffer) = 0;
 
     /**
      * @brief Write a single byte to the stream
@@ -172,7 +172,7 @@ inline namespace v1 {
      * @return The number of bytes actually written
      */
     std::size_t write(uint8_t byte) {
-      return write(ArrayRef<uint8_t>(&byte, 1));
+      return write(Span<const uint8_t>(&byte, 1));
     }
 
     /**

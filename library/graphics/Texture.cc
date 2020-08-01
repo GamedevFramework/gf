@@ -241,7 +241,7 @@ inline namespace v1 {
   {
   }
 
-  Texture::Texture(ArrayRef<uint8_t> content)
+  Texture::Texture(Span<const uint8_t> content)
   : Texture(Image(content))
   {
   }

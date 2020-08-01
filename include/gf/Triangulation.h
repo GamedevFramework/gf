@@ -23,8 +23,8 @@
 
 #include <vector>
 
-#include "ArrayRef.h"
 #include "CoreApi.h"
+#include "Span.h"
 #include "Vector.h"
 
 namespace gf {
@@ -117,9 +117,9 @@ inline namespace v1 {
    * @param points The set of points
    * @returns A set of triangles refering to the original points
    */
-  GF_CORE_API std::vector<TriangleRef<const Vector2f>> triangulation(ArrayRef<Vector2f> points);
+  GF_CORE_API std::vector<TriangleRef<const Vector2f>> triangulation(Span<const Vector2f> points);
 
-//   GF_CORE_API std::vector<TriangleRef<const Vector2f>> triangulationConstrained(ArrayRef<Vector2f> points, ArrayRef<EdgeRef<Vector2f>> contrainedEdges);
+//   GF_CORE_API std::vector<TriangleRef<const Vector2f>> triangulationConstrained(Span<const Vector2f> points, Span<const EdgeRef<Vector2f>> contrainedEdges);
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

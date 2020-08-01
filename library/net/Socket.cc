@@ -102,11 +102,11 @@ inline namespace v1 {
     return err == WSAEWOULDBLOCK;
   }
 
-  auto Socket::sendLength(ArrayRef<uint8_t> buffer) -> SendLengthType {
+  auto Socket::sendLength(Span<const uint8_t> buffer) -> SendLengthType {
     return static_cast<SendLengthType>(buffer.getSize());
   }
 
-  auto Socket::sendPointer(ArrayRef<uint8_t> buffer) -> SendPointerType {
+  auto Socket::sendPointer(Span<const uint8_t> buffer) -> SendPointerType {
     return reinterpret_cast<SendPointerType>(buffer.getData());
   }
 
@@ -149,11 +149,11 @@ inline namespace v1 {
     return err == EAGAIN || err == EWOULDBLOCK;
   }
 
-  auto Socket::sendLength(ArrayRef<uint8_t> buffer) -> SendLengthType {
+  auto Socket::sendLength(Span<const uint8_t> buffer) -> SendLengthType {
     return buffer.getSize();
   }
 
-  auto Socket::sendPointer(ArrayRef<uint8_t> buffer) -> SendPointerType {
+  auto Socket::sendPointer(Span<const uint8_t> buffer) -> SendPointerType {
     return static_cast<SendPointerType>(buffer.getData());
   }
 

@@ -226,7 +226,7 @@ inline namespace v1 {
     customDraw(buffer, PredefinedAttributes, states);
   }
 
-  void RenderTarget::customDraw(const void *vertices, std::size_t size, std::size_t count, PrimitiveType type, ArrayRef<RenderAttributeInfo> attributes, const RenderStates& states) {
+  void RenderTarget::customDraw(const void *vertices, std::size_t size, std::size_t count, PrimitiveType type, Span<const RenderAttributeInfo> attributes, const RenderStates& states) {
     if (vertices == nullptr || count == 0) {
       return;
     }
@@ -235,7 +235,7 @@ inline namespace v1 {
     customDraw(buffer, attributes, states);
   }
 
-  void RenderTarget::customDraw(const void *vertices, std::size_t size, const uint16_t *indices, std::size_t count, PrimitiveType type, ArrayRef<RenderAttributeInfo> attributes, const RenderStates& states) {
+  void RenderTarget::customDraw(const void *vertices, std::size_t size, const uint16_t *indices, std::size_t count, PrimitiveType type, Span<const RenderAttributeInfo> attributes, const RenderStates& states) {
     if (vertices == nullptr || indices == nullptr || count == 0) {
       return;
     }
@@ -244,7 +244,7 @@ inline namespace v1 {
     customDraw(buffer, attributes, states);
   }
 
-  void RenderTarget::customDraw(const VertexBuffer& buffer, ArrayRef<RenderAttributeInfo> attributes, const RenderStates& states) {
+  void RenderTarget::customDraw(const VertexBuffer& buffer, Span<const RenderAttributeInfo> attributes, const RenderStates& states) {
     if (!buffer.hasArrayBuffer()) {
       return;
     }
@@ -265,7 +265,7 @@ inline namespace v1 {
     VertexBuffer::bind(nullptr);
   }
 
-  void RenderTarget::drawStart(const RenderStates& states, Locations& locations, std::size_t size, ArrayRef<RenderAttributeInfo> attributes) {
+  void RenderTarget::drawStart(const RenderStates& states, Locations& locations, std::size_t size, Span<const RenderAttributeInfo> attributes) {
     assert(attributes.getSize() <= Locations::CountMax);
 
     /*

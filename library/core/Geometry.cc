@@ -146,7 +146,7 @@ inline namespace v1 {
       return actualSize;
     }
 
-    void initializeCorners(Heightmap& map, ArrayRef<double> initialValues, int d) {
+    void initializeCorners(Heightmap& map, Span<const double> initialValues, int d) {
       if (initialValues.getSize() == 0) {
         map.setValue({ 0, 0 }, 0.0);
         map.setValue({ 0, d }, 0.0);
@@ -167,7 +167,7 @@ inline namespace v1 {
 
   } // anonymous namespace
 
-  Heightmap midpointDisplacement2D(Vector2i size, Random& random, ArrayRef<double> initialValues) {
+  Heightmap midpointDisplacement2D(Vector2i size, Random& random, Span<const double> initialValues) {
     int actualSize = computePowerOfTwoSize(size);
 
     int d = actualSize;
@@ -270,7 +270,7 @@ inline namespace v1 {
 
   } // anonymous namespace
 
-  Heightmap diamondSquare2D(Vector2i size, Random& random, ArrayRef<double> initialValues) {
+  Heightmap diamondSquare2D(Vector2i size, Random& random, Span<const double> initialValues) {
     int actualSize = computePowerOfTwoSize(size);
 
     int d = actualSize;
@@ -357,7 +357,7 @@ inline namespace v1 {
       findHull(s2, out, c, b);
     }
 
-    void quickHull(ArrayRef<Vector2f> in, std::vector<Vector2f>& out) {
+    void quickHull(Span<const Vector2f> in, std::vector<Vector2f>& out) {
       const Vector2f *pa;
       const Vector2f *pb;
 
@@ -391,7 +391,7 @@ inline namespace v1 {
 
   } // anonymous namespace
 
-  Polygon convexHull(ArrayRef<Vector2f> points) {
+  Polygon convexHull(Span<const Vector2f> points) {
     if (points.getSize() <= 3) {
       return Polygon(points);
     }
@@ -408,7 +408,7 @@ inline namespace v1 {
       return std::abs(cross(l1 - l2, point - l1)) / euclideanDistance(l1, l2);
     }
 
-    void simplifyPointsRecursive(ArrayRef<Vector2f> points, float distance, std::vector<Vector2f>& result) {
+    void simplifyPointsRecursive(Span<const Vector2f> points, float distance, std::vector<Vector2f>& result) {
       float maxDistance = 0.0f;
       std::size_t maxIndex = 0;
 
@@ -424,15 +424,15 @@ inline namespace v1 {
       }
 
       if (maxDistance > distance) {
-        simplifyPointsRecursive(gf::array(points.begin(), maxIndex + 1), distance, result);
+        simplifyPointsRecursive(points.first(maxIndex), distance, result);
         result.push_back(points[maxIndex]);
-        simplifyPointsRecursive(gf::array(points.begin() + maxIndex, points.getSize() - maxIndex), distance, result);
+        simplifyPointsRecursive(points.lastExcept(maxIndex), distance, result);
       }
     }
 
   } // anonymous namespace
 
-  std::vector<Vector2f> simplifyPoints(ArrayRef<Vector2f> points, float distance) {
+  std::vector<Vector2f> simplifyPoints(Span<const Vector2f> points, float distance) {
     std::vector<Vector2f> result;
     result.push_back(points[0]);
     simplifyPointsRecursive(points, distance, result);
@@ -466,7 +466,7 @@ inline namespace v1 {
     return std::tie(lhs.p0.x, lhs.p0.y, lhs.p1.x, lhs.p1.y) < std::tie(rhs.p0.x, rhs.p0.y, rhs.p1.x, rhs.p1.y);
   }
 
-  std::vector<Polyline> buildLines(ArrayRef<SegmentI> segments) {
+  std::vector<Polyline> buildLines(Span<const SegmentI> segments) {
     std::vector<Polyline> lines;
 
     std::multiset<SegmentI> remaining(segments.begin(), segments.end());

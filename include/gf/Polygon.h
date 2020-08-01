@@ -23,12 +23,12 @@
 
 #include <vector>
 
-#include "ArrayRef.h"
 #include "CoreApi.h"
 #include "Math.h"
 #include "Matrix.h"
 #include "PointSequence.h"
 #include "SerializationFwd.h"
+#include "Span.h"
 #include "Vector.h"
 #include "Winding.h"
 
@@ -56,7 +56,7 @@ inline namespace v1 {
      *
      * @param points The array of points
      */
-    Polygon(ArrayRef<Vector2f> points)
+    Polygon(Span<const Vector2f> points)
     : PointSequence(points)
     {
     }

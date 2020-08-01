@@ -28,9 +28,9 @@
 #include <cstdint>
 #include <vector>
 
-#include "ArrayRef.h"
 #include "CoreApi.h"
 #include "Path.h"
+#include "Span.h"
 #include "Vector.h"
 
 namespace gf {
@@ -146,7 +146,7 @@ inline namespace v1 {
      *
      * @param content Content of the file data in memory
      */
-    Image(ArrayRef<uint8_t> content);
+    Image(Span<const uint8_t> content);
 
     /**
      * @brief Load the image from a custom stream

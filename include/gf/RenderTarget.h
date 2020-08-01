@@ -26,7 +26,6 @@
 
 #include <cstdint>
 
-#include "ArrayRef.h"
 #include "GraphicsApi.h"
 #include "GraphicsHandle.h"
 #include "Image.h"
@@ -36,6 +35,7 @@
 #include "Region.h"
 #include "RenderStates.h"
 #include "Shader.h"
+#include "Span.h"
 #include "View.h"
 
 namespace gf {
@@ -248,7 +248,7 @@ inline namespace v1 {
      * @param attributes The attributes in the vertices
      * @param states Render states to use for drawing
      */
-    void customDraw(const void *vertices, std::size_t size, std::size_t count, PrimitiveType type, ArrayRef<RenderAttributeInfo> attributes, const RenderStates& states = RenderStates());
+    void customDraw(const void *vertices, std::size_t size, std::size_t count, PrimitiveType type, Span<const RenderAttributeInfo> attributes, const RenderStates& states = RenderStates());
 
     /**
      * @brief Draw primitives defined by an array of custom vertices and their indices
@@ -261,7 +261,7 @@ inline namespace v1 {
      * @param attributes The attributes in the vertices
      * @param states Render states to use for drawing
      */
-    void customDraw(const void *vertices, std::size_t size, const uint16_t *indices, std::size_t count, PrimitiveType type, ArrayRef<RenderAttributeInfo> attributes, const RenderStates& states = RenderStates());
+    void customDraw(const void *vertices, std::size_t size, const uint16_t *indices, std::size_t count, PrimitiveType type, Span<const RenderAttributeInfo> attributes, const RenderStates& states = RenderStates());
 
     /**
      * @brief Draw a custom vertex buffer to the render target
@@ -270,7 +270,7 @@ inline namespace v1 {
      * @param attributes The attributes in the vertices
      * @param states Render states to use for drawing
      */
-    void customDraw(const VertexBuffer& buffer, ArrayRef<RenderAttributeInfo> attributes, const RenderStates& states = RenderStates());
+    void customDraw(const VertexBuffer& buffer, Span<const RenderAttributeInfo> attributes, const RenderStates& states = RenderStates());
 
     /** @} */
 
@@ -455,7 +455,7 @@ inline namespace v1 {
       std::size_t count = 0;
     };
 
-    void drawStart(const RenderStates& states, Locations& locations, std::size_t size, ArrayRef<RenderAttributeInfo> attributes);
+    void drawStart(const RenderStates& states, Locations& locations, std::size_t size, Span<const RenderAttributeInfo> attributes);
     void drawFinish(const Locations& locations);
 
   private:

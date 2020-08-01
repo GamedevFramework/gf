@@ -63,7 +63,7 @@ inline namespace v1 {
   }
 
 
-  SocketDataResult UdpSocket::sendRawBytesTo(ArrayRef<uint8_t> buffer, const SocketAddress& address) {
+  SocketDataResult UdpSocket::sendRawBytesTo(Span<const uint8_t> buffer, const SocketAddress& address) {
     auto res = ::sendto(getHandle(), sendPointer(buffer), sendLength(buffer), NoFlag, reinterpret_cast<const sockaddr*>(&address.m_storage), address.m_length);
 
     if (res == InvalidCommunication) {
@@ -97,7 +97,7 @@ inline namespace v1 {
 
   static std::size_t MaxDatagramSize = 65507;
 
-  bool UdpSocket::sendBytesTo(ArrayRef<uint8_t> buffer, const SocketAddress& address) {
+  bool UdpSocket::sendBytesTo(Span<const uint8_t> buffer, const SocketAddress& address) {
     if (buffer.getSize() > MaxDatagramSize) {
       return false;
     }

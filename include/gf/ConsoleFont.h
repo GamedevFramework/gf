@@ -21,9 +21,9 @@
 #ifndef GF_CONSOLE_FONT_H
 #define GF_CONSOLE_FONT_H
 
-#include "ArrayRef.h"
 #include "GraphicsApi.h"
 #include "Path.h"
+#include "Span.h"
 #include "StringRef.h"
 #include "Texture.h"
 #include "Vector.h"
@@ -206,7 +206,7 @@ inline namespace v1 {
      *
      * @param elements The font elements
      */
-    void mapElements(ArrayRef<ConsoleFontElement> elements);
+    void mapElements(Span<const ConsoleFontElement> elements);
 
     /**
      * @brief Clear the mapping

@@ -23,12 +23,12 @@
 
 #include <vector>
 
-#include "ArrayRef.h"
 #include "CoreApi.h"
 #include "Math.h"
 #include "Matrix.h"
 #include "PointSequence.h"
 #include "SerializationFwd.h"
+#include "Span.h"
 #include "Vector.h"
 
 namespace gf {
@@ -69,7 +69,7 @@ inline namespace v1 {
      * @param points The array of points
      * @param type The type of polyline (default: chain)
      */
-    Polyline(ArrayRef<Vector2f> points, Type type = Chain)
+    Polyline(Span<const Vector2f> points, Type type = Chain)
     : PointSequence(points)
     , m_type(type)
     {

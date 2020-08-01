@@ -5,7 +5,6 @@ find_package(Threads REQUIRED)
 add_executable(gf_core_tests
   main.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/googletest/googletest/src/gtest-all.cc
-  testArrayRef.cc
   testBufferRef.cc
   testCirc.cc
   testDice.cc
