@@ -38,10 +38,8 @@ build:
   project: C:\projects\GF\build\GF.sln
   verbosity: normal
 
-test_script:
-  - cmd: dir C:\projects\GF\build\%CONFIGURATION%
-  - cmd: C:\projects\GF\build\%CONFIGURATION%\gf_core_tests.exe --gtest_output=xml:C:\projects\GF\build\gf_core_tests.xml
-  - cmd: dir C:\projects\GF\build\%CONFIGURATION%
+#test_script:
+  #- cmd: C:\projects\GF\build\%CONFIGURATION%\gf_core_tests.exe --gtest_output=xml:C:\projects\GF\build\gf_core_tests.xml
 
-on_finish:
-  - ps: (new-object net.webclient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\gf_core_tests.xml))
+#on_finish:
+  #- ps: (new-object net.webclient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\gf_core_tests.xml))
