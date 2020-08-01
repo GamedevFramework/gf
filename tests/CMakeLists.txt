@@ -39,7 +39,7 @@ target_link_libraries(gf_core_tests
 
 add_test(
   NAME GF_CORE_TEST
-  COMMAND gf_tests
+  COMMAND gf_core_tests
 )
 
 # gf::net tests
@@ -64,5 +64,5 @@ target_link_libraries(gf_net_tests
 
 add_test(
   NAME GF_NET_TEST
-  COMMAND gf_tests
+  COMMAND gf_net_tests
 )
