@@ -83,7 +83,7 @@ inline namespace v1 {
      *
      * @return The number of bytes actually read
      */
-    virtual std::size_t read(Span<uint8_t> buffer) = 0;
+    virtual std::size_t read(Span<uint8_t> buffer) = 0; // Flawfinder: ignore
 
     /**
      * @brief Read a single byte from the stream
@@ -95,8 +95,8 @@ inline namespace v1 {
      *
      * @return The number of bytes actually read
      */
-    std::size_t read(uint8_t& byte) {
-      return read(Span<uint8_t>(&byte, 1));
+    std::size_t read(uint8_t& byte) {        // Flawfinder: ignore
+      return read(Span<uint8_t>(&byte, 1));  // Flawfinder: ignore
     }
 
     /**

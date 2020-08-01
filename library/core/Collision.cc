@@ -322,9 +322,9 @@ inline namespace v1 {
 
     class ExpandingSimplex {
     public:
-      ExpandingSimplex(const Simplex& simplex) {
-        m_winding = getWinding(simplex);
-
+      ExpandingSimplex(const Simplex& simplex)
+      : m_winding(getWinding(simplex))
+      {
         unsigned size = simplex.getSize();
 
         for (unsigned i = 0; i < size; ++i) {

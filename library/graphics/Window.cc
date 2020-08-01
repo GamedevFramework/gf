@@ -24,7 +24,7 @@
 #include <gf/Window.h>
 
 #include <cassert>
-#include <cstring>
+#include <type_traits>
 
 #include <SDL.h>
 
@@ -550,7 +550,9 @@ inline namespace v1 {
 
         case SDL_TEXTINPUT:
           out.type = EventType::TextEntered;
-          std::strncpy(out.text.rune.data, in->text.text, Rune::Size);
+          static_assert(std::extent<decltype(out.text.rune.data)>::value == std::extent<decltype(in->text.text)>::value, "Buffer size mismatch.");
+          static_assert(std::extent<decltype(out.text.rune.data)>::value == Rune::Size, "Buffer size mismatch.");
+          std::copy_n(std::begin(in->text.text), Rune::Size, std::begin(out.text.rune.data));
           break;
 
         case SDL_FINGERDOWN:

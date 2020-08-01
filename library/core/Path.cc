@@ -29,7 +29,8 @@ inline namespace v1 {
 
   Serializer& operator|(Serializer& ar, const Path& path) {
     std::string str = path.string();
-    return ar | str;
+    ar | str;
+    return ar;
   }
 
   Deserializer& operator|(Deserializer& ar, Path& path) {

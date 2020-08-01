@@ -22,6 +22,7 @@
 
 #include <cassert>
 #include <cinttypes>
+#include <cstring>
 
 #include <limits>
 #include <memory>
@@ -61,7 +62,7 @@ inline namespace v1 {
 
     template<>
     struct CharReader<true> {
-      static bool read(Deserializer& deserializer, char& data) {
+      static bool read(Deserializer& deserializer, char& data) { // Flawfinder: ignore
         int8_t x;
 
         if (deserializer.readSigned8(x)) {
@@ -225,7 +226,7 @@ inline namespace v1 {
   , m_version(0)
   {
     uint8_t magic[2] = { 0u, 0u };
-    m_stream->read(magic);
+    m_stream->read(magic); // Flawfinder: ignore
 
     if (magic[0] != Magic[0] || magic[1] != Magic[1]) {
       Log::error("The stream is not a gf archive.\n"); // throw?
@@ -249,66 +250,54 @@ inline namespace v1 {
 
   bool Deserializer::readChar(char& data) {
     CharReader<std::numeric_limits<char>::is_signed> reader;
-    return reader.read(*this, data);
+    return reader.read(*this, data); // Flawfinder: ignore
   }
 
   bool Deserializer::readSigned8(int8_t& data) {
-    union {
-      uint8_t u8;
-      int8_t i8;
-    };
+    uint8_t u8;
 
     if (!readBigEndian8(u8)) {
       Log::error("Asking for signed but the file is at the end.\n");
       return false;
     }
 
-    data = i8;
+    std::memcpy(&data, &u8, sizeof(int8_t));
     return true;
   }
 
   bool Deserializer::readSigned16(int16_t& data) {
-    union {
-      uint16_t u16;
-      int16_t i16;
-    };
+    uint16_t u16;
 
     if (!readBigEndian16(u16)) {
       Log::error("Asking for signed but the file is at the end.\n");
       return false;
     }
 
-    data = i16;
+    std::memcpy(&data, &u16, sizeof(int16_t));
     return true;
   }
 
   bool Deserializer::readSigned32(int32_t& data) {
-    union {
-      uint32_t u32;
-      int32_t i32;
-    };
+    uint32_t u32;
 
     if (!readBigEndian32(u32)) {
       Log::error("Asking for signed but the file is at the end.\n");
       return false;
     }
 
-    data = i32;
+    std::memcpy(&data, &u32, sizeof(int32_t));
     return true;
   }
 
   bool Deserializer::readSigned64(int64_t& data) {
-    union {
-      uint64_t u64;
-      int64_t i64;
-    };
+    uint64_t u64;
 
     if (!readBigEndian64(u64)) {
       Log::error("Asking for signed but the file is at the end.\n");
       return false;
     }
 
-    data = i64;
+    std::memcpy(&data, &u64, sizeof(int64_t));
     return true;
   }
 
@@ -401,7 +390,7 @@ inline namespace v1 {
     static constexpr std::size_t Size = sizeof(data);
 
     uint8_t buf[Size];
-    if (m_stream->read(buf) != Size) {
+    if (m_stream->read(buf) != Size) { // Flawfinder: ignore
       return false;
     }
 
@@ -420,7 +409,7 @@ inline namespace v1 {
     static constexpr std::size_t Size = sizeof(data);
 
     uint8_t buf[Size];
-    if (m_stream->read(buf) != Size) {
+    if (m_stream->read(buf) != Size) { // Flawfinder: ignore
       return false;
     }
 
@@ -439,7 +428,7 @@ inline namespace v1 {
     static constexpr std::size_t Size = sizeof(data);
 
     uint8_t buf[Size];
-    if (m_stream->read(buf) != Size) {
+    if (m_stream->read(buf) != Size) { // Flawfinder: ignore
       return false;
     }
 
@@ -455,7 +444,7 @@ inline namespace v1 {
   }
 
   bool Deserializer::readBigEndian8(uint8_t& data) {
-    return m_stream->read(data) == 1;
+    return m_stream->read(data) == 1; // Flawfinder: ignore
   }
 
   bool Deserializer::isEof() const {

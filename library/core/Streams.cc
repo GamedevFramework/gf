@@ -175,7 +175,7 @@ inline namespace v1 {
     do {
       if (m_start == m_stop) {
         m_start = 0;
-        m_stop = m_compressed->read(m_buffer);
+        m_stop = m_compressed->read(m_buffer); // Flawfinder: ignore
       }
 
       uInt remaining = m_stop - m_start;
