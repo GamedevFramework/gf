@@ -18,6 +18,7 @@ add_executable(gf_core_tests
   testSerialization.cc
   testSingleton.cc
   testSpatial.cc
+  testSpan.cc
   testStringRef.cc
   testVector.cc
   testVector1.cc
