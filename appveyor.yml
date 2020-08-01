@@ -31,15 +31,15 @@ before_build:
   - cmd: git submodule update --init
   - cmd: mkdir build
   - cmd: cd build
-  - cmd: cmake -A x64 -DGF_DEBUG=OFF -DGF_BUILD_GAMES=OFF -DGF_SINGLE_COMPILTATION_UNIT=ON -DBUILD_SHARED_LIBS=OFF -DCMAKE_TOOLCHAIN_FILE=C:\Tools\vcpkg\scripts\buildsystems\vcpkg.cmake ..
+  - cmd: cmake -A x64 -DGF_VCPKG=ON -DGF_DEBUG=OFF -DGF_BUILD_GAMES=OFF -DGF_SINGLE_COMPILTATION_UNIT=ON -DBUILD_SHARED_LIBS=OFF  -DBUILD_TESTING=ON -DCMAKE_TOOLCHAIN_FILE=C:\Tools\vcpkg\scripts\buildsystems\vcpkg.cmake ..
 
 build:
   parallel: true
   project: C:\projects\GF\build\GF.sln
   verbosity: normal
 
-# test_script:
-  # - cmd: .\tests\Debug\gf_tests.exe --gtest_output=xml:tests.xml --gtest_filter=-Socket*
+test_script:
+  - cmd: '%APPVEYOR_BUILD_FOLDER%\%CONFIGURATION%\gf_core_tests.exe --gtest_output=xml:%APPVEYOR_BUILD_FOLDER%/gf_core_tests.xml'
 
-# on_finish:
-  # - ps: (new-object net.webclient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\tests.xml))
+on_finish:
+  - ps: (new-object net.webclient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\gf_core_tests.xml))

@@ -41,6 +41,6 @@ before_script:
   - test "$TRAVIS_OS_NAME" = "linux" && sudo ln -s /usr/share/libpugixml-dev/cmake /usr/lib/x86_64-linux-gnu/cmake/pugixml || true
   - mkdir build
   - cd build
-  - cmake -DCMAKE_BUILD_TYPE=Release -DGF_DEBUG=OFF -DGF_BUILD_GAMES=ON -DGF_SINGLE_COMPILTATION_UNIT=ON ..
+  - cmake -DCMAKE_BUILD_TYPE=Release -DGF_DEBUG=OFF -DGF_BUILD_GAMES=ON -DGF_SINGLE_COMPILTATION_UNIT=ON -DBUILD_TESTING=ON ..
 script:
-  - make && ./tests/gf_tests --gtest_filter=-*V6:SpatialTest*
+  - make && ./tests/gf_core_tests && ./tests/gf_net_tests --gtest_filter=-*V6:SpatialTest*
