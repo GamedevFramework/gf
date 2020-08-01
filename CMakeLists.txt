@@ -16,11 +16,11 @@ if(NOT MSVC AND (NOT DEFINED CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL ""))
 endif()
 
 option(BUILD_SHARED_LIBS "Build the library as a shared library" ON)
+option(BUILD_TESTING "Build tests" ON)
 
 option(GF_DEBUG "Activate debug build" ON)
 option(GF_BUILD_WITH_OPENGL3 "Build with OpenGL 3.3 instead of OpenGL ES 2.0" OFF)
 option(GF_BUILD_EXAMPLES "Build examples" ON)
-option(GF_BUILD_TESTS "Build tests" ON)
 option(GF_BUILD_DOCUMENTATION "Build documentation (needs Doxygen)" ON)
 option(GF_BUILD_GAMES "Build games" OFF)
 option(GF_SINGLE_COMPILTATION_UNIT "Build the library in a single file (unity build)" OFF)
@@ -92,7 +92,8 @@ if(GF_BUILD_EXAMPLES)
   add_subdirectory(examples)
 endif()
 
-if(GF_BUILD_TESTS)
+if(BUILD_TESTING)
+  enable_testing()
   add_subdirectory(tests)
 endif()
 

@@ -1,6 +1,8 @@
 find_package(Threads REQUIRED)
 
-add_executable(gf_tests
+# gf::core tests
+
+add_executable(gf_core_tests
   main.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/googletest/googletest/src/gtest-all.cc
   testArrayRef.cc
@@ -15,7 +17,6 @@ add_executable(gf_tests
   testRect.cc
   testSerialization.cc
   testSingleton.cc
-  testSocket.cc
   testSpatial.cc
   testStringRef.cc
   testVector.cc
@@ -25,15 +26,44 @@ add_executable(gf_tests
   testVector4.cc
 )
 
-target_include_directories(gf_tests
+target_include_directories(gf_core_tests
   PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/googletest/googletest/include
     ${CMAKE_CURRENT_SOURCE_DIR}/googletest/googletest
 )
 
-target_link_libraries(gf_tests
+target_link_libraries(gf_core_tests
   PRIVATE
-    gf0
+    gfcore0
+    Threads::Threads
+)
+
+add_test(
+  NAME GF_CORE_TEST
+  COMMAND gf_tests
+)
+
+# gf::net tests
+
+add_executable(gf_net_tests
+  main.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/googletest/googletest/src/gtest-all.cc
+  testSocket.cc
+)
+
+target_include_directories(gf_net_tests
+  PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/googletest/googletest/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/googletest/googletest
+)
+
+target_link_libraries(gf_net_tests
+  PRIVATE
     gfnet0
     Threads::Threads
+)
+
+add_test(
+  NAME GF_NET_TEST
+  COMMAND gf_tests
 )

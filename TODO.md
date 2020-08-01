@@ -28,7 +28,7 @@ This file is a list of ideas for gf. Some of them will eventually be in gf. Othe
 - (curve) add different join styles and cap styles
   - ideas: [Polyline2D](https://github.com/CrushedPixel/Polyline2D),
 - (tilelayer) make `TileLayer` a base class for the different type of tile layers
-  - create `OrthogonalTileLayer`, `IsometricTileLayer`, `StaggeredTileLayer`, `HexagonalTileLayer`
+  - create `SquareTileLayer`, `IsometricTileLayer`, `StaggeredTileLayer`, `HexagonalTileLayer`
   - create helpers like `StaggerHelper` or `HexagonHelper`
   - [differences between these types](https://gamedev.stackexchange.com/questions/49847/difference-between-staggered-isometric-and-normal-isometric-tilemaps)
 - (tilelayer) handle multiple tileset in `TileLayer`
@@ -50,7 +50,6 @@ This file is a list of ideas for gf. Some of them will eventually be in gf. Othe
 ## meta
 
 - (docs) split gf_dev_doc by modules (core, graphics, net)
-- (tests) split gf_tests by modules (core, net)
 - (portability) consider using [hedley](https://nemequ.github.io/hedley/)
   - blocking bug: nemequ/hedley#35
 - (versions) go with C++17
