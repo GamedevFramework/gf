@@ -39,9 +39,9 @@ build:
   verbosity: normal
 
 test_script:
-  - cmd: dir %APPVEYOR_BUILD_FOLDER%\%CONFIGURATION%
-  - cmd: %APPVEYOR_BUILD_FOLDER%\%CONFIGURATION%\gf_core_tests.exe --gtest_output=xml:C:\projects\GF\build\gf_core_tests.xml
-  - cmd: dir %APPVEYOR_BUILD_FOLDER%\%CONFIGURATION%
+  - cmd: dir C:\projects\GF\build\%CONFIGURATION%
+  - cmd: C:\projects\GF\build\%CONFIGURATION%\gf_core_tests.exe --gtest_output=xml:C:\projects\GF\build\gf_core_tests.xml
+  - cmd: dir C:\projects\GF\build\%CONFIGURATION%
 
 on_finish:
   - ps: (new-object net.webclient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\gf_core_tests.xml))
