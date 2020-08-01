@@ -24,7 +24,6 @@
 #include <cstdint>
 #include <string>
 
-#include "BufferRef.h"
 #include "NetApi.h"
 #include "Socket.h"
 #include "SocketAddress.h"
@@ -107,7 +106,7 @@ inline namespace v1 {
      * @param address The address of the sending host
      * @returns A result for the operation
      */
-    SocketDataResult recvRawBytesFrom(BufferRef<uint8_t> buffer, SocketAddress& address);
+    SocketDataResult recvRawBytesFrom(Span<uint8_t> buffer, SocketAddress& address);
 
     /**
      * @brief Send a whole buffer to the socket
@@ -129,7 +128,7 @@ inline namespace v1 {
      * @param address The address of the sending host
      * @returns True if no error occurred and the buffer was received
      */
-    bool recvBytesFrom(BufferRef<uint8_t> buffer, SocketAddress& address);
+    bool recvBytesFrom(Span<uint8_t> buffer, SocketAddress& address);
 
   private:
     static SocketHandle nativeBind(const std::string& service, SocketFamily family);

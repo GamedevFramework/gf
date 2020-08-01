@@ -56,7 +56,7 @@ inline namespace v1 {
 
     int callbackRead(void *user,char *data,int size) {
       InputStream *stream = static_cast<InputStream *>(user);
-      return static_cast<int>(stream->read(BufferRef<uint8_t>(reinterpret_cast<uint8_t*>(data), size)));
+      return static_cast<int>(stream->read(Span<uint8_t>(reinterpret_cast<uint8_t*>(data), size)));
     }
 
     void callbackSkip(void *user, int n) {

@@ -61,7 +61,7 @@ inline namespace v1 {
      */
     ~FileInputStream();
 
-    std::size_t read(BufferRef<uint8_t> buffer) override;
+    std::size_t read(Span<uint8_t> buffer) override;
     void seek(std::ptrdiff_t position) override;
     void skip(std::ptrdiff_t position) override;
     bool isFinished() override;
@@ -87,7 +87,7 @@ inline namespace v1 {
      */
     explicit MemoryInputStream(Span<const uint8_t> memory);
 
-    std::size_t read(BufferRef<uint8_t> buffer) override;
+    std::size_t read(Span<uint8_t> buffer) override;
     void seek(std::ptrdiff_t position) override;
     void skip(std::ptrdiff_t position) override;
     bool isFinished() override;
@@ -116,7 +116,7 @@ inline namespace v1 {
      */
     virtual ~CompressedInputStream();
 
-    std::size_t read(BufferRef<uint8_t> buffer) override;
+    std::size_t read(Span<uint8_t> buffer) override;
     void seek(std::ptrdiff_t position) override;
     void skip(std::ptrdiff_t position) override;
     bool isFinished() override;
@@ -153,7 +153,7 @@ inline namespace v1 {
       return m_bytes;
     }
 
-    virtual std::size_t read(BufferRef<uint8_t> buffer) override;
+    virtual std::size_t read(Span<uint8_t> buffer) override;
     virtual void seek(std::ptrdiff_t position) override;
     virtual void skip(std::ptrdiff_t position) override;
     virtual bool isFinished() override;
@@ -218,13 +218,13 @@ inline namespace v1 {
      *
      * @param memory The destination buffer
      */
-    explicit MemoryOutputStream(BufferRef<uint8_t> memory);
+    explicit MemoryOutputStream(Span<uint8_t> memory);
 
     std::size_t write(Span<const uint8_t> buffer) override;
 
     std::size_t getWrittenBytesCount() const override;
   private:
-    BufferRef<uint8_t> m_memory;
+    Span<uint8_t> m_memory;
     std::size_t m_offset;
   };
 

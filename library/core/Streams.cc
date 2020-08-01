@@ -60,7 +60,7 @@ inline namespace v1 {
     }
   }
 
-  std::size_t FileInputStream::read(BufferRef<uint8_t> buffer) {
+  std::size_t FileInputStream::read(Span<uint8_t> buffer) {
     if (m_file == nullptr) {
       return 0;
     }
@@ -103,7 +103,7 @@ inline namespace v1 {
 
   }
 
-  std::size_t MemoryInputStream::read(BufferRef<uint8_t> buffer) {
+  std::size_t MemoryInputStream::read(Span<uint8_t> buffer) {
     if (buffer.getSize() == 0) {
       return 0;
     }
@@ -168,7 +168,7 @@ inline namespace v1 {
     assert(err == Z_OK);
   }
 
-  std::size_t CompressedInputStream::read(BufferRef<uint8_t> buffer) {
+  std::size_t CompressedInputStream::read(Span<uint8_t> buffer) {
     m_stream.next_out = buffer.getData();
     m_stream.avail_out = buffer.getSize();
 
@@ -226,7 +226,7 @@ inline namespace v1 {
     assert(bytes != nullptr);
   }
 
-  std::size_t BufferInputStream::read(BufferRef<uint8_t> buffer) {
+  std::size_t BufferInputStream::read(Span<uint8_t> buffer) {
     if (buffer.getSize() == 0) {
       return 0;
     }
@@ -326,7 +326,7 @@ inline namespace v1 {
    * MemoryOutputStream
    */
 
-  MemoryOutputStream::MemoryOutputStream(BufferRef<uint8_t> memory)
+  MemoryOutputStream::MemoryOutputStream(Span<uint8_t> memory)
   : m_memory(memory)
   , m_offset(0)
   {

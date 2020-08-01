@@ -31,7 +31,6 @@
 #include <unistd.h>
 #endif
 
-#include "BufferRef.h"
 #include "NetApi.h"
 #include "SocketAddress.h"
 #include "SocketGuard.h"
@@ -205,8 +204,8 @@ inline namespace v1 {
     static SendLengthType sendLength(Span<const uint8_t> buffer);
     static SendPointerType sendPointer(Span<const uint8_t> buffer);
 
-    static RecvLengthType recvLength(BufferRef<uint8_t> buffer);
-    static RecvPointerType recvPointer(BufferRef<uint8_t> buffer);
+    static RecvLengthType recvLength(Span<uint8_t> buffer);
+    static RecvPointerType recvPointer(Span<uint8_t> buffer);
 
     static int getErrorCode();
     static std::string getErrorString();

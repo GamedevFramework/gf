@@ -78,7 +78,7 @@ inline namespace v1 {
     return { SocketStatus::Data, static_cast<std::size_t>(res) };
   }
 
-  SocketDataResult UdpSocket::recvRawBytesFrom(BufferRef<uint8_t> buffer, SocketAddress& address) {
+  SocketDataResult UdpSocket::recvRawBytesFrom(Span<uint8_t> buffer, SocketAddress& address) {
     address.m_length = sizeof(sockaddr_storage);
     auto res = ::recvfrom(getHandle(), recvPointer(buffer), recvLength(buffer), NoFlag, reinterpret_cast<sockaddr*>(&address.m_storage), &address.m_length);
 
@@ -112,7 +112,7 @@ inline namespace v1 {
     return false;
   }
 
-  bool UdpSocket::recvBytesFrom(BufferRef<uint8_t> buffer, SocketAddress& address) {
+  bool UdpSocket::recvBytesFrom(Span<uint8_t> buffer, SocketAddress& address) {
     if (buffer.getSize() > MaxDatagramSize) {
       return false;
     }

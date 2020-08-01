@@ -32,9 +32,9 @@
 #include <unordered_set>
 #include <vector>
 
-#include "BufferRef.h"
 #include "CoreApi.h"
 #include "Serialization.h"
+#include "Span.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -350,7 +350,7 @@ inline namespace v1 {
    */
   template<typename T>
   inline
-  Deserializer& operator|(Deserializer& ar, BufferRef<T> array) {
+  Deserializer& operator|(Deserializer& ar, Span<T> array) {
     std::size_t size;
 
     if (!ar.readSizeHeader(size)) {
@@ -375,7 +375,7 @@ inline namespace v1 {
   template<typename T, std::size_t N>
   inline
   Deserializer& operator|(Deserializer& ar, T (&array)[N]) {
-    return ar | BufferRef<T>(array);
+    return ar | Span<T>(array);
   }
 
   /**
@@ -385,7 +385,7 @@ inline namespace v1 {
   template<typename T, std::size_t N>
   inline
   Deserializer& operator|(Deserializer& ar, std::array<T, N>& array) {
-    return ar | BufferRef<T>(array);
+    return ar | Span<T>(array);
   }
 
   /**

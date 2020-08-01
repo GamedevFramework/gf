@@ -24,7 +24,6 @@
 #include <cstdint>
 #include <string>
 
-#include "BufferRef.h"
 #include "NetApi.h"
 #include "Socket.h"
 #include "Span.h"
@@ -112,7 +111,7 @@ inline namespace v1 {
      * @param buffer The buffer to store the received bytes
      * @returns A result for the operation
      */
-    SocketDataResult recvRawBytes(BufferRef<uint8_t> buffer);
+    SocketDataResult recvRawBytes(Span<uint8_t> buffer);
 
     /**
      * @brief Send a whole buffer to the socket
@@ -133,7 +132,7 @@ inline namespace v1 {
      * @param buffer The buffer to store the received bytes
      * @returns The status of the connection
      */
-    SocketStatus recvBytes(BufferRef<uint8_t> buffer);
+    SocketStatus recvBytes(Span<uint8_t> buffer);
 
     /**
      * @brief Send a packet to the socket

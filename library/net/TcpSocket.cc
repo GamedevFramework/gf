@@ -88,7 +88,7 @@ inline namespace v1 {
     return { SocketStatus::Data, static_cast<std::size_t>(res) };
   }
 
-  SocketDataResult TcpSocket::recvRawBytes(BufferRef<uint8_t> buffer) {
+  SocketDataResult TcpSocket::recvRawBytes(Span<uint8_t> buffer) {
     int res = ::recv(getHandle(), recvPointer(buffer), recvLength(buffer), NoFlag);
 
     if (res == InvalidCommunication) {
@@ -127,13 +127,13 @@ inline namespace v1 {
     return SocketStatus::Data;
   }
 
-  SocketStatus TcpSocket::recvBytes(BufferRef<uint8_t> buffer) {
+  SocketStatus TcpSocket::recvBytes(Span<uint8_t> buffer) {
     do {
       auto res = recvRawBytes(buffer);
 
       switch (res.status) {
         case SocketStatus::Data:
-          buffer = buffer.sub(res.length);
+          buffer = buffer.lastExcept(res.length);
           break;
         case SocketStatus::Block:
           continue;

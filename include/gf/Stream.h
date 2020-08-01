@@ -27,7 +27,6 @@
 #include <cstddef>
 #include <cstdint>
 
-#include "BufferRef.h"
 #include "CoreApi.h"
 #include "Span.h"
 
@@ -84,7 +83,7 @@ inline namespace v1 {
      *
      * @return The number of bytes actually read
      */
-    virtual std::size_t read(BufferRef<uint8_t> buffer) = 0;
+    virtual std::size_t read(Span<uint8_t> buffer) = 0;
 
     /**
      * @brief Read a single byte from the stream
@@ -97,7 +96,7 @@ inline namespace v1 {
      * @return The number of bytes actually read
      */
     std::size_t read(uint8_t& byte) {
-      return read(BufferRef<uint8_t>(&byte, 1));
+      return read(Span<uint8_t>(&byte, 1));
     }
 
     /**

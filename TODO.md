@@ -4,7 +4,6 @@ This file is a list of ideas for gf. Some of them will eventually be in gf. Othe
 
 ## core
 
-- (vocabulary) merge `ArrayRef` and `BufferRef` in `Span`
 - (vocabulary) rename `StringRef` in `StringView`
 - (geometry) add more algorithms from [here](http://geomalgorithms.com/algorithms.html)
 - (spatial) add linear and quadratic RTree

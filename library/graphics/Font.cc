@@ -84,7 +84,7 @@ inline namespace v1 {
         return 0;
       }
 
-      return stream->read(BufferRef<uint8_t>(buffer, count));
+      return stream->read(Span<uint8_t>(buffer, count));
     }
 
     void callbackClose(FT_Stream rec) {

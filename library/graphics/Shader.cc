@@ -67,7 +67,7 @@ inline namespace v1 {
       char buffer[BufferSize];
 
       while (!stream.isFinished()) {
-        std::size_t size = stream.read(BufferRef<uint8_t>(reinterpret_cast<uint8_t*>(buffer), BufferSize));
+        std::size_t size = stream.read(Span<uint8_t>(reinterpret_cast<uint8_t*>(buffer), BufferSize));
         content.insert(content.end(), buffer, buffer + size);
       }
 

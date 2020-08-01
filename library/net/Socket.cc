@@ -110,11 +110,11 @@ inline namespace v1 {
     return reinterpret_cast<SendPointerType>(buffer.getData());
   }
 
-  auto Socket::recvLength(BufferRef<uint8_t> buffer) -> RecvLengthType {
+  auto Socket::recvLength(Span<uint8_t> buffer) -> RecvLengthType {
     return static_cast<SendLengthType>(buffer.getSize());
   }
 
-  auto Socket::recvPointer(BufferRef<uint8_t> buffer) -> RecvPointerType {
+  auto Socket::recvPointer(Span<uint8_t> buffer) -> RecvPointerType {
     return reinterpret_cast<RecvPointerType>(buffer.getData());
   }
 
@@ -157,11 +157,11 @@ inline namespace v1 {
     return static_cast<SendPointerType>(buffer.getData());
   }
 
-  auto Socket::recvLength(BufferRef<uint8_t> buffer) -> RecvLengthType {
+  auto Socket::recvLength(Span<uint8_t> buffer) -> RecvLengthType {
     return buffer.getSize();
   }
 
-  auto Socket::recvPointer(BufferRef<uint8_t> buffer) -> RecvPointerType {
+  auto Socket::recvPointer(Span<uint8_t> buffer) -> RecvPointerType {
     return static_cast<RecvPointerType>(buffer.getData());
   }
 

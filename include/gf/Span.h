@@ -531,7 +531,7 @@ inline namespace v1 {
      *
      * @returns A pointer to the first element in the array
      */
-    constexpr const T *getData() const noexcept {
+    constexpr T *getData() noexcept {
       return m_data;
     }
 
@@ -540,7 +540,7 @@ inline namespace v1 {
      *
      * @returns A pointer to the first element in the array
      */
-    constexpr const T *getData() noexcept {
+    constexpr const T *getData() const noexcept {
       return m_data;
     }
 

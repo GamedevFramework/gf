@@ -378,7 +378,7 @@ inline namespace v1 {
   }
 
   bool Deserializer::readString(char *data, std::size_t size) {
-    if (m_stream->read(BufferRef<uint8_t>(reinterpret_cast<uint8_t*>(data), size)) != size) {
+    if (m_stream->read(Span<uint8_t>(reinterpret_cast<uint8_t*>(data), size)) != size) {
       Log::error("Asking for a string but the file is at the end.\n");
       return false;
     }

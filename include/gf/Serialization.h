@@ -24,7 +24,6 @@
 #include <cstddef>
 #include <cstdint>
 
-#include "BufferRef.h"
 #include "CoreApi.h"
 #include "Stream.h"
 #include "StringRef.h"
