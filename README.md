@@ -80,7 +80,11 @@ See the [online documentation for Gamedev Framework (gf)](http://gamedevframewor
 
 ## Contact
 
-If you want to talk directly with the developpers, you can join the [#gf-devel IRC channel on Freenode](irc://chat.freenode.net/gf-devel). Or you can post a message on [/r/GamedevFramework](https://www.reddit.com/r/GamedevFramework/).
+If you want to talk directly with the developpers, you can
+
+- chat on the [Discord server of gf](https://discord.gg/2fXM3T4)
+- post a message on [/r/GamedevFramework](https://www.reddit.com/r/GamedevFramework/).
+- join the [#gf-devel IRC channel on Freenode](irc://chat.freenode.net/gf-devel)
 
 ## Contribution
 
@@ -108,11 +112,6 @@ These screenshots are from games included in the repository.
 
 ![gf Pong!](games/gf_pong/gf_pong.png)
 ![gf 2048!](games/gf_2048/gf_2048.png)
-![Huaca](games/huaca/huaca.png)
-![Bank Robbery for Dummies](games/bank_robbery_for_dummies/brfd.png)
-![Bygone Islands](games/islands/islands.png)
-![HOME](games/HOME/HOME.png)
-![Lux](games/lux/lux.png)
 
 ## Code Quality
 

@@ -120,13 +120,8 @@ if (GF_BUILD_DOCUMENTATION)
 endif()
 
 if(GF_BUILD_GAMES)
-  add_subdirectory(games/bank_robbery_for_dummies)
   add_subdirectory(games/gf_2048)
   add_subdirectory(games/gf_pong)
-  add_subdirectory(games/HOME)
-  add_subdirectory(games/huaca)
-  add_subdirectory(games/islands)
-  add_subdirectory(games/lux)
 endif()
 
 add_subdirectory(tools/gf_info)

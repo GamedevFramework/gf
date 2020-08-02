@@ -1,6 +1,0 @@
-#ifndef CONFIG_H
-#define CONFIG_H
-
-#define BRFD_DATA_DIR "@BRFD_DATA_DIR@"
-
-#endif // CONFIG_H
