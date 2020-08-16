@@ -43,6 +43,7 @@ add_gf_example(30_postprocessing)
 add_gf_example(31_pipeline)
 add_gf_example(32_colorblind)
 add_gf_example(33_segues)
+add_gf_example(34_multiple_windows)
 
 add_gf_example(41_collisions)
 add_gf_example(42_physics)
