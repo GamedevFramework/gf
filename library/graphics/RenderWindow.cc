@@ -44,7 +44,8 @@ inline namespace v1 {
   }
 
   void RenderWindow::setActive() {
-     glCheck(glBindFramebuffer(GL_FRAMEBUFFER, 0));
+    m_window.makeMainContextCurrent();
+    glCheck(glBindFramebuffer(GL_FRAMEBUFFER, 0));
   }
 
   void RenderWindow::display() {

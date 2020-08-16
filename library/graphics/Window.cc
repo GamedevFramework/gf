@@ -665,11 +665,17 @@ inline namespace v1 {
     SDL_SetCursor(cursor.m_cursor);
   }
 
-  void Window::attachGLContext() {
+  void Window::makeMainContextCurrent() {
+    if (SDL_GL_GetCurrentContext() != m_mainContext) {
+      SDL_GL_MakeCurrent(m_window, m_mainContext);
+    }
+  }
+
+  void Window::makeSharedContextCurrent() {
     SDL_GL_MakeCurrent(m_window, m_sharedContext);
   }
 
-  void Window::detachGLContext() {
+  void Window::makeNoContextCurrent() {
     SDL_GL_MakeCurrent(m_window, nullptr);
   }
 

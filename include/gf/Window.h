@@ -469,11 +469,14 @@ inline namespace v1 {
 
     /** @} */
 
-    friend class SharedGraphics;
 
   private:
-    void attachGLContext();
-    void detachGLContext();
+    friend class SharedGraphics;
+    friend class RenderWindow;
+
+    void makeMainContextCurrent();
+    void makeSharedContextCurrent();
+    void makeNoContextCurrent();
 
   private:
     Library m_lib; // to automatically initialize SDL

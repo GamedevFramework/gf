@@ -5,9 +5,9 @@
 
 int main() {
   gf::Window window0("window0", {640, 480}, ~gf::WindowHints::Resizable);
-  gf::Window window1("window1", {640, 480}, ~gf::WindowHints::Resizable);
-
   gf::RenderWindow renderer0(window0);
+
+  gf::Window window1("window1", {640, 480}, ~gf::WindowHints::Resizable);
   gf::RenderWindow renderer1(window1);
 
   while (window0.isOpen() || window1.isOpen()) {
