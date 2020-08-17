@@ -17,7 +17,6 @@ This file is a list of ideas for gf. Some of them will eventually be in gf. Othe
 ## graphics
 
 - (window/events) add a flag in `pollEvent`/`waitEvent` (`EventFlag::TouchAsMouse`, `EventFlag::NoWindowFilter`)
-- (window/events) add more data in events (see SDL events data)
 - (texture) add area in loading functions
 - (texture) `setTexture(const Texture& texture, const RectF& textureRect = RectF(0, 0, 1, 1))` instead of `bool resetRect`
 - (curve/shape) add anti-aliasing to `Curve` and `Shape`
@@ -54,7 +53,6 @@ This file is a list of ideas for gf. Some of them will eventually be in gf. Othe
 - (versions) go with C++17
   - check support in Debian stable and Ubuntu LTS
   - replace `boost::filesystem` by `std::filesystem`
-- (games) put games in their own repository
 - (sources) create a private include directory somewhere (`include-priv`)
   - put network portability functions
   - put debug functions (for GL and SDL)
