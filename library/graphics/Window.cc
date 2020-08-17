@@ -405,37 +405,71 @@ inline namespace v1 {
     }
 
     bool translateEvent(Uint32 windowId, Vector2i size, const SDL_Event *in, Event& out) {
+      out.timestamp = in->common.timestamp;
+
       switch (in->type) {
         case SDL_WINDOWEVENT:
-          if (windowId != in->window.windowID) {
-            return false;
-          }
-
           switch (in->window.event) {
             case SDL_WINDOWEVENT_SIZE_CHANGED:
               out.type = EventType::Resized;
-              out.size.width = in->window.data1;
-              out.size.height = in->window.data2;
+              out.resize.windowId = in->window.windowID;
+              out.resize.size.width = in->window.data1;
+              out.resize.size.height = in->window.data2;
               break;
 
             case SDL_WINDOWEVENT_CLOSE:
               out.type = EventType::Closed;
+              out.window.windowId = in->window.windowID;
               break;
 
             case SDL_WINDOWEVENT_FOCUS_GAINED:
               out.type = EventType::FocusGained;
+              out.window.windowId = in->window.windowID;
               break;
 
             case SDL_WINDOWEVENT_FOCUS_LOST:
               out.type = EventType::FocusLost;
+              out.window.windowId = in->window.windowID;
               break;
 
             case SDL_WINDOWEVENT_ENTER:
               out.type = EventType::MouseEntered;
+              out.window.windowId = in->window.windowID;
               break;
 
             case SDL_WINDOWEVENT_LEAVE:
               out.type = EventType::MouseLeft;
+              out.window.windowId = in->window.windowID;
+              break;
+
+            case SDL_WINDOWEVENT_SHOWN:
+              out.type = EventType::Shown;
+              out.window.windowId = in->window.windowID;
+              break;
+
+            case SDL_WINDOWEVENT_HIDDEN:
+              out.type = EventType::Hidden;
+              out.window.windowId = in->window.windowID;
+              break;
+
+            case SDL_WINDOWEVENT_EXPOSED:
+              out.type = EventType::Exposed;
+              out.window.windowId = in->window.windowID;
+              break;
+
+            case SDL_WINDOWEVENT_MINIMIZED:
+              out.type = EventType::Minimized;
+              out.window.windowId = in->window.windowID;
+              break;
+
+            case SDL_WINDOWEVENT_MAXIMIZED:
+              out.type = EventType::Maximized;
+              out.window.windowId = in->window.windowID;
+              break;
+
+            case SDL_WINDOWEVENT_RESTORED:
+              out.type = EventType::Restored;
+              out.window.windowId = in->window.windowID;
               break;
 
             default:
@@ -444,7 +478,7 @@ inline namespace v1 {
           break;
 
         case SDL_QUIT:
-          out.type = EventType::Closed;
+          out.type = EventType::Quit;
           break;
 
         case SDL_KEYDOWN:
@@ -456,17 +490,21 @@ inline namespace v1 {
             out.type = EventType::KeyRepeated;
           }
 
+          out.key.windowId = in->key.windowID;
           out.key.keycode = static_cast<Keycode>(in->key.keysym.sym);
           out.key.scancode = static_cast<Scancode>(in->key.keysym.scancode);
           out.key.modifiers = getModifiersFromMod(in->key.keysym.mod);
+          out.key.repeat = in->key.repeat;
           break;
 
         case SDL_KEYUP:
           assert(in->key.state == SDL_RELEASED);
           out.type = EventType::KeyReleased;
+          out.key.windowId = in->key.windowID;
           out.key.keycode = static_cast<Keycode>(in->key.keysym.sym);
           out.key.scancode = static_cast<Scancode>(in->key.keysym.scancode);
           out.key.modifiers = getModifiersFromMod(in->key.keysym.mod);
+          out.key.repeat = in->key.repeat;
           break;
 
         case SDL_MOUSEWHEEL:
@@ -475,9 +513,13 @@ inline namespace v1 {
           }
 
           out.type = EventType::MouseWheelScrolled;
+          out.mouseWheel.windowId = in->wheel.windowID;
           out.mouseWheel.offset.x = in->wheel.x;
           out.mouseWheel.offset.y = in->wheel.y;
-          // TODO: handle SDL_MOUSEWHEEL_FLIPPED?
+
+          if (in->wheel.direction == SDL_MOUSEWHEEL_FLIPPED) {
+            out.mouseWheel.offset = - out.mouseWheel.offset;
+          }
           break;
 
         case SDL_MOUSEBUTTONDOWN:
@@ -488,9 +530,11 @@ inline namespace v1 {
           }
 
           out.type = EventType::MouseButtonPressed;
+          out.mouseButton.windowId = in->button.windowID;
           out.mouseButton.button = getMouseButtonFromButton(in->button.button);
           out.mouseButton.coords.x = in->button.x;
           out.mouseButton.coords.y = in->button.y;
+          out.mouseButton.clicks = in->button.clicks;
           break;
 
         case SDL_MOUSEBUTTONUP:
@@ -501,9 +545,11 @@ inline namespace v1 {
           }
 
           out.type = EventType::MouseButtonReleased;
+          out.mouseButton.windowId = in->button.windowID;
           out.mouseButton.button = getMouseButtonFromButton(in->button.button);
           out.mouseButton.coords.x = in->button.x;
           out.mouseButton.coords.y = in->button.y;
+          out.mouseButton.clicks = in->button.clicks;
           break;
 
         case SDL_MOUSEMOTION:
@@ -512,8 +558,11 @@ inline namespace v1 {
           }
 
           out.type = EventType::MouseMoved;
+          out.mouseCursor.windowId = in->motion.windowID;
           out.mouseCursor.coords.x = in->motion.x;
           out.mouseCursor.coords.y = in->motion.y;
+          out.mouseCursor.motion.x = in->motion.xrel;
+          out.mouseCursor.motion.y = in->motion.yrel;
           break;
 
         case SDL_CONTROLLERDEVICEADDED:
@@ -560,6 +609,9 @@ inline namespace v1 {
           out.touch.finger = in->tfinger.fingerId;
           out.touch.coords.x = static_cast<int>(in->tfinger.x * size.width);
           out.touch.coords.y = static_cast<int>(in->tfinger.y * size.height);
+          out.touch.motion.x = static_cast<int>(in->tfinger.dx * size.width);
+          out.touch.motion.y = static_cast<int>(in->tfinger.dy * size.height);
+          out.touch.pressure = in->tfinger.pressure;
           break;
 
         case SDL_FINGERMOTION:
@@ -567,6 +619,9 @@ inline namespace v1 {
           out.touch.finger = in->tfinger.fingerId;
           out.touch.coords.x = static_cast<int>(in->tfinger.x * size.width);
           out.touch.coords.y = static_cast<int>(in->tfinger.y * size.height);
+          out.touch.motion.x = static_cast<int>(in->tfinger.dx * size.width);
+          out.touch.motion.y = static_cast<int>(in->tfinger.dy * size.height);
+          out.touch.pressure = in->tfinger.pressure;
           break;
 
         case SDL_FINGERUP:
@@ -574,6 +629,9 @@ inline namespace v1 {
           out.touch.finger = in->tfinger.fingerId;
           out.touch.coords.x = static_cast<int>(in->tfinger.x * size.width);
           out.touch.coords.y = static_cast<int>(in->tfinger.y * size.height);
+          out.touch.motion.x = static_cast<int>(in->tfinger.dx * size.width);
+          out.touch.motion.y = static_cast<int>(in->tfinger.dy * size.height);
+          out.touch.pressure = in->tfinger.pressure;
           break;
 
         default:

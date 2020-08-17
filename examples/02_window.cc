@@ -59,7 +59,7 @@ int main() {
           break;
 
         case gf::EventType::Resized:
-          std::cout << "Resized: " << event.size.width << 'x' << event.size.height << '\n';
+          std::cout << "Resized: " << event.resize.size.width << 'x' << event.resize.size.height << '\n';
           break;
 
         case gf::EventType::FocusGained:

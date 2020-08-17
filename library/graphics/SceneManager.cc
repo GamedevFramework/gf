@@ -67,9 +67,9 @@ inline namespace v1 {
 
         while (m_window.pollEvent(event)) {
           if (event.type == EventType::Resized) {
-            m_targetPrevScenes.resize(event.size);
-            m_targetCurrScenes.resize(event.size);
-            m_view.onFramebufferSizeChange(event.size);
+            m_targetPrevScenes.resize(event.resize.size);
+            m_targetCurrScenes.resize(event.resize.size);
+            m_view.onFramebufferSizeChange(event.resize.size);
             m_segue.setTextures(m_targetPrevScenes.getTexture(), m_targetCurrScenes.getTexture());
           }
 

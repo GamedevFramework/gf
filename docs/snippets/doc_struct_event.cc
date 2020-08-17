@@ -43,7 +43,7 @@ void dummyEventUsage(gf::Window& window) {
 
     // The window was resized
     if (event.type == gf::EventType::Resized) {
-      doSomethingWithTheNewSize(event.size);
+      doSomethingWithTheNewSize(event.resize.size);
     }
 
     // etc ...

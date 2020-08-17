@@ -37,7 +37,7 @@ inline namespace v1 {
       return;
     }
 
-    onFramebufferSizeChange(event.size);
+    onFramebufferSizeChange(event.resize.size);
   }
 
   void ViewContainer::onFramebufferSizeChange(Vector2i framebufferSize) {
