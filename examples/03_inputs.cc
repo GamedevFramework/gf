@@ -42,6 +42,7 @@ std::ostream& operator<<(std::ostream& o, gf::Scancode scancode) {
 }
 
 std::ostream& operator<<(std::ostream& o, const gf::KeyEvent& event) {
+  o << "\twindowId: " << event.windowId << '\n';
   o << "\tkeycode: " << event.keycode << " (" << gf::Keyboard::getKeycodeName(event.keycode) << ")\n";
   o << "\tscancode: " << event.scancode << " (" << gf::Keyboard::getScancodeName(event.scancode) << ")\n";
   o << "\tmodifiers:" << event.modifiers;
@@ -49,8 +50,17 @@ std::ostream& operator<<(std::ostream& o, const gf::KeyEvent& event) {
 }
 
 std::ostream& operator<<(std::ostream& o, const gf::MouseButtonEvent& event) {
+  o << "\twindowId: " << event.windowId << '\n';
   o << "\tbutton: " << static_cast<int>(event.button) << '\n';
-  o << "\tcoordinates: " << event.coords.x << 'x' << event.coords.y;
+  o << "\tcoordinates: " << event.coords.x << 'x' << event.coords.y << '\n';
+  o << "\tclicks: " << static_cast<int>(event.clicks);
+  return o;
+}
+
+std::ostream& operator<<(std::ostream& o, const gf::MouseCursorEvent& event) {
+  o << "\twindowId: " << event.windowId << '\n';
+  o << "\tcoordinates: " << event.coords.x << 'x' << event.coords.y << '\n';
+  o << "\tmotion: " << event.motion.x << 'x' << event.motion.y;
   return o;
 }
 
@@ -71,7 +81,8 @@ std::ostream& operator<<(std::ostream& o, const gf::GamepadAxisEvent& event) {
 
 std::ostream& operator<<(std::ostream& o, const gf::TouchEvent& event) {
   o << "\tfinger: " << event.finger << '\n';
-  o << "\tcoordinates: " << event.coords.x << 'x' << event.coords.y;
+  o << "\tcoordinates: " << event.coords.x << 'x' << event.coords.y << '\n';
+  o << "\tmotion: " << event.motion.x << 'x' << event.motion.y;
   return o;
 }
 
@@ -139,7 +150,7 @@ int main() {
           break;
 
 //         case gf::EventType::MouseMoved:
-//           std::cout << "MouseMoved: " << event.mouseCursor.coords.x << 'x' << event.mouseCursor.coords.y << '\n';
+//           std::cout << "MouseMoved:\n" << event.mouseCursor << '\n';
 //           break;
 
         case gf::EventType::MouseEntered:

@@ -104,6 +104,7 @@ inline namespace v1 {
 
   Window::Window(StringRef title, Vector2i size, Flags<WindowHints> hints)
   : m_window(nullptr)
+  , m_windowId(-1)
   , m_mainContext(nullptr)
   , m_sharedContext(nullptr)
   , m_shouldClose(false)
@@ -112,6 +113,8 @@ inline namespace v1 {
   {
     auto flags = getFlagsFromHints(hints);
     m_window = SDL_CreateWindow(title.getData(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, size.width, size.height, flags);
+    assert(m_window);
+    m_windowId = SDL_GetWindowID(m_window);
 
     SDL_GL_SetAttribute(SDL_GL_SHARE_WITH_CURRENT_CONTEXT, 1);
     m_sharedContext = SDL_GL_CreateContext(m_window);
@@ -404,7 +407,7 @@ inline namespace v1 {
       return modifiers;
     }
 
-    bool translateEvent(Uint32 windowId, Vector2i size, const SDL_Event *in, Event& out) {
+    bool translateEvent(Vector2i size, const SDL_Event *in, Event& out) {
       out.timestamp = in->common.timestamp;
 
       switch (in->type) {
@@ -494,7 +497,6 @@ inline namespace v1 {
           out.key.keycode = static_cast<Keycode>(in->key.keysym.sym);
           out.key.scancode = static_cast<Scancode>(in->key.keysym.scancode);
           out.key.modifiers = getModifiersFromMod(in->key.keysym.mod);
-          out.key.repeat = in->key.repeat;
           break;
 
         case SDL_KEYUP:
@@ -504,7 +506,6 @@ inline namespace v1 {
           out.key.keycode = static_cast<Keycode>(in->key.keysym.sym);
           out.key.scancode = static_cast<Scancode>(in->key.keysym.scancode);
           out.key.modifiers = getModifiersFromMod(in->key.keysym.mod);
-          out.key.repeat = in->key.repeat;
           break;
 
         case SDL_MOUSEWHEEL:
@@ -641,38 +642,121 @@ inline namespace v1 {
       return true;
     }
 
+    bool isEventWindowDependent(const Event& event) {
+      switch (event.type) {
+        case EventType::Resized:
+        case EventType::Closed:
+        case EventType::FocusGained:
+        case EventType::FocusLost:
+        case EventType::Shown:
+        case EventType::Hidden:
+        case EventType::Exposed:
+        case EventType::Minimized:
+        case EventType::Maximized:
+        case EventType::Restored:
+        case EventType::KeyPressed:
+        case EventType::KeyRepeated:
+        case EventType::KeyReleased:
+        case EventType::MouseWheelScrolled:
+        case EventType::MouseButtonPressed:
+        case EventType::MouseButtonReleased:
+        case EventType::MouseMoved:
+        case EventType::TextEntered:
+          return true;
+        default:
+          return false;
+      }
+
+      return false;
+    }
+
+    uint32_t getWindowIdFromEvent(const Event& event) {
+      switch (event.type) {
+        case EventType::Resized:
+          return event.resize.windowId;
+        case EventType::Closed:
+        case EventType::FocusGained:
+        case EventType::FocusLost:
+        case EventType::Shown:
+        case EventType::Hidden:
+        case EventType::Exposed:
+        case EventType::Minimized:
+        case EventType::Maximized:
+        case EventType::Restored:
+          return event.window.windowId;
+        case EventType::KeyPressed:
+        case EventType::KeyRepeated:
+        case EventType::KeyReleased:
+          return event.key.windowId;
+        case EventType::MouseWheelScrolled:
+          return event.mouseWheel.windowId;
+        case EventType::MouseButtonPressed:
+        case EventType::MouseButtonReleased:
+          return event.mouseButton.windowId;
+        case EventType::MouseMoved:
+          return event.mouseCursor.windowId;
+        case EventType::TextEntered:
+          return event.text.windowId;
+        default:
+          return uint32_t(-1);
+      }
+
+      return uint32_t(-1);
+    }
+
   } // anonymous namespace
 
   bool Window::pollEvent(Event& event) {
     assert(m_window);
 
-    Uint32 windowId = SDL_GetWindowID(m_window);
+    if (pickEventForWindow(m_windowId, event)) {
+      return true;
+    }
+
     SDL_Event ev;
 
-    do {
-      int status = SDL_PollEvent(&ev);
+    for (;;) {
+      do {
+        int status = SDL_PollEvent(&ev);
 
-      if (status == 0) {
-        return false;
+        if (status == 0) {
+          return false;
+        }
+      } while (!translateEvent(getSize(), &ev, event));
+
+      if (isEventWindowDependent(event) && getWindowIdFromEvent(event) != m_windowId) {
+        g_pendingEvents.push_back(event);
+      } else {
+        break;
       }
-    } while (!translateEvent(windowId, getSize(), &ev, event));
+    }
 
     return true;
   }
 
   bool Window::waitEvent(Event& event) {
     assert(m_window);
-
-    Uint32 windowId = SDL_GetWindowID(m_window);
     SDL_Event ev;
 
-    do {
-      int status = SDL_WaitEvent(&ev);
+    if (pickEventForWindow(m_windowId, event)) {
+      return true;
+    }
 
-      if (status == 0) {
-        return false;
+    for (;;) {
+      do {
+        int status = SDL_WaitEvent(&ev);
+
+        if (status == 0) {
+          return false;
+        }
+      } while (!translateEvent(getSize(), &ev, event));
+
+      if (isEventWindowDependent(event) && getWindowIdFromEvent(event) != m_windowId) {
+        g_pendingEvents.push_back(event);
+      } else {
+        break;
       }
-    } while (!translateEvent(windowId, getSize(), &ev, event));
+    }
 
     return true;
   }
@@ -735,6 +819,22 @@ inline namespace v1 {
 
   void Window::makeNoContextCurrent() {
     SDL_GL_MakeCurrent(m_window, nullptr);
+  }
+
+  std::vector<Event> Window::g_pendingEvents;
+
+  bool Window::pickEventForWindow(uint32_t windowId, Event& event) {
+    auto it = std::find_if(g_pendingEvents.begin(), g_pendingEvents.end(), [windowId](const Event& current) {
+      return getWindowIdFromEvent(current) == windowId;
+    });
+
+    if (it != g_pendingEvents.end()) {
+      event = *it;
+      g_pendingEvents.erase(it);
+      return true;
+    }
+
+    return false;
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

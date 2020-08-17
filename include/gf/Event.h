@@ -109,7 +109,6 @@ inline namespace v1 {
     Keycode keycode;      ///< Keycode of the key
     Scancode scancode;    ///< Scancode of the key
     Flags<Mod> modifiers; ///< Modifiers that are pressed
-    uint8_t repeat;       ///< Number of repeat
   };
 
   /**

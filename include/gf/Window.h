@@ -24,7 +24,9 @@
 #ifndef GF_WINDOW_H
 #define GF_WINDOW_H
 
+#include <cstdint>
 #include <string>
+#include <vector>
 
 #include "Clock.h"
 #include "Flags.h"
@@ -326,6 +328,13 @@ inline namespace v1 {
      */
 
     /**
+     * @brief Get the window id
+     */
+    uint32_t getWindowId() const {
+      return m_windowId;
+    }
+
+    /**
      * @brief Pop the event on top of the event queue, if any, and return it
      *
      * This function is not blocking: if there's no pending event then
@@ -479,10 +488,16 @@ inline namespace v1 {
     void makeNoContextCurrent();
 
   private:
+    static std::vector<Event> g_pendingEvents;
+
+    bool pickEventForWindow(uint32_t windowId, Event& event);
+
+  private:
     Library m_lib; // to automatically initialize SDL
 
   private:
     SDL_Window *m_window;
+    uint32_t m_windowId;
     void *m_mainContext;
     void *m_sharedContext;
     bool m_shouldClose;
