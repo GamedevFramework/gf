@@ -140,6 +140,8 @@ inline namespace v1 {
   }
 
   Window::~Window() {
+    makeMainContextCurrent();
+
     if (m_sharedContext != nullptr) {
       SDL_GL_DeleteContext(m_sharedContext);
     }

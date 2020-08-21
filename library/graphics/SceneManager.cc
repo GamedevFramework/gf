@@ -89,6 +89,7 @@ inline namespace v1 {
             scene.update(time);
           }
 
+          m_renderer.setActive();
           m_renderer.clear(clearColor);
 
           for (Scene& scene : scenes) {

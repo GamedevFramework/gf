@@ -87,6 +87,11 @@ inline namespace v1 {
      */
     RenderWindow(Window& window);
 
+    /**
+     * @brief Destructor
+     */
+    ~RenderWindow();
+
     virtual Vector2i getSize() const override;
 
     /**

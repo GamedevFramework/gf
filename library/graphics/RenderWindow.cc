@@ -39,6 +39,10 @@ inline namespace v1 {
   {
   }
 
+  RenderWindow::~RenderWindow() {
+    m_window.makeMainContextCurrent();
+  }
+
   Vector2i RenderWindow::getSize() const {
     return m_window.getFramebufferSize();
   }
