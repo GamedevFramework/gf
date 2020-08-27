@@ -2,14 +2,10 @@ file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/generated")
 
 add_executable(gfdev_source_file graphics/tools/gfdev_source_file.cc)
 
-target_compile_features(gfdev_source_file
-  PUBLIC
-    cxx_std_14
-)
-
 set_target_properties(gfdev_source_file
   PROPERTIES
-  CXX_EXTENSIONS OFF
+    CXX_STANDARD 14
+    CXX_EXTENSIONS OFF
 )
 
 # process gamecontrollerdb
@@ -284,12 +280,6 @@ if (GF_BUILD_WITH_OPENGL3)
   )
 endif()
 
-if (GF_USE_EMBEDDED_LIBS)
-  target_compile_definitions(gf0
-    PRIVATE GF_USE_EMBEDDED_LIBS
-  )
-endif()
-
 if (GF_DEBUG)
   target_compile_definitions(gfcore0
     PRIVATE GF_DEBUG
@@ -320,19 +310,12 @@ endif()
 
 target_compile_definitions(gfcore0
   PRIVATE
-    gfcore0_EXPORTS
     ZLIB_CONST
 )
 
 target_compile_definitions(gf0
   PRIVATE
-    gf0_EXPORTS
     ZLIB_CONST
-)
-
-target_compile_definitions(gfnet0
-  PRIVATE
-    gfnet0_EXPORTS
 )
 
 if (UNIX AND NOT APPLE)
@@ -433,40 +416,31 @@ if (WIN32)
   )
 endif()
 
-target_compile_features(gfcore0
-  PUBLIC
-    cxx_std_14
-)
-
 set_target_properties(gfcore0
   PROPERTIES
-  EXPORT_NAME "core"
-  VERSION ${PROJECT_VERSION}
-  SOVERSION ${PROJECT_VERSION_MAJOR}
-)
-
-target_compile_features(gf0
-  PUBLIC
-    cxx_std_14
+    EXPORT_NAME "core"
+    CXX_STANDARD 14
+    CXX_EXTENSIONS OFF
+    VERSION ${PROJECT_VERSION}
+    SOVERSION ${PROJECT_VERSION_MAJOR}
 )
 
 set_target_properties(gf0
   PROPERTIES
-  EXPORT_NAME "graphics"
-  VERSION ${PROJECT_VERSION}
-  SOVERSION ${PROJECT_VERSION_MAJOR}
-)
-
-target_compile_features(gfnet0
-  PUBLIC
-    cxx_std_14
+    CXX_STANDARD 14
+    CXX_EXTENSIONS OFF
+    EXPORT_NAME "graphics"
+    VERSION ${PROJECT_VERSION}
+    SOVERSION ${PROJECT_VERSION_MAJOR}
 )
 
 set_target_properties(gfnet0
   PROPERTIES
-  EXPORT_NAME "net"
-  VERSION ${PROJECT_VERSION}
-  SOVERSION ${PROJECT_VERSION_MAJOR}
+    CXX_STANDARD 14
+    CXX_EXTENSIONS OFF
+    EXPORT_NAME "net"
+    VERSION ${PROJECT_VERSION}
+    SOVERSION ${PROJECT_VERSION_MAJOR}
 )
 
 if(NOT BUILD_SHARED_LIBS)
