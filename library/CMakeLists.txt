@@ -416,6 +416,11 @@ if (WIN32)
   )
 endif()
 
+target_compile_features(gfcore0
+  PUBLIC
+    cxx_std_14
+)
+
 set_target_properties(gfcore0
   PROPERTIES
     EXPORT_NAME "core"
@@ -425,6 +430,11 @@ set_target_properties(gfcore0
     SOVERSION ${PROJECT_VERSION_MAJOR}
 )
 
+target_compile_features(gf0
+  PUBLIC
+    cxx_std_14
+)
+
 set_target_properties(gf0
   PROPERTIES
     CXX_STANDARD 14
@@ -432,6 +442,11 @@ set_target_properties(gf0
     EXPORT_NAME "graphics"
     VERSION ${PROJECT_VERSION}
     SOVERSION ${PROJECT_VERSION_MAJOR}
+)
+
+target_compile_features(gfnet0
+  PUBLIC
+    cxx_std_14
 )
 
 set_target_properties(gfnet0
