@@ -78,6 +78,10 @@ int main() {
 
 See the [online documentation for Gamedev Framework (gf)](http://gamedevframework.github.io/).
 
+## Packaging
+
+[![Packaging status](https://repology.org/badge/vertical-allrepos/gamedev-framework.svg)](https://repology.org/project/gamedev-framework/versions)
+
 ## Contact
 
 If you want to talk directly with the developpers, you can
@@ -94,13 +98,14 @@ Gamedev Framework (gf) is very open to contributions. See [the contribution guid
 
 You have to install the following dependencies:
 
-- [SDL2](https://www.libsdl.org/) >= 2.0.2 (zlib/libpng license)
-- [Boost Filesystem](http://www.boost.org/doc/libs/release/libs/filesystem/) >= 1.55 (Boost license)
-- [Boost String Algorithms](http://www.boost.org/doc/libs/release/libs/algorithm/string/) >= 1.55 (Boost license)
-- [Boost Heap](http://www.boost.org/doc/libs/release/libs/heap/) >= 1.55 (Boost license)
-- [Freetype](http://freetype.org/) >= 2.5.2 (FreeType license)
-- [zlib](https://zlib.net/) >= 1.2.8 (zlib/libpng license)
-- [CMake](https://cmake.org/) >= 3.0.2
+- [SDL2](https://www.libsdl.org/) >= 2.0.8 (zlib/libpng license)
+- [Boost Filesystem](http://www.boost.org/doc/libs/release/libs/filesystem/) >= 1.65 (Boost license)
+- [Boost String Algorithms](http://www.boost.org/doc/libs/release/libs/algorithm/string/) >= 1.65 (Boost license)
+- [Boost Heap](http://www.boost.org/doc/libs/release/libs/heap/) >= 1.65 (Boost license)
+- [Freetype](http://freetype.org/) >= 2.9.1 (FreeType license)
+- [zlib](https://zlib.net/) >= 1.2.11 (zlib/libpng license)
+- [pugixml](https://pugixml.org/) >= 1.8.1 (MIT licence)
+- [CMake](https://cmake.org/) >= 3.10.2
 
 See the [documentation](http://gamedevframework.github.io/latest/build_and_install.html) for more information on how to build and install gf.
 
