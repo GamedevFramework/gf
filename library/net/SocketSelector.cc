@@ -27,6 +27,8 @@
 
 #include <gf/Log.h>
 
+#include <gfpriv/SocketPrivate.h>
+
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
@@ -85,7 +87,7 @@ inline namespace v1 {
       m_sorted = true;
     }
 
-    return nativePoll(m_fds, duration);
+    return priv::nativePoll(m_fds, duration);
   }
 
   bool SocketSelector::isReady(Socket& socket) {
@@ -111,28 +113,6 @@ inline namespace v1 {
     }
 
     return std::find_if(m_fds.begin(), m_fds.end(), PollFdEqualTo(pollfd{ socket.m_handle, 0, 0 }));
-  }
-
-
-  SocketSelectorStatus SocketSelector::nativePoll(std::vector<pollfd>& fds, Time duration) {
-    auto ms = duration.asMilliseconds();
-
-#ifdef _WIN32
-    int err = ::WSAPoll(fds.data(), static_cast<ULONG>(fds.size()), ms) > 0;
-#else
-    int err = ::poll(fds.data(), static_cast<nfds_t>(fds.size()), ms) > 0;
-#endif
-
-    if (err < 0) {
-      Log::error("Error while polling: %s\n", Socket::getErrorString().c_str());
-      return SocketSelectorStatus::Error;
-    }
-
-    if (err == 0) {
-      return SocketSelectorStatus::Timeout;
-    }
-
-    return SocketSelectorStatus::Event;
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

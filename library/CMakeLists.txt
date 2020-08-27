@@ -241,6 +241,7 @@ else()
     net/Socket.cc
     net/SocketAddress.cc
     net/SocketGuard.cc
+    net/SocketPrivate.cc
     net/SocketSelector.cc
     net/TcpListener.cc
     net/TcpSocket.cc
@@ -349,6 +350,7 @@ target_include_directories(gfcore0
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
   PRIVATE
     "${Stb_INCLUDE_DIR}"
+    "${CMAKE_SOURCE_DIR}/include-priv"
 )
 
 target_include_directories(gf0
@@ -358,6 +360,7 @@ target_include_directories(gf0
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
   PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}"
+    "${CMAKE_SOURCE_DIR}/include-priv"
 )
 
 target_include_directories(gfnet0
@@ -365,6 +368,8 @@ target_include_directories(gfnet0
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+  PRIVATE
+    "${CMAKE_SOURCE_DIR}/include-priv"
 )
 
 if (APPLE)

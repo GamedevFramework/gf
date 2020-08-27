@@ -154,9 +154,6 @@ inline namespace v1 {
     TcpSocket(SocketHandle handle);
 
     friend class TcpListener;
-
-  private:
-    static SocketHandle nativeConnect(const std::string& host, const std::string& service, SocketFamily family);
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

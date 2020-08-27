@@ -37,6 +37,8 @@
 
 #include <gf/Log.h>
 
+#include <gfpriv/SocketPrivate.h>
+
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
@@ -44,16 +46,16 @@ inline namespace v1 {
 
   UdpSocket::UdpSocket(const std::string& service, SocketFamily family)
   {
-    setHandle(nativeBind(service, family));
+    setHandle(priv::nativeBind(service, family));
   }
 
   UdpSocket::UdpSocket(AnyType, SocketFamily family)
   {
-    setHandle(nativeBind("0", family));
+    setHandle(priv::nativeBind("0", family));
   }
 
   SocketAddress UdpSocket::getRemoteAddress(const std::string& hostname, const std::string& service) {
-    auto addresses = getRemoteAddressInfo(hostname, service, SocketType::Udp, getLocalAddress().getFamily());
+    auto addresses = priv::getRemoteAddressInfo(hostname, service, priv::SocketType::Udp, getLocalAddress().getFamily());
 
     if (!addresses.empty()) {
       return addresses.front().address;
@@ -64,14 +66,14 @@ inline namespace v1 {
 
 
   SocketDataResult UdpSocket::sendRawBytesTo(Span<const uint8_t> buffer, const SocketAddress& address) {
-    auto res = ::sendto(getHandle(), sendPointer(buffer), sendLength(buffer), NoFlag, reinterpret_cast<const sockaddr*>(&address.m_storage), address.m_length);
+    auto res = ::sendto(getHandle(), priv::sendPointer(buffer), priv::sendLength(buffer), priv::NoFlag, reinterpret_cast<const sockaddr*>(&address.storage), address.length);
 
-    if (res == InvalidCommunication) {
-      if (nativeWouldBlock(getErrorCode())) {
+    if (res == priv::InvalidCommunication) {
+      if (priv::nativeWouldBlock(priv::getErrorCode())) {
         return { SocketStatus::Block, 0u };
       }
 
-      gf::Log::error("Error while sending data. Reason: %s\n", getErrorString().c_str());
+      gf::Log::error("Error while sending data. Reason: %s\n", priv::getErrorString().c_str());
       return { SocketStatus::Error, 0u };
     }
 
@@ -79,15 +81,15 @@ inline namespace v1 {
   }
 
   SocketDataResult UdpSocket::recvRawBytesFrom(Span<uint8_t> buffer, SocketAddress& address) {
-    address.m_length = sizeof(sockaddr_storage);
-    auto res = ::recvfrom(getHandle(), recvPointer(buffer), recvLength(buffer), NoFlag, reinterpret_cast<sockaddr*>(&address.m_storage), &address.m_length);
+    address.length = sizeof(address.storage);
+    auto res = ::recvfrom(getHandle(), priv::recvPointer(buffer), priv::recvLength(buffer), priv::NoFlag, reinterpret_cast<sockaddr*>(&address.storage), &address.length);
 
-    if (res == InvalidCommunication) {
-      if (nativeWouldBlock(getErrorCode())) {
+    if (res == priv::InvalidCommunication) {
+      if (priv::nativeWouldBlock(priv::getErrorCode())) {
         return { SocketStatus::Block, 0u };
       }
 
-      gf::Log::error("Error while receiving data. Reason: %s\n", getErrorString().c_str());
+      gf::Log::error("Error while receiving data. Reason: %s\n", priv::getErrorString().c_str());
       return { SocketStatus::Error, 0u };
     }
 
@@ -127,31 +129,7 @@ inline namespace v1 {
     return false;
   }
 
-  SocketHandle UdpSocket::nativeBind(const std::string& service, SocketFamily family) {
-    auto addresses = getLocalAddressInfo(service, SocketType::Udp, family);
-
-    for (auto info : addresses) {
-      SocketHandle sock = ::socket(static_cast<int>(info.family), static_cast<int>(info.type), 0);
-
-      if (sock == InvalidSocketHandle) {
-        continue;
-      }
-
-      if (::bind(sock, info.address.getData(), info.address.getLength()) != 0) {
-        nativeCloseSocket(sock);
-        continue;
-      }
-
-      return sock;
-    }
-
-    gf::Log::error("Unable to bind service '%s'\n", service.c_str());
-    return InvalidSocketHandle;
-  }
-
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif
 }
-
-

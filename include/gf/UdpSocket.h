@@ -130,8 +130,6 @@ inline namespace v1 {
      */
     bool recvBytesFrom(Span<uint8_t> buffer, SocketAddress& address);
 
-  private:
-    static SocketHandle nativeBind(const std::string& service, SocketFamily family);
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
