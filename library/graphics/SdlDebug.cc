@@ -17,50 +17,26 @@
  * 2. Altered source versions must be plainly marked as such, and must not be
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
- *
- * Part of this file comes from SFML, with the same license:
- * Copyright (C) 2007-2015 Laurent Gomila (laurent@sfml-dev.org)
  */
-#include <gf/RenderWindow.h>
+#include <gfpriv/SdlDebug.h>
 
-#include <gf/Window.h>
+#include <SDL.h>
 
-#include <gfpriv/GlDebug.h>
-#include <gfpriv/GlFwd.h>
+#include <gf/Log.h>
 
 namespace gf {
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-inline namespace v1 {
-#endif
+namespace priv {
 
-  RenderWindow::RenderWindow(Window& window)
-  : RenderTarget(window.getFramebufferSize())
-  , m_window(window)
-  {
+  void loggedSdlCall(const char *file, unsigned int line, const char *expr) {
+    const char *desc = SDL_GetError();
+
+    if (desc == nullptr || desc[0] == '\0') {
+      return;
+    }
+
+    Log::error("Error at %s:%u for expression '%s': %s\n", file, line, expr, desc);
+    SDL_ClearError();
   }
 
-  RenderWindow::~RenderWindow() {
-    m_window.makeMainContextCurrent();
-  }
-
-  Vector2i RenderWindow::getSize() const {
-    return m_window.getFramebufferSize();
-  }
-
-  void RenderWindow::setActive() {
-    m_window.makeMainContextCurrent();
-    GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, 0));
-  }
-
-  void RenderWindow::display() {
-    m_window.display();
-  }
-
-  Image RenderWindow::capture() const {
-    return captureFramebuffer(0);
-  }
-
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
-#endif
 }

@@ -22,7 +22,7 @@
 
 #include <SDL.h>
 
-#include "priv/OpenGLFwd.h"
+#include <gfpriv/GlFwd.h>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

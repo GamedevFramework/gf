@@ -37,9 +37,11 @@
 #include <gf/Sleep.h>
 #include <gf/Unused.h>
 #include <gf/Vector.h>
+#include <gf/VectorOps.h>
 
-#include "priv/Debug.h"
-#include "priv/OpenGLFwd.h"
+#include <gfpriv/GlDebug.h>
+#include <gfpriv/GlFwd.h>
+#include <gfpriv/SdlDebug.h>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -73,14 +75,14 @@ inline namespace v1 {
         return nullptr;
       }
 
-      void *context = SDL_GL_CreateContext(window);
+      void *context = SDL_CHECK_EXPR(SDL_GL_CreateContext(window));
 
       if (context == nullptr) {
         Log::error("Failed to create a context: %s\n", SDL_GetError());
         return nullptr;
       }
 
-      int err = SDL_GL_MakeCurrent(window, context);
+      int err = SDL_CHECK_EXPR(SDL_GL_MakeCurrent(window, context));
 
       if (err != 0) {
         Log::error("Failed to make the context current: %s\n", SDL_GetError());
@@ -112,12 +114,12 @@ inline namespace v1 {
   , m_vao(0)
   {
     auto flags = getFlagsFromHints(hints);
-    m_window = SDL_CreateWindow(title.getData(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, size.width, size.height, flags);
+    m_window = SDL_CHECK_EXPR(SDL_CreateWindow(title.getData(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, size.width, size.height, flags));
     assert(m_window);
-    m_windowId = SDL_GetWindowID(m_window);
+    m_windowId = SDL_CHECK_EXPR(SDL_GetWindowID(m_window));
 
-    SDL_GL_SetAttribute(SDL_GL_SHARE_WITH_CURRENT_CONTEXT, 1);
-    m_sharedContext = SDL_GL_CreateContext(m_window);
+    SDL_CHECK(SDL_GL_SetAttribute(SDL_GL_SHARE_WITH_CURRENT_CONTEXT, 1));
+    m_sharedContext = SDL_CHECK_EXPR(SDL_GL_CreateContext(m_window));
     m_mainContext = createContextFromWindow(m_window);
 
     if (m_sharedContext == nullptr) {
@@ -126,13 +128,13 @@ inline namespace v1 {
     }
 
     if (m_mainContext != nullptr) {
-      glCheck(glEnable(GL_BLEND));
-      glCheck(glEnable(GL_SCISSOR_TEST));
-      glCheck(glClear(GL_COLOR_BUFFER_BIT));
+      GL_CHECK(glEnable(GL_BLEND));
+      GL_CHECK(glEnable(GL_SCISSOR_TEST));
+      GL_CHECK(glClear(GL_COLOR_BUFFER_BIT));
 
 #ifdef GF_OPENGL3
-      glCheck(glGenVertexArrays(1, &m_vao));
-      glCheck(glBindVertexArray(m_vao));
+      GL_CHECK(glGenVertexArrays(1, &m_vao));
+      GL_CHECK(glBindVertexArray(m_vao));
 #else
       gf::unused(m_vao);
 #endif
@@ -143,19 +145,19 @@ inline namespace v1 {
     makeMainContextCurrent();
 
     if (m_sharedContext != nullptr) {
-      SDL_GL_DeleteContext(m_sharedContext);
+      SDL_CHECK(SDL_GL_DeleteContext(m_sharedContext));
     }
 
     if (m_mainContext != nullptr) {
 #ifdef GF_OPENGL3
-      glCheck(glBindVertexArray(0));
-      glCheck(glDeleteVertexArrays(1, &m_vao));
+      GL_CHECK(glBindVertexArray(0));
+      GL_CHECK(glDeleteVertexArrays(1, &m_vao));
 #endif
-      SDL_GL_DeleteContext(m_mainContext);
+      SDL_CHECK(SDL_GL_DeleteContext(m_mainContext));
     }
 
     if (m_window != nullptr) {
-      SDL_DestroyWindow(m_window);
+      SDL_CHECK(SDL_DestroyWindow(m_window));
     }
   }
 
@@ -170,37 +172,37 @@ inline namespace v1 {
 
   void Window::setTitle(StringRef title) {
     assert(m_window);
-    SDL_SetWindowTitle(m_window, title.getData());
+    SDL_CHECK(SDL_SetWindowTitle(m_window, title.getData()));
   }
 
   Vector2i Window::getPosition() const {
     assert(m_window);
     Vector2i position;
-    SDL_GetWindowPosition(m_window, &position.x, &position.y);
+    SDL_CHECK(SDL_GetWindowPosition(m_window, &position.x, &position.y));
     return position;
   }
 
   void Window::setPosition(Vector2i position) {
     assert(m_window);
-    SDL_SetWindowPosition(m_window, position.x, position.y);
+    SDL_CHECK(SDL_SetWindowPosition(m_window, position.x, position.y));
   }
 
   Vector2i Window::getSize() const {
     assert(m_window);
     Vector2i size;
-    SDL_GetWindowSize(m_window, &size.width, &size.height);
+    SDL_CHECK(SDL_GetWindowSize(m_window, &size.width, &size.height));
     return size;
   }
 
   void Window::setSize(Vector2i size) {
     assert(m_window);
-    SDL_SetWindowSize(m_window, size.width, size.height);
+    SDL_CHECK(SDL_SetWindowSize(m_window, size.width, size.height));
   }
 
   Vector2i Window::getFramebufferSize() const {
     assert(m_window);
     Vector2i size;
-    SDL_GL_GetDrawableSize(m_window, &size.width, &size.height);
+    SDL_CHECK(SDL_GL_GetDrawableSize(m_window, &size.width, &size.height));
     return size;
   }
 
@@ -208,9 +210,9 @@ inline namespace v1 {
     assert(m_window);
 
     if (full) {
-      SDL_SetWindowFullscreen(m_window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+      SDL_CHECK(SDL_SetWindowFullscreen(m_window, SDL_WINDOW_FULLSCREEN_DESKTOP));
     } else {
-      SDL_SetWindowFullscreen(m_window, 0);
+      SDL_CHECK(SDL_SetWindowFullscreen(m_window, 0));
     }
 
     m_isFullscreen = full;
@@ -223,45 +225,45 @@ inline namespace v1 {
 
   bool Window::isMinimized() const {
     assert(m_window);
-    auto flags = SDL_GetWindowFlags(m_window);
+    auto flags = SDL_CHECK_EXPR(SDL_GetWindowFlags(m_window));
     return (flags & SDL_WINDOW_MINIMIZED) != 0;
   }
 
   void Window::minimize() {
     assert(m_window);
-    SDL_MinimizeWindow(m_window);
+    SDL_CHECK(SDL_MinimizeWindow(m_window));
   }
 
   void Window::restore() {
     assert(m_window);
-    SDL_RestoreWindow(m_window);
+    SDL_CHECK(SDL_RestoreWindow(m_window));
   }
 
   bool Window::isMaximized() const {
     assert(m_window);
-    auto flags = SDL_GetWindowFlags(m_window);
+    auto flags = SDL_CHECK_EXPR(SDL_GetWindowFlags(m_window));
     return (flags & SDL_WINDOW_MAXIMIZED) != 0;
   }
 
   void Window::maximize() {
     assert(m_window);
-    SDL_MaximizeWindow(m_window);
+    SDL_CHECK(SDL_MaximizeWindow(m_window));
   }
 
   bool Window::isVisible() const {
     assert(m_window);
-    auto flags = SDL_GetWindowFlags(m_window);
+    auto flags = SDL_CHECK_EXPR(SDL_GetWindowFlags(m_window));
     return (flags & SDL_WINDOW_SHOWN) != 0;
   }
 
   void Window::show() {
     assert(m_window);
-    SDL_ShowWindow(m_window);
+    SDL_CHECK(SDL_ShowWindow(m_window));
   }
 
   void Window::hide() {
     assert(m_window);
-    SDL_HideWindow(m_window);
+    SDL_CHECK(SDL_HideWindow(m_window));
   }
 
   void Window::setVisible(bool visible) {
@@ -274,31 +276,31 @@ inline namespace v1 {
 
   bool Window::isDecorated() const {
     assert(m_window);
-    auto flags = SDL_GetWindowFlags(m_window);
+    auto flags = SDL_CHECK_EXPR(SDL_GetWindowFlags(m_window));
     return (flags & SDL_WINDOW_BORDERLESS) == 0;
   }
 
   void Window::setDecorated(bool decorated) {
     assert(m_window);
-    SDL_SetWindowBordered(m_window, decorated ? SDL_TRUE : SDL_FALSE);
+    SDL_CHECK(SDL_SetWindowBordered(m_window, decorated ? SDL_TRUE : SDL_FALSE));
   }
 
   bool Window::isFocused() const {
     assert(m_window);
-    auto flags = SDL_GetWindowFlags(m_window);
+    auto flags = SDL_CHECK_EXPR(SDL_GetWindowFlags(m_window));
     return (flags & SDL_WINDOW_INPUT_FOCUS) != 0;
   }
 
   bool Window::isResizable() const {
     assert(m_window);
-    auto flags = SDL_GetWindowFlags(m_window);
+    auto flags = SDL_CHECK_EXPR(SDL_GetWindowFlags(m_window));
     return (flags & SDL_WINDOW_RESIZABLE) != 0;
   }
 
   void Window::setResizable(bool resizable) {
     assert(m_window);
 #if SDL_VERSION_ATLEAST(2,0,5)
-    SDL_SetWindowResizable(m_window, resizable ? SDL_TRUE : SDL_FALSE);
+    SDL_CHECK(SDL_SetWindowResizable(m_window, resizable ? SDL_TRUE : SDL_FALSE));
 #else
     gf::unused(resizable);
     Log::error("Window can not be set resizable. You must compile with SDL 2.0.5 at least.\n");
@@ -719,7 +721,7 @@ inline namespace v1 {
 
     for (;;) {
       do {
-        int status = SDL_PollEvent(&ev);
+        int status = SDL_CHECK_EXPR(SDL_PollEvent(&ev));
 
         if (status == 0) {
           return false;
@@ -746,7 +748,7 @@ inline namespace v1 {
 
     for (;;) {
       do {
-        int status = SDL_WaitEvent(&ev);
+        int status = SDL_CHECK_EXPR(SDL_WaitEvent(&ev));
 
         if (status == 0) {
           return false;
@@ -764,11 +766,11 @@ inline namespace v1 {
   }
 
   void Window::setVerticalSyncEnabled(bool enabled) {
-    SDL_GL_SetSwapInterval(enabled ? 1 : 0);
+    SDL_CHECK(SDL_GL_SetSwapInterval(enabled ? 1 : 0));
   }
 
   bool Window::isVerticalSyncEnabled() const {
-    return SDL_GL_GetSwapInterval() != 0;
+    return SDL_CHECK_EXPR(SDL_GL_GetSwapInterval()) != 0;
   }
 
   void Window::setFramerateLimit(unsigned int limit) {
@@ -781,7 +783,7 @@ inline namespace v1 {
 
   void Window::display() {
     assert(m_window);
-    SDL_GL_SwapWindow(m_window);
+    SDL_CHECK(SDL_GL_SwapWindow(m_window));
 
     // handle framerate limit
 
@@ -794,11 +796,11 @@ inline namespace v1 {
   }
 
   void Window::setMouseCursorVisible(bool visible) {
-    SDL_ShowCursor(visible ? SDL_ENABLE : SDL_DISABLE);
+    SDL_CHECK(SDL_ShowCursor(visible ? SDL_ENABLE : SDL_DISABLE));
   }
 
   void Window::setMouseCursorGrabbed(bool grabbed) {
-    SDL_SetWindowGrab(m_window, grabbed ? SDL_TRUE : SDL_FALSE);
+    SDL_CHECK(SDL_SetWindowGrab(m_window, grabbed ? SDL_TRUE : SDL_FALSE));
   }
 
   void Window::setMouseCursor(const Cursor& cursor) {
@@ -806,21 +808,21 @@ inline namespace v1 {
       return;
     }
 
-    SDL_SetCursor(cursor.m_cursor);
+    SDL_CHECK(SDL_SetCursor(cursor.m_cursor));
   }
 
   void Window::makeMainContextCurrent() {
-    if (SDL_GL_GetCurrentContext() != m_mainContext) {
-      SDL_GL_MakeCurrent(m_window, m_mainContext);
+    if (SDL_CHECK_EXPR(SDL_GL_GetCurrentContext()) != m_mainContext) {
+      SDL_CHECK(SDL_GL_MakeCurrent(m_window, m_mainContext));
     }
   }
 
   void Window::makeSharedContextCurrent() {
-    SDL_GL_MakeCurrent(m_window, m_sharedContext);
+    SDL_CHECK(SDL_GL_MakeCurrent(m_window, m_sharedContext));
   }
 
   void Window::makeNoContextCurrent() {
-    SDL_GL_MakeCurrent(m_window, nullptr);
+    SDL_CHECK(SDL_GL_MakeCurrent(m_window, nullptr));
   }
 
   std::vector<Event> Window::g_pendingEvents;

@@ -177,6 +177,7 @@ else()
     graphics/EntityContainer.cc
     graphics/Font.cc
     graphics/Gamepad.cc
+    graphics/GlDebug.cc
     graphics/GraphicsHandle.cc
     graphics/GraphicsInfo.cc
     graphics/Grid.cc
@@ -198,6 +199,7 @@ else()
     graphics/ResourceManager.cc
     graphics/Scene.cc
     graphics/SceneManager.cc
+    graphics/SdlDebug.cc
     graphics/Segue.cc
     graphics/SegueEffect.cc
     graphics/SegueEffects.cc
@@ -227,8 +229,6 @@ else()
     graphics/Window.cc
     # generated
     graphics/data/generated.cc
-    # priv
-    graphics/priv/Debug.cc
     # vendor
     ${GF_GLAD_SRC}
   )

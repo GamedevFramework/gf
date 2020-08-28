@@ -17,50 +17,31 @@
  * 2. Altered source versions must be plainly marked as such, and must not be
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
- *
- * Part of this file comes from SFML, with the same license:
- * Copyright (C) 2007-2015 Laurent Gomila (laurent@sfml-dev.org)
  */
-#include <gf/RenderWindow.h>
+#ifndef GF_GL_DEBUG_H
+#define GF_GL_DEBUG_H
 
-#include <gf/Window.h>
-
-#include <gfpriv/GlDebug.h>
-#include <gfpriv/GlFwd.h>
+#ifdef GF_DEBUG
+  #define GL_CHECK_EXPR(expr) gf::priv::checkedGlCall(expr, __FILE__, __LINE__, #expr)
+  #define GL_CHECK(expr) do { (expr); gf::priv::loggedGlCall(__FILE__, __LINE__, #expr); } while (false)
+#else
+  #define GL_CHECK_EXPR(expr) (expr)
+  #define GL_CHECK(expr) (expr)
+#endif
 
 namespace gf {
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-inline namespace v1 {
-#endif
+namespace priv {
 
-  RenderWindow::RenderWindow(Window& window)
-  : RenderTarget(window.getFramebufferSize())
-  , m_window(window)
-  {
+  void loggedGlCall(const char* file, unsigned int line, const char* expr);
+
+  template<typename T>
+  T checkedGlCall(T value, const char* file, unsigned int line, const char* expr) {
+    loggedGlCall(file, line, expr);
+    return value;
   }
 
-  RenderWindow::~RenderWindow() {
-    m_window.makeMainContextCurrent();
-  }
-
-  Vector2i RenderWindow::getSize() const {
-    return m_window.getFramebufferSize();
-  }
-
-  void RenderWindow::setActive() {
-    m_window.makeMainContextCurrent();
-    GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, 0));
-  }
-
-  void RenderWindow::display() {
-    m_window.display();
-  }
-
-  Image RenderWindow::capture() const {
-    return captureFramebuffer(0);
-  }
-
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
-#endif
 }
+
+
+#endif // GF_GL_DEBUG_H

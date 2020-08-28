@@ -1,5 +1,5 @@
-#ifndef GF_OPENGL_FWD_H
-#define GF_OPENGL_FWD_H
+#ifndef GF_GL_FWD_H
+#define GF_GL_FWD_H
 
 #ifdef __APPLE__
   #include <OpenGL/gl3.h>
@@ -8,4 +8,4 @@
   #include <glad/glad.h>
 #endif
 
-#endif // GF_OPENGL_FWD_H
+#endif // GF_GL_FWD_H

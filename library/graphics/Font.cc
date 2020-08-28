@@ -36,8 +36,8 @@
 #include <gf/Unused.h>
 #include <gf/VectorOps.h>
 
-#include "priv/Debug.h"
-#include "priv/OpenGLFwd.h"
+#include <gfpriv/GlDebug.h>
+#include <gfpriv/GlFwd.h>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -440,7 +440,7 @@ inline namespace v1 {
 
     cache.texture.update(paddedBuffer.data(), rect);
 
-    glCheck(glFlush());
+    GL_CHECK(glFlush());
 
     FT_Done_Glyph(glyph);
     return out;
