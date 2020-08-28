@@ -6,7 +6,7 @@
 At build time, gf generates a CMake module that is suitable for other projects. Once installed, it is very easy to import gf as a dependency. Here is a simple `CMakeLists.txt` for a projet that uses gf.
 
 ~~~{.cmake}
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.10)
 
 project(FOOGAME
   VERSION 0.1.0
@@ -20,7 +20,9 @@ add_executable(foogame
 )
 
 target_link_libraries(foogame
-  gf::gf0
+  PRIVATE
+    gf::graphics
+    gf::network
 )
 ~~~
 

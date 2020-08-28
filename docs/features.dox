@@ -4,31 +4,50 @@
 Gamedev Framework (gf) is a game framework, it provides some useful features for developping 2D games. Here is a short list of some of the main features of gf:
 
 - Core
-  - Vector and matrix library
-  - Geometry library
-  - Noise library
-  - Easings
-- Window
-  - Multiple monitors handling
-  - Complete window events
-  - Complete input events, including gamepads
-  - Easy fullscreen
+  - @ref core_vocabulary
+  - @ref core_container
+  - @ref core_maths
+  - @ref core_geometry
+  - @ref core_color
+  - @ref core_models
+  - @ref core_messages
+  - @ref core_procedural_generation
+  - @ref core_spatial
+  - @ref core_physics
+  - @ref core_animation
+  - @ref core_roguelike
+  - @ref core_system
+  - @ref core_filesystem
+  - @ref core_streams
+  - @ref core_serialization
+  - @ref core_utilities
+  - @ref core_strings
+  - @ref core_tmx
+
 - Graphics
-  - Views (a.k.a. cameras)
-  - Sprites and animated sprites
-  - Text and fonts
-  - NinePatch
-  - Sprite batch
-  - Texture atlas
-  - Tile layers
-  - Post-processing effects
-  - Immediate mode GUI
-  - Particles
-- Game
-  - Resource loader
-  - Application messages
-  - Simple physics engine
-  - Roguelike toolkit and console
+  - @ref graphics_events
+  - @ref graphics_window_monitor
+  - @ref graphics_devices
+  - @ref graphics_gpu
+  - @ref graphics_renderers
+  - @ref graphics_views
+  - @ref graphics_drawables
+  - @ref graphics_sprite
+  - @ref graphics_text
+  - @ref graphics_shapes
+  - @ref graphics_curves
+  - @ref graphics_tiles
+  - @ref graphics_particles
+  - @ref graphics_console
+  - @ref graphics_widgets
+  - @ref graphics_resources
+  - @ref graphics_entities
+  - @ref graphics_scenes
+  - @ref graphics_post_proc
+  - @ref graphics_segues
+
+- Network
+  - @ref net_sockets
 
 If you are looking for a full game engine, you should take a look at [the list of game engines on Wikipedia](https://en.wikipedia.org/wiki/List_of_game_engines).
 
