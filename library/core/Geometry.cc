@@ -511,7 +511,6 @@ inline namespace v1 {
       auto prev = it++;
       remaining.erase(prev);
 
-      polyline.simplify();
       lines.push_back(std::move(polyline));
     }
 
