@@ -176,6 +176,7 @@ else()
     graphics/Entity.cc
     graphics/EntityContainer.cc
     graphics/Font.cc
+    graphics/GameManager.cc
     graphics/Gamepad.cc
     graphics/GlDebug.cc
     graphics/GraphicsHandle.cc
