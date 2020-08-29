@@ -53,6 +53,3 @@ This file is a list of ideas for gf. Some of them will eventually be in gf. Othe
 - (versions) go with C++17
   - check support in Debian stable and Ubuntu LTS
   - replace `boost::filesystem` by `std::filesystem`
-- (sources) create a private include directory somewhere (`include-priv`)
-  - put network portability functions
-  - put debug functions (for GL and SDL)
