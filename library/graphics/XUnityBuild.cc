@@ -48,6 +48,7 @@
 #include "EntityContainer.cc"
 #include "Font.cc"
 #include "Gamepad.cc"
+#include "GlDebug.cc"
 #include "GraphicsHandle.cc"
 #include "GraphicsInfo.cc"
 #include "Grid.cc"
@@ -69,6 +70,7 @@
 #include "ResourceManager.cc"
 #include "Scene.cc"
 #include "SceneManager.cc"
+#include "SdlDebug.cc"
 #include "Segue.cc"
 #include "SegueEffect.cc"
 #include "SegueEffects.cc"
@@ -96,8 +98,6 @@
 #include "WidgetContainer.cc"
 #include "Widgets.cc"
 #include "Window.cc"
-
-#include "priv/Debug.cc"
 
 #ifndef __APPLE__
 #ifdef GF_OPENGL3
