@@ -33,9 +33,7 @@ This file is a list of ideas for gf. Some of them will eventually be in gf. Othe
 - (scene) integrate post-processing in `Scene`/`SceneManager`
   - remove `RenderPipeline`
   - rename `Effect` in `PostProcEffect`
-- (scene) create `GameManager` = `SceneManager` with `Random`, `ResourceManager`, `MessageManager`, etc.
 - (console) make style a class and remove internal style state
-- (physics) remove `PhysicsModel`, `PhysicsGeometry`, `PhysicsBody`
 - (drawable) Remove `Drawable`, make it a named requirement (or a concept in the future)
 
 ## net
@@ -53,3 +51,4 @@ This file is a list of ideas for gf. Some of them will eventually be in gf. Othe
 - (versions) go with C++17
   - check support in Debian stable and Ubuntu LTS
   - replace `boost::filesystem` by `std::filesystem`
+- (packaging) use CPack to create packages

@@ -46,7 +46,6 @@ add_gf_example(33_segues)
 add_gf_example(34_multiple_windows)
 
 add_gf_example(41_collisions)
-add_gf_example(42_physics)
 add_gf_example(43_points)
 add_gf_example(44_tmx)
 

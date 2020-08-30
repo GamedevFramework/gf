@@ -189,9 +189,6 @@ else()
     graphics/NinePatch.cc
     graphics/Particles.cc
     graphics/Paths.cc
-    graphics/PhysicsBody.cc
-    graphics/PhysicsGeometry.cc
-    graphics/PhysicsModel.cc
     graphics/PostProcessing.cc
     graphics/RenderPipeline.cc
     graphics/RenderTarget.cc
