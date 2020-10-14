@@ -23,7 +23,6 @@
 
 #include <vector>
 
-#include "ArrayRef.h"
 #include "Color.h"
 #include "Easings.h"
 #include "GraphicsApi.h"
@@ -34,6 +33,7 @@
 #include "Scene.h"
 #include "Segue.h"
 #include "SegueEffect.h"
+#include "Span.h"
 #include "Window.h"
 
 namespace gf {
@@ -42,7 +42,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_scenes
    * @brief A scene manager
    *
    * A scene manager handles several scenes, organised into a stack. It has a
@@ -85,7 +85,7 @@ inline namespace v1 {
      *
      * @param scenes The scenes to add
      */
-    void pushScenes(ArrayRef<Ref<Scene>> scenes);
+    void pushScenes(Span<const Ref<Scene>> scenes);
 
     /**
      * @brief Remove the top scene from the non-empty stack
@@ -116,7 +116,7 @@ inline namespace v1 {
      *
      * @param scenes The scenes to add
      */
-    void replaceScene(ArrayRef<Ref<Scene>> scenes) {
+    void replaceScene(Span<const Ref<Scene>> scenes) {
       popScene();
       pushScenes(scenes);
     }
@@ -140,7 +140,7 @@ inline namespace v1 {
      *
      * @param scenes The scenes to add
      */
-    void replaceAllScenes(ArrayRef<Ref<Scene>> scenes) {
+    void replaceAllScenes(Span<const Ref<Scene>> scenes) {
       popAllScenes();
       pushScenes(scenes);
     }
@@ -163,7 +163,7 @@ inline namespace v1 {
      * @param duration The duration of the transition
      * @param easing The easing of the transition
      */
-    void replaceScene(ArrayRef<Ref<Scene>> scenes, SegueEffect& effect, Time duration, Easing easing = Ease::linear);
+    void replaceScene(Span<const Ref<Scene>> scenes, SegueEffect& effect, Time duration, Easing easing = Ease::linear);
 
     /**
      * @brief Replace all the scenes with a new scene and a transition
@@ -183,7 +183,7 @@ inline namespace v1 {
      * @param duration The duration of the transition
      * @param easing The easing of the transition
      */
-    void replaceAllScenes(ArrayRef<Ref<Scene>> scenes, SegueEffect& effect, Time duration, Easing easing = Ease::linear);
+    void replaceAllScenes(Span<const Ref<Scene>> scenes, SegueEffect& effect, Time duration, Easing easing = Ease::linear);
 
     /**
      * @brief Get the window associated to the scene

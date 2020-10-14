@@ -27,7 +27,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief The direction of a polygon's rotation
    */
   enum class Winding {

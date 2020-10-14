@@ -103,9 +103,6 @@ inline namespace v1 {
      * @returns A new socket representing the remote client
      */
     TcpSocket accept(SocketAddress& address);
-
-  private:
-    static SocketHandle nativeBindListen(const std::string& service, SocketFamily family);
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

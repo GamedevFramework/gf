@@ -28,9 +28,9 @@
 #include <cstdint>
 #include <vector>
 
-#include "ArrayRef.h"
 #include "CoreApi.h"
 #include "Path.h"
+#include "Span.h"
 #include "Vector.h"
 
 namespace gf {
@@ -41,7 +41,7 @@ inline namespace v1 {
   class InputStream;
 
   /**
-   * @ingroup core
+   * @ingroup core_color
    * @brief Pixel format
    */
   enum PixelFormat {
@@ -50,7 +50,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup graphics
+   * @ingroup core_color
    * @brief Class for loading, manipulating and saving images
    *
    * gf::Image is an abstraction to manipulate images
@@ -146,7 +146,7 @@ inline namespace v1 {
      *
      * @param content Content of the file data in memory
      */
-    Image(ArrayRef<uint8_t> content);
+    Image(Span<const uint8_t> content);
 
     /**
      * @brief Load the image from a custom stream

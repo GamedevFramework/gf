@@ -78,9 +78,17 @@ int main() {
 
 See the [online documentation for Gamedev Framework (gf)](http://gamedevframework.github.io/).
 
+## Packaging
+
+[![Packaging status](https://repology.org/badge/vertical-allrepos/gamedev-framework.svg)](https://repology.org/project/gamedev-framework/versions)
+
 ## Contact
 
-If you want to talk directly with the developpers, you can join the [#gf-devel IRC channel on Freenode](irc://chat.freenode.net/gf-devel). Or you can post a message on [/r/GamedevFramework](https://www.reddit.com/r/GamedevFramework/).
+If you want to talk directly with the developpers, you can
+
+- chat on the [Discord server of gf](https://discord.gg/2fXM3T4)
+- post a message on [/r/GamedevFramework](https://www.reddit.com/r/GamedevFramework/).
+- join the [#gf-devel IRC channel on Freenode](irc://chat.freenode.net/gf-devel)
 
 ## Contribution
 
@@ -90,13 +98,14 @@ Gamedev Framework (gf) is very open to contributions. See [the contribution guid
 
 You have to install the following dependencies:
 
-- [SDL2](https://www.libsdl.org/) >= 2.0.2 (zlib/libpng license)
-- [Boost Filesystem](http://www.boost.org/doc/libs/release/libs/filesystem/) >= 1.55 (Boost license)
-- [Boost String Algorithms](http://www.boost.org/doc/libs/release/libs/algorithm/string/) >= 1.55 (Boost license)
-- [Boost Heap](http://www.boost.org/doc/libs/release/libs/heap/) >= 1.55 (Boost license)
-- [Freetype](http://freetype.org/) >= 2.5.2 (FreeType license)
-- [zlib](https://zlib.net/) >= 1.2.8 (zlib/libpng license)
-- [CMake](https://cmake.org/) >= 3.0.2
+- [SDL2](https://www.libsdl.org/) >= 2.0.8 (zlib/libpng license)
+- [Boost Filesystem](http://www.boost.org/doc/libs/release/libs/filesystem/) >= 1.65 (Boost license)
+- [Boost String Algorithms](http://www.boost.org/doc/libs/release/libs/algorithm/string/) >= 1.65 (Boost license)
+- [Boost Heap](http://www.boost.org/doc/libs/release/libs/heap/) >= 1.65 (Boost license)
+- [Freetype](http://freetype.org/) >= 2.9.1 (FreeType license)
+- [zlib](https://zlib.net/) >= 1.2.11 (zlib/libpng license)
+- [pugixml](https://pugixml.org/) >= 1.8.1 (MIT licence)
+- [CMake](https://cmake.org/) >= 3.10.2
 
 See the [documentation](http://gamedevframework.github.io/latest/build_and_install.html) for more information on how to build and install gf.
 
@@ -108,11 +117,6 @@ These screenshots are from games included in the repository.
 
 ![gf Pong!](games/gf_pong/gf_pong.png)
 ![gf 2048!](games/gf_2048/gf_2048.png)
-![Huaca](games/huaca/huaca.png)
-![Bank Robbery for Dummies](games/bank_robbery_for_dummies/brfd.png)
-![Bygone Islands](games/islands/islands.png)
-![HOME](games/HOME/HOME.png)
-![Lux](games/lux/lux.png)
 
 ## Code Quality
 

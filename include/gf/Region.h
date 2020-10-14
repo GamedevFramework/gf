@@ -29,7 +29,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup window
+   * @ingroup graphics_renderers
    * @brief A region of a window
    *
    * A region is defined by its bottom-left point and its size. It is used to

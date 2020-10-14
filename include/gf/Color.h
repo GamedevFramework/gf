@@ -36,7 +36,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup core
+   * @ingroup core_color
    * @brief Predefined colors and utilities
    *
    * This class does not contain anything but predefined colors. All the
@@ -50,7 +50,7 @@ inline namespace v1 {
    * - gf::ColorF or gf::Color for the instantiation with `float`
    * - gf::ColorD for the instantiation with `double`
    *
-   * @sa gf::Color4f
+   * @sa gf::ColorRampBase, gf::Color4f
    */
   template<typename T>
   struct ColorBase {
@@ -395,19 +395,19 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup graphics
+   * @ingroup core_color
    * @brief Instantiation of ColoBase for `float`
    */
   using ColorF = ColorBase<float>;
 
   /**
-   * @ingroup graphics
+   * @ingroup core_color
    * @brief Instantiation of ColoBase for `double`
    */
   using ColorD = ColorBase<double>;
 
   /**
-   * @ingroup graphics
+   * @ingroup core_color
    * @brief Instantiation of ColorBase for `float`
    *
    * This name is used for compatibility with SFML.

@@ -23,11 +23,11 @@
 
 #include <vector>
 
-#include "ArrayRef.h"
 #include "CoreApi.h"
 #include "Math.h"
 #include "Matrix.h"
 #include "SerializationFwd.h"
+#include "Span.h"
 #include "Vector.h"
 
 namespace gf {
@@ -36,7 +36,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief A sequence of points
    *
    * @sa gf::Polygon, gf::Polyline
@@ -53,7 +53,7 @@ inline namespace v1 {
      *
      * @param points The array of points
      */
-    PointSequence(ArrayRef<Vector2f> points);
+    PointSequence(Span<const Vector2f> points);
 
     /**
      * @brief Constructor from points

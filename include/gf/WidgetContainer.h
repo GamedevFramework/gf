@@ -37,7 +37,7 @@ inline namespace v1 {
   class RenderTarget;
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_widgets
    * @brief A collection of widgets
    *
    * @sa gf::Widget

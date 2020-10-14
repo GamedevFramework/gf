@@ -36,7 +36,7 @@ inline namespace v1 {
   class VertexBuffer;
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_drawables
    * @brief A drawable for buffers
    *
    * A buffered geometry is a lightweight object to draw vertex buffers. It

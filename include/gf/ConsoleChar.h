@@ -29,7 +29,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup game
+   * @ingroup graphics_console
    * @brief Named console characters
    *
    * The name of the characters is the name defined in Unicode.
@@ -38,7 +38,7 @@ inline namespace v1 {
    */
   struct GF_GRAPHICS_API ConsoleChar final {
     /**
-     * @brief Deleted copy constructor
+     * @brief Deleted constructor
      */
     ConsoleChar() = delete;
 

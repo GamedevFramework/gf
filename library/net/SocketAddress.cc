@@ -39,19 +39,19 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  SocketAddress::SocketAddress(sockaddr *storage, StorageLengthType length)
-  : m_length(length)
+  SocketAddress::SocketAddress(sockaddr *a_storage, StorageLengthType a_length)
+  : length(a_length)
   {
-    std::memcpy(&m_storage, storage, static_cast<std::size_t>(length));
+    std::memcpy(&storage, a_storage, static_cast<std::size_t>(a_length));
   }
 
   SocketFamily SocketAddress::getFamily() const {
-    return static_cast<SocketFamily>(m_storage.ss_family);
+    return static_cast<SocketFamily>(storage.ss_family);
   }
 
   std::string SocketAddress::getHostname(SocketAddressFormat format) const {
     char host[NI_MAXHOST];
-    auto err = ::getnameinfo(getData(), m_length, host, NI_MAXHOST, nullptr, 0, format == SocketAddressFormat::Numeric ? NI_NUMERICHOST : 0);
+    auto err = ::getnameinfo(asSockAddr(), length, host, NI_MAXHOST, nullptr, 0, format == SocketAddressFormat::Numeric ? NI_NUMERICHOST : 0);
 
     if (err != 0) {
       gf::Log::error("Error while getting the host of an address. Reason: %s\n", ::gai_strerror(err));
@@ -63,7 +63,7 @@ inline namespace v1 {
 
   std::string SocketAddress::getService(SocketAddressFormat format) const {
     char serv[NI_MAXSERV];
-    auto err = ::getnameinfo(getData(), m_length, nullptr, 0, serv, NI_MAXSERV, format == SocketAddressFormat::Numeric ? NI_NUMERICSERV : 0);
+    auto err = ::getnameinfo(asSockAddr(), length, nullptr, 0, serv, NI_MAXSERV, format == SocketAddressFormat::Numeric ? NI_NUMERICSERV : 0);
 
     if (err != 0) {
       gf::Log::error("Error while getting the service of an address. Reason: %s\n", ::gai_strerror(err));

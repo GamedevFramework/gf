@@ -24,7 +24,6 @@
 #include <cstddef>
 #include <cstdint>
 
-#include "BufferRef.h"
 #include "CoreApi.h"
 #include "Stream.h"
 #include "StringRef.h"
@@ -35,7 +34,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup game
+   * @ingroup core_serialization
    * @brief A serializer to a binary file
    *
    * You should not use the methods in this class. Prefer using and overloading operator `|`.
@@ -143,7 +142,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup game
+   * @ingroup core_serialization
    * @brief A deserializer from a binary file
    *
    * You should not use the methods in this class. Prefer using and overloading operator `|`.

@@ -27,7 +27,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup core
+   * @ingroup core_vocabulary
    * @brief A simple way to avoid warnings about unused variables
    */
   template <typename... Args>

@@ -37,13 +37,13 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup core
+   * @ingroup core_color
    * @brief A color ramp
    *
    * A color ramp (or color gradient) specifies a range of colors that depends
    * on a position.
    *
-   * @sa gf::Color4f
+   * @sa gf::ColorBase, gf::Color4f
    */
   template<typename T>
   struct ColorRampBase {
@@ -123,19 +123,19 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup graphics
+   * @ingroup core_color
    * @brief Instantiation of ColoRampBase for `float`
    */
   using ColorRampF = ColorRampBase<float>;
 
   /**
-   * @ingroup graphics
+   * @ingroup core_color
    * @brief Instantiation of ColoRampBase for `double`
    */
   using ColorRampD = ColorRampBase<double>;
 
   /**
-   * @ingroup graphics
+   * @ingroup core_color
    * @brief Instantiation of ColoRampBase for `float`
    */
   using ColorRamp = ColorRampF;

@@ -234,10 +234,10 @@ inline namespace v1 {
       return ActivityStatus::Finished;
     }
 
-    auto status = m_activity.run(time);
+    auto status = m_activity.get().run(time);
 
     if (status == ActivityStatus::Finished) {
-      m_activity.restart();
+      m_activity.get().restart();
       m_count++;
     }
 
@@ -246,7 +246,7 @@ inline namespace v1 {
 
   void RepeatActivity::restart() {
     m_count = 0;
-    m_activity.restart();
+    m_activity.get().restart();
   }
 
   /*

@@ -39,7 +39,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup core
+   * @ingroup core_streams
    * @brief File based input stream
    */
   class GF_CORE_API FileInputStream : public InputStream {
@@ -61,7 +61,7 @@ inline namespace v1 {
      */
     ~FileInputStream();
 
-    std::size_t read(BufferRef<uint8_t> buffer) override;
+    std::size_t read(Span<uint8_t> buffer) override; // Flawfinder: ignore
     void seek(std::ptrdiff_t position) override;
     void skip(std::ptrdiff_t position) override;
     bool isFinished() override;
@@ -72,7 +72,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup core
+   * @ingroup core_streams
    * @brief Memory based input stream
    */
   class GF_CORE_API MemoryInputStream : public InputStream {
@@ -85,21 +85,21 @@ inline namespace v1 {
      *
      * @param memory The source memory
      */
-    explicit MemoryInputStream(ArrayRef<uint8_t> memory);
+    explicit MemoryInputStream(Span<const uint8_t> memory);
 
-    std::size_t read(BufferRef<uint8_t> buffer) override;
+    std::size_t read(Span<uint8_t> buffer) override; // Flawfinder: ignore
     void seek(std::ptrdiff_t position) override;
     void skip(std::ptrdiff_t position) override;
     bool isFinished() override;
 
   private:
-    ArrayRef<uint8_t> m_memory;
+    Span<const uint8_t> m_memory;
     std::size_t m_offset;
   };
 
 
   /**
-   * @ingroup core
+   * @ingroup core_streams
    * @brief Compressed input stream
    */
   class GF_CORE_API CompressedInputStream : public InputStream {
@@ -116,7 +116,7 @@ inline namespace v1 {
      */
     virtual ~CompressedInputStream();
 
-    std::size_t read(BufferRef<uint8_t> buffer) override;
+    std::size_t read(Span<uint8_t> buffer) override; // Flawfinder: ignore
     void seek(std::ptrdiff_t position) override;
     void skip(std::ptrdiff_t position) override;
     bool isFinished() override;
@@ -134,7 +134,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup core
+   * @ingroup core_streams
    * @brief Buffer input stream
    */
   class GF_CORE_API BufferInputStream : public InputStream {
@@ -153,7 +153,7 @@ inline namespace v1 {
       return m_bytes;
     }
 
-    virtual std::size_t read(BufferRef<uint8_t> buffer) override;
+    virtual std::size_t read(Span<uint8_t> buffer) override; // Flawfinder: ignore
     virtual void seek(std::ptrdiff_t position) override;
     virtual void skip(std::ptrdiff_t position) override;
     virtual bool isFinished() override;
@@ -164,7 +164,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup core
+   * @ingroup core_streams
    * @brief File based output stream
    */
   class GF_CORE_API FileOutputStream : public OutputStream {
@@ -195,7 +195,7 @@ inline namespace v1 {
      */
     ~FileOutputStream();
 
-    std::size_t write(ArrayRef<uint8_t> buffer) override;
+    std::size_t write(Span<const uint8_t> buffer) override;
 
     std::size_t getWrittenBytesCount() const override;
 
@@ -205,7 +205,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup core
+   * @ingroup core_streams
    * @brief Memory based output stream
    */
   class GF_CORE_API MemoryOutputStream : public OutputStream {
@@ -218,19 +218,19 @@ inline namespace v1 {
      *
      * @param memory The destination buffer
      */
-    explicit MemoryOutputStream(BufferRef<uint8_t> memory);
+    explicit MemoryOutputStream(Span<uint8_t> memory);
 
-    std::size_t write(ArrayRef<uint8_t> buffer) override;
+    std::size_t write(Span<const uint8_t> buffer) override;
 
     std::size_t getWrittenBytesCount() const override;
   private:
-    BufferRef<uint8_t> m_memory;
+    Span<uint8_t> m_memory;
     std::size_t m_offset;
   };
 
 
   /**
-   * @ingroup core
+   * @ingroup core_streams
    * @brief Compressed output stream
    */
   class GF_CORE_API CompressedOutputStream : public OutputStream {
@@ -247,7 +247,7 @@ inline namespace v1 {
      */
     ~CompressedOutputStream();
 
-    std::size_t write(ArrayRef<uint8_t> buffer) override;
+    std::size_t write(Span<const uint8_t> buffer) override;
 
     std::size_t getWrittenBytesCount() const override;
   private:
@@ -260,7 +260,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup core
+   * @ingroup core_streams
    * @brief Buffer output stream
    */
   class GF_CORE_API BufferOutputStream : public OutputStream {
@@ -279,7 +279,7 @@ inline namespace v1 {
       return m_bytes;
     }
 
-    virtual std::size_t write(ArrayRef<uint8_t> buffer) override;
+    virtual std::size_t write(Span<const uint8_t> buffer) override;
     virtual std::size_t getWrittenBytesCount() const override;
 
   private:

@@ -24,7 +24,7 @@
 #include <gf/Window.h>
 
 #include <cassert>
-#include <cstring>
+#include <type_traits>
 
 #include <SDL.h>
 
@@ -37,9 +37,11 @@
 #include <gf/Sleep.h>
 #include <gf/Unused.h>
 #include <gf/Vector.h>
+#include <gf/VectorOps.h>
 
-#include "priv/Debug.h"
-#include "priv/OpenGLFwd.h"
+#include <gfpriv/GlDebug.h>
+#include <gfpriv/GlFwd.h>
+#include <gfpriv/SdlDebug.h>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -73,14 +75,14 @@ inline namespace v1 {
         return nullptr;
       }
 
-      void *context = SDL_GL_CreateContext(window);
+      void *context = SDL_CHECK_EXPR(SDL_GL_CreateContext(window));
 
       if (context == nullptr) {
         Log::error("Failed to create a context: %s\n", SDL_GetError());
         return nullptr;
       }
 
-      int err = SDL_GL_MakeCurrent(window, context);
+      int err = SDL_CHECK_EXPR(SDL_GL_MakeCurrent(window, context));
 
       if (err != 0) {
         Log::error("Failed to make the context current: %s\n", SDL_GetError());
@@ -104,6 +106,7 @@ inline namespace v1 {
 
   Window::Window(StringRef title, Vector2i size, Flags<WindowHints> hints)
   : m_window(nullptr)
+  , m_windowId(-1)
   , m_mainContext(nullptr)
   , m_sharedContext(nullptr)
   , m_shouldClose(false)
@@ -111,10 +114,12 @@ inline namespace v1 {
   , m_vao(0)
   {
     auto flags = getFlagsFromHints(hints);
-    m_window = SDL_CreateWindow(title.getData(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, size.width, size.height, flags);
+    m_window = SDL_CHECK_EXPR(SDL_CreateWindow(title.getData(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, size.width, size.height, flags));
+    assert(m_window);
+    m_windowId = SDL_CHECK_EXPR(SDL_GetWindowID(m_window));
 
-    SDL_GL_SetAttribute(SDL_GL_SHARE_WITH_CURRENT_CONTEXT, 1);
-    m_sharedContext = SDL_GL_CreateContext(m_window);
+    SDL_CHECK(SDL_GL_SetAttribute(SDL_GL_SHARE_WITH_CURRENT_CONTEXT, 1));
+    m_sharedContext = SDL_CHECK_EXPR(SDL_GL_CreateContext(m_window));
     m_mainContext = createContextFromWindow(m_window);
 
     if (m_sharedContext == nullptr) {
@@ -123,13 +128,13 @@ inline namespace v1 {
     }
 
     if (m_mainContext != nullptr) {
-      glCheck(glEnable(GL_BLEND));
-      glCheck(glEnable(GL_SCISSOR_TEST));
-      glCheck(glClear(GL_COLOR_BUFFER_BIT));
+      GL_CHECK(glEnable(GL_BLEND));
+      GL_CHECK(glEnable(GL_SCISSOR_TEST));
+      GL_CHECK(glClear(GL_COLOR_BUFFER_BIT));
 
 #ifdef GF_OPENGL3
-      glCheck(glGenVertexArrays(1, &m_vao));
-      glCheck(glBindVertexArray(m_vao));
+      GL_CHECK(glGenVertexArrays(1, &m_vao));
+      GL_CHECK(glBindVertexArray(m_vao));
 #else
       gf::unused(m_vao);
 #endif
@@ -137,20 +142,22 @@ inline namespace v1 {
   }
 
   Window::~Window() {
+    makeMainContextCurrent();
+
     if (m_sharedContext != nullptr) {
-      SDL_GL_DeleteContext(m_sharedContext);
+      SDL_CHECK(SDL_GL_DeleteContext(m_sharedContext));
     }
 
     if (m_mainContext != nullptr) {
 #ifdef GF_OPENGL3
-      glCheck(glBindVertexArray(0));
-      glCheck(glDeleteVertexArrays(1, &m_vao));
+      GL_CHECK(glBindVertexArray(0));
+      GL_CHECK(glDeleteVertexArrays(1, &m_vao));
 #endif
-      SDL_GL_DeleteContext(m_mainContext);
+      SDL_CHECK(SDL_GL_DeleteContext(m_mainContext));
     }
 
     if (m_window != nullptr) {
-      SDL_DestroyWindow(m_window);
+      SDL_CHECK(SDL_DestroyWindow(m_window));
     }
   }
 
@@ -165,37 +172,37 @@ inline namespace v1 {
 
   void Window::setTitle(StringRef title) {
     assert(m_window);
-    SDL_SetWindowTitle(m_window, title.getData());
+    SDL_CHECK(SDL_SetWindowTitle(m_window, title.getData()));
   }
 
   Vector2i Window::getPosition() const {
     assert(m_window);
     Vector2i position;
-    SDL_GetWindowPosition(m_window, &position.x, &position.y);
+    SDL_CHECK(SDL_GetWindowPosition(m_window, &position.x, &position.y));
     return position;
   }
 
   void Window::setPosition(Vector2i position) {
     assert(m_window);
-    SDL_SetWindowPosition(m_window, position.x, position.y);
+    SDL_CHECK(SDL_SetWindowPosition(m_window, position.x, position.y));
   }
 
   Vector2i Window::getSize() const {
     assert(m_window);
     Vector2i size;
-    SDL_GetWindowSize(m_window, &size.width, &size.height);
+    SDL_CHECK(SDL_GetWindowSize(m_window, &size.width, &size.height));
     return size;
   }
 
   void Window::setSize(Vector2i size) {
     assert(m_window);
-    SDL_SetWindowSize(m_window, size.width, size.height);
+    SDL_CHECK(SDL_SetWindowSize(m_window, size.width, size.height));
   }
 
   Vector2i Window::getFramebufferSize() const {
     assert(m_window);
     Vector2i size;
-    SDL_GL_GetDrawableSize(m_window, &size.width, &size.height);
+    SDL_CHECK(SDL_GL_GetDrawableSize(m_window, &size.width, &size.height));
     return size;
   }
 
@@ -203,9 +210,9 @@ inline namespace v1 {
     assert(m_window);
 
     if (full) {
-      SDL_SetWindowFullscreen(m_window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+      SDL_CHECK(SDL_SetWindowFullscreen(m_window, SDL_WINDOW_FULLSCREEN_DESKTOP));
     } else {
-      SDL_SetWindowFullscreen(m_window, 0);
+      SDL_CHECK(SDL_SetWindowFullscreen(m_window, 0));
     }
 
     m_isFullscreen = full;
@@ -218,45 +225,45 @@ inline namespace v1 {
 
   bool Window::isMinimized() const {
     assert(m_window);
-    auto flags = SDL_GetWindowFlags(m_window);
+    auto flags = SDL_CHECK_EXPR(SDL_GetWindowFlags(m_window));
     return (flags & SDL_WINDOW_MINIMIZED) != 0;
   }
 
   void Window::minimize() {
     assert(m_window);
-    SDL_MinimizeWindow(m_window);
+    SDL_CHECK(SDL_MinimizeWindow(m_window));
   }
 
   void Window::restore() {
     assert(m_window);
-    SDL_RestoreWindow(m_window);
+    SDL_CHECK(SDL_RestoreWindow(m_window));
   }
 
   bool Window::isMaximized() const {
     assert(m_window);
-    auto flags = SDL_GetWindowFlags(m_window);
+    auto flags = SDL_CHECK_EXPR(SDL_GetWindowFlags(m_window));
     return (flags & SDL_WINDOW_MAXIMIZED) != 0;
   }
 
   void Window::maximize() {
     assert(m_window);
-    SDL_MaximizeWindow(m_window);
+    SDL_CHECK(SDL_MaximizeWindow(m_window));
   }
 
   bool Window::isVisible() const {
     assert(m_window);
-    auto flags = SDL_GetWindowFlags(m_window);
+    auto flags = SDL_CHECK_EXPR(SDL_GetWindowFlags(m_window));
     return (flags & SDL_WINDOW_SHOWN) != 0;
   }
 
   void Window::show() {
     assert(m_window);
-    SDL_ShowWindow(m_window);
+    SDL_CHECK(SDL_ShowWindow(m_window));
   }
 
   void Window::hide() {
     assert(m_window);
-    SDL_HideWindow(m_window);
+    SDL_CHECK(SDL_HideWindow(m_window));
   }
 
   void Window::setVisible(bool visible) {
@@ -269,31 +276,31 @@ inline namespace v1 {
 
   bool Window::isDecorated() const {
     assert(m_window);
-    auto flags = SDL_GetWindowFlags(m_window);
+    auto flags = SDL_CHECK_EXPR(SDL_GetWindowFlags(m_window));
     return (flags & SDL_WINDOW_BORDERLESS) == 0;
   }
 
   void Window::setDecorated(bool decorated) {
     assert(m_window);
-    SDL_SetWindowBordered(m_window, decorated ? SDL_TRUE : SDL_FALSE);
+    SDL_CHECK(SDL_SetWindowBordered(m_window, decorated ? SDL_TRUE : SDL_FALSE));
   }
 
   bool Window::isFocused() const {
     assert(m_window);
-    auto flags = SDL_GetWindowFlags(m_window);
+    auto flags = SDL_CHECK_EXPR(SDL_GetWindowFlags(m_window));
     return (flags & SDL_WINDOW_INPUT_FOCUS) != 0;
   }
 
   bool Window::isResizable() const {
     assert(m_window);
-    auto flags = SDL_GetWindowFlags(m_window);
+    auto flags = SDL_CHECK_EXPR(SDL_GetWindowFlags(m_window));
     return (flags & SDL_WINDOW_RESIZABLE) != 0;
   }
 
   void Window::setResizable(bool resizable) {
     assert(m_window);
 #if SDL_VERSION_ATLEAST(2,0,5)
-    SDL_SetWindowResizable(m_window, resizable ? SDL_TRUE : SDL_FALSE);
+    SDL_CHECK(SDL_SetWindowResizable(m_window, resizable ? SDL_TRUE : SDL_FALSE));
 #else
     gf::unused(resizable);
     Log::error("Window can not be set resizable. You must compile with SDL 2.0.5 at least.\n");
@@ -404,38 +411,72 @@ inline namespace v1 {
       return modifiers;
     }
 
-    bool translateEvent(Uint32 windowId, Vector2i size, const SDL_Event *in, Event& out) {
+    bool translateEvent(Vector2i size, const SDL_Event *in, Event& out) {
+      out.timestamp = in->common.timestamp;
+
       switch (in->type) {
         case SDL_WINDOWEVENT:
-          if (windowId != in->window.windowID) {
-            return false;
-          }
-
           switch (in->window.event) {
             case SDL_WINDOWEVENT_SIZE_CHANGED:
               out.type = EventType::Resized;
-              out.size.width = in->window.data1;
-              out.size.height = in->window.data2;
+              out.resize.windowId = in->window.windowID;
+              out.resize.size.width = in->window.data1;
+              out.resize.size.height = in->window.data2;
               break;
 
             case SDL_WINDOWEVENT_CLOSE:
               out.type = EventType::Closed;
+              out.window.windowId = in->window.windowID;
               break;
 
             case SDL_WINDOWEVENT_FOCUS_GAINED:
               out.type = EventType::FocusGained;
+              out.window.windowId = in->window.windowID;
               break;
 
             case SDL_WINDOWEVENT_FOCUS_LOST:
               out.type = EventType::FocusLost;
+              out.window.windowId = in->window.windowID;
               break;
 
             case SDL_WINDOWEVENT_ENTER:
               out.type = EventType::MouseEntered;
+              out.window.windowId = in->window.windowID;
               break;
 
             case SDL_WINDOWEVENT_LEAVE:
               out.type = EventType::MouseLeft;
+              out.window.windowId = in->window.windowID;
+              break;
+
+            case SDL_WINDOWEVENT_SHOWN:
+              out.type = EventType::Shown;
+              out.window.windowId = in->window.windowID;
+              break;
+
+            case SDL_WINDOWEVENT_HIDDEN:
+              out.type = EventType::Hidden;
+              out.window.windowId = in->window.windowID;
+              break;
+
+            case SDL_WINDOWEVENT_EXPOSED:
+              out.type = EventType::Exposed;
+              out.window.windowId = in->window.windowID;
+              break;
+
+            case SDL_WINDOWEVENT_MINIMIZED:
+              out.type = EventType::Minimized;
+              out.window.windowId = in->window.windowID;
+              break;
+
+            case SDL_WINDOWEVENT_MAXIMIZED:
+              out.type = EventType::Maximized;
+              out.window.windowId = in->window.windowID;
+              break;
+
+            case SDL_WINDOWEVENT_RESTORED:
+              out.type = EventType::Restored;
+              out.window.windowId = in->window.windowID;
               break;
 
             default:
@@ -444,7 +485,7 @@ inline namespace v1 {
           break;
 
         case SDL_QUIT:
-          out.type = EventType::Closed;
+          out.type = EventType::Quit;
           break;
 
         case SDL_KEYDOWN:
@@ -456,6 +497,7 @@ inline namespace v1 {
             out.type = EventType::KeyRepeated;
           }
 
+          out.key.windowId = in->key.windowID;
           out.key.keycode = static_cast<Keycode>(in->key.keysym.sym);
           out.key.scancode = static_cast<Scancode>(in->key.keysym.scancode);
           out.key.modifiers = getModifiersFromMod(in->key.keysym.mod);
@@ -464,6 +506,7 @@ inline namespace v1 {
         case SDL_KEYUP:
           assert(in->key.state == SDL_RELEASED);
           out.type = EventType::KeyReleased;
+          out.key.windowId = in->key.windowID;
           out.key.keycode = static_cast<Keycode>(in->key.keysym.sym);
           out.key.scancode = static_cast<Scancode>(in->key.keysym.scancode);
           out.key.modifiers = getModifiersFromMod(in->key.keysym.mod);
@@ -475,9 +518,13 @@ inline namespace v1 {
           }
 
           out.type = EventType::MouseWheelScrolled;
+          out.mouseWheel.windowId = in->wheel.windowID;
           out.mouseWheel.offset.x = in->wheel.x;
           out.mouseWheel.offset.y = in->wheel.y;
-          // TODO: handle SDL_MOUSEWHEEL_FLIPPED?
+
+          if (in->wheel.direction == SDL_MOUSEWHEEL_FLIPPED) {
+            out.mouseWheel.offset = - out.mouseWheel.offset;
+          }
           break;
 
         case SDL_MOUSEBUTTONDOWN:
@@ -488,9 +535,11 @@ inline namespace v1 {
           }
 
           out.type = EventType::MouseButtonPressed;
+          out.mouseButton.windowId = in->button.windowID;
           out.mouseButton.button = getMouseButtonFromButton(in->button.button);
           out.mouseButton.coords.x = in->button.x;
           out.mouseButton.coords.y = in->button.y;
+          out.mouseButton.clicks = in->button.clicks;
           break;
 
         case SDL_MOUSEBUTTONUP:
@@ -501,9 +550,11 @@ inline namespace v1 {
           }
 
           out.type = EventType::MouseButtonReleased;
+          out.mouseButton.windowId = in->button.windowID;
           out.mouseButton.button = getMouseButtonFromButton(in->button.button);
           out.mouseButton.coords.x = in->button.x;
           out.mouseButton.coords.y = in->button.y;
+          out.mouseButton.clicks = in->button.clicks;
           break;
 
         case SDL_MOUSEMOTION:
@@ -512,8 +563,11 @@ inline namespace v1 {
           }
 
           out.type = EventType::MouseMoved;
+          out.mouseCursor.windowId = in->motion.windowID;
           out.mouseCursor.coords.x = in->motion.x;
           out.mouseCursor.coords.y = in->motion.y;
+          out.mouseCursor.motion.x = in->motion.xrel;
+          out.mouseCursor.motion.y = in->motion.yrel;
           break;
 
         case SDL_CONTROLLERDEVICEADDED:
@@ -550,7 +604,9 @@ inline namespace v1 {
 
         case SDL_TEXTINPUT:
           out.type = EventType::TextEntered;
-          std::strncpy(out.text.rune.data, in->text.text, Rune::Size);
+          static_assert(std::extent<decltype(out.text.rune.data)>::value == std::extent<decltype(in->text.text)>::value, "Buffer size mismatch.");
+          static_assert(std::extent<decltype(out.text.rune.data)>::value == Rune::Size, "Buffer size mismatch.");
+          std::copy_n(std::begin(in->text.text), Rune::Size, std::begin(out.text.rune.data));
           break;
 
         case SDL_FINGERDOWN:
@@ -558,6 +614,9 @@ inline namespace v1 {
           out.touch.finger = in->tfinger.fingerId;
           out.touch.coords.x = static_cast<int>(in->tfinger.x * size.width);
           out.touch.coords.y = static_cast<int>(in->tfinger.y * size.height);
+          out.touch.motion.x = static_cast<int>(in->tfinger.dx * size.width);
+          out.touch.motion.y = static_cast<int>(in->tfinger.dy * size.height);
+          out.touch.pressure = in->tfinger.pressure;
           break;
 
         case SDL_FINGERMOTION:
@@ -565,6 +624,9 @@ inline namespace v1 {
           out.touch.finger = in->tfinger.fingerId;
           out.touch.coords.x = static_cast<int>(in->tfinger.x * size.width);
           out.touch.coords.y = static_cast<int>(in->tfinger.y * size.height);
+          out.touch.motion.x = static_cast<int>(in->tfinger.dx * size.width);
+          out.touch.motion.y = static_cast<int>(in->tfinger.dy * size.height);
+          out.touch.pressure = in->tfinger.pressure;
           break;
 
         case SDL_FINGERUP:
@@ -572,6 +634,9 @@ inline namespace v1 {
           out.touch.finger = in->tfinger.fingerId;
           out.touch.coords.x = static_cast<int>(in->tfinger.x * size.width);
           out.touch.coords.y = static_cast<int>(in->tfinger.y * size.height);
+          out.touch.motion.x = static_cast<int>(in->tfinger.dx * size.width);
+          out.touch.motion.y = static_cast<int>(in->tfinger.dy * size.height);
+          out.touch.pressure = in->tfinger.pressure;
           break;
 
         default:
@@ -581,48 +646,131 @@ inline namespace v1 {
       return true;
     }
 
+    bool isEventWindowDependent(const Event& event) {
+      switch (event.type) {
+        case EventType::Resized:
+        case EventType::Closed:
+        case EventType::FocusGained:
+        case EventType::FocusLost:
+        case EventType::Shown:
+        case EventType::Hidden:
+        case EventType::Exposed:
+        case EventType::Minimized:
+        case EventType::Maximized:
+        case EventType::Restored:
+        case EventType::KeyPressed:
+        case EventType::KeyRepeated:
+        case EventType::KeyReleased:
+        case EventType::MouseWheelScrolled:
+        case EventType::MouseButtonPressed:
+        case EventType::MouseButtonReleased:
+        case EventType::MouseMoved:
+        case EventType::TextEntered:
+          return true;
+        default:
+          return false;
+      }
+
+      return false;
+    }
+
+    uint32_t getWindowIdFromEvent(const Event& event) {
+      switch (event.type) {
+        case EventType::Resized:
+          return event.resize.windowId;
+        case EventType::Closed:
+        case EventType::FocusGained:
+        case EventType::FocusLost:
+        case EventType::Shown:
+        case EventType::Hidden:
+        case EventType::Exposed:
+        case EventType::Minimized:
+        case EventType::Maximized:
+        case EventType::Restored:
+          return event.window.windowId;
+        case EventType::KeyPressed:
+        case EventType::KeyRepeated:
+        case EventType::KeyReleased:
+          return event.key.windowId;
+        case EventType::MouseWheelScrolled:
+          return event.mouseWheel.windowId;
+        case EventType::MouseButtonPressed:
+        case EventType::MouseButtonReleased:
+          return event.mouseButton.windowId;
+        case EventType::MouseMoved:
+          return event.mouseCursor.windowId;
+        case EventType::TextEntered:
+          return event.text.windowId;
+        default:
+          return uint32_t(-1);
+      }
+
+      return uint32_t(-1);
+    }
+
   } // anonymous namespace
 
   bool Window::pollEvent(Event& event) {
     assert(m_window);
 
-    Uint32 windowId = SDL_GetWindowID(m_window);
+    if (pickEventForWindow(m_windowId, event)) {
+      return true;
+    }
+
     SDL_Event ev;
 
-    do {
-      int status = SDL_PollEvent(&ev);
+    for (;;) {
+      do {
+        int status = SDL_CHECK_EXPR(SDL_PollEvent(&ev));
 
-      if (status == 0) {
-        return false;
+        if (status == 0) {
+          return false;
+        }
+      } while (!translateEvent(getSize(), &ev, event));
+
+      if (isEventWindowDependent(event) && getWindowIdFromEvent(event) != m_windowId) {
+        g_pendingEvents.push_back(event);
+      } else {
+        break;
       }
-    } while (!translateEvent(windowId, getSize(), &ev, event));
+    }
 
     return true;
   }
 
   bool Window::waitEvent(Event& event) {
     assert(m_window);
-
-    Uint32 windowId = SDL_GetWindowID(m_window);
     SDL_Event ev;
 
-    do {
-      int status = SDL_WaitEvent(&ev);
+    if (pickEventForWindow(m_windowId, event)) {
+      return true;
+    }
 
-      if (status == 0) {
-        return false;
+    for (;;) {
+      do {
+        int status = SDL_CHECK_EXPR(SDL_WaitEvent(&ev));
+
+        if (status == 0) {
+          return false;
+        }
+      } while (!translateEvent(getSize(), &ev, event));
+
+      if (isEventWindowDependent(event) && getWindowIdFromEvent(event) != m_windowId) {
+        g_pendingEvents.push_back(event);
+      } else {
+        break;
       }
-    } while (!translateEvent(windowId, getSize(), &ev, event));
+    }
 
     return true;
   }
 
   void Window::setVerticalSyncEnabled(bool enabled) {
-    SDL_GL_SetSwapInterval(enabled ? 1 : 0);
+    SDL_CHECK(SDL_GL_SetSwapInterval(enabled ? 1 : 0));
   }
 
   bool Window::isVerticalSyncEnabled() const {
-    return SDL_GL_GetSwapInterval() != 0;
+    return SDL_CHECK_EXPR(SDL_GL_GetSwapInterval()) != 0;
   }
 
   void Window::setFramerateLimit(unsigned int limit) {
@@ -635,7 +783,7 @@ inline namespace v1 {
 
   void Window::display() {
     assert(m_window);
-    SDL_GL_SwapWindow(m_window);
+    SDL_CHECK(SDL_GL_SwapWindow(m_window));
 
     // handle framerate limit
 
@@ -648,11 +796,11 @@ inline namespace v1 {
   }
 
   void Window::setMouseCursorVisible(bool visible) {
-    SDL_ShowCursor(visible ? SDL_ENABLE : SDL_DISABLE);
+    SDL_CHECK(SDL_ShowCursor(visible ? SDL_ENABLE : SDL_DISABLE));
   }
 
   void Window::setMouseCursorGrabbed(bool grabbed) {
-    SDL_SetWindowGrab(m_window, grabbed ? SDL_TRUE : SDL_FALSE);
+    SDL_CHECK(SDL_SetWindowGrab(m_window, grabbed ? SDL_TRUE : SDL_FALSE));
   }
 
   void Window::setMouseCursor(const Cursor& cursor) {
@@ -660,15 +808,37 @@ inline namespace v1 {
       return;
     }
 
-    SDL_SetCursor(cursor.m_cursor);
+    SDL_CHECK(SDL_SetCursor(cursor.m_cursor));
   }
 
-  void Window::attachGLContext() {
-    SDL_GL_MakeCurrent(m_window, m_sharedContext);
+  void Window::makeMainContextCurrent() {
+    if (SDL_CHECK_EXPR(SDL_GL_GetCurrentContext()) != m_mainContext) {
+      SDL_CHECK(SDL_GL_MakeCurrent(m_window, m_mainContext));
+    }
   }
 
-  void Window::detachGLContext() {
-    SDL_GL_MakeCurrent(m_window, nullptr);
+  void Window::makeSharedContextCurrent() {
+    SDL_CHECK(SDL_GL_MakeCurrent(m_window, m_sharedContext));
+  }
+
+  void Window::makeNoContextCurrent() {
+    SDL_CHECK(SDL_GL_MakeCurrent(m_window, nullptr));
+  }
+
+  std::vector<Event> Window::g_pendingEvents;
+
+  bool Window::pickEventForWindow(uint32_t windowId, Event& event) {
+    auto it = std::find_if(g_pendingEvents.begin(), g_pendingEvents.end(), [windowId](const Event& current) {
+      return getWindowIdFromEvent(current) == windowId;
+    });
+
+    if (it != g_pendingEvents.end()) {
+      event = *it;
+      g_pendingEvents.erase(it);
+      return true;
+    }
+
+    return false;
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

@@ -31,10 +31,11 @@
 #else
 #include <sys/types.h>
 #include <sys/socket.h>
-#include <netdb.h>
 #endif
 
 #include <gf/Log.h>
+
+#include <gfpriv/SocketPrivate.h>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -43,59 +44,28 @@ inline namespace v1 {
 
   TcpListener::TcpListener(const std::string& service, SocketFamily family)
   {
-    setHandle(nativeBindListen(service, family));
+    setHandle(priv::nativeBindListen(service, family));
   }
 
   TcpSocket TcpListener::accept() {
     SocketHandle handle = ::accept(getHandle(), nullptr, nullptr);
 
     if (handle == InvalidSocketHandle) {
-      if (!nativeWouldBlock(getErrorCode())) {
-        gf::Log::error("Error while accepting. Reason: %s\n", getErrorString().c_str());
-      }
+      gf::Log::error("Error while accepting. Reason: %s\n", priv::getErrorString().c_str());
     }
 
     return TcpSocket(handle);
   }
 
   TcpSocket TcpListener::accept(SocketAddress& address) {
-    address.m_length = sizeof(sockaddr_storage);
-    SocketHandle handle = ::accept(getHandle(), reinterpret_cast<sockaddr*>(&address.m_storage), &address.m_length);
+    address.length = sizeof(address.storage);
+    SocketHandle handle = ::accept(getHandle(), reinterpret_cast<sockaddr*>(&address.storage), &address.length);
 
     if (handle == InvalidSocketHandle) {
-      if (!nativeWouldBlock(getErrorCode())) {
-        gf::Log::error("Error while accepting. Reason: %s\n", getErrorString().c_str());
-      }
+      gf::Log::error("Error while accepting. Reason: %s\n", priv::getErrorString().c_str());
     }
 
     return TcpSocket(handle);
-  }
-
-  SocketHandle TcpListener::nativeBindListen(const std::string& service, SocketFamily family) {
-    auto addresses = getLocalAddressInfo(service, SocketType::Tcp, family);
-
-    for (auto info : addresses) {
-      SocketHandle sock = ::socket(static_cast<int>(info.family), static_cast<int>(info.type), 0);
-
-      if (sock == InvalidSocketHandle) {
-        continue;
-      }
-
-      if (::bind(sock, info.address.getData(), info.address.getLength()) != 0) {
-        nativeCloseSocket(sock);
-        continue;
-      }
-
-      if (::listen(sock, SOMAXCONN) != 0) {
-        nativeCloseSocket(sock);
-        continue;
-      }
-
-      return sock;
-    }
-
-    gf::Log::error("Unable to bind service '%s'.\n", service.c_str());
-    return InvalidSocketHandle;
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

@@ -27,7 +27,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup core
+   * @ingroup core_vocabulary
    * @brief A quarter in a square
    */
   enum Quarter {

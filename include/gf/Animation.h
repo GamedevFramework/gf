@@ -36,7 +36,7 @@ inline namespace v1 {
   class Texture;
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_sprite
    * @brief An animation
    *
    * An animation is a collection of frames that are displayed
@@ -74,10 +74,10 @@ inline namespace v1 {
      * @param texture The texture where the sprite is
      * @param frameSize The frame texture normalized size
      * @param layout Layout of frames
-     * @param nbFrames Number of frames included in tileset
+     * @param frames Number of frames included in tileset
      * @param duration The amount of time to display the frame
      */
-    void addTileset(const Texture& texture, const Vector2f& frameSize, const Vector2i& layout, int nbFrames, Time duration);
+    void addTileset(const Texture& texture, Vector2f frameSize, Vector2i layout, int frames, Time duration);
 
     /**
      * @brief Enable or disable the animation loop

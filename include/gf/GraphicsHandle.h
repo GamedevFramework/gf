@@ -30,17 +30,25 @@ namespace gf {
 inline namespace v1 {
 #endif
 
+  /**
+   * @ingroup graphics_gpu
+   * @brief A tag to represent various GPU resources
+   */
   enum class GraphicsTag {
-    Buffer,
-    Framebuffer,
-    Texture,
+    Buffer,       ///< A GPU buffer
+    Framebuffer,  ///< A GPU framebuffer
+    Texture,      ///< A GPU texture
   };
 
+  /**
+   * @ingroup graphics_gpu
+   * @brief A trait to handle creation and deletion of GPU resources
+   */
   template<GraphicsTag Tag>
   struct GraphicsTrait;
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_gpu
    * @brief A GL handle
    *
    * This class is a RAII class around an OpenGL name.
@@ -48,45 +56,90 @@ inline namespace v1 {
   template<GraphicsTag Tag>
   class GraphicsHandle {
   public:
+    /**
+     * @brief Constructor
+     *
+     * Generate a valid handle.
+     */
     GraphicsHandle()
     : m_name()
     {
       GraphicsTrait<Tag>::gen(1, &m_name);
     }
 
+    /**
+     * @brief Constructor
+     *
+     * Generate an invalid handle.
+     */
     constexpr GraphicsHandle(NoneType) noexcept
     : m_name(0)
     {
     }
 
+    /**
+     * @brief Destructor
+     */
     ~GraphicsHandle() noexcept {
       if (m_name != 0) {
         GraphicsTrait<Tag>::del(1, &m_name);
       }
     }
 
+    /**
+     * @brief Deleted copy constructor
+     */
     GraphicsHandle(const GraphicsHandle&) = delete;
 
+    /**
+     * @brief Deleted copy assignment
+     */
     GraphicsHandle& operator=(const GraphicsHandle&) = delete;
 
+    /**
+     * @brief Move constructor
+     *
+     * @param other Another handle
+     */
     GraphicsHandle(GraphicsHandle&& other) noexcept
     : m_name(std::exchange(other.m_name, 0))
     {
     }
 
+    /**
+     * @brief Move assignment
+     *
+     * @param other Another handle
+     * @returns A reference to this handle
+     */
     GraphicsHandle& operator=(GraphicsHandle&& other) noexcept {
       std::swap(m_name, other.m_name);
       return *this;
     }
 
+    /**
+     * @brief Check if the handle is valid
+     *
+     * @returns True if the handle is valid
+     */
     bool isValid() const noexcept {
       return m_name != 0;
     }
 
+    /**
+     * @brief Get the underlying name of the handle
+     *
+     * @returns A GL name
+     */
     unsigned getName() const noexcept {
       return m_name;
     }
 
+    /**
+     * @brief Conversion operator to the underlying name
+     *
+     * @sa getName()
+     */
     operator unsigned () const noexcept {
       return m_name;
     }

@@ -27,7 +27,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_text
    * @brief The alignement of a text
    */
   enum class Alignment {

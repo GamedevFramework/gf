@@ -33,7 +33,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup window
+   * @ingroup graphics_events
    * @brief A key control based on keycode.
    */
   class GF_GRAPHICS_API KeycodeKeyControl : public Control {
@@ -52,7 +52,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup window
+   * @ingroup graphics_events
    * @brief A key control based on scancode.
    */
   class GF_GRAPHICS_API ScancodeKeyControl : public Control {
@@ -71,7 +71,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup window
+   * @ingroup graphics_events
    * @brief A mouse button control.
    */
   class GF_GRAPHICS_API MouseButtonControl : public Control {
@@ -90,7 +90,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup window
+   * @ingroup graphics_events
    * @brief A gamepad button control
    */
   class GF_GRAPHICS_API GamepadButtonControl : public Control {
@@ -112,7 +112,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup window
+   * @ingroup graphics_events
    * @brief A gamepad axis control
    */
   class GF_GRAPHICS_API GamepadAxisControl : public Control {
@@ -137,7 +137,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup window
+   * @ingroup graphics_events
    * @brief A close control.
    *
    */
@@ -152,7 +152,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup window
+   * @ingroup graphics_events
    * @brief The Konami code control for keyboard
    *
    * @sa gf::KonamiGamepadControl
@@ -173,7 +173,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup window
+   * @ingroup graphics_events
    * @brief The Konami code control for gamepad
    *
    * @sa gf::KonamiKeyboardControl

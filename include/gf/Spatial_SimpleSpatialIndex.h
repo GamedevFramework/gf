@@ -34,7 +34,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup core
+   * @ingroup core_spatial
    * @brief An very simple spatial index
    *
    * @sa gf::Quadtree, gf::RStarTree

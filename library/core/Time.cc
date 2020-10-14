@@ -35,7 +35,8 @@ inline namespace v1 {
   const Time Time::Zero = Time();
 
   Serializer& operator|(Serializer& ar, Time time) {
-    return ar | time.asMicroseconds();
+    ar | time.asMicroseconds();
+    return ar;
   }
 
   Deserializer& operator|(Deserializer& ar, Time& time) {

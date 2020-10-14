@@ -24,7 +24,9 @@
 #ifndef GF_WINDOW_H
 #define GF_WINDOW_H
 
+#include <cstdint>
 #include <string>
+#include <vector>
 
 #include "Clock.h"
 #include "Flags.h"
@@ -45,7 +47,7 @@ inline namespace v1 {
   class Cursor;
 
   /**
-   * @ingroup window
+   * @ingroup graphics_window_monitor
    * @brief Hints for window creation
    */
   enum class WindowHints : uint32_t {
@@ -66,7 +68,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup window
+   * @ingroup graphics_window_monitor
    * @brief An OS window
    *
    * The gf::Window class provides a simple interface for manipulating
@@ -326,6 +328,13 @@ inline namespace v1 {
      */
 
     /**
+     * @brief Get the window id
+     */
+    uint32_t getWindowId() const {
+      return m_windowId;
+    }
+
+    /**
      * @brief Pop the event on top of the event queue, if any, and return it
      *
      * This function is not blocking: if there's no pending event then
@@ -469,17 +478,26 @@ inline namespace v1 {
 
     /** @} */
 
-    friend class SharedGraphics;
 
   private:
-    void attachGLContext();
-    void detachGLContext();
+    friend class SharedGraphics;
+    friend class RenderWindow;
+
+    void makeMainContextCurrent();
+    void makeSharedContextCurrent();
+    void makeNoContextCurrent();
+
+  private:
+    static std::vector<Event> g_pendingEvents;
+
+    bool pickEventForWindow(uint32_t windowId, Event& event);
 
   private:
     Library m_lib; // to automatically initialize SDL
 
   private:
     SDL_Window *m_window;
+    uint32_t m_windowId;
     void *m_mainContext;
     void *m_sharedContext;
     bool m_shouldClose;

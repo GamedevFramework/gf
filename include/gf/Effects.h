@@ -30,7 +30,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_post_proc
    * @brief Default effect
    *
    * This post-processing effect does nothing
@@ -45,7 +45,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_post_proc
    * @brief Anti-aliasing effect
    *
    * This effect uses [Fast Approximate Anti-Aliasing (FXAA)](https://en.wikipedia.org/wiki/Fast_approximate_anti-aliasing).
@@ -67,7 +67,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_post_proc
    * @brief Generic color matrix effect
    *
    * This effect uses a color matrix. You can use it directly or use a
@@ -95,7 +95,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_post_proc
    * @brief Simple color effects
    */
   class GF_GRAPHICS_API ColorEffect : public ColorMatrixEffect {
@@ -128,7 +128,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_post_proc
    * @brief Simulation of color blindness
    *
    * [Color blindness](https://en.wikipedia.org/wiki/Color_blindness) is a
@@ -171,7 +171,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_post_proc
    * @brief Edge detector
    *
    * This effect uses a [Sobel filter](https://en.wikipedia.org/wiki/Sobel_operator).

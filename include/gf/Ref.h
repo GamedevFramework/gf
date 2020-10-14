@@ -30,7 +30,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup core
+   * @ingroup core_vocabulary
    * @brief A reference wrapper
    *
    * This class is similar to [std::reference_wrapper](https://en.cppreference.com/w/cpp/utility/functional/reference_wrapper).

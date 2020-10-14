@@ -32,7 +32,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup game
+   * @ingroup core_roguelike
    * @brief A property of a cell
    *
    * @sa gf::SquareMap
@@ -45,7 +45,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup game
+   * @ingroup core_roguelike
    * @brief An empty cell
    *
    * An empty cell is transparent and walkable.
@@ -55,7 +55,7 @@ inline namespace v1 {
   constexpr Flags<CellProperty> EmptyCell = combineFlags(CellProperty::Transparent, CellProperty::Walkable);
 
   /**
-   * @ingroup game
+   * @ingroup core_roguelike
    * @brief Algorithm for computing a field of vision
    *
    * @sa gf::SquareMap
@@ -65,7 +65,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup game
+   * @ingroup core_roguelike
    * @brief Constant to indicate if the limit is part of the field of vision
    *
    * The limit is generally a wall that is next to a visible ground cell.
@@ -78,7 +78,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup game
+   * @ingroup core_roguelike
    * @brief Algorithm for computing a route
    *
    * @sa gf::SquareMap
@@ -89,7 +89,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup game
+   * @ingroup core_roguelike
    * @brief A square map
    *
    * A square map is a model of map where cells are organized in a square grid.

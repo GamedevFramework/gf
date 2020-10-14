@@ -30,7 +30,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief Cardinal and ordinal orientation
    *
    * gf::Orientation represents one the four cardinal orientations and the
@@ -53,7 +53,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief Get a unit vector from an orientation
    *
    * @param orientation The orientation
@@ -62,7 +62,7 @@ inline namespace v1 {
   GF_CORE_API Vector2f unit(Orientation orientation);
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief Get a vector from an orientation
    *
    * The vector has its coordinates at -1, 0 or 1 depending on the orientation.
@@ -75,7 +75,7 @@ inline namespace v1 {
   GF_CORE_API Vector2i displacement(Orientation orientation);
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief Get an angle from a orientation
    *
    * East is at angle 0 and angle grows clockwise.
@@ -87,7 +87,7 @@ inline namespace v1 {
   GF_CORE_API float angle(Orientation orientation);
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief Get an orientation from an angle
    *
    * East is at angle 0 and angle grows clockwise.
@@ -99,7 +99,7 @@ inline namespace v1 {
   GF_CORE_API Orientation orientation(float angle);
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief Get the opposite orientation
    *
    * @param orientation The orientation
@@ -108,7 +108,7 @@ inline namespace v1 {
   GF_CORE_API Orientation opposite(Orientation orientation);
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief Get the orthogonal orientation clockwise
    *
    * @param orientation The orientation
@@ -117,7 +117,7 @@ inline namespace v1 {
   GF_CORE_API Orientation orthogonalCW(Orientation orientation);
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief Get the orthogonal orientation counter-clockwise
    *
    * @param orientation The orientation
@@ -126,7 +126,7 @@ inline namespace v1 {
   GF_CORE_API Orientation orthogonalCCW(Orientation orientation);
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief Get the next orientation clockwise
    *
    * @param orientation The orientation
@@ -135,7 +135,7 @@ inline namespace v1 {
   GF_CORE_API Orientation nextCW(Orientation orientation);
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief Get the next orientation counter-clockwise
    *
    * @param orientation The orientation

@@ -35,7 +35,7 @@ inline namespace v1 {
   class RenderTarget;
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_drawables
    * @brief Abstract base class for objects that can be drawn to a render window
    *
    * gf::Drawable is a very simple base class that allows objects

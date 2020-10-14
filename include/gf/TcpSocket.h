@@ -24,10 +24,9 @@
 #include <cstdint>
 #include <string>
 
-#include "ArrayRef.h"
-#include "BufferRef.h"
 #include "NetApi.h"
 #include "Socket.h"
+#include "Span.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -104,7 +103,7 @@ inline namespace v1 {
      * @param buffer The buffer that contains the bytes to send
      * @returns A result for the operation
      */
-    SocketDataResult sendRawBytes(ArrayRef<uint8_t> buffer);
+    SocketDataResult sendRawBytes(Span<const uint8_t> buffer);
 
     /**
      * @brief Receive some bytes from the socket
@@ -112,7 +111,7 @@ inline namespace v1 {
      * @param buffer The buffer to store the received bytes
      * @returns A result for the operation
      */
-    SocketDataResult recvRawBytes(BufferRef<uint8_t> buffer);
+    SocketDataResult recvRawBytes(Span<uint8_t> buffer);
 
     /**
      * @brief Send a whole buffer to the socket
@@ -122,7 +121,7 @@ inline namespace v1 {
      * @param buffer The buffer that contains the bytes to send
      * @returns The status of the connection
      */
-    SocketStatus sendBytes(ArrayRef<uint8_t> buffer);
+    SocketStatus sendBytes(Span<const uint8_t> buffer);
 
     /**
      * @brief Receive a whole buffer from the socket
@@ -133,7 +132,7 @@ inline namespace v1 {
      * @param buffer The buffer to store the received bytes
      * @returns The status of the connection
      */
-    SocketStatus recvBytes(BufferRef<uint8_t> buffer);
+    SocketStatus recvBytes(Span<uint8_t> buffer);
 
     /**
      * @brief Send a packet to the socket
@@ -155,9 +154,6 @@ inline namespace v1 {
     TcpSocket(SocketHandle handle);
 
     friend class TcpListener;
-
-  private:
-    static SocketHandle nativeConnect(const std::string& host, const std::string& service, SocketFamily family);
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

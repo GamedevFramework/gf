@@ -33,7 +33,7 @@ inline namespace v1 {
   class Animation;
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_sprite
    * @brief An animated sprite
    *
    * An animated sprite is a sprite that can display an animation.

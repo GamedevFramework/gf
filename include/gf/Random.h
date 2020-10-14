@@ -36,7 +36,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup core
+   * @ingroup core_utilities
    * @brief A random engine
    *
    * gf::Random is a wrapper around [C++11 standard random features](http://en.cppreference.com/w/cpp/numeric/random).

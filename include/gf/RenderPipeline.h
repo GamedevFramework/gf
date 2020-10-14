@@ -37,7 +37,7 @@ inline namespace v1 {
   class Window;
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_renderers
    * @brief A render pipeline
    *
    * A render pipeline automates the application of post-processing effects.

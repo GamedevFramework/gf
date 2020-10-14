@@ -34,7 +34,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief A half-open range of values
    *
    * gf::Range represents a half-open range of values.
@@ -46,7 +46,7 @@ inline namespace v1 {
     T hi; ///< The higher endpoint (excluded)
 
     /**
-     * @ingroup core
+     * @ingroup core_maths
      * @brief A range iterator
      */
     struct Iterator {
@@ -228,7 +228,7 @@ inline namespace v1 {
   }
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief A float range
    *
    * @sa gf::Range
@@ -236,7 +236,7 @@ inline namespace v1 {
   using RangeF = Range<float>;
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief A int range
    *
    * @sa gf::Range
@@ -244,7 +244,7 @@ inline namespace v1 {
   using RangeI = Range<int>;
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief A unsigned range
    *
    * @sa gf::Range
@@ -252,7 +252,7 @@ inline namespace v1 {
   using RangeU = Range<unsigned>;
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief A `std::size_t` range
    *
    * @sa gf::Range
@@ -269,7 +269,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief A 2D range
    *
    * gf::PositionRange represents a range across a 2D area.
@@ -280,6 +280,7 @@ inline namespace v1 {
     Range<T> second;  ///< The range in the second dimension
 
     /**
+     * @ingroup core_maths
      * @brief An iterator for a 2D range
      */
     struct Iterator {
@@ -416,7 +417,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief A 2D range
    *
    * gf::NeighborSquareRange represents a range accross a square area around an origin (not included).
@@ -428,6 +429,7 @@ inline namespace v1 {
     Vector<T, 2> origin;
 
     /**
+     * @ingroup core_maths
      * @brief An iterator for a 2D range
      */
     struct Iterator {
@@ -584,7 +586,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief A 2D range
    *
    * gf::NeighborDiamondRange represents a range accross a diamond area around an origin (not included).
@@ -597,6 +599,7 @@ inline namespace v1 {
     T radius;
 
     /**
+     * @ingroup core_maths
      * @brief An iterator for a 2D range
      */
     struct Iterator {

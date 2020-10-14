@@ -30,7 +30,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup game
+   * @ingroup core_models
    * @brief A game object that can be updated
    *
    * gf::Model represents a game object that is updated but not rendered.

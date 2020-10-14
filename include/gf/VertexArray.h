@@ -39,7 +39,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_drawables
    * @brief A set of primitives
    *
    * gf::VertexArray is a very simple wrapper around a dynamic

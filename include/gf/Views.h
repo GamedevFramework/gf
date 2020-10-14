@@ -30,7 +30,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_views
    * @brief Stretch view
    *
    * This view assumes that the framebuffer is always the same size as the world.
@@ -79,7 +79,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_views
    * @brief Fit view
    *
    * This view will always maintain the aspect ratio of the world, while
@@ -143,7 +143,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_views
    * @brief Fill view
    *
    * This view keeps the aspect ratio of the world, but it will always fill
@@ -206,7 +206,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_views
    * @brief Extend view
    *
    * This view keeps the world aspect ratio without black bars by extending
@@ -271,7 +271,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_views
    * @brief Locked view
    *
    * This view keeps the world size constant and add black bars if the world
@@ -337,7 +337,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_views
    * @brief Screen view
    *
    * This view will always match the window size which means that no scaling

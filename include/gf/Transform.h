@@ -34,6 +34,7 @@ inline namespace v1 {
 #endif
 
   /**
+   * @ingroup core_geometry
    * @brief A rotation
    *
    * @sa gf::Translation, gf::Transform
@@ -115,6 +116,7 @@ inline namespace v1 {
   }
 
   /**
+   * @ingroup core_geometry
    * @brief A translation
    *
    * @sa gf::Rotation, gf::Transform
@@ -188,6 +190,7 @@ inline namespace v1 {
   }
 
   /**
+   * @ingroup core_geometry
    * @brief A simple transformation (rotation then translation)
    *
    * This class is meant for simple transformation as can be seen in physics.
@@ -312,7 +315,7 @@ inline namespace v1 {
   // https://en.wikipedia.org/wiki/Homogeneous_coordinates
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief Apply an affine transformation to a 2D point.
    *
    * @param mat The transformation matrix
@@ -325,7 +328,7 @@ inline namespace v1 {
   }
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief Apply an affine transformaton to a rectangle
    *
    * The resulting rectangle is axis-aligned
@@ -338,7 +341,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief Identity transform
    *
    * @return The identity matrix
@@ -348,7 +351,7 @@ inline namespace v1 {
   }
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief Get a translation matrix
    *
    * @param offset The offset of the translation
@@ -364,7 +367,7 @@ inline namespace v1 {
   }
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief Combine the current transform with a translation
    *
    * @param mat The current transform
@@ -373,7 +376,7 @@ inline namespace v1 {
   GF_CORE_API void translate(Matrix3f& mat, Vector2f offset);
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief Get a rotation matrix
    *
    * @param angle The angle of the rotation (in radians)
@@ -391,7 +394,7 @@ inline namespace v1 {
   }
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief Get a rotation matrix
    *
    * @param angle The angle of the rotation (in radians)
@@ -410,7 +413,7 @@ inline namespace v1 {
   }
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief Combine the current transform with a rotation
    *
    * @param mat The current transform
@@ -419,7 +422,7 @@ inline namespace v1 {
   GF_CORE_API void rotate(Matrix3f& mat, float angle);
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief Combine the current transform with a rotation
    *
    * @param mat The current transform
@@ -429,7 +432,7 @@ inline namespace v1 {
   GF_CORE_API void rotate(Matrix3f& mat, float angle, Vector2f center);
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief Get a scaling matrix
    *
    * @param factor The scaling factor
@@ -445,7 +448,7 @@ inline namespace v1 {
   }
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief Get a scaling matrix
    *
    * @param factor The scaling factor
@@ -462,7 +465,7 @@ inline namespace v1 {
   }
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief Combine the current transform with a scaling
    *
    * @param mat The current transform
@@ -471,7 +474,7 @@ inline namespace v1 {
   GF_CORE_API void scale(Matrix3f& mat, Vector2f factor);
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief Combine the current transform with a scaling
    *
    * @param mat The current transform

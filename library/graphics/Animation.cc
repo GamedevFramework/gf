@@ -46,18 +46,18 @@ inline namespace v1 {
     m_frames.push_back({ &texture, bounds, duration });
   }
 
-  void Animation::addTileset(const Texture& texture, const Vector2f& frameSize, const Vector2i& layout, int nbFrames, Time duration) {
+  void Animation::addTileset(const Texture& texture, Vector2f frameSize, Vector2i layout, int frames, Time duration) {
     int index = 0;
 
     for (int j = 0; j < layout.height; ++j) {
       for (int i = 0; i < layout.width; ++i) {
         // End of function to avoid to add emtpy frame
-        if (index >= nbFrames) {
+        if (index >= frames) {
           return;
         }
 
-        auto rectTexture = gf::RectF::fromPositionSize({ i * frameSize.width, j * frameSize.height }, frameSize);
-        addFrame(texture, rectTexture, duration);
+        auto textureRect = gf::RectF::fromPositionSize(frameSize * gf::vec(i, j), frameSize);
+        addFrame(texture, textureRect, duration);
         index++;
       }
     }

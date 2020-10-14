@@ -40,7 +40,7 @@ inline namespace v1 {
   class AlphaTexture;
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_text
    * @brief A basic text
    *
    * You should use gf::Text instead.

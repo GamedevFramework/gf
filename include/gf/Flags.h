@@ -31,7 +31,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup core
+   * @ingroup core_vocabulary
    * @brief Bitfield relying on an enumeration
    *
    * @snippet snippets/doc_class_flags.cc flags_def

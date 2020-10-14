@@ -31,7 +31,7 @@ inline namespace v1 {
   struct Event;
 
   /**
-   * @ingroup window
+   * @ingroup graphics_events
    * @brief A physical control.
    *
    */

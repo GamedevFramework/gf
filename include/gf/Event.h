@@ -24,6 +24,8 @@
 #ifndef GF_EVENT_H
 #define GF_EVENT_H
 
+#include <cstdint>
+
 #include "Gamepad.h"
 #include "GraphicsApi.h"
 #include "Keyboard.h"
@@ -37,15 +39,24 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup window
+   * @ingroup graphics_events
    * @brief Enumeration of the different types of events
    */
   enum class EventType {
+    // global event
+    Quit,         ///< The application is asked to quit
+
     // window events
-    Resized,      ///< The window was resized (data in event.size)
-    Closed,       ///< The window requested to be closed (no data)
-    FocusGained,  ///< The window gained focus (no data)
-    FocusLost,    ///< The window lost focus (no data)
+    Resized,      ///< The window was resized (data in event.resize)
+    Closed,       ///< The window requested to be closed (data in event.window)
+    FocusGained,  ///< The window gained focus (data in event.window)
+    FocusLost,    ///< The window lost focus (data in event.window)
+    Shown,        ///< The window is shown (data in event.window)
+    Hidden,       ///< The window is hidden (data in event.window)
+    Exposed,      ///< The window is exposed (data in event.window)
+    Minimized,    ///< The window is minimized (data in event.window)
+    Maximized,    ///< The window is maximized (data in event.window)
+    Restored,     ///< The window is restored (data in event.window)
 
     // inputs events
     KeyPressed,   ///< A key was pressed (data in event.key)
@@ -72,9 +83,121 @@ inline namespace v1 {
     TouchEnded, ///< A touch ended
   };
 
+  /**
+   * @ingroup graphics_events
+   * @brief Window event parameters (EventType::Closed, EventType::FocusGained, EventType::FocusLost, EventType::Shown, EventType::Hidden, EventType::Exposed, EventType::Minimized, EventType::Maximized, EventType::Restored)
+   */
+  struct WindowEvent {
+    uint32_t windowId; ///< The window id of the event
+  };
 
   /**
-   * @ingroup window
+   * @ingroup graphics_events
+   * @brief Resize event parameters (EventType::Resized)
+   */
+  struct ResizeEvent {
+    uint32_t windowId;  ///< The window id of the event
+    Vector2i size;      ///< The new size of the window
+  };
+
+  /**
+   * @ingroup graphics_events
+   * @brief Keyboard event parameters (EventType::KeyPressed, EventType::KeyReleased, EventType::KeyRepeated)
+   */
+  struct KeyEvent {
+    uint32_t windowId;    ///< The window id of the event
+    Keycode keycode;      ///< Keycode of the key
+    Scancode scancode;    ///< Scancode of the key
+    Flags<Mod> modifiers; ///< Modifiers that are pressed
+  };
+
+  /**
+   * @ingroup graphics_events
+   * @brief Text event parameters (EventType::TextEntered)
+   */
+  struct TextEvent {
+    uint32_t windowId;  ///< The window id of the event
+    Rune rune;          ///< The rune
+  };
+
+  /**
+   * @ingroup graphics_events
+   * @brief Mouse button event parameters (EventType::MouseButtonPressed, EventType::MouseButtonReleased)
+   */
+  struct MouseButtonEvent {
+    uint32_t windowId;    ///< The window id of the event
+    MouseButton button;   ///< Code of the button that has been pressed
+    Vector2i coords;      ///< Position of the mouse cursor
+    uint8_t clicks;       ///< Number of clicks
+  };
+
+  /**
+   * @ingroup graphics_events
+   * @brief Mouse cursor move event parameters (EventType::MouseMoved)
+   */
+  struct MouseCursorEvent {
+    uint32_t windowId;  ///< The window id of the event
+    Vector2i coords;    ///< Position of the mouse cursor
+    Vector2i motion;    ///< Relative position of the mouse cursor
+  };
+
+  /**
+   * @ingroup graphics_events
+   * @brief Mouse wheel event parameters (EventType::MouseWheelScrolled)
+   */
+  struct MouseWheelEvent {
+    uint32_t windowId;  ///< The window id of the event
+    Vector2i offset;    ///< Offset of the mouse wheel
+  };
+
+  /**
+   * @ingroup graphics_events
+   * @brief Gamepad button event parameters (EventType::GamepadButtonPressed, EventType::GamepadButtonReleased)
+   */
+  struct GamepadButtonEvent {
+    GamepadId id;         ///< Id of the gamepad
+    GamepadButton button; ///< Button of the gamepad
+  };
+
+  /**
+   * @ingroup graphics_events
+   * @brief Gamepad axis event parameters (EventType::GamepadAxisMoved)
+   */
+  struct GamepadAxisEvent {
+    GamepadId id;     ///< Id of the gamepad
+    GamepadAxis axis; ///< Axis of the gamepad
+    int16_t value;    ///< Value of the axis
+  };
+
+  /**
+   * @ingroup graphics_events
+   * @brief Gamepad connection event parameters (EventType::GamepadConnected)
+   */
+  struct GamepadConnectionEvent {
+    GamepadHwId id; ///< Hardware id of the gamepad
+  };
+
+  /**
+   * @ingroup graphics_events
+   * @brief Gamepad disconnection event parameters (EventType::GamepadDisconnected)
+   */
+  struct GamepadDisconnectionEvent {
+    GamepadId id; ///< Id of the gamepad
+  };
+
+  /**
+   * @ingroup graphics_events
+   * @brief Touch event parameters (EventType::TouchBegan, EventType::TouchMoved, EventType::TouchEnded)
+   */
+  struct TouchEvent {
+    int64_t finger;   ///< Finger that touched
+    Vector2i coords;  ///< Position of the touch
+    Vector2i motion;  ///< Relative position of the touch
+    float pressure;   ///< The pressure applied (between 0 and 1)
+  };
+
+  /**
+   * @ingroup graphics_events
    * @brief Defines a system event and its parameters
    *
    * gf::Event holds all the informations about a system event
@@ -99,87 +222,12 @@ inline namespace v1 {
    * @sa gf::EventType
    */
   struct GF_GRAPHICS_API Event {
-    /**
-     * @brief Keyboard event parameters (EventType::KeyPressed, EventType::KeyReleased, EventType::KeyRepeated)
-     */
-    struct KeyEvent {
-      Keycode keycode;      ///< Keycode of the key
-      Scancode scancode;    ///< Scancode of the key
-      Flags<Mod> modifiers;  ///< Modifiers that are pressed
-    };
-
-    /**
-     * @brief Text event parameters (EventType::TextEntered)
-     */
-    struct TextEvent {
-      Rune rune; ///< The rune
-    };
-
-    /**
-     * @brief Mouse button event parameters (EventType::MouseButtonPressed, EventType::MouseButtonReleased)
-     */
-    struct MouseButtonEvent {
-      MouseButton button;   ///< Code of the button that has been pressed
-      Vector2i coords;      ///< Position of the mouse cursor
-    };
-
-    /**
-     * @brief Mouse cursor move event parameters (EventType::MouseMoved)
-     */
-    struct MouseCursorEvent {
-      Vector2i coords;  ///< Position of the mouse cursor
-    };
-
-    /**
-     * @brief Mouse wheel event parameters (EventType::MouseWheelScrolled)
-     */
-    struct MouseWheelEvent {
-      Vector2i offset;  ///< Offset of the mouse wheel
-    };
-
-    /**
-     * @brief Gamepad button event parameters (EventType::GamepadButtonPressed, EventType::GamepadButtonReleased)
-     */
-    struct GamepadButtonEvent {
-      GamepadId id; ///< Id of the gamepad
-      GamepadButton button; ///< Button of the gamepad
-    };
-
-    /**
-     * @brief Gamepad axis event parameters (EventType::GamepadAxisMoved)
-     */
-    struct GamepadAxisEvent {
-      GamepadId id; ///< Id of the gamepad
-      GamepadAxis axis; ///< Axis of the gamepad
-      int16_t value; ///< Value of the axis
-    };
-
-    /**
-     * @brief Gamepad connection event parameters (EventType::GamepadConnected)
-     */
-    struct GamepadConnection {
-      GamepadHwId id; ///< Hardware id of the gamepad
-    };
-
-    /**
-     * @brief Gamepad disconnection event parameters (EventType::GamepadDisconnected)
-     */
-    struct GamepadDisconnection {
-      GamepadId id; ///< Id of the gamepad
-    };
-
-    /**
-     * @brief Touch event parameters (EventType::TouchBegan, EventType::TouchMoved, EventType::TouchEnded)
-     */
-    struct TouchEvent {
-      int64_t finger; ///< Finger that touched
-      Vector2i coords; ///< Position of the touch
-    };
-
-    EventType type; ///< Type of the event
+    EventType type;     ///< Type of the event
+    uint32_t timestamp; ///< A timestamp
 
     union {
-      Vector2i size; ///< Size event parameters (EventType::Resized)
+      WindowEvent window; ///< Window event parameters (EventType::Closed, EventType::FocusGained, EventType::FocusLost)
+      ResizeEvent resize; ///< Size event parameters (EventType::Resized)
       KeyEvent key; ///< Key event parameters (EventType::KeyPressed, EventType::KeyReleased, EventType::KeyRepeated)
       TextEvent text; ///< Text event parameters (EventType::TextEntered)
       MouseButtonEvent mouseButton; ///< Mouse button event parameters (EventType::MouseButtonPressed, EventType::MouseButtonReleased)
@@ -187,8 +235,8 @@ inline namespace v1 {
       MouseWheelEvent mouseWheel; ///< Mouse wheel event parameters (EventType::MouseWheelScrolled)
       GamepadButtonEvent gamepadButton; ///< Gamepad button event parameters (EventType::GamepadButtonPressed, EventType::GamepadButtonReleased)
       GamepadAxisEvent gamepadAxis; ///< Gamepad axis event parameters (EventType::GamepadAxisMoved)
-      GamepadConnection gamepadConnection; ///< Gamepad connection event parameters (EventType::GamepadConnected)
-      GamepadDisconnection gamepadDisconnection; ///< Gamepad disconnection event parameters (EventType::GamepadDisconnected)
+      GamepadConnectionEvent gamepadConnection; ///< Gamepad connection event parameters (EventType::GamepadConnected)
+      GamepadDisconnectionEvent gamepadDisconnection; ///< Gamepad disconnection event parameters (EventType::GamepadDisconnected)
       TouchEvent touch; ///< Touch event parameters (EventType::TouchBegan, EventType::Moved, EventType::Ended)
     };
 

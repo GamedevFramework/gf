@@ -33,7 +33,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_devices
    * @brief A class for graphics info
    *
    * This class only contains static methods. It provides convenient functions

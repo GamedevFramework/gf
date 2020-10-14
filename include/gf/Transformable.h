@@ -37,7 +37,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_drawables
    * @brief Decomposed transform defined by a position, a rotation and a scale
    *
    * gf::Matrix3f, as a low-level class, offers a great level of

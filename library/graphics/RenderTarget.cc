@@ -33,8 +33,8 @@
 #include <gf/Vertex.h>
 #include <gf/VertexBuffer.h>
 
-#include "priv/Debug.h"
-#include "priv/OpenGLFwd.h"
+#include <gfpriv/GlDebug.h>
+#include <gfpriv/GlFwd.h>
 
 #include "generated/default_alpha.frag.h"
 #include "generated/default.frag.h"
@@ -56,11 +56,11 @@ inline namespace v1 {
 #undef ENUM_CHECK
 
   void GraphicsTrait<GraphicsTag::Framebuffer>::gen(int n, unsigned* resources) {
-    glCheck(glGenFramebuffers(n, resources));
+    GL_CHECK(glGenFramebuffers(n, resources));
   }
 
   void GraphicsTrait<GraphicsTag::Framebuffer>::del(int n, const unsigned* resources) {
-    glCheck(glDeleteFramebuffers(n, resources));
+    GL_CHECK(glDeleteFramebuffers(n, resources));
   }
 
   namespace {
@@ -90,12 +90,12 @@ inline namespace v1 {
 
   Region RenderTarget::getCanonicalScissorBox() {
     GLint box[4];
-    glCheck(glGetIntegerv(GL_SCISSOR_BOX, &box[0]));
+    GL_CHECK(glGetIntegerv(GL_SCISSOR_BOX, &box[0]));
     return { box[0], box[1], box[2], box[3] };
   }
 
   void RenderTarget::setCanonicalScissorBox(const Region& box) {
-    glCheck(glScissor(box.left, box.bottom, box.width, box.height));
+    GL_CHECK(glScissor(box.left, box.bottom, box.width, box.height));
   }
 
   RectI RenderTarget::getScissorBox() {
@@ -111,7 +111,7 @@ inline namespace v1 {
   }
 
   void RenderTarget::clear(const Color4f& color) {
-    glCheck(glClearColor(color.r, color.g, color.b, color.a));
+    GL_CHECK(glClearColor(color.r, color.g, color.b, color.a));
     clear();
   }
 
@@ -119,19 +119,19 @@ inline namespace v1 {
     Region saved = getCanonicalScissorBox();
     Vector2i size = getSize();
     setCanonicalScissorBox({ 0, 0, size.width, size.height });
-    glCheck(glClear(GL_COLOR_BUFFER_BIT));
+    GL_CHECK(glClear(GL_COLOR_BUFFER_BIT));
     setCanonicalScissorBox(saved);
   }
 
   RangeF RenderTarget::getAliasedLineWidthRange() const {
     float range[2];
-    glCheck(glGetFloatv(GL_ALIASED_LINE_WIDTH_RANGE, range));
+    GL_CHECK(glGetFloatv(GL_ALIASED_LINE_WIDTH_RANGE, range));
     return { range[0], range[1] };
   }
 
   float RenderTarget::getLineWidth() const {
     float width = 0;
-    glCheck(glGetFloatv(GL_LINE_WIDTH, &width));
+    GL_CHECK(glGetFloatv(GL_LINE_WIDTH, &width));
     return width;
   }
 
@@ -226,7 +226,7 @@ inline namespace v1 {
     customDraw(buffer, PredefinedAttributes, states);
   }
 
-  void RenderTarget::customDraw(const void *vertices, std::size_t size, std::size_t count, PrimitiveType type, ArrayRef<RenderAttributeInfo> attributes, const RenderStates& states) {
+  void RenderTarget::customDraw(const void *vertices, std::size_t size, std::size_t count, PrimitiveType type, Span<const RenderAttributeInfo> attributes, const RenderStates& states) {
     if (vertices == nullptr || count == 0) {
       return;
     }
@@ -235,7 +235,7 @@ inline namespace v1 {
     customDraw(buffer, attributes, states);
   }
 
-  void RenderTarget::customDraw(const void *vertices, std::size_t size, const uint16_t *indices, std::size_t count, PrimitiveType type, ArrayRef<RenderAttributeInfo> attributes, const RenderStates& states) {
+  void RenderTarget::customDraw(const void *vertices, std::size_t size, const uint16_t *indices, std::size_t count, PrimitiveType type, Span<const RenderAttributeInfo> attributes, const RenderStates& states) {
     if (vertices == nullptr || indices == nullptr || count == 0) {
       return;
     }
@@ -244,7 +244,7 @@ inline namespace v1 {
     customDraw(buffer, attributes, states);
   }
 
-  void RenderTarget::customDraw(const VertexBuffer& buffer, ArrayRef<RenderAttributeInfo> attributes, const RenderStates& states) {
+  void RenderTarget::customDraw(const VertexBuffer& buffer, Span<const RenderAttributeInfo> attributes, const RenderStates& states) {
     if (!buffer.hasArrayBuffer()) {
       return;
     }
@@ -255,9 +255,9 @@ inline namespace v1 {
     drawStart(states, locations, buffer.getVertexSize(), attributes);
 
     if (buffer.hasElementArrayBuffer()) {
-      glCheck(glDrawElements(getEnum(buffer.getPrimitiveType()), buffer.getCount(), GL_UNSIGNED_SHORT, nullptr));
+      GL_CHECK(glDrawElements(getEnum(buffer.getPrimitiveType()), buffer.getCount(), GL_UNSIGNED_SHORT, nullptr));
     } else {
-      glCheck(glDrawArrays(getEnum(buffer.getPrimitiveType()), 0, buffer.getCount()));
+      GL_CHECK(glDrawArrays(getEnum(buffer.getPrimitiveType()), 0, buffer.getCount()));
     }
 
     drawFinish(locations);
@@ -265,7 +265,7 @@ inline namespace v1 {
     VertexBuffer::bind(nullptr);
   }
 
-  void RenderTarget::drawStart(const RenderStates& states, Locations& locations, std::size_t size, ArrayRef<RenderAttributeInfo> attributes) {
+  void RenderTarget::drawStart(const RenderStates& states, Locations& locations, std::size_t size, Span<const RenderAttributeInfo> attributes) {
     assert(attributes.getSize() <= Locations::CountMax);
 
     /*
@@ -314,8 +314,8 @@ inline namespace v1 {
      * blend mode
      */
 
-    glCheck(glBlendEquationSeparate(getEnum(states.mode.colorEquation), getEnum(states.mode.alphaEquation)));
-    glCheck(glBlendFuncSeparate(
+    GL_CHECK(glBlendEquationSeparate(getEnum(states.mode.colorEquation), getEnum(states.mode.alphaEquation)));
+    GL_CHECK(glBlendFuncSeparate(
       getEnum(states.mode.colorSrcFactor), getEnum(states.mode.colorDstFactor),
       getEnum(states.mode.alphaSrcFactor), getEnum(states.mode.alphaDstFactor)
     ));
@@ -325,7 +325,7 @@ inline namespace v1 {
      */
 
     if (states.lineWidth > 0) {
-      glCheck(glLineWidth(states.lineWidth));
+      GL_CHECK(glLineWidth(states.lineWidth));
     }
 
     /*
@@ -342,9 +342,9 @@ inline namespace v1 {
         continue;
       }
 
-      glCheck(glEnableVertexAttribArray(loc));
+      GL_CHECK(glEnableVertexAttribArray(loc));
       const void *pointer = reinterpret_cast<const void *>(info.offset);
-      glCheck(glVertexAttribPointer(loc, info.size, static_cast<GLenum>(info.type), info.normalized ? GL_TRUE : GL_FALSE, size, pointer));
+      GL_CHECK(glVertexAttribPointer(loc, info.size, static_cast<GLenum>(info.type), info.normalized ? GL_TRUE : GL_FALSE, size, pointer));
     }
   }
 
@@ -353,7 +353,7 @@ inline namespace v1 {
       auto loc = locations.data[i];
 
       if (loc != -1) {
-        glCheck(glDisableVertexAttribArray(loc));
+        GL_CHECK(glDisableVertexAttribArray(loc));
       }
     }
   }
@@ -368,7 +368,7 @@ inline namespace v1 {
 
     // set the GL viewport everytime a new view is defined
     Region viewport = getCanonicalViewport(getView());
-    glCheck(glViewport(viewport.left, viewport.bottom, viewport.width, viewport.height));
+    GL_CHECK(glViewport(viewport.left, viewport.bottom, viewport.width, viewport.height));
 
 //     Log::info("Viewport: %i %i %i %i\n", viewport.left, viewport.bottom, viewport.width, viewport.height);
 
@@ -460,16 +460,16 @@ inline namespace v1 {
     std::vector<uint8_t> pixels(static_cast<std::size_t>(size.width) * static_cast<std::size_t>(size.height) * 4);
 
     GLint boundFrameBuffer;
-    glCheck(glGetIntegerv(GL_FRAMEBUFFER_BINDING, &boundFrameBuffer));
+    GL_CHECK(glGetIntegerv(GL_FRAMEBUFFER_BINDING, &boundFrameBuffer));
 
     if (static_cast<unsigned>(boundFrameBuffer) != name) {
-      glCheck(glBindFramebuffer(GL_FRAMEBUFFER, name));
+      GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, name));
     }
 
-    glCheck(glReadPixels(0, 0, size.width, size.height, GL_RGBA, GL_UNSIGNED_BYTE, &pixels[0]));
+    GL_CHECK(glReadPixels(0, 0, size.width, size.height, GL_RGBA, GL_UNSIGNED_BYTE, &pixels[0]));
 
     if (static_cast<unsigned>(boundFrameBuffer) != name) {
-      glCheck(glBindFramebuffer(GL_FRAMEBUFFER, boundFrameBuffer));
+      GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, boundFrameBuffer));
     }
 
     Image image(size, pixels.data());

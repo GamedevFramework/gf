@@ -26,7 +26,6 @@
 
 #include <cstdint>
 
-#include "ArrayRef.h"
 #include "GraphicsApi.h"
 #include "GraphicsHandle.h"
 #include "Image.h"
@@ -36,6 +35,7 @@
 #include "Region.h"
 #include "RenderStates.h"
 #include "Shader.h"
+#include "Span.h"
 #include "View.h"
 
 namespace gf {
@@ -47,6 +47,10 @@ inline namespace v1 {
   class VertexBuffer;
   struct Vertex;
 
+  /**
+   * @ingroup graphics_renderers
+   * @brief The type of an attribute
+   */
   enum class RenderAttributeType {
     Byte    = 0x1400,
     UByte   = 0x1401,
@@ -55,14 +59,22 @@ inline namespace v1 {
     Float   = 0x1406,
   };
 
+  /**
+   * @ingroup graphics_renderers
+   * @brief Attribute info
+   */
   struct GF_GRAPHICS_API RenderAttributeInfo {
-    const char *name;
-    int size;
-    RenderAttributeType type;
-    bool normalized;
-    std::size_t offset;
+    const char *name; ///< Name of the attribute
+    int size; ///< Size of the attribute
+    RenderAttributeType type; ///< Type of the attribute
+    bool normalized; ///< Is the attribute normalized?
+    std::size_t offset; ///< Offset of the attribute in the vertex
   };
 
+  /**
+   * @ingroup graphics_gpu
+   * @brief Trait for framebuffer
+   */
   template<>
   struct GF_GRAPHICS_API GraphicsTrait<GraphicsTag::Framebuffer> {
     static void gen(int n, unsigned* resources);
@@ -70,7 +82,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_renderers
    * @brief Base class for all render targets (window, texture, ...)
    *
    * gf::RenderTarget defines the common behavior of all the
@@ -236,7 +248,7 @@ inline namespace v1 {
      * @param attributes The attributes in the vertices
      * @param states Render states to use for drawing
      */
-    void customDraw(const void *vertices, std::size_t size, std::size_t count, PrimitiveType type, ArrayRef<RenderAttributeInfo> attributes, const RenderStates& states = RenderStates());
+    void customDraw(const void *vertices, std::size_t size, std::size_t count, PrimitiveType type, Span<const RenderAttributeInfo> attributes, const RenderStates& states = RenderStates());
 
     /**
      * @brief Draw primitives defined by an array of custom vertices and their indices
@@ -249,7 +261,7 @@ inline namespace v1 {
      * @param attributes The attributes in the vertices
      * @param states Render states to use for drawing
      */
-    void customDraw(const void *vertices, std::size_t size, const uint16_t *indices, std::size_t count, PrimitiveType type, ArrayRef<RenderAttributeInfo> attributes, const RenderStates& states = RenderStates());
+    void customDraw(const void *vertices, std::size_t size, const uint16_t *indices, std::size_t count, PrimitiveType type, Span<const RenderAttributeInfo> attributes, const RenderStates& states = RenderStates());
 
     /**
      * @brief Draw a custom vertex buffer to the render target
@@ -258,7 +270,7 @@ inline namespace v1 {
      * @param attributes The attributes in the vertices
      * @param states Render states to use for drawing
      */
-    void customDraw(const VertexBuffer& buffer, ArrayRef<RenderAttributeInfo> attributes, const RenderStates& states = RenderStates());
+    void customDraw(const VertexBuffer& buffer, Span<const RenderAttributeInfo> attributes, const RenderStates& states = RenderStates());
 
     /** @} */
 
@@ -443,7 +455,7 @@ inline namespace v1 {
       std::size_t count = 0;
     };
 
-    void drawStart(const RenderStates& states, Locations& locations, std::size_t size, ArrayRef<RenderAttributeInfo> attributes);
+    void drawStart(const RenderStates& states, Locations& locations, std::size_t size, Span<const RenderAttributeInfo> attributes);
     void drawFinish(const Locations& locations);
 
   private:

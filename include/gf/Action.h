@@ -40,7 +40,7 @@ inline namespace v1 {
   struct Event;
 
   /**
-   * @ingroup window
+   * @ingroup graphics_events
    * @brief An action that can be triggered by different controls.
    *
    * An action can be continuous or instantaneous. A continuous action is an
@@ -233,7 +233,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup window
+   * @ingroup graphics_events
    * @brief A set of actions.
    *
    */

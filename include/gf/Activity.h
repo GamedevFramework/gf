@@ -30,7 +30,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup game
+   * @ingroup core_animation
    * @brief Status of an activity
    *
    * @sa gf::Activity
@@ -41,7 +41,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup game
+   * @ingroup core_animation
    * @brief A game activity
    *
    * An activity is a task that can be run over time. `gf` provides predefined

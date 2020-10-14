@@ -26,8 +26,8 @@
 #include <gf/Log.h>
 #include <gf/Vertex.h>
 
-#include "priv/Debug.h"
-#include "priv/OpenGLFwd.h"
+#include <gfpriv/GlDebug.h>
+#include <gfpriv/GlFwd.h>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -35,11 +35,11 @@ inline namespace v1 {
 #endif
 
   void GraphicsTrait<GraphicsTag::Buffer>::gen(int n, unsigned* resources) {
-    glCheck(glGenBuffers(n, resources));
+    GL_CHECK(glGenBuffers(n, resources));
   }
 
   void GraphicsTrait<GraphicsTag::Buffer>::del(int n, const unsigned* resources) {
-    glCheck(glDeleteBuffers(n, resources));
+    GL_CHECK(glDeleteBuffers(n, resources));
   }
 
   VertexBuffer::VertexBuffer()
@@ -75,14 +75,14 @@ inline namespace v1 {
 
     std::size_t vboSize = count * size;
 
-    glCheck(glBindBuffer(GL_ARRAY_BUFFER, m_vbo));
-    glCheck(glBufferData(GL_ARRAY_BUFFER, vboSize, nullptr, GL_STATIC_DRAW));
-    glCheck(glBufferSubData(GL_ARRAY_BUFFER, 0, vboSize, vertices));
+    GL_CHECK(glBindBuffer(GL_ARRAY_BUFFER, m_vbo));
+    GL_CHECK(glBufferData(GL_ARRAY_BUFFER, vboSize, nullptr, GL_STATIC_DRAW));
+    GL_CHECK(glBufferSubData(GL_ARRAY_BUFFER, 0, vboSize, vertices));
 
     GLint vboUploadedSize = 0;
-    glCheck(glGetBufferParameteriv(GL_ARRAY_BUFFER, GL_BUFFER_SIZE, &vboUploadedSize));
+    GL_CHECK(glGetBufferParameteriv(GL_ARRAY_BUFFER, GL_BUFFER_SIZE, &vboUploadedSize));
 
-    glCheck(glBindBuffer(GL_ARRAY_BUFFER, 0));
+    GL_CHECK(glBindBuffer(GL_ARRAY_BUFFER, 0));
 
     if(vboSize != static_cast<std::size_t>(vboUploadedSize)) {
       Log::error("Vertex array buffer size in not correct.\n");
@@ -104,14 +104,14 @@ inline namespace v1 {
     uint16_t maxIndex = *std::max_element(indices, indices + count);
     std::size_t vboSize = (maxIndex + 1) * size;
 
-    glCheck(glBindBuffer(GL_ARRAY_BUFFER, m_vbo));
-    glCheck(glBufferData(GL_ARRAY_BUFFER, vboSize, nullptr, GL_STATIC_DRAW));
-    glCheck(glBufferSubData(GL_ARRAY_BUFFER, 0, vboSize, vertices));
+    GL_CHECK(glBindBuffer(GL_ARRAY_BUFFER, m_vbo));
+    GL_CHECK(glBufferData(GL_ARRAY_BUFFER, vboSize, nullptr, GL_STATIC_DRAW));
+    GL_CHECK(glBufferSubData(GL_ARRAY_BUFFER, 0, vboSize, vertices));
 
     GLint vboUploadedSize = 0;
-    glCheck(glGetBufferParameteriv(GL_ARRAY_BUFFER, GL_BUFFER_SIZE, &vboUploadedSize));
+    GL_CHECK(glGetBufferParameteriv(GL_ARRAY_BUFFER, GL_BUFFER_SIZE, &vboUploadedSize));
 
-    glCheck(glBindBuffer(GL_ARRAY_BUFFER, 0));
+    GL_CHECK(glBindBuffer(GL_ARRAY_BUFFER, 0));
 
     if(vboSize != static_cast<std::size_t>(vboUploadedSize)) {
       Log::error("Vertex array buffer size in not correct.\n");
@@ -120,14 +120,14 @@ inline namespace v1 {
 
     std::size_t eboSize = count * sizeof(uint16_t);
 
-    glCheck(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo));
-    glCheck(glBufferData(GL_ELEMENT_ARRAY_BUFFER, eboSize, nullptr, GL_STATIC_DRAW));
-    glCheck(glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, eboSize, indices));
+    GL_CHECK(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo));
+    GL_CHECK(glBufferData(GL_ELEMENT_ARRAY_BUFFER, eboSize, nullptr, GL_STATIC_DRAW));
+    GL_CHECK(glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, eboSize, indices));
 
     GLint eboUploadedSize = 0;
-    glCheck(glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &eboUploadedSize));
+    GL_CHECK(glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &eboUploadedSize));
 
-    glCheck(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
+    GL_CHECK(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
 
     if(eboSize != static_cast<std::size_t>(eboUploadedSize)) {
       Log::error("Vertex element array buffer size in not correct.\n");
@@ -138,15 +138,15 @@ inline namespace v1 {
   void VertexBuffer::bind(const VertexBuffer *buffer) {
     if (buffer != nullptr) {
       if (buffer->m_vbo.isValid()) {
-        glCheck(glBindBuffer(GL_ARRAY_BUFFER, buffer->m_vbo));
+        GL_CHECK(glBindBuffer(GL_ARRAY_BUFFER, buffer->m_vbo));
       }
 
       if (buffer->m_ebo.isValid()) {
-        glCheck(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer->m_ebo));
+        GL_CHECK(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer->m_ebo));
       }
     } else {
-      glCheck(glBindBuffer(GL_ARRAY_BUFFER, 0));
-      glCheck(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
+      GL_CHECK(glBindBuffer(GL_ARRAY_BUFFER, 0));
+      GL_CHECK(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
     }
   }
 

@@ -25,8 +25,8 @@
 
 #include <gf/Window.h>
 
-#include "priv/Debug.h"
-#include "priv/OpenGLFwd.h"
+#include <gfpriv/GlDebug.h>
+#include <gfpriv/GlFwd.h>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -39,12 +39,17 @@ inline namespace v1 {
   {
   }
 
+  RenderWindow::~RenderWindow() {
+    m_window.makeMainContextCurrent();
+  }
+
   Vector2i RenderWindow::getSize() const {
     return m_window.getFramebufferSize();
   }
 
   void RenderWindow::setActive() {
-     glCheck(glBindFramebuffer(GL_FRAMEBUFFER, 0));
+    m_window.makeMainContextCurrent();
+    GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, 0));
   }
 
   void RenderWindow::display() {

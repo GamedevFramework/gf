@@ -24,9 +24,9 @@
 #ifndef GF_BASIC_SPRITE_H
 #define GF_BASIC_SPRITE_H
 
-#include "BufferRef.h"
 #include "GraphicsApi.h"
 #include "Rect.h"
+#include "Span.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -36,7 +36,7 @@ inline namespace v1 {
   struct Vertex;
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_sprite
    * @brief A basic sprite
    *
    * You should use gf::Sprite instead.
@@ -167,7 +167,7 @@ inline namespace v1 {
     RectF getLocalBounds() const;
 
 
-    void updateGeometry(BufferRef<Vertex> vertices);
+    void updateGeometry(Span<Vertex> vertices);
 
   private:
     const Texture *m_texture;

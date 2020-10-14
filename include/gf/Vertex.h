@@ -34,7 +34,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_renderers
    * @brief A point associated with a color and a texture coordinate
    *
    * gf::Vertex represents the association between a position in the world, a

@@ -37,7 +37,7 @@ inline namespace v1 {
   class Texture;
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_sprite
    * @brief A drawable representation of a texture, with its
    * own transformations, color, etc.
    *

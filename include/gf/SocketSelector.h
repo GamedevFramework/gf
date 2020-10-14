@@ -32,22 +32,13 @@
 #include "NetApi.h"
 #include "Socket.h"
 #include "SocketGuard.h"
+#include "SocketTypes.h"
 #include "Time.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
 #endif
-
-  /**
-   * @ingroup net_sockets
-   * @brief The status of the selector
-   */
-  enum SocketSelectorStatus {
-    Event,    ///< An event is pending on the sockets
-    Timeout,  ///< The call timed out
-    Error,    ///< An error occurred
-  };
 
   /**
    * @ingroup net_sockets
@@ -98,7 +89,6 @@ inline namespace v1 {
   private:
     std::vector<pollfd>::iterator find(Socket& socket);
 
-    static SocketSelectorStatus nativePoll(std::vector<pollfd>& fds, Time duration);
   private:
     std::vector<pollfd> m_fds;
     bool m_sorted;

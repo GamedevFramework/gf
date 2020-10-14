@@ -27,7 +27,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_drawables
    * @brief An anchor of a box
    *
    * It is used to define the origin in transformable objects. It is also used

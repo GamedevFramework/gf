@@ -31,7 +31,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup core
+   * @ingroup core_vocabulary
    * @brief An angular move
    *
    * An angular move represents a rotation move to the right or to the left.
@@ -45,7 +45,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup core
+   * @ingroup core_vocabulary
    * @brief Get the angular factor from the angular move
    *
    * @return @f$ -1 @f$, @f$ 0 @f$ or @f$ 1 @f$ with respect to the move
@@ -53,7 +53,7 @@ inline namespace v1 {
   GF_CORE_API float angularFactor(AngularMove move);
 
   /**
-   * @ingroup core
+   * @ingroup core_vocabulary
    * @brief A linear move
    *
    * A linear move represents a translation move forward or backward.
@@ -67,7 +67,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup core
+   * @ingroup core_vocabulary
    * @brief Get the linear factor from the linear move
    *
    * @return @f$ -1 @f$, @f$ 0 @f$ or @f$ 1 @f$ with respect to the move

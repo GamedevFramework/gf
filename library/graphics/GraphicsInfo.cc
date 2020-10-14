@@ -30,8 +30,8 @@
 #include <gf/Log.h>
 #include <gf/Unused.h>
 
-#include "priv/Debug.h"
-#include "priv/OpenGLFwd.h"
+#include <gfpriv/GlDebug.h>
+#include <gfpriv/GlFwd.h>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -56,7 +56,7 @@ inline namespace v1 {
 
     int getInteger(GLenum name) {
       GLint value;
-      glCheck(glGetIntegerv(name, &value));
+      GL_CHECK(glGetIntegerv(name, &value));
       return value;
     }
 
@@ -239,12 +239,12 @@ inline namespace v1 {
 
   std::vector<GraphicsInfo::Format> GraphicsInfo::getCompressedTextureFormats() {
     GLint count;
-    glCheck(glGetIntegerv(GL_NUM_COMPRESSED_TEXTURE_FORMATS, &count));
+    GL_CHECK(glGetIntegerv(GL_NUM_COMPRESSED_TEXTURE_FORMATS, &count));
 
     std::vector<GLint> formats(count);
 
     if (count > 0) {
-      glCheck(glGetIntegerv(GL_COMPRESSED_TEXTURE_FORMATS, &formats[0]));
+      GL_CHECK(glGetIntegerv(GL_COMPRESSED_TEXTURE_FORMATS, &formats[0]));
       std::sort(formats.begin(), formats.end());
     }
 
@@ -259,12 +259,12 @@ inline namespace v1 {
 
   std::vector<GraphicsInfo::Format> GraphicsInfo::getShaderBinaryFormats() {
     GLint count;
-    glCheck(glGetIntegerv(GL_NUM_SHADER_BINARY_FORMATS, &count));
+    GL_CHECK(glGetIntegerv(GL_NUM_SHADER_BINARY_FORMATS, &count));
 
     std::vector<GLint> formats(count);
 
     if (count > 0) {
-      glCheck(glGetIntegerv(GL_SHADER_BINARY_FORMATS, &formats[0]));
+      GL_CHECK(glGetIntegerv(GL_SHADER_BINARY_FORMATS, &formats[0]));
       std::sort(formats.begin(), formats.end());
     }
 
@@ -320,7 +320,7 @@ inline namespace v1 {
 
   Vector2i GraphicsInfo::getMaxViewportDims() {
     GLint value[2];
-    glCheck(glGetIntegerv(GL_MAX_VIEWPORT_DIMS, value));
+    GL_CHECK(glGetIntegerv(GL_MAX_VIEWPORT_DIMS, value));
     return { value[0], value[1] };
   }
 

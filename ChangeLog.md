@@ -1,5 +1,24 @@
 # ChangeLog for gf
 
+## gf 0.18.0 (14 Oct 2020)
+
+- Core (gf::core)
+  - Add gf::PointSequence
+  - Add gf::Span
+  - Remove gf::BufferRef and gf::ArrayRef (in favor of gf::Span)
+  - Remove physics classes
+- Graphics (gf::graphics)
+  - Remove gf::UI (and nuklear dependency)
+  - Handle multiple windows (events and rendering)
+  - Add gf::GameManager
+- Tools and games
+  - Remove games from repository
+- Misc
+  - Use GenerateExportHeader in cmake
+  - Now integrated in vcpkg!
+  - Add submodules in the documentation
+  - Put debug include files in their own directory
+
 ## gf 0.17.0 (14 Jul 2020)
 
 - Core (gf::core)

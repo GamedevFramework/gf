@@ -37,7 +37,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief General purpose math vector
    *
    * gf::Vector is a class that represents an element of a `N`-dimensional
@@ -271,7 +271,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief A 2D vector
    *
    * This specialization of gf::Vector handles the 2-dimension spaces. It can
@@ -531,7 +531,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief A 3D vector
    *
    * This specialization of gf::Vector handles the 3-dimension spaces. It can
@@ -813,7 +813,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief A 4D vector
    *
    * This specialization of gf::Vector handles the 4-dimension spaces. It can
@@ -1109,7 +1109,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief A float vector with 2 components
    *
    * @sa gf::Vector, gf::Vector<T, 2>
@@ -1117,7 +1117,7 @@ inline namespace v1 {
   using Vector2f = Vector<float, 2>;
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief A float vector with 3 components
    *
    * @sa gf::Vector, gf::Vector<T, 3>
@@ -1125,7 +1125,7 @@ inline namespace v1 {
   using Vector3f = Vector<float, 3>;
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief A float vector with 4 components
    *
    * @sa gf::Vector, gf::Vector<T, 4>
@@ -1133,7 +1133,7 @@ inline namespace v1 {
   using Vector4f = Vector<float, 4>;
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief A double vector with 2 components
    *
    * @sa gf::Vector, gf::Vector<T, 2>
@@ -1141,7 +1141,7 @@ inline namespace v1 {
   using Vector2d = Vector<double, 2>;
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief A double vector with 3 components
    *
    * @sa gf::Vector, gf::Vector<T, 3>
@@ -1149,7 +1149,7 @@ inline namespace v1 {
   using Vector3d = Vector<double, 3>;
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief A double vector with 4 components
    *
    * @sa gf::Vector, gf::Vector<T, 4>
@@ -1157,7 +1157,7 @@ inline namespace v1 {
   using Vector4d = Vector<double, 4>;
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief A int vector with 2 components
    *
    * @sa gf::Vector, gf::Vector<T, 2>
@@ -1165,7 +1165,7 @@ inline namespace v1 {
   using Vector2i = Vector<int, 2>;
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief A int vector with 3 components
    *
    * @sa gf::Vector, gf::Vector<T, 3>
@@ -1173,7 +1173,7 @@ inline namespace v1 {
   using Vector3i = Vector<int, 3>;
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief A int vector with 4 components
    *
    * @sa gf::Vector, gf::Vector<T, 4>
@@ -1181,7 +1181,7 @@ inline namespace v1 {
   using Vector4i = Vector<int, 4>;
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief A unsigned vector with 2 components
    *
    * @sa gf::Vector, gf::Vector<T, 2>
@@ -1189,7 +1189,7 @@ inline namespace v1 {
   using Vector2u = Vector<unsigned, 2>;
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief A unsigned vector with 3 components
    *
    * @sa gf::Vector, gf::Vector<T, 3>
@@ -1197,7 +1197,7 @@ inline namespace v1 {
   using Vector3u = Vector<unsigned, 3>;
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief A unsigned vector with 4 components
    *
    * @sa gf::Vector, gf::Vector<T, 4>
@@ -1205,7 +1205,7 @@ inline namespace v1 {
   using Vector4u = Vector<unsigned, 4>;
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief A std::size_t vector with 2 components
    *
    * @sa gf::Vector, gf::Vector<T, 2>
@@ -1213,7 +1213,7 @@ inline namespace v1 {
   using Vector2z = Vector<std::size_t, 2>;
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief A std::size_t vector with 3 components
    *
    * @sa gf::Vector, gf::Vector<T, 3>
@@ -1221,7 +1221,7 @@ inline namespace v1 {
   using Vector3z = Vector<std::size_t, 3>;
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief A std::size_t vector with 4 components
    *
    * @sa gf::Vector, gf::Vector<T, 4>
@@ -1229,7 +1229,7 @@ inline namespace v1 {
   using Vector4z = Vector<std::size_t, 4>;
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief A bool vector with 2 components
    *
    * @sa gf::Vector, gf::Vector<T, 2>
@@ -1237,7 +1237,7 @@ inline namespace v1 {
   using Vector2b = Vector<bool, 2>;
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief A bool vector with 3 components
    *
    * @sa gf::Vector, gf::Vector<T, 3>
@@ -1245,7 +1245,7 @@ inline namespace v1 {
   using Vector3b = Vector<bool, 3>;
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief A bool vector with 4 components
    *
    * @sa gf::Vector, gf::Vector<T, 4>
@@ -1253,7 +1253,7 @@ inline namespace v1 {
   using Vector4b = Vector<bool, 4>;
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief A color vector with 3 components
    *
    * @sa gf::Vector, gf::Vector<T, 4>
@@ -1262,7 +1262,7 @@ inline namespace v1 {
   using Color3 = Vector<T, 3>;
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief A color vector with 4 components
    *
    * @sa gf::Vector, gf::Vector<T, 4>
@@ -1271,7 +1271,7 @@ inline namespace v1 {
   using Color4 = Vector<T, 4>;
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief A float color vector with 3 components
    *
    * @sa gf::Vector, gf::Vector<T, 3>
@@ -1279,7 +1279,7 @@ inline namespace v1 {
   using Color3f = Color3<float>;
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief A float color vector with 4 components
    *
    * @sa gf::Vector, gf::Vector<T, 4>
@@ -1287,7 +1287,7 @@ inline namespace v1 {
   using Color4f = Color4<float>;
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief A double color vector with 3 components
    *
    * @sa gf::Vector, gf::Vector<T, 3>
@@ -1295,7 +1295,7 @@ inline namespace v1 {
   using Color3d = Color3<double>;
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief A double color vector with 4 components
    *
    * @sa gf::Vector, gf::Vector<T, 4>
@@ -1303,7 +1303,7 @@ inline namespace v1 {
   using Color4d = Color4<double>;
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief A uint8_t color vector with 3 components
    *
    * @sa gf::Vector, gf::Vector<T, 3>
@@ -1311,7 +1311,7 @@ inline namespace v1 {
   using Color3u = Color3<uint8_t>;
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief A uint8_t color vector with 4 components
    *
    * @sa gf::Vector, gf::Vector<T, 4>
@@ -1347,7 +1347,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief A distance function
    *
    * A distance function is a function that gives the distance between two vectors.
@@ -1367,7 +1367,7 @@ inline namespace v1 {
   using Distance = T (*)(Vector<T, N>, Vector<T, N>);
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief A distance function for 2D vectors
    *
    * @sa gf::Distance
@@ -1376,7 +1376,7 @@ inline namespace v1 {
   using Distance2 = Distance<T, 2>;
 
   /**
-   * @ingroup core
+   * @ingroup core_maths
    * @brief A distance function for 3D vectors
    *
    * @sa gf::Distance

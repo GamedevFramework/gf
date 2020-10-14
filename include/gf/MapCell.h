@@ -27,7 +27,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup game
+   * @ingroup core_utilities
    * @brief Map cell index in a map celled or hexagonal map.
    *
    * @sa gf::MapCellAxis
@@ -38,7 +38,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup game
+   * @ingroup core_utilities
    * @brief Map cell axis in a map celled
    *
    * @sa gf::MapCellIndex

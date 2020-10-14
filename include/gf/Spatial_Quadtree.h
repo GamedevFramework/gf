@@ -36,7 +36,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup core
+   * @ingroup core_spatial
    * @brief An implementation of quadtree
    *
    * @sa gf::RStarTree

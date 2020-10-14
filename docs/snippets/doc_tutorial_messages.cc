@@ -121,8 +121,8 @@ class ShortLife {
   }
 
   ~ShortLife() {
-    auto ids = { m_onFoo, m_onBar, m_onBaz };
-    messageManager.removeHandlers(gf::array(ids.begin(), ids.size()));
+    gf::Id ids[] = { m_onFoo, m_onBar, m_onBaz };
+    messageManager.removeHandlers(ids);
   }
 
 private:

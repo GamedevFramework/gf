@@ -29,7 +29,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_tiles
    * @brief The orientation of the tile
    *
    * @sa gf::TileLayer
@@ -43,7 +43,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_tiles
    * @brief A flag to indicate how to flip a tile
    *
    * @sa gf::TileLayer

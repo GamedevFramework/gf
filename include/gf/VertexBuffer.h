@@ -35,6 +35,10 @@ inline namespace v1 {
 
   struct Vertex;
 
+  /**
+   * @ingroup graphics_gpu
+   * @brief Trait for buffer
+   */
   template<>
   struct GF_GRAPHICS_API GraphicsTrait<GraphicsTag::Buffer> {
     static void gen(int n, unsigned* resources);
@@ -42,7 +46,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_gpu
    * @brief Data in the graphics memory
    *
    * A vertex buffer is a buffer that resides directly in the graphics memory.

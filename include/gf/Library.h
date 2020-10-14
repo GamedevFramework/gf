@@ -31,7 +31,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup core
+   * @ingroup graphics_window_monitor
    * @brief A class to represent the library
    *
    * This class is used to initialize the library (especially SDL). Normally,

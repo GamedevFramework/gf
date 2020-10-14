@@ -37,13 +37,15 @@
 #include <gf/Log.h>
 #include <gf/Packet.h>
 
+#include <gfpriv/SocketPrivate.h>
+
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
 #endif
   TcpSocket::TcpSocket(const std::string& hostname, const std::string& service, SocketFamily family)
   {
-    setHandle(nativeConnect(hostname, service, family));
+    setHandle(priv::nativeConnect(hostname, service, family));
   }
 
   TcpSocket::TcpSocket(SocketHandle handle)
@@ -63,40 +65,40 @@ inline namespace v1 {
 
   SocketAddress TcpSocket::getRemoteAddress() const {
     SocketAddress address;
-    address.m_length = sizeof(address.m_storage);
-    int err = ::getpeername(getHandle(), reinterpret_cast<sockaddr*>(&address.m_storage), &address.m_length);
+    address.length = sizeof(address.storage);
+    int err = ::getpeername(getHandle(), reinterpret_cast<sockaddr*>(&address.storage), &address.length);
 
     if (err != 0) {
-      gf::Log::error("Could not get the remote address. Reason: %s\n", getErrorString().c_str());
+      gf::Log::error("Could not get the remote address. Reason: %s\n", priv::getErrorString().c_str());
     }
 
     return address;
   }
 
-  SocketDataResult TcpSocket::sendRawBytes(ArrayRef<uint8_t> buffer) {
-    int res = ::send(getHandle(), sendPointer(buffer), sendLength(buffer), NoFlag);
+  SocketDataResult TcpSocket::sendRawBytes(Span<const uint8_t> buffer) {
+    int res = ::send(getHandle(), priv::sendPointer(buffer), priv::sendLength(buffer), priv::NoFlag);
 
-    if (res == InvalidCommunication) {
-      if (nativeWouldBlock(getErrorCode())) {
+    if (res == priv::InvalidCommunication) {
+      if (priv::nativeWouldBlock(priv::getErrorCode())) {
         return { SocketStatus::Block, 0u };
       }
 
-      gf::Log::error("Error while sending data. Reason: %s\n", getErrorString().c_str());
+      gf::Log::error("Error while sending data. Reason: %s\n", priv::getErrorString().c_str());
       return { SocketStatus::Error, 0u };
     }
 
     return { SocketStatus::Data, static_cast<std::size_t>(res) };
   }
 
-  SocketDataResult TcpSocket::recvRawBytes(BufferRef<uint8_t> buffer) {
-    int res = ::recv(getHandle(), recvPointer(buffer), recvLength(buffer), NoFlag);
+  SocketDataResult TcpSocket::recvRawBytes(Span<uint8_t> buffer) {
+    int res = ::recv(getHandle(), priv::recvPointer(buffer), priv::recvLength(buffer), priv::NoFlag);
 
-    if (res == InvalidCommunication) {
-      if (nativeWouldBlock(getErrorCode())) {
+    if (res == priv::InvalidCommunication) {
+      if (priv::nativeWouldBlock(priv::getErrorCode())) {
         return { SocketStatus::Block, 0u };
       }
 
-      gf::Log::error("Error while receiving data. Reason: %s\n", getErrorString().c_str());
+      gf::Log::error("Error while receiving data. Reason: %s\n", priv::getErrorString().c_str());
       return { SocketStatus::Error, 0u };
     }
 
@@ -107,13 +109,13 @@ inline namespace v1 {
     return { SocketStatus::Data, static_cast<std::size_t>(res) };
   }
 
-  SocketStatus TcpSocket::sendBytes(ArrayRef<uint8_t> buffer) {
+  SocketStatus TcpSocket::sendBytes(Span<const uint8_t> buffer) {
     do {
       auto res = sendRawBytes(buffer);
 
       switch (res.status) {
         case SocketStatus::Data:
-          buffer = buffer.sub(res.length);
+          buffer = buffer.lastExcept(res.length);
           break;
         case SocketStatus::Block:
           continue;
@@ -127,13 +129,13 @@ inline namespace v1 {
     return SocketStatus::Data;
   }
 
-  SocketStatus TcpSocket::recvBytes(BufferRef<uint8_t> buffer) {
+  SocketStatus TcpSocket::recvBytes(Span<uint8_t> buffer) {
     do {
       auto res = recvRawBytes(buffer);
 
       switch (res.status) {
         case SocketStatus::Data:
-          buffer = buffer.sub(res.length);
+          buffer = buffer.lastExcept(res.length);
           break;
         case SocketStatus::Block:
           continue;
@@ -149,7 +151,7 @@ inline namespace v1 {
 
   SocketStatus TcpSocket::sendPacket(const Packet& packet) {
     auto size = static_cast<uint64_t>(packet.bytes.size());
-    auto header = encodeHeader(size);
+    auto header = priv::encodeHeader(size);
 
     auto status = sendBytes(header.data);
 
@@ -161,39 +163,18 @@ inline namespace v1 {
   }
 
   SocketStatus TcpSocket::recvPacket(Packet& packet) {
-    Header header;
+    priv::SizeHeader header;
     auto status = recvBytes(header.data);
 
     if (status != SocketStatus::Data) {
       return status;
     }
 
-    auto size = decodeHeader(header);
+    auto size = priv::decodeHeader(header);
     packet.bytes.resize(static_cast<std::size_t>(size));
     return recvBytes(packet.bytes);
   }
 
-  SocketHandle TcpSocket::nativeConnect(const std::string& hostname, const std::string& service, SocketFamily family) {
-    auto addresses = getRemoteAddressInfo(hostname, service, SocketType::Tcp, family);
-
-    for (auto info : addresses) {
-      SocketHandle sock = ::socket(static_cast<int>(info.family), static_cast<int>(info.type), 0);
-
-      if (sock == InvalidSocketHandle) {
-        continue;
-      }
-
-      if (::connect(sock, info.address.getData(), info.address.getLength()) != 0) {
-        nativeCloseSocket(sock);
-        continue;
-      }
-
-      return sock;
-    }
-
-    gf::Log::error("Unable to connect to '%s:%s'\n", hostname.c_str(), service.c_str());
-    return InvalidSocketHandle;
-  }
 
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

@@ -35,7 +35,7 @@ inline namespace v1 {
   struct Transform;
 
   /**
-   * @ingroup game
+   * @ingroup core_geometry
    * @brief Data about the collision between two objects
    *
    * @sa [How to Create a Custom Physics Engine](http://gamedevelopment.tutsplus.com/series/how-to-create-a-custom-physics-engine--gamedev-12715)

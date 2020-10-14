@@ -31,7 +31,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_tiles
    * @brief A tileset
    *
    * @sa gf::TileLayer

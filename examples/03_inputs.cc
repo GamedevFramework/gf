@@ -41,27 +41,37 @@ std::ostream& operator<<(std::ostream& o, gf::Scancode scancode) {
   return o << std::hex << "0x" << static_cast<int>(scancode);
 }
 
-std::ostream& operator<<(std::ostream& o, const gf::Event::KeyEvent& event) {
+std::ostream& operator<<(std::ostream& o, const gf::KeyEvent& event) {
+  o << "\twindowId: " << event.windowId << '\n';
   o << "\tkeycode: " << event.keycode << " (" << gf::Keyboard::getKeycodeName(event.keycode) << ")\n";
   o << "\tscancode: " << event.scancode << " (" << gf::Keyboard::getScancodeName(event.scancode) << ")\n";
   o << "\tmodifiers:" << event.modifiers;
   return o;
 }
 
-std::ostream& operator<<(std::ostream& o, const gf::Event::MouseButtonEvent& event) {
+std::ostream& operator<<(std::ostream& o, const gf::MouseButtonEvent& event) {
+  o << "\twindowId: " << event.windowId << '\n';
   o << "\tbutton: " << static_cast<int>(event.button) << '\n';
-  o << "\tcoordinates: " << event.coords.x << 'x' << event.coords.y;
+  o << "\tcoordinates: " << event.coords.x << 'x' << event.coords.y << '\n';
+  o << "\tclicks: " << static_cast<int>(event.clicks);
   return o;
 }
 
-std::ostream& operator<<(std::ostream& o, const gf::Event::GamepadButtonEvent& event) {
+std::ostream& operator<<(std::ostream& o, const gf::MouseCursorEvent& event) {
+  o << "\twindowId: " << event.windowId << '\n';
+  o << "\tcoordinates: " << event.coords.x << 'x' << event.coords.y << '\n';
+  o << "\tmotion: " << event.motion.x << 'x' << event.motion.y;
+  return o;
+}
+
+std::ostream& operator<<(std::ostream& o, const gf::GamepadButtonEvent& event) {
   o << "\tname: " << gf::Gamepad::getName(event.id) << '\n';
   o << "\tid: " << static_cast<int32_t>(event.id) << '\n';
   o << "\tbutton: " << gf::Gamepad::getButtonName(event.button);
   return o;
 }
 
-std::ostream& operator<<(std::ostream& o, const gf::Event::GamepadAxisEvent& event) {
+std::ostream& operator<<(std::ostream& o, const gf::GamepadAxisEvent& event) {
   o << "\tname: " << gf::Gamepad::getName(event.id) << '\n';
   o << "\tid: " << static_cast<int32_t>(event.id) << '\n';
   o << "\taxis: " << gf::Gamepad::getAxisName(event.axis) << '\n';
@@ -69,9 +79,10 @@ std::ostream& operator<<(std::ostream& o, const gf::Event::GamepadAxisEvent& eve
   return o;
 }
 
-std::ostream& operator<<(std::ostream& o, const gf::Event::TouchEvent& event) {
+std::ostream& operator<<(std::ostream& o, const gf::TouchEvent& event) {
   o << "\tfinger: " << event.finger << '\n';
-  o << "\tcoordinates: " << event.coords.x << 'x' << event.coords.y;
+  o << "\tcoordinates: " << event.coords.x << 'x' << event.coords.y << '\n';
+  o << "\tmotion: " << event.motion.x << 'x' << event.motion.y;
   return o;
 }
 
@@ -139,7 +150,7 @@ int main() {
           break;
 
 //         case gf::EventType::MouseMoved:
-//           std::cout << "MouseMoved: " << event.mouseCursor.coords.x << 'x' << event.mouseCursor.coords.y << '\n';
+//           std::cout << "MouseMoved:\n" << event.mouseCursor << '\n';
 //           break;
 
         case gf::EventType::MouseEntered:

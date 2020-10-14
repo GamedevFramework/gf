@@ -30,7 +30,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_segues
    * @brief A segue effect
    *
    * @sa gf::Segue

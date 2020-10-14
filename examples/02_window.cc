@@ -53,21 +53,49 @@ int main() {
 
     while (window.pollEvent(event)) {
       switch (event.type) {
+        case gf::EventType::Quit:
+          std::cout << "Quit";
+          break;
+
         case gf::EventType::Closed:
-          std::cout << "Closed\n";
+          std::cout << "Closed: " << event.window.windowId << '\n';
           window.close();
           break;
 
         case gf::EventType::Resized:
-          std::cout << "Resized: " << event.size.width << 'x' << event.size.height << '\n';
+          std::cout << "Resized: " << event.resize.size.width << 'x' << event.resize.size.height << ' ' << event.resize.windowId << '\n';
           break;
 
         case gf::EventType::FocusGained:
-          std::cout << "FocusGained\n";
+          std::cout << "FocusGained: " << event.window.windowId << '\n';
           break;
 
         case gf::EventType::FocusLost:
-          std::cout << "FocusLost\n";
+          std::cout << "FocusLost: " << event.window.windowId << '\n';
+          break;
+
+        case gf::EventType::Shown:
+          std::cout << "Shown: " << event.window.windowId << '\n';
+          break;
+
+        case gf::EventType::Hidden:
+          std::cout << "Hidden: " << event.window.windowId << '\n';
+          break;
+
+        case gf::EventType::Exposed:
+          std::cout << "Exposed: " << event.window.windowId << '\n';
+          break;
+
+        case gf::EventType::Maximized:
+          std::cout << "Maximized: " << event.window.windowId << '\n';
+          break;
+
+        case gf::EventType::Minimized:
+          std::cout << "Minimized: " << event.window.windowId << '\n';
+          break;
+
+        case gf::EventType::Restored:
+          std::cout << "Restored: " << event.window.windowId << '\n';
           break;
 
         case gf::EventType::KeyPressed:

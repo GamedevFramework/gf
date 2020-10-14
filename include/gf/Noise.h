@@ -29,7 +29,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup core
+   * @ingroup core_procedural_generation
    * @brief 2D A noise function
    */
   class GF_CORE_API Noise2D {
@@ -65,7 +65,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup core
+   * @ingroup core_procedural_generation
    * @brief 3D A noise function
    */
   class GF_CORE_API Noise3D {

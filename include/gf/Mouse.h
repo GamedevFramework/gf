@@ -30,7 +30,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup window
+   * @ingroup graphics_devices
    * @brief Mouse buttons
    */
   enum class MouseButton {

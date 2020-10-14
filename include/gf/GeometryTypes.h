@@ -28,16 +28,39 @@ namespace gf {
 inline namespace v1 {
 #endif
 
+  /**
+   * @ingroup core_geometry
+   * @brief A segment with two points
+   */
   template<typename T>
   struct Segment {
-    Vector<T, 2> p0;
-    Vector<T, 2> p1;
+    Vector<T, 2> p0;  ///< First end point of the segment
+    Vector<T, 2> p1;  ///< Second end point of the segment
   };
 
 
+  /**
+   * @ingroup core_geometry
+   * @brief A segment with float vectors
+   *
+   * @sa gf::Segment
+   */
   using SegmentF = Segment<float>;
+
+  /**
+   * @ingroup core_geometry
+   * @brief A segment with double vectors
+   *
+   * @sa gf::Segment
+   */
   using SegmentD = Segment<double>;
 
+  /**
+   * @ingroup core_geometry
+   * @brief A segment with int vectors
+   *
+   * @sa gf::Segment
+   */
   using SegmentI = Segment<int>;
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

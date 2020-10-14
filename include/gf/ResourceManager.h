@@ -41,7 +41,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup game
+   * @ingroup graphics_resources
    * @brief A generic cache for resources
    *
    * This function is a low-level class that is used in gf::ResourceManager.
@@ -136,7 +136,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup game
+   * @ingroup graphics_resources
    * @brief A resource manager
    *
    * @sa gf::ResourceCache

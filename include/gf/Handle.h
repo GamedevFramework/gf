@@ -29,30 +29,56 @@ namespace gf {
 inline namespace v1 {
 #endif
 
+  /**
+   * @ingroup core_container
+   * @brief A handle to an object or an id
+   *
+   * A handle is a very light container around either an id or a reference to
+   * an object. No type checking is made, it's up to the user to know what to
+   * do with this handle.
+   */
   class GF_CORE_API Handle {
   public:
+    /**
+     * @brief Default constructor
+     */
     Handle() = default;
 
+    /**
+     * @brief Constructor with an id
+     */
     explicit Handle(Id id)
     : m_id(id)
     {
     }
 
+    /**
+     * @brief Coonstructor with an object
+     */
     template<typename T>
     explicit Handle(T& object)
     : m_ptr(&object)
     {
     }
 
+    /**
+     * @brief Get the contained id
+     */
     Id asId() const {
       return m_id;
     }
 
+    /**
+     * @brief Get the reference to the object
+     */
     template<typename T>
     T& as() {
       return *static_cast<T*>(m_ptr);
     }
 
+    /**
+     * @brief Get the reference to the object
+     */
     template<typename T>
     const T& as() const {
       return *static_cast<const T*>(m_ptr);

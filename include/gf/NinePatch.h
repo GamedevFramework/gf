@@ -34,7 +34,7 @@ inline namespace v1 {
   class Texture;
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_sprite
    * @brief A nine-patch
    *
    * A nine-patch is a stretchable image that can be automatically resized. You

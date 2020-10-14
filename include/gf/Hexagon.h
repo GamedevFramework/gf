@@ -35,7 +35,7 @@ inline namespace v1 {
 #endif
 
    /**
-   * @ingroup game
+   * @ingroup core_utilities
    * @brief A helper for computing coordinates in a hexagonal map
    */
   class GF_CORE_API HexagonHelper {

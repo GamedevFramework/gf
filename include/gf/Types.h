@@ -29,7 +29,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup core
+   * @ingroup core_vocabulary
    * @brief Semantic type to represent "none"
    *
    * @sa gf::None, gf::AllType
@@ -37,7 +37,7 @@ inline namespace v1 {
   struct GF_CORE_API NoneType { };
 
   /**
-   * @ingroup core
+   * @ingroup core_vocabulary
    * @brief Constant to represent "none"
    *
    * @sa gf::NoneType, gf::All
@@ -45,7 +45,7 @@ inline namespace v1 {
   constexpr NoneType None = { };
 
   /**
-   * @ingroup core
+   * @ingroup core_vocabulary
    * @brief Semantic type to represent "all"
    *
    * @sa gf::All, gf::NoneType
@@ -53,7 +53,7 @@ inline namespace v1 {
   struct GF_CORE_API AllType {  };
 
   /**
-   * @ingroup core
+   * @ingroup core_vocabulary
    * @brief Constant to represent "all"
    *
    * @sa gf::AllType, gf::None
@@ -61,7 +61,7 @@ inline namespace v1 {
   constexpr AllType All = { };
 
   /**
-   * @ingroup core
+   * @ingroup core_vocabulary
    * @brief Semantic type to represent "any"
    *
    * @sa gf::Any, gf::AllType, gf::NoneType
@@ -69,7 +69,7 @@ inline namespace v1 {
   struct GF_CORE_API AnyType {  };
 
   /**
-   * @ingroup core
+   * @ingroup core_vocabulary
    * @brief Constant to represent "any"
    *
    * @sa gf::AnyType, gf::All, gf::None
@@ -77,7 +77,7 @@ inline namespace v1 {
   constexpr AnyType Any = { };
 
   /**
-   * @ingroup core
+   * @ingroup core_vocabulary
    * @brief Semantic type to represent "zero"
    *
    * @sa gf::Zero
@@ -85,7 +85,7 @@ inline namespace v1 {
   struct GF_CORE_API ZeroType { };
 
   /**
-   * @ingroup core
+   * @ingroup core_vocabulary
    * @brief Constant to represent "zero"
    *
    * @sa gf::ZeroType

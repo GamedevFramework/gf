@@ -34,7 +34,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup core
+   * @ingroup core_utilities
    * @brief Logging functions
    *
    * Logging functions are used to report some events that have happened in

@@ -36,8 +36,8 @@
 #include <gf/Unused.h>
 #include <gf/VectorOps.h>
 
-#include "priv/Debug.h"
-#include "priv/OpenGLFwd.h"
+#include <gfpriv/GlDebug.h>
+#include <gfpriv/GlFwd.h>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -84,7 +84,7 @@ inline namespace v1 {
         return 0;
       }
 
-      return stream->read(BufferRef<uint8_t>(buffer, count));
+      return stream->read(Span<uint8_t>(buffer, count));
     }
 
     void callbackClose(FT_Stream rec) {
@@ -168,7 +168,7 @@ inline namespace v1 {
     m_face = face;
   }
 
-  Font::Font(ArrayRef<uint8_t> content)
+  Font::Font(Span<const uint8_t> content)
   : Font()
   {
     FT_Library library = static_cast<FT_Library>(m_library);
@@ -440,7 +440,7 @@ inline namespace v1 {
 
     cache.texture.update(paddedBuffer.data(), rect);
 
-    glCheck(glFlush());
+    GL_CHECK(glFlush());
 
     FT_Done_Glyph(glyph);
     return out;

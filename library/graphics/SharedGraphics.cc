@@ -28,11 +28,11 @@ inline namespace v1 {
   SharedGraphics::SharedGraphics(Window& window)
   : m_window(window)
   {
-    m_window.attachGLContext();
+    m_window.makeSharedContextCurrent();
   }
 
   SharedGraphics::~SharedGraphics() {
-    m_window.detachGLContext();
+    m_window.makeNoContextCurrent();
   }
 
 

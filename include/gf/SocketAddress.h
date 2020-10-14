@@ -105,30 +105,33 @@ inline namespace v1 {
      */
     std::string getService(SocketAddressFormat format = SocketAddressFormat::Unrestricted) const;
 
-  private:
-    friend class Socket;
-    friend class TcpSocket;
-    friend class TcpListener;
-    friend class UdpSocket;
-
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 #ifdef _WIN32
     using StorageLengthType = int;
 #else
     using StorageLengthType = socklen_t;
 #endif
+#else
+    /**
+     * @brief The type to handle the storage length
+     */
+    using StorageLengthType = implementation-defined;
+#endif
 
-    SocketAddress(sockaddr *storage, StorageLengthType length);
+    /**
+     * @brief Constructor with a raw sockaddr and a length
+     */
+    SocketAddress(sockaddr *a_storage, StorageLengthType a_length);
 
-    const sockaddr *getData() const {
-      return reinterpret_cast<const sockaddr*>(&m_storage);
+    /**
+     * @brief Get the storage as a sockaddr address
+     */
+    const sockaddr *asSockAddr() const {
+      return reinterpret_cast<const sockaddr*>(&storage);
     }
 
-    StorageLengthType getLength() const {
-      return m_length;
-    }
-
-    sockaddr_storage m_storage;
-    StorageLengthType m_length;
+    sockaddr_storage storage; ///< The storage for the address
+    StorageLengthType length; ///< The length of the address
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

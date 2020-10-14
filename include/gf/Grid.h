@@ -34,7 +34,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_drawables
    * @brief A square grid
    */
   class GF_GRAPHICS_API SquareGrid : public gf::Transformable {
@@ -164,7 +164,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_drawables
    * @brief A hexagonal grid
    */
   class GF_GRAPHICS_API HexagonGrid : public gf::Transformable {

@@ -2,14 +2,10 @@ file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/generated")
 
 add_executable(gfdev_source_file graphics/tools/gfdev_source_file.cc)
 
-target_compile_features(gfdev_source_file
-  PUBLIC
-    cxx_std_14
-)
-
 set_target_properties(gfdev_source_file
   PROPERTIES
-  CXX_EXTENSIONS OFF
+    CXX_STANDARD 14
+    CXX_EXTENSIONS OFF
 )
 
 # process gamecontrollerdb
@@ -180,7 +176,9 @@ else()
     graphics/Entity.cc
     graphics/EntityContainer.cc
     graphics/Font.cc
+    graphics/GameManager.cc
     graphics/Gamepad.cc
+    graphics/GlDebug.cc
     graphics/GraphicsHandle.cc
     graphics/GraphicsInfo.cc
     graphics/Grid.cc
@@ -191,9 +189,6 @@ else()
     graphics/NinePatch.cc
     graphics/Particles.cc
     graphics/Paths.cc
-    graphics/PhysicsBody.cc
-    graphics/PhysicsGeometry.cc
-    graphics/PhysicsModel.cc
     graphics/PostProcessing.cc
     graphics/RenderPipeline.cc
     graphics/RenderTarget.cc
@@ -202,6 +197,7 @@ else()
     graphics/ResourceManager.cc
     graphics/Scene.cc
     graphics/SceneManager.cc
+    graphics/SdlDebug.cc
     graphics/Segue.cc
     graphics/SegueEffect.cc
     graphics/SegueEffects.cc
@@ -231,8 +227,6 @@ else()
     graphics/Window.cc
     # generated
     graphics/data/generated.cc
-    # priv
-    graphics/priv/Debug.cc
     # vendor
     ${GF_GLAD_SRC}
   )
@@ -241,6 +235,7 @@ else()
     net/Socket.cc
     net/SocketAddress.cc
     net/SocketGuard.cc
+    net/SocketPrivate.cc
     net/SocketSelector.cc
     net/TcpListener.cc
     net/TcpSocket.cc
@@ -283,12 +278,6 @@ if (GF_BUILD_WITH_OPENGL3)
   )
 endif()
 
-if (GF_USE_EMBEDDED_LIBS)
-  target_compile_definitions(gf0
-    PRIVATE GF_USE_EMBEDDED_LIBS
-  )
-endif()
-
 if (GF_DEBUG)
   target_compile_definitions(gfcore0
     PRIVATE GF_DEBUG
@@ -319,19 +308,12 @@ endif()
 
 target_compile_definitions(gfcore0
   PRIVATE
-    gfcore0_EXPORTS
     ZLIB_CONST
 )
 
 target_compile_definitions(gf0
   PRIVATE
-    gf0_EXPORTS
     ZLIB_CONST
-)
-
-target_compile_definitions(gfnet0
-  PRIVATE
-    gfnet0_EXPORTS
 )
 
 if (UNIX AND NOT APPLE)
@@ -349,6 +331,7 @@ target_include_directories(gfcore0
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
   PRIVATE
     "${Stb_INCLUDE_DIR}"
+    "${CMAKE_SOURCE_DIR}/include-priv"
 )
 
 target_include_directories(gf0
@@ -358,6 +341,7 @@ target_include_directories(gf0
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
   PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}"
+    "${CMAKE_SOURCE_DIR}/include-priv"
 )
 
 target_include_directories(gfnet0
@@ -365,6 +349,8 @@ target_include_directories(gfnet0
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+  PRIVATE
+    "${CMAKE_SOURCE_DIR}/include-priv"
 )
 
 if (APPLE)
@@ -435,9 +421,11 @@ target_compile_features(gfcore0
 
 set_target_properties(gfcore0
   PROPERTIES
-  EXPORT_NAME "core"
-  VERSION ${PROJECT_VERSION}
-  SOVERSION ${PROJECT_VERSION_MAJOR}
+    EXPORT_NAME "core"
+    CXX_STANDARD 14
+    CXX_EXTENSIONS OFF
+    VERSION ${PROJECT_VERSION}
+    SOVERSION ${PROJECT_VERSION_MAJOR}
 )
 
 target_compile_features(gf0
@@ -447,9 +435,11 @@ target_compile_features(gf0
 
 set_target_properties(gf0
   PROPERTIES
-  EXPORT_NAME "graphics"
-  VERSION ${PROJECT_VERSION}
-  SOVERSION ${PROJECT_VERSION_MAJOR}
+    CXX_STANDARD 14
+    CXX_EXTENSIONS OFF
+    EXPORT_NAME "graphics"
+    VERSION ${PROJECT_VERSION}
+    SOVERSION ${PROJECT_VERSION_MAJOR}
 )
 
 target_compile_features(gfnet0
@@ -459,9 +449,11 @@ target_compile_features(gfnet0
 
 set_target_properties(gfnet0
   PROPERTIES
-  EXPORT_NAME "net"
-  VERSION ${PROJECT_VERSION}
-  SOVERSION ${PROJECT_VERSION_MAJOR}
+    CXX_STANDARD 14
+    CXX_EXTENSIONS OFF
+    EXPORT_NAME "net"
+    VERSION ${PROJECT_VERSION}
+    SOVERSION ${PROJECT_VERSION_MAJOR}
 )
 
 if(NOT BUILD_SHARED_LIBS)

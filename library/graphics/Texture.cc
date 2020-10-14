@@ -28,8 +28,8 @@
 #include <gf/Image.h>
 #include <gf/RenderTarget.h>
 
-#include "priv/Debug.h"
-#include "priv/OpenGLFwd.h"
+#include <gfpriv/GlDebug.h>
+#include <gfpriv/GlFwd.h>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -37,11 +37,11 @@ inline namespace v1 {
 #endif
 
   void GraphicsTrait<GraphicsTag::Texture>::gen(int n, unsigned* resources) {
-    glCheck(glGenTextures(n, resources));
+    GL_CHECK(glGenTextures(n, resources));
   }
 
   void GraphicsTrait<GraphicsTag::Texture>::del(int n, const unsigned* resources) {
-    glCheck(glDeleteTextures(n, resources));
+    GL_CHECK(glDeleteTextures(n, resources));
   }
 
   namespace {
@@ -105,15 +105,15 @@ inline namespace v1 {
 
     GLenum textureFormat = getEnum(m_format);
 
-    glCheck(glPixelStorei(GL_UNPACK_ALIGNMENT, getAlignment(m_format)));
+    GL_CHECK(glPixelStorei(GL_UNPACK_ALIGNMENT, getAlignment(m_format)));
 
-    glCheck(glBindTexture(GL_TEXTURE_2D, m_handle));
-    glCheck(glTexImage2D(GL_TEXTURE_2D, 0, textureFormat, m_size.width, m_size.height, 0, textureFormat, GL_UNSIGNED_BYTE, data));
+    GL_CHECK(glBindTexture(GL_TEXTURE_2D, m_handle));
+    GL_CHECK(glTexImage2D(GL_TEXTURE_2D, 0, textureFormat, m_size.width, m_size.height, 0, textureFormat, GL_UNSIGNED_BYTE, data));
 
-    glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE)); // m_repeated == false
-    glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE)); // m_repeated == false
-    glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)); // m_smooth == false
-    glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)); // m_smooth == false && m_mipmap == false
+    GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE)); // m_repeated == false
+    GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE)); // m_repeated == false
+    GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)); // m_smooth == false
+    GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)); // m_smooth == false && m_mipmap == false
   }
 
   void BareTexture::setSmooth(bool smooth) {
@@ -127,9 +127,9 @@ inline namespace v1 {
       return;
     }
 
-    glCheck(glBindTexture(GL_TEXTURE_2D, m_handle));
-    glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, m_smooth ? GL_LINEAR : GL_NEAREST));
-    glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, getMinFilter(m_smooth, m_mipmap)));
+    GL_CHECK(glBindTexture(GL_TEXTURE_2D, m_handle));
+    GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, m_smooth ? GL_LINEAR : GL_NEAREST));
+    GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, getMinFilter(m_smooth, m_mipmap)));
   }
 
   void BareTexture::setRepeated(bool repeated) {
@@ -143,9 +143,9 @@ inline namespace v1 {
       return;
     }
 
-    glCheck(glBindTexture(GL_TEXTURE_2D, m_handle));
-    glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, m_repeated ? GL_REPEAT : GL_CLAMP_TO_EDGE));
-    glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, m_repeated ? GL_REPEAT : GL_CLAMP_TO_EDGE));
+    GL_CHECK(glBindTexture(GL_TEXTURE_2D, m_handle));
+    GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, m_repeated ? GL_REPEAT : GL_CLAMP_TO_EDGE));
+    GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, m_repeated ? GL_REPEAT : GL_CLAMP_TO_EDGE));
   }
 
   void BareTexture::update(const uint8_t *data) {
@@ -164,15 +164,15 @@ inline namespace v1 {
 
     m_mipmap = false;
 
-    glCheck(glPixelStorei(GL_UNPACK_ALIGNMENT, getAlignment(m_format)));
+    GL_CHECK(glPixelStorei(GL_UNPACK_ALIGNMENT, getAlignment(m_format)));
 
-    glCheck(glBindTexture(GL_TEXTURE_2D, m_handle));
-    glCheck(glTexSubImage2D(GL_TEXTURE_2D, 0, rect.min.x, rect.min.y, rect.getWidth(), rect.getHeight(), getEnum(m_format), GL_UNSIGNED_BYTE, data));
-    glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, getMinFilter(m_smooth, m_mipmap)));
+    GL_CHECK(glBindTexture(GL_TEXTURE_2D, m_handle));
+    GL_CHECK(glTexSubImage2D(GL_TEXTURE_2D, 0, rect.min.x, rect.min.y, rect.getWidth(), rect.getHeight(), getEnum(m_format), GL_UNSIGNED_BYTE, data));
+    GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, getMinFilter(m_smooth, m_mipmap)));
 
 #ifdef GF_OPENGL3
     if (m_format == Format::Alpha) {
-      glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_A, GL_RED));
+      GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_A, GL_RED));
     }
 #endif
   }
@@ -183,10 +183,10 @@ inline namespace v1 {
 
     GLenum textureFormat = getEnum(m_format);
 
-    glCheck(glPixelStorei(GL_UNPACK_ALIGNMENT, getAlignment(m_format)));
+    GL_CHECK(glPixelStorei(GL_UNPACK_ALIGNMENT, getAlignment(m_format)));
 
-    glCheck(glBindTexture(GL_TEXTURE_2D, m_handle));
-    glCheck(glTexImage2D(GL_TEXTURE_2D, 0, textureFormat, m_size.width, m_size.height, 0, textureFormat, GL_UNSIGNED_BYTE, data));
+    GL_CHECK(glBindTexture(GL_TEXTURE_2D, m_handle));
+    GL_CHECK(glTexImage2D(GL_TEXTURE_2D, 0, textureFormat, m_size.width, m_size.height, 0, textureFormat, GL_UNSIGNED_BYTE, data));
   }
 
   RectF BareTexture::computeTextureCoords(const RectI& rect) const {
@@ -201,18 +201,18 @@ inline namespace v1 {
 
     m_mipmap = true;
 
-    glCheck(glBindTexture(GL_TEXTURE_2D, m_handle));
-    glCheck(glGenerateMipmap(GL_TEXTURE_2D));
-    glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, getMinFilter(m_smooth, m_mipmap)));
+    GL_CHECK(glBindTexture(GL_TEXTURE_2D, m_handle));
+    GL_CHECK(glGenerateMipmap(GL_TEXTURE_2D));
+    GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, getMinFilter(m_smooth, m_mipmap)));
 
     return true;
   }
 
   void BareTexture::bind(const BareTexture *texture) {
     if (texture != nullptr && texture->m_handle.getName() != 0) {
-      glCheck(glBindTexture(GL_TEXTURE_2D, texture->m_handle));
+      GL_CHECK(glBindTexture(GL_TEXTURE_2D, texture->m_handle));
     } else {
-      glCheck(glBindTexture(GL_TEXTURE_2D, 0));
+      GL_CHECK(glBindTexture(GL_TEXTURE_2D, 0));
     }
   }
 
@@ -241,7 +241,7 @@ inline namespace v1 {
   {
   }
 
-  Texture::Texture(ArrayRef<uint8_t> content)
+  Texture::Texture(Span<const uint8_t> content)
   : Texture(Image(content))
   {
   }
@@ -261,16 +261,16 @@ inline namespace v1 {
     GraphicsHandle<GraphicsTag::Framebuffer> framebuffer;
 
     GLint boundFramebuffer;
-    glCheck(glGetIntegerv(GL_FRAMEBUFFER_BINDING, &boundFramebuffer));
+    GL_CHECK(glGetIntegerv(GL_FRAMEBUFFER_BINDING, &boundFramebuffer));
 
-    glCheck(glBindFramebuffer(GL_FRAMEBUFFER, framebuffer));
-    glCheck(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, getName(), 0));
+    GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, framebuffer));
+    GL_CHECK(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, getName(), 0));
     assert(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
 
-    glCheck(glPixelStorei(GL_PACK_ALIGNMENT, 4));
-    glCheck(glReadPixels(0, 0, size.width, size.height, GL_RGBA, GL_UNSIGNED_BYTE, &pixels[0]));
+    GL_CHECK(glPixelStorei(GL_PACK_ALIGNMENT, 4));
+    GL_CHECK(glReadPixels(0, 0, size.width, size.height, GL_RGBA, GL_UNSIGNED_BYTE, &pixels[0]));
 
-    glCheck(glBindFramebuffer(GL_FRAMEBUFFER, boundFramebuffer));
+    GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, boundFramebuffer));
 
     Image image(size, pixels.data());
     image.flipHorizontally();

@@ -561,7 +561,7 @@ TEST(SerialTest, Array2D) {
 }
 
 TEST(SerialTest, Path) {
-  gf::Path filename = gf::Paths::getTemporaryDirectory() / gf::Paths::getUniquePath();
+  gf::Path filename = "/etc/passwd";
 
   gf::Path in1 = filename;
   gf::Path out1;

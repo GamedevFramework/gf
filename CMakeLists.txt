@@ -1,14 +1,14 @@
 cmake_minimum_required(VERSION 3.10)
 
 project(GF
-  VERSION 0.17.4
+  VERSION 0.18.0
   LANGUAGES CXX C
 )
 
 include(GenerateExportHeader)
 
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
-set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_VISIBILITY_INLINES_HIDDEN ON)
 
 if(NOT MSVC AND (NOT DEFINED CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL ""))
   message(STATUS "Setting build type to 'RelWithDebInfo' as none was specified.")
@@ -16,11 +16,11 @@ if(NOT MSVC AND (NOT DEFINED CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL ""))
 endif()
 
 option(BUILD_SHARED_LIBS "Build the library as a shared library" ON)
+option(BUILD_TESTING "Build tests" ON)
 
 option(GF_DEBUG "Activate debug build" ON)
 option(GF_BUILD_WITH_OPENGL3 "Build with OpenGL 3.3 instead of OpenGL ES 2.0" OFF)
 option(GF_BUILD_EXAMPLES "Build examples" ON)
-option(GF_BUILD_TESTS "Build tests" ON)
 option(GF_BUILD_DOCUMENTATION "Build documentation (needs Doxygen)" ON)
 option(GF_BUILD_GAMES "Build games" OFF)
 option(GF_SINGLE_COMPILTATION_UNIT "Build the library in a single file (unity build)" OFF)
@@ -92,7 +92,8 @@ if(GF_BUILD_EXAMPLES)
   add_subdirectory(examples)
 endif()
 
-if(GF_BUILD_TESTS)
+if(BUILD_TESTING)
+  enable_testing()
   add_subdirectory(tests)
 endif()
 
@@ -119,13 +120,8 @@ if (GF_BUILD_DOCUMENTATION)
 endif()
 
 if(GF_BUILD_GAMES)
-  add_subdirectory(games/bank_robbery_for_dummies)
   add_subdirectory(games/gf_2048)
   add_subdirectory(games/gf_pong)
-  add_subdirectory(games/HOME)
-  add_subdirectory(games/huaca)
-  add_subdirectory(games/islands)
-  add_subdirectory(games/lux)
 endif()
 
 add_subdirectory(tools/gf_info)

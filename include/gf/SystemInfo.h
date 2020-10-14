@@ -31,7 +31,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup core
+   * @ingroup graphics_devices
    * @brief A class for system info
    *
    * This class only contains static methods. You can get:

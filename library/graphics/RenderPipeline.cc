@@ -26,8 +26,8 @@
 #include <gf/Unused.h>
 #include <gf/Window.h>
 
-#include "priv/Debug.h"
-#include "priv/OpenGLFwd.h"
+#include <gfpriv/GlDebug.h>
+#include <gfpriv/GlFwd.h>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -48,13 +48,13 @@ inline namespace v1 {
       buffer.texture = std::move(texture);
       buffer.texture.setSmooth();
 
-      glCheck(glBindFramebuffer(GL_FRAMEBUFFER, buffer.framebuffer));
-      glCheck(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, buffer.texture.getName(), 0));
+      GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, buffer.framebuffer));
+      GL_CHECK(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, buffer.texture.getName(), 0));
       assert(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
-      glCheck(glBindFramebuffer(GL_FRAMEBUFFER, 0));
+      GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, 0));
     }
 
-    glCheck(glBindFramebuffer(GL_FRAMEBUFFER, m_buffers[m_current].framebuffer));
+    GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, m_buffers[m_current].framebuffer));
   }
 
   void RenderPipeline::addEffect(Effect& effect) {
@@ -75,10 +75,10 @@ inline namespace v1 {
       buffer.texture = std::move(texture);
       buffer.texture.setSmooth();
 
-      glCheck(glBindFramebuffer(GL_FRAMEBUFFER, buffer.framebuffer));
-      glCheck(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, buffer.texture.getName(), 0));
+      GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, buffer.framebuffer));
+      GL_CHECK(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, buffer.texture.getName(), 0));
       assert(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
-      glCheck(glBindFramebuffer(GL_FRAMEBUFFER, 0));
+      GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, 0));
     }
 
     onFramebufferResize(size);
@@ -98,11 +98,11 @@ inline namespace v1 {
       postProcessing.setEffect(effect);
 
       m_current = 1 - m_current;
-      glCheck(glBindFramebuffer(GL_FRAMEBUFFER, m_buffers[m_current].framebuffer));
+      GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, m_buffers[m_current].framebuffer));
 
       RenderTarget::clear();
       RenderTarget::draw(postProcessing);
-      glCheck(glFlush());
+      GL_CHECK(glFlush());
     }
 
     // display to the window
@@ -110,7 +110,7 @@ inline namespace v1 {
     postProcessing.setTexture(m_buffers[m_current].texture);
     postProcessing.setEffect(m_defaultEffect);
 
-    glCheck(glBindFramebuffer(GL_FRAMEBUFFER, 0));
+    GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, 0));
 
     RenderTarget::clear();
     RenderTarget::draw(postProcessing);
@@ -119,7 +119,7 @@ inline namespace v1 {
     // prepare for next frame
 
     m_current = 0;
-    glCheck(glBindFramebuffer(GL_FRAMEBUFFER, m_buffers[m_current].framebuffer));
+    GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, m_buffers[m_current].framebuffer));
   }
 
   void RenderPipeline::onFramebufferResize(Vector2i size) {

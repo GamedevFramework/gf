@@ -31,7 +31,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_drawables
    * @brief The `gf` logo
    *
    * This class can show the `gf` logo without loading any font. It is loaded

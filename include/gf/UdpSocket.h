@@ -24,11 +24,10 @@
 #include <cstdint>
 #include <string>
 
-#include "ArrayRef.h"
-#include "BufferRef.h"
 #include "NetApi.h"
 #include "Socket.h"
 #include "SocketAddress.h"
+#include "Span.h"
 #include "Types.h"
 
 namespace gf {
@@ -98,7 +97,7 @@ inline namespace v1 {
      * @param address The address of the host to communicate with
      * @returns A result for the operation
      */
-    SocketDataResult sendRawBytesTo(ArrayRef<uint8_t> buffer, const SocketAddress& address);
+    SocketDataResult sendRawBytesTo(Span<const uint8_t> buffer, const SocketAddress& address);
 
     /**
      * @brief Receive some bytes from the socket
@@ -107,7 +106,7 @@ inline namespace v1 {
      * @param address The address of the sending host
      * @returns A result for the operation
      */
-    SocketDataResult recvRawBytesFrom(BufferRef<uint8_t> buffer, SocketAddress& address);
+    SocketDataResult recvRawBytesFrom(Span<uint8_t> buffer, SocketAddress& address);
 
     /**
      * @brief Send a whole buffer to the socket
@@ -118,7 +117,7 @@ inline namespace v1 {
      * @param address The address of the host to communicate with
      * @returns True if no error occurred and the buffer was sent
      */
-    bool sendBytesTo(ArrayRef<uint8_t> buffer, const SocketAddress& address);
+    bool sendBytesTo(Span<const uint8_t> buffer, const SocketAddress& address);
 
     /**
      * @brief Receive a whole buffer from the socket
@@ -129,10 +128,8 @@ inline namespace v1 {
      * @param address The address of the sending host
      * @returns True if no error occurred and the buffer was received
      */
-    bool recvBytesFrom(BufferRef<uint8_t> buffer, SocketAddress& address);
+    bool recvBytesFrom(Span<uint8_t> buffer, SocketAddress& address);
 
-  private:
-    static SocketHandle nativeBind(const std::string& service, SocketFamily family);
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

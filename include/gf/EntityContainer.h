@@ -38,7 +38,7 @@ inline namespace v1 {
   class RenderTarget;
 
   /**
-   * @ingroup game
+   * @ingroup graphics_entities
    * @brief A collection of entities
    *
    * gf::EntityContainer represents a collection of entities that are

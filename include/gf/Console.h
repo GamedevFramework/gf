@@ -43,7 +43,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup game
+   * @ingroup graphics_console
    * @brief The alignment of the text in the console
    *
    * @sa gf::Console
@@ -55,7 +55,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup game
+   * @ingroup graphics_console
    * @brief A type for color controls in a console
    *
    * @sa gf::Console
@@ -63,7 +63,7 @@ inline namespace v1 {
   using ConsoleColorControl = char;
 
   /**
-   * @ingroup game
+   * @ingroup graphics_console
    * @brief The constant for color control #1
    *
    * @sa gf::Console
@@ -71,7 +71,7 @@ inline namespace v1 {
   constexpr ConsoleColorControl ConsoleColorControl1 = '\x01';
 
   /**
-   * @ingroup game
+   * @ingroup graphics_console
    * @brief The constant for color control #2
    *
    * @sa gf::Console
@@ -79,7 +79,7 @@ inline namespace v1 {
   constexpr ConsoleColorControl ConsoleColorControl2 = '\x02';
 
   /**
-   * @ingroup game
+   * @ingroup graphics_console
    * @brief The constant for color control #3
    *
    * @sa gf::Console
@@ -87,7 +87,7 @@ inline namespace v1 {
   constexpr ConsoleColorControl ConsoleColorControl3 = '\x03';
 
   /**
-   * @ingroup game
+   * @ingroup graphics_console
    * @brief The constant for color control #4
    *
    * @sa gf::Console
@@ -95,7 +95,7 @@ inline namespace v1 {
   constexpr ConsoleColorControl ConsoleColorControl4 = '\x04';
 
   /**
-   * @ingroup game
+   * @ingroup graphics_console
    * @brief The constant for color control #5
    *
    * @sa gf::Console
@@ -103,7 +103,7 @@ inline namespace v1 {
   constexpr ConsoleColorControl ConsoleColorControl5 = '\x05';
 
   /**
-   * @ingroup game
+   * @ingroup graphics_console
    * @brief The constant for color control stop
    *
    * @sa gf::Console
@@ -113,6 +113,7 @@ inline namespace v1 {
 
 
   /**
+   * @ingroup graphics_console
    * @brief A console effect on the background color
    *
    * A console effect is used to modify the background color of the console.
@@ -205,7 +206,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup game
+   * @ingroup graphics_console
    * @brief A virtual console
    *
    * A console is a virtual terminal where you can print the characters from a

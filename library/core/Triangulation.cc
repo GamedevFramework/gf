@@ -151,7 +151,7 @@ inline namespace v1 {
 
   } // anonymous namespace
 
-  std::vector<TriangleRef<const Vector2f>> triangulation(ArrayRef<Vector2f> points) {
+  std::vector<TriangleRef<const Vector2f>> triangulation(Span<const Vector2f> points) {
     std::vector<TriangleRef<const Vector2f>> out;
 
     if (points.isEmpty()) {

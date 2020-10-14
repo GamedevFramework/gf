@@ -36,7 +36,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup game
+   * @ingroup core_animation
    * @brief An activity for a simple float value
    *
    * @sa gf::Tween
@@ -117,7 +117,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup game
+   * @ingroup core_animation
    * @brief An activity for a change of angle
    *
    * The activity ensures that the change is no more that @f$ \pi @f$ radians.
@@ -205,7 +205,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup game
+   * @ingroup core_animation
    * @brief An activity for a change of position
    *
    * @sa gf::Tween
@@ -286,7 +286,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup game
+   * @ingroup core_animation
    * @brief An activity for a change of color
    *
    * @sa gf::Tween
@@ -367,7 +367,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup game
+   * @ingroup core_animation
    * @brief An activity for calling a function once
    */
   class GF_CORE_API CallbackActivity : public Activity {
@@ -389,7 +389,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup game
+   * @ingroup core_animation
    * @brief An activity to wait for a predefined duration
    */
   class GF_CORE_API DelayActivity : public Activity {
@@ -411,7 +411,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup game
+   * @ingroup core_animation
    * @brief An activity to run several activities sequentially
    */
   class GF_CORE_API SequenceActivity : public Activity {
@@ -443,7 +443,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup game
+   * @ingroup core_animation
    * @brief An activity to run an activity several times
    */
   class GF_CORE_API RepeatActivity : public Activity {
@@ -460,14 +460,14 @@ inline namespace v1 {
     void restart() override;
 
   private:
-    Activity& m_activity;
+    Ref<Activity> m_activity;
     unsigned m_count;
     unsigned m_repeat;
   };
 
 
   /**
-   * @ingroup game
+   * @ingroup core_animation
    * @brief A repeated sequence activity
    *
    * This is a convenient combination of gf::SequenceActivity and
@@ -492,7 +492,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup game
+   * @ingroup core_animation
    * @brief An activity to run several activities in parallel
    */
   class GF_CORE_API ParallelActivity : public Activity {

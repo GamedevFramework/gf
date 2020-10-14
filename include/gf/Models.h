@@ -30,7 +30,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup game
+   * @ingroup core_models
    * @brief Fixed timestep model
    *
    * This model takes another model that needs a fixed timestep and provides

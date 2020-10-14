@@ -26,9 +26,9 @@
 #include <type_traits>
 #include <vector>
 
-#include "ArrayRef.h"
 #include "CoreApi.h"
 #include "Message.h"
+#include "Span.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -36,7 +36,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup game
+   * @ingroup core_messages
    * @brief An identifier for a message handler
    *
    * @sa gf::MessageHandler
@@ -44,7 +44,7 @@ inline namespace v1 {
   using MessageHandlerId = uint64_t;
 
   /**
-   * @ingroup game
+   * @ingroup core_messages
    * @brief A message manager
    *
    * A message manager is responsible for passing messages synchronously
@@ -218,7 +218,7 @@ inline namespace v1 {
      *
      * @param ids The list of handler ids
      */
-    void removeHandlers(ArrayRef<MessageHandlerId> ids) {
+    void removeHandlers(Span<const MessageHandlerId> ids) {
       for (auto id : ids) {
         removeHandler(id);
       }

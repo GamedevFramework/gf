@@ -34,7 +34,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup core
+   * @ingroup core_utilities
    * @brief A set of dice that can be rolled
    *
    * The set of dice is composed of several dice with the same number of faces.

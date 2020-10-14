@@ -34,6 +34,8 @@
 #include <gf/Log.h>
 #include <gf/Unused.h>
 
+#include <gfpriv/SdlDebug.h>
+
 #include "config.h"
 
 namespace gf {
@@ -45,20 +47,24 @@ inline namespace v1 {
 
   Library::Library()
   {
+
     if (g_loaded.fetch_add(1) == 0) { // we are the first
       if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) != 0) {
+        // do not use SDL_CHECK here, it has a bug with udev on Linux
         Log::error("Unable to initialize SDL: '%s'\n", SDL_GetError());
         return;
       }
 
+      SDL_ClearError();
+
 #ifdef GF_OPENGL3
-      SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-      SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-      SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+      SDL_CHECK(SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE));
+      SDL_CHECK(SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3));
+      SDL_CHECK(SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3));
 #else
-      SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
-      SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
-      SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+      SDL_CHECK(SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES));
+      SDL_CHECK(SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2));
+      SDL_CHECK(SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0));
 #endif
     }
   }

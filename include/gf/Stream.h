@@ -27,9 +27,8 @@
 #include <cstddef>
 #include <cstdint>
 
-#include "ArrayRef.h"
-#include "BufferRef.h"
 #include "CoreApi.h"
+#include "Span.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -37,7 +36,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup core
+   * @ingroup core_streams
    * @brief Abstract class for custom file input streams
    *
    * This class allows users to define their own stream input sources from
@@ -84,7 +83,7 @@ inline namespace v1 {
      *
      * @return The number of bytes actually read
      */
-    virtual std::size_t read(BufferRef<uint8_t> buffer) = 0;
+    virtual std::size_t read(Span<uint8_t> buffer) = 0; // Flawfinder: ignore
 
     /**
      * @brief Read a single byte from the stream
@@ -96,8 +95,8 @@ inline namespace v1 {
      *
      * @return The number of bytes actually read
      */
-    std::size_t read(uint8_t& byte) {
-      return read(BufferRef<uint8_t>(&byte, 1));
+    std::size_t read(uint8_t& byte) {        // Flawfinder: ignore
+      return read(Span<uint8_t>(&byte, 1));  // Flawfinder: ignore
     }
 
     /**
@@ -125,7 +124,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup core
+   * @ingroup core_streams
    * @brief Abstract class for custom file output streams
    *
    * This class allows users to define their own stream output sinks to
@@ -162,7 +161,7 @@ inline namespace v1 {
      *
      * @return The number of bytes actually written
      */
-    virtual std::size_t write(ArrayRef<uint8_t> buffer) = 0;
+    virtual std::size_t write(Span<const uint8_t> buffer) = 0;
 
     /**
      * @brief Write a single byte to the stream
@@ -172,7 +171,7 @@ inline namespace v1 {
      * @return The number of bytes actually written
      */
     std::size_t write(uint8_t byte) {
-      return write(ArrayRef<uint8_t>(&byte, 1));
+      return write(Span<const uint8_t>(&byte, 1));
     }
 
     /**

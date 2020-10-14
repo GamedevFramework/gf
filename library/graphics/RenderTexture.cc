@@ -25,8 +25,8 @@
 
 #include <cassert>
 
-#include "priv/Debug.h"
-#include "priv/OpenGLFwd.h"
+#include <gfpriv/GlDebug.h>
+#include <gfpriv/GlFwd.h>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -40,10 +40,10 @@ inline namespace v1 {
     m_texture.setSmooth();
     Texture::bind(nullptr);
 
-    glCheck(glBindFramebuffer(GL_FRAMEBUFFER, m_framebuffer));
-    glCheck(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_texture.getName(), 0));
+    GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, m_framebuffer));
+    GL_CHECK(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_texture.getName(), 0));
     assert(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
-    glCheck(glBindFramebuffer(GL_FRAMEBUFFER, 0));
+    GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, 0));
   }
 
   Vector2i RenderTexture::getSize() const {
@@ -56,12 +56,12 @@ inline namespace v1 {
 
   void RenderTexture::setActive() {
     if (m_framebuffer.isValid()) {
-      glCheck(glBindFramebuffer(GL_FRAMEBUFFER, m_framebuffer));
+      GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, m_framebuffer));
     }
   }
 
   void RenderTexture::display() {
-    glCheck(glFlush());
+    GL_CHECK(glFlush());
   }
 
   Image RenderTexture::capture() const {

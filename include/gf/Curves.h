@@ -33,6 +33,7 @@ inline namespace v1 {
 #endif
 
   /**
+   * @ingroup graphics_curves
    * @brief A line
    *
    * A line is a straight curve. It is defined by two end points.
@@ -57,6 +58,7 @@ inline namespace v1 {
   };
 
   /**
+   * @ingroup graphics_curves
    * @brief A quadratic Bézier curve
    *
    * A quadratic Bézier curve is a Bézier curve with two end points and one control point.
@@ -85,6 +87,7 @@ inline namespace v1 {
   };
 
   /**
+   * @ingroup graphics_curves
    * @brief A cubic Bézier curve
    *
    * A cubic Bézier curve is a Bézier curve with two end points and two control points.
@@ -115,6 +118,7 @@ inline namespace v1 {
   };
 
   /**
+   * @ingroup graphics_curves
    * @brief A Catmull–Rom spline
    *
    * @sa [Centripetal Catmull–Rom spline - Wikipedia](https://en.wikipedia.org/wiki/Centripetal_Catmull%E2%80%93Rom_spline)
@@ -162,6 +166,7 @@ inline namespace v1 {
   };
 
   /**
+   * @ingroup graphics_curves
    * @brief A compound curve
    *
    * A compound curve is a curve composed of several continuous curves. It is

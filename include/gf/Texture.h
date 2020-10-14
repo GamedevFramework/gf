@@ -26,11 +26,11 @@
 
 #include <cstdint>
 
-#include "ArrayRef.h"
 #include "GraphicsApi.h"
 #include "GraphicsHandle.h"
 #include "Path.h"
 #include "Rect.h"
+#include "Span.h"
 #include "Vector.h"
 
 namespace gf {
@@ -41,6 +41,10 @@ inline namespace v1 {
   class Image;
   class InputStream;
 
+  /**
+   * @ingroup graphics_gpu
+   * @brief Trait for texture
+   */
   template<>
   struct GF_GRAPHICS_API GraphicsTrait<GraphicsTag::Texture> {
     static void gen(int n, unsigned* resources);
@@ -48,7 +52,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_gpu
    * @brief An image that lives in the graphic memory that can be used for drawing
    *
    * gf::BareTexture stores pixels that can be drawn, with a sprite
@@ -284,7 +288,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_gpu
    * @brief A texture for colored images
    *
    * A texture can be loaded from an image, but also directly
@@ -348,7 +352,7 @@ inline namespace v1 {
      *
      * @param content Content of the file data in memory
      */
-    Texture(ArrayRef<uint8_t> content);
+    Texture(Span<const uint8_t> content);
 
     /**
      * @brief Update the texture from an image
@@ -383,7 +387,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_gpu
    * @brief A texture with a single alpha channel
    *
    * This texture is used internally by gf::Font

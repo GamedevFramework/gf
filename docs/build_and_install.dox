@@ -21,18 +21,19 @@ Libraries:
 
 | Name                                                                                    | Version | License     |
 |-----------------------------------------------------------------------------------------|:-------:|:-----------:|
-| [SDL2](https://www.libsdl.org/)                                                         | 2.0.2   | zlib/libpng |
-| [Boost Filesystem](http://www.boost.org/doc/libs/release/libs/filesystem/)              | 1.55    | Boost       |
-| [Boost String Algorithms](http://www.boost.org/doc/libs/release/libs/algorithm/string/) | 1.55    | Boost       |
-| [Boost Heap](http://www.boost.org/doc/libs/release/libs/heap/)                          | 1.55    | Boost       |
-| [Freetype](http://freetype.org/)                                                        | 2.5.2   | Freetype    |
-| [zlib](https://zlib.net/)                                                               | 1.2.8   | zlib/libpng |
+| [SDL2](https://www.libsdl.org/)                                                         | 2.0.8   | zlib/libpng |
+| [Boost Filesystem](http://www.boost.org/doc/libs/release/libs/filesystem/)              | 1.65    | Boost       |
+| [Boost String Algorithms](http://www.boost.org/doc/libs/release/libs/algorithm/string/) | 1.65    | Boost       |
+| [Boost Heap](http://www.boost.org/doc/libs/release/libs/heap/)                          | 1.65    | Boost       |
+| [Freetype](http://freetype.org/)                                                        | 2.9.1   | Freetype    |
+| [zlib](https://zlib.net/)                                                               | 1.2.11  | zlib/libpng |
+| [pugixml](https://pugixml.org/)                                                         | 1.8.1   | MIT         |
 
 Tools:
 
 | Name                        | Version |
 |-----------------------------|:-------:|
-| [CMake](https://cmake.org/) | 3.0.2   |
+| [CMake](https://cmake.org/) | 3.10.2  |
 
 
 @section getting_started_with_linux Getting started with Linux
@@ -46,19 +47,19 @@ The recommanded way for handling dependencies on Linux is to use your favorite d
 For Debian/Ubuntu:
 
 ~~~{.sh}
-apt-get install libsdl2-dev libboost-filesystem-dev libboost-dev libfreetype6-dev zlib1g-dev cmake
+apt-get install libsdl2-dev libboost-filesystem-dev libboost-dev libfreetype6-dev zlib1g-dev libpugixml-dev cmake
 ~~~
 
 For Archlinux:
 
 ~~~{.sh}
-pacman -S sdl2 boost freetype2 zlib cmake
+pacman -S sdl2 boost freetype2 zlib pugixml cmake
 ~~~
 
 For Fedora/Red Hat/CentOS:
 
 ~~~{.sh}
-dnf install SDL2-devel boost-devel freetype-devel zlib-devel cmake
+dnf install SDL2-devel boost-devel freetype-devel zlib-devel pugixml cmake
 ~~~
 
 @subsection build_and_install_for_linux Build and install
@@ -83,11 +84,7 @@ make install # may require root permissions
 
 @section getting_started_with_windows Getting started with Windows
 
-This section assumes you are using at least [Visual Studio Community 2017](https://www.visualstudio.com/vs/community/). You also need [git for Windows](https://git-for-windows.github.io/) and [CMake 3.8 or newer](https://cmake.org/download/). Finally, the working directory where everything will be installed is set to `C:\Local\`. You can choose whatever directory you want.
-
-@subsection dependencies_for_windows Dependencies for Windows
-
-For Windows, [vcpkg](https://github.com/Microsoft/vcpkg) can handle the dependencies.
+This section assumes you are using at least [Visual Studio Community 2017](https://www.visualstudio.com/vs/community/). You also need [git for Windows](https://git-for-windows.github.io/) and [vcpkg](https://github.com/Microsoft/vcpkg). Finally, the working directory where everything will be installed is set to `C:\Local\`. You can choose whatever directory you want.
 
 First, you have to install vcpkg from its git repository. From a command line, in the working directory:
 
@@ -96,32 +93,17 @@ C:\Local> git clone https://github.com/Microsoft/vcpkg.git
 C:\Local> cd vcpkg
 ~~~
 
-Then, you have to follow the instructions from the vcpkg documentation. Normally, during the installation process, it will detect the installed CMake.
+Then, you have to follow the instructions from the vcpkg documentation. Normally, during the installation process, it will install CMake.
 
 ~~~{.bat}
 C:\Local\vcpkg> .\bootstrap-vcpkg.bat
 C:\Local\vcpkg> .\vcpkg integrate install
 ~~~
 
-Then, you can install the dependencies:
+Then, you can install the gf package:
 
 ~~~{.bat}
-C:\Local\vcpkg> .\vcpkg install sdl2:x64-windows freetype:x64-windows zlib:x64-windows boost-algorithm:x64-windows boost-filesystem:x64-windows boost-heap:x64-windows boost-container:x64-windows
+C:\Local\vcpkg> .\vcpkg install gamedev-framework:x64-windows
 ~~~
-
-@subsection build_and_install_for_windows Build and install
-
-Back in the working directory, you can prepare the build of gf. Everything will be installed in the vcpkg hierarchy.
-
-~~~{.bat}
-C:\Local> git clone https://github.com/GamedevFramework/gf.git
-C:\Local> cd gf
-C:\Local\gf> git submodule update --init
-C:\Local\gf> mkdir build
-C:\Local\gf> cd build
-C:\Local\gf\build> cmake ../ -DCMAKE_TOOLCHAIN_FILE=C:\Local\vcpkg\scripts\buildsystems\vcpkg.cmake -DCMAKE_INSTALL_PREFIX=C:\Local\vcpkg\installed\x64-windows -DGF_BUILD_GAMES=ON -DGF_BUILD_TOOLS=ON
-~~~
-
-Finally, open Visual Studio. Then, open the gf solution located at `C:\Local\gf\build\GF.sln`. Then, choose "Release" and build the solution (F7). Finally, build the "INSTALL" project. gf is installed as well as its tools and games.
 
 */

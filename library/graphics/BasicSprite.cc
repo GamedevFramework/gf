@@ -73,7 +73,7 @@ inline namespace v1 {
     return m_bounds;
   }
 
-  void BasicSprite::updateGeometry(BufferRef<Vertex> vertices) {
+  void BasicSprite::updateGeometry(Span<Vertex> vertices) {
     assert(vertices.getSize() >= 4);
 
     vertices[0].texCoords = m_textureRect.getTopLeft();

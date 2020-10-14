@@ -42,8 +42,8 @@ namespace {
       return m_stream != nullptr;
     }
 
-    int getc() const {
-      return std::fgetc(m_stream);
+    int getc() const { // Flawfinder: ignore
+      return std::fgetc(m_stream); // Flawfinder: ignore
     }
 
     int printf(const char *fmt, ...) {
@@ -99,7 +99,7 @@ int main(int argc, char *argv[]) {
   std::size_t count = 0;
   int c;
 
-  while ((c = inFile.getc()) != EOF) {
+  while ((c = inFile.getc()) != EOF) { // Flawfinder: ignore
     if (count % 12 == 0) {
       outFile.printf("\n   ");
     }

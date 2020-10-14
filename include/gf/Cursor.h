@@ -41,7 +41,7 @@ inline namespace v1 {
   class Image;
 
   /**
-   * @ingroup window
+   * @ingroup graphics_window_monitor
    * @brief A mouse cursor
    *
    * This class abstracts the operating system resources

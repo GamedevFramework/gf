@@ -35,7 +35,7 @@ inline namespace v1 {
   class Window;
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_renderers
    * @brief A window that can serve as a target for 2D drawing
    *
    * gf::RenderWindow is the main class of the graphics module.
@@ -86,6 +86,11 @@ inline namespace v1 {
      * @param window The window to render to
      */
     RenderWindow(Window& window);
+
+    /**
+     * @brief Destructor
+     */
+    ~RenderWindow();
 
     virtual Vector2i getSize() const override;
 

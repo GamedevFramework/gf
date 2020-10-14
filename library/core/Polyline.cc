@@ -77,7 +77,8 @@ inline namespace v1 {
 
   Serializer& operator|(Serializer& ar, const Polyline& polyline) {
     ar | polyline.getType();
-    return ar | static_cast<const PointSequence&>(polyline);
+    ar | static_cast<const PointSequence&>(polyline);
+    return ar;
   }
 
   Deserializer& operator|(Deserializer& ar, Polyline& polyline) {
@@ -85,7 +86,8 @@ inline namespace v1 {
     ar | type;
 
     polyline = Polyline(type);
-    return ar | static_cast<PointSequence&>(polyline);
+    ar | static_cast<PointSequence&>(polyline);
+    return ar;
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

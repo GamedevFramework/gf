@@ -30,7 +30,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief Main four directions
    *
    * gf::Direction represents one of the four main directions. A special value
@@ -47,7 +47,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief Get a unit vector from a direction
    *
    * @param direction The direction
@@ -56,7 +56,7 @@ inline namespace v1 {
   GF_CORE_API Vector2f unit(Direction direction);
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief Get a vector from a direction
    *
    * The vector has its coordinates at -1, 0 or 1 depending on the direction.
@@ -69,7 +69,7 @@ inline namespace v1 {
   GF_CORE_API Vector2i displacement(Direction direction);
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief Get an angle from a direction
    *
    * Up is at angle 0 and angle grows clockwise.
@@ -80,7 +80,7 @@ inline namespace v1 {
   GF_CORE_API float angle(Direction direction);
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief Get the opposite direction
    *
    * @param direction The direction
@@ -89,7 +89,7 @@ inline namespace v1 {
   GF_CORE_API Direction opposite(Direction direction);
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief Get the orthogonal direction clockwise
    *
    * @param direction The direction
@@ -98,7 +98,7 @@ inline namespace v1 {
   GF_CORE_API Direction orthogonalCW(Direction direction);
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief Get the orthogonal direction counter-clockwise
    *
    * @param direction The direction
@@ -107,7 +107,7 @@ inline namespace v1 {
   GF_CORE_API Direction orthogonalCCW(Direction direction);
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief Get the next direction clockwise
    *
    * @param direction The direction
@@ -116,7 +116,7 @@ inline namespace v1 {
   GF_CORE_API Direction nextCW(Direction direction);
 
   /**
-   * @ingroup core
+   * @ingroup core_geometry
    * @brief Get the next direction counter-clockwise
    *
    * @param direction The direction

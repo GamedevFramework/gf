@@ -37,7 +37,7 @@ inline namespace v1 {
   class Texture;
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_shapes
    * @brief Base class for textured shapes with outline
    *
    * gf::Shape is a drawable class that allows to define and

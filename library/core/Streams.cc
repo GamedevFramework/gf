@@ -60,7 +60,7 @@ inline namespace v1 {
     }
   }
 
-  std::size_t FileInputStream::read(BufferRef<uint8_t> buffer) {
+  std::size_t FileInputStream::read(Span<uint8_t> buffer) {
     if (m_file == nullptr) {
       return 0;
     }
@@ -96,14 +96,14 @@ inline namespace v1 {
    * MemoryInputStream
    */
 
-  MemoryInputStream::MemoryInputStream(ArrayRef<uint8_t> memory)
+  MemoryInputStream::MemoryInputStream(Span<const uint8_t> memory)
   : m_memory(memory)
   , m_offset(0)
   {
 
   }
 
-  std::size_t MemoryInputStream::read(BufferRef<uint8_t> buffer) {
+  std::size_t MemoryInputStream::read(Span<uint8_t> buffer) {
     if (buffer.getSize() == 0) {
       return 0;
     }
@@ -168,14 +168,14 @@ inline namespace v1 {
     assert(err == Z_OK);
   }
 
-  std::size_t CompressedInputStream::read(BufferRef<uint8_t> buffer) {
+  std::size_t CompressedInputStream::read(Span<uint8_t> buffer) {
     m_stream.next_out = buffer.getData();
     m_stream.avail_out = buffer.getSize();
 
     do {
       if (m_start == m_stop) {
         m_start = 0;
-        m_stop = m_compressed->read(m_buffer);
+        m_stop = m_compressed->read(m_buffer); // Flawfinder: ignore
       }
 
       uInt remaining = m_stop - m_start;
@@ -226,7 +226,7 @@ inline namespace v1 {
     assert(bytes != nullptr);
   }
 
-  std::size_t BufferInputStream::read(BufferRef<uint8_t> buffer) {
+  std::size_t BufferInputStream::read(Span<uint8_t> buffer) {
     if (buffer.getSize() == 0) {
       return 0;
     }
@@ -304,7 +304,7 @@ inline namespace v1 {
     }
   }
 
-  std::size_t FileOutputStream::write(ArrayRef<uint8_t> buffer) {
+  std::size_t FileOutputStream::write(Span<const uint8_t> buffer) {
     if (m_file == nullptr) {
       return 0;
     }
@@ -326,14 +326,14 @@ inline namespace v1 {
    * MemoryOutputStream
    */
 
-  MemoryOutputStream::MemoryOutputStream(BufferRef<uint8_t> memory)
+  MemoryOutputStream::MemoryOutputStream(Span<uint8_t> memory)
   : m_memory(memory)
   , m_offset(0)
   {
 
   }
 
-  std::size_t MemoryOutputStream::write(ArrayRef<uint8_t> buffer) {
+  std::size_t MemoryOutputStream::write(Span<const uint8_t> buffer) {
     std::size_t remaining = m_memory.getSize() - m_offset;
     std::size_t size = std::min(remaining, buffer.getSize());
     std::copy_n(buffer.getData(), size, m_memory.getData() + m_offset);
@@ -373,7 +373,7 @@ inline namespace v1 {
       uInt written = BufferSize - m_stream.avail_out;
 
       if (written > 0) {
-        std::size_t flushed = m_compressed->write(gf::array(m_buffer, written));
+        std::size_t flushed = m_compressed->write(gf::span(m_buffer, written));
         assert(flushed == written);
 
         m_stream.next_out = m_buffer;
@@ -385,7 +385,7 @@ inline namespace v1 {
     assert(err == Z_OK);
   }
 
-  std::size_t CompressedOutputStream::write(ArrayRef<uint8_t> buffer) {
+  std::size_t CompressedOutputStream::write(Span<const uint8_t> buffer) {
     m_stream.next_in = buffer.getData();
     m_stream.avail_in = buffer.getSize();
     m_stream.next_out = m_buffer;
@@ -397,7 +397,7 @@ inline namespace v1 {
       uInt written = BufferSize - m_stream.avail_out;
 
       if (written > 0) {
-        std::size_t flushed = m_compressed->write(gf::array(m_buffer, written));
+        std::size_t flushed = m_compressed->write(gf::span(m_buffer, written));
         assert(flushed == written);
 
         m_stream.next_out = m_buffer;
@@ -424,7 +424,7 @@ inline namespace v1 {
     assert(bytes != nullptr);
   }
 
-  std::size_t BufferOutputStream::write(ArrayRef<uint8_t> buffer) {
+  std::size_t BufferOutputStream::write(Span<const uint8_t> buffer) {
     std::copy_n(buffer.getData(), buffer.getSize(), std::back_inserter(*m_bytes));
     return buffer.getSize();
   }

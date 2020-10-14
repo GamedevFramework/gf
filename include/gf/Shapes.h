@@ -40,7 +40,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_shapes
    * @brief Specialized shape representing a rectangle
    *
    * This class inherits all the functions of gf::Transformable
@@ -108,7 +108,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_shapes
    * @brief Specialized shape representing a circle
    *
    * This class inherits all the functions of gf::Transformable
@@ -197,7 +197,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_shapes
    * @brief Specialized shape representing a convex polygon
    *
    * This class inherits all the functions of gf::Transformable
@@ -271,7 +271,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_shapes
    * @brief Specialized shape representing a star
    *
    * This class inherits all the functions of gf::Transformable
@@ -370,7 +370,7 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup graphics
+   * @ingroup graphics_shapes
    * @brief Specialized shape representing a rounded rectangle
    *
    * This class inherits all the functions of gf::Transformable
