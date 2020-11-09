@@ -95,7 +95,7 @@ inline namespace v1 {
    * @ingroup net_sockets
    * @brief The status of the selector
    */
-  enum SocketSelectorStatus {
+  enum class SocketSelectorStatus {
     Event,    ///< An event is pending on the sockets
     Timeout,  ///< The call timed out
     Error,    ///< An error occurred
