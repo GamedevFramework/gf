@@ -27,10 +27,11 @@ list(REMOVE_DUPLICATES GF_COMPONENTS)
 macro (load_dependencies component)
   # For gf::core
   if (${component} STREQUAL "core")
-    find_dependency (Threads)
-    find_dependency (Boost REQUIRED COMPONENTS filesystem)
+    find_dependency(Threads)
+    find_dependency(Boost REQUIRED COMPONENTS filesystem)
     if (NOT BUILD_SHARED_LIBS)
-      find_dependency (ZLIB)
+      find_dependency(ZLIB)
+      find_dependency(pugixml)
     endif ()
 
   # For gf::graphics
@@ -39,6 +40,7 @@ macro (load_dependencies component)
       find_dependency(SDL2)
       find_dependency(Freetype)
       find_dependency(ZLIB)
+      find_dependency(pugixml)
     endif()
 
   # For gf::net
