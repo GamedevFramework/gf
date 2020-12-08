@@ -551,7 +551,7 @@ inline namespace v1 {
     ar | size.width | size.height;
 
     for (auto& item : array) {
-      ar | item;
+      ar | const_cast<T&>(item);
     }
 
     return ar;
