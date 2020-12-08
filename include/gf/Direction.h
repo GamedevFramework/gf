@@ -21,6 +21,8 @@
 #ifndef GF_DIRECTION_H
 #define GF_DIRECTION_H
 
+#include <cstdint>
+
 #include "CoreApi.h"
 #include "Vector.h"
 
@@ -38,7 +40,7 @@ inline namespace v1 {
    *
    * @sa gf::Orientation
    */
-  enum class Direction : int {
+  enum class Direction : int8_t {
     Center  = -1, ///< The center, indicates no direction
     Up      =  0, ///< The up direction
     Right   =  1, ///< The right direction
