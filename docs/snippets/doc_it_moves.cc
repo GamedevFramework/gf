@@ -67,7 +67,7 @@ private:
 int main() {
   // initialization
 
-  static constexpr gf::Vector2u ScreenSize(500, 500);
+  static constexpr gf::Vector2i ScreenSize(500, 500);
   gf::Window window("It moves", ScreenSize);
   gf::RenderWindow renderer(window);
 
