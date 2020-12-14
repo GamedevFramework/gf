@@ -45,6 +45,10 @@ inline namespace v1 {
   TcpListener::TcpListener(const std::string& service, SocketFamily family)
   {
     setHandle(priv::nativeBindListen(service, family));
+
+    if (!gf::priv::nativeSetReuseAddress(getHandle(), true)) {
+      gf::Log::error("Error when setting address reuse. Reason: %s\n", priv::getErrorString().c_str());
+    }
   }
 
   TcpSocket TcpListener::accept() {

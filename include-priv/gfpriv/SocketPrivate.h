@@ -47,6 +47,8 @@ namespace priv {
 
   bool nativeCloseSocket(SocketHandle handle);
 
+  bool nativeSetReuseAddress(SocketHandle handle, bool reuse = true);
+
   bool nativeSetBlockMode(SocketHandle handle, bool blocking);
 
   bool nativeWouldBlock(int err);
