@@ -42,7 +42,7 @@ namespace priv {
 
   bool nativeSetReuseAddress(SocketHandle handle, bool reuse) {
     BOOL val = reuse ? TRUE : FALSE;
-    return ::setsockopt(handle, SOL_SOCKET, SO_REUSEADDR, static_cast<const char*>(&val), sizeof(BOOL))  == 0;
+    return ::setsockopt(handle, SOL_SOCKET, SO_REUSEADDR, reinterpret_cast<const char*>(&val), sizeof(BOOL)) == 0;
   }
 
   bool nativeSetBlockMode(SocketHandle handle, bool blocking) {
@@ -73,7 +73,7 @@ namespace priv {
 
   bool nativeSetReuseAddress(SocketHandle handle, bool reuse) {
     int val = reuse ? 1 : 0;
-    return ::setsockopt(handle, SOL_SOCKET, SO_REUSEADDR, static_cast<const void*>(&val), sizeof(int))  == 0;
+    return ::setsockopt(handle, SOL_SOCKET, SO_REUSEADDR, static_cast<const void*>(&val), sizeof(int)) == 0;
   }
 
   bool nativeSetBlockMode(SocketHandle handle, bool blocking) {
