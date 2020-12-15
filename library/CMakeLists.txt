@@ -4,7 +4,7 @@ add_executable(gfdev_source_file graphics/tools/gfdev_source_file.cc)
 
 set_target_properties(gfdev_source_file
   PROPERTIES
-    CXX_STANDARD 14
+    CXX_STANDARD 17
     CXX_EXTENSIONS OFF
 )
 
@@ -416,13 +416,13 @@ endif()
 
 target_compile_features(gfcore0
   PUBLIC
-    cxx_std_14
+    cxx_std_17
 )
 
 set_target_properties(gfcore0
   PROPERTIES
     EXPORT_NAME "core"
-    CXX_STANDARD 14
+    CXX_STANDARD 17
     CXX_EXTENSIONS OFF
     VERSION ${PROJECT_VERSION}
     SOVERSION ${PROJECT_VERSION_MAJOR}
@@ -430,12 +430,12 @@ set_target_properties(gfcore0
 
 target_compile_features(gf0
   PUBLIC
-    cxx_std_14
+    cxx_std_17
 )
 
 set_target_properties(gf0
   PROPERTIES
-    CXX_STANDARD 14
+    CXX_STANDARD 17
     CXX_EXTENSIONS OFF
     EXPORT_NAME "graphics"
     VERSION ${PROJECT_VERSION}
@@ -444,12 +444,12 @@ set_target_properties(gf0
 
 target_compile_features(gfnet0
   PUBLIC
-    cxx_std_14
+    cxx_std_17
 )
 
 set_target_properties(gfnet0
   PROPERTIES
-    CXX_STANDARD 14
+    CXX_STANDARD 17
     CXX_EXTENSIONS OFF
     EXPORT_NAME "net"
     VERSION ${PROJECT_VERSION}
