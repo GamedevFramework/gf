@@ -100,7 +100,7 @@ inline namespace v1 {
         }
       }
 
-      std::size_t h = boost::filesystem::hash_value(filename);
+      std::size_t h = std::filesystem::hash_value(filename);
 
       auto it = m_cache.find(h);
 

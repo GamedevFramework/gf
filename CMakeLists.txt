@@ -42,7 +42,7 @@ endif()
 set(SDL2_BUILDING_LIBRARY TRUE)
 find_package(SDL2 REQUIRED)
 
-find_package(Boost REQUIRED COMPONENTS filesystem system)
+find_package(Boost REQUIRED)
 find_package(Freetype REQUIRED)
 find_package(pugixml REQUIRED)
 find_package(ZLIB REQUIRED)

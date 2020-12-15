@@ -369,11 +369,29 @@ target_link_libraries(gfcore0
   PUBLIC
     Threads::Threads
     Boost::boost
-    Boost::filesystem
   PRIVATE
     ZLIB::ZLIB
     pugixml
 )
+
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+  if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "9.1")
+    message(STATUS "Using explicit C++ std::filesystem library (GNU)")
+    target_link_libraries(gfcore0
+      PUBLIC
+        stdc++fs
+    )
+  endif()
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+  if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "9.0")
+    message(STATUS "Using explicit C++ std::filesystem library (clang)")
+    target_link_libraries(gfcore0
+      PUBLIC
+        stdc++fs
+    )
+  endif()
+endif()
+
 
 target_link_libraries(gf0
   PUBLIC

@@ -21,8 +21,7 @@
 #ifndef GF_PATH_H
 #define GF_PATH_H
 
-#include <boost/filesystem.hpp>
-#include <boost/functional/hash.hpp>
+#include <filesystem>
 
 #include "CoreApi.h"
 #include "SerializationFwd.h"
@@ -36,12 +35,9 @@ inline namespace v1 {
    * @ingroup core_filesystem
    * @brief A path in the filesystem
    *
-   * gf::Path is a simple typedef for `boost::filesystem::path`.
-   * [Boost.Filesystem](http://www.boost.org/doc/libs/release/libs/filesystem/)
-   * will eventually be part of the C++17 standard. So, in the future, gf::Path
-   * will be a typedef for `std::path`.
+   * gf::Path is a simple typedef for `std::filesystem::path`.
    */
-  using Path = boost::filesystem::path;
+  using Path = std::filesystem::path;
 
   /**
    * @relates Serializer

@@ -7,7 +7,6 @@ addons:
     packages:
       - cmake
       - libboost-dev
-      - libboost-filesystem-dev
       - libfreetype6-dev
       - libpugixml-dev
       - libsdl2-dev

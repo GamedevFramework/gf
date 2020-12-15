@@ -35,8 +35,6 @@
 
 #include <pugixml.hpp>
 
-namespace fs = boost::filesystem;
-
 using namespace std::string_literals;
 
 namespace gf {
@@ -1115,7 +1113,7 @@ inline namespace v1 {
   }
 
   bool TmxLayers::loadFromFile(const Path& filename) {
-    if (!fs::is_regular_file(filename)) {
+    if (!std::filesystem::is_regular_file(filename)) {
       Log::error("Unknown TMX file: '%s'\n", filename.string().c_str());
       return false;
     }
