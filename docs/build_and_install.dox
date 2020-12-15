@@ -5,12 +5,12 @@
 
 In this document, you will learn how to build and install gf so that you are ready for your first project with gf. It is assumed you already have a compiler installed (gcc or clang for Linux; MSVC included in Visual Studio for Windows).
 
-gf needs a conformant C++14 compiler. The minimum version of supported compilers are given in the following table.
+gf needs a conformant C++17 compiler. The minimum version of supported compilers are given in the following table.
 
 | Compiler | Version | Reference                                                                                               |
 |----------|:-------:|---------------------------------------------------------------------------------------------------------|
-| GCC      | 5       | [C++14 Support in GCC](https://gcc.gnu.org/projects/cxx-status.html#cxx14)                              |
-| Clang    | 3.4     | [C++14 implementation status](http://clang.llvm.org/cxx_status.html#cxx14)                              |
+| GCC      | 8       | [C++17 Support in GCC](https://gcc.gnu.org/projects/cxx-status.html#cxx17)                              |
+| Clang    | 5       | [C++17 implementation status](http://clang.llvm.org/cxx_status.html#cxx17)                              |
 | MSVC     | VS 2017 | [Visual C++ Language Conformance](https://docs.microsoft.com/en-us/cpp/visual-cpp-language-conformance) |
 
 @section dependencies Dependencies
@@ -22,7 +22,6 @@ Libraries:
 | Name                                                                                    | Version | License     |
 |-----------------------------------------------------------------------------------------|:-------:|:-----------:|
 | [SDL2](https://www.libsdl.org/)                                                         | 2.0.8   | zlib/libpng |
-| [Boost Filesystem](http://www.boost.org/doc/libs/release/libs/filesystem/)              | 1.65    | Boost       |
 | [Boost String Algorithms](http://www.boost.org/doc/libs/release/libs/algorithm/string/) | 1.65    | Boost       |
 | [Boost Heap](http://www.boost.org/doc/libs/release/libs/heap/)                          | 1.65    | Boost       |
 | [Freetype](http://freetype.org/)                                                        | 2.9.1   | Freetype    |
@@ -47,7 +46,7 @@ The recommanded way for handling dependencies on Linux is to use your favorite d
 For Debian/Ubuntu:
 
 ~~~{.sh}
-apt-get install libsdl2-dev libboost-filesystem-dev libboost-dev libfreetype6-dev zlib1g-dev libpugixml-dev cmake
+apt-get install libsdl2-dev libboost-dev libfreetype6-dev zlib1g-dev libpugixml-dev cmake
 ~~~
 
 For Archlinux:

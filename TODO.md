@@ -48,7 +48,4 @@ This file is a list of ideas for gf. Some of them will eventually be in gf. Othe
 - (docs) split gf_dev_doc by modules (core, graphics, net)
 - (portability) consider using [hedley](https://nemequ.github.io/hedley/)
   - blocking bug: nemequ/hedley#35
-- (versions) go with C++17
-  - check support in Debian stable and Ubuntu LTS
-  - replace `boost::filesystem` by `std::filesystem`
 - (packaging) use CPack to create packages
