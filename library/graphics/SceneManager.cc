@@ -50,7 +50,7 @@ inline namespace v1 {
 
   }
 
-  SceneManager::SceneManager(StringRef title, Vector2i size, Flags<WindowHints> hints)
+  SceneManager::SceneManager(const std::string& title, Vector2i size, Flags<WindowHints> hints)
   : m_window(title, size, hints)
   , m_renderer(m_window)
   , m_scenesChanged(false)

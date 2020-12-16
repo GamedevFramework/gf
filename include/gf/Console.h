@@ -22,6 +22,7 @@
 #define GF_CONSOLE_H
 
 #include <cstdint>
+#include <string_view>
 
 #include "Alignment.h"
 #include "Array2D.h"
@@ -31,7 +32,6 @@
 #include "GraphicsApi.h"
 #include "Path.h"
 #include "Portability.h"
-#include "StringRef.h"
 #include "Texture.h"
 #include "Transformable.h"
 #include "Vector.h"
@@ -664,7 +664,7 @@ inline namespace v1 {
   private:
     Color4f computeColor(ConsoleEffect effect, const Color4f& existing, const Color4f& current);
 
-    int putWord(Vector2i position, ConsoleEffect effect, StringRef message, const Color4f& foreground, const Color4f& background);
+    int putWord(Vector2i position, ConsoleEffect effect, std::string_view message, const Color4f& foreground, const Color4f& background);
 
     enum class PrintOption {
       Split     = 0x01,

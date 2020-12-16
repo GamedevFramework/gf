@@ -26,9 +26,6 @@
 #include <algorithm>
 #include <memory>
 
-#include <boost/algorithm/string/split.hpp>
-#include <boost/algorithm/string/classification.hpp>
-
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
@@ -117,7 +114,7 @@ inline namespace v1 {
     return std::string(buffer.get());
   }
 
-  std::string escapeString(StringRef str) {
+  std::string escapeString(std::string_view str) {
     std::string out;
 
     for (auto c : str) {
@@ -143,22 +140,53 @@ inline namespace v1 {
     return out;
   }
 
-  std::vector<StringRef> splitInParagraphs(StringRef str) {
-    std::vector<StringRef> out;
-    boost::algorithm::split(out, str, boost::is_any_of("\n"), boost::algorithm::token_compress_on);
-    out.erase(std::remove_if(out.begin(), out.end(), [](StringRef s) {
-      return s.isEmpty();
-    }), out.end());
-    return out;
+  namespace {
+    bool is_delimiter(char c, std::string_view delimiters) {
+      for (auto d : delimiters) {
+        if (c == d) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+
+
+    std::vector<std::string_view> split(std::string_view str, std::string_view delimiters) {
+      std::size_t sz = str.size();
+      std::size_t i = 0;
+      std::vector<std::string_view> result;
+
+      while (i < sz) {
+        while (i < sz && is_delimiter(str[i], delimiters)) {
+          ++i;
+        }
+
+        if (i == sz) {
+          break;
+        }
+
+        const char *start = str.data() + i;
+        size_t len = 0;
+
+        while (i < sz && !is_delimiter(str[i], delimiters)) {
+          ++i;
+          ++len;
+        }
+
+        result.push_back(std::string_view(start, len));
+      }
+
+      return result;
+    }
   }
 
-  std::vector<StringRef> splitInWords(StringRef str) {
-    std::vector<StringRef> out;
-    boost::algorithm::split(out, str, boost::is_any_of(U" \t"), boost::algorithm::token_compress_on);
-    out.erase(std::remove_if(out.begin(), out.end(), [](StringRef s) {
-      return s.isEmpty();
-    }), out.end());
-    return out;
+  std::vector<std::string_view> splitInParagraphs(std::string_view str) {
+    return split(str, "\n");
+  }
+
+  std::vector<std::string_view> splitInWords(std::string_view str) {
+    return split(str, " \t");
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

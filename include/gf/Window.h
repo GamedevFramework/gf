@@ -32,7 +32,6 @@
 #include "Flags.h"
 #include "GraphicsApi.h"
 #include "Library.h"
-#include "StringRef.h"
 #include "Time.h"
 #include "Vector.h"
 
@@ -95,7 +94,7 @@ inline namespace v1 {
      * @param hints Some hints for the creation of the window
      * @sa gf::WindowHints
      */
-    Window(StringRef title, Vector2i size, Flags<WindowHints> hints = All);
+    Window(const std::string& title, Vector2i size, Flags<WindowHints> hints = All);
 
     /**
      * @brief Destructor
@@ -149,7 +148,7 @@ inline namespace v1 {
      *
      * @param title New title
      */
-    void setTitle(StringRef title);
+    void setTitle(const std::string& title);
 
     /**
      * @brief Get the position of the window

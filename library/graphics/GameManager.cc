@@ -25,7 +25,7 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  GameManager::GameManager(StringRef title, std::initializer_list<gf::Path> resourcePaths)
+  GameManager::GameManager(const std::string& title, std::initializer_list<gf::Path> resourcePaths)
   : SceneManager(title, gf::vec(1600, 900))
   , resources(resourcePaths)
   {

@@ -21,9 +21,10 @@
 #ifndef GF_PATHS_H
 #define GF_PATHS_H
 
+#include <string>
+
 #include "GraphicsApi.h"
 #include "Path.h"
-#include "StringRef.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -52,7 +53,7 @@ inline namespace v1 {
      * @param app The name of your application
      * @returns The preferences path
      */
-    static Path getPrefPath(StringRef org, StringRef app);
+    static Path getPrefPath(const std::string& org, const std::string& app);
 
     /**
      * @brief Get the base path

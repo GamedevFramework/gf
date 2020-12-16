@@ -26,7 +26,6 @@
 
 #include "CoreApi.h"
 #include "Stream.h"
-#include "StringRef.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

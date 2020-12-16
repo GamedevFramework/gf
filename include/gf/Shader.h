@@ -30,7 +30,6 @@
 #include "GraphicsApi.h"
 #include "Matrix.h"
 #include "Path.h"
-#include "StringRef.h"
 #include "Texture.h"
 #include "Vector.h"
 
@@ -268,7 +267,7 @@ inline namespace v1 {
      * @param name Name of the uniform variable in GLSL
      * @param val Value of the `float` scalar
      */
-    void setUniform(StringRef name, float val);
+    void setUniform(const std::string& name, float val);
 
     /**
      * @brief Specify value for a `int` uniform
@@ -276,7 +275,7 @@ inline namespace v1 {
      * @param name Name of the uniform variable in GLSL
      * @param val Value of the `int` scalar
      */
-    void setUniform(StringRef name, int val);
+    void setUniform(const std::string& name, int val);
 
     /**
      * @brief Specify value for a `vec2` uniform
@@ -284,7 +283,7 @@ inline namespace v1 {
      * @param name Name of the uniform variable in GLSL
      * @param vec Value of the `vec2` vector
      */
-    void setUniform(StringRef name, const Vector2f& vec);
+    void setUniform(const std::string& name, const Vector2f& vec);
 
     /**
      * @brief Specify value for a `vec3` uniform
@@ -292,7 +291,7 @@ inline namespace v1 {
      * @param name Name of the uniform variable in GLSL
      * @param vec Value of the `vec3` vector
      */
-    void setUniform(StringRef name, const Vector3f& vec);
+    void setUniform(const std::string& name, const Vector3f& vec);
 
     /**
      * @brief Specify value for a `vec4` uniform
@@ -300,7 +299,7 @@ inline namespace v1 {
      * @param name Name of the uniform variable in GLSL
      * @param vec Value of the `vec4` vector
      */
-    void setUniform(StringRef name, const Vector4f& vec);
+    void setUniform(const std::string& name, const Vector4f& vec);
 
     /**
      * @brief Specify value for a `ivec2` uniform
@@ -308,7 +307,7 @@ inline namespace v1 {
      * @param name Name of the uniform variable in GLSL
      * @param vec Value of the `ivec2` vector
      */
-    void setUniform(StringRef name, const Vector2i& vec);
+    void setUniform(const std::string& name, const Vector2i& vec);
 
     /**
      * @brief Specify value for a `ivec3` uniform
@@ -316,7 +315,7 @@ inline namespace v1 {
      * @param name Name of the uniform variable in GLSL
      * @param vec Value of the `ivec3` vector
      */
-    void setUniform(StringRef name, const Vector3i& vec);
+    void setUniform(const std::string& name, const Vector3i& vec);
 
     /**
      * @brief Specify value for a `ivec4` uniform
@@ -324,7 +323,7 @@ inline namespace v1 {
      * @param name Name of the uniform variable in GLSL
      * @param vec Value of the `ivec4` vector
      */
-    void setUniform(StringRef name, const Vector4i& vec);
+    void setUniform(const std::string& name, const Vector4i& vec);
 
     /**
      * @brief Specify value for a `mat3` uniform
@@ -332,7 +331,7 @@ inline namespace v1 {
      * @param name Name of the uniform variable in GLSL
      * @param mat Value of the `mat3` matrix
      */
-    void setUniform(StringRef name, const Matrix3f& mat);
+    void setUniform(const std::string& name, const Matrix3f& mat);
 
     /**
      * @brief Specify value for a `mat4` uniform
@@ -340,7 +339,7 @@ inline namespace v1 {
      * @param name Name of the uniform variable in GLSL
      * @param mat Value of the `mat4` matrix
      */
-    void setUniform(StringRef name, const Matrix4f& mat);
+    void setUniform(const std::string& name, const Matrix4f& mat);
 
     /**
      * @brief Specify a texture for a `sampler2D` uniform
@@ -368,7 +367,7 @@ inline namespace v1 {
      * @param name Name of the uniform variable in GLSL
      * @param tex Value of the `sampler2D` texture
      */
-    void setUniform(StringRef name, const BareTexture& tex);
+    void setUniform(const std::string& name, const BareTexture& tex);
 
     /** @} */
 
@@ -384,8 +383,8 @@ inline namespace v1 {
 
   private:
     friend class RenderTarget;
-    int getUniformLocation(StringRef name);
-    int getAttributeLocation(StringRef name);
+    int getUniformLocation(const std::string& name);
+    int getAttributeLocation(const std::string& name);
 
     struct Guard;
 

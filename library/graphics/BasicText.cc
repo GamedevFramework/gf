@@ -105,7 +105,7 @@ inline namespace v1 {
   namespace {
 
     struct ParagraphLine {
-      std::vector<StringRef> words;
+      std::vector<std::string_view> words;
       float indent = 0.0f;
       float spacing = 0.0f;
     };
@@ -114,9 +114,9 @@ inline namespace v1 {
       std::vector<ParagraphLine> lines;
     };
 
-    float getWordWidth(StringRef word, unsigned characterSize, Font& font) {
+    float getWordWidth(std::string_view word, unsigned characterSize, Font& font) {
       assert(characterSize > 0);
-      assert(!word.isEmpty());
+      assert(!word.empty());
 
       float width = 0.0f;
       char32_t prevCodepoint = '\0';
@@ -133,11 +133,11 @@ inline namespace v1 {
     }
 
     std::vector<Paragraph> makeParagraphs(const std::string& str, float spaceWidth, float paragraphWidth, Alignment align, unsigned characterSize, Font& font) {
-      std::vector<StringRef> paragraphs = splitInParagraphs(str);
+      std::vector<std::string_view> paragraphs = splitInParagraphs(str);
       std::vector<Paragraph> out;
 
       for (auto simpleParagraph : paragraphs) {
-        std::vector<StringRef> words = splitInWords(simpleParagraph);
+        std::vector<std::string_view> words = splitInWords(simpleParagraph);
 
         Paragraph paragraph;
 

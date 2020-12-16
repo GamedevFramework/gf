@@ -22,6 +22,7 @@
 #define GF_GAME_MANAGER_H
 
 #include <initializer_list>
+#include <string>
 
 #include "MessageManager.h"
 #include "Random.h"
@@ -42,7 +43,7 @@ inline namespace v1 {
    * @sa gf::SceneManager
    */
   struct GF_GRAPHICS_API GameManager : public SceneManager {
-    GameManager(StringRef title, std::initializer_list<gf::Path> resourcePaths);
+    GameManager(const std::string& title, std::initializer_list<gf::Path> resourcePaths);
 
     Random random;
     ResourceManager resources;

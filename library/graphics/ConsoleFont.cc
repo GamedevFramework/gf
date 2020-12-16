@@ -282,7 +282,7 @@ inline namespace v1 {
     }
   }
 
-  void ConsoleFont::mapString(StringRef str, Vector2i position) {
+  void ConsoleFont::mapString(std::string_view str, Vector2i position) {
     int index = computeIndex(position, m_format.layout, m_size);
 
     for (auto codepoint : gf::codepoints(str)) {

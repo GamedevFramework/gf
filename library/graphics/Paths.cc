@@ -27,8 +27,8 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  Path Paths::getPrefPath(StringRef org, StringRef app) {
-    char *prefPath = SDL_GetPrefPath(org.getData(), app.getData());
+  Path Paths::getPrefPath(const std::string& org, const std::string& app) {
+    char *prefPath = SDL_GetPrefPath(org.c_str(), app.c_str());
 
     if (prefPath == nullptr) {
       return Path();

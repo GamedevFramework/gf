@@ -22,6 +22,7 @@
 #define GF_SCENE_MANAGER_H
 
 #include <vector>
+#include <string>
 
 #include "Color.h"
 #include "Easings.h"
@@ -64,7 +65,7 @@ inline namespace v1 {
      * @param size The initial size of the window
      * @param hints Some hints for the creation of the window
      */
-    SceneManager(StringRef title, Vector2i size, Flags<WindowHints> hints = All);
+    SceneManager(const std::string& title, Vector2i size, Flags<WindowHints> hints = All);
 
     /**
      * @brief Run the scene manager until completion
