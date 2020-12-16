@@ -533,6 +533,190 @@ inline namespace v1 {
     std::vector<Ref<Activity>> m_activities;
   };
 
+  /**
+   * The namespace for activity creation
+   */
+  namespace activity {
+    /**
+     * @brief Create a gf::ValueActivity.
+     *
+     * @param origin The origin value
+     * @param target The target value
+     * @param value A reference on the value
+     * @param duration The duration of the tween
+     * @param easing The easing for the interpolation
+     */
+    inline
+    ValueActivity value(float origin, float target, float& value, Time duration, Easing easing = Ease::linear) {
+      return ValueActivity(origin, target, value, duration, easing);
+    }
+
+    /**
+     * @brief Create a gf::RotateToActivity.
+     *
+     * @param origin The origin value
+     * @param target The target value
+     * @param angle A reference on the value
+     * @param duration The duration of the tween
+     * @param easing The easing for the interpolation
+     */
+    inline
+    RotateToActivity rotateTo(float origin, float target, float& angle, Time duration, Easing easing = Ease::linear) {
+      return RotateToActivity(origin, target, angle, duration, easing);
+    }
+
+    /**
+     * @brief Create a gf::MoveToActivity.
+     *
+     * @param origin The origin value
+     * @param target The target value
+     * @param position A reference on the value
+     * @param duration The duration of the tween
+     * @param easing The easing for the interpolation
+     */
+    inline
+    MoveToActivity moveTo(Vector2f origin, Vector2f target, Vector2f& position, Time duration, Easing easing = Ease::linear) {
+      return MoveToActivity(origin, target, position, duration, easing);
+    }
+
+    /**
+     * @brief Create a gf::ColorActivity.
+     *
+     * @param origin The origin value
+     * @param target The target value
+     * @param color A reference on the value
+     * @param duration The duration of the tween
+     * @param easing The easing for the interpolation
+     */
+    inline
+    ColorActivity color(Color4f origin, Color4f target, Color4f& color, Time duration, Easing easing = Ease::linear) {
+      return ColorActivity(origin, target, color, duration, easing);
+    }
+
+    /**
+     * @brief Create a gf::CallbackActivity.
+     *
+     * @param callback The function to call
+     */
+    inline
+    CallbackActivity call(std::function<void()> callback) {
+      return CallbackActivity(std::move(callback));
+    }
+
+    /**
+     * @brief Create a gf::DelayActivity.
+     *
+     * @param duration The duration to wait for
+     */
+    inline
+    DelayActivity delay(Time duration) {
+      return DelayActivity(duration);
+    }
+
+    /**
+     * @brief A gf::SequenceActivity that holds its activities.
+     */
+    template<typename... Args>
+    class SequenceActivityEx : public SequenceActivity {
+    public:
+      /**
+       * @brief Constructor.
+       *
+       * @param activities The activities of the sequence
+       */
+      SequenceActivityEx(Args... activities)
+      : m_activities(std::make_unique<std::tuple<Args...>>(std::forward<Args>(activities)...))
+      {
+        addToSequence(std::index_sequence_for<Args...>{});
+      }
+
+    private:
+      template<std::size_t... Is>
+      void addToSequence(std::index_sequence<Is...>) {
+        (addActivity(std::get<Is>(*m_activities)), ...);
+      }
+
+      std::unique_ptr<std::tuple<Args...>> m_activities;
+    };
+
+    /**
+     * Create a gf::SequenceActivityEx.
+     *
+     * @param activities The activities of the sequence
+     */
+    template<typename... Args>
+    SequenceActivityEx<Args...> sequence(Args... activities) {
+      return SequenceActivityEx<Args...>(std::forward<Args>(activities)...);
+    }
+
+    /**
+     * @brief A gf::RepeatActivity that holds its activity
+     */
+    template<typename Other>
+    class RepeatActivityEx : public RepeatActivity {
+    public:
+      /**
+       * @brief Constructor
+       *
+       * @param activity The activity to repeat
+       */
+      RepeatActivityEx(Other activity)
+      : RepeatActivity(m_activity)
+      , m_activity(std::move(activity))
+      {
+      }
+
+    private:
+      Other m_activity;
+    };
+
+    /**
+     * Create a gf::RepeatActivityEx.
+     *
+     * @param activity The activity to repeat
+     */
+    template<typename Other>
+    RepeatActivityEx<Other> repeat(Other activity) {
+      return RepeatActivityEx<Other>(std::move(activity));
+    }
+
+    /**
+     * @brief A gf::ParallelActivity that holds its activities.
+     */
+    template<typename... Args>
+    class ParallelActivityEx : public ParallelActivity {
+    public:
+      /**
+       * @brief Constructor.
+       *
+       * @param activities The activities in parallel
+       */
+      ParallelActivityEx(Args... activities)
+      : m_activities(std::make_unique<std::tuple<Args...>>(std::forward<Args>(activities)...))
+      {
+        addToParallel(std::index_sequence_for<Args...>{});
+      }
+
+    private:
+      template<std::size_t... Is>
+      void addToParallel(std::index_sequence<Is...>) {
+        (addActivity(std::get<Is>(*m_activities)), ...);
+      }
+
+      std::unique_ptr<std::tuple<Args...>> m_activities;
+    };
+
+    /**
+     * @brief Create a gf::ParallelActivityEx
+     *
+     * @param activities The activities in parallel
+     */
+    template<typename... Args>
+    ParallelActivityEx<Args...> parallel(Args... activities) {
+      return ParallelActivityEx<Args...>(std::forward<Args>(activities)...);
+    }
+
+  }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
