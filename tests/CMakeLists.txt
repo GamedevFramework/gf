@@ -17,7 +17,6 @@ add_executable(gf_core_tests
   testSingleton.cc
   testSpatial.cc
   testSpan.cc
-  testStringRef.cc
   testVector.cc
   testVector1.cc
   testVector2.cc

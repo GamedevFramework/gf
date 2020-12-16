@@ -230,12 +230,12 @@ inline namespace v1 {
       }
     };
 
-    constexpr Iterator begin() const noexcept {
-      return Iterator{ ref.begin() };
+    Iterator begin() const noexcept {
+      return Iterator{ ref.data() };
     }
 
-    constexpr Iterator end() const noexcept {
-      return Iterator{ ref.end() };
+    Iterator end() const noexcept {
+      return Iterator{ ref.data() + ref.size() };
     }
 
   };

@@ -23,6 +23,7 @@
 
 #include <cstdint>
 
+#include <array>
 #include <map>
 #include <memory>
 #include <string>
