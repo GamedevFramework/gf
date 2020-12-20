@@ -267,7 +267,7 @@ inline namespace v1 {
     };
 
   private:
-    GlyphCache createCache(unsigned characterSize);
+    GlyphCache createCache();
     Glyph createGlyph(char32_t codepoint, unsigned characterSize, float outlineThickness, GlyphCache& cache);
 
     bool setCurrentCharacterSize(unsigned characterSize);
