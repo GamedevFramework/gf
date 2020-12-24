@@ -113,23 +113,9 @@ inline namespace v1 {
 
   namespace {
 
-#if SDL_VERSION_ATLEAST(2,0,4)
     SDL_GameController *getController(GamepadId id) {
       return SDL_GameControllerFromInstanceID(static_cast<SDL_JoystickID>(id));
     }
-#else
-    std::map<GamepadId, SDL_GameController*> g_controllers;
-
-    SDL_GameController *getController(GamepadId id) {
-      auto it = g_controllers.find(id);
-
-      if (it == g_controllers.end()) {
-        return nullptr;
-      }
-
-      return it->second;
-    }
-#endif
 
     GamepadId openController(int index) {
       SDL_GameController *controller = SDL_GameControllerOpen(index);
@@ -143,10 +129,6 @@ inline namespace v1 {
       SDL_JoystickID instanceId = SDL_JoystickInstanceID(joystick);
 
       Log::debug("New gamepad (device: %i / instance: %i)\n", index, instanceId);
-
-#if !SDL_VERSION_ATLEAST(2,0,4)
-      g_controllers.insert(std::make_pair(static_cast<GamepadId>(instanceId), controller));
-#endif
 
       return static_cast<GamepadId>(instanceId);
     }
@@ -173,10 +155,6 @@ inline namespace v1 {
     if (controller == nullptr) {
       return;
     }
-
-#if !SDL_VERSION_ATLEAST(2,0,4)
-    g_controllers.erase(id);
-#endif
 
     SDL_GameControllerClose(controller);
   }
