@@ -26,6 +26,7 @@
 
 #include "Color.h"
 #include "Easings.h"
+#include "Event.h"
 #include "GraphicsApi.h"
 #include "Ref.h"
 #include "RenderStates.h"
@@ -41,6 +42,7 @@ namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
 #endif
+
 
   /**
    * @ingroup graphics_scenes
@@ -213,6 +215,9 @@ inline namespace v1 {
      * @sa RenderTarget::mapCoordsToPixel()
      */
     Vector2i computeGameToWindowCoordinates(Vector2f coords, const View& view) const;
+
+  private:
+    virtual void doGlobalProcessEvent(const Event& event);
 
   private:
     void setupSegue(SegueEffect& effect, Time duration, Easing easing);
