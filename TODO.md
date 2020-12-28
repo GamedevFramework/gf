@@ -14,6 +14,7 @@ This file is a list of ideas for gf. Some of them will eventually be in gf. Othe
 
 ## graphics
 
+- (font) use Signed Distance Field for big size fonts
 - (window/events) add a flag in `pollEvent`/`waitEvent` (`EventFlag::TouchAsMouse`, `EventFlag::NoWindowFilter`)
 - (texture) add area in loading functions
 - (texture) `setTexture(const Texture& texture, const RectF& textureRect = RectF(0, 0, 1, 1))` instead of `bool resetRect`
