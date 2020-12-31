@@ -37,7 +37,7 @@ namespace {
   auto createActivity(gf::Vector2f& position, float& rotation, gf::Color4f& color, float& faces) {
     return ga::repeat(
       ga::sequence(
-        ga::parallel(
+        ga::parallelAny(
           ga::sequence(
             ga::moveTo({ 100.0f, 100.0f }, { 540.0f, 100.0f }, position, gf::seconds(2.7f), gf::Ease::quadInOut),
             ga::moveTo({ 540.0f, 100.0f }, { 540.0f, 380.0f }, position, gf::seconds(1.9f), gf::Ease::backOut),
@@ -59,7 +59,6 @@ namespace {
     );
   }
 
-  using ActivityType = decltype(createActivity(std::declval<gf::Vector2f&>(), std::declval<float&>(), std::declval<gf::Color4f&>(), std::declval<float&>()));
 }
 
 class Blob {
@@ -90,7 +89,7 @@ private:
   float m_rotation;
   gf::Color4f m_color;
   float m_faces;
-  ActivityType m_activity;
+  ga::AnyActivity m_activity;
 };
 
 

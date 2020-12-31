@@ -21,6 +21,7 @@
 #ifndef GF_ACTIVITIES_H
 #define GF_ACTIVITIES_H
 
+#include <cassert>
 #include <functional>
 #include <vector>
 
@@ -454,42 +455,24 @@ inline namespace v1 {
      * @param activity The activity to run serveral times
      * @param repeat The number of time to repeat the activity or 0 for infinite
      */
-    RepeatActivity(Activity& activity, unsigned repeat = 0);
+    RepeatActivity(Activity& activity, int repeat = 0);
 
     ActivityStatus run(Time time) override;
     void restart() override;
 
   private:
     Ref<Activity> m_activity;
-    unsigned m_count;
-    unsigned m_repeat;
+    int m_count;
+    int m_repeat;
   };
-
 
   /**
-   * @ingroup core_animation
-   * @brief A repeated sequence activity
-   *
-   * This is a convenient combination of gf::SequenceActivity and
-   * gf::RepeatActivity.
+   * @brief The type of finish for the activity
    */
-  class GF_CORE_API RepeatedSequenceActivity : public Activity {
-  public:
-    /**
-     * @brief Constructor
-     *
-     * @param repeat The number of time to repeat the activity or 0 for infinite
-     */
-    RepeatedSequenceActivity(unsigned repeat = 0);
-
-    ActivityStatus run(Time time) override;
-    void restart() override;
-
-  private:
-    SequenceActivity m_sequence;
-    RepeatActivity m_repeat;
+  enum class ActivityFinish {
+    Any,  ///< If any of the activities ends
+    All,  ///< If all of the activities ends
   };
-
 
   /**
    * @ingroup core_animation
@@ -497,20 +480,13 @@ inline namespace v1 {
    */
   class GF_CORE_API ParallelActivity : public Activity {
   public:
-    /**
-     * @brief The type of finish for the activity
-     */
-    enum class Finish {
-      Any,  ///< If any of the activities ends
-      All,  ///< If all of the activities ends
-    };
 
     /**
      * @brief Constructor
      *
      * @param finish The type of finish
      */
-    ParallelActivity(Finish finish = Finish::Any);
+    ParallelActivity(ActivityFinish finish = ActivityFinish::Any);
 
     /**
      * @brief Add an activity to the set
@@ -528,7 +504,7 @@ inline namespace v1 {
     void restart() override;
 
   private:
-    Finish m_finish;
+    ActivityFinish m_finish;
     ActivityStatus m_status;
     std::vector<Ref<Activity>> m_activities;
   };
@@ -613,11 +589,37 @@ inline namespace v1 {
       return DelayActivity(duration);
     }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+    // inspired by https://accu.org/journals/overload/25/139/williams_2382/
+
+    template<typename Tuple, std::size_t I>
+    Activity& activityTupleGet(Tuple& tuple) {
+      return std::get<I>(tuple);
+    }
+
+    template<typename Tuple, typename Indices = std::make_index_sequence<std::tuple_size_v<Tuple>>>
+    struct ActivityTupleGetters;
+
+    template<typename Tuple, std::size_t ... Indices>
+    struct ActivityTupleGetters<Tuple, std::index_sequence<Indices...>>
+    {
+      using Getter = Activity& (*)(Tuple&);
+      static inline constexpr Getter table[std::tuple_size_v<Tuple>] = { &activityTupleGet<Tuple, Indices>... };
+    };
+
+    template<typename Tuple>
+    Activity& activityTupleGetIth(Tuple& tuple, std::size_t i) {
+      assert(i < std::tuple_size_v<Tuple>);
+      return ActivityTupleGetters<Tuple>::table[i](tuple);
+    }
+
+#endif
+
     /**
      * @brief A gf::SequenceActivity that holds its activities.
      */
     template<typename... Args>
-    class SequenceActivityEx : public SequenceActivity {
+    class SequenceActivityEx : public Activity {
     public:
       /**
        * @brief Constructor.
@@ -625,18 +627,37 @@ inline namespace v1 {
        * @param activities The activities of the sequence
        */
       SequenceActivityEx(Args... activities)
-      : m_activities(std::make_unique<std::tuple<Args...>>(std::forward<Args>(activities)...))
+      : m_current(0)
+      , m_activities(std::forward<Args>(activities)...)
       {
-        addToSequence(std::index_sequence_for<Args...>{});
+      }
+
+      ActivityStatus run(Time time) override {
+        if (m_current == sizeof... (Args)) {
+          return ActivityStatus::Finished;
+        }
+
+        Activity& currentActivity = activityTupleGetIth(m_activities, m_current);
+        auto status = currentActivity.run(time);
+
+        if (status == ActivityStatus::Finished) {
+          m_current++;
+        }
+
+        return m_current == sizeof... (Args) ? ActivityStatus::Finished : ActivityStatus::Running;
+      }
+
+      void restart() override {
+        m_current = 0;
+
+        for (std::size_t i = 0; i < sizeof ... (Args); ++i) {
+          activityTupleGetIth(m_activities, i).restart();
+        }
       }
 
     private:
-      template<std::size_t... Is>
-      void addToSequence(std::index_sequence<Is...>) {
-        (addActivity(std::get<Is>(*m_activities)), ...);
-      }
-
-      std::unique_ptr<std::tuple<Args...>> m_activities;
+      std::size_t m_current;
+      std::tuple<Args...> m_activities;
     };
 
     /**
@@ -653,21 +674,44 @@ inline namespace v1 {
      * @brief A gf::RepeatActivity that holds its activity
      */
     template<typename Other>
-    class RepeatActivityEx : public RepeatActivity {
+    class RepeatActivityEx : public Activity {
     public:
       /**
        * @brief Constructor
        *
        * @param activity The activity to repeat
        */
-      RepeatActivityEx(Other activity)
-      : RepeatActivity(m_activity)
-      , m_activity(std::move(activity))
+      RepeatActivityEx(Other activity, int repeat)
+      : m_activity(std::move(activity))
+      , m_count(0)
+      , m_repeat(repeat)
       {
+      }
+
+      ActivityStatus run(Time time) override {
+        if (m_count > 0 && m_repeat == m_count) {
+          return ActivityStatus::Finished;
+        }
+
+        auto status = m_activity.run(time);
+
+        if (status == ActivityStatus::Finished) {
+          m_activity.restart();
+          m_count++;
+        }
+
+        return (m_repeat > 0 && m_repeat == m_count) ? ActivityStatus::Finished : ActivityStatus::Running;
+      }
+
+      void restart() override {
+        m_count = 0;
+        m_activity.restart();
       }
 
     private:
       Other m_activity;
+      int m_count;
+      int m_repeat;
     };
 
     /**
@@ -676,34 +720,73 @@ inline namespace v1 {
      * @param activity The activity to repeat
      */
     template<typename Other>
-    RepeatActivityEx<Other> repeat(Other activity) {
-      return RepeatActivityEx<Other>(std::move(activity));
+    RepeatActivityEx<Other> repeat(Other activity, unsigned repeat = 0) {
+      return RepeatActivityEx<Other>(std::move(activity), repeat);
     }
 
     /**
      * @brief A gf::ParallelActivity that holds its activities.
      */
     template<typename... Args>
-    class ParallelActivityEx : public ParallelActivity {
+    class ParallelActivityEx : public Activity {
     public:
       /**
        * @brief Constructor.
        *
        * @param activities The activities in parallel
        */
-      ParallelActivityEx(Args... activities)
-      : m_activities(std::make_unique<std::tuple<Args...>>(std::forward<Args>(activities)...))
+      ParallelActivityEx(ActivityFinish finish, Args... activities)
+      : m_finish(finish)
+      , m_status(ActivityStatus::Running)
+      , m_activities(std::forward<Args>(activities)...)
       {
-        addToParallel(std::index_sequence_for<Args...>{});
       }
+
+      ActivityStatus run(Time time) override {
+        if (m_status == ActivityStatus::Finished) {
+          return ActivityStatus::Finished;
+        }
+
+        std::size_t finished = 0;
+
+        for (std::size_t i = 0; i < sizeof ... (Args); ++i) {
+          auto status = activityTupleGetIth(m_activities, i).run(time);
+
+          if (status == ActivityStatus::Finished) {
+            finished++;
+          }
+        }
+
+        switch (m_finish) {
+          case ActivityFinish::Any:
+            if (finished > 0) {
+              m_status = ActivityStatus::Finished;
+            }
+            break;
+
+          case ActivityFinish::All:
+            if (finished == sizeof ... (Args)) {
+              m_status = ActivityStatus::Finished;
+            }
+            break;
+        }
+
+        return m_status;
+      }
+
+      void restart() override {
+        m_status = ActivityStatus::Running;
+
+        for (std::size_t i = 0; i < sizeof ... (Args); ++i) {
+          activityTupleGetIth(m_activities, i).restart();
+        }
+      }
+
 
     private:
-      template<std::size_t... Is>
-      void addToParallel(std::index_sequence<Is...>) {
-        (addActivity(std::get<Is>(*m_activities)), ...);
-      }
-
-      std::unique_ptr<std::tuple<Args...>> m_activities;
+      ActivityFinish m_finish;
+      ActivityStatus m_status;
+      std::tuple<Args...> m_activities;
     };
 
     /**
@@ -712,9 +795,47 @@ inline namespace v1 {
      * @param activities The activities in parallel
      */
     template<typename... Args>
-    ParallelActivityEx<Args...> parallel(Args... activities) {
-      return ParallelActivityEx<Args...>(std::forward<Args>(activities)...);
+    ParallelActivityEx<Args...> parallelAny(Args... activities) {
+      return ParallelActivityEx<Args...>(ActivityFinish::Any, std::forward<Args>(activities)...);
     }
+
+    /**
+     * @brief Create a gf::ParallelActivityEx
+     *
+     * @param activities The activities in parallel
+     */
+    template<typename... Args>
+    ParallelActivityEx<Args...> parallelAll(Args... activities) {
+      return ParallelActivityEx<Args...>(ActivityFinish::All, std::forward<Args>(activities)...);
+    }
+
+    /**
+     * @brief An activity that can hold any other activity
+     */
+    class AnyActivity : public Activity {
+    public:
+      /**
+       * @brief Constructor
+       *
+       * @param other Another activity
+       */
+      template<typename Other>
+      explicit AnyActivity(Other other)
+      : m_activity(std::make_unique<Other>(std::move(other)))
+      {
+      }
+
+      ActivityStatus run(Time time) override {
+        return m_activity->run(time);
+      }
+
+      void restart() override {
+        m_activity->restart();
+      }
+
+    private:
+      std::unique_ptr<Activity> m_activity;
+    };
 
   }
 

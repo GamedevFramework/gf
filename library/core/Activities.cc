@@ -222,7 +222,7 @@ inline namespace v1 {
    * RepeatActivity
    */
 
-  RepeatActivity::RepeatActivity(Activity& activity, unsigned repeat)
+  RepeatActivity::RepeatActivity(Activity& activity, int repeat)
   : m_activity(activity)
   , m_count(0)
   , m_repeat(repeat)
@@ -250,27 +250,10 @@ inline namespace v1 {
   }
 
   /*
-   * RepeatedSequenceActivity
-   */
-
-  RepeatedSequenceActivity::RepeatedSequenceActivity(unsigned repeat)
-  : m_repeat(m_sequence, repeat)
-  {
-  }
-
-  ActivityStatus RepeatedSequenceActivity::run(Time time) {
-    return m_repeat.run(time);
-  }
-
-  void RepeatedSequenceActivity::restart() {
-    m_repeat.restart();
-  }
-
-  /*
    * ParallelActivity
    */
 
-  ParallelActivity::ParallelActivity(Finish finish)
+  ParallelActivity::ParallelActivity(ActivityFinish finish)
   : m_finish(finish)
   , m_status(ActivityStatus::Running)
   {
@@ -300,13 +283,13 @@ inline namespace v1 {
     }
 
     switch (m_finish) {
-      case Finish::Any:
+      case ActivityFinish::Any:
         if (finished > 0) {
           m_status = ActivityStatus::Finished;
         }
         break;
 
-      case Finish::All:
+      case ActivityFinish::All:
         if (finished == m_activities.size()) {
           m_status = ActivityStatus::Finished;
         }
