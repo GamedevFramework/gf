@@ -20,6 +20,7 @@
  */
 #include <gf/Spatial_RStarTree.h>
 
+#include <iterator>
 #include <numeric>
 
 #include <gf/Unused.h>
