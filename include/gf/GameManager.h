@@ -48,6 +48,11 @@ inline namespace v1 {
     Random random;
     ResourceManager resources;
     MessageManager messages;
+
+    GamepadTracker gamepads;
+
+  private:
+    void doGlobalProcessEvent(const Event& event) override;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

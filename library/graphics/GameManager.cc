@@ -31,6 +31,10 @@ inline namespace v1 {
   {
   }
 
+  void GameManager::doGlobalProcessEvent(const Event& event) {
+    gamepads.processEvent(event);
+  }
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif
