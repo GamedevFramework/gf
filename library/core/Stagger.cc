@@ -28,6 +28,10 @@ inline namespace v1 {
 #endif
 
   Vector2f StaggerHelper::computeCenter(Vector2i coords, Vector2f size) const {
+    return computeTilePosition(coords, size) + size / 2;
+  }
+
+  Vector2f StaggerHelper::computeTilePosition(Vector2i coords, Vector2f size) const {
     Vector2f base = coords * size;
 
     switch (m_axis) {
@@ -36,19 +40,13 @@ inline namespace v1 {
 
         switch (m_index) {
           case MapCellIndex::Odd:
-            if (coords.y % 2 == 0) {
-              base += size / 2;
-            } else {
-              base.x += size.width;
-              base.y += size.height / 2;
+            if (coords.y % 2 != 0) {
+              base.x += size.width / 2;
             }
             break;
           case MapCellIndex::Even:
             if (coords.y % 2 == 0) {
-              base.x += size.width;
-              base.y += size.height / 2;
-            } else {
-              base += size / 2;
+              base.x += size.width / 2;
             }
             break;
         }
@@ -58,19 +56,13 @@ inline namespace v1 {
 
         switch (m_index) {
           case MapCellIndex::Odd:
-            if (coords.x % 2 == 0) {
-              base += size / 2;
-            } else {
-              base.y += size.height;
-              base.x += size.width / 2;
+            if (coords.x % 2 != 0) {
+              base.y += size.height / 2;
             }
             break;
           case MapCellIndex::Even:
             if (coords.x % 2 == 0) {
-              base.y += size.height;
-              base.x += size.width / 2;
-            } else {
-              base += size / 2;
+              base.y += size.height / 2;
             }
             break;
         }
@@ -78,6 +70,38 @@ inline namespace v1 {
     }
 
     return base;
+  }
+
+  Vector2i StaggerHelper::computeCoords(Vector2f point, Vector2f size) const {
+    // TODO: quick approximation but not really good
+
+    switch (m_axis) {
+      case MapCellAxis::Y:
+        size.y /= 2;
+        break;
+      case MapCellAxis::X:
+        size.x /= 2;
+        break;
+    }
+
+    return point / size;
+  }
+
+  RectF StaggerHelper::computeBounds(Vector2i layer, Vector2f size) const {
+    Vector2f base = layer * size;
+
+    switch (m_axis) {
+      case MapCellAxis::Y:
+        base.y /= 2;
+        base.x += size.width / 2;
+        break;
+      case MapCellAxis::X:
+        base.x /= 2;
+        base.y += size.height / 2;
+        break;
+    }
+
+    return RectF::fromPositionSize({ 0.0f, 0.0f }, base);
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

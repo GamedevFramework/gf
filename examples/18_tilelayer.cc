@@ -89,14 +89,18 @@ int main() {
 
   gf::TileLayer tileLayer({ MapWidth, MapHeight });
   tileLayer.setTileSize({ TileSize, TileSize });
-  tileLayer.setTilesetTileSize({ TileSize, TileSize });
-  tileLayer.setSpacing(2);
-  tileLayer.setTexture(texture);
+
+  std::size_t id = tileLayer.createTilesetId();
+  gf::Tileset& tileset = tileLayer.getTileset(id);
+  tileset.setTileSize({ TileSize, TileSize });
+  tileset.setSpacing(2);
+  tileset.setTexture(texture);
+
   tileLayer.setOrigin({ TileSize * MapWidth / 2, TileSize * MapHeight / 2 });
 
   for (int y = 0; y < MapHeight; ++y) {
     for (int x = 0; x < MapWidth; ++x) {
-      tileLayer.setTile({ x, y }, map[y][x]);
+      tileLayer.setTile({ x, y }, id, map[y][x]);
     }
   }
 

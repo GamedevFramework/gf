@@ -23,6 +23,7 @@
 
 #include "CoreApi.h"
 #include "MapCell.h"
+#include "Rect.h"
 #include "Vector.h"
 
 namespace gf {
@@ -51,6 +52,33 @@ inline namespace v1 {
      * @returns The position of the center
      */
     Vector2f computeCenter(Vector2i coords, Vector2f size) const;
+
+    /**
+     * @brief Compute the position of the tile
+     *
+     * @param coords The coordinates of the tile in the map
+     * @param size The size of the tile in the map
+     * @returns The position of the center
+     */
+    Vector2f computeTilePosition(Vector2i coords, Vector2f size) const;
+
+    /**
+     * @brief Compute the coordinates of a point
+     *
+     * @param point The point in the map
+     * @param size The size of the tile in the map
+     * @returns The coordinates of the point
+     */
+    Vector2i computeCoords(Vector2f point, Vector2f size) const;
+
+    /**
+     * @brief Compute the bounds of the layer
+     *
+     * @param layer The size of the layer in tiles
+     * @param size The size of the tile in the map
+     * @returns The bounds of the map
+     */
+    RectF computeBounds(Vector2i layer, Vector2f size) const;
 
   private:
     MapCellAxis m_axis;
