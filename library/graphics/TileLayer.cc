@@ -30,9 +30,6 @@
 #include <gf/Transform.h>
 #include <gf/VectorOps.h>
 
-#include <gf/Color.h>
-#include <gf/Shapes.h>
-
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
@@ -149,13 +146,6 @@ inline namespace v1 {
     if (m_sheets.empty() || m_orientation == TileOrientation::Unknown) {
       return;
     }
-
-    gf::RectangleShape shape(getLocalBounds());
-    shape.setColor(gf::Color::Transparent);
-    shape.setOutlineColor(gf::Color::Red);
-    shape.setOutlineThickness(2.0f);
-    target.draw(shape, states);
-
 
     const View& view = target.getView();
     RectF bounds = gf::transform(gf::rotation(view.getRotation()), view.getBounds());
