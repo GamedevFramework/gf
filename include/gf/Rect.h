@@ -293,13 +293,10 @@ inline namespace v1 {
      * @param point The point of extension
      */
     constexpr void extend(const T (&point)[2]) noexcept {
-      auto xMin = min.x;
-      auto xMax = max.x;
-      std::tie(min.x, max.x) = std::minmax({ xMin, xMax, point[0] });
-
-      auto yMin = min.y;
-      auto yMax = max.y;
-      std::tie(min.y, max.y) = std::minmax({ yMin, yMax, point[1] });
+      min.x = std::min(min.x, point[0]);
+      min.y = std::min(min.y, point[1]);
+      max.x = std::max(max.x, point[0]);
+      max.y = std::max(max.y, point[1]);
     }
 
     /**
@@ -308,13 +305,10 @@ inline namespace v1 {
      * @param point The point of extension
      */
     constexpr void extend(Vector<T, 2> point) noexcept {
-      auto xMin = min.x;
-      auto xMax = max.x;
-      std::tie(min.x, max.x) = std::minmax({ xMin, xMax, point.x });
-
-      auto yMin = min.y;
-      auto yMax = max.y;
-      std::tie(min.y, max.y) = std::minmax({ yMin, yMax, point.y });
+      min.x = std::min(min.x, point.x);
+      min.y = std::min(min.y, point.y);
+      max.x = std::max(max.x, point.x);
+      max.y = std::max(max.y, point.y);
     }
 
     /**
