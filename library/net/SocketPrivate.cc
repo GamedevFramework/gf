@@ -135,6 +135,10 @@ namespace priv {
         continue;
       }
 
+      if (!nativeSetReuseAddress(sock, true)) {
+        gf::Log::error("Error when setting address reuse. Reason: %s\n", priv::getErrorString().c_str());
+      }
+
       if (::bind(sock, info.address.asSockAddr(), info.address.length) != 0) {
         nativeCloseSocket(sock);
         continue;
