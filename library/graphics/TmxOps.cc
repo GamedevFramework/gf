@@ -28,10 +28,21 @@ inline namespace v1 {
 #endif
 
   TileLayer makeTileLayer(const TmxLayers& map, const TmxTileLayer& layer, ResourceManager& resources) {
-    TileLayer tiles(map.mapSize, map.orientation);
+    TileLayer tiles;
+
+    switch (map.orientation) {
+      case TileOrientation::Orthogonal:
+        tiles = TileLayer::createOrthogonal(map.mapSize);
+        break;
+      case TileOrientation::Staggered:
+        tiles = TileLayer::createStaggered(map.mapSize, map.mapCellAxis, map.mapCellIndex);
+        break;
+      default:
+        assert(false);
+        break;
+    }
+
     tiles.setTileSize(map.tileSize);
-    tiles.setCellAxis(map.mapCellAxis);
-    tiles.setCellIndex(map.mapCellIndex);
 
     std::map<const TmxTileset *, std::size_t> mapping;
     int k = 0;

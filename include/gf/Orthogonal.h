@@ -18,13 +18,12 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#ifndef GF_STAGGER_H
-#define GF_STAGGER_H
+#ifndef GF_ORTHOGONAL_H
+#define GF_ORTHOGONAL_H
 
 #include <functional>
 
 #include "CoreApi.h"
-#include "MapCell.h"
 #include "Polyline.h"
 #include "Rect.h"
 #include "Vector.h"
@@ -36,16 +35,10 @@ inline namespace v1 {
 
   /**
    * @ingroup core_utilities
-   * @brief A helper for computing coordinates in a staggered map
+   * @brief A helper for computing coordinates in an orthogonal map
    */
-  class GF_CORE_API StaggerHelper {
+  class GF_CORE_API OrthogonalHelper {
   public:
-    StaggerHelper(MapCellAxis axis, MapCellIndex index)
-    : m_axis(axis)
-    , m_index(index)
-    {
-    }
-
     RectF computeBounds(Vector2i layerSize, Vector2f tileSize) const;
 
     RectI computeVisibleArea(const RectF& local, Vector2f tileSize) const;
@@ -57,10 +50,6 @@ inline namespace v1 {
     Polyline computePolyline(Vector2i coords, Vector2f tileSize) const;
 
     void forEachNeighbor(Vector2i coords, Vector2i layerSize, std::function<void(Vector2i)> func) const;
-
-  private:
-    MapCellAxis m_axis;
-    MapCellIndex m_index;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -68,4 +57,4 @@ inline namespace v1 {
 #endif
 }
 
-#endif // GF_STAGGER_H
+#endif // GF_ORTHOGONAL_H

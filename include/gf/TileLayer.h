@@ -21,12 +21,14 @@
 #ifndef GF_TILE_LAYER_H
 #define GF_TILE_LAYER_H
 
+#include <memory>
 #include <vector>
 
 #include "Array2D.h"
 #include "Flags.h"
 #include "GraphicsApi.h"
-#include "Stagger.h"
+#include "MapCell.h"
+#include "TileProperties.h"
 #include "Tileset.h"
 #include "TileTypes.h"
 #include "Transformable.h"
@@ -47,16 +49,6 @@ inline namespace v1 {
    * A tile layer represents a map made of tiles. gf::TileLayer makes it easy
    * to draw a tile map.
    *
-   * A tile layer is associated to a single tileset. A tileset is a texture
-   * that contains all the tiles, ordered in a grid. The tileset has several
-   * parameters that are inspired by the parameters in
-   * [Tiled](http://www.mapeditor.org/):
-   *
-   * - tile size: the size of a tile (`setTilesetTileSize()`, `getTilesetTileSize()`)
-   * - margin: the margin around the tiles (`setMargin()`, `getMargin()`), default: @f$ (0,0) @f$
-   * - spacing: the spacing between the tiles (`setSpacing()`, `getSpacing()`), default: @f$ (0,0) @f$
-   * - offset: the offset of the tileset when drawing a tile, default: @f$ (0,0) @f$
-   *
    * The tile layer is given with an array of indices. Each index correspond
    * to a tile in the tileset. Tile 0 correspond to the tile at the top left
    * in the tileset. Then tile are numbered from left to right, and then from
@@ -76,13 +68,9 @@ inline namespace v1 {
      */
     TileLayer();
 
-    /**
-     * @brief Constructor
-     *
-     * @param layerSize The size of the layer, in number of tiles
-     * @param orientation The orientation of the layer
-     */
-    TileLayer(Vector2i layerSize, TileOrientation orientation = TileOrientation::Orthogonal);
+    static TileLayer createOrthogonal(Vector2i layerSize);
+
+    static TileLayer createStaggered(Vector2i layerSize, MapCellAxis axis, MapCellIndex index);
 
     /**
      * @brief Get the size of the layer
@@ -92,16 +80,6 @@ inline namespace v1 {
     Vector2i getMapSize() const {
       return m_tiles.getSize();
     }
-
-    /**
-     * @brief Set the cell map axis
-     */
-    void setCellAxis(MapCellAxis axis);
-
-    /**
-     * @brief Set the cell map index
-     */
-    void setCellIndex(MapCellIndex index);
 
     /**
      * @name Tileset parameters
@@ -240,6 +218,9 @@ inline namespace v1 {
     virtual void draw(RenderTarget& target, const RenderStates& states) override;
 
   private:
+    TileLayer(Vector2i layerSize, TileOrientation orientation, std::unique_ptr<TileProperties> properties);
+
+  private:
     struct Cell {
       std::size_t tileset = -1;
       int tile = NoTile;
@@ -254,11 +235,11 @@ inline namespace v1 {
   private:
     void fillVertexArray(std::vector<Sheet>& sheets, RectI rect) const;
     void updateGeometry();
+    RectI computeOffsets() const;
 
   private:
     TileOrientation m_orientation;
-    MapCellIndex m_mapCellIndex;
-    MapCellAxis m_mapCellAxis;
+    std::unique_ptr<TileProperties> m_properties;
 
     Vector2i m_layerSize;
     Vector2i m_tileSize;

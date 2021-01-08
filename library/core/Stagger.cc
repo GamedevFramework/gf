@@ -27,12 +27,29 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  Vector2f StaggerHelper::computeCenter(Vector2i coords, Vector2f size) const {
-    return computeTilePosition(coords, size) + size / 2;
+  RectF StaggerHelper::computeBounds(Vector2i layerSize, Vector2f tileSize) const {
+    Vector2f base = layerSize * tileSize;
+
+    switch (m_axis) {
+      case MapCellAxis::Y:
+        base.y /= 2;
+        base.x += tileSize.width / 2;
+        break;
+      case MapCellAxis::X:
+        base.x /= 2;
+        base.y += tileSize.height / 2;
+        break;
+    }
+
+    return RectF::fromPositionSize({ 0.0f, 0.0f }, base);
   }
 
-  Vector2f StaggerHelper::computeTilePosition(Vector2i coords, Vector2f size) const {
-    Vector2f base = coords * size;
+  RectI StaggerHelper::computeVisibleArea(const RectF& local, Vector2f tileSize) const {
+    return RectI::fromMinMax(computeCoordinates(local.min, tileSize), computeCoordinates(local.max, tileSize)).grow(2);
+  }
+
+  RectF StaggerHelper::computeCellBounds(Vector2i coords, Vector2f tileSize) const {
+    Vector2f base = coords * tileSize;
 
     switch (m_axis) {
       case MapCellAxis::Y:
@@ -41,12 +58,12 @@ inline namespace v1 {
         switch (m_index) {
           case MapCellIndex::Odd:
             if (coords.y % 2 != 0) {
-              base.x += size.width / 2;
+              base.x += tileSize.width / 2;
             }
             break;
           case MapCellIndex::Even:
             if (coords.y % 2 == 0) {
-              base.x += size.width / 2;
+              base.x += tileSize.width / 2;
             }
             break;
         }
@@ -57,52 +74,46 @@ inline namespace v1 {
         switch (m_index) {
           case MapCellIndex::Odd:
             if (coords.x % 2 != 0) {
-              base.y += size.height / 2;
+              base.y += tileSize.height / 2;
             }
             break;
           case MapCellIndex::Even:
             if (coords.x % 2 == 0) {
-              base.y += size.height / 2;
+              base.y += tileSize.height / 2;
             }
             break;
         }
         break;
     }
 
-    return base;
+    return RectF::fromPositionSize(base, tileSize);
   }
 
-  Vector2i StaggerHelper::computeCoords(Vector2f point, Vector2f size) const {
+  Vector2i StaggerHelper::computeCoordinates(Vector2f position, Vector2f tileSize) const {
     // TODO: quick approximation but not really good
 
     switch (m_axis) {
       case MapCellAxis::Y:
-        size.y /= 2;
+        tileSize.y /= 2;
         break;
       case MapCellAxis::X:
-        size.x /= 2;
+        tileSize.x /= 2;
         break;
     }
 
-    return point / size;
+    return position / tileSize;
   }
 
-  RectF StaggerHelper::computeBounds(Vector2i layer, Vector2f size) const {
-    Vector2f base = layer * size;
-
-    switch (m_axis) {
-      case MapCellAxis::Y:
-        base.y /= 2;
-        base.x += size.width / 2;
-        break;
-      case MapCellAxis::X:
-        base.x /= 2;
-        base.y += size.height / 2;
-        break;
-    }
-
-    return RectF::fromPositionSize({ 0.0f, 0.0f }, base);
+  Polyline StaggerHelper::computePolyline(Vector2i coords, Vector2f tileSize) const {
+    Polyline line;
+    // TODO
+    return line;
   }
+
+  void StaggerHelper::forEachNeighbor(Vector2i coords, Vector2i layerSize, std::function<void(Vector2i)> func) const {
+    // TODO
+  }
+
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

@@ -25,8 +25,9 @@
 #include <algorithm>
 
 #include <gf/Log.h>
-
+#include <gf/Orthogonal.h>
 #include <gf/RenderTarget.h>
+#include <gf/Stagger.h>
 #include <gf/Transform.h>
 #include <gf/VectorOps.h>
 
@@ -39,18 +40,16 @@ inline namespace v1 {
 
   TileLayer::TileLayer()
   : m_orientation(TileOrientation::Unknown)
-  , m_mapCellIndex(MapCellIndex::Odd)
-  , m_mapCellAxis(MapCellAxis::Y)
+  , m_properties(nullptr)
   , m_layerSize(0, 0)
   , m_tileSize(0, 0)
   , m_rect(RectI::empty())
   {
   }
 
-  TileLayer::TileLayer(Vector2i layerSize, TileOrientation orientation)
+  TileLayer::TileLayer(Vector2i layerSize, TileOrientation orientation, std::unique_ptr<TileProperties> properties)
   : m_orientation(orientation)
-  , m_mapCellIndex(MapCellIndex::Odd)
-  , m_mapCellAxis(MapCellAxis::Y)
+  , m_properties(std::move(properties))
   , m_layerSize(layerSize)
   , m_tileSize(0, 0)
   , m_rect(RectI::empty())
@@ -59,12 +58,12 @@ inline namespace v1 {
     clear();
   }
 
-  void TileLayer::setCellAxis(MapCellAxis axis) {
-    m_mapCellAxis = axis;
+  TileLayer TileLayer::createOrthogonal(Vector2i layerSize) {
+    return TileLayer(layerSize, TileOrientation::Orthogonal, std::make_unique<GenericTileProperties<OrthogonalHelper>>(OrthogonalHelper()));
   }
 
-  void TileLayer::setCellIndex(MapCellIndex index) {
-    m_mapCellIndex = index;
+  TileLayer TileLayer::createStaggered(Vector2i layerSize, MapCellAxis axis, MapCellIndex index) {
+    return TileLayer(layerSize, TileOrientation::Orthogonal, std::make_unique<GenericTileProperties<StaggerHelper>>(StaggerHelper(axis, index)));
   }
 
   std::size_t TileLayer::createTilesetId() {
@@ -97,7 +96,6 @@ inline namespace v1 {
     return m_tiles(position).tile;
   }
 
-
   Flags<Flip> TileLayer::getFlip(Vector2i position) const {
     assert(m_tiles.isValid(position));
     return m_tiles(position).flip;
@@ -110,24 +108,15 @@ inline namespace v1 {
 
   void TileLayer::clear() {
     for (auto& cell : m_tiles) {
+      cell.tileset = -1;
       cell.tile = NoTile;
       cell.flip = None;
     }
   }
 
   RectF TileLayer::getLocalBounds() const {
-    switch (m_orientation) {
-      case TileOrientation::Orthogonal:
-        return RectF::fromPositionSize({ 0.0f, 0.0f }, m_layerSize * m_tileSize);
-
-      case TileOrientation::Staggered:
-        return StaggerHelper(m_mapCellAxis, m_mapCellIndex).computeBounds(m_layerSize, m_tileSize);
-
-      default:
-        break;
-    }
-
-    return RectF::fromMinMax({ 0.0f, 0.0f }, { 0.0f, 0.0f });
+    assert(m_properties);
+    return m_properties->computeBounds(m_layerSize, m_tileSize);
   }
 
   void TileLayer::setAnchor(Anchor anchor) {
@@ -143,36 +132,36 @@ inline namespace v1 {
   }
 
   void TileLayer::draw(RenderTarget& target, const RenderStates& states) {
-    if (m_sheets.empty() || m_orientation == TileOrientation::Unknown) {
+    if (m_sheets.empty() || m_orientation == TileOrientation::Unknown || m_properties == nullptr) {
       return;
     }
 
-    const View& view = target.getView();
-    RectF bounds = gf::transform(gf::rotation(view.getRotation()), view.getBounds());
-    RectF local = gf::transform(getInverseTransform(), bounds);
+    auto inverseTransform = getInverseTransform();
 
-    Vector2i min, max;
+    auto toLocal = [&](Vector2i point) {
+      return gf::transform(inverseTransform, target.mapPixelToCoords(point));
+    };
 
-    switch (m_orientation) {
-      case TileOrientation::Orthogonal:
-        min = local.min / m_tileSize;
-        max = local.max / m_tileSize;
-        break;
-      case TileOrientation::Staggered:
-        min = StaggerHelper(m_mapCellAxis, m_mapCellIndex).computeCoords(local.min, m_tileSize);
-        max = StaggerHelper(m_mapCellAxis, m_mapCellIndex).computeCoords(local.max, m_tileSize);
-        break;
-      default:
-        assert(false);
-    }
+    RectI screen = RectI::fromPositionSize({ 0, 0 }, target.getSize());
 
-    RectI rect = RectI::fromMinMax(min, max).grow(5).getIntersection(gf::RectI::fromPositionSize({ 0, 0 }, m_layerSize - 1));
+    RectF local = RectF::empty();
+    local.extend(toLocal(screen.getTopLeft()));
+    local.extend(toLocal(screen.getTopRight()));
+    local.extend(toLocal(screen.getBottomLeft()));
+    local.extend(toLocal(screen.getBottomRight()));
+
+    RectI layer = gf::RectI::fromPositionSize({ 0, 0 }, m_layerSize - 1);
+    RectI visible = m_properties->computeVisibleArea(local, m_tileSize);
+    RectI rect = visible.getIntersection(layer);
+
+    // TODO: handle offsets of tilesets
 
     // build vertex array (if necessary)
 
-    if (rect != m_rect) {
-//       std::printf("rect | min: %i,%i | max: %i,%i\n", rect.min.x, rect.min.y, rect.max.x, rect.max.y);
-      m_rect = rect;
+    if (!m_rect.contains(rect)) {
+      m_rect = rect.grow(5).getIntersection(layer);
+//       std::printf("local  | min: %g,%g | max: %g,%g\n", local.min.x, local.min.y, local.max.x, local.max.y);
+//       std::printf("rect   | min: %i,%i | max: %i,%i\n", m_rect.min.x, m_rect.min.y, m_rect.max.x, m_rect.max.y);
       updateGeometry();
     }
 
@@ -187,20 +176,22 @@ inline namespace v1 {
       target.draw(sheet.vertices, localStates);
     }
 
+    // TODO: maybe do not draw tileset by tileset, but row by row with a batch
   }
 
-
   void TileLayer::fillVertexArray(std::vector<Sheet>& sheets, RectI rect) const {
-    Vector2i index;
+    assert(m_properties);
 
     for (auto& sheet : sheets) {
       sheet.vertices.clear();
     }
 
-    for (index.y = rect.min.y; index.y <= rect.max.y; ++index.y) {
-      for (index.x = rect.min.x; index.x <= rect.max.x; ++index.x) {
-        assert(m_tiles.isValid(index));
-        const Cell& cell = m_tiles(index);
+    Vector2i coords;
+
+    for (coords.y = rect.min.y; coords.y <= rect.max.y; ++coords.y) {
+      for (coords.x = rect.min.x; coords.x <= rect.max.x; ++coords.x) {
+        assert(m_tiles.isValid(coords));
+        const Cell& cell = m_tiles(coords);
 
         if (cell.tile == NoTile) {
           continue;
@@ -213,28 +204,11 @@ inline namespace v1 {
 
         // position
 
-        Vector2f position, size;
-
-        switch (m_orientation) {
-          case TileOrientation::Unknown:
-            assert(false);
-            break;
-          case TileOrientation::Orthogonal:
-            size = m_tileSize;
-            position = index * m_tileSize;
-            break;
-          case TileOrientation::Staggered:
-            size = sheet.tileset.getTileSize();
-            position = StaggerHelper(m_mapCellAxis, m_mapCellIndex).computeTilePosition(index, m_tileSize);
-            break;
-          default:
-            assert(false);
-            break;
-        }
-
+        RectF bounds = m_properties->computeCellBounds(coords, m_tileSize);
+        Vector2f position = bounds.getPosition();
         position += sheet.tileset.getOffset();
 
-        RectF box = RectF::fromPositionSize(position, size);
+        RectF box = RectF::fromPositionSize(position, sheet.tileset.getTileSize());
 
         // texture coords
 
@@ -290,11 +264,21 @@ inline namespace v1 {
   }
 
   void TileLayer::updateGeometry() {
-    if (m_sheets.empty() || m_tileSize.width == 0 || m_tileSize.height == 0) {
+    if (m_sheets.empty() || m_tileSize.width == 0 || m_tileSize.height == 0 || m_properties == nullptr) {
       return;
     }
 
     fillVertexArray(m_sheets, m_rect);
+  }
+
+  RectI TileLayer::computeOffsets() const {
+    RectI offsets;
+
+    for (auto& sheet : m_sheets) {
+      offsets.extend(sheet.tileset.getOffset());
+    }
+
+    return offsets;
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

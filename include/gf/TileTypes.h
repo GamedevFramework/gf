@@ -18,8 +18,8 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#ifndef GF_FLIP_H
-#define GF_FLIP_H
+#ifndef GF_TILE_TYPES_H
+#define GF_TILE_TYPES_H
 
 #include <cstdint>
 
@@ -59,4 +59,4 @@ inline namespace v1 {
 #endif
 }
 
-#endif // GF_FLIP_H
+#endif // GF_TILE_TYPES_H

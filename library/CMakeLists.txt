@@ -128,6 +128,7 @@ else()
     core/Noise.cc
     core/Noises.cc
     core/Orientation.cc
+    core/Orthogonal.cc
     core/Path.cc
     core/PointSequence.cc
     core/Polygon.cc
@@ -212,6 +213,7 @@ else()
     graphics/TextureAtlas.cc
     graphics/Texture.cc
     graphics/TileLayer.cc
+    graphics/TileProperties.cc
     graphics/Tileset.cc
     graphics/TmxOps.cc
     graphics/Transformable.cc

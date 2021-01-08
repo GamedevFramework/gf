@@ -18,54 +18,16 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#ifndef GF_STAGGER_H
-#define GF_STAGGER_H
-
-#include <functional>
-
-#include "CoreApi.h"
-#include "MapCell.h"
-#include "Polyline.h"
-#include "Rect.h"
-#include "Vector.h"
+#include <gf/TileProperties.h>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
 #endif
 
-  /**
-   * @ingroup core_utilities
-   * @brief A helper for computing coordinates in a staggered map
-   */
-  class GF_CORE_API StaggerHelper {
-  public:
-    StaggerHelper(MapCellAxis axis, MapCellIndex index)
-    : m_axis(axis)
-    , m_index(index)
-    {
-    }
-
-    RectF computeBounds(Vector2i layerSize, Vector2f tileSize) const;
-
-    RectI computeVisibleArea(const RectF& local, Vector2f tileSize) const;
-
-    RectF computeCellBounds(Vector2i coords, Vector2f tileSize) const;
-
-    Vector2i computeCoordinates(Vector2f position, Vector2f tileSize) const;
-
-    Polyline computePolyline(Vector2i coords, Vector2f tileSize) const;
-
-    void forEachNeighbor(Vector2i coords, Vector2i layerSize, std::function<void(Vector2i)> func) const;
-
-  private:
-    MapCellAxis m_axis;
-    MapCellIndex m_index;
-  };
+  TileProperties::~TileProperties() = default;
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif
 }
-
-#endif // GF_STAGGER_H
