@@ -179,6 +179,7 @@ else()
     graphics/Font.cc
     graphics/GameManager.cc
     graphics/Gamepad.cc
+    graphics/GamepadValues.cc
     graphics/GlDebug.cc
     graphics/GraphicsHandle.cc
     graphics/GraphicsInfo.cc
@@ -187,6 +188,7 @@ else()
     graphics/Library.cc
     graphics/Logo.cc
     graphics/Monitor.cc
+    graphics/MouseValues.cc
     graphics/NinePatch.cc
     graphics/Particles.cc
     graphics/Paths.cc
