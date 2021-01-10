@@ -25,6 +25,8 @@
 #include <array>
 #include <vector>
 
+#include "Unused.h"
+
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
@@ -89,6 +91,7 @@ inline namespace v1 {
     : m_data(data)
     {
       assert(size == Size);
+      gf::unused(size);
     }
 
     /**

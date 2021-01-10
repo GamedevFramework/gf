@@ -160,7 +160,7 @@ inline namespace v1 {
 
   RectI TmxTileset::getSubTexture(int id, Vector2i size) const noexcept {
     int width = (size.width - 2 * margin + spacing) / (tileSize.width + spacing); // number of tiles
-    int height = (size.height - 2 * margin + spacing) / (tileSize.height + spacing); // number of tiles
+    [[maybe_unused]] int height = (size.height - 2 * margin + spacing) / (tileSize.height + spacing); // number of tiles
 
     int tu = id % width;
     int tv = id / width;
