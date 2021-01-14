@@ -1,5 +1,20 @@
 # ChangeLog for gf
 
+## gf 0.19.0 (14 Jan 2021)
+
+- Core (gf::core)
+  - Remove gf::StringRef in favor of std::string_view
+  - gf::Path is now std::filesystem::path
+  - Improve activities
+- Graphics (gf::graphics)
+  - Change the default texture size for fonts
+  - Add support for multiple tilesets in gf::TileLayer
+  - Add gf::GamepadValues and gf::MouseValues
+- Network (gf::net)
+  - Set address reuse in gf::TcpListener
+- Misc
+  - Use C++17!
+
 ## gf 0.18.0 (14 Oct 2020)
 
 - Core (gf::core)
