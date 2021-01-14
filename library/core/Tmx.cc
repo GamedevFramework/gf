@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2019 Julien Bernard
+ * Copyright (C) 2016-2021 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -34,8 +34,6 @@
 #include <gf/Unused.h>
 
 #include <pugixml.hpp>
-
-namespace fs = boost::filesystem;
 
 using namespace std::string_literals;
 
@@ -162,7 +160,7 @@ inline namespace v1 {
 
   RectI TmxTileset::getSubTexture(int id, Vector2i size) const noexcept {
     int width = (size.width - 2 * margin + spacing) / (tileSize.width + spacing); // number of tiles
-    int height = (size.height - 2 * margin + spacing) / (tileSize.height + spacing); // number of tiles
+    [[maybe_unused]] int height = (size.height - 2 * margin + spacing) / (tileSize.height + spacing); // number of tiles
 
     int tu = id % width;
     int tv = id / width;
@@ -1115,7 +1113,7 @@ inline namespace v1 {
   }
 
   bool TmxLayers::loadFromFile(const Path& filename) {
-    if (!fs::is_regular_file(filename)) {
+    if (!std::filesystem::is_regular_file(filename)) {
       Log::error("Unknown TMX file: '%s'\n", filename.string().c_str());
       return false;
     }

@@ -4,7 +4,6 @@ This file is a list of ideas for gf. Some of them will eventually be in gf. Othe
 
 ## core
 
-- (vocabulary) rename `StringRef` in `StringView`
 - (geometry) add more algorithms from [here](http://geomalgorithms.com/algorithms.html)
 - (spatial) add linear and quadratic RTree
 - (color) color interpolation (and color space)
@@ -12,10 +11,10 @@ This file is a list of ideas for gf. Some of them will eventually be in gf. Othe
   - ideas: [blog post](https://www.alanzucconi.com/2016/01/06/colour-interpolation/)
   - ideas: [chroma.js](https://github.com/gka/chroma.js)
   - ideas: [gurki/vivid](https://github.com/gurki/vivid)
-- (activity) find a simple syntax for creating activities (templates spotted, wait for C++17)
 
 ## graphics
 
+- (font) use Signed Distance Field for big size fonts
 - (window/events) add a flag in `pollEvent`/`waitEvent` (`EventFlag::TouchAsMouse`, `EventFlag::NoWindowFilter`)
 - (texture) add area in loading functions
 - (texture) `setTexture(const Texture& texture, const RectF& textureRect = RectF(0, 0, 1, 1))` instead of `bool resetRect`
@@ -25,11 +24,6 @@ This file is a list of ideas for gf. Some of them will eventually be in gf. Othe
   - ideas: [a blog post](https://blog.mapbox.com/drawing-antialiased-lines-with-opengl-8766f34192dc)
 - (curve) add different join styles and cap styles
   - ideas: [Polyline2D](https://github.com/CrushedPixel/Polyline2D),
-- (tilelayer) make `TileLayer` a base class for the different type of tile layers
-  - create `SquareTileLayer`, `IsometricTileLayer`, `StaggeredTileLayer`, `HexagonalTileLayer`
-  - create helpers like `StaggerHelper` or `HexagonHelper`
-  - [differences between these types](https://gamedev.stackexchange.com/questions/49847/difference-between-staggered-isometric-and-normal-isometric-tilemaps)
-- (tilelayer) handle multiple tileset in `TileLayer`
 - (scene) integrate post-processing in `Scene`/`SceneManager`
   - remove `RenderPipeline`
   - rename `Effect` in `PostProcEffect`
@@ -48,7 +42,4 @@ This file is a list of ideas for gf. Some of them will eventually be in gf. Othe
 - (docs) split gf_dev_doc by modules (core, graphics, net)
 - (portability) consider using [hedley](https://nemequ.github.io/hedley/)
   - blocking bug: nemequ/hedley#35
-- (versions) go with C++17
-  - check support in Debian stable and Ubuntu LTS
-  - replace `boost::filesystem` by `std::filesystem`
 - (packaging) use CPack to create packages

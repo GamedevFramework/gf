@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2019 Julien Bernard
+ * Copyright (C) 2016-2021 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -21,10 +21,14 @@
 #ifndef GF_TILE_LAYER_H
 #define GF_TILE_LAYER_H
 
+#include <memory>
+#include <vector>
+
 #include "Array2D.h"
 #include "Flags.h"
 #include "GraphicsApi.h"
-#include "Stagger.h"
+#include "MapCell.h"
+#include "TileProperties.h"
 #include "Tileset.h"
 #include "TileTypes.h"
 #include "Transformable.h"
@@ -45,16 +49,6 @@ inline namespace v1 {
    * A tile layer represents a map made of tiles. gf::TileLayer makes it easy
    * to draw a tile map.
    *
-   * A tile layer is associated to a single tileset. A tileset is a texture
-   * that contains all the tiles, ordered in a grid. The tileset has several
-   * parameters that are inspired by the parameters in
-   * [Tiled](http://www.mapeditor.org/):
-   *
-   * - tile size: the size of a tile (`setTilesetTileSize()`, `getTilesetTileSize()`)
-   * - margin: the margin around the tiles (`setMargin()`, `getMargin()`), default: @f$ (0,0) @f$
-   * - spacing: the spacing between the tiles (`setSpacing()`, `getSpacing()`), default: @f$ (0,0) @f$
-   * - offset: the offset of the tileset when drawing a tile, default: @f$ (0,0) @f$
-   *
    * The tile layer is given with an array of indices. Each index correspond
    * to a tile in the tileset. Tile 0 correspond to the tile at the top left
    * in the tileset. Then tile are numbered from left to right, and then from
@@ -74,13 +68,9 @@ inline namespace v1 {
      */
     TileLayer();
 
-    /**
-     * @brief Constructor
-     *
-     * @param layerSize The size of the layer, in number of tiles
-     * @param orientation The orientation of the layer
-     */
-    TileLayer(Vector2i layerSize, TileOrientation orientation = TileOrientation::Orthogonal);
+    static TileLayer createOrthogonal(Vector2i layerSize);
+
+    static TileLayer createStaggered(Vector2i layerSize, MapCellAxis axis, MapCellIndex index);
 
     /**
      * @brief Get the size of the layer
@@ -97,155 +87,28 @@ inline namespace v1 {
      */
 
     /**
-     * @brief Change the source texture of the tileset
+     * @brief Create a tileset id
      *
-     * The texture must exist as long as the tile layer uses it. Indeed, the
-     * tile layer doesn't store its own copy of the texture, but rather keeps
-     * a pointer to the one that you passed to this function.
-     * If the source texture is destroyed and the tile layer tries to
-     * use it, the behavior is undefined.
-     *
-     * @param texture New texture
-     * @sa getTexture()
+     * @returns A new tileset id
      */
-    void setTexture(const Texture& texture) {
-      m_tileset.setTexture(texture);
-    }
+    std::size_t createTilesetId();
 
     /**
-     * @brief Get the source texture of the tileset
+     * @brief Get a tileset with a tileset id
      *
-     * The returned reference is const, which means that you can't
-     * modify the texture when you retrieve it with this function.
-     *
-     * @return Reference to the tileset's texture
-     * @sa setTexture()
+     * @param id A valid tileset id
+     * @returns A reference to the tileset
      */
-    const Texture& getTexture() const {
-      return m_tileset.getTexture();
-    }
+    Tileset& getTileset(std::size_t id);
 
     /**
-     * @brief Check if a texture is set
+     * @brief Get a tileset with a tileset id
      *
-     * @returns True if a texture is already set
-     *
-     * @sa setTexture(), getTexture()
+     * @param id A valid tileset id
+     * @returns A reference to the tileset
      */
-    bool hasTexture() const {
-      return m_tileset.hasTexture();
-    }
+    const Tileset& getTileset(std::size_t id) const;
 
-    /**
-     * @brief Unset the source texture of the tile layer
-     *
-     * After a call to this function, the tile layer has no source texture.
-     *
-     * @sa setTexture()
-     */
-    void unsetTexture() {
-      m_tileset.unsetTexture();
-    }
-
-    /**
-     * @brief Set the tile size in the tileset
-     *
-     * @param tileSize The new tile size, in pixels
-     * @sa getTileSize()
-     */
-    void setTilesetTileSize(Vector2i tileSize) {
-      m_tileset.setTileSize(tileSize);
-    }
-
-    /**
-     * @brief Get the tile size in the tileset
-     *
-     * @return The tile size, in pixels
-     * @sa setTileSize()
-     */
-    Vector2i getTilesetTileSize() const {
-      return m_tileset.getTileSize();
-    }
-
-    /**
-     * @brief Set the margin of the tileset
-     *
-     * @param margin The margin, in pixels
-     * @sa getMargin()
-     */
-    void setMargin(int margin) {
-      m_tileset.setMargin(margin);
-    }
-
-    /**
-     * @brief Set the margin of the tileset
-     *
-     * @param margin The margin, in pixels
-     * @sa getMargin()
-     */
-    void setMargin(Vector2i margin) {
-      m_tileset.setMargin(margin);
-    }
-
-    /**
-     * @brief Get the margin of the tileset
-     *
-     * @return The margin, in pixels
-     * @sa setMargin()
-     */
-    Vector2i getMargin() const {
-      return m_tileset.getMargin();
-    }
-
-    /**
-     * @brief Set the spacing of the tileset
-     *
-     * @param spacing The spacing, in pixels
-     * @sa getSpacing()
-     */
-    void setSpacing(int spacing) {
-      m_tileset.setSpacing(spacing);
-    }
-
-    /**
-     * @brief Set the spacing of the tileset
-     *
-     * @param spacing The spacing, in pixels
-     * @sa getSpacing()
-     */
-    void setSpacing(Vector2i spacing) {
-      m_tileset.setSpacing(spacing);
-    }
-
-    /**
-     * @brief Get the spacing of the tileset
-     *
-     * @return The spacing, in pixels
-     * @sa setSpacing()
-     */
-    Vector2i getSpacing() const {
-      return m_tileset.getSpacing();
-    }
-
-    /**
-     * @brief Set the offset of the tileset
-     *
-     * @param offset The offset, in pixels
-     * @sa getOffset();
-     */
-    void setOffset(Vector2i offset) {
-      m_tileset.setOffset(offset);
-    }
-
-    /**
-     * @brief Get the offset of the tileset
-     *
-     * @return The offset, in pixels
-     * @sa setOffset()
-     */
-    Vector2i getOffset() const {
-      return m_tileset.getOffset();
-    }
 
     /** @} */
 
@@ -276,11 +139,12 @@ inline namespace v1 {
      * @brief Set a tile
      *
      * @param position The position of the tile in the tile layer
+     * @param tileset The tileset id of the tile
      * @param tile The number of the tile in the tileset or `gf::TileLayer::NoTile`
      * @param flip The flip property of the tile
-     * @sa getTile()
+     * @sa getTile(), getFlip(), getTileTileset()
      */
-    void setTile(Vector2i position, int tile, Flags<Flip> flip = None);
+    void setTile(Vector2i position, std::size_t tileset, int tile, Flags<Flip> flip = None);
 
     /**
      * @brief Get a tile
@@ -291,7 +155,6 @@ inline namespace v1 {
      */
     int getTile(Vector2i position) const;
 
-
     /**
      * @brief Get the flip properties of a tile
      *
@@ -300,6 +163,15 @@ inline namespace v1 {
      * @sa setTile()
      */
     Flags<Flip> getFlip(Vector2i position) const;
+
+    /**
+     * @brief Get the tileset property of a tile
+     *
+     * @param position The position of the tile in the tile layer
+     * @return The tileset id of the tile
+     * @sa setTile()
+     */
+    std::size_t getTileTileset(Vector2i position) const;
 
     /**
      * @brief Remove all the tiles
@@ -346,29 +218,36 @@ inline namespace v1 {
     virtual void draw(RenderTarget& target, const RenderStates& states) override;
 
   private:
+    TileLayer(Vector2i layerSize, TileOrientation orientation, std::unique_ptr<TileProperties> properties);
+
+  private:
     struct Cell {
-      int tile;
-      Flags<Flip> flip;
+      std::size_t tileset = -1;
+      int tile = NoTile;
+      Flags<Flip> flip = gf::None;
+    };
+
+    struct Sheet {
+      Tileset tileset;
+      VertexArray vertices;
     };
 
   private:
-    void fillVertexArray(VertexArray& array, RectI rect) const;
+    void fillVertexArray(std::vector<Sheet>& sheets, RectI rect) const;
     void updateGeometry();
+    RectI computeOffsets() const;
 
   private:
     TileOrientation m_orientation;
-    MapCellIndex m_mapCellIndex;
-    MapCellAxis m_mapCellAxis;
+    std::unique_ptr<TileProperties> m_properties;
 
     Vector2i m_layerSize;
     Vector2i m_tileSize;
 
-    Tileset m_tileset;
+    std::vector<Sheet> m_sheets;
+    RectI m_rect;
 
     Array2D<Cell> m_tiles;
-
-    RectI m_rect;
-    VertexArray m_vertices;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

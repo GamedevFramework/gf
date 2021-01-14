@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2019 Julien Bernard
+ * Copyright (C) 2016-2021 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -27,8 +27,8 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  Path Paths::getPrefPath(StringRef org, StringRef app) {
-    char *prefPath = SDL_GetPrefPath(org.getData(), app.getData());
+  Path Paths::getPrefPath(const std::string& org, const std::string& app) {
+    char *prefPath = SDL_GetPrefPath(org.c_str(), app.c_str());
 
     if (prefPath == nullptr) {
       return Path();
@@ -52,15 +52,11 @@ inline namespace v1 {
   }
 
   Path Paths::getCurrentPath() {
-    return boost::filesystem::current_path();
+    return std::filesystem::current_path();
   }
 
   Path Paths::getTemporaryDirectory() {
-    return boost::filesystem::temp_directory_path();
-  }
-
-  Path Paths::getUniquePath() {
-    return boost::filesystem::unique_path();
+    return std::filesystem::temp_directory_path();
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2019 Julien Bernard
+ * Copyright (C) 2016-2021 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -23,10 +23,10 @@
 
 #include <cassert>
 #include <climits>
+#include <string_view>
 
 #include "CoreApi.h"
 #include "Random.h"
-#include "StringRef.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -65,13 +65,13 @@ inline namespace v1 {
      *
      * @param str The string representing a dice notation
      */
-    constexpr Dice(StringRef str)
+    constexpr Dice(std::string_view str)
     : m_faces(0)
     , m_count(0)
     , m_modifier(0)
     {
       std::size_t i = 0;
-      std::size_t sz = str.getSize();
+      std::size_t sz = str.size();
 
       while (i < sz && '0' <= str[i] && str[i] <= '9') {
         m_count = m_count * 10 + (str[i] - '0');
@@ -167,7 +167,7 @@ inline namespace v1 {
      * @sa [Dice notation - Wikipedia](https://en.wikipedia.org/wiki/Dice_notation)
      */
     constexpr gf::Dice operator"" _dice(const char *str, std::size_t sz) {
-      return gf::Dice(StringRef(str, sz));
+      return gf::Dice(std::string_view(str, sz));
     }
 
     /**

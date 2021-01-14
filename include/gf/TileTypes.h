@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2019 Julien Bernard
+ * Copyright (C) 2016-2021 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -18,8 +18,8 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#ifndef GF_FLIP_H
-#define GF_FLIP_H
+#ifndef GF_TILE_TYPES_H
+#define GF_TILE_TYPES_H
 
 #include <cstdint>
 
@@ -59,4 +59,4 @@ inline namespace v1 {
 #endif
 }
 
-#endif // GF_FLIP_H
+#endif // GF_TILE_TYPES_H

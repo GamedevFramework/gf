@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2019 Julien Bernard
+ * Copyright (C) 2016-2021 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -51,7 +51,7 @@ inline namespace v1 {
   namespace {
 
     struct ConsoleLine {
-      std::vector<StringRef> words;
+      std::vector<std::string_view> words;
       int indent;
     };
 
@@ -76,7 +76,7 @@ inline namespace v1 {
       return false;
     }
 
-    int getWordWidth(StringRef word) {
+    int getWordWidth(std::string_view word) {
       int width = 0;
 
       for (char32_t c : gf::codepoints(word)) {
@@ -324,7 +324,7 @@ inline namespace v1 {
     m_data(position) = { foreground, background, c };
   }
 
-  int Console::putWord(Vector2i position, ConsoleEffect effect, StringRef message, const Color4f& foreground, const Color4f& background) {
+  int Console::putWord(Vector2i position, ConsoleEffect effect, std::string_view message, const Color4f& foreground, const Color4f& background) {
     int width = 0;
 
     for (auto c : gf::codepoints(message)) {

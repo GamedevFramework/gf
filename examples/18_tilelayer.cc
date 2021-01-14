@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2018 Julien Bernard
+ * Copyright (C) 2016-2021 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -87,16 +87,20 @@ int main() {
   gf::Texture texture("assets/tilelayer.png");
   texture.setSmooth();
 
-  gf::TileLayer tileLayer({ MapWidth, MapHeight });
+  gf::TileLayer tileLayer = gf::TileLayer::createOrthogonal({ MapWidth, MapHeight });
   tileLayer.setTileSize({ TileSize, TileSize });
-  tileLayer.setTilesetTileSize({ TileSize, TileSize });
-  tileLayer.setSpacing(2);
-  tileLayer.setTexture(texture);
+
+  std::size_t id = tileLayer.createTilesetId();
+  gf::Tileset& tileset = tileLayer.getTileset(id);
+  tileset.setTileSize({ TileSize, TileSize });
+  tileset.setSpacing(2);
+  tileset.setTexture(texture);
+
   tileLayer.setOrigin({ TileSize * MapWidth / 2, TileSize * MapHeight / 2 });
 
   for (int y = 0; y < MapHeight; ++y) {
     for (int x = 0; x < MapWidth; ++x) {
-      tileLayer.setTile({ x, y }, map[y][x]);
+      tileLayer.setTile({ x, y }, id, map[y][x]);
     }
   }
 

@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2019 Julien Bernard
+ * Copyright (C) 2016-2021 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -25,10 +25,14 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  GameManager::GameManager(StringRef title, std::initializer_list<gf::Path> resourcePaths)
+  GameManager::GameManager(const std::string& title, std::initializer_list<gf::Path> resourcePaths)
   : SceneManager(title, gf::vec(1600, 900))
   , resources(resourcePaths)
   {
+  }
+
+  void GameManager::doGlobalProcessEvent(const Event& event) {
+    gamepads.processEvent(event);
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

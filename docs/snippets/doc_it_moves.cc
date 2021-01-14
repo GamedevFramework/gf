@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2021 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -67,7 +67,7 @@ private:
 int main() {
   // initialization
 
-  static constexpr gf::Vector2u ScreenSize(500, 500);
+  static constexpr gf::Vector2i ScreenSize(500, 500);
   gf::Window window("It moves", ScreenSize);
   gf::RenderWindow renderer(window);
 

@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2019 Julien Bernard
+ * Copyright (C) 2016-2021 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -26,9 +26,9 @@
 
 #include <vector>
 #include <string>
+#include <string_view>
 
 #include "CoreApi.h"
-#include "StringRef.h"
 #include "Portability.h"
 
 namespace gf {
@@ -76,7 +76,7 @@ inline namespace v1 {
    * @param str The input string
    * @returns An escaped string
    */
-  GF_CORE_API std::string escapeString(StringRef str);
+  GF_CORE_API std::string escapeString(std::string_view str);
 
   /**
    * @ingroup core_strings
@@ -87,7 +87,7 @@ inline namespace v1 {
    * @param str The input string
    * @returns A vector of strings containing the paragraphs
    */
-  GF_CORE_API std::vector<StringRef> splitInParagraphs(StringRef str);
+  GF_CORE_API std::vector<std::string_view> splitInParagraphs(std::string_view str);
 
   /**
    * @ingroup core_strings
@@ -98,7 +98,7 @@ inline namespace v1 {
    * @param str The input string
    * @returns A vector of strings containing the words
    */
-  GF_CORE_API std::vector<StringRef> splitInWords(StringRef str);
+  GF_CORE_API std::vector<std::string_view> splitInWords(std::string_view str);
 
 
   /**
@@ -108,7 +108,7 @@ inline namespace v1 {
    * @sa gf::codepoints
    */
   struct GF_CORE_API CodepointRange {
-    StringRef ref;
+    std::string_view ref;
 
     /**
      * @ingroup core_strings
@@ -230,12 +230,12 @@ inline namespace v1 {
       }
     };
 
-    constexpr Iterator begin() const noexcept {
-      return Iterator{ ref.begin() };
+    Iterator begin() const noexcept {
+      return Iterator{ ref.data() };
     }
 
-    constexpr Iterator end() const noexcept {
-      return Iterator{ ref.end() };
+    Iterator end() const noexcept {
+      return Iterator{ ref.data() + ref.size() };
     }
 
   };
@@ -245,7 +245,7 @@ inline namespace v1 {
    * @brief Create a range over codepoints from a string
    */
   inline
-  constexpr CodepointRange codepoints(StringRef ref) {
+  constexpr CodepointRange codepoints(std::string_view ref) {
     return CodepointRange{ ref };
   }
 

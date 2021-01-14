@@ -5,7 +5,7 @@
 [![GitHub license](https://img.shields.io/badge/license-zlib-blue.svg?style=flat-square)](https://raw.githubusercontent.com/GamedevFramework/gf/master/LICENSE)
 [![GitHub tag](https://img.shields.io/github/tag/GamedevFramework/gf.svg?style=flat-square)](https://github.com/GamedevFramework/gf/tags)
 
-__Gamedev Framework (gf)__ is a framework to build 2D games in C++14. It is based on [SDL](https://www.libsdl.org/) and [OpenGL ES 2.0](https://www.khronos.org/opengles/2_X/), and presents an API that is very similar to the graphics module of [SFML](http://www.sfml-dev.org/) with additional features. It is _not_ a [game engine](https://en.wikipedia.org/wiki/Game_engine), it is more something like a framework, similar to [libGDX](https://libgdx.badlogicgames.com/) in the Java world.
+__Gamedev Framework (gf)__ is a framework to build 2D games in C++17. It is based on [SDL](https://www.libsdl.org/) and [OpenGL ES 2.0](https://www.khronos.org/opengles/2_X/), and presents an API that is very similar to the graphics module of [SFML](http://www.sfml-dev.org/) with additional features. It is _not_ a [game engine](https://en.wikipedia.org/wiki/Game_engine), it is more something like a framework, similar to [libGDX](https://libgdx.badlogicgames.com/) in the Java world.
 
 Gamedev Framework (gf) is licensed under the terms and conditions of the [zlib/libpng license](https://opensource.org/licenses/Zlib).
 
@@ -99,7 +99,6 @@ Gamedev Framework (gf) is very open to contributions. See [the contribution guid
 You have to install the following dependencies:
 
 - [SDL2](https://www.libsdl.org/) >= 2.0.8 (zlib/libpng license)
-- [Boost Filesystem](http://www.boost.org/doc/libs/release/libs/filesystem/) >= 1.65 (Boost license)
 - [Boost String Algorithms](http://www.boost.org/doc/libs/release/libs/algorithm/string/) >= 1.65 (Boost license)
 - [Boost Heap](http://www.boost.org/doc/libs/release/libs/heap/) >= 1.65 (Boost license)
 - [Freetype](http://freetype.org/) >= 2.9.1 (FreeType license)

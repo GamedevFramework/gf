@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2019 Julien Bernard
+ * Copyright (C) 2016-2021 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -24,6 +24,7 @@
 
 #include <gf/Color.h>
 #include <gf/Log.h>
+#include <gf/Unused.h>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -50,7 +51,7 @@ inline namespace v1 {
 
   }
 
-  SceneManager::SceneManager(StringRef title, Vector2i size, Flags<WindowHints> hints)
+  SceneManager::SceneManager(const std::string& title, Vector2i size, Flags<WindowHints> hints)
   : m_window(title, size, hints)
   , m_renderer(m_window)
   , m_scenesChanged(false)
@@ -92,6 +93,8 @@ inline namespace v1 {
             m_view.onFramebufferSizeChange(event.resize.size);
             m_segue.setTextures(m_targetPrevScenes.getTexture(), m_targetCurrScenes.getTexture());
           }
+
+          doGlobalProcessEvent(event);
 
           for (Scene& scene : scenes) {
             scene.processEvent(event);
@@ -252,6 +255,11 @@ inline namespace v1 {
 
   Vector2i SceneManager::computeGameToWindowCoordinates(Vector2f coords, const View& view) const {
     return m_renderer.mapCoordsToPixel(coords, view);
+  }
+
+  void SceneManager::doGlobalProcessEvent(const Event& event) {
+    gf::unused(event);
+    // nothing by default
   }
 
   void SceneManager::setupSegue(SegueEffect& effect, Time duration, Easing easing) {

@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2019 Julien Bernard
+ * Copyright (C) 2016-2021 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -47,7 +47,9 @@
 #include "Entity.cc"
 #include "EntityContainer.cc"
 #include "Font.cc"
+#include "GameManager.cc"
 #include "Gamepad.cc"
+#include "GamepadValues.cc"
 #include "GlDebug.cc"
 #include "GraphicsHandle.cc"
 #include "GraphicsInfo.cc"
@@ -56,6 +58,7 @@
 #include "Library.cc"
 #include "Logo.cc"
 #include "Monitor.cc"
+#include "MouseValues.cc"
 #include "NinePatch.cc"
 #include "Particles.cc"
 #include "Paths.cc"
@@ -82,6 +85,7 @@
 #include "TextureAtlas.cc"
 #include "Texture.cc"
 #include "TileLayer.cc"
+#include "TileProperties.cc"
 #include "Tileset.cc"
 #include "TmxOps.cc"
 #include "Transformable.cc"

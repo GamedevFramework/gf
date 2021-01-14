@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2019 Julien Bernard
+ * Copyright (C) 2016-2021 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -245,67 +245,67 @@ inline namespace v1 {
     GLuint m_curr;
   };
 
-  void Shader::setUniform(StringRef name, float val) {
+  void Shader::setUniform(const std::string& name, float val) {
     Guard guard(*this);
     int loc = getUniformLocation(name);
     GL_CHECK(glUniform1f(loc, val));
   }
 
-  void Shader::setUniform(StringRef name, int val) {
+  void Shader::setUniform(const std::string& name, int val) {
     Guard guard(*this);
     int loc = getUniformLocation(name);
     GL_CHECK(glUniform1i(loc, val));
   }
 
-  void Shader::setUniform(StringRef name, const Vector2f& vec) {
+  void Shader::setUniform(const std::string& name, const Vector2f& vec) {
     Guard guard(*this);
     int loc = getUniformLocation(name);
     GL_CHECK(glUniform2f(loc, vec.x, vec.y));
   }
 
-  void Shader::setUniform(StringRef name, const Vector3f& vec) {
+  void Shader::setUniform(const std::string& name, const Vector3f& vec) {
     Guard guard(*this);
     int loc = getUniformLocation(name);
     GL_CHECK(glUniform3f(loc, vec.x, vec.y, vec.z));
   }
 
-  void Shader::setUniform(StringRef name, const Vector4f& vec) {
+  void Shader::setUniform(const std::string& name, const Vector4f& vec) {
     Guard guard(*this);
     int loc = getUniformLocation(name);
     GL_CHECK(glUniform4f(loc, vec.x, vec.y, vec.z, vec.w));
   }
 
-  void Shader::setUniform(StringRef name, const Vector2i& vec) {
+  void Shader::setUniform(const std::string& name, const Vector2i& vec) {
     Guard guard(*this);
     int loc = getUniformLocation(name);
     GL_CHECK(glUniform2i(loc, vec.x, vec.y));
   }
 
-  void Shader::setUniform(StringRef name, const Vector3i& vec) {
+  void Shader::setUniform(const std::string& name, const Vector3i& vec) {
     Guard guard(*this);
     int loc = getUniformLocation(name);
     GL_CHECK(glUniform3i(loc, vec.x, vec.y, vec.z));
   }
 
-  void Shader::setUniform(StringRef name, const Vector4i& vec) {
+  void Shader::setUniform(const std::string& name, const Vector4i& vec) {
     Guard guard(*this);
     int loc = getUniformLocation(name);
     GL_CHECK(glUniform4i(loc, vec.x, vec.y, vec.z, vec.w));
   }
 
-  void Shader::setUniform(StringRef name, const Matrix3f& mat) {
+  void Shader::setUniform(const std::string& name, const Matrix3f& mat) {
     Guard guard(*this);
     int loc = getUniformLocation(name);
     GL_CHECK(glUniformMatrix3fv(loc, 1, GL_FALSE, mat.getData()));
   }
 
-  void Shader::setUniform(StringRef name, const Matrix4f& mat) {
+  void Shader::setUniform(const std::string& name, const Matrix4f& mat) {
     Guard guard(*this);
     int loc = getUniformLocation(name);
     GL_CHECK(glUniformMatrix4fv(loc, 1, GL_FALSE, mat.getData()));
   }
 
-  void Shader::setUniform(StringRef name, const BareTexture& tex) {
+  void Shader::setUniform(const std::string& name, const BareTexture& tex) {
     int loc = getUniformLocation(name);
 
     if (loc == -1) {
@@ -322,23 +322,23 @@ inline namespace v1 {
 
   }
 
-  int Shader::getUniformLocation(StringRef name) {
+  int Shader::getUniformLocation(const std::string& name) {
     GLint loc;
-    GL_CHECK(loc = glGetUniformLocation(static_cast<GLuint>(m_program), name.getData()));
+    GL_CHECK(loc = glGetUniformLocation(static_cast<GLuint>(m_program), name.c_str()));
 
 //     if (loc == -1) {
-//       Log::warning("Uniform not found: '%s'\n", name.getData());
+//       Log::warning("Uniform not found: '%s'\n", name.c_str());
 //     }
 
     return loc;
   }
 
-  int Shader::getAttributeLocation(StringRef name) {
+  int Shader::getAttributeLocation(const std::string& name) {
     GLint loc;
-    GL_CHECK(loc = glGetAttribLocation(static_cast<GLuint>(m_program), name.getData()));
+    GL_CHECK(loc = glGetAttribLocation(static_cast<GLuint>(m_program), name.c_str()));
 
 //     if (loc == -1) {
-//       Log::warning("Attribute not found: '%s'\n", name.getData());
+//       Log::warning("Attribute not found: '%s'\n", name.c_str());
 //     }
 
     return loc;

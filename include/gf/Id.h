@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2019 Julien Bernard
+ * Copyright (C) 2016-2021 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -23,8 +23,7 @@
 
 #include <cstdint>
 #include <string>
-
-#include "StringRef.h"
+#include <string_view>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -81,8 +80,8 @@ inline namespace v1 {
    * @param str The string
    * @returns The hash of the string
    */
-  constexpr Id hash(StringRef str) {
-    return hash(str.getData(), str.getSize());
+  constexpr Id hash(std::string_view str) {
+    return hash(str.data(), str.size());
   }
 
   namespace literals {

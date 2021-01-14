@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2019 Julien Bernard
+ * Copyright (C) 2016-2021 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -282,7 +282,7 @@ inline namespace v1 {
     }
   }
 
-  void ConsoleFont::mapString(StringRef str, Vector2i position) {
+  void ConsoleFont::mapString(std::string_view str, Vector2i position) {
     int index = computeIndex(position, m_format.layout, m_size);
 
     for (auto codepoint : gf::codepoints(str)) {

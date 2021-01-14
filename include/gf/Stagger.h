@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2019 Julien Bernard
+ * Copyright (C) 2016-2021 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -21,8 +21,12 @@
 #ifndef GF_STAGGER_H
 #define GF_STAGGER_H
 
+#include <functional>
+
 #include "CoreApi.h"
 #include "MapCell.h"
+#include "Polyline.h"
+#include "Rect.h"
 #include "Vector.h"
 
 namespace gf {
@@ -40,17 +44,19 @@ inline namespace v1 {
     : m_axis(axis)
     , m_index(index)
     {
-
     }
 
-    /**
-     * @brief Compute the center of the tile
-     *
-     * @param coords The coordinates of the tile in the map
-     * @param size The size of the tile in the map
-     * @returns The position of the center
-     */
-    Vector2f computeCenter(Vector2i coords, Vector2f size) const;
+    RectF computeBounds(Vector2i layerSize, Vector2f tileSize) const;
+
+    RectI computeVisibleArea(const RectF& local, Vector2f tileSize) const;
+
+    RectF computeCellBounds(Vector2i coords, Vector2f tileSize) const;
+
+    Vector2i computeCoordinates(Vector2f position, Vector2f tileSize) const;
+
+    Polyline computePolyline(Vector2i coords, Vector2f tileSize) const;
+
+    void forEachNeighbor(Vector2i coords, Vector2i layerSize, std::function<void(Vector2i)> func) const;
 
   private:
     MapCellAxis m_axis;

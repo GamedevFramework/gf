@@ -22,7 +22,7 @@ add_executable(foogame
 target_link_libraries(foogame
   PRIVATE
     gf::graphics
-    gf::network
+    gf::net
 )
 ~~~
 

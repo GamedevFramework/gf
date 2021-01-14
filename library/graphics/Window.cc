@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2019 Julien Bernard
+ * Copyright (C) 2016-2021 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -104,7 +104,7 @@ inline namespace v1 {
     }
   }
 
-  Window::Window(StringRef title, Vector2i size, Flags<WindowHints> hints)
+  Window::Window(const std::string& title, Vector2i size, Flags<WindowHints> hints)
   : m_window(nullptr)
   , m_windowId(-1)
   , m_mainContext(nullptr)
@@ -114,7 +114,7 @@ inline namespace v1 {
   , m_vao(0)
   {
     auto flags = getFlagsFromHints(hints);
-    m_window = SDL_CHECK_EXPR(SDL_CreateWindow(title.getData(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, size.width, size.height, flags));
+    m_window = SDL_CHECK_EXPR(SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, size.width, size.height, flags));
     assert(m_window);
     m_windowId = SDL_CHECK_EXPR(SDL_GetWindowID(m_window));
 
@@ -170,9 +170,9 @@ inline namespace v1 {
     m_shouldClose = true;
   }
 
-  void Window::setTitle(StringRef title) {
+  void Window::setTitle(const std::string& title) {
     assert(m_window);
-    SDL_CHECK(SDL_SetWindowTitle(m_window, title.getData()));
+    SDL_CHECK(SDL_SetWindowTitle(m_window, title.c_str()));
   }
 
   Vector2i Window::getPosition() const {

@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2019 Julien Bernard
+ * Copyright (C) 2016-2021 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -24,6 +24,8 @@
 #include <cassert>
 #include <array>
 #include <vector>
+
+#include "Unused.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -89,6 +91,7 @@ inline namespace v1 {
     : m_data(data)
     {
       assert(size == Size);
+      gf::unused(size);
     }
 
     /**

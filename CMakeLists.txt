@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 project(GF
-  VERSION 0.18.1
+  VERSION 0.19.0
   LANGUAGES CXX C
 )
 
@@ -42,7 +42,7 @@ endif()
 set(SDL2_BUILDING_LIBRARY TRUE)
 find_package(SDL2 REQUIRED)
 
-find_package(Boost REQUIRED COMPONENTS filesystem system)
+find_package(Boost REQUIRED)
 find_package(Freetype REQUIRED)
 find_package(pugixml REQUIRED)
 find_package(ZLIB REQUIRED)

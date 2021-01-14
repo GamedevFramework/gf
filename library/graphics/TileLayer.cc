@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2019 Julien Bernard
+ * Copyright (C) 2016-2021 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -25,8 +25,9 @@
 #include <algorithm>
 
 #include <gf/Log.h>
-
+#include <gf/Orthogonal.h>
 #include <gf/RenderTarget.h>
+#include <gf/Stagger.h>
 #include <gf/Transform.h>
 #include <gf/VectorOps.h>
 
@@ -39,35 +40,55 @@ inline namespace v1 {
 
   TileLayer::TileLayer()
   : m_orientation(TileOrientation::Unknown)
-  , m_mapCellIndex(MapCellIndex::Odd)
-  , m_mapCellAxis(MapCellAxis::Y)
+  , m_properties(nullptr)
   , m_layerSize(0, 0)
   , m_tileSize(0, 0)
   , m_rect(RectI::empty())
-  , m_vertices(PrimitiveType::Triangles)
   {
   }
 
-  TileLayer::TileLayer(Vector2i layerSize, TileOrientation orientation)
+  TileLayer::TileLayer(Vector2i layerSize, TileOrientation orientation, std::unique_ptr<TileProperties> properties)
   : m_orientation(orientation)
-  , m_mapCellIndex(MapCellIndex::Odd)
-  , m_mapCellAxis(MapCellAxis::Y)
+  , m_properties(std::move(properties))
   , m_layerSize(layerSize)
   , m_tileSize(0, 0)
-  , m_tiles(layerSize)
   , m_rect(RectI::empty())
-  , m_vertices(PrimitiveType::Triangles)
+  , m_tiles(layerSize)
   {
     clear();
+  }
+
+  TileLayer TileLayer::createOrthogonal(Vector2i layerSize) {
+    return TileLayer(layerSize, TileOrientation::Orthogonal, std::make_unique<GenericTileProperties<OrthogonalHelper>>(OrthogonalHelper()));
+  }
+
+  TileLayer TileLayer::createStaggered(Vector2i layerSize, MapCellAxis axis, MapCellIndex index) {
+    return TileLayer(layerSize, TileOrientation::Orthogonal, std::make_unique<GenericTileProperties<StaggerHelper>>(StaggerHelper(axis, index)));
+  }
+
+  std::size_t TileLayer::createTilesetId() {
+    std::size_t id = m_sheets.size();
+    m_sheets.push_back({ Tileset{}, VertexArray(PrimitiveType::Triangles) });
+    return id;
+  }
+
+  Tileset& TileLayer::getTileset(std::size_t id) {
+    assert(id < m_sheets.size());
+    return m_sheets[id].tileset;
+  }
+
+  const Tileset& TileLayer::getTileset(std::size_t id) const {
+    assert(id < m_sheets.size());
+    return m_sheets[id].tileset;
   }
 
   void TileLayer::setTileSize(Vector2i tileSize) {
     m_tileSize = tileSize;
   }
 
-  void TileLayer::setTile(Vector2i position, int tile, Flags<Flip> flip) {
+  void TileLayer::setTile(Vector2i position, std::size_t tileset, int tile, Flags<Flip> flip) {
     assert(m_tiles.isValid(position));
-    m_tiles(position) = { tile, flip };
+    m_tiles(position) = { tileset, tile, flip };
   }
 
   int TileLayer::getTile(Vector2i position) const {
@@ -75,21 +96,27 @@ inline namespace v1 {
     return m_tiles(position).tile;
   }
 
-
   Flags<Flip> TileLayer::getFlip(Vector2i position) const {
     assert(m_tiles.isValid(position));
     return m_tiles(position).flip;
   }
 
+  std::size_t TileLayer::getTileTileset(Vector2i position) const {
+    assert(m_tiles.isValid(position));
+    return m_tiles(position).tileset;
+  }
+
   void TileLayer::clear() {
     for (auto& cell : m_tiles) {
+      cell.tileset = -1;
       cell.tile = NoTile;
       cell.flip = None;
     }
   }
 
   RectF TileLayer::getLocalBounds() const {
-    return RectF::fromPositionSize({ 0.0f, 0.0f }, m_layerSize * m_tileSize);
+    assert(m_properties);
+    return m_properties->computeBounds(m_layerSize, m_tileSize);
   }
 
   void TileLayer::setAnchor(Anchor anchor) {
@@ -97,50 +124,44 @@ inline namespace v1 {
   }
 
   VertexBuffer TileLayer::commitGeometry() const {
+    // TODO: there is more than one geometry
     VertexArray vertices(PrimitiveType::Triangles);
-    RectI rect = RectI::fromPositionSize({ 0, 0 }, m_layerSize);
-    fillVertexArray(vertices, rect);
-
+//     RectI rect = RectI::fromPositionSize({ 0, 0 }, m_layerSize);
+//     fillVertexArray(vertices, rect);
     return VertexBuffer(vertices.getVertexData(), vertices.getVertexCount(), vertices.getPrimitiveType());
   }
 
   void TileLayer::draw(RenderTarget& target, const RenderStates& states) {
-    if (!m_tileset.hasTexture() || m_orientation == TileOrientation::Unknown) {
+    if (m_sheets.empty() || m_orientation == TileOrientation::Unknown || m_properties == nullptr) {
       return;
     }
 
-    gf::Vector2i tileSize = m_tileSize;
+    auto inverseTransform = getInverseTransform();
 
-    if (m_orientation == TileOrientation::Staggered) {
-      tileSize.y /= 2;
-    }
+    auto toLocal = [&](Vector2i point) {
+      return gf::transform(inverseTransform, target.mapPixelToCoords(point));
+    };
 
-    // compute the viewable part of the layer
+    RectI screen = RectI::fromPositionSize({ 0, 0 }, target.getSize());
 
-    const View& view = target.getView();
-    Vector2f size = view.getSize();
-    Vector2f center = view.getCenter();
+    RectF local = RectF::empty();
+    local.extend(toLocal(screen.getTopLeft()));
+    local.extend(toLocal(screen.getTopRight()));
+    local.extend(toLocal(screen.getBottomLeft()));
+    local.extend(toLocal(screen.getBottomRight()));
 
-    size.width = size.height = gf::Sqrt2 * std::max(size.width, size.height);
+    RectI layer = gf::RectI::fromPositionSize({ 0, 0 }, m_layerSize - 1);
+    RectI visible = m_properties->computeVisibleArea(local, m_tileSize);
+    RectI rect = visible.getIntersection(layer);
 
-    RectF world = RectF::fromCenterSize(center, size);
-    RectF local = gf::transform(getInverseTransform(), world).grow(std::max(tileSize.width, tileSize.height));
-
-    RectF layer = RectF::fromPositionSize({ 0.0f, 0.0f }, m_layerSize * tileSize);
-
-    RectI rect;
-    RectF intersection;
-
-    if (local.intersects(layer, intersection)) {
-      rect = RectI::fromPositionSize(intersection.getPosition() / tileSize + 0.5f, intersection.getSize() / tileSize + 0.5f);
-      rect.intersects(gf::RectI::fromPositionSize({ 0, 0 }, m_layerSize - 1), rect);
-    }
+    // TODO: handle offsets of tilesets
 
     // build vertex array (if necessary)
 
-    if (rect != m_rect) {
-//       std::printf("rect | min: %i,%i | max: %i,%i\n", rect.min.x, rect.min.y, rect.max.x, rect.max.y);
-      m_rect = rect;
+    if (!m_rect.contains(rect)) {
+      m_rect = rect.grow(5).getIntersection(layer);
+//       std::printf("local  | min: %g,%g | max: %g,%g\n", local.min.x, local.min.y, local.max.x, local.max.y);
+//       std::printf("rect   | min: %i,%i | max: %i,%i\n", m_rect.min.x, m_rect.min.y, m_rect.max.x, m_rect.max.y);
       updateGeometry();
     }
 
@@ -149,56 +170,49 @@ inline namespace v1 {
     RenderStates localStates = states;
 
     localStates.transform *= getTransform();
-    localStates.texture[0] = &m_tileset.getTexture();
 
-    target.draw(m_vertices, localStates);
+    for (auto& sheet : m_sheets) {
+      localStates.texture[0] = &sheet.tileset.getTexture();
+      target.draw(sheet.vertices, localStates);
+    }
+
+    // TODO: maybe do not draw tileset by tileset, but row by row with a batch
   }
 
+  void TileLayer::fillVertexArray(std::vector<Sheet>& sheets, RectI rect) const {
+    assert(m_properties);
 
-  void TileLayer::fillVertexArray(VertexArray& array, RectI rect) const {
-    array.reserve(static_cast<std::size_t>(rect.getWidth()) * static_cast<std::size_t>(rect.getHeight()) * 6);
+    for (auto& sheet : sheets) {
+      sheet.vertices.clear();
+    }
 
-    Vector2i cell;
+    Vector2i coords;
 
-    for (cell.y = rect.min.y; cell.y <= rect.max.y; ++cell.y) {
-      for (cell.x = rect.min.x; cell.x <= rect.max.x; ++cell.x) {
-        assert(m_tiles.isValid(cell));
-        int tile = m_tiles(cell).tile;
+    for (coords.y = rect.min.y; coords.y <= rect.max.y; ++coords.y) {
+      for (coords.x = rect.min.x; coords.x <= rect.max.x; ++coords.x) {
+        assert(m_tiles.isValid(coords));
+        const Cell& cell = m_tiles(coords);
 
-        if (tile == NoTile) {
+        if (cell.tile == NoTile) {
           continue;
         }
 
-        assert(tile >= 0);
+        assert(cell.tile >= 0);
+
+        assert(cell.tileset < sheets.size());
+        Sheet& sheet = sheets[cell.tileset];
 
         // position
 
-        Vector2f position, size;
+        RectF bounds = m_properties->computeCellBounds(coords, m_tileSize);
+        Vector2f position = bounds.getPosition();
+        position += sheet.tileset.getOffset();
 
-        if (m_orientation == TileOrientation::Orthogonal) {
-          size = m_tileSize;
-          position = cell * m_tileSize + m_tileset.getOffset();
-        } else {
-          assert(m_orientation == TileOrientation::Staggered);
-          size = m_tileset.getTileSize();
-
-          if (cell.y % 2 == 0) {
-            position = cell * m_tileSize;
-            position.y /= 2;
-          } else {
-            position = cell * m_tileSize;
-            position.y /= 2;
-            position.x += m_tileSize.width / 2;
-          }
-
-          position += m_tileset.getOffset();
-        }
-
-        RectF box = RectF::fromPositionSize(position, size);
+        RectF box = RectF::fromPositionSize(position, sheet.tileset.getTileSize());
 
         // texture coords
 
-        RectF textureCoords = m_tileset.computeTextureCoords(tile);
+        RectF textureCoords = sheet.tileset.computeTextureCoords(cell.tile);
 
         // vertices
 
@@ -214,7 +228,7 @@ inline namespace v1 {
         vertices[2].texCoords = textureCoords.getBottomLeft();
         vertices[3].texCoords = textureCoords.getBottomRight();
 
-        auto flip = m_tiles(cell).flip;
+        auto flip = cell.flip;
 
         // order of flip matters:
         // http://docs.mapeditor.org/en/latest/reference/tmx-map-format/#tile-flipping
@@ -235,28 +249,36 @@ inline namespace v1 {
 
         // first triangle
 
-        array.append(vertices[0]);
-        array.append(vertices[1]);
-        array.append(vertices[2]);
+        sheet.vertices.append(vertices[0]);
+        sheet.vertices.append(vertices[1]);
+        sheet.vertices.append(vertices[2]);
 
         // second triangle
 
-        array.append(vertices[2]);
-        array.append(vertices[1]);
-        array.append(vertices[3]);
+        sheet.vertices.append(vertices[2]);
+        sheet.vertices.append(vertices[1]);
+        sheet.vertices.append(vertices[3]);
       }
     }
 
   }
 
   void TileLayer::updateGeometry() {
-    m_vertices.clear();
-
-    if (!m_tileset.hasTexture() || m_tileSize.width == 0 || m_tileSize.height == 0) {
+    if (m_sheets.empty() || m_tileSize.width == 0 || m_tileSize.height == 0 || m_properties == nullptr) {
       return;
     }
 
-    fillVertexArray(m_vertices, m_rect);
+    fillVertexArray(m_sheets, m_rect);
+  }
+
+  RectI TileLayer::computeOffsets() const {
+    RectI offsets;
+
+    for (auto& sheet : m_sheets) {
+      offsets.extend(sheet.tileset.getOffset());
+    }
+
+    return offsets;
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2017 Julien Bernard
+ * Copyright (C) 2016-2021 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -37,7 +37,7 @@ public:
 
 
 void dummyViewContainerUsage() {
-  static constexpr gf::Vector2u ScreenSize(1024, 576);
+  static constexpr gf::Vector2i ScreenSize(1024, 576);
   static constexpr gf::Vector2f ViewSize(100.0f, 100.0f); // dummy values
   static constexpr gf::Vector2f ViewCenter(0.0f, 0.0f); // dummy values
 

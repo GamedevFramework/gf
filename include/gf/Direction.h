@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2019 Julien Bernard
+ * Copyright (C) 2016-2021 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -21,6 +21,8 @@
 #ifndef GF_DIRECTION_H
 #define GF_DIRECTION_H
 
+#include <cstdint>
+
 #include "CoreApi.h"
 #include "Vector.h"
 
@@ -38,7 +40,7 @@ inline namespace v1 {
    *
    * @sa gf::Orientation
    */
-  enum class Direction : int {
+  enum class Direction : int8_t {
     Center  = -1, ///< The center, indicates no direction
     Up      =  0, ///< The up direction
     Right   =  1, ///< The right direction

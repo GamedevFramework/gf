@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2019 Julien Bernard
+ * Copyright (C) 2016-2021 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -21,9 +21,10 @@
 #ifndef GF_PATHS_H
 #define GF_PATHS_H
 
+#include <string>
+
 #include "GraphicsApi.h"
 #include "Path.h"
-#include "StringRef.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -52,7 +53,7 @@ inline namespace v1 {
      * @param app The name of your application
      * @returns The preferences path
      */
-    static Path getPrefPath(StringRef org, StringRef app);
+    static Path getPrefPath(const std::string& org, const std::string& app);
 
     /**
      * @brief Get the base path
@@ -75,13 +76,6 @@ inline namespace v1 {
      * @returns A temporary directory
      */
     static Path getTemporaryDirectory();
-
-    /**
-     * @brief Get a unique path
-     *
-     * @returns A unique path
-     */
-    static Path getUniquePath();
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

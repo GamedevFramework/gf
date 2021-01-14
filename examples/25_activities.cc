@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2018 Julien Bernard
+ * Copyright (C) 2016-2021 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -31,42 +31,48 @@
 #include <gf/Shapes.h>
 #include <gf/Window.h>
 
+namespace {
+  namespace ga = gf::activity;
+
+  auto createActivity(gf::Vector2f& position, float& rotation, gf::Color4f& color, float& faces) {
+    return ga::repeat(
+      ga::sequence(
+        ga::parallelAny(
+          ga::sequence(
+            ga::moveTo({ 100.0f, 100.0f }, { 540.0f, 100.0f }, position, gf::seconds(2.7f), gf::Ease::quadInOut),
+            ga::moveTo({ 540.0f, 100.0f }, { 540.0f, 380.0f }, position, gf::seconds(1.9f), gf::Ease::backOut),
+            ga::moveTo({ 540.0f, 380.0f }, { 100.0f, 380.0f }, position, gf::seconds(2.7f), gf::Ease::elasticOut),
+            ga::moveTo({ 100.0f, 380.0f }, { 100.0f, 100.0f }, position, gf::seconds(1.9f))
+          ),
+          ga::sequence(
+            ga::value(4, 8, faces, gf::seconds(4.6f), gf::Ease::circInOut),
+            ga::value(8, 4, faces, gf::seconds(4.6f), gf::Ease::circInOut)
+          ),
+          ga::sequence(
+            ga::color(gf::Color::Azure, gf::Color::Orange, color, gf::seconds(4.6f)),
+            ga::color(gf::Color::Orange, gf::Color::Azure, color, gf::seconds(4.6f))
+          ),
+          ga::value(0, 10 * gf::Pi, rotation, gf::seconds(9.2f), gf::Ease::bounceInOut)
+        ),
+        ga::delay(gf::seconds(0.5f))
+      )
+    );
+  }
+
+}
+
 class Blob {
 public:
   Blob()
   : m_rotation(0.0f)
   , m_color(gf::Color::Azure)
   , m_faces(4)
-  , m_moveNorth({ 100.0f, 100.0f }, { 540.0f, 100.0f }, m_position, gf::seconds(2.7f), gf::Ease::quadInOut)
-  , m_moveWest({ 540.0f, 100.0f }, { 540.0f, 380.0f }, m_position, gf::seconds(1.9f), gf::Ease::backOut)
-  , m_moveSouth({ 540.0f, 380.0f }, { 100.0f, 380.0f }, m_position, gf::seconds(2.7f), gf::Ease::elasticOut)
-  , m_moveEast({ 100.0f, 380.0f }, { 100.0f, 100.0f }, m_position, gf::seconds(1.9f))
-  , m_facesUp(4, 8, m_faces, gf::seconds(4.6f), gf::Ease::circInOut)
-  , m_facesDown(8, 4, m_faces, gf::seconds(4.6f), gf::Ease::circInOut)
-  , m_colorToOrange(gf::Color::Azure, gf::Color::Orange, m_color, gf::seconds(4.6f))
-  , m_colorToAzure(gf::Color::Orange, gf::Color::Azure, m_color, gf::seconds(4.6f))
-  , m_rotationActivity(0, 10 * gf::Pi, m_rotation, gf::seconds(9.2f), gf::Ease::bounceInOut)
-  , m_repeat(m_parallel)
+  , m_activity(createActivity(m_position, m_rotation, m_color, m_faces))
   {
-    m_moveSequence.addActivity(m_moveNorth);
-    m_moveSequence.addActivity(m_moveWest);
-    m_moveSequence.addActivity(m_moveSouth);
-    m_moveSequence.addActivity(m_moveEast);
-
-    m_faceSequence.addActivity(m_facesUp);
-    m_faceSequence.addActivity(m_facesDown);
-
-    m_colorSequence.addActivity(m_colorToOrange);
-    m_colorSequence.addActivity(m_colorToAzure);
-
-    m_parallel.addActivity(m_moveSequence);
-    m_parallel.addActivity(m_faceSequence);
-    m_parallel.addActivity(m_colorSequence);
-    m_parallel.addActivity(m_rotationActivity);
   }
 
   void run(gf::Time time) {
-    m_repeat.run(time);
+    m_activity.run(time);
   }
 
   void render(gf::RenderTarget& target) {
@@ -83,23 +89,7 @@ private:
   float m_rotation;
   gf::Color4f m_color;
   float m_faces;
-
-private:
-  // activities
-  gf::MoveToActivity m_moveNorth;
-  gf::MoveToActivity m_moveWest;
-  gf::MoveToActivity m_moveSouth;
-  gf::MoveToActivity m_moveEast;
-  gf::SequenceActivity m_moveSequence;
-  gf::ValueActivity m_facesUp;
-  gf::ValueActivity m_facesDown;
-  gf::SequenceActivity m_faceSequence;
-  gf::ColorActivity m_colorToOrange;
-  gf::ColorActivity m_colorToAzure;
-  gf::SequenceActivity m_colorSequence;
-  gf::ValueActivity m_rotationActivity;
-  gf::ParallelActivity m_parallel;
-  gf::RepeatActivity m_repeat;
+  ga::AnyActivity m_activity;
 };
 
 

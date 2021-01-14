@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2019 Julien Bernard
+ * Copyright (C) 2016-2021 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -33,6 +33,15 @@ inline namespace v1 {
   /**
    * @ingroup graphics_tiles
    * @brief A tileset
+   *
+   * A tileset is a texture that contains all the tiles, ordered in a grid.
+   * The tileset has several parameters that are inspired by the parameters in
+   * [Tiled](http://www.mapeditor.org/):
+   *
+   * - tile size: the size of a tile (`setTileSize()`, `getTileSize()`)
+   * - margin: the margin around the tiles (`setMargin()`, `getMargin()`), default: @f$ (0,0) @f$
+   * - spacing: the spacing between the tiles (`setSpacing()`, `getSpacing()`), default: @f$ (0,0) @f$
+   * - offset: the offset of the tileset when drawing a tile, default: @f$ (0,0) @f$
    *
    * @sa gf::TileLayer
    */

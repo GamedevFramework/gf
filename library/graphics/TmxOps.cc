@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2019 Julien Bernard
+ * Copyright (C) 2016-2021 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -28,10 +28,23 @@ inline namespace v1 {
 #endif
 
   TileLayer makeTileLayer(const TmxLayers& map, const TmxTileLayer& layer, ResourceManager& resources) {
-    TileLayer tiles(map.mapSize, map.orientation);
+    TileLayer tiles;
+
+    switch (map.orientation) {
+      case TileOrientation::Orthogonal:
+        tiles = TileLayer::createOrthogonal(map.mapSize);
+        break;
+      case TileOrientation::Staggered:
+        tiles = TileLayer::createStaggered(map.mapSize, map.mapCellAxis, map.mapCellIndex);
+        break;
+      default:
+        assert(false);
+        break;
+    }
+
     tiles.setTileSize(map.tileSize);
 
-    const TmxTileset *uniqueTileset = nullptr;
+    std::map<const TmxTileset *, std::size_t> mapping;
     int k = 0;
 
     for (auto& cell : layer.cells) {
@@ -45,24 +58,27 @@ inline namespace v1 {
         const TmxTileset *tileset = map.getTileSetFromGID(gid);
         assert(tileset);
 
-        gid = gid - tileset->firstGid;
-        tiles.setTile({ i, j }, gid, cell.flip);
+        std::size_t id;
 
-        if (!tiles.hasTexture()) {
+        if (auto it = mapping.find(tileset); it != mapping.end()) {
+          id = it->second;
+        } else {
+          id = tiles.createTilesetId();
+
           assert(tileset->image);
           const gf::Texture& texture = resources.getTexture(tileset->image->source);
-          tiles.setTexture(texture);
 
-          tiles.setTilesetTileSize(tileset->tileSize);
-          tiles.setOffset(tileset->offset);
-          tiles.setMargin(tileset->margin);
-          tiles.setSpacing(tileset->spacing);
+          Tileset& ts = tiles.getTileset(id);
+          ts.setTexture(texture);
 
-          assert(uniqueTileset == nullptr);
-          uniqueTileset = tileset;
-        } else {
-          assert(tileset == uniqueTileset);
+          ts.setTileSize(tileset->tileSize);
+          ts.setOffset(tileset->offset);
+          ts.setMargin(tileset->margin);
+          ts.setSpacing(tileset->spacing);
         }
+
+        gid = gid - tileset->firstGid;
+        tiles.setTile({ i, j }, id, gid, cell.flip);
       }
 
       k++;

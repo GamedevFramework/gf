@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2019 Julien Bernard
+ * Copyright (C) 2016-2021 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -551,7 +551,7 @@ inline namespace v1 {
     ar | size.width | size.height;
 
     for (auto& item : array) {
-      ar | item;
+      ar | const_cast<T&>(item);
     }
 
     return ar;

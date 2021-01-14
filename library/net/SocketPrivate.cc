@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2019 Julien Bernard
+ * Copyright (C) 2016-2021 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -40,6 +40,11 @@ namespace priv {
     return ::closesocket(handle) == 0;
   }
 
+  bool nativeSetReuseAddress(SocketHandle handle, bool reuse) {
+    BOOL val = reuse ? TRUE : FALSE;
+    return ::setsockopt(handle, SOL_SOCKET, SO_REUSEADDR, reinterpret_cast<const char*>(&val), sizeof(BOOL)) == 0;
+  }
+
   bool nativeSetBlockMode(SocketHandle handle, bool blocking) {
     u_long mode = blocking ? 1 : 0;
     return ::ioctlsocket(handle, FIONBIO, &mode) == 0;
@@ -64,6 +69,11 @@ namespace priv {
 #else
   bool nativeCloseSocket(SocketHandle handle) {
     return ::close(handle) == 0;
+  }
+
+  bool nativeSetReuseAddress(SocketHandle handle, bool reuse) {
+    int val = reuse ? 1 : 0;
+    return ::setsockopt(handle, SOL_SOCKET, SO_REUSEADDR, static_cast<const void*>(&val), sizeof(int)) == 0;
   }
 
   bool nativeSetBlockMode(SocketHandle handle, bool blocking) {
@@ -123,6 +133,10 @@ namespace priv {
 
       if (sock == InvalidSocketHandle) {
         continue;
+      }
+
+      if (!nativeSetReuseAddress(sock, true)) {
+        gf::Log::error("Error when setting address reuse. Reason: %s\n", priv::getErrorString().c_str());
       }
 
       if (::bind(sock, info.address.asSockAddr(), info.address.length) != 0) {

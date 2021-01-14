@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2019 Julien Bernard
+ * Copyright (C) 2016-2021 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -28,6 +28,8 @@
 
 #include <gf/Event.h>
 #include <gf/Log.h>
+
+#include <gfpriv/SdlDebug.h>
 
 #define GF_IMPLEMENTATION
 #include "generated/gamecontrollerdb.txt.h"
@@ -104,49 +106,31 @@ inline namespace v1 {
   } // anonymous namespace
 
   const char *Gamepad::getAxisName(GamepadAxis axis) {
-    return SDL_GameControllerGetStringForAxis(getAxisFromGamepadAxis(axis));
+    return SDL_CHECK_EXPR(SDL_GameControllerGetStringForAxis(getAxisFromGamepadAxis(axis)));
   }
 
   const char *Gamepad::getButtonName(GamepadButton button) {
-    return SDL_GameControllerGetStringForButton(getButtonFromGamepadButton(button));
+    return SDL_CHECK_EXPR(SDL_GameControllerGetStringForButton(getButtonFromGamepadButton(button)));
   }
 
   namespace {
 
-#if SDL_VERSION_ATLEAST(2,0,4)
     SDL_GameController *getController(GamepadId id) {
-      return SDL_GameControllerFromInstanceID(static_cast<SDL_JoystickID>(id));
+      return SDL_CHECK_EXPR(SDL_GameControllerFromInstanceID(static_cast<SDL_JoystickID>(id)));
     }
-#else
-    std::map<GamepadId, SDL_GameController*> g_controllers;
-
-    SDL_GameController *getController(GamepadId id) {
-      auto it = g_controllers.find(id);
-
-      if (it == g_controllers.end()) {
-        return nullptr;
-      }
-
-      return it->second;
-    }
-#endif
 
     GamepadId openController(int index) {
-      SDL_GameController *controller = SDL_GameControllerOpen(index);
+      SDL_GameController *controller = SDL_CHECK_EXPR(SDL_GameControllerOpen(index));
 
       if (controller == nullptr) {
         Log::error("Could not open gamepad %i: %s\n", index, SDL_GetError());
         return static_cast<GamepadId>(-1);
       }
 
-      SDL_Joystick *joystick = SDL_GameControllerGetJoystick(controller);
-      SDL_JoystickID instanceId = SDL_JoystickInstanceID(joystick);
+      SDL_Joystick *joystick = SDL_CHECK_EXPR(SDL_GameControllerGetJoystick(controller));
+      SDL_JoystickID instanceId = SDL_CHECK_EXPR(SDL_JoystickInstanceID(joystick));
 
       Log::debug("New gamepad (device: %i / instance: %i)\n", index, instanceId);
-
-#if !SDL_VERSION_ATLEAST(2,0,4)
-      g_controllers.insert(std::make_pair(static_cast<GamepadId>(instanceId), controller));
-#endif
 
       return static_cast<GamepadId>(instanceId);
     }
@@ -164,7 +148,7 @@ inline namespace v1 {
       return false;
     }
 
-    return SDL_GameControllerGetAttached(controller) == SDL_TRUE;
+    return SDL_CHECK_EXPR(SDL_GameControllerGetAttached(controller)) == SDL_TRUE;
   }
 
   void Gamepad::close(GamepadId id) {
@@ -174,11 +158,7 @@ inline namespace v1 {
       return;
     }
 
-#if !SDL_VERSION_ATLEAST(2,0,4)
-    g_controllers.erase(id);
-#endif
-
-    SDL_GameControllerClose(controller);
+    SDL_CHECK(SDL_GameControllerClose(controller));
   }
 
   const char *Gamepad::getName(GamepadId id) {
@@ -188,7 +168,7 @@ inline namespace v1 {
       return "?";
     }
 
-    return SDL_GameControllerName(controller);
+    return SDL_CHECK_EXPR(SDL_GameControllerName(controller));
   }
 
   void Gamepad::initialize() {
@@ -198,7 +178,7 @@ inline namespace v1 {
       return;
     }
 
-    int added = SDL_GameControllerAddMappingsFromRW(SDL_RWFromConstMem(gamecontrollerdb, sizeof gamecontrollerdb), 1);
+    int added = SDL_CHECK_EXPR(SDL_GameControllerAddMappingsFromRW(SDL_RWFromConstMem(gamecontrollerdb, sizeof gamecontrollerdb), 1));
 
     if (added == -1) {
       Log::error("Unable to load game controller mappings: '%s'\n", SDL_GetError());
@@ -207,7 +187,7 @@ inline namespace v1 {
     }
 
     for (int index = 0; index < SDL_NumJoysticks(); ++index) {
-      if (SDL_IsGameController(index) == SDL_TRUE) {
+      if (SDL_CHECK_EXPR(SDL_IsGameController(index)) == SDL_TRUE) {
         openController(index);
       }
     }

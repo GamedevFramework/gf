@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2019 Julien Bernard
+ * Copyright (C) 2016-2021 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -21,10 +21,11 @@
 #ifndef GF_CONSOLE_FONT_H
 #define GF_CONSOLE_FONT_H
 
+#include <string_view>
+
 #include "GraphicsApi.h"
 #include "Path.h"
 #include "Span.h"
-#include "StringRef.h"
 #include "Texture.h"
 #include "Vector.h"
 
@@ -192,7 +193,7 @@ inline namespace v1 {
      * @param str The string with the characters
      * @param position The position, in characters, of the first character of the string
      */
-    void mapString(StringRef str, Vector2i position);
+    void mapString(std::string_view str, Vector2i position);
 
     /**
      * @brief Map an element in the font

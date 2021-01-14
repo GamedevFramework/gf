@@ -4,7 +4,7 @@ add_executable(gfdev_source_file graphics/tools/gfdev_source_file.cc)
 
 set_target_properties(gfdev_source_file
   PROPERTIES
-    CXX_STANDARD 14
+    CXX_STANDARD 17
     CXX_EXTENSIONS OFF
 )
 
@@ -128,6 +128,7 @@ else()
     core/Noise.cc
     core/Noises.cc
     core/Orientation.cc
+    core/Orthogonal.cc
     core/Path.cc
     core/PointSequence.cc
     core/Polygon.cc
@@ -178,6 +179,7 @@ else()
     graphics/Font.cc
     graphics/GameManager.cc
     graphics/Gamepad.cc
+    graphics/GamepadValues.cc
     graphics/GlDebug.cc
     graphics/GraphicsHandle.cc
     graphics/GraphicsInfo.cc
@@ -186,6 +188,7 @@ else()
     graphics/Library.cc
     graphics/Logo.cc
     graphics/Monitor.cc
+    graphics/MouseValues.cc
     graphics/NinePatch.cc
     graphics/Particles.cc
     graphics/Paths.cc
@@ -212,6 +215,7 @@ else()
     graphics/TextureAtlas.cc
     graphics/Texture.cc
     graphics/TileLayer.cc
+    graphics/TileProperties.cc
     graphics/Tileset.cc
     graphics/TmxOps.cc
     graphics/Transformable.cc
@@ -369,11 +373,29 @@ target_link_libraries(gfcore0
   PUBLIC
     Threads::Threads
     Boost::boost
-    Boost::filesystem
   PRIVATE
     ZLIB::ZLIB
     pugixml
 )
+
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+  if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "9.1")
+    message(STATUS "Using explicit C++ std::filesystem library (GNU)")
+    target_link_libraries(gfcore0
+      PUBLIC
+        stdc++fs
+    )
+  endif()
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+  if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "9.0")
+    message(STATUS "Using explicit C++ std::filesystem library (clang)")
+    target_link_libraries(gfcore0
+      PUBLIC
+        stdc++fs
+    )
+  endif()
+endif()
+
 
 target_link_libraries(gf0
   PUBLIC
@@ -416,13 +438,13 @@ endif()
 
 target_compile_features(gfcore0
   PUBLIC
-    cxx_std_14
+    cxx_std_17
 )
 
 set_target_properties(gfcore0
   PROPERTIES
     EXPORT_NAME "core"
-    CXX_STANDARD 14
+    CXX_STANDARD 17
     CXX_EXTENSIONS OFF
     VERSION ${PROJECT_VERSION}
     SOVERSION ${PROJECT_VERSION_MAJOR}
@@ -430,12 +452,12 @@ set_target_properties(gfcore0
 
 target_compile_features(gf0
   PUBLIC
-    cxx_std_14
+    cxx_std_17
 )
 
 set_target_properties(gf0
   PROPERTIES
-    CXX_STANDARD 14
+    CXX_STANDARD 17
     CXX_EXTENSIONS OFF
     EXPORT_NAME "graphics"
     VERSION ${PROJECT_VERSION}
@@ -444,12 +466,12 @@ set_target_properties(gf0
 
 target_compile_features(gfnet0
   PUBLIC
-    cxx_std_14
+    cxx_std_17
 )
 
 set_target_properties(gfnet0
   PROPERTIES
-    CXX_STANDARD 14
+    CXX_STANDARD 17
     CXX_EXTENSIONS OFF
     EXPORT_NAME "net"
     VERSION ${PROJECT_VERSION}

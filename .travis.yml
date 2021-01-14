@@ -1,17 +1,16 @@
+version: ~> 1.0
+
 language: cpp
 
 addons:
   apt:
     packages:
       - cmake
-      - libboost-filesystem-dev
       - libboost-dev
       - libfreetype6-dev
       - libpugixml-dev
       - libsdl2-dev
       - zlib1g-dev
-      - libsfml-dev
-      - libbox2d-dev
   homebrew:
     packages:
       - cmake
@@ -22,14 +21,17 @@ addons:
       - zlib
     update: true
 
-matrix:
+jobs:
   include:
     - os: linux
-      dist: bionic
+      dist: focal
       compiler: gcc
     - os: linux
-      dist: bionic
+      dist: focal
       compiler: clang
+    - os: osx
+      osx_image: xcode12
+  allow_failures:
     - os: osx
 
 branches:
@@ -38,7 +40,7 @@ branches:
     - develop
 
 before_script:
-  - test "$TRAVIS_OS_NAME" = "linux" && sudo ln -s /usr/share/libpugixml-dev/cmake /usr/lib/x86_64-linux-gnu/cmake/pugixml || true
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo ln -s /usr/share/libpugixml-dev/cmake /usr/lib/x86_64-linux-gnu/cmake/pugixml; fi
   - mkdir build
   - cd build
   - cmake -DCMAKE_BUILD_TYPE=Release -DGF_DEBUG=OFF -DGF_BUILD_GAMES=ON -DGF_SINGLE_COMPILTATION_UNIT=ON -DBUILD_TESTING=ON ..

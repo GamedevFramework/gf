@@ -23,7 +23,7 @@ install:
   - cmd: .\bootstrap-vcpkg.bat
   - cmd: vcpkg integrate install
   - cmd: vcpkg remove --outdated --recurse
-  - cmd: vcpkg install sdl2:x64-windows freetype:x64-windows zlib:x64-windows boost-algorithm:x64-windows boost-filesystem:x64-windows boost-heap:x64-windows boost-container:x64-windows pugixml:x64-windows
+  - cmd: vcpkg install sdl2:x64-windows freetype:x64-windows zlib:x64-windows boost-algorithm:x64-windows boost-heap:x64-windows boost-container:x64-windows pugixml:x64-windows
   # box2d:x64-windows sfml:x64-windows
 
 before_build:

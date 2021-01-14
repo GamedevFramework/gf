@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2019 Julien Bernard
+ * Copyright (C) 2016-2021 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -226,7 +226,7 @@ inline namespace v1 {
     auto cacheIt = m_cache.find(characterSize);
 
     if (cacheIt == m_cache.end()) {
-      GlyphCache cache = createCache(characterSize);
+      GlyphCache cache = createCache();
       std::tie(cacheIt, std::ignore) = m_cache.insert(std::make_pair(characterSize, std::move(cache)));
     }
 
@@ -301,20 +301,13 @@ inline namespace v1 {
     getGlyph(' ', characterSize, 0);
   }
 
-  static constexpr int DefaultSize = 1024;
+  static constexpr int DefaultSize = 4096;
 
-  Font::GlyphCache Font::createCache(unsigned characterSize) {
+  Font::GlyphCache Font::createCache() {
     GlyphCache cache;
 
     AlphaTexture texture({ DefaultSize, DefaultSize });
     cache.texture = std::move(texture);
-
-    // create the glyphs for the usual characters
-    for (char c : "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz") {
-      Glyph glyph = createGlyph(c, characterSize, 0.0f, cache);
-      uint64_t key = makeKey(c, 0.0f);
-      cache.glyphs.insert(std::make_pair(key, glyph));
-    }
 
     return cache;
   }

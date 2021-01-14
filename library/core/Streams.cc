@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2019 Julien Bernard
+ * Copyright (C) 2016-2021 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -42,7 +42,7 @@ inline namespace v1 {
   FileInputStream::FileInputStream(const Path& path)
   : m_file(nullptr)
   {
-    if (!boost::filesystem::is_regular_file(path)) {
+    if (!std::filesystem::is_regular_file(path)) {
       Log::error("Could not find the following file for streaming: %s\n", path.string().c_str()); // throw?
       return;
     }
@@ -164,7 +164,7 @@ inline namespace v1 {
   }
 
   CompressedInputStream::~CompressedInputStream() {
-    int err = inflateEnd(&m_stream);
+    [[maybe_unused]] int err = inflateEnd(&m_stream);
     assert(err == Z_OK);
   }
 
@@ -373,7 +373,7 @@ inline namespace v1 {
       uInt written = BufferSize - m_stream.avail_out;
 
       if (written > 0) {
-        std::size_t flushed = m_compressed->write(gf::span(m_buffer, written));
+        [[maybe_unused]] std::size_t flushed = m_compressed->write(gf::span(m_buffer, written));
         assert(flushed == written);
 
         m_stream.next_out = m_buffer;
@@ -392,12 +392,12 @@ inline namespace v1 {
     m_stream.avail_out = BufferSize;
 
     do {
-      int err = deflate(&m_stream, Z_NO_FLUSH);
+      [[maybe_unused]] int err = deflate(&m_stream, Z_NO_FLUSH);
       assert(err == Z_OK);
       uInt written = BufferSize - m_stream.avail_out;
 
       if (written > 0) {
-        std::size_t flushed = m_compressed->write(gf::span(m_buffer, written));
+        [[maybe_unused]] std::size_t flushed = m_compressed->write(gf::span(m_buffer, written));
         assert(flushed == written);
 
         m_stream.next_out = m_buffer;
