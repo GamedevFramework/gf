@@ -144,6 +144,23 @@ inline namespace v1 {
     return std::abs(getSignedArea(getRawPoints()) / 2);
   }
 
+  Vector2f Polygon::getPrevPoint(std::size_t i) const {
+    if (i > 0) {
+      return getPoint(i - 1);
+    }
+
+    return getLastPoint();
+  }
+
+  Vector2f Polygon::getNextPoint(std::size_t i) const {
+    if (i < getPointCount() - 1) {
+      return getPoint(i + 1);
+    }
+
+    return getFirstPoint();
+  }
+
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif

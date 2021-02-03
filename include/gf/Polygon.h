@@ -129,6 +129,22 @@ inline namespace v1 {
      * @returns The area of the polygon
      */
     float getArea() const;
+
+    /**
+     * @brief Get the point before the i-th point
+     *
+     * @param i The index of the current point
+     * @returns The point before the current point
+     */
+    Vector2f getPrevPoint(std::size_t i) const;
+
+    /**
+     * @brief Get the point after the i-th point
+     *
+     * @param i The index of the current point
+     * @returns The point after the current point
+     */
+    Vector2f getNextPoint(std::size_t i) const;
   };
 
   /**
