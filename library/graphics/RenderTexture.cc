@@ -25,6 +25,8 @@
 
 #include <cassert>
 
+#include <gf/Log.h>
+
 #include <gfpriv/GlDebug.h>
 #include <gfpriv/GlFwd.h>
 
@@ -57,6 +59,8 @@ inline namespace v1 {
   void RenderTexture::setActive() {
     if (m_framebuffer.isValid()) {
       GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, m_framebuffer));
+    } else {
+      gf::Log::warning("Framebuffer is not valid, you can not activate it!\n");
     }
   }
 

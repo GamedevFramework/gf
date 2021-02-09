@@ -88,6 +88,9 @@ inline namespace v1 {
 
   RenderTarget::~RenderTarget() = default;
 
+  void RenderTarget::setActive() {
+  }
+
   Region RenderTarget::getCanonicalScissorBox() {
     GLint box[4];
     GL_CHECK(glGetIntegerv(GL_SCISSOR_BOX, &box[0]));

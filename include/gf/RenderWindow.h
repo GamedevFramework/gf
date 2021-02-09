@@ -94,14 +94,7 @@ inline namespace v1 {
 
     virtual Vector2i getSize() const override;
 
-    /**
-     * @brief Activate the target for rendering
-     *
-     * This function activates the render-window so that all draw calls
-     * are targeted to the window. You should call this function before
-     * you want to draw something to the target.
-     */
-    void setActive();
+    void setActive() override;
 
     /**
      * @brief Display on screen what has been rendered to the window so far

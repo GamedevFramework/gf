@@ -154,7 +154,7 @@ inline namespace v1 {
       return m_texture.isRepeated();
     }
 
-    virtual Vector2i getSize() const override;
+    Vector2i getSize() const override;
 
     /**
      * @brief Resize the underlying texture
@@ -163,14 +163,7 @@ inline namespace v1 {
      */
     void resize(Vector2i size);
 
-    /**
-     * @brief Activate the render-texture for rendering
-     *
-     * This function activates the render-texture so that all draw calls
-     * are targeted to the texture. You should call this function before
-     * you want to draw something to the target.
-     */
-    void setActive();
+    void setActive() override;
 
     /**
      * @brief Update the contents of the target texture
