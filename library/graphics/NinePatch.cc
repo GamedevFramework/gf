@@ -23,6 +23,8 @@
 #include <gf/RenderTarget.h>
 #include <gf/Texture.h>
 
+#include <gfpriv/TextureCoords.h>
+
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
@@ -215,22 +217,22 @@ inline namespace v1 {
     float y2 = gf::lerp(m_textureRect.min.y, m_textureRect.max.y, 1 - m_bottom);
     float y3 = m_textureRect.max.y;
 
-    m_vertices[ 0].texCoords = { x0, y0 };
-    m_vertices[ 1].texCoords = { x0, y1 };
-    m_vertices[ 2].texCoords = { x0, y2 };
-    m_vertices[ 3].texCoords = { x0, y3 };
-    m_vertices[ 4].texCoords = { x1, y0 };
-    m_vertices[ 5].texCoords = { x1, y1 };
-    m_vertices[ 6].texCoords = { x1, y2 };
-    m_vertices[ 7].texCoords = { x1, y3 };
-    m_vertices[ 8].texCoords = { x2, y0 };
-    m_vertices[ 9].texCoords = { x2, y1 };
-    m_vertices[10].texCoords = { x2, y2 };
-    m_vertices[11].texCoords = { x2, y3 };
-    m_vertices[12].texCoords = { x3, y0 };
-    m_vertices[13].texCoords = { x3, y1 };
-    m_vertices[14].texCoords = { x3, y2 };
-    m_vertices[15].texCoords = { x3, y3 };
+    m_vertices[ 0].texCoords = gf::priv::computeTextureCoords({ x0, y0 });
+    m_vertices[ 1].texCoords = gf::priv::computeTextureCoords({ x0, y1 });
+    m_vertices[ 2].texCoords = gf::priv::computeTextureCoords({ x0, y2 });
+    m_vertices[ 3].texCoords = gf::priv::computeTextureCoords({ x0, y3 });
+    m_vertices[ 4].texCoords = gf::priv::computeTextureCoords({ x1, y0 });
+    m_vertices[ 5].texCoords = gf::priv::computeTextureCoords({ x1, y1 });
+    m_vertices[ 6].texCoords = gf::priv::computeTextureCoords({ x1, y2 });
+    m_vertices[ 7].texCoords = gf::priv::computeTextureCoords({ x1, y3 });
+    m_vertices[ 8].texCoords = gf::priv::computeTextureCoords({ x2, y0 });
+    m_vertices[ 9].texCoords = gf::priv::computeTextureCoords({ x2, y1 });
+    m_vertices[10].texCoords = gf::priv::computeTextureCoords({ x2, y2 });
+    m_vertices[11].texCoords = gf::priv::computeTextureCoords({ x2, y3 });
+    m_vertices[12].texCoords = gf::priv::computeTextureCoords({ x3, y0 });
+    m_vertices[13].texCoords = gf::priv::computeTextureCoords({ x3, y1 });
+    m_vertices[14].texCoords = gf::priv::computeTextureCoords({ x3, y2 });
+    m_vertices[15].texCoords = gf::priv::computeTextureCoords({ x3, y3 });
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

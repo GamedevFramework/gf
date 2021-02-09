@@ -28,6 +28,8 @@
 #include <gf/VectorOps.h>
 #include <gf/Vertex.h>
 
+#include <gfpriv/TextureCoords.h>
+
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
@@ -682,7 +684,7 @@ inline namespace v1 {
   }
 
   RectF Logo::getLocalBounds() const {
-    return RectF::fromPositionSize({ 0.0f, 0.0f }, Vector2f(BoundsWidth, BoundsHeight));
+    return RectF::fromPositionSize({ 0.0f, 0.0f }, gf::vec(BoundsWidth, BoundsHeight));
   }
 
   void Logo::setAnchor(Anchor anchor) {
@@ -692,15 +694,17 @@ inline namespace v1 {
   void Logo::draw(RenderTarget& target, const RenderStates& states) {
     Vertex vertices[4];
 
-    vertices[0].position = Vector2f(0.0f,        0.0f        );
-    vertices[1].position = Vector2f(BoundsWidth, 0.0f        );
-    vertices[2].position = Vector2f(0.0f,        BoundsHeight);
-    vertices[3].position = Vector2f(BoundsWidth, BoundsHeight);
+    RectF bounds = getLocalBounds();
 
-    vertices[0].texCoords = { 0.0f, 0.0f };
-    vertices[1].texCoords = { 1.0f, 0.0f };
-    vertices[2].texCoords = { 0.0f, 1.0f };
-    vertices[3].texCoords = { 1.0f, 1.0f };
+    vertices[0].position = bounds.getTopLeft();
+    vertices[1].position = bounds.getTopRight();
+    vertices[2].position = bounds.getBottomLeft();
+    vertices[3].position = bounds.getBottomRight();
+
+    vertices[0].texCoords = gf::priv::computeTextureCoords({ 0.0f, 0.0f });
+    vertices[1].texCoords = gf::priv::computeTextureCoords({ 1.0f, 0.0f });
+    vertices[2].texCoords = gf::priv::computeTextureCoords({ 0.0f, 1.0f });
+    vertices[3].texCoords = gf::priv::computeTextureCoords({ 1.0f, 1.0f });
 
     RenderStates localStates = states;
     localStates.transform *= getTransform();

@@ -24,6 +24,8 @@
 #include <gf/Texture.h>
 #include <gf/VectorOps.h>
 
+#include <gfpriv/TextureCoords.h>
+
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
@@ -146,10 +148,10 @@ inline namespace v1 {
 
     vertices[0].color = vertices[1].color = vertices[2].color = vertices[3].color = color;
 
-    vertices[0].texCoords = textureRect.getTopLeft();
-    vertices[1].texCoords = textureRect.getTopRight();
-    vertices[2].texCoords = textureRect.getBottomLeft();
-    vertices[3].texCoords = textureRect.getBottomRight();
+    vertices[0].texCoords = gf::priv::computeTextureCoords(textureRect.getTopLeft());
+    vertices[1].texCoords = gf::priv::computeTextureCoords(textureRect.getTopRight());
+    vertices[2].texCoords = gf::priv::computeTextureCoords(textureRect.getBottomLeft());
+    vertices[3].texCoords = gf::priv::computeTextureCoords(textureRect.getBottomRight());
 
     m_vertices.append(vertices[0]);
     m_vertices.append(vertices[1]);

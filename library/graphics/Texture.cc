@@ -273,7 +273,6 @@ inline namespace v1 {
     GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, boundFramebuffer));
 
     Image image(size, pixels.data());
-    image.flipHorizontally();
     return image;
   }
 

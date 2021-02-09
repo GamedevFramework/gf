@@ -74,14 +74,12 @@ inline namespace v1 {
   Image::Image()
   : m_size{0, 0}
   {
-
   }
 
   Image::Image(Vector2i size)
   : m_size(size)
   , m_pixels(computeImageSize(size), 0xFF)
   {
-
   }
 
   Image::Image(Vector2i size, Color4u color)
@@ -148,6 +146,7 @@ inline namespace v1 {
         break;
     }
 
+    flipHorizontally();
   }
 
   Image::Image(const Path& filename)
@@ -164,6 +163,8 @@ inline namespace v1 {
     m_pixels.resize(computeImageSize(m_size));
     std::copy_n(pixels, m_pixels.size(), m_pixels.data());
     stbi_image_free(pixels);
+
+    flipHorizontally();
   }
 
   Image::Image(Span<const uint8_t> content)
@@ -180,6 +181,8 @@ inline namespace v1 {
     m_pixels.resize(computeImageSize(m_size));
     std::copy_n(pixels, m_pixels.size(), m_pixels.data());
     stbi_image_free(pixels);
+
+    flipHorizontally();
   }
 
   Image::Image(InputStream& stream)
@@ -201,6 +204,8 @@ inline namespace v1 {
     m_pixels.resize(computeImageSize(m_size));
     std::copy_n(pixels, m_pixels.size(), m_pixels.data());
     stbi_image_free(pixels);
+
+    flipHorizontally();
   }
 
   bool Image::saveToFile (const Path& filename) const {
@@ -211,22 +216,25 @@ inline namespace v1 {
       return false;
     }
 
+    Image flipped(*this);
+    flipped.flipHorizontally();
+
     auto len = filenameString.length();
     std::string ext = len >= 4 ? filenameString.substr(len - 4) : "";
     lower(ext);
 
     if (ext == ".png") {
-      stbi_write_png(filenameString.c_str(), m_size.x, m_size.y, 4, m_pixels.data(), 0);
+      stbi_write_png(filenameString.c_str(), m_size.x, m_size.y, 4, flipped.m_pixels.data(), 0);
       return true;
     }
 
     if (ext == ".bmp") {
-      stbi_write_bmp(filenameString.c_str(), m_size.x, m_size.y, 4, m_pixels.data());
+      stbi_write_bmp(filenameString.c_str(), m_size.x, m_size.y, 4, flipped.m_pixels.data());
       return true;
     }
 
     if (ext == ".tga") {
-      stbi_write_tga(filenameString.c_str(), m_size.x, m_size.y, 4, m_pixels.data());
+      stbi_write_tga(filenameString.c_str(), m_size.x, m_size.y, 4, flipped.m_pixels.data());
       return true;
     }
 
@@ -261,7 +269,7 @@ inline namespace v1 {
       return;
     }
 
-    uint8_t *ptr = m_pixels.data() + (pos.x + pos.y * m_size.width) * 4;
+    uint8_t *ptr = m_pixels.data() + (pos.x + (m_size.height - pos.y - 1) * m_size.width) * 4;
     ptr[0] = color.r;
     ptr[1] = color.g;
     ptr[2] = color.b;
@@ -273,7 +281,7 @@ inline namespace v1 {
       return Color4u{0x00, 0x00, 0x00, 0x00};
     }
 
-    const uint8_t *ptr = m_pixels.data() + (pos.x + pos.y * m_size.width) * 4;
+    const uint8_t *ptr = m_pixels.data() + (pos.x + (m_size.height - pos.y - 1) * m_size.width) * 4;
     return Color4u{ptr[0], ptr[1], ptr[2], ptr[3]};
   }
 

@@ -31,6 +31,8 @@
 #include <gf/Texture.h>
 #include <gf/VectorOps.h>
 
+#include <gfpriv/TextureCoords.h>
+
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
@@ -155,7 +157,7 @@ inline namespace v1 {
         ratio = (m_vertices[i].position - m_bounds.getPosition()) / m_bounds.getSize();
       }
 
-      m_vertices[i].texCoords = m_textureRect.getPosition() + m_textureRect.getSize() * ratio;
+      m_vertices[i].texCoords = gf::priv::computeTextureCoords(m_textureRect.getPosition() + m_textureRect.getSize() * ratio);
     }
   }
 

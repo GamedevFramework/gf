@@ -408,7 +408,7 @@ inline namespace v1 {
 
     switch (format.transparency) {
       case ConsoleFontFormat::Alpha:
-        for (int y = 0; y < imageSize.height; ++y) {
+        for (int y = imageSize.height - 1; y >= 0; --y) {
           for (int x = 0; x < imageSize.width; ++x) {
             Color4u color = image.getPixel({ x, y });
             pixels[index++] = color.a;
@@ -418,7 +418,7 @@ inline namespace v1 {
         break;
 
       case ConsoleFontFormat::Grayscale:
-        for (int y = 0; y < imageSize.height; ++y) {
+        for (int y = imageSize.height - 1; y >= 0; --y) {
           for (int x = 0; x < imageSize.width; ++x) {
             Color4u color = image.getPixel({ x, y });
             assert(color.r == color.g && color.g == color.b);
@@ -431,7 +431,7 @@ inline namespace v1 {
       case ConsoleFontFormat::ColorKey: {
         Color4u key = image.getPixel(getColorKeyPosition());
 
-        for (int y = 0; y < imageSize.height; ++y) {
+        for (int y = imageSize.height - 1; y >= 0; --y) {
           for (int x = 0; x < imageSize.width; ++x) {
             Color4u color = image.getPixel({ x, y });
 

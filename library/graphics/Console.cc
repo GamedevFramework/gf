@@ -36,6 +36,7 @@
 #include <gf/VectorOps.h>
 #include <gf/VertexArray.h>
 
+#include <gfpriv/TextureCoords.h>
 
 namespace gf {
 
@@ -729,10 +730,10 @@ inline namespace v1 {
       // same positions
 
       RectF textureRect = m_font->getTextureRect(data.c);
-      vertices[0].texCoords = textureRect.getTopLeft();
-      vertices[1].texCoords = textureRect.getTopRight();
-      vertices[2].texCoords = textureRect.getBottomLeft();
-      vertices[3].texCoords = textureRect.getBottomRight();
+      vertices[0].texCoords = gf::priv::computeTextureCoords(textureRect.getTopLeft());
+      vertices[1].texCoords = gf::priv::computeTextureCoords(textureRect.getTopRight());
+      vertices[2].texCoords = gf::priv::computeTextureCoords(textureRect.getBottomLeft());
+      vertices[3].texCoords = gf::priv::computeTextureCoords(textureRect.getBottomRight());
 
       foregroundVertices.append(vertices[0]);
       foregroundVertices.append(vertices[1]);
