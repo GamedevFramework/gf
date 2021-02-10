@@ -36,14 +36,14 @@ inline namespace v1 {
 
   BasicSprite::BasicSprite()
   : m_texture(nullptr)
-  , m_textureRect(RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }))
+  , m_textureRect(RectF::fromSize({ 1.0f, 1.0f }))
   {
 
   }
 
   BasicSprite::BasicSprite(const Texture& texture)
   : m_texture(&texture)
-  , m_textureRect(RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }))
+  , m_textureRect(RectF::fromSize({ 1.0f, 1.0f }))
   {
 
   }
@@ -59,7 +59,7 @@ inline namespace v1 {
     m_texture = &texture;
 
     if (resetRect) {
-      m_textureRect = RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f });
+      m_textureRect = RectF::fromSize({ 1.0f, 1.0f });
     }
   }
 
@@ -90,7 +90,7 @@ inline namespace v1 {
     Vector2i textureSize = m_texture->getSize();
     Vector2f spriteSize = textureSize * m_textureRect.getSize();
 
-    m_bounds = RectF::fromPositionSize({ 0.0f, 0.0f }, spriteSize);
+    m_bounds = RectF::fromSize(spriteSize);
 
     vertices[0].position = m_bounds.getTopLeft();
     vertices[1].position = m_bounds.getTopRight();

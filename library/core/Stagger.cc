@@ -41,7 +41,7 @@ inline namespace v1 {
         break;
     }
 
-    return RectF::fromPositionSize({ 0.0f, 0.0f }, base);
+    return RectF::fromSize(base);
   }
 
   RectI StaggerHelper::computeVisibleArea(const RectF& local, Vector2f tileSize) const {

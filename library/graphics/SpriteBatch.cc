@@ -84,7 +84,7 @@ inline namespace v1 {
 
     Vector2i textureSize = texture.getSize();
     Vector2f spriteSize = textureSize * textureRect.getSize();
-    RectF bounds = RectF::fromPositionSize({ 0.0f, 0.0f }, spriteSize);
+    RectF bounds = RectF::fromSize(spriteSize);
 
     vertices[0].position = bounds.getTopLeft();
     vertices[1].position = bounds.getTopRight();

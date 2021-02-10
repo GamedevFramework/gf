@@ -247,7 +247,7 @@ inline namespace v1 {
   }
 
   void Texture::update(const Image& image) {
-    BareTexture::update(image.getPixelsPtr(), RectI::fromPositionSize({ 0, 0 }, image.getSize()));
+    BareTexture::update(image.getPixelsPtr(), RectI::fromSize(image.getSize()));
   }
 
   Image Texture::copyToImage() const {

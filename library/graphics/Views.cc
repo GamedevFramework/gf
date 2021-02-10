@@ -231,7 +231,7 @@ inline namespace v1 {
   }
 
   void ScreenView::updateView() {
-    RectF framebuffer = RectF::fromPositionSize({ 0.0f, 0.0f }, m_localFramebufferSize * getViewport().getSize());
+    RectF framebuffer = RectF::fromSize(m_localFramebufferSize * getViewport().getSize());
     reset(framebuffer);
   }
 

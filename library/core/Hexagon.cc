@@ -65,7 +65,7 @@ inline namespace v1 {
         break;
     }
 
-    return RectF::fromPositionSize({ 0.0f, 0.0f }, bottomRightCorner);
+    return RectF::fromSize(bottomRightCorner);
   }
 
   Vector2f HexagonHelper::computeCenter(Vector2i coords, float radius) const {

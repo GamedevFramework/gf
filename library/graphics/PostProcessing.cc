@@ -33,7 +33,7 @@ inline namespace v1 {
 
   PostProcessing::PostProcessing()
   : m_texture(nullptr)
-  , m_textureRect(RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }))
+  , m_textureRect(RectF::fromSize({ 1.0f, 1.0f }))
   , m_effect(nullptr)
   {
     updateTexCoords();
@@ -67,7 +67,7 @@ inline namespace v1 {
       return;
     }
 
-    RectF bounds = RectF::fromPositionSize({ 0.0f, 0.0f }, m_texture->getSize() * m_textureRect.getSize());
+    RectF bounds = RectF::fromSize(m_texture->getSize() * m_textureRect.getSize());
 
     m_vertices[0].position = bounds.getTopLeft();
     m_vertices[1].position = bounds.getTopRight();

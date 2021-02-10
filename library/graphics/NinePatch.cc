@@ -32,7 +32,7 @@ inline namespace v1 {
 
   NinePatch::NinePatch()
   : m_texture(nullptr)
-  , m_textureRect(RectF::fromPositionSize({ 0, 0 }, { 1, 1 }))
+  , m_textureRect(RectF::fromSize({ 1.0f, 1.0f }))
   , m_top(0)
   , m_bottom(1)
   , m_left(0)
@@ -45,12 +45,12 @@ inline namespace v1 {
 
   NinePatch::NinePatch(const Texture& texture)
   : m_texture(&texture)
-  , m_textureRect(RectF::fromPositionSize({ 0, 0 }, { 1, 1 }))
-  , m_top(0)
-  , m_bottom(1)
-  , m_left(0)
-  , m_right(1)
-  , m_size({ 0, 0 })
+  , m_textureRect(RectF::fromSize({ 1.0f, 1.0f }))
+  , m_top(0.0f)
+  , m_bottom(1.0f)
+  , m_left(0.0f)
+  , m_right(1.0f)
+  , m_size({ 0.0f, 0.0f })
   {
     updatePositions();
     updateTexCoords();
@@ -59,11 +59,11 @@ inline namespace v1 {
   NinePatch::NinePatch(const Texture& texture, const RectF& textureRect)
   : m_texture(&texture)
   , m_textureRect(textureRect)
-  , m_top(0)
-  , m_bottom(1)
-  , m_left(0)
-  , m_right(1)
-  , m_size({ 0, 0 })
+  , m_top(0.0f)
+  , m_bottom(1.0f)
+  , m_left(0.0f)
+  , m_right(1.0f)
+  , m_size({ 0.0f, 0.0f })
   {
     updatePositions();
     updateTexCoords();
@@ -74,7 +74,7 @@ inline namespace v1 {
     updatePositions();
 
     if (resetRect) {
-      m_textureRect = RectF::fromPositionSize({ 0, 0 }, { 1, 1 });
+      m_textureRect = RectF::fromSize({ 1.0f, 1.0f });
       updateTexCoords();
     }
   }
@@ -130,7 +130,7 @@ inline namespace v1 {
   }
 
   RectF NinePatch::getLocalBounds() const {
-    return RectF::fromPositionSize({ 0.0f, 0.0f }, m_size);
+    return RectF::fromSize(m_size);
   }
 
   void NinePatch::setAnchor(Anchor anchor) {

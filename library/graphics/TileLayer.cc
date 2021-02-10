@@ -128,7 +128,7 @@ inline namespace v1 {
   VertexBuffer TileLayer::commitGeometry() const {
     // TODO: there is more than one geometry
     VertexArray vertices(PrimitiveType::Triangles);
-//     RectI rect = RectI::fromPositionSize({ 0, 0 }, m_layerSize);
+//     RectI rect = RectI::fromSize(m_layerSize);
 //     fillVertexArray(vertices, rect);
     return VertexBuffer(vertices.getVertexData(), vertices.getVertexCount(), vertices.getPrimitiveType());
   }
@@ -144,7 +144,7 @@ inline namespace v1 {
       return gf::transform(inverseTransform, target.mapPixelToCoords(point));
     };
 
-    RectI screen = RectI::fromPositionSize({ 0, 0 }, target.getSize());
+    RectI screen = RectI::fromSize(target.getSize());
 
     RectF local = RectF::empty();
     local.extend(toLocal(screen.getTopLeft()));
@@ -152,7 +152,7 @@ inline namespace v1 {
     local.extend(toLocal(screen.getBottomLeft()));
     local.extend(toLocal(screen.getBottomRight()));
 
-    RectI layer = gf::RectI::fromPositionSize({ 0, 0 }, m_layerSize - 1);
+    RectI layer = gf::RectI::fromSize(m_layerSize - 1);
     RectI visible = m_properties->computeVisibleArea(local, m_tileSize);
     RectI rect = visible.getIntersection(layer);
 

@@ -40,7 +40,7 @@ inline namespace v1 {
 
   Shape::Shape()
   : m_texture(nullptr)
-  , m_textureRect(gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }))
+  , m_textureRect(gf::RectF::fromSize({ 1.0f, 1.0f }))
   , m_color(Color::White)
   , m_vertices(PrimitiveType::TriangleFan)
   , m_outlineColor(Color::White)
@@ -54,7 +54,7 @@ inline namespace v1 {
     m_texture = &texture;
 
     if (resetRect) {
-      m_textureRect = gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f });
+      m_textureRect = gf::RectF::fromSize({ 1.0f, 1.0f });
       updateTexCoords();
     }
   }

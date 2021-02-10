@@ -684,7 +684,7 @@ inline namespace v1 {
   }
 
   RectF Logo::getLocalBounds() const {
-    return RectF::fromPositionSize({ 0.0f, 0.0f }, gf::vec(BoundsWidth, BoundsHeight));
+    return RectF::fromSize(gf::vec(BoundsWidth, BoundsHeight));
   }
 
   void Logo::setAnchor(Anchor anchor) {

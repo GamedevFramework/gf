@@ -34,7 +34,7 @@ inline namespace v1 {
   Segue::Segue()
   : m_texture0(nullptr)
   , m_texture1(nullptr)
-  , m_textureRect(RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }))
+  , m_textureRect(RectF::fromSize({ 1.0f, 1.0f }))
   , m_effect(nullptr)
   , m_easing(Ease::linear)
   , m_totalTime(Time::zero())
@@ -85,7 +85,7 @@ inline namespace v1 {
       return;
     }
 
-    RectF bounds = RectF::fromPositionSize({ 0.0f, 0.0f }, m_texture0->getSize() * m_textureRect.getSize());
+    RectF bounds = RectF::fromSize(m_texture0->getSize() * m_textureRect.getSize());
 
     m_vertices[0].position = bounds.getTopLeft();
     m_vertices[1].position = bounds.getTopRight();

@@ -39,27 +39,24 @@ inline namespace v1 {
   : m_center{0.0f, 0.0f}
   , m_size{1000.0f, 1000.0f}
   , m_rotation(0)
-  , m_viewport(RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }))
+  , m_viewport(RectF::fromSize({ 1.0f, 1.0f }))
   {
-
   }
 
   View::View(const RectF& rect)
   : m_center(rect.getCenter())
   , m_size(rect.getSize())
   , m_rotation(0)
-  , m_viewport(RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }))
+  , m_viewport(RectF::fromSize({ 1.0f, 1.0f }))
   {
-
   }
 
   View::View(Vector2f center, Vector2f size)
   : m_center(center)
   , m_size(size)
   , m_rotation(0)
-  , m_viewport(RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }))
+  , m_viewport(RectF::fromSize({ 1.0f, 1.0f }))
   {
-
   }
 
   View::~View() = default;
