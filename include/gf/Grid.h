@@ -58,6 +58,7 @@ inline namespace v1 {
      * @param cellSize The size of a cell in the grid
      * @param color The color of the grid frame
      * @param lineWidth The width of the grid frame
+     * @param borderLines The state of border lines
      */
     SquareGrid(Vector2i gridSize, Vector2f cellSize, const Color4f& color, float lineWidth = 1.0f, BorderLines borderLines = BorderLines::Both);
 
@@ -128,16 +129,16 @@ inline namespace v1 {
     }
 
     /**
-     * @brief Set the width of the grid frame
+     * @brief Set which lines are included in the square grid
      *
-     * @param lineWidth The new width of the grid frame
+     * @param borderLines The new state of border lines
      */
     void setBorderLines(BorderLines borderLines);
 
     /**
      * @brief Get which lines are included in the square grid
      *
-     * @returns The current state of lines included
+     * @returns The current state of border lines
      */
     BorderLines getBorderLines() const noexcept {
       return m_borderLines;
