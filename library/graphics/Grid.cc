@@ -94,7 +94,7 @@ inline namespace v1 {
     vertices[0].color = vertices[1].color = m_color;
 
     if (m_borderLines == BorderLines::Width || m_borderLines == BorderLines::Both) {
-      for (int i = 0; i < m_gridSize.width; ++i) {
+      for (int i = 0; i <= m_gridSize.width; ++i) {
         float x = i * m_cellSize.width;
         vertices[0].position = { x, 0.0f };
         vertices[1].position = { x, max.y };
@@ -105,7 +105,7 @@ inline namespace v1 {
     }
 
     if (m_borderLines == BorderLines::Height || m_borderLines == BorderLines::Both) {
-      for (int j = 0; j < m_gridSize.height; ++j) {
+      for (int j = 0; j <= m_gridSize.height; ++j) {
         float y = j * m_cellSize.height;
         vertices[0].position = { 0.0f, y };
         vertices[1].position = { max.x, y };
