@@ -32,11 +32,12 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  SquareGrid::SquareGrid(Vector2i gridSize, Vector2f cellSize, const Color4f& color, float lineWidth)
+  SquareGrid::SquareGrid(Vector2i gridSize, Vector2f cellSize, const Color4f& color, float lineWidth, BorderLines borderLines)
   : m_gridSize(gridSize)
   , m_cellSize(cellSize)
   , m_color(color)
   , m_lineWidth(lineWidth)
+  , m_borderLines(borderLines)
   , m_vertices(PrimitiveType::Lines)
   {
     updateGeometry();
@@ -59,6 +60,11 @@ inline namespace v1 {
     for (std::size_t i = 0; i < m_vertices.getVertexCount(); ++i) {
       m_vertices[i].color = m_color;
     }
+  }
+
+  void SquareGrid::setBorderLines(BorderLines borderLines) {
+    m_borderLines = borderLines;
+    updateGeometry();
   }
 
   RectF SquareGrid::getLocalBounds() const {
@@ -87,7 +93,8 @@ inline namespace v1 {
     Vertex vertices[2];
     vertices[0].color = vertices[1].color = m_color;
 
-    for (int i = 0; i < m_gridSize.width; ++i) {
+    int width = (m_borderLines == BorderLines::Width || m_borderLines == BorderLines::Both) ? (m_gridSize.width + 1) : m_gridSize.width;
+    for (int i = 0; i < width; ++i) {
       float x = i * m_cellSize.width;
       vertices[0].position = { x, 0.0f };
       vertices[1].position = { x, max.y };
@@ -96,7 +103,8 @@ inline namespace v1 {
       m_vertices.append(vertices[1]);
     }
 
-    for (int j = 0; j < m_gridSize.height; ++j) {
+    int height = (m_borderLines == BorderLines::Height || m_borderLines == BorderLines::Both) ? (m_gridSize.height + 1) : m_gridSize.height;
+    for (int j = 0; j < height; ++j) {
       float y = j * m_cellSize.height;
       vertices[0].position = { 0.0f, y };
       vertices[1].position = { max.x, y };

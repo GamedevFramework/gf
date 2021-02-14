@@ -40,6 +40,18 @@ inline namespace v1 {
   class GF_GRAPHICS_API SquareGrid : public gf::Transformable {
   public:
     /**
+     * @brief Include border lines in square grid
+     *
+     * @sa gf::SquareGrid
+     */
+    enum class BorderLines {
+      Nothing, ///< Include no line
+      Height, ///< Include bottom/top lines
+      Width, ///< Include left/right lines
+      Both, ///< Include bottom/top/left/right lines
+    };
+
+    /**
      * @brief Constructor
      *
      * @param gridSize The size of the grid
@@ -47,7 +59,7 @@ inline namespace v1 {
      * @param color The color of the grid frame
      * @param lineWidth The width of the grid frame
      */
-    SquareGrid(Vector2i gridSize, Vector2f cellSize, const Color4f& color, float lineWidth = 1.0f);
+    SquareGrid(Vector2i gridSize, Vector2f cellSize, const Color4f& color, float lineWidth = 1.0f, BorderLines borderLines = BorderLines::Nothing);
 
     /**
      * @brief Set the grid size
@@ -116,6 +128,22 @@ inline namespace v1 {
     }
 
     /**
+     * @brief Set the width of the grid frame
+     *
+     * @param lineWidth The new width of the grid frame
+     */
+    void setBorderLines(BorderLines borderLines);
+
+    /**
+     * @brief Get which lines are included in the square grid
+     *
+     * @returns The current state of lines included
+     */
+    BorderLines getBorderLines() const noexcept {
+      return m_borderLines;
+    }
+
+    /**
      * @brief Get the local bounding rectangle of the entity
      *
      * The returned rectangle is in local coordinates, which means
@@ -160,6 +188,7 @@ inline namespace v1 {
     Vector2f m_cellSize;
     Color4f m_color;
     float m_lineWidth;
+    BorderLines m_borderLines;
     VertexArray m_vertices;
   };
 
