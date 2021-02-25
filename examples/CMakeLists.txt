@@ -38,6 +38,7 @@ add_gf_example(26_map)
 add_gf_example(27_console)
 add_gf_example(28_widgets)
 add_gf_example(29_hexagonal)
+add_gf_example(35_squaregrid)
 
 add_gf_example(30_postprocessing)
 add_gf_example(31_pipeline)
