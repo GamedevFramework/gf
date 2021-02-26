@@ -69,14 +69,12 @@ inline namespace v1 {
     updateTexCoords();
   }
 
-  void NinePatch::setTexture(const Texture& texture, bool resetRect) {
+  void NinePatch::setTexture(const Texture& texture, const RectF& textureRect) {
     m_texture = &texture;
     updatePositions();
 
-    if (resetRect) {
-      m_textureRect = RectF::fromSize({ 1.0f, 1.0f });
-      updateTexCoords();
-    }
+    m_textureRect = textureRect;
+    updateTexCoords();
   }
 
   void NinePatch::unsetTexture() {

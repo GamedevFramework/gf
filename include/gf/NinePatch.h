@@ -80,16 +80,14 @@ inline namespace v1 {
      * If the source texture is destroyed and the nine-patch tries to
      * use it, the behavior is undefined.
      *
-     * If `resetRect` is true, the texture rect property of
-     * the nine-patch is automatically adjusted to the size of the new
-     * texture. If it is false, the texture rect is left unchanged.
+     * By default, the sub-rectangle will be reset to the full size of the new texture.
      *
      * @param texture New texture
-     * @param resetRect Should the texture rect be reset to the size of the new texture?
+     * @param textureRect Sub-rectangle of the new texture to assign to the nine-patch
      *
      * @sa getTexture(), setTextureRect()
      */
-    void setTexture(const Texture& texture, bool resetRect = false);
+    void setTexture(const Texture& texture, const RectF& textureRect = RectF::fromSize({ 1.0f, 1.0f }));
 
     /**
      * @brief Get the source texture of the nine-patch

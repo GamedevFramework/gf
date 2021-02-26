@@ -17,7 +17,6 @@ This file is a list of ideas for gf. Some of them will eventually be in gf. Othe
 - (font) use Signed Distance Field for big size fonts
 - (window/events) add a flag in `pollEvent`/`waitEvent` (`EventFlag::TouchAsMouse`, `EventFlag::NoWindowFilter`)
 - (texture) add area in loading functions
-- (texture) `setTexture(const Texture& texture, const RectF& textureRect = RectF(0, 0, 1, 1))` instead of `bool resetRect`
 - (curve/shape) add anti-aliasing to `Curve` and `Shape`
   - ideas: [vaserenderer](https://github.com/tyt2y3/vaserenderer),
   - ideas: [a forum thread](https://forum.libcinder.org/topic/smooth-thick-lines-using-geometry-shader#23286000001269127)

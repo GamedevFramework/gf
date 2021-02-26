@@ -55,12 +55,9 @@ inline namespace v1 {
 
   }
 
-  void BasicSprite::setTexture(const Texture& texture, bool resetRect) {
+  void BasicSprite::setTexture(const Texture& texture, const RectF& textureRect) {
     m_texture = &texture;
-
-    if (resetRect) {
-      m_textureRect = RectF::fromSize({ 1.0f, 1.0f });
-    }
+    m_textureRect = textureRect;
   }
 
   void BasicSprite::unsetTexture() {
