@@ -49,6 +49,10 @@ inline namespace v1 {
     m_basic.updateGeometry(m_vertices);
   }
 
+  void Sprite::setTexture(const Texture& texture, bool resetRect) {
+    setTexture(texture, (resetRect) ? (RectF::fromSize({ 1.0f, 1.0f })) : m_basic.getTextureRect());
+  }
+
   void Sprite::setTexture(const Texture& texture, const RectF& textureRect) {
     m_basic.setTexture(texture, textureRect);
     m_basic.updateGeometry(m_vertices);
