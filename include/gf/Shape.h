@@ -87,7 +87,7 @@ inline namespace v1 {
      * use it, the behavior is undefined.
      *
      * If `resetRect` is true, the texture rect property of
-     * the sprite is automatically adjusted to the size of the new
+     * the shape is automatically adjusted to the size of the new
      * texture. If it is false, the texture rect is left unchanged.
      *
      * @param texture New texture
