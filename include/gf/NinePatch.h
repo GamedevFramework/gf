@@ -80,10 +80,12 @@ inline namespace v1 {
      * If the source texture is destroyed and the nine-patch tries to
      * use it, the behavior is undefined.
      *
-     * By default, the sub-rectangle will be reset to the full size of the new texture.
+     * If `resetRect` is true, the texture rect property of
+     * the sprite is automatically adjusted to the size of the new
+     * texture. If it is false, the texture rect is left unchanged.
      *
      * @param texture New texture
-     * @param textureRect Sub-rectangle of the new texture to assign to the nine-patch
+     * @param resetRect Should the texture rect be reset to the size of the new texture?
      *
      * @deprecated You should use setTexture(const Texture&, const RectF&) instead
      */
