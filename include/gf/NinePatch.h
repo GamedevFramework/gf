@@ -90,7 +90,7 @@ inline namespace v1 {
      * @deprecated You should use setTexture(const Texture&, const RectF&) instead
      */
     [[deprecated("You should use setTexture(const Texture&, const RectF&) instead")]]
-    void setTexture(const Texture& texture, bool resetRect = false);
+    void setTexture(const Texture& texture, bool resetRect);
 
     /**
      * @brief Change the source texture of the nine-patch
