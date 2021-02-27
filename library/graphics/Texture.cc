@@ -232,12 +232,9 @@ inline namespace v1 {
     Vector2i areaSize = area.getSize();
 
     // Load the entire image if the area is either empty or contains the whole image
-    if (areaSize.width == 0 || areaSize.height == 0 || area.contains(RectI::fromSize(image.getSize())))
-    {
+    if (areaSize.width == 0 || areaSize.height == 0 || area.contains(RectI::fromSize(image.getSize()))) {
       BareTexture::update(image.getPixelsPtr());
-    }
-    else
-    {
+    } else {
       Vector2i areaPos = area.getPosition();
       Vector2i imageSize = image.getSize();
       Vector2i bottomRightPos = area.getPositionFromAnchor(Anchor::BottomRight);
@@ -252,8 +249,7 @@ inline namespace v1 {
       BareTexture::resize(newArea.getSize());
 
       const uint8_t* pixels = image.getPixelsPtr() + 4 * (newPosX + (imageSize.width * newPosY));
-      for (int i = 0; i < newHeight; ++i)
-      {
+      for (int i = 0; i < newHeight; ++i) {
         BareTexture::update(pixels, RectI::fromPositionSize({0, i}, {newWidth, 1}));
         pixels += 4 * imageSize.width;
       }
