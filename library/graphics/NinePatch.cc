@@ -70,13 +70,15 @@ inline namespace v1 {
   }
 
   void NinePatch::setTexture(const Texture& texture, bool resetRect) {
+    setTexture(texture, (resetRect) ? (RectF::fromSize({ 1.0f, 1.0f })) : m_textureRect);
+  }
+
+  void NinePatch::setTexture(const Texture& texture, const RectF& textureRect) {
     m_texture = &texture;
     updatePositions();
 
-    if (resetRect) {
-      m_textureRect = RectF::fromSize({ 1.0f, 1.0f });
-      updateTexCoords();
-    }
+    m_textureRect = textureRect;
+    updateTexCoords();
   }
 
   void NinePatch::unsetTexture() {
