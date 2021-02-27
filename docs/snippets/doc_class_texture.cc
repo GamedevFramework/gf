@@ -33,7 +33,7 @@ void dummyTextureUsage(gf::RenderTarget& renderer) {
 
   // Assign it to a sprite
   gf::Sprite sprite;
-  sprite.setTexture(texture, gf::RectF::fromSize({ 1.0f, 1.0f }));
+  sprite.setTexture(texture);
 
   // Draw the textured sprite
   renderer.draw(sprite);
