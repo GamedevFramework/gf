@@ -226,23 +226,52 @@ inline namespace v1 {
   {
   }
 
-  Texture::Texture(const Image& image)
-  : BareTexture(Format::Color, image.getSize(), image.getPixelsPtr())
+  Texture::Texture(const Image& image, const RectI& area)
+  : BareTexture(Format::Color, image.getSize(), nullptr)
+  {
+    Vector2i areaSize = area.getSize();
+
+    // Load the entire image if the area is either empty or contains the whole image
+    if (areaSize.width == 0 || areaSize.height == 0 || area.contains(RectI::fromSize(image.getSize())))
+    {
+      BareTexture::update(image.getPixelsPtr());
+    }
+    else
+    {
+      Vector2i areaPos = area.getPosition();
+      Vector2i imageSize = image.getSize();
+      Vector2i bottomRightPos = area.getPositionFromAnchor(Anchor::BottomRight);
+
+      // Adjust the rectangle to the size of the image
+      int newPosX = std::max(0, areaPos.x);
+      int newPosY = std::max(0, areaPos.y);
+      int newWidth = (bottomRightPos.x > imageSize.width) ? (imageSize.width - areaPos.x) : (areaSize.x);
+      int newHeight = (bottomRightPos.y > imageSize.height) ? (imageSize.height - areaPos.y) : (areaSize.y);
+      RectI newArea = RectI::fromPositionSize({ newPosX, newPosY }, { newWidth, newHeight });
+
+      BareTexture::resize(newArea.getSize());
+
+      const uint8_t* pixels = image.getPixelsPtr() + 4 * (newPosX + (imageSize.width * newPosY));
+      for (int i = 0; i < newHeight; ++i)
+      {
+        BareTexture::update(pixels, RectI::fromPositionSize({0, i}, {newWidth, 1}));
+        pixels += 4 * imageSize.width;
+      }
+    }
+  }
+
+  Texture::Texture(const Path& filename, const RectI& area)
+  : Texture(Image(filename), area)
   {
   }
 
-  Texture::Texture(const Path& filename)
-  : Texture(Image(filename))
+  Texture::Texture(InputStream& stream, const RectI& area)
+  : Texture(Image(stream), area)
   {
   }
 
-  Texture::Texture(InputStream& stream)
-  : Texture(Image(stream))
-  {
-  }
-
-  Texture::Texture(Span<const uint8_t> content)
-  : Texture(Image(content))
+  Texture::Texture(Span<const uint8_t> content, const RectI& area)
+  : Texture(Image(content), area)
   {
   }
 

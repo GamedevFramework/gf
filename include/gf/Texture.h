@@ -328,31 +328,51 @@ inline namespace v1 {
 
     /**
      * @brief Load the texture from an image
+     * 
+     * The area argument can be used to load only a sub-rectangle of the whole image.
+     * If you want the entire image then leave the default value (which is an empty RectI).
+     * If the area rectangle crosses the bounds of the image, it is adjusted to fit the image size.
      *
      * @param image Image to load into the texture
+     * @param area sub-rectangle of the image
      */
-    Texture(const Image& image);
+    Texture(const Image& image, const RectI& area = RectI::fromSize({ 0, 0 }));
 
     /**
      * @brief Load the texture from a file on disk
+     * 
+     * The area argument can be used to load only a sub-rectangle of the whole image.
+     * If you want the entire image then leave the default value (which is an empty RectI).
+     * If the area rectangle crosses the bounds of the image, it is adjusted to fit the image size.
      *
      * @param filename Path of the image file to load
+     * @param area sub-rectangle of the image
      */
-    Texture(const Path& filename);
+    Texture(const Path& filename, const RectI& area = RectI::fromSize({ 0, 0 }));
 
     /**
      * @brief Load the texture from a custom stream
+     * 
+     * The area argument can be used to load only a sub-rectangle of the whole image.
+     * If you want the entire image then leave the default value (which is an empty RectI).
+     * If the area rectangle crosses the bounds of the image, it is adjusted to fit the image size.
      *
      * @param stream Source stream to read from
+     * @param area sub-rectangle of the image
      */
-    Texture(InputStream& stream);
+    Texture(InputStream& stream, const RectI& area = RectI::fromSize({ 0, 0 }));
 
     /**
      * @brief Load the texture from a file in memory
+     * 
+     * The area argument can be used to load only a sub-rectangle of the whole image.
+     * If you want the entire image then leave the default value (which is an empty RectI).
+     * If the area rectangle crosses the bounds of the image, it is adjusted to fit the image size.
      *
      * @param content Content of the file data in memory
+     * @param area sub-rectangle of the image
      */
-    Texture(Span<const uint8_t> content);
+    Texture(Span<const uint8_t> content, const RectI& area = RectI::fromSize({ 0, 0 }));
 
     /**
      * @brief Update the texture from an image
