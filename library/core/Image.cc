@@ -242,6 +242,31 @@ inline namespace v1 {
     return false;
   }
 
+  Image Image::subImage(const RectI& area) const {
+    RectI currArea = RectI::fromSize(m_size);
+    RectI newArea;
+    
+    if (!area.intersects(currArea, newArea)) {
+      return Image();
+    } else {
+      Vector2i newPos = newArea.getPosition();
+      Vector2i newSize = newArea.getSize();
+      Image resultImage(newSize);
+
+      const uint8_t* pixels = m_pixels.data() + (newPos.x + (m_size.height - newPos.y - 1) * m_size.width) * 4;
+      uint8_t *ptr = resultImage.m_pixels.data();
+
+      for (int y = 0; y < newSize.height; ++y) {
+        std::copy_n(pixels, newSize.width * 4, ptr);
+        ptr += 4 * newSize.width;
+        pixels -= 4 * m_size.width;
+      }
+
+      resultImage.flipHorizontally();
+      return resultImage;
+    }
+  }
+
   Vector2i Image::getSize() const {
     return m_size;
   }
