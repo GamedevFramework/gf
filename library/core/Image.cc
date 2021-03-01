@@ -255,7 +255,7 @@ inline namespace v1 {
     Image resultImage(newSize);
 
     const uint8_t* pixels = m_pixels.data() + (newPos.x + (m_size.height - newPos.y - 1) * m_size.width) * 4;
-    pixels -= 4 * m_size.width * newSize.height;
+    pixels -= 4 * m_size.width * (newSize.height - 1);
     uint8_t *ptr = resultImage.m_pixels.data();
 
     for (int y = 0; y < newSize.height; ++y) {
