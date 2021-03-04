@@ -231,8 +231,18 @@ inline namespace v1 {
   {
   }
 
+  Texture::Texture(const Image& image, const RectI& area)
+  : Texture(image.subImage(area))
+  {
+  }
+
   Texture::Texture(const Path& filename)
   : Texture(Image(filename))
+  {
+  }
+
+  Texture::Texture(const Path& filename, const RectI& area)
+  : Texture(Image(filename), area)
   {
   }
 
@@ -241,8 +251,18 @@ inline namespace v1 {
   {
   }
 
+  Texture::Texture(InputStream& stream, const RectI& area)
+  : Texture(Image(stream), area)
+  {
+  }
+
   Texture::Texture(Span<const uint8_t> content)
   : Texture(Image(content))
+  {
+  }
+
+  Texture::Texture(Span<const uint8_t> content, const RectI& area)
+  : Texture(Image(content), area)
   {
   }
 
