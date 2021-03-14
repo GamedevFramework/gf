@@ -30,6 +30,7 @@
 #include "SerializationFwd.h"
 #include "Span.h"
 #include "Vector.h"
+#include "Winding.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -152,6 +153,27 @@ inline namespace v1 {
      * @return The next extension point
      */
     Vector2f getNextExtensionPoint() const;
+
+    /**
+     * @brief Compute the winding of a simple loop polyline
+     *
+     * Complexity: @f$ O(n) @f$
+     *
+     * @returns The winding of the simple loop polyline
+     * @sa gf::Winding, isConvex()
+     * @sa [Curve orientation - Wikipedia](https://en.wikipedia.org/wiki/Curve_orientation)
+     */
+    Winding getWinding() const;
+
+    /**
+     * @brief Test if a point is inside the polyline
+     *
+     * If the polyline is a chain, it returns false.
+     *
+     * @param point The point to test
+     * @returns True if the point is inside the polyline
+     */
+    bool contains(Vector2f point) const;
 
     /**
      * @brief Set the type of the polyline

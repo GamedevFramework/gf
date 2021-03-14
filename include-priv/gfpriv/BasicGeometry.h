@@ -18,27 +18,20 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#ifndef GF_WINDING_H
-#define GF_WINDING_H
+#ifndef GFPRIV_BASIC_GEOMETRY_H
+#define GFPRIV_BASIC_GEOMETRY_H
+
+#include <gf/Span.h>
+#include <gf/Vector.h>
 
 namespace gf {
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-inline namespace v1 {
-#endif
+namespace priv {
 
-  /**
-   * @ingroup core_geometry
-   * @brief The direction of a polygon's rotation
-   */
-  enum class Winding {
-    None,             ///< No winding
-    Clockwise,        ///< Same direction as a clock's hands
-    Counterclockwise, ///< Opposite direction of a clock's hands
-  };
+  int computeWindingNumber(Vector2f point, Span<const Vector2f> points);
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+  float computeSignedArea(Span<const Vector2f> points);
+
 }
-#endif
 }
 
-#endif // GF_WINDING_H
+#endif // GFPRIV_BASIC_GEOMETRY_H

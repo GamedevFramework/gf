@@ -51,6 +51,8 @@ set(SHADER_SOURCES
   graphics/data/shaders/pixelate.frag
   graphics/data/shaders/radial.frag
   graphics/data/shaders/zoomblur.frag
+  graphics/data/shaders/light_shape.frag
+  graphics/data/shaders/light_unshadow.frag
 )
 
 set(SHADER_HEADERS "")
@@ -103,6 +105,7 @@ else()
     core/Activity.cc
     core/Array2D.cc
     core/AssetManager.cc
+    core/BasicGeometry.cc
     core/Circ.cc
     core/Clock.cc
     core/Collision.cc

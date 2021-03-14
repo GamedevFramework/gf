@@ -103,18 +103,18 @@ inline namespace v1 {
     bool isConvex() const;
 
     /**
-     * @brief Compute the winding of a convex polygon
+     * @brief Compute the winding of a simple polygon
      *
      * Complexity: @f$ O(n) @f$
      *
-     * @returns The winding of the convex polygon
-     * @sa gf::Winding, isConvex()
+     * @returns The winding of the simple polygon
+     * @sa gf::Winding
      * @sa [Curve orientation - Wikipedia](https://en.wikipedia.org/wiki/Curve_orientation)
      */
     Winding getWinding() const;
 
     /**
-     * @brief Test if a point is inside the (convex) polygon
+     * @brief Test if a point is inside the polygon
      *
      * @param point The point to test
      * @returns True if the point is inside the polygon

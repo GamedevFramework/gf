@@ -26,6 +26,8 @@
 #include <gf/SerializationOps.h>
 #include <gf/VectorOps.h>
 
+#include <gfpriv/BasicGeometry.h>
+
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
@@ -74,6 +76,31 @@ inline namespace v1 {
     return 2 * getPoint(sz - 1) - getPoint(sz - 2); // = p_{n-1} - (p_{n-2} - p_{n-1})
   }
 
+  Winding Polyline::getWinding() const {
+    if (isChain()) {
+      return Winding::None;
+    }
+
+    float area = gf::priv::computeSignedArea(getRawPoints());
+
+    if (area > 0) {
+      return Winding::Clockwise;
+    }
+
+    if (area < 0) {
+      return Winding::Counterclockwise;
+    }
+
+    return Winding::None;
+  }
+
+  bool Polyline::contains(Vector2f point) const {
+    if (isChain()) {
+      return false;
+    }
+
+    return gf::priv::computeWindingNumber(point, getRawPoints()) != 0;
+  }
 
   Serializer& operator|(Serializer& ar, const Polyline& polyline) {
     ar | polyline.getType();
