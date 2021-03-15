@@ -49,6 +49,6 @@ add_gf_example(34_multiple_windows)
 add_gf_example(41_collisions)
 add_gf_example(43_points)
 add_gf_example(44_tmx)
-add_gf_example(45_lights)
+# add_gf_example(45_lights)
 
 add_gf_example(98_logo)

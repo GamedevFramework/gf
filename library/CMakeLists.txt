@@ -51,8 +51,8 @@ set(SHADER_SOURCES
   graphics/data/shaders/pixelate.frag
   graphics/data/shaders/radial.frag
   graphics/data/shaders/zoomblur.frag
-  graphics/data/shaders/light_shape.frag
-  graphics/data/shaders/light_unshadow.frag
+#   graphics/data/shaders/light_shape.frag
+#   graphics/data/shaders/light_unshadow.frag
 )
 
 set(SHADER_HEADERS "")
@@ -189,10 +189,10 @@ else()
     graphics/Grid.cc
     graphics/Keyboard.cc
     graphics/Library.cc
-    graphics/LightPointEmission.cc
-    graphics/LightShape.cc
-    graphics/LightSystem.cc
-    graphics/LightTextures.cc
+#     graphics/LightPointEmission.cc
+#     graphics/LightShape.cc
+#     graphics/LightSystem.cc
+#     graphics/LightTextures.cc
     graphics/Logo.cc
     graphics/Monitor.cc
     graphics/MouseValues.cc
