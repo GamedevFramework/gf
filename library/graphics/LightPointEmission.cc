@@ -17,25 +17,40 @@
  * 2. Altered source versions must be plainly marked as such, and must not be
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
+ *
+ * Part of this file comes from SFML, with the same license:
+ * Copyright (C) 2007-2015 Laurent Gomila (laurent@sfml-dev.org)
  */
+#include <gf/LightPointEmission.h>
 
-#define GF_IMPLEMENTATION
+#include <cassert>
 
-#include "generated/blackout.frag.h"
-#include "generated/color_matrix.frag.h"
-#include "generated/default_alpha.frag.h"
-#include "generated/default.frag.h"
-#include "generated/default.vert.h"
-#include "generated/edge.frag.h"
-#include "generated/fxaa.frag.h"
-#include "generated/fade.frag.h"
-#include "generated/slide.frag.h"
-#include "generated/glitch.frag.h"
-#include "generated/checkerboard.frag.h"
-#include "generated/circle.frag.h"
-#include "generated/pixelate.frag.h"
-#include "generated/radial.frag.h"
-#include "generated/zoomblur.frag.h"
+#include <gf/Color.h>
+#include <gf/RenderTarget.h>
 
-#include "generated/light_shape.frag.h"
-#include "generated/light_unshadow.frag.h"
+namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+inline namespace v1 {
+#endif
+
+  LightPointEmission::LightPointEmission()
+  : m_center(0.0f, 0.0f)
+  , m_radius(8.0f)
+  , m_multiplier(1.4f)
+  {
+  }
+
+  LightPointEmission::LightPointEmission(const Texture& texture)
+  : Sprite(texture)
+  , m_center(0.0f, 0.0f)
+  , m_radius(8.0f)
+  , m_multiplier(1.4f)
+  {
+
+  }
+
+
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+}
+#endif
+}

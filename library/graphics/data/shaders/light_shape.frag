@@ -18,24 +18,18 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
+#version 100
 
-#define GF_IMPLEMENTATION
+precision mediump float;
 
-#include "generated/blackout.frag.h"
-#include "generated/color_matrix.frag.h"
-#include "generated/default_alpha.frag.h"
-#include "generated/default.frag.h"
-#include "generated/default.vert.h"
-#include "generated/edge.frag.h"
-#include "generated/fxaa.frag.h"
-#include "generated/fade.frag.h"
-#include "generated/slide.frag.h"
-#include "generated/glitch.frag.h"
-#include "generated/checkerboard.frag.h"
-#include "generated/circle.frag.h"
-#include "generated/pixelate.frag.h"
-#include "generated/radial.frag.h"
-#include "generated/zoomblur.frag.h"
+varying vec4 v_color;
+varying vec2 v_texCoords;
 
-#include "generated/light_shape.frag.h"
-#include "generated/light_unshadow.frag.h"
+uniform sampler2D u_texture0;
+uniform ivec2 u_size;
+
+void main() {
+  vec2 texCoords = gl_FragCoord.xy / vec2(u_size);
+  vec4 color = texture2D(u_texture0, texCoords);
+  gl_FragColor = vec4(color.rgb, 1.0) * v_color;
+};

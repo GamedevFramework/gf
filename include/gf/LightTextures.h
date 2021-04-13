@@ -18,24 +18,29 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
+#ifndef GF_LIGHT_TEXTURES_H
+#define GF_LIGHT_TEXTURES_H
 
-#define GF_IMPLEMENTATION
+#include "GraphicsApi.h"
+#include "Texture.h"
 
-#include "generated/blackout.frag.h"
-#include "generated/color_matrix.frag.h"
-#include "generated/default_alpha.frag.h"
-#include "generated/default.frag.h"
-#include "generated/default.vert.h"
-#include "generated/edge.frag.h"
-#include "generated/fxaa.frag.h"
-#include "generated/fade.frag.h"
-#include "generated/slide.frag.h"
-#include "generated/glitch.frag.h"
-#include "generated/checkerboard.frag.h"
-#include "generated/circle.frag.h"
-#include "generated/pixelate.frag.h"
-#include "generated/radial.frag.h"
-#include "generated/zoomblur.frag.h"
+namespace gf {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+inline namespace v1 {
+#endif
 
-#include "generated/light_shape.frag.h"
-#include "generated/light_unshadow.frag.h"
+  struct GF_GRAPHICS_API LightTextures {
+
+    static Texture createSimpleLight(int size);
+    static Texture createRealisticLight(int size, float attenuation = 1.0f, float radius = 0.0f);
+
+  };
+
+
+
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+}
+#endif
+}
+
+#endif // GF_LIGHT_TEXTURES_H
