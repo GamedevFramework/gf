@@ -188,6 +188,11 @@ inline namespace v1 {
      */
     void simplify(float distance = Epsilon);
 
+    /**
+     * @brief Reverse the points in the sequence
+     */
+    void reverse();
+
   protected:
     /**
      * @brief Get the raw container of points

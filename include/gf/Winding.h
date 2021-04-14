@@ -31,6 +31,7 @@ inline namespace v1 {
    * @brief The direction of a polygon's rotation
    */
   enum class Winding {
+    None,             ///< No winding
     Clockwise,        ///< Same direction as a clock's hands
     Counterclockwise, ///< Opposite direction of a clock's hands
   };

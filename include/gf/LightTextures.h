@@ -18,37 +18,33 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#include <gf/AnimatedSprite.h>
+#ifndef GF_LIGHT_TEXTURES_H
+#define GF_LIGHT_TEXTURES_H
 
-#include <gf/Animation.h>
+#include "GraphicsApi.h"
+#include "Texture.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
 #endif
 
-  AnimatedSprite::AnimatedSprite()
-  : m_animation(nullptr)
-  {
+  /**
+   * @ingroup graphics_light
+   * @brief Light texture creator
+   */
+  struct GF_GRAPHICS_API LightTextures {
 
-  }
+    static Texture createSimpleLight(int size);
+    static Texture createRealisticLight(int size, float attenuation = 1.0f, float radius = 0.0f);
 
-  void AnimatedSprite::setAnimation(Animation& animation) {
-    m_animation = &animation;
-    setTexture(m_animation->getCurrentTexture(), m_animation->getCurrentBounds());
-  }
+  };
 
-  void AnimatedSprite::update(Time time) {
-    if (m_animation == nullptr) {
-      return;
-    }
 
-    if (m_animation->update(time)) {
-      setTexture(m_animation->getCurrentTexture(), m_animation->getCurrentBounds());
-    }
-  }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif
 }
+
+#endif // GF_LIGHT_TEXTURES_H

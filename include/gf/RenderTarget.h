@@ -131,6 +131,15 @@ inline namespace v1 {
      */
     virtual Vector2i getSize() const = 0;
 
+
+    /**
+     * @brief Activate the render target for rendering
+     *
+     * This function activates the render target. You should call this
+     * function before you want to draw something to the target.
+     */
+    virtual void setActive();
+
     /**
      * @name Drawing commands
      * @{

@@ -53,6 +53,15 @@ inline namespace v1 {
     Coordinates(RenderTarget& target);
 
     /**
+     * @brief Get the size of the window
+     *
+     * @return The size of the window
+     */
+    Vector2f getWindowSize() const {
+      return m_size;
+    }
+
+    /**
      * @brief Get the center of the window
      *
      * @returns The center of the window

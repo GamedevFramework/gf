@@ -166,6 +166,10 @@ target_link_libraries(mygame
 @ingroup graphics
 @brief Tiles and tilelayers
 
+@defgroup graphics_light Lights
+@ingroup graphics
+@brief Lights
+
 @defgroup graphics_particles Particles
 @ingroup graphics
 @brief Particles

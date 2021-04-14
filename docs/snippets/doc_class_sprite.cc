@@ -29,8 +29,7 @@ void dummySpriteUsage(gf::RenderTarget& renderer) {
 
   // Create a sprite
   gf::Sprite sprite;
-  sprite.setTexture(texture);
-  sprite.setTextureRect(gf::RectF::fromPositionSize({ 0.1f, 0.1f }, { 0.5f, 0.3f }));
+  sprite.setTexture(texture, gf::RectF::fromPositionSize({ 0.1f, 0.1f }, { 0.5f, 0.3f }));
   sprite.setColor({ 1.0f, 1.0f, 1.0f, 0.8f });
   sprite.setPosition({ 100.0f, 25.0f });
 

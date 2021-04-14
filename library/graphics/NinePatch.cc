@@ -23,6 +23,8 @@
 #include <gf/RenderTarget.h>
 #include <gf/Texture.h>
 
+#include <gfpriv/TextureCoords.h>
+
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
@@ -30,7 +32,7 @@ inline namespace v1 {
 
   NinePatch::NinePatch()
   : m_texture(nullptr)
-  , m_textureRect(RectF::fromPositionSize({ 0, 0 }, { 1, 1 }))
+  , m_textureRect(RectF::fromSize({ 1.0f, 1.0f }))
   , m_top(0)
   , m_bottom(1)
   , m_left(0)
@@ -43,12 +45,12 @@ inline namespace v1 {
 
   NinePatch::NinePatch(const Texture& texture)
   : m_texture(&texture)
-  , m_textureRect(RectF::fromPositionSize({ 0, 0 }, { 1, 1 }))
-  , m_top(0)
-  , m_bottom(1)
-  , m_left(0)
-  , m_right(1)
-  , m_size({ 0, 0 })
+  , m_textureRect(RectF::fromSize({ 1.0f, 1.0f }))
+  , m_top(0.0f)
+  , m_bottom(1.0f)
+  , m_left(0.0f)
+  , m_right(1.0f)
+  , m_size({ 0.0f, 0.0f })
   {
     updatePositions();
     updateTexCoords();
@@ -57,24 +59,26 @@ inline namespace v1 {
   NinePatch::NinePatch(const Texture& texture, const RectF& textureRect)
   : m_texture(&texture)
   , m_textureRect(textureRect)
-  , m_top(0)
-  , m_bottom(1)
-  , m_left(0)
-  , m_right(1)
-  , m_size({ 0, 0 })
+  , m_top(0.0f)
+  , m_bottom(1.0f)
+  , m_left(0.0f)
+  , m_right(1.0f)
+  , m_size({ 0.0f, 0.0f })
   {
     updatePositions();
     updateTexCoords();
   }
 
   void NinePatch::setTexture(const Texture& texture, bool resetRect) {
+    setTexture(texture, (resetRect) ? (RectF::fromSize({ 1.0f, 1.0f })) : m_textureRect);
+  }
+
+  void NinePatch::setTexture(const Texture& texture, const RectF& textureRect) {
     m_texture = &texture;
     updatePositions();
 
-    if (resetRect) {
-      m_textureRect = RectF::fromPositionSize({ 0, 0 }, { 1, 1 });
-      updateTexCoords();
-    }
+    m_textureRect = textureRect;
+    updateTexCoords();
   }
 
   void NinePatch::unsetTexture() {
@@ -128,7 +132,7 @@ inline namespace v1 {
   }
 
   RectF NinePatch::getLocalBounds() const {
-    return RectF::fromPositionSize({ 0.0f, 0.0f }, m_size);
+    return RectF::fromSize(m_size);
   }
 
   void NinePatch::setAnchor(Anchor anchor) {
@@ -215,22 +219,22 @@ inline namespace v1 {
     float y2 = gf::lerp(m_textureRect.min.y, m_textureRect.max.y, 1 - m_bottom);
     float y3 = m_textureRect.max.y;
 
-    m_vertices[ 0].texCoords = { x0, y0 };
-    m_vertices[ 1].texCoords = { x0, y1 };
-    m_vertices[ 2].texCoords = { x0, y2 };
-    m_vertices[ 3].texCoords = { x0, y3 };
-    m_vertices[ 4].texCoords = { x1, y0 };
-    m_vertices[ 5].texCoords = { x1, y1 };
-    m_vertices[ 6].texCoords = { x1, y2 };
-    m_vertices[ 7].texCoords = { x1, y3 };
-    m_vertices[ 8].texCoords = { x2, y0 };
-    m_vertices[ 9].texCoords = { x2, y1 };
-    m_vertices[10].texCoords = { x2, y2 };
-    m_vertices[11].texCoords = { x2, y3 };
-    m_vertices[12].texCoords = { x3, y0 };
-    m_vertices[13].texCoords = { x3, y1 };
-    m_vertices[14].texCoords = { x3, y2 };
-    m_vertices[15].texCoords = { x3, y3 };
+    m_vertices[ 0].texCoords = gf::priv::computeTextureCoords({ x0, y0 });
+    m_vertices[ 1].texCoords = gf::priv::computeTextureCoords({ x0, y1 });
+    m_vertices[ 2].texCoords = gf::priv::computeTextureCoords({ x0, y2 });
+    m_vertices[ 3].texCoords = gf::priv::computeTextureCoords({ x0, y3 });
+    m_vertices[ 4].texCoords = gf::priv::computeTextureCoords({ x1, y0 });
+    m_vertices[ 5].texCoords = gf::priv::computeTextureCoords({ x1, y1 });
+    m_vertices[ 6].texCoords = gf::priv::computeTextureCoords({ x1, y2 });
+    m_vertices[ 7].texCoords = gf::priv::computeTextureCoords({ x1, y3 });
+    m_vertices[ 8].texCoords = gf::priv::computeTextureCoords({ x2, y0 });
+    m_vertices[ 9].texCoords = gf::priv::computeTextureCoords({ x2, y1 });
+    m_vertices[10].texCoords = gf::priv::computeTextureCoords({ x2, y2 });
+    m_vertices[11].texCoords = gf::priv::computeTextureCoords({ x2, y3 });
+    m_vertices[12].texCoords = gf::priv::computeTextureCoords({ x3, y0 });
+    m_vertices[13].texCoords = gf::priv::computeTextureCoords({ x3, y1 });
+    m_vertices[14].texCoords = gf::priv::computeTextureCoords({ x3, y2 });
+    m_vertices[15].texCoords = gf::priv::computeTextureCoords({ x3, y3 });
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

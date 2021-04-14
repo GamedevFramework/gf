@@ -87,9 +87,28 @@ inline namespace v1 {
      * @param texture New texture
      * @param resetRect Should the texture rect be reset to the size of the new texture?
      *
+     * @deprecated You should use setTexture(const Texture&, const RectF&) instead
+     */
+    [[deprecated("You should use setTexture(const Texture&, const RectF&) instead")]]
+    void setTexture(const Texture& texture, bool resetRect);
+
+    /**
+     * @brief Change the source texture of the nine-patch
+     *
+     * The texture must exist as long as the nine-patch uses it. Indeed, the
+     * nine-patch doesn't store its own copy of the texture, but rather keeps
+     * a pointer to the one that you passed to this function.
+     * If the source texture is destroyed and the nine-patch tries to
+     * use it, the behavior is undefined.
+     *
+     * By default, the sub-rectangle will be reset to the full size of the new texture.
+     *
+     * @param texture New texture
+     * @param textureRect Sub-rectangle of the new texture to assign to the nine-patch
+     *
      * @sa getTexture(), setTextureRect()
      */
-    void setTexture(const Texture& texture, bool resetRect = false);
+    void setTexture(const Texture& texture, const RectF& textureRect = RectF::fromSize({ 1.0f, 1.0f }));
 
     /**
      * @brief Get the source texture of the nine-patch

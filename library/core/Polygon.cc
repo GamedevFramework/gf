@@ -30,7 +30,7 @@
 #include <gf/Transform.h>
 #include <gf/VectorOps.h>
 
-#include <gf/Log.h>
+#include <gfpriv/BasicGeometry.h>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -79,70 +79,44 @@ inline namespace v1 {
     return true;
   }
 
-  namespace {
-
-    // https://en.wikipedia.org/wiki/Shoelace_formula
-    float getSignedArea(const std::vector<Vector2f>& points) {
-      float area = 0.0f;
-
-      for (std::size_t i = 0; i < points.size() - 1; ++i) {
-        area += gf::cross(points[i], points[i + 1]);
-      }
-
-      area += gf::cross(points.back(), points.front());
-      return area;
-    }
-
-  } // namespace
-
   Winding Polygon::getWinding() const {
-    return getSignedArea(getRawPoints()) > 0 ? Winding::Clockwise : Winding::Counterclockwise;
-  }
+    float area = gf::priv::computeSignedArea(getRawPoints());
 
-  namespace {
-    enum class LineSide {
-      Left,
-      Right,
-      None,
-    };
-
-    constexpr LineSide getSide(Vector2f a, Vector2f b) {
-      float x = cross(a, b);
-      if (x < 0) {
-        return LineSide::Left;
-      } else if (x > 0) {
-        return LineSide::Right;
-      }
-      return LineSide::None;
+    if (area > 0) {
+      return Winding::Clockwise;
     }
+
+    if (area < 0) {
+      return Winding::Counterclockwise;
+    }
+
+    return Winding::None;
   }
 
   bool Polygon::contains(Vector2f point) const {
-    LineSide previousSide = LineSide::None;
-
-    for (std::size_t i = 0, n = getPointCount(); i < n; ++i) {
-      Vector2f a = getPoint(i);
-      Vector2f b = getPoint((i + 1) % n);
-
-      Vector2f segment = b - a;
-      Vector2f pointDirection = point - a;
-
-      LineSide currentSide = getSide(segment, pointDirection);
-      if (previousSide == LineSide::None) {
-        previousSide = currentSide;
-      }
-
-      if (previousSide != currentSide) {
-        return false;
-      }
-    }
-
-    return true;
+    return gf::priv::computeWindingNumber(point, getRawPoints()) != 0;
   }
 
   float Polygon::getArea() const {
-    return std::abs(getSignedArea(getRawPoints()) / 2);
+    return std::abs(gf::priv::computeSignedArea(getRawPoints()) / 2);
   }
+
+  Vector2f Polygon::getPrevPoint(std::size_t i) const {
+    if (i > 0) {
+      return getPoint(i - 1);
+    }
+
+    return getLastPoint();
+  }
+
+  Vector2f Polygon::getNextPoint(std::size_t i) const {
+    if (i < getPointCount() - 1) {
+      return getPoint(i + 1);
+    }
+
+    return getFirstPoint();
+  }
+
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

@@ -334,11 +334,27 @@ inline namespace v1 {
     Texture(const Image& image);
 
     /**
+     * @brief Load the texture from a sub-area of an image
+     *
+     * @param image Image to load into the texture
+     * @param area Sub-area of the image
+     */
+    Texture(const Image& image, const RectI& area);
+
+    /**
      * @brief Load the texture from a file on disk
      *
      * @param filename Path of the image file to load
      */
     Texture(const Path& filename);
+
+    /**
+     * @brief Load the texture from a sub-area of a file on disk
+     *
+     * @param filename Path of the image file to load
+     * @param area Sub-area of the image
+     */
+    Texture(const Path& filename, const RectI& area);
 
     /**
      * @brief Load the texture from a custom stream
@@ -348,11 +364,27 @@ inline namespace v1 {
     Texture(InputStream& stream);
 
     /**
+     * @brief Load the texture from a sub-area of a custom stream
+     *
+     * @param stream Source stream to read from
+     * @param area Sub-area of the image
+     */
+    Texture(InputStream& stream, const RectI& area);
+
+    /**
      * @brief Load the texture from a file in memory
      *
      * @param content Content of the file data in memory
      */
     Texture(Span<const uint8_t> content);
+
+    /**
+     * @brief Load the texture from a sub-area of a file in memory
+     *
+     * @param content Content of the file data in memory
+     * @param area Sub-area of the image
+     */
+    Texture(Span<const uint8_t> content, const RectI& area);
 
     /**
      * @brief Update the texture from an image

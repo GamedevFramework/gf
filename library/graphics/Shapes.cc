@@ -40,14 +40,14 @@ inline namespace v1 {
   : m_size(size)
   {
     updateGeometry();
-    updateBounds(gf::RectF::fromPositionSize({ 0.0f, 0.0f }, m_size));
+    updateBounds(gf::RectF::fromSize(m_size));
   }
 
   RectangleShape::RectangleShape(const RectF& rect)
   : m_size(rect.getSize())
   {
     updateGeometry();
-    updateBounds(gf::RectF::fromPositionSize({ 0.0f, 0.0f }, m_size));
+    updateBounds(gf::RectF::fromSize(m_size));
     setPosition(rect.getPosition());
   }
 
@@ -58,7 +58,7 @@ inline namespace v1 {
 
     m_size = size;
     updateGeometry();
-    updateBounds(gf::RectF::fromPositionSize({ 0.0f, 0.0f }, m_size));
+    updateBounds(gf::RectF::fromSize(m_size));
   }
 
   std::size_t RectangleShape::getPointCount() const {
@@ -89,7 +89,7 @@ inline namespace v1 {
   , m_pointCount(pointCount)
   {
     updateGeometry();
-    updateBounds(gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 2 * m_radius, 2 * m_radius }));
+    updateBounds(gf::RectF::fromSize({ 2 * m_radius, 2 * m_radius }));
   }
 
   CircleShape::CircleShape(const CircF& circ, std::size_t pointCount)
@@ -97,7 +97,7 @@ inline namespace v1 {
   , m_pointCount(pointCount)
   {
     updateGeometry();
-    updateBounds(gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 2 * m_radius, 2 * m_radius }));
+    updateBounds(gf::RectF::fromSize({ 2 * m_radius, 2 * m_radius }));
     setPosition(circ.center - circ.radius);
   }
 
@@ -108,7 +108,7 @@ inline namespace v1 {
 
     m_radius = radius;
     updateGeometry();
-    updateBounds(gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 2 * m_radius, 2 * m_radius }));
+    updateBounds(gf::RectF::fromSize({ 2 * m_radius, 2 * m_radius }));
   }
 
   void CircleShape::setPointCount(std::size_t pointCount) {
@@ -185,7 +185,7 @@ inline namespace v1 {
   , m_branches(branches)
   {
     updateGeometry();
-    updateBounds(gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 2 * m_maxRadius, 2 * m_maxRadius }));
+    updateBounds(gf::RectF::fromSize({ 2 * m_maxRadius, 2 * m_maxRadius }));
   }
 
   void StarShape::setMinRadius(float minRadius) {
@@ -204,7 +204,7 @@ inline namespace v1 {
 
     m_maxRadius = maxRadius;
     updateGeometry();
-    updateBounds(gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 2 * m_maxRadius, 2 * m_maxRadius }));
+    updateBounds(gf::RectF::fromSize({ 2 * m_maxRadius, 2 * m_maxRadius }));
   }
 
   void StarShape::setBranches(std::size_t branches) {
@@ -238,7 +238,7 @@ inline namespace v1 {
   , m_cornerPointCount(cornerPointCount)
   {
     updateGeometry();
-    updateBounds(gf::RectF::fromPositionSize({ 0.0f, 0.0f }, m_size));
+    updateBounds(gf::RectF::fromSize(m_size));
   }
 
   RoundedRectangleShape::RoundedRectangleShape(const RectF& rect, float radius, std::size_t cornerPointCount)
@@ -247,7 +247,7 @@ inline namespace v1 {
   , m_cornerPointCount(cornerPointCount)
   {
     updateGeometry();
-    updateBounds(gf::RectF::fromPositionSize({ 0.0f, 0.0f }, m_size));
+    updateBounds(gf::RectF::fromSize(m_size));
     setPosition(rect.getPosition());
   }
 
@@ -258,7 +258,7 @@ inline namespace v1 {
 
     m_size = size;
     updateGeometry();
-    updateBounds(gf::RectF::fromPositionSize({ 0.0f, 0.0f }, m_size));
+    updateBounds(gf::RectF::fromSize(m_size));
   }
 
   void RoundedRectangleShape::setRadius(float radius) {
@@ -352,7 +352,7 @@ inline namespace v1 {
   {
     adjustAngles(variation);
     updateGeometry();
-    updateBounds(gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 2 * m_radius, 2 * m_radius }));
+    updateBounds(gf::RectF::fromSize({ 2 * m_radius, 2 * m_radius }));
   }
 
   void Pie::setRadius(float radius) {
@@ -362,7 +362,7 @@ inline namespace v1 {
 
     m_radius = radius;
     updateGeometry();
-    updateBounds(gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 2 * m_radius, 2 * m_radius }));
+    updateBounds(gf::RectF::fromSize({ 2 * m_radius, 2 * m_radius }));
   }
 
   void Pie::setAngleRange(float angle0, float angle1, Variation variation) {

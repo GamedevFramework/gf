@@ -121,5 +121,4 @@ These screenshots are from games included in the repository.
 
 - LGTM: [![Language grade: C/C++](https://img.shields.io/lgtm/grade/cpp/g/GamedevFramework/gf.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/GamedevFramework/gf/context:cpp)
 - CodeFactor: [![CodeFactor](https://www.codefactor.io/repository/github/gamedevframework/gf/badge)](https://www.codefactor.io/repository/github/gamedevframework/gf)
-- Codacy: [![Codacy Badge](https://api.codacy.com/project/badge/Grade/991cd949d3d74b3a9052be89d7b42541)](https://www.codacy.com/app/jube/gf?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=GamedevFramework/gf&amp;utm_campaign=Badge_Grade)
-
+- Codacy: [![Codacy Badge](https://app.codacy.com/project/badge/Grade/8199bae5ed3b4f7fb50ad23bbe1867fc)](https://www.codacy.com/gh/GamedevFramework/gf/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=GamedevFramework/gf&amp;utm_campaign=Badge_Grade)

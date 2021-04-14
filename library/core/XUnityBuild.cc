@@ -28,6 +28,7 @@
 #include "Activity.cc"
 #include "Array2D.cc"
 #include "AssetManager.cc"
+#include "BasicGeometry.cc"
 #include "Circ.cc"
 #include "Clock.cc"
 #include "Collision.cc"

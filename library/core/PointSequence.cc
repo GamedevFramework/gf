@@ -64,6 +64,10 @@ inline namespace v1 {
     m_points = gf::simplifyPoints(m_points, distance);
   }
 
+  void PointSequence::reverse() {
+    std::reverse(m_points.begin(), m_points.end());
+  }
+
   Serializer& operator|(Serializer& ar, const PointSequence& sequence) {
     uint64_t size = sequence.getPointCount();
     ar | size;

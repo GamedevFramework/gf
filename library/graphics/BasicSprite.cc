@@ -27,6 +27,8 @@
 #include <gf/VectorOps.h>
 #include <gf/Vertex.h>
 
+#include <gfpriv/TextureCoords.h>
+
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
@@ -34,14 +36,14 @@ inline namespace v1 {
 
   BasicSprite::BasicSprite()
   : m_texture(nullptr)
-  , m_textureRect(RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }))
+  , m_textureRect(RectF::fromSize({ 1.0f, 1.0f }))
   {
 
   }
 
   BasicSprite::BasicSprite(const Texture& texture)
   : m_texture(&texture)
-  , m_textureRect(RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }))
+  , m_textureRect(RectF::fromSize({ 1.0f, 1.0f }))
   {
 
   }
@@ -54,11 +56,12 @@ inline namespace v1 {
   }
 
   void BasicSprite::setTexture(const Texture& texture, bool resetRect) {
-    m_texture = &texture;
+    setTexture(texture, (resetRect) ? (RectF::fromSize({ 1.0f, 1.0f })) : m_textureRect);
+  }
 
-    if (resetRect) {
-      m_textureRect = RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f });
-    }
+  void BasicSprite::setTexture(const Texture& texture, const RectF& textureRect) {
+    m_texture = &texture;
+    m_textureRect = textureRect;
   }
 
   void BasicSprite::unsetTexture() {
@@ -76,10 +79,10 @@ inline namespace v1 {
   void BasicSprite::updateGeometry(Span<Vertex> vertices) {
     assert(vertices.getSize() >= 4);
 
-    vertices[0].texCoords = m_textureRect.getTopLeft();
-    vertices[1].texCoords = m_textureRect.getTopRight();
-    vertices[2].texCoords = m_textureRect.getBottomLeft();
-    vertices[3].texCoords = m_textureRect.getBottomRight();
+    vertices[0].texCoords = gf::priv::computeTextureCoords(m_textureRect.getTopLeft());
+    vertices[1].texCoords = gf::priv::computeTextureCoords(m_textureRect.getTopRight());
+    vertices[2].texCoords = gf::priv::computeTextureCoords(m_textureRect.getBottomLeft());
+    vertices[3].texCoords = gf::priv::computeTextureCoords(m_textureRect.getBottomRight());
 
     if (m_texture == nullptr) {
       return;
@@ -88,12 +91,12 @@ inline namespace v1 {
     Vector2i textureSize = m_texture->getSize();
     Vector2f spriteSize = textureSize * m_textureRect.getSize();
 
-    vertices[0].position = {  0.0f,            0.0f };
-    vertices[1].position = { spriteSize.width, 0.0f };
-    vertices[2].position = {  0.0f,            spriteSize.height };
-    vertices[3].position = { spriteSize.width, spriteSize.height };
+    m_bounds = RectF::fromSize(spriteSize);
 
-    m_bounds = RectF::fromPositionSize({ 0.0f, 0.0f }, spriteSize);
+    vertices[0].position = m_bounds.getTopLeft();
+    vertices[1].position = m_bounds.getTopRight();
+    vertices[2].position = m_bounds.getBottomLeft();
+    vertices[3].position = m_bounds.getBottomRight();
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

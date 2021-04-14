@@ -358,8 +358,7 @@ inline namespace v1 {
   }
 
   void SpriteWidget::setDisabledSprite(const Texture& texture, const RectF& textureRect) {
-    m_disabledSprite.setTexture(texture);
-    m_disabledSprite.setTextureRect(textureRect);
+    m_disabledSprite.setTexture(texture, textureRect);
 
     if (isDisabled()) {
       updateGeometry();
@@ -375,8 +374,7 @@ inline namespace v1 {
   }
 
   void SpriteWidget::setDefaultSprite(const Texture& texture, const RectF& textureRect) {
-    m_defaultSprite.setTexture(texture);
-    m_defaultSprite.setTextureRect(textureRect);
+    m_defaultSprite.setTexture(texture, textureRect);
 
     if (isDefault()) {
       updateGeometry();
@@ -392,8 +390,7 @@ inline namespace v1 {
   }
 
   void SpriteWidget::setSelectedSprite(const Texture& texture, const RectF& textureRect) {
-    m_selectedSprite.setTexture(texture);
-    m_selectedSprite.setTextureRect(textureRect);
+    m_selectedSprite.setTexture(texture, textureRect);
 
     if (isSelected()) {
       updateGeometry();
@@ -494,8 +491,7 @@ inline namespace v1 {
   }
 
   void ChoiceSpriteWidget::setEmptySprite(const Texture& texture, const RectF& textureRect) {
-    m_empty.setTexture(texture);
-    m_empty.setTextureRect(textureRect);
+    m_empty.setTexture(texture, textureRect);
 
     if (!isChosen()) {
       updateGeometry();
@@ -503,8 +499,7 @@ inline namespace v1 {
   }
 
   void ChoiceSpriteWidget::setChosenSprite(const Texture& texture, const RectF& textureRect) {
-    m_chosen.setTexture(texture);
-    m_chosen.setTextureRect(textureRect);
+    m_chosen.setTexture(texture, textureRect);
 
     if (isChosen()) {
       updateGeometry();

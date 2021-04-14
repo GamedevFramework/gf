@@ -18,37 +18,20 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#include <gf/AnimatedSprite.h>
+#ifndef GF_TEXTURE_COORDS_H
+#define GF_TEXTURE_COORDS_H
 
-#include <gf/Animation.h>
+#include <gf/Vector.h>
 
 namespace gf {
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-inline namespace v1 {
-#endif
+namespace priv {
 
-  AnimatedSprite::AnimatedSprite()
-  : m_animation(nullptr)
-  {
-
+  constexpr
+  Vector2f computeTextureCoords(Vector2f original) {
+    return gf::vec(original.x, 1.0f - original.y);
   }
 
-  void AnimatedSprite::setAnimation(Animation& animation) {
-    m_animation = &animation;
-    setTexture(m_animation->getCurrentTexture(), m_animation->getCurrentBounds());
-  }
-
-  void AnimatedSprite::update(Time time) {
-    if (m_animation == nullptr) {
-      return;
-    }
-
-    if (m_animation->update(time)) {
-      setTexture(m_animation->getCurrentTexture(), m_animation->getCurrentBounds());
-    }
-  }
-
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
-#endif
 }
+
+#endif // GF_TEXTURE_COORDS_H

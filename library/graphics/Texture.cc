@@ -231,8 +231,18 @@ inline namespace v1 {
   {
   }
 
+  Texture::Texture(const Image& image, const RectI& area)
+  : Texture(image.subImage(area))
+  {
+  }
+
   Texture::Texture(const Path& filename)
   : Texture(Image(filename))
+  {
+  }
+
+  Texture::Texture(const Path& filename, const RectI& area)
+  : Texture(Image(filename), area)
   {
   }
 
@@ -241,13 +251,23 @@ inline namespace v1 {
   {
   }
 
+  Texture::Texture(InputStream& stream, const RectI& area)
+  : Texture(Image(stream), area)
+  {
+  }
+
   Texture::Texture(Span<const uint8_t> content)
   : Texture(Image(content))
   {
   }
 
+  Texture::Texture(Span<const uint8_t> content, const RectI& area)
+  : Texture(Image(content), area)
+  {
+  }
+
   void Texture::update(const Image& image) {
-    BareTexture::update(image.getPixelsPtr(), RectI::fromPositionSize({ 0, 0 }, image.getSize()));
+    BareTexture::update(image.getPixelsPtr(), RectI::fromSize(image.getSize()));
   }
 
   Image Texture::copyToImage() const {
@@ -273,7 +293,6 @@ inline namespace v1 {
     GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, boundFramebuffer));
 
     Image image(size, pixels.data());
-    image.flipHorizontally();
     return image;
   }
 

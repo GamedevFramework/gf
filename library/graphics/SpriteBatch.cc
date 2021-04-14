@@ -26,6 +26,8 @@
 #include <gf/Texture.h>
 #include <gf/VectorOps.h>
 
+#include <gfpriv/TextureCoords.h>
+
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
@@ -82,11 +84,12 @@ inline namespace v1 {
 
     Vector2i textureSize = texture.getSize();
     Vector2f spriteSize = textureSize * textureRect.getSize();
+    RectF bounds = RectF::fromSize(spriteSize);
 
-    vertices[0].position = {  0.0f,            0.0f };
-    vertices[1].position = { spriteSize.width, 0.0f };
-    vertices[2].position = {  0.0f,            spriteSize.height };
-    vertices[3].position = { spriteSize.width, spriteSize.height };
+    vertices[0].position = bounds.getTopLeft();
+    vertices[1].position = bounds.getTopRight();
+    vertices[2].position = bounds.getBottomLeft();
+    vertices[3].position = bounds.getBottomRight();
 
     for (auto& vertex : vertices) {
       // apply transform as it is different for every sprite
@@ -99,10 +102,10 @@ inline namespace v1 {
 
     // compute sprite texture coordinates
 
-    vertices[0].texCoords = textureRect.getTopLeft();
-    vertices[1].texCoords = textureRect.getTopRight();
-    vertices[2].texCoords = textureRect.getBottomLeft();
-    vertices[3].texCoords = textureRect.getBottomRight();
+    vertices[0].texCoords = gf::priv::computeTextureCoords(textureRect.getTopLeft());
+    vertices[1].texCoords = gf::priv::computeTextureCoords(textureRect.getTopRight());
+    vertices[2].texCoords = gf::priv::computeTextureCoords(textureRect.getBottomLeft());
+    vertices[3].texCoords = gf::priv::computeTextureCoords(textureRect.getBottomRight());
 
     // add first triangle
 

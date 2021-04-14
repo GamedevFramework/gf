@@ -78,7 +78,7 @@ inline namespace v1 {
   }
 
   RenderTarget::RenderTarget(Vector2i size)
-  : m_view(RectF::fromPositionSize({ 0.0f, 0.0f }, { static_cast<float>(size.width), static_cast<float>(size.height) }))
+  : m_view(RectF::fromSize(size))
   , m_defaultShader(default_vert, default_frag)
   , m_defaultAlphaShader(default_vert, default_alpha_frag)
   , m_defaultTexture(createWhitePixel())
@@ -87,6 +87,9 @@ inline namespace v1 {
   }
 
   RenderTarget::~RenderTarget() = default;
+
+  void RenderTarget::setActive() {
+  }
 
   Region RenderTarget::getCanonicalScissorBox() {
     GLint box[4];

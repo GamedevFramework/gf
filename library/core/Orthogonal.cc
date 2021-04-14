@@ -28,7 +28,7 @@ inline namespace v1 {
 #endif
 
   RectF OrthogonalHelper::computeBounds(Vector2i layerSize, Vector2f tileSize) const {
-    return RectF::fromPositionSize(gf::vec(0.0f, 0.0f), layerSize * tileSize);
+    return RectF::fromSize(layerSize * tileSize);
   }
 
   RectI OrthogonalHelper::computeVisibleArea(const RectF& local, Vector2f tileSize) const {

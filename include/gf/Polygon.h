@@ -103,18 +103,18 @@ inline namespace v1 {
     bool isConvex() const;
 
     /**
-     * @brief Compute the winding of a convex polygon
+     * @brief Compute the winding of a simple polygon
      *
      * Complexity: @f$ O(n) @f$
      *
-     * @returns The winding of the convex polygon
-     * @sa gf::Winding, isConvex()
+     * @returns The winding of the simple polygon
+     * @sa gf::Winding
      * @sa [Curve orientation - Wikipedia](https://en.wikipedia.org/wiki/Curve_orientation)
      */
     Winding getWinding() const;
 
     /**
-     * @brief Test if a point is inside the (convex) polygon
+     * @brief Test if a point is inside the polygon
      *
      * @param point The point to test
      * @returns True if the point is inside the polygon
@@ -129,6 +129,22 @@ inline namespace v1 {
      * @returns The area of the polygon
      */
     float getArea() const;
+
+    /**
+     * @brief Get the point before the i-th point
+     *
+     * @param i The index of the current point
+     * @returns The point before the current point
+     */
+    Vector2f getPrevPoint(std::size_t i) const;
+
+    /**
+     * @brief Get the point after the i-th point
+     *
+     * @param i The index of the current point
+     * @returns The point after the current point
+     */
+    Vector2f getNextPoint(std::size_t i) const;
   };
 
   /**

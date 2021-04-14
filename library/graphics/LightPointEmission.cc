@@ -21,56 +21,34 @@
  * Part of this file comes from SFML, with the same license:
  * Copyright (C) 2007-2015 Laurent Gomila (laurent@sfml-dev.org)
  */
-#include <gf/RenderTexture.h>
+#include <gf/LightPointEmission.h>
 
 #include <cassert>
 
-#include <gf/Log.h>
-
-#include <gfpriv/GlDebug.h>
-#include <gfpriv/GlFwd.h>
+#include <gf/Color.h>
+#include <gf/RenderTarget.h>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
 #endif
 
-  RenderTexture::RenderTexture(Vector2i size)
-  : RenderTarget(size)
-  , m_texture(size)
+  LightPointEmission::LightPointEmission()
+  : m_center(0.0f, 0.0f)
+  , m_radius(8.0f)
+  , m_multiplier(1.4f)
   {
-    m_texture.setSmooth();
-    Texture::bind(nullptr);
-
-    GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, m_framebuffer));
-    GL_CHECK(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_texture.getName(), 0));
-    assert(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
-    GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, 0));
   }
 
-  Vector2i RenderTexture::getSize() const {
-    return m_texture.getSize();
+  LightPointEmission::LightPointEmission(const Texture& texture)
+  : Sprite(texture)
+  , m_center(0.0f, 0.0f)
+  , m_radius(8.0f)
+  , m_multiplier(1.4f)
+  {
+
   }
 
-  void RenderTexture::resize(Vector2i size) {
-    m_texture.resize(size);
-  }
-
-  void RenderTexture::setActive() {
-    if (m_framebuffer.isValid()) {
-      GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, m_framebuffer));
-    } else {
-      gf::Log::warning("Framebuffer is not valid, you can not activate it!\n");
-    }
-  }
-
-  void RenderTexture::display() {
-    GL_CHECK(glFlush());
-  }
-
-  Image RenderTexture::capture() const {
-    return captureFramebuffer(m_framebuffer);
-  }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

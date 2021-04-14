@@ -18,37 +18,20 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#include <gf/AnimatedSprite.h>
+#ifndef GFPRIV_BASIC_GEOMETRY_H
+#define GFPRIV_BASIC_GEOMETRY_H
 
-#include <gf/Animation.h>
+#include <gf/Span.h>
+#include <gf/Vector.h>
 
 namespace gf {
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-inline namespace v1 {
-#endif
+namespace priv {
 
-  AnimatedSprite::AnimatedSprite()
-  : m_animation(nullptr)
-  {
+  int computeWindingNumber(Vector2f point, Span<const Vector2f> points);
 
-  }
+  float computeSignedArea(Span<const Vector2f> points);
 
-  void AnimatedSprite::setAnimation(Animation& animation) {
-    m_animation = &animation;
-    setTexture(m_animation->getCurrentTexture(), m_animation->getCurrentBounds());
-  }
-
-  void AnimatedSprite::update(Time time) {
-    if (m_animation == nullptr) {
-      return;
-    }
-
-    if (m_animation->update(time)) {
-      setTexture(m_animation->getCurrentTexture(), m_animation->getCurrentBounds());
-    }
-  }
-
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
-#endif
 }
+
+#endif // GFPRIV_BASIC_GEOMETRY_H

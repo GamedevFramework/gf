@@ -31,6 +31,8 @@
 #include <gf/Transform.h>
 #include <gf/VectorOps.h>
 
+#include <gfpriv/TextureCoords.h>
+
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
@@ -126,7 +128,7 @@ inline namespace v1 {
   VertexBuffer TileLayer::commitGeometry() const {
     // TODO: there is more than one geometry
     VertexArray vertices(PrimitiveType::Triangles);
-//     RectI rect = RectI::fromPositionSize({ 0, 0 }, m_layerSize);
+//     RectI rect = RectI::fromSize(m_layerSize);
 //     fillVertexArray(vertices, rect);
     return VertexBuffer(vertices.getVertexData(), vertices.getVertexCount(), vertices.getPrimitiveType());
   }
@@ -142,7 +144,7 @@ inline namespace v1 {
       return gf::transform(inverseTransform, target.mapPixelToCoords(point));
     };
 
-    RectI screen = RectI::fromPositionSize({ 0, 0 }, target.getSize());
+    RectI screen = RectI::fromSize(target.getSize());
 
     RectF local = RectF::empty();
     local.extend(toLocal(screen.getTopLeft()));
@@ -150,7 +152,7 @@ inline namespace v1 {
     local.extend(toLocal(screen.getBottomLeft()));
     local.extend(toLocal(screen.getBottomRight()));
 
-    RectI layer = gf::RectI::fromPositionSize({ 0, 0 }, m_layerSize - 1);
+    RectI layer = gf::RectI::fromSize(m_layerSize - 1);
     RectI visible = m_properties->computeVisibleArea(local, m_tileSize);
     RectI rect = visible.getIntersection(layer);
 
@@ -223,10 +225,10 @@ inline namespace v1 {
         vertices[2].position = box.getBottomLeft();
         vertices[3].position = box.getBottomRight();
 
-        vertices[0].texCoords = textureCoords.getTopLeft();
-        vertices[1].texCoords = textureCoords.getTopRight();
-        vertices[2].texCoords = textureCoords.getBottomLeft();
-        vertices[3].texCoords = textureCoords.getBottomRight();
+        vertices[0].texCoords = gf::priv::computeTextureCoords(textureCoords.getTopLeft());
+        vertices[1].texCoords = gf::priv::computeTextureCoords(textureCoords.getTopRight());
+        vertices[2].texCoords = gf::priv::computeTextureCoords(textureCoords.getBottomLeft());
+        vertices[3].texCoords = gf::priv::computeTextureCoords(textureCoords.getBottomRight());
 
         auto flip = cell.flip;
 

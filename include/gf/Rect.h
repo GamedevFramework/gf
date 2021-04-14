@@ -119,6 +119,18 @@ inline namespace v1 {
     }
 
     /**
+     * @brief Create a rectangle from a size
+     *
+     * The position of the rectangle is assumed to be at @f$ (0, 0) @f$
+     *
+     * @param size The size of the rectangle
+     * @returns A new rectangle
+     */
+    static constexpr Rect<T> fromSize(Vector<T, 2> size) noexcept {
+      return Rect<T>({ T(0), T(0) }, size);
+    }
+
+    /**
      * @brief Create a rectangle from a center and a size
      *
      * @param center The center of the rectangle

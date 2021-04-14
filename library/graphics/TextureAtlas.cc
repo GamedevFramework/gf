@@ -98,7 +98,7 @@ inline namespace v1 {
     auto it = m_rects.find(name);
 
     if (it == m_rects.end()) {
-      return RectI::fromPositionSize({ 0, 0 }, { 1, 1 });
+      return RectI::fromSize({ 1, 1 });
     }
 
     return it->second;
@@ -106,7 +106,7 @@ inline namespace v1 {
 
   RectF TextureAtlas::getTextureRect(const std::string& name) const {
     if (m_texture == nullptr) {
-      return RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f });
+      return RectF::fromSize({ 1.0f, 1.0f });
     }
 
     RectI rect = getSubTexture(name);

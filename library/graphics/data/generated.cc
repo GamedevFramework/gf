@@ -36,3 +36,6 @@
 #include "generated/pixelate.frag.h"
 #include "generated/radial.frag.h"
 #include "generated/zoomblur.frag.h"
+
+#include "generated/light_shape.frag.h"
+#include "generated/light_unshadow.frag.h"

@@ -79,7 +79,7 @@ inline namespace v1 {
      * a pointer to the one that you passed to this function.
      * If the source texture is destroyed and the sprite tries to
      * use it, the behavior is undefined.
-     *
+     * 
      * If `resetRect` is true, the texture rect property of
      * the sprite is automatically adjusted to the size of the new
      * texture. If it is false, the texture rect is left unchanged.
@@ -87,9 +87,28 @@ inline namespace v1 {
      * @param texture New texture
      * @param resetRect Should the texture rect be reset to the size of the new texture?
      *
+     * @deprecated You should use setTexture(const Texture&, const RectF&) instead
+     */
+    [[deprecated("You should use setTexture(const Texture&, const RectF&) instead")]]
+    void setTexture(const Texture& texture, bool resetRect);
+
+    /**
+     * @brief Change the source texture of the sprite
+     *
+     * The texture must exist as long as the sprite uses it. Indeed, the
+     * sprite doesn't store its own copy of the texture, but rather keeps
+     * a pointer to the one that you passed to this function.
+     * If the source texture is destroyed and the sprite tries to
+     * use it, the behavior is undefined.
+     * 
+     * By default, the sub-rectangle will be reset to the full size of the new texture.
+     *
+     * @param texture New texture
+     * @param textureRect Sub-rectangle of the new texture to assign to the sprite
+     *
      * @sa getTexture(), setTextureRect()
      */
-    void setTexture(const Texture& texture, bool resetRect = false);
+    void setTexture(const Texture& texture, const RectF& textureRect = RectF::fromSize({ 1.0f, 1.0f }));
 
     /**
      * @brief Get the source texture of the sprite

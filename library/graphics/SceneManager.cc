@@ -80,7 +80,7 @@ inline namespace v1 {
         scene.setFramebufferSize(size);
       }
 
-      auto clearColor = currentScene.getClearColor();
+      auto clearColor = currentScene.getClearColor(); // TODO: clearColor of the front scene (bottom of the stack)?
 
       while (!m_scenesChanged && m_window.isOpen()) {
         bool transition = (m_status == Status::Segue);
@@ -220,6 +220,8 @@ inline namespace v1 {
       m_currScenes.pop_back();
     }
   }
+
+  // TODO: check if alrady during a Segue and stop
 
   void SceneManager::replaceScene(Scene& scene, SegueEffect& effect, Time duration, Easing easing) {
     setupSegue(effect, duration, easing);

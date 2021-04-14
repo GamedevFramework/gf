@@ -18,37 +18,18 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#include <gf/AnimatedSprite.h>
+#version 100
 
-#include <gf/Animation.h>
+precision mediump float;
 
-namespace gf {
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-inline namespace v1 {
-#endif
+varying vec2 v_texCoords;
 
-  AnimatedSprite::AnimatedSprite()
-  : m_animation(nullptr)
-  {
+uniform sampler2D u_texture0;
+uniform float u_light_brightness;
+uniform float u_dark_brightness;
 
-  }
-
-  void AnimatedSprite::setAnimation(Animation& animation) {
-    m_animation = &animation;
-    setTexture(m_animation->getCurrentTexture(), m_animation->getCurrentBounds());
-  }
-
-  void AnimatedSprite::update(Time time) {
-    if (m_animation == nullptr) {
-      return;
-    }
-
-    if (m_animation->update(time)) {
-      setTexture(m_animation->getCurrentTexture(), m_animation->getCurrentBounds());
-    }
-  }
-
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-}
-#endif
-}
+void main() {
+  float penumbra = texture2D(u_texture0, v_texCoords).x;
+  float shadow = (u_light_brightness - u_dark_brightness) * penumbra + u_dark_brightness;
+  gl_FragColor = vec4(vec3(1.0 - shadow), 1.0);
+};

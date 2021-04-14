@@ -62,7 +62,7 @@ inline namespace v1 {
   }
 
   RectF SquareGrid::getLocalBounds() const {
-    return RectF::fromPositionSize({ 0.0f, 0.0f }, m_gridSize * m_cellSize);
+    return RectF::fromSize(m_gridSize * m_cellSize);
   }
 
   void SquareGrid::setAnchor(Anchor anchor) {
@@ -87,7 +87,7 @@ inline namespace v1 {
     Vertex vertices[2];
     vertices[0].color = vertices[1].color = m_color;
 
-    for (int i = 0; i < m_gridSize.width; ++i) {
+    for (int i = 0; i <= m_gridSize.width; ++i) {
       float x = i * m_cellSize.width;
       vertices[0].position = { x, 0.0f };
       vertices[1].position = { x, max.y };
@@ -96,7 +96,7 @@ inline namespace v1 {
       m_vertices.append(vertices[1]);
     }
 
-    for (int j = 0; j < m_gridSize.height; ++j) {
+    for (int j = 0; j <= m_gridSize.height; ++j) {
       float y = j * m_cellSize.height;
       vertices[0].position = { 0.0f, y };
       vertices[1].position = { max.x, y };

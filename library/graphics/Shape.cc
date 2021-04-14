@@ -31,6 +31,8 @@
 #include <gf/Texture.h>
 #include <gf/VectorOps.h>
 
+#include <gfpriv/TextureCoords.h>
+
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
@@ -38,7 +40,7 @@ inline namespace v1 {
 
   Shape::Shape()
   : m_texture(nullptr)
-  , m_textureRect(gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }))
+  , m_textureRect(gf::RectF::fromSize({ 1.0f, 1.0f }))
   , m_color(Color::White)
   , m_vertices(PrimitiveType::TriangleFan)
   , m_outlineColor(Color::White)
@@ -49,12 +51,14 @@ inline namespace v1 {
   }
 
   void Shape::setTexture(const Texture& texture, bool resetRect) {
+    setTexture(texture, (resetRect) ? (RectF::fromSize({ 1.0f, 1.0f })) : m_textureRect);
+  }
+
+  void Shape::setTexture(const Texture& texture, const RectF& textureRect) {
     m_texture = &texture;
 
-    if (resetRect) {
-      m_textureRect = gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f });
-      updateTexCoords();
-    }
+    m_textureRect = textureRect;
+    updateTexCoords();
   }
 
   void Shape::unsetTexture() {
@@ -155,7 +159,7 @@ inline namespace v1 {
         ratio = (m_vertices[i].position - m_bounds.getPosition()) / m_bounds.getSize();
       }
 
-      m_vertices[i].texCoords = m_textureRect.getPosition() + m_textureRect.getSize() * ratio;
+      m_vertices[i].texCoords = gf::priv::computeTextureCoords(m_textureRect.getPosition() + m_textureRect.getSize() * ratio);
     }
   }
 

@@ -32,6 +32,7 @@
 #include "Path.h"
 #include "Span.h"
 #include "Vector.h"
+#include "Rect.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -193,6 +194,18 @@ inline namespace v1 {
      * @return true if saving was successful
      */
     bool saveToFile(const Path& filename) const;
+
+    /**
+     * @brief Create a sub-image of the image from a defined area
+     * 
+     * If the area doesn't contain the image, an empty image is returned.
+     * If the area is bigger than the size of the image, the image itself is returned.
+     * 
+     * @param area Sub-area of the image
+     *
+     * @return The sub-image of the image
+     */
+    Image subImage(const RectI& area) const;
 
     /**
      * @brief Return the size (width and height) of the image

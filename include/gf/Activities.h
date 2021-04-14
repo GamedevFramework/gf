@@ -680,6 +680,7 @@ inline namespace v1 {
        * @brief Constructor
        *
        * @param activity The activity to repeat
+       * @param repeat The number of time to repeat the activity or 0 for infinite
        */
       RepeatActivityEx(Other activity, int repeat)
       : m_activity(std::move(activity))
@@ -718,9 +719,10 @@ inline namespace v1 {
      * Create a gf::RepeatActivityEx.
      *
      * @param activity The activity to repeat
+     * @param repeat The number of time to repeat the activity or 0 for infinite
      */
     template<typename Other>
-    RepeatActivityEx<Other> repeat(Other activity, unsigned repeat = 0) {
+    RepeatActivityEx<Other> repeat(Other activity, int repeat = 0) {
       return RepeatActivityEx<Other>(std::move(activity), repeat);
     }
 
@@ -733,6 +735,7 @@ inline namespace v1 {
       /**
        * @brief Constructor.
        *
+       * @param finish The type of finish
        * @param activities The activities in parallel
        */
       ParallelActivityEx(ActivityFinish finish, Args... activities)
