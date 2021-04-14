@@ -1,5 +1,23 @@
 # ChangeLog for gf
 
+## gf 0.20.0 (14 Apr 2021)
+
+- Core (gf::core)
+  - Add gf::Polygon::getPrevPoint() and gf::Polygon::getNextPoint()
+  - Add gf::Rect::fromSize
+  - Add gf::Polyline::getWinding() and gf::Polyline::contains()
+  - Add gf::PointSequence::reverse()
+- Graphics (gf::graphics)
+  - Add gf::Coordinates::getWindowSize()
+  - Images are now uploaded correctly in textures
+  - Make gf::RenderTarget::setActive() virtual
+  - Fix SquareGrid rendering (thanks @NiiRoZz)
+  - setTexture now takes a gf::RectF instead of a boolean (thanks @NiiRoZz)
+  - Add area in texture loading functions (thanks @NiiRoZz)
+  - Add gf::LightSystem and more light classes (early stage)
+- Network (gf::net)
+- Misc
+
 ## gf 0.19.0 (14 Jan 2021)
 
 - Core (gf::core)
