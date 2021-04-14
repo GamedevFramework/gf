@@ -29,6 +29,10 @@ namespace gf {
 inline namespace v1 {
 #endif
 
+  /**
+   * @ingroup graphics_light
+   * @brief Light texture creator
+   */
   struct GF_GRAPHICS_API LightTextures {
 
     static Texture createSimpleLight(int size);

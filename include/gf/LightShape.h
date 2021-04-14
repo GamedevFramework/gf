@@ -34,11 +34,23 @@ namespace gf {
 inline namespace v1 {
 #endif
 
+  /**
+   * @ingroup graphics_light
+   * @brief Light shape visibility
+   *
+   * @sa gf::LightShape
+   */
   enum LightShapeVisibility {
     Apparent,
     Opaque,
   };
 
+  /**
+   * @ingroup graphics_light
+   * @brief Light shape
+   *
+   * @sa gf::LightSystem
+   */
   class GF_GRAPHICS_API LightShape : public Transformable {
   public:
     LightShape(const Polygon& polygon, LightShapeVisibility visibility = LightShapeVisibility::Apparent);

@@ -30,6 +30,12 @@ namespace gf {
 inline namespace v1 {
 #endif
 
+  /**
+   * @ingroup graphics_light
+   * @brief Light point emission
+   *
+   * @sa gf::LightSystem
+   */
   class GF_GRAPHICS_API LightPointEmission : public Sprite {
   public:
     LightPointEmission();

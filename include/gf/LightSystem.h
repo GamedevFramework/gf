@@ -44,17 +44,33 @@ inline namespace v1 {
   struct RenderStates;
   class Texture;
 
+  /**
+   * @ingroup graphics_light
+   * @brief The type of light
+   *
+   * @sa gf::LightShape, gf::LightSystem
+   */
   enum class LightType : uint32_t {
     Shape,
     Point,
     Direction,
   };
 
+  /**
+   * @ingroup graphics_light
+   * @brief The id of a light
+   *
+   * @sa gf::LightSystem
+   */
   struct GF_GRAPHICS_API LightId {
     LightType type;
     uint32_t index;
   };
 
+  /**
+   * @ingroup graphics_light
+   * @brief A light system
+   */
   class GF_GRAPHICS_API LightSystem : public Drawable {
   public:
     LightSystem(Vector2i size);
