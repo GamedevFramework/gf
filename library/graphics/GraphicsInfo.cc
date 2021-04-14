@@ -169,6 +169,18 @@ inline namespace v1 {
       // OES_compressed_ETC1_RGB8_texture
       { 0x8D64, "ETC1_RGB8_OES" },
 
+      // EXT_texture_compression_rgtc
+      { 0x8DBB, "COMPRESSED_RED_RGTC1_EXT" },
+      { 0x8DBC, "COMPRESSED_SIGNED_RED_RGTC1_EXT" },
+      { 0x8DBD, "COMPRESSED_RED_GREEN_RGTC2_EXT" },
+      { 0x8DBE, "COMPRESSED_SIGNED_RED_GREEN_RGTC2_EXT" },
+
+      // ARB_texture_compression_bptc
+      { 0x8E8C, "COMPRESSED_RGBA_BPTC_UNORM_ARB" },
+      { 0x8E8D, "COMPRESSED_SRGB_ALPHA_BPTC_UNORM_ARB" },
+      { 0x8E8E, "COMPRESSED_RGB_BPTC_SIGNED_FLOAT_ARB" },
+      { 0x8E8F, "COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT_ARB" },
+
       // ARB_ES3_compatibility
       { 0x9270, "COMPRESSED_R11_EAC" },
       { 0x9271, "COMPRESSED_SIGNED_R11_EAC" },
