@@ -115,6 +115,23 @@ int main() {
   staggeredMaker.resources.addSearchDir(gf::Paths::getCurrentPath());
   staggeredLayers.visitLayers(staggeredMaker);
 
+  // hexagonal layers
+
+  gf::TmxLayers hexagonalLayers;
+
+  if (!hexagonalLayers.loadFromFile("assets/hexagonal-mini.tmx")) {
+    return EXIT_FAILURE;
+  }
+
+  LayersMaker hexagonalMaker;
+  hexagonalMaker.resources.addSearchDir(gf::Paths::getBasePath());
+  hexagonalMaker.resources.addSearchDir(gf::Paths::getCurrentPath());
+  hexagonalLayers.visitLayers(hexagonalMaker);
+
+  for (auto& layer : hexagonalMaker.layers) {
+    layer.scale(4);
+  }
+
   //
 
   std::cout << "Gamedev Framework (gf) example #44: TMX loading\n";
@@ -141,6 +158,8 @@ int main() {
             case gf::Scancode::Return:
               if (orientation == gf::TileOrientation::Orthogonal) {
                 orientation = gf::TileOrientation::Staggered;
+              } else if (orientation == gf::TileOrientation::Staggered) {
+                orientation = gf::TileOrientation::Hexagonal;
               } else {
                 orientation = gf::TileOrientation::Orthogonal;
               }
@@ -175,6 +194,12 @@ int main() {
 
       case gf::TileOrientation::Staggered:
         for (auto& layer : staggeredMaker.layers) {
+          renderer.draw(layer);
+        }
+        break;
+
+      case gf::TileOrientation::Hexagonal:
+        for (auto& layer : hexagonalMaker.layers) {
           renderer.draw(layer);
         }
         break;

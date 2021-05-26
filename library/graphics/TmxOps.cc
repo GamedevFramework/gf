@@ -37,6 +37,9 @@ inline namespace v1 {
       case TileOrientation::Staggered:
         tiles = TileLayer::createStaggered(map.mapSize, map.mapCellAxis, map.mapCellIndex);
         break;
+      case TileOrientation::Hexagonal:
+        tiles = TileLayer::createHexagonal(map.mapSize, map.mapCellAxis, map.mapCellIndex, map.hexSideLength);
+        break;
       default:
         assert(false);
         break;

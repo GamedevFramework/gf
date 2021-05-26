@@ -27,6 +27,95 @@ namespace gf {
 inline namespace v1 {
 #endif
 
+  RectF HexagonHelper::computeBounds(Vector2i layerSize, Vector2f tileSize) const {
+    Vector2f base = layerSize * tileSize;
+
+    switch (m_axis) {
+      case MapCellAxis::Y:
+        base.y /= 2;
+        base.x += tileSize.width / 2;
+        break;
+      case MapCellAxis::X:
+        base.x /= 2;
+        base.y += tileSize.height / 2;
+        break;
+    }
+
+    return RectF::fromSize(base);
+  }
+
+  RectI HexagonHelper::computeVisibleArea(const RectF& local, Vector2f tileSize) const {
+    return RectI::fromMinMax(computeCoordinates(local.min, tileSize), computeCoordinates(local.max, tileSize)).grow(2);
+  }
+
+  RectF HexagonHelper::computeCellBounds(Vector2i coords, Vector2f tileSize) const {
+    Vector2f base = coords * tileSize;
+
+    switch (m_axis) {
+      case MapCellAxis::Y:
+        base.y += coords.y * m_sideLength;
+        base.y /= 2;
+
+        switch (m_index) {
+          case MapCellIndex::Odd:
+            if (coords.y % 2 != 0) {
+              base.x += tileSize.width / 2;
+            }
+            break;
+          case MapCellIndex::Even:
+            if (coords.y % 2 == 0) {
+              base.x += tileSize.width / 2;
+            }
+            break;
+        }
+        break;
+      case MapCellAxis::X:
+        base.x += coords.x * m_sideLength;
+        base.x /= 2;
+
+        switch (m_index) {
+          case MapCellIndex::Odd:
+            if (coords.x % 2 != 0) {
+              base.y += tileSize.height / 2;
+            }
+            break;
+          case MapCellIndex::Even:
+            if (coords.x % 2 == 0) {
+              base.y += tileSize.height / 2;
+            }
+            break;
+        }
+        break;
+    }
+
+    return RectF::fromPositionSize(base, tileSize);
+  }
+
+  Vector2i HexagonHelper::computeCoordinates(Vector2f position, Vector2f tileSize) const {
+    // TODO: quick approximation but not really good
+
+    switch (m_axis) {
+      case MapCellAxis::Y:
+        tileSize.y /= 2;
+        break;
+      case MapCellAxis::X:
+        tileSize.x /= 2;
+        break;
+    }
+
+    return position / tileSize;
+  }
+
+  Polyline HexagonHelper::computePolyline(Vector2i coords, Vector2f tileSize) const {
+    Polyline polyline;
+    // TODO
+    return polyline;
+  }
+
+  void HexagonHelper::forEachNeighbor(Vector2i coords, Vector2i layerSize, std::function<void(Vector2i)> func) const {
+    // TODO
+  }
+
   Vector2f HexagonHelper::getHexagonSize(float radius) const noexcept {
     Vector2f size;
 

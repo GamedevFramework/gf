@@ -110,7 +110,7 @@ inline namespace v1 {
   HexagonGrid::HexagonGrid(MapCellAxis axis, MapCellIndex index, Vector2i gridSize, float radius, const Color4f& color, float lineWidth)
   : m_gridSize(gridSize)
   , m_radius(radius)
-  , m_helper(axis, index)
+  , m_helper(axis, index, 0) // TODO: compute sideLength
   , m_color(color)
   , m_lineWidth(lineWidth)
   , m_vertices(PrimitiveType::Lines)

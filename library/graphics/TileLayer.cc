@@ -25,6 +25,7 @@
 #include <algorithm>
 
 #include <gf/Log.h>
+#include <gf/Hexagon.h>
 #include <gf/Orthogonal.h>
 #include <gf/RenderTarget.h>
 #include <gf/Stagger.h>
@@ -65,7 +66,11 @@ inline namespace v1 {
   }
 
   TileLayer TileLayer::createStaggered(Vector2i layerSize, MapCellAxis axis, MapCellIndex index) {
-    return TileLayer(layerSize, TileOrientation::Orthogonal, std::make_unique<GenericTileProperties<StaggerHelper>>(StaggerHelper(axis, index)));
+    return TileLayer(layerSize, TileOrientation::Staggered, std::make_unique<GenericTileProperties<StaggerHelper>>(StaggerHelper(axis, index)));
+  }
+
+  TileLayer TileLayer::createHexagonal(Vector2i layerSize, MapCellAxis axis, MapCellIndex index, int sideLength) {
+    return TileLayer(layerSize, TileOrientation::Hexagonal, std::make_unique<GenericTileProperties<HexagonHelper>>(HexagonHelper(axis, index, sideLength)));
   }
 
   std::size_t TileLayer::createTilesetId() {

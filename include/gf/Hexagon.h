@@ -24,10 +24,12 @@
 #include "CoreApi.h"
 #include "MapCell.h"
 #include "Math.h"
+#include "Polyline.h"
 #include "Rect.h"
 #include "Vector.h"
 
 #include <vector>
+#include <functional>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -49,10 +51,24 @@ inline namespace v1 {
      *
      * @sa gf::MapCellAxis and gf::MapCellIndex
      */
-    HexagonHelper(MapCellAxis axis, MapCellIndex index)
+    HexagonHelper(MapCellAxis axis, MapCellIndex index, int sideLength)
     : m_axis(axis)
-    , m_index(index) {
+    , m_index(index)
+    , m_sideLength(sideLength)
+    {
     }
+
+    RectF computeBounds(Vector2i layerSize, Vector2f tileSize) const;
+
+    RectI computeVisibleArea(const RectF& local, Vector2f tileSize) const;
+
+    RectF computeCellBounds(Vector2i coords, Vector2f tileSize) const;
+
+    Vector2i computeCoordinates(Vector2f position, Vector2f tileSize) const;
+
+    Polyline computePolyline(Vector2i coords, Vector2f tileSize) const;
+
+    void forEachNeighbor(Vector2i coords, Vector2i layerSize, std::function<void(Vector2i)> func) const;
 
     /**
      * @brief Get the hexagon size
@@ -96,6 +112,7 @@ inline namespace v1 {
   private:
     MapCellAxis m_axis;
     MapCellIndex m_index;
+    int m_sideLength;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
