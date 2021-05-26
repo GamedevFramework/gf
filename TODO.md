@@ -1,6 +1,6 @@
 # Things to do (or not) in gf
 
-This file is a list of ideas for gf. Some of them will eventually be in gf. Others are just random thoughts. If you are interested in on of these items, read [CONTRIBUTING.md](CONTRIBUTING.md).
+This file is a list of ideas for gf. Some of them will eventually be in gf. Others are just random thoughts. If you are interested in one of these items, read [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## core
 
