@@ -67,6 +67,7 @@ inline namespace v1 {
           id = it->second;
         } else {
           id = tiles.createTilesetId();
+          mapping.emplace(tileset, id);
 
           assert(tileset->image);
           const gf::Texture& texture = resources.getTexture(tileset->image->source);
