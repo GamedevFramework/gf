@@ -45,15 +45,15 @@ inline namespace v1 {
   public:
     virtual ~TileProperties();
 
-    virtual RectF computeBounds(Vector2i layerSize, Vector2f tileSize) = 0;
+    virtual RectF computeBounds(Vector2i layerSize) const noexcept = 0;
 
-    virtual RectI computeVisibleArea(const RectF& local, Vector2f tileSize) = 0;
+    virtual RectI computeVisibleArea(const RectF& local) const noexcept = 0;
 
-    virtual RectF computeCellBounds(Vector2i coords, Vector2f tileSize) = 0;
+    virtual RectF computeCellBounds(Vector2i coords) const noexcept = 0;
 
-    virtual Vector2i computeCoordinates(Vector2f position, Vector2f tileSize) = 0;
+    virtual Vector2i computeCoordinates(Vector2f position) const noexcept = 0;
 
-    virtual Polyline computePolyline(Vector2i coords, Vector2f tileSize) = 0;
+    virtual Polyline computePolyline(Vector2i coords) const = 0;
 
     virtual void forEachNeighbor(Vector2i coords, Vector2i layerSize, std::function<void(Vector2i)> func) = 0;
   };
@@ -66,7 +66,7 @@ inline namespace v1 {
    * For tile orientation that have a helper, they can be instantiated directly
    * thanks to this class.
    *
-   * @sa gf::StaggerHelper, gf::HexagonHelper
+   * @sa gf::OrthogonalHelper, gf::StaggerHelper, gf::HexagonHelper
    */
   template<typename Helper>
   class GenericTileProperties : public TileProperties {
@@ -76,24 +76,24 @@ inline namespace v1 {
     {
     }
 
-    RectF computeBounds(Vector2i layerSize, Vector2f tileSize) override {
-      return m_helper.computeBounds(layerSize, tileSize);
+    RectF computeBounds(Vector2i layerSize) const noexcept override {
+      return m_helper.computeBounds(layerSize);
     }
 
-    RectI computeVisibleArea(const RectF& local, Vector2f tileSize) override {
-      return m_helper.computeVisibleArea(local, tileSize);
+    RectI computeVisibleArea(const RectF& local) const noexcept override {
+      return m_helper.computeVisibleArea(local);
     }
 
-    RectF computeCellBounds(Vector2i coords, Vector2f tileSize) override {
-      return m_helper.computeCellBounds(coords, tileSize);
+    RectF computeCellBounds(Vector2i coords) const noexcept override {
+      return m_helper.computeCellBounds(coords);
     }
 
-    Vector2i computeCoordinates(Vector2f position, Vector2f tileSize) override {
-      return m_helper.computeCoordinates(position, tileSize);
+    Vector2i computeCoordinates(Vector2f position) const noexcept override {
+      return m_helper.computeCoordinates(position);
     }
 
-    Polyline computePolyline(Vector2i coords, Vector2f tileSize) override {
-      return m_helper.computePolyline(coords, tileSize);
+    Polyline computePolyline(Vector2i coords) const override {
+      return m_helper.computePolyline(coords);
     }
 
     void forEachNeighbor(Vector2i coords, Vector2i layerSize, std::function<void(Vector2i)> func) override {

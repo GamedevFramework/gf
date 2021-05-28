@@ -40,25 +40,27 @@ inline namespace v1 {
    */
   class GF_CORE_API StaggerHelper {
   public:
-    StaggerHelper(MapCellAxis axis, MapCellIndex index)
-    : m_axis(axis)
+    StaggerHelper(Vector2f tileSize, MapCellAxis axis, MapCellIndex index)
+    : m_tileSize(tileSize)
+    , m_axis(axis)
     , m_index(index)
     {
     }
 
-    RectF computeBounds(Vector2i layerSize, Vector2f tileSize) const;
+    RectF computeBounds(Vector2i layerSize) const noexcept;
 
-    RectI computeVisibleArea(const RectF& local, Vector2f tileSize) const;
+    RectI computeVisibleArea(const RectF& local) const noexcept;
 
-    RectF computeCellBounds(Vector2i coords, Vector2f tileSize) const;
+    RectF computeCellBounds(Vector2i coords) const noexcept;
 
-    Vector2i computeCoordinates(Vector2f position, Vector2f tileSize) const;
+    Vector2i computeCoordinates(Vector2f position) const noexcept;
 
-    Polyline computePolyline(Vector2i coords, Vector2f tileSize) const;
+    Polyline computePolyline(Vector2i coords) const;
 
     void forEachNeighbor(Vector2i coords, Vector2i layerSize, std::function<void(Vector2i)> func) const;
 
   private:
+    Vector2f m_tileSize;
     MapCellAxis m_axis;
     MapCellIndex m_index;
   };

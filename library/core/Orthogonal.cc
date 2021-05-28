@@ -27,24 +27,24 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  RectF OrthogonalHelper::computeBounds(Vector2i layerSize, Vector2f tileSize) const {
-    return RectF::fromSize(layerSize * tileSize);
+  RectF OrthogonalHelper::computeBounds(Vector2i layerSize) const noexcept {
+    return RectF::fromSize(layerSize * m_tileSize);
   }
 
-  RectI OrthogonalHelper::computeVisibleArea(const RectF& local, Vector2f tileSize) const {
-    return RectI::fromMinMax(local.min / tileSize, local.max / tileSize);
+  RectI OrthogonalHelper::computeVisibleArea(const RectF& local) const noexcept {
+    return RectI::fromMinMax(local.min / m_tileSize, local.max / m_tileSize);
   }
 
-  RectF OrthogonalHelper::computeCellBounds(Vector2i coords, Vector2f tileSize) const {
-    return RectF::fromPositionSize(coords * tileSize, tileSize);
+  RectF OrthogonalHelper::computeCellBounds(Vector2i coords) const noexcept {
+    return RectF::fromPositionSize(coords * m_tileSize, m_tileSize);
   }
 
-  Vector2i OrthogonalHelper::computeCoordinates(Vector2f position, Vector2f tileSize) const {
-    return position / tileSize;
+  Vector2i OrthogonalHelper::computeCoordinates(Vector2f position) const noexcept {
+    return position / m_tileSize;
   }
 
-  Polyline OrthogonalHelper::computePolyline(Vector2i coords, Vector2f tileSize) const {
-    RectF rect = computeCellBounds(coords, tileSize);
+  Polyline OrthogonalHelper::computePolyline(Vector2i coords) const {
+    RectF rect = computeCellBounds(coords);
     Polyline line(Polyline::Loop);
     line.addPoint(rect.getTopRight());
     line.addPoint(rect.getTopLeft());

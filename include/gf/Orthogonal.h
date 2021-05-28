@@ -39,17 +39,25 @@ inline namespace v1 {
    */
   class GF_CORE_API OrthogonalHelper {
   public:
-    RectF computeBounds(Vector2i layerSize, Vector2f tileSize) const;
+    OrthogonalHelper(Vector2f tileSize)
+    : m_tileSize(tileSize)
+    {
+    }
 
-    RectI computeVisibleArea(const RectF& local, Vector2f tileSize) const;
+    RectF computeBounds(Vector2i layerSize) const noexcept;
 
-    RectF computeCellBounds(Vector2i coords, Vector2f tileSize) const;
+    RectI computeVisibleArea(const RectF& local) const noexcept;
 
-    Vector2i computeCoordinates(Vector2f position, Vector2f tileSize) const;
+    RectF computeCellBounds(Vector2i coords) const noexcept;
 
-    Polyline computePolyline(Vector2i coords, Vector2f tileSize) const;
+    Vector2i computeCoordinates(Vector2f position) const noexcept;
+
+    Polyline computePolyline(Vector2i coords) const;
 
     void forEachNeighbor(Vector2i coords, Vector2i layerSize, std::function<void(Vector2i)> func) const;
+
+  private:
+    Vector2f m_tileSize;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

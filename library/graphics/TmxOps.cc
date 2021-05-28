@@ -32,20 +32,18 @@ inline namespace v1 {
 
     switch (map.orientation) {
       case TileOrientation::Orthogonal:
-        tiles = TileLayer::createOrthogonal(map.mapSize);
+        tiles = TileLayer::createOrthogonal(map.mapSize, map.tileSize);
         break;
       case TileOrientation::Staggered:
-        tiles = TileLayer::createStaggered(map.mapSize, map.mapCellAxis, map.mapCellIndex);
+        tiles = TileLayer::createStaggered(map.mapSize, map.tileSize, map.mapCellAxis, map.mapCellIndex);
         break;
       case TileOrientation::Hexagonal:
-        tiles = TileLayer::createHexagonal(map.mapSize, map.mapCellAxis, map.mapCellIndex, map.hexSideLength);
+        tiles = TileLayer::createHexagonal(map.mapSize, map.tileSize, map.mapCellAxis, map.mapCellIndex, map.hexSideLength);
         break;
       default:
         assert(false);
         break;
     }
-
-    tiles.setTileSize(map.tileSize);
 
     std::map<const TmxTileset *, std::size_t> mapping;
     int k = 0;

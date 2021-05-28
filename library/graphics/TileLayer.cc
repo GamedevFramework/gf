@@ -50,27 +50,27 @@ inline namespace v1 {
   {
   }
 
-  TileLayer::TileLayer(Vector2i layerSize, TileOrientation orientation, std::unique_ptr<TileProperties> properties)
+  TileLayer::TileLayer(Vector2i layerSize, Vector2i tileSize, TileOrientation orientation, std::unique_ptr<TileProperties> properties)
   : m_orientation(orientation)
   , m_properties(std::move(properties))
   , m_layerSize(layerSize)
-  , m_tileSize(0, 0)
+  , m_tileSize(tileSize)
   , m_rect(RectI::empty())
   , m_tiles(layerSize)
   {
     clear();
   }
 
-  TileLayer TileLayer::createOrthogonal(Vector2i layerSize) {
-    return TileLayer(layerSize, TileOrientation::Orthogonal, std::make_unique<GenericTileProperties<OrthogonalHelper>>(OrthogonalHelper()));
+  TileLayer TileLayer::createOrthogonal(Vector2i layerSize, Vector2i tileSize) {
+    return TileLayer(layerSize, tileSize, TileOrientation::Orthogonal, std::make_unique<GenericTileProperties<OrthogonalHelper>>(OrthogonalHelper(tileSize)));
   }
 
-  TileLayer TileLayer::createStaggered(Vector2i layerSize, MapCellAxis axis, MapCellIndex index) {
-    return TileLayer(layerSize, TileOrientation::Staggered, std::make_unique<GenericTileProperties<StaggerHelper>>(StaggerHelper(axis, index)));
+  TileLayer TileLayer::createStaggered(Vector2i layerSize, Vector2i tileSize, MapCellAxis axis, MapCellIndex index) {
+    return TileLayer(layerSize, tileSize, TileOrientation::Staggered, std::make_unique<GenericTileProperties<StaggerHelper>>(StaggerHelper(tileSize, axis, index)));
   }
 
-  TileLayer TileLayer::createHexagonal(Vector2i layerSize, MapCellAxis axis, MapCellIndex index, int sideLength) {
-    return TileLayer(layerSize, TileOrientation::Hexagonal, std::make_unique<GenericTileProperties<HexagonHelper>>(HexagonHelper(axis, index, sideLength)));
+  TileLayer TileLayer::createHexagonal(Vector2i layerSize, Vector2i tileSize, MapCellAxis axis, MapCellIndex index, int sideLength) {
+    return TileLayer(layerSize, tileSize, TileOrientation::Hexagonal, std::make_unique<GenericTileProperties<HexagonHelper>>(HexagonHelper(tileSize, sideLength, axis, index)));
   }
 
   std::size_t TileLayer::createTilesetId() {
@@ -123,7 +123,7 @@ inline namespace v1 {
 
   RectF TileLayer::getLocalBounds() const {
     assert(m_properties);
-    return m_properties->computeBounds(m_layerSize, m_tileSize);
+    return m_properties->computeBounds(m_layerSize);
   }
 
   void TileLayer::setAnchor(Anchor anchor) {
@@ -158,7 +158,7 @@ inline namespace v1 {
     local.extend(toLocal(screen.getBottomRight()));
 
     RectI layer = gf::RectI::fromSize(m_layerSize - 1);
-    RectI visible = m_properties->computeVisibleArea(local, m_tileSize);
+    RectI visible = m_properties->computeVisibleArea(local);
     RectI rect = visible.getIntersection(layer);
 
     // TODO: handle offsets of tilesets
@@ -211,7 +211,7 @@ inline namespace v1 {
 
         // position
 
-        RectF bounds = m_properties->computeCellBounds(coords, m_tileSize);
+        RectF bounds = m_properties->computeCellBounds(coords);
         Vector2f position = bounds.getPosition();
         position += sheet.tileset.getOffset();
 

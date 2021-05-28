@@ -51,22 +51,23 @@ inline namespace v1 {
      *
      * @sa gf::MapCellAxis and gf::MapCellIndex
      */
-    HexagonHelper(MapCellAxis axis, MapCellIndex index, int sideLength)
-    : m_axis(axis)
-    , m_index(index)
+    HexagonHelper(Vector2f tileSize, float sideLength, MapCellAxis axis, MapCellIndex index)
+    : m_tileSize(tileSize)
     , m_sideLength(sideLength)
+    , m_axis(axis)
+    , m_index(index)
     {
     }
 
-    RectF computeBounds(Vector2i layerSize, Vector2f tileSize) const;
+    RectF computeBounds(Vector2i layerSize) const noexcept;
 
-    RectI computeVisibleArea(const RectF& local, Vector2f tileSize) const;
+    RectI computeVisibleArea(const RectF& local) const noexcept;
 
-    RectF computeCellBounds(Vector2i coords, Vector2f tileSize) const;
+    RectF computeCellBounds(Vector2i coords) const noexcept;
 
-    Vector2i computeCoordinates(Vector2f position, Vector2f tileSize) const;
+    Vector2i computeCoordinates(Vector2f position) const noexcept;
 
-    Polyline computePolyline(Vector2i coords, Vector2f tileSize) const;
+    Polyline computePolyline(Vector2i coords) const;
 
     void forEachNeighbor(Vector2i coords, Vector2i layerSize, std::function<void(Vector2i)> func) const;
 
@@ -110,9 +111,10 @@ inline namespace v1 {
     std::vector<Vector2f> computeCorners(Vector2i coords, float radius) const;
 
   private:
+    Vector2f m_tileSize;
+    float m_sideLength;
     MapCellAxis m_axis;
     MapCellIndex m_index;
-    int m_sideLength;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

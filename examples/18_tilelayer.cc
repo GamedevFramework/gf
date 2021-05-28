@@ -87,8 +87,7 @@ int main() {
   gf::Texture texture("assets/tilelayer.png");
   texture.setSmooth();
 
-  gf::TileLayer tileLayer = gf::TileLayer::createOrthogonal({ MapWidth, MapHeight });
-  tileLayer.setTileSize({ TileSize, TileSize });
+  gf::TileLayer tileLayer = gf::TileLayer::createOrthogonal({ MapWidth, MapHeight }, { TileSize, TileSize });
 
   std::size_t id = tileLayer.createTilesetId();
   gf::Tileset& tileset = tileLayer.getTileset(id);

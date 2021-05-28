@@ -68,11 +68,11 @@ inline namespace v1 {
      */
     TileLayer();
 
-    static TileLayer createOrthogonal(Vector2i layerSize);
+    static TileLayer createOrthogonal(Vector2i layerSize, Vector2i tileSize);
 
-    static TileLayer createStaggered(Vector2i layerSize, MapCellAxis axis, MapCellIndex index);
+    static TileLayer createStaggered(Vector2i layerSize, Vector2i tileSize, MapCellAxis axis, MapCellIndex index);
 
-    static TileLayer createHexagonal(Vector2i layerSize, MapCellAxis axis, MapCellIndex index, int sideLength);
+    static TileLayer createHexagonal(Vector2i layerSize, Vector2i tileSize, MapCellAxis axis, MapCellIndex index, int sideLength);
 
     /**
      * @brief Get the size of the layer
@@ -220,7 +220,7 @@ inline namespace v1 {
     virtual void draw(RenderTarget& target, const RenderStates& states) override;
 
   private:
-    TileLayer(Vector2i layerSize, TileOrientation orientation, std::unique_ptr<TileProperties> properties);
+    TileLayer(Vector2i layerSize, Vector2i tileLayer, TileOrientation orientation, std::unique_ptr<TileProperties> properties);
 
   private:
     struct Cell {

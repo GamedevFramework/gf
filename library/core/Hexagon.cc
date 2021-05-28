@@ -27,29 +27,29 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  RectF HexagonHelper::computeBounds(Vector2i layerSize, Vector2f tileSize) const {
-    Vector2f base = layerSize * tileSize;
+  RectF HexagonHelper::computeBounds(Vector2i layerSize) const noexcept {
+    Vector2f base = layerSize * m_tileSize;
 
     switch (m_axis) {
       case MapCellAxis::Y:
         base.y /= 2;
-        base.x += tileSize.width / 2;
+        base.x += m_tileSize.width / 2;
         break;
       case MapCellAxis::X:
         base.x /= 2;
-        base.y += tileSize.height / 2;
+        base.y += m_tileSize.height / 2;
         break;
     }
 
     return RectF::fromSize(base);
   }
 
-  RectI HexagonHelper::computeVisibleArea(const RectF& local, Vector2f tileSize) const {
-    return RectI::fromMinMax(computeCoordinates(local.min, tileSize), computeCoordinates(local.max, tileSize)).grow(2);
+  RectI HexagonHelper::computeVisibleArea(const RectF& local) const noexcept {
+    return RectI::fromMinMax(computeCoordinates(local.min), computeCoordinates(local.max)).grow(2);
   }
 
-  RectF HexagonHelper::computeCellBounds(Vector2i coords, Vector2f tileSize) const {
-    Vector2f base = coords * tileSize;
+  RectF HexagonHelper::computeCellBounds(Vector2i coords) const noexcept {
+    Vector2f base = coords * m_tileSize;
 
     switch (m_axis) {
       case MapCellAxis::Y:
@@ -59,12 +59,12 @@ inline namespace v1 {
         switch (m_index) {
           case MapCellIndex::Odd:
             if (coords.y % 2 != 0) {
-              base.x += tileSize.width / 2;
+              base.x += m_tileSize.width / 2;
             }
             break;
           case MapCellIndex::Even:
             if (coords.y % 2 == 0) {
-              base.x += tileSize.width / 2;
+              base.x += m_tileSize.width / 2;
             }
             break;
         }
@@ -76,23 +76,24 @@ inline namespace v1 {
         switch (m_index) {
           case MapCellIndex::Odd:
             if (coords.x % 2 != 0) {
-              base.y += tileSize.height / 2;
+              base.y += m_tileSize.height / 2;
             }
             break;
           case MapCellIndex::Even:
             if (coords.x % 2 == 0) {
-              base.y += tileSize.height / 2;
+              base.y += m_tileSize.height / 2;
             }
             break;
         }
         break;
     }
 
-    return RectF::fromPositionSize(base, tileSize);
+    return RectF::fromPositionSize(base, m_tileSize);
   }
 
-  Vector2i HexagonHelper::computeCoordinates(Vector2f position, Vector2f tileSize) const {
+  Vector2i HexagonHelper::computeCoordinates(Vector2f position) const noexcept {
     // TODO: quick approximation but not really good
+    auto tileSize = m_tileSize;
 
     switch (m_axis) {
       case MapCellAxis::Y:
@@ -106,7 +107,7 @@ inline namespace v1 {
     return position / tileSize;
   }
 
-  Polyline HexagonHelper::computePolyline(Vector2i coords, Vector2f tileSize) const {
+  Polyline HexagonHelper::computePolyline(Vector2i coords) const {
     Polyline polyline;
     // TODO
     return polyline;
