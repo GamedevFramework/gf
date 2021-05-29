@@ -120,14 +120,6 @@ inline namespace v1 {
      */
 
     /**
-     * @brief Set the tile size
-     *
-     * @param tileSize The new tile size, in pixels
-     * @sa getTileSize()
-     */
-    void setTileSize(Vector2i tileSize);
-
-    /**
      * @brief Get the tile size
      *
      * @return The tile size, in pixels

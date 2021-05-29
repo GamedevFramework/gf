@@ -89,10 +89,6 @@ inline namespace v1 {
     return m_sheets[id].tileset;
   }
 
-  void TileLayer::setTileSize(Vector2i tileSize) {
-    m_tileSize = tileSize;
-  }
-
   void TileLayer::setTile(Vector2i position, std::size_t tileset, int tile, Flags<Flip> flip) {
     assert(m_tiles.isValid(position));
     m_tiles(position) = { tileset, tile, flip };
