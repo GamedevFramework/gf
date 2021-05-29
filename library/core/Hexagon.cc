@@ -31,13 +31,13 @@ inline namespace v1 {
     Vector2f base = layerSize * m_tileSize;
 
     switch (m_axis) {
-      case MapCellAxis::Y:
-        base.y /= 2;
-        base.x += m_tileSize.width / 2;
-        break;
       case MapCellAxis::X:
         base.x /= 2;
         base.y += m_tileSize.height / 2;
+        break;
+      case MapCellAxis::Y:
+        base.y /= 2;
+        base.x += m_tileSize.width / 2;
         break;
     }
 
@@ -52,23 +52,6 @@ inline namespace v1 {
     Vector2f base = coords * m_tileSize;
 
     switch (m_axis) {
-      case MapCellAxis::Y:
-        base.y += coords.y * m_sideLength;
-        base.y /= 2;
-
-        switch (m_index) {
-          case MapCellIndex::Odd:
-            if (coords.y % 2 != 0) {
-              base.x += m_tileSize.width / 2;
-            }
-            break;
-          case MapCellIndex::Even:
-            if (coords.y % 2 == 0) {
-              base.x += m_tileSize.width / 2;
-            }
-            break;
-        }
-        break;
       case MapCellAxis::X:
         base.x += coords.x * m_sideLength;
         base.x /= 2;
@@ -86,6 +69,23 @@ inline namespace v1 {
             break;
         }
         break;
+      case MapCellAxis::Y:
+        base.y += coords.y * m_sideLength;
+        base.y /= 2;
+
+        switch (m_index) {
+          case MapCellIndex::Odd:
+            if (coords.y % 2 != 0) {
+              base.x += m_tileSize.width / 2;
+            }
+            break;
+          case MapCellIndex::Even:
+            if (coords.y % 2 == 0) {
+              base.x += m_tileSize.width / 2;
+            }
+            break;
+        }
+        break;
     }
 
     return RectF::fromPositionSize(base, m_tileSize);
@@ -96,11 +96,11 @@ inline namespace v1 {
     auto tileSize = m_tileSize;
 
     switch (m_axis) {
-      case MapCellAxis::Y:
-        tileSize.y /= 2;
-        break;
       case MapCellAxis::X:
         tileSize.x /= 2;
+        break;
+      case MapCellAxis::Y:
+        tileSize.y /= 2;
         break;
     }
 
@@ -108,14 +108,52 @@ inline namespace v1 {
   }
 
   Polyline HexagonHelper::computePolyline(Vector2i coords) const {
+    auto bounds = computeCellBounds(coords);
     Polyline polyline;
-    // TODO
+
+    switch (m_axis) {
+      case MapCellAxis::X:
+        polyline.addPoint((bounds.getTopLeft() + bounds.getTopRight()) / 2.0f);
+        polyline.addPoint(0.75f * bounds.getTopLeft() + 0.25f * bounds.getBottomLeft());
+        polyline.addPoint(0.25f * bounds.getTopLeft() + 0.75f * bounds.getBottomLeft());
+        polyline.addPoint((bounds.getBottomLeft() + bounds.getBottomRight()) / 2.0f);
+        polyline.addPoint(0.25f * bounds.getTopRight() + 0.75f * bounds.getBottomRight());
+        polyline.addPoint(0.75f * bounds.getTopRight() + 0.25f * bounds.getBottomRight());
+        break;
+
+      case MapCellAxis::Y:
+        polyline.addPoint((bounds.getTopLeft() + bounds.getBottomLeft()) / 2.0f);
+        polyline.addPoint(0.75f * bounds.getTopLeft() + 0.25f * bounds.getTopRight());
+        polyline.addPoint(0.25f * bounds.getTopLeft() + 0.75f * bounds.getTopRight());
+        polyline.addPoint((bounds.getTopRight() + bounds.getBottomRight()) / 2.0f);
+        polyline.addPoint(0.25f * bounds.getBottomLeft() + 0.75f * bounds.getBottomRight());
+        polyline.addPoint(0.75f * bounds.getBottomLeft() + 0.25f * bounds.getBottomRight());
+        break;
+    }
+
     return polyline;
   }
 
   void HexagonHelper::forEachNeighbor(Vector2i coords, Vector2i layerSize, std::function<void(Vector2i)> func) const {
     // TODO
   }
+
+  Vector2f HexagonHelper::computeRegularSize(MapCellAxis axis, float radius) {
+    Vector2f size;
+
+    switch (axis) {
+      case MapCellAxis::X:
+        size = { radius * Sqrt3, radius * 2.0f };
+        break;
+
+      case MapCellAxis::Y:
+        size = { radius * 2.0f, radius * Sqrt3 };
+        break;
+    }
+
+    return size;
+  }
+
 
   Vector2f HexagonHelper::getHexagonSize(float radius) const noexcept {
     Vector2f size;

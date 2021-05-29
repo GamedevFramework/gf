@@ -59,6 +59,14 @@ inline namespace v1 {
     {
     }
 
+    HexagonHelper(float radius, MapCellAxis axis, MapCellIndex index)
+    : m_tileSize(computeRegularSize(axis, radius))
+    , m_sideLength(radius)
+    , m_axis(axis)
+    , m_index(index)
+    {
+    }
+
     RectF computeBounds(Vector2i layerSize) const noexcept;
 
     RectI computeVisibleArea(const RectF& local) const noexcept;
@@ -109,6 +117,9 @@ inline namespace v1 {
      * @returns The position of six corners
      */
     std::vector<Vector2f> computeCorners(Vector2i coords, float radius) const;
+
+  private:
+    static Vector2f computeRegularSize(MapCellAxis axis, float radius);
 
   private:
     Vector2f m_tileSize;
