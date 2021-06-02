@@ -72,12 +72,12 @@ inline namespace v1 {
      * texture rectangle (in texture coordinates) and an amount of time.
      *
      * @param texture The texture where the sprite is
-     * @param frameSize The frame texture normalized size
      * @param layout Layout of frames
-     * @param frames Number of frames included in tileset
      * @param duration The amount of time to display the frame
+     * @param frameCount Number of frames included in tileset
+     * @param frameOffset The frame to start with
      */
-    void addTileset(const Texture& texture, Vector2f frameSize, Vector2i layout, int frames, Time duration);
+    void addTileset(const Texture& texture, Vector2i layout, Time duration, int frameCount, int frameOffset = 0);
 
     /**
      * @brief Enable or disable the animation loop
