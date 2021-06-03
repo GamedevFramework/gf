@@ -120,16 +120,6 @@ inline namespace v1 {
      */
 
     /**
-     * @brief Get the tile size
-     *
-     * @return The tile size, in pixels
-     * @sa setTileSize()
-     */
-    Vector2i getTileSize() const {
-      return m_tileSize;
-    }
-
-    /**
      * @brief Set a tile
      *
      * @param position The position of the tile in the tile layer
@@ -212,7 +202,7 @@ inline namespace v1 {
     virtual void draw(RenderTarget& target, const RenderStates& states) override;
 
   private:
-    TileLayer(Vector2i layerSize, Vector2i tileLayer, TileOrientation orientation, std::unique_ptr<TileProperties> properties);
+    TileLayer(Vector2i layerSize, TileOrientation orientation, std::unique_ptr<TileProperties> properties);
 
   private:
     struct Cell {
@@ -236,7 +226,6 @@ inline namespace v1 {
     std::unique_ptr<TileProperties> m_properties;
 
     Vector2i m_layerSize;
-    Vector2i m_tileSize;
 
     std::vector<Sheet> m_sheets;
     RectI m_rect;

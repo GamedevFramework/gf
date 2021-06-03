@@ -45,16 +45,14 @@ inline namespace v1 {
   : m_orientation(TileOrientation::Unknown)
   , m_properties(nullptr)
   , m_layerSize(0, 0)
-  , m_tileSize(0, 0)
   , m_rect(RectI::empty())
   {
   }
 
-  TileLayer::TileLayer(Vector2i layerSize, Vector2i tileSize, TileOrientation orientation, std::unique_ptr<TileProperties> properties)
+  TileLayer::TileLayer(Vector2i layerSize, TileOrientation orientation, std::unique_ptr<TileProperties> properties)
   : m_orientation(orientation)
   , m_properties(std::move(properties))
   , m_layerSize(layerSize)
-  , m_tileSize(tileSize)
   , m_rect(RectI::empty())
   , m_tiles(layerSize)
   {
@@ -62,15 +60,15 @@ inline namespace v1 {
   }
 
   TileLayer TileLayer::createOrthogonal(Vector2i layerSize, Vector2i tileSize) {
-    return TileLayer(layerSize, tileSize, TileOrientation::Orthogonal, std::make_unique<GenericTileProperties<OrthogonalHelper>>(OrthogonalHelper(tileSize)));
+    return TileLayer(layerSize, TileOrientation::Orthogonal, std::make_unique<GenericTileProperties<OrthogonalHelper>>(OrthogonalHelper(tileSize)));
   }
 
   TileLayer TileLayer::createStaggered(Vector2i layerSize, Vector2i tileSize, MapCellAxis axis, MapCellIndex index) {
-    return TileLayer(layerSize, tileSize, TileOrientation::Staggered, std::make_unique<GenericTileProperties<StaggerHelper>>(StaggerHelper(tileSize, axis, index)));
+    return TileLayer(layerSize, TileOrientation::Staggered, std::make_unique<GenericTileProperties<StaggerHelper>>(StaggerHelper(tileSize, axis, index)));
   }
 
   TileLayer TileLayer::createHexagonal(Vector2i layerSize, Vector2i tileSize, MapCellAxis axis, MapCellIndex index, int sideLength) {
-    return TileLayer(layerSize, tileSize, TileOrientation::Hexagonal, std::make_unique<GenericTileProperties<HexagonHelper>>(HexagonHelper(tileSize, sideLength, axis, index)));
+    return TileLayer(layerSize, TileOrientation::Hexagonal, std::make_unique<GenericTileProperties<HexagonHelper>>(HexagonHelper(tileSize, sideLength, axis, index)));
   }
 
   std::size_t TileLayer::createTilesetId() {
@@ -267,7 +265,7 @@ inline namespace v1 {
   }
 
   void TileLayer::updateGeometry() {
-    if (m_sheets.empty() || m_tileSize.width == 0 || m_tileSize.height == 0 || m_properties == nullptr) {
+    if (m_sheets.empty() || m_properties == nullptr) {
       return;
     }
 
