@@ -1,12 +1,24 @@
 file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/generated")
 
-add_executable(gfdev_source_file graphics/tools/gfdev_source_file.cc)
+# Create gfdev_source_file tool
 
-set_target_properties(gfdev_source_file
-  PROPERTIES
-    CXX_STANDARD 17
-    CXX_EXTENSIONS OFF
-)
+if (ANDROID)
+  include(ExternalProject)
+
+  ExternalProject_Add(gfdev_source_file
+    SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/graphics/tools"
+    CMAKE_ARGS
+		  -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_CURRENT_BINARY_DIR}
+  )
+else()
+  add_executable(gfdev_source_file graphics/tools/gfdev_source_file.cc)
+
+  set_target_properties(gfdev_source_file
+    PROPERTIES
+      CXX_STANDARD 17
+      CXX_EXTENSIONS OFF
+  )
+endif()
 
 # process gamecontrollerdb
 
@@ -23,7 +35,7 @@ foreach(GCDB_RELATIVE_SOURCE ${GCDB_SOURCES})
   set(GCDB_HEADER "${CMAKE_CURRENT_BINARY_DIR}/generated/${GCDB_NAME}.h")
   add_custom_command(
     OUTPUT "${GCDB_HEADER}"
-    COMMAND gfdev_source_file "${GCDB_SOURCE}" "${GCDB_HEADER}" "gamecontrollerdb"
+    COMMAND "${CMAKE_CURRENT_BINARY_DIR}/gfdev_source_file" "${GCDB_SOURCE}" "${GCDB_HEADER}" "gamecontrollerdb"
     COMMENT "Compiling ${GCDB_NAME} to header"
     DEPENDS gfdev_source_file "${GCDB_SOURCE}"
   )
@@ -64,7 +76,7 @@ foreach(SHADER_RELATIVE_SOURCE ${SHADER_SOURCES})
   set(SHADER_HEADER "${CMAKE_CURRENT_BINARY_DIR}/generated/${SHADER_NAME}.h")
   add_custom_command(
     OUTPUT "${SHADER_HEADER}"
-    COMMAND gfdev_source_file "${SHADER_SOURCE}" "${SHADER_HEADER}" "${SHADER_VARIABLE}"
+    COMMAND "${CMAKE_CURRENT_BINARY_DIR}/gfdev_source_file" "${SHADER_SOURCE}" "${SHADER_HEADER}" "${SHADER_VARIABLE}"
     COMMENT "Compiling ${SHADER_NAME} to header"
     DEPENDS gfdev_source_file "${SHADER_SOURCE}"
   )
