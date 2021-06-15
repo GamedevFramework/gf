@@ -9,18 +9,13 @@ if (ANDROID)
     SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/graphics/tools"
     CMAKE_ARGS
 		  -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_CURRENT_BINARY_DIR}
+      -DGFDEV_ANDROID_TOOL=ON
   )
 
   # Hack to select the right executable for android cross-compilation
   set(GFDEV_SOURCE_FILE_EXEC "${CMAKE_CURRENT_BINARY_DIR}/gfdev_source_file")
 else()
-  add_executable(gfdev_source_file graphics/tools/gfdev_source_file.cc)
-
-  set_target_properties(gfdev_source_file
-    PROPERTIES
-      CXX_STANDARD 17
-      CXX_EXTENSIONS OFF
-  )
+  add_subdirectory(graphics/tools)
 
   set(GFDEV_SOURCE_FILE_EXEC "gfdev_source_file")
 endif()
