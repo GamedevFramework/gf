@@ -10,6 +10,9 @@ if (ANDROID)
     CMAKE_ARGS
 		  -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_CURRENT_BINARY_DIR}
   )
+
+  # Hack to select the right executable for android cross-compilation
+  set(GFDEV_SOURCE_FILE_EXEC "${CMAKE_CURRENT_BINARY_DIR}/gfdev_source_file")
 else()
   add_executable(gfdev_source_file graphics/tools/gfdev_source_file.cc)
 
@@ -18,6 +21,8 @@ else()
       CXX_STANDARD 17
       CXX_EXTENSIONS OFF
   )
+
+  set(GFDEV_SOURCE_FILE_EXEC "gfdev_source_file")
 endif()
 
 # process gamecontrollerdb
@@ -35,7 +40,7 @@ foreach(GCDB_RELATIVE_SOURCE ${GCDB_SOURCES})
   set(GCDB_HEADER "${CMAKE_CURRENT_BINARY_DIR}/generated/${GCDB_NAME}.h")
   add_custom_command(
     OUTPUT "${GCDB_HEADER}"
-    COMMAND "${CMAKE_CURRENT_BINARY_DIR}/gfdev_source_file" "${GCDB_SOURCE}" "${GCDB_HEADER}" "gamecontrollerdb"
+    COMMAND ${GFDEV_SOURCE_FILE_EXEC} "${GCDB_SOURCE}" "${GCDB_HEADER}" "gamecontrollerdb"
     COMMENT "Compiling ${GCDB_NAME} to header"
     DEPENDS gfdev_source_file "${GCDB_SOURCE}"
   )
@@ -76,7 +81,7 @@ foreach(SHADER_RELATIVE_SOURCE ${SHADER_SOURCES})
   set(SHADER_HEADER "${CMAKE_CURRENT_BINARY_DIR}/generated/${SHADER_NAME}.h")
   add_custom_command(
     OUTPUT "${SHADER_HEADER}"
-    COMMAND "${CMAKE_CURRENT_BINARY_DIR}/gfdev_source_file" "${SHADER_SOURCE}" "${SHADER_HEADER}" "${SHADER_VARIABLE}"
+    COMMAND ${GFDEV_SOURCE_FILE_EXEC} "${SHADER_SOURCE}" "${SHADER_HEADER}" "${SHADER_VARIABLE}"
     COMMENT "Compiling ${SHADER_NAME} to header"
     DEPENDS gfdev_source_file "${SHADER_SOURCE}"
   )
