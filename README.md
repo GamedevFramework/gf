@@ -88,7 +88,6 @@ If you want to talk directly with the developpers, you can
 
 - chat on the [Discord server of gf](https://discord.gg/2fXM3T4)
 - post a message on [/r/GamedevFramework](https://www.reddit.com/r/GamedevFramework/).
-- join the [#gf-devel IRC channel on Freenode](irc://chat.freenode.net/gf-devel)
 
 ## Contribution
 
