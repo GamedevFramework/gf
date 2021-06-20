@@ -67,7 +67,7 @@ inline namespace v1 {
     return TileLayer(layerSize, TileOrientation::Staggered, std::make_unique<GenericTileProperties<StaggerHelper>>(StaggerHelper(tileSize, axis, index)));
   }
 
-  TileLayer TileLayer::createHexagonal(Vector2i layerSize, Vector2i tileSize, MapCellAxis axis, MapCellIndex index, int sideLength) {
+  TileLayer TileLayer::createHexagonal(Vector2i layerSize, Vector2i tileSize, int sideLength, MapCellAxis axis, MapCellIndex index) {
     return TileLayer(layerSize, TileOrientation::Hexagonal, std::make_unique<GenericTileProperties<HexagonHelper>>(HexagonHelper(tileSize, sideLength, axis, index)));
   }
 

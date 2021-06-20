@@ -80,45 +80,13 @@ inline namespace v1 {
     void forEachNeighbor(Vector2i coords, Vector2i layerSize, std::function<void(Vector2i)> func) const;
 
     /**
-     * @brief Get the hexagon size
+     * @brief Get the size of a regular hexagon
      *
+     * @param axis The hexagon axis
      * @param radius Radius of hexagon
      *
-     * @returns The current hexagon size
+     * @returns The size of the bounding box of the hexagon
      */
-    Vector2f getHexagonSize(float radius) const noexcept;
-
-    /**
-     * @brief Get the bounds for hexagon cells
-     *
-     * @param size Number of cells
-     * @param radius Radius of hexagon
-     *
-     * @returns The current hexagon size
-     */
-    RectF computeBounds(Vector2i size, float radius) const noexcept;
-
-    /**
-     * @brief Compute the center of the hexagon
-     *
-     * @param coords The size of the hexagon in the map
-     * @param radius Radius of hexagon
-     *
-     * @returns The position of the center
-     */
-    Vector2f computeCenter(Vector2i coords, float radius) const;
-
-    /**
-     * @brief Compute the six corners of the hexagon
-     *
-     * @param coords The size of the hexagon in the map
-     * @param radius Radius of hexagon
-     *
-     * @returns The position of six corners
-     */
-    std::vector<Vector2f> computeCorners(Vector2i coords, float radius) const;
-
-  private:
     static Vector2f computeRegularSize(MapCellAxis axis, float radius);
 
   private:

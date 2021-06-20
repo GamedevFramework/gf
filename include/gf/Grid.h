@@ -21,8 +21,11 @@
 #ifndef GF_GRID_H
 #define GF_GRID_H
 
+#include <memory>
+
 #include "GraphicsApi.h"
 #include "Hexagon.h"
+#include "TileProperties.h"
 #include "Transformable.h"
 #include "Vector.h"
 #include "VertexArray.h"
@@ -35,19 +38,16 @@ inline namespace v1 {
 
   /**
    * @ingroup graphics_drawables
-   * @brief A square grid
+   * @brief A grid
    */
-  class GF_GRAPHICS_API SquareGrid : public gf::Transformable {
+  class GF_GRAPHICS_API Grid : public gf::Transformable {
   public:
-    /**
-     * @brief Constructor
-     *
-     * @param gridSize The size of the grid
-     * @param cellSize The size of a cell in the grid
-     * @param color The color of the grid frame
-     * @param lineWidth The width of the grid frame
-     */
-    SquareGrid(Vector2i gridSize, Vector2f cellSize, const Color4f& color, float lineWidth = 1.0f);
+    Grid();
+
+    static Grid createOrthogonal(Vector2i gridSize, Vector2f cellSize);
+    static Grid createStaggered(Vector2i gridSize, Vector2f cellSize, MapCellAxis axis, MapCellIndex index);
+    static Grid createHexagonal(Vector2i gridSize, Vector2f cellSize, float sideLength, MapCellAxis axis, MapCellIndex index);
+    static Grid createHexagonal(Vector2i gridSize, float radius, MapCellAxis axis, MapCellIndex index);
 
     /**
      * @brief Set the grid size
@@ -63,22 +63,6 @@ inline namespace v1 {
      */
     Vector2i getGridSize() const noexcept {
       return m_gridSize;
-    }
-
-    /**
-     * @brief Set the cell size
-     *
-     * @param cellSize The new cell size
-     */
-    void setCellSize(Vector2f cellSize);
-
-    /**
-     * @brief Get the cell size
-     *
-     * @returns The current cell size
-     */
-    Vector2f getCellSize() const noexcept {
-      return m_cellSize;
     }
 
     /**
@@ -98,6 +82,22 @@ inline namespace v1 {
     }
 
     /**
+     * @brief Set the color of the selected cell
+     *
+     * @param color The new color of the selected cell
+     */
+    void setSelectedColor(const Color4f& color);
+
+    /**
+     * @brief Get the color of the selected cell
+     *
+     * @returns The current color of the selected cell
+     */
+    const Color4f& getSelectedColor() const noexcept {
+      return m_selectedColor;
+    }
+
+    /**
      * @brief Set the width of the grid frame
      *
      * @param lineWidth The new width of the grid frame
@@ -114,6 +114,9 @@ inline namespace v1 {
     float getLineWidth() const noexcept {
       return m_lineWidth;
     }
+
+    void hover(Vector2f pointer);
+
 
     /**
      * @brief Get the local bounding rectangle of the entity
@@ -150,161 +153,22 @@ inline namespace v1 {
      */
     VertexBuffer commitGeometry() const;
 
-    virtual void draw(RenderTarget& target, const RenderStates& states) override;
+    void draw(RenderTarget& target, const RenderStates& states) override;
 
   private:
+    Grid(Vector2i gridSize, std::unique_ptr<TileProperties> properties);
+
     void updateGeometry();
 
   private:
+    std::unique_ptr<TileProperties> m_properties;
     Vector2i m_gridSize;
-    Vector2f m_cellSize;
     Color4f m_color;
     float m_lineWidth;
     VertexArray m_vertices;
-  };
-
-  /**
-   * @ingroup graphics_drawables
-   * @brief A hexagonal grid
-   */
-  class GF_GRAPHICS_API HexagonGrid : public gf::Transformable {
-  public:
-    /**
-     * @brief Constructor
-     *
-     * @param axis The orientation of hexagon cells. X for pointy and Y for flat
-     * @param index The index of data storage. Odd or Even indicate on which col or row is the offset
-     * @param gridSize The number of hexagonal cell in the grid
-     * @param radius The radius of hexagon
-     * @param color The color of the grid frame
-     * @param lineWidth The width of the grid frame
-     *
-     * @sa gf::MapCellAxis and gf::MapCellIndex
-     */
-    HexagonGrid(MapCellAxis axis, MapCellIndex index, Vector2i gridSize, float radius, const Color4f& color, float lineWidth = 1.0f);
-
-    /**
-     * @brief Set the grid size
-     *
-     * @param gridSize The new grid size
-     */
-    void setGridSize(Vector2i gridSize);
-
-    /**
-     * @brief Get the grid size
-     *
-     * @returns The current grid size
-     */
-    Vector2i getGridSize() const noexcept {
-      return m_gridSize;
-    }
-
-    /**
-     * @brief Set the radius of hexagon
-     *
-     * @param radius The new radius of hexagon
-     */
-    void setRadius(float radius);
-
-    /**
-     * @brief Get the radius of hexagon
-     *
-     * @returns The current radius of hexagon
-     */
-    float getRadius() const noexcept {
-      return m_radius;
-    }
-
-    /**
-     * @brief Get the hexagon size
-     *
-     * @returns The current hexagon size
-     */
-    Vector2f getHexagonSize() const noexcept {
-      return m_helper.getHexagonSize(m_radius);
-    }
-
-    /**
-     * @brief Set the color of the grid frame
-     *
-     * @param color The new color of the grid frame
-     */
-    void setColor(const Color4f& color);
-
-    /**
-     * @brief Get the color of the grid frame
-     *
-     * @returns The current color of the grid frame
-     */
-    const Color4f& getColor() const noexcept {
-      return m_color;
-    }
-
-    /**
-     * @brief Set the width of the grid frame
-     *
-     * @param lineWidth The new width of the grid frame
-     */
-    void setLineWidth(float lineWidth) noexcept {
-      m_lineWidth = lineWidth;
-    }
-
-    /**
-     * @brief Get the width of the grid frame
-     *
-     * @returns The current width of the grid frame
-     */
-    float getLineWidth() const noexcept {
-      return m_lineWidth;
-    }
-
-    /**
-     * @brief Get the local bounding rectangle of the entity
-     *
-     * The returned rectangle is in local coordinates, which means
-     * that it ignores the transformations (translation, rotation,
-     * scale, ...) that are applied to the entity.
-     * In other words, this function returns the bounds of the
-     * entity in the entity's coordinate system.
-     *
-     * @return Local bounding rectangle of the entity
-     */
-    RectF getLocalBounds() const;
-
-    /**
-     * @brief Set the anchor origin of the entity
-     *
-     * Compute the origin of the entity based on the local bounds and
-     * the specified anchor. Internally, this function calls
-     * `Transformable::setOrigin()`.
-     *
-     * @param anchor The anchor of the entity
-     * @sa getLocalBounds(), Transformable::setOrigin()
-     */
-    void setAnchor(Anchor anchor);
-
-    /**
-     * @brief Create a buffer with the current geometry
-     *
-     * The geometry is uploaded in the graphics memory so that it's faster
-     * to draw.
-     *
-     * @return A buffer with the current geometry
-     */
-    VertexBuffer commitGeometry() const;
-
-    virtual void draw(RenderTarget& target, const RenderStates& states) override;
-
-  private:
-    void updateGeometry();
-
-  private:
-    Vector2i m_gridSize;
-    float m_radius;
-    HexagonHelper m_helper;
-    Color4f m_color;
-    float m_lineWidth;
-    VertexArray m_vertices;
+    Vector2i m_selected;
+    Color4f m_selectedColor;
+    VertexArray m_selectedVertices;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

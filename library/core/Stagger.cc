@@ -31,13 +31,15 @@ inline namespace v1 {
     Vector2f base = layerSize * m_tileSize;
 
     switch (m_axis) {
-      case MapCellAxis::Y:
-        base.y /= 2;
-        base.x += m_tileSize.width / 2;
-        break;
       case MapCellAxis::X:
         base.x /= 2;
+        base.x += m_tileSize.width / 2;
         base.y += m_tileSize.height / 2;
+        break;
+      case MapCellAxis::Y:
+        base.y /= 2;
+        base.y += m_tileSize.height / 2;
+        base.x += m_tileSize.width / 2;
         break;
     }
 
@@ -106,8 +108,17 @@ inline namespace v1 {
   }
 
   Polyline StaggerHelper::computePolyline(Vector2i coords) const {
-    Polyline line;
-    // TODO
+    auto bounds = computeCellBounds(coords);
+    float xmin = bounds.min.x;
+    float ymin = bounds.min.y;
+    float xmax = bounds.max.x;
+    float ymax = bounds.max.y;
+
+    Polyline line(gf::Polyline::Loop);
+    line.addPoint({ (xmin + xmax) / 2,  ymin });
+    line.addPoint({ xmax,               (ymin + ymax) / 2 });
+    line.addPoint({ (xmin + xmax) / 2,  ymax });
+    line.addPoint({ xmin,               (ymin + ymax) / 2 });
     return line;
   }
 

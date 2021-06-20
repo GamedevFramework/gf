@@ -72,7 +72,7 @@ inline namespace v1 {
 
     static TileLayer createStaggered(Vector2i layerSize, Vector2i tileSize, MapCellAxis axis, MapCellIndex index);
 
-    static TileLayer createHexagonal(Vector2i layerSize, Vector2i tileSize, MapCellAxis axis, MapCellIndex index, int sideLength);
+    static TileLayer createHexagonal(Vector2i layerSize, Vector2i tileSize, int sideLength, MapCellAxis axis, MapCellIndex index);
 
     /**
      * @brief Get the size of the layer
