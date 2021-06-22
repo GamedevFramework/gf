@@ -23,9 +23,8 @@
 
 #include <memory>
 
+#include "Cells.h"
 #include "GraphicsApi.h"
-#include "Hexagon.h"
-#include "TileProperties.h"
 #include "Transformable.h"
 #include "Vector.h"
 #include "VertexArray.h"
@@ -45,9 +44,9 @@ inline namespace v1 {
     Grid();
 
     static Grid createOrthogonal(Vector2i gridSize, Vector2f cellSize);
-    static Grid createStaggered(Vector2i gridSize, Vector2f cellSize, MapCellAxis axis, MapCellIndex index);
-    static Grid createHexagonal(Vector2i gridSize, Vector2f cellSize, float sideLength, MapCellAxis axis, MapCellIndex index);
-    static Grid createHexagonal(Vector2i gridSize, float radius, MapCellAxis axis, MapCellIndex index);
+    static Grid createStaggered(Vector2i gridSize, Vector2f cellSize, CellAxis axis, CellIndex index);
+    static Grid createHexagonal(Vector2i gridSize, Vector2f cellSize, float sideLength, CellAxis axis, CellIndex index);
+    static Grid createHexagonal(Vector2i gridSize, float radius, CellAxis axis, CellIndex index);
 
     /**
      * @brief Set the grid size
@@ -156,12 +155,12 @@ inline namespace v1 {
     void draw(RenderTarget& target, const RenderStates& states) override;
 
   private:
-    Grid(Vector2i gridSize, std::unique_ptr<TileProperties> properties);
+    Grid(Vector2i gridSize, std::unique_ptr<Cells> properties);
 
     void updateGeometry();
 
   private:
-    std::unique_ptr<TileProperties> m_properties;
+    std::unique_ptr<Cells> m_properties;
     Vector2i m_gridSize;
     Color4f m_color;
     float m_lineWidth;

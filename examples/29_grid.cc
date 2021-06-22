@@ -60,14 +60,14 @@ int main() {
 
   NamedGrid grids[] = {
     { "Orthogonal"s, gf::Grid::createOrthogonal(GridSize, CellSize) },
-    { "Staggered X Odd"s, gf::Grid::createStaggered(GridSize, StaggeredCellSize, gf::MapCellAxis::X, gf::MapCellIndex::Odd) },
-    { "Staggered X Even"s, gf::Grid::createStaggered(GridSize, StaggeredCellSize, gf::MapCellAxis::X, gf::MapCellIndex::Even) },
-    { "Staggered Y Odd"s, gf::Grid::createStaggered(GridSize, StaggeredCellSize, gf::MapCellAxis::Y, gf::MapCellIndex::Odd) },
-    { "Staggered Y Even"s, gf::Grid::createStaggered(GridSize, StaggeredCellSize, gf::MapCellAxis::Y, gf::MapCellIndex::Even) },
-    { "Hexagonal X Odd"s, gf::Grid::createHexagonal(GridSize, HexagonRadius, gf::MapCellAxis::X, gf::MapCellIndex::Odd) },
-    { "Hexagonal X Even"s, gf::Grid::createHexagonal(GridSize, HexagonRadius, gf::MapCellAxis::X, gf::MapCellIndex::Even) },
-    { "Hexagonal Y Odd"s, gf::Grid::createHexagonal(GridSize, HexagonRadius, gf::MapCellAxis::Y, gf::MapCellIndex::Odd) },
-    { "Hexagonal Y Even"s, gf::Grid::createHexagonal(GridSize, HexagonRadius, gf::MapCellAxis::Y, gf::MapCellIndex::Even) },
+    { "Staggered X Odd"s, gf::Grid::createStaggered(GridSize, StaggeredCellSize, gf::CellAxis::X, gf::CellIndex::Odd) },
+    { "Staggered X Even"s, gf::Grid::createStaggered(GridSize, StaggeredCellSize, gf::CellAxis::X, gf::CellIndex::Even) },
+    { "Staggered Y Odd"s, gf::Grid::createStaggered(GridSize, StaggeredCellSize, gf::CellAxis::Y, gf::CellIndex::Odd) },
+    { "Staggered Y Even"s, gf::Grid::createStaggered(GridSize, StaggeredCellSize, gf::CellAxis::Y, gf::CellIndex::Even) },
+    { "Hexagonal X Odd"s, gf::Grid::createHexagonal(GridSize, HexagonRadius, gf::CellAxis::X, gf::CellIndex::Odd) },
+    { "Hexagonal X Even"s, gf::Grid::createHexagonal(GridSize, HexagonRadius, gf::CellAxis::X, gf::CellIndex::Even) },
+    { "Hexagonal Y Odd"s, gf::Grid::createHexagonal(GridSize, HexagonRadius, gf::CellAxis::Y, gf::CellIndex::Odd) },
+    { "Hexagonal Y Even"s, gf::Grid::createHexagonal(GridSize, HexagonRadius, gf::CellAxis::Y, gf::CellIndex::Even) },
   };
 
   std::size_t current = 0;

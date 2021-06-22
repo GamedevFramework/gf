@@ -18,7 +18,7 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#include <gf/Orthogonal.h>
+#include <gf/Cells.h>
 
 #include <gf/VectorOps.h>
 
@@ -27,23 +27,23 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  RectF OrthogonalHelper::computeBounds(Vector2i layerSize) const noexcept {
+  RectF OrthogonalCells::computeBounds(Vector2i layerSize) const noexcept {
     return RectF::fromSize(layerSize * m_tileSize);
   }
 
-  RectI OrthogonalHelper::computeVisibleArea(const RectF& local) const noexcept {
+  RectI OrthogonalCells::computeVisibleArea(const RectF& local) const noexcept {
     return RectI::fromMinMax(local.min / m_tileSize, local.max / m_tileSize);
   }
 
-  RectF OrthogonalHelper::computeCellBounds(Vector2i coords) const noexcept {
+  RectF OrthogonalCells::computeCellBounds(Vector2i coords) const noexcept {
     return RectF::fromPositionSize(coords * m_tileSize, m_tileSize);
   }
 
-  Vector2i OrthogonalHelper::computeCoordinates(Vector2f position) const noexcept {
+  Vector2i OrthogonalCells::computeCoordinates(Vector2f position) const noexcept {
     return position / m_tileSize;
   }
 
-  Polyline OrthogonalHelper::computePolyline(Vector2i coords) const {
+  Polyline OrthogonalCells::computePolyline(Vector2i coords) const {
     RectF rect = computeCellBounds(coords);
     Polyline line(Polyline::Loop);
     line.addPoint(rect.getTopRight());
@@ -53,7 +53,8 @@ inline namespace v1 {
     return line;
   }
 
-  void OrthogonalHelper::forEachNeighbor(Vector2i coords, Vector2i layerSize, std::function<void(Vector2i)> func) const {
+  std::vector<Vector2i> OrthogonalCells::computeNeighbors(Vector2i coords, Vector2i layerSize, Flags<CellNeighborQuery> flags) const {
+#if 0
     if (coords.x > 0) {
       func(coords + gf::dirx(-1));
     }
@@ -69,6 +70,8 @@ inline namespace v1 {
     if (coords.y < layerSize.height - 1) {
       func(coords + gf::diry(1));
     }
+#endif
+    return { };
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

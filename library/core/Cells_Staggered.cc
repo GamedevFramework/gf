@@ -18,7 +18,7 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#include <gf/Stagger.h>
+#include <gf/Cells.h>
 
 #include <gf/VectorOps.h>
 
@@ -27,16 +27,16 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  RectF StaggerHelper::computeBounds(Vector2i layerSize) const noexcept {
+  RectF StaggeredCells::computeBounds(Vector2i layerSize) const noexcept {
     Vector2f base = layerSize * m_tileSize;
 
     switch (m_axis) {
-      case MapCellAxis::X:
+      case CellAxis::X:
         base.x /= 2;
         base.x += m_tileSize.width / 2;
         base.y += m_tileSize.height / 2;
         break;
-      case MapCellAxis::Y:
+      case CellAxis::Y:
         base.y /= 2;
         base.y += m_tileSize.height / 2;
         base.x += m_tileSize.width / 2;
@@ -46,40 +46,40 @@ inline namespace v1 {
     return RectF::fromSize(base);
   }
 
-  RectI StaggerHelper::computeVisibleArea(const RectF& local) const noexcept {
+  RectI StaggeredCells::computeVisibleArea(const RectF& local) const noexcept {
     return RectI::fromMinMax(computeCoordinates(local.min), computeCoordinates(local.max)).grow(2);
   }
 
-  RectF StaggerHelper::computeCellBounds(Vector2i coords) const noexcept {
+  RectF StaggeredCells::computeCellBounds(Vector2i coords) const noexcept {
     Vector2f base = coords * m_tileSize;
 
     switch (m_axis) {
-      case MapCellAxis::Y:
+      case CellAxis::Y:
         base.y /= 2;
 
         switch (m_index) {
-          case MapCellIndex::Odd:
+          case CellIndex::Odd:
             if (coords.y % 2 != 0) {
               base.x += m_tileSize.width / 2;
             }
             break;
-          case MapCellIndex::Even:
+          case CellIndex::Even:
             if (coords.y % 2 == 0) {
               base.x += m_tileSize.width / 2;
             }
             break;
         }
         break;
-      case MapCellAxis::X:
+      case CellAxis::X:
         base.x /= 2;
 
         switch (m_index) {
-          case MapCellIndex::Odd:
+          case CellIndex::Odd:
             if (coords.x % 2 != 0) {
               base.y += m_tileSize.height / 2;
             }
             break;
-          case MapCellIndex::Even:
+          case CellIndex::Even:
             if (coords.x % 2 == 0) {
               base.y += m_tileSize.height / 2;
             }
@@ -91,15 +91,15 @@ inline namespace v1 {
     return RectF::fromPositionSize(base, m_tileSize);
   }
 
-  Vector2i StaggerHelper::computeCoordinates(Vector2f position) const noexcept {
+  Vector2i StaggeredCells::computeCoordinates(Vector2f position) const noexcept {
     // TODO: quick approximation but not really good
     auto tileSize = m_tileSize;
 
     switch (m_axis) {
-      case MapCellAxis::Y:
+      case CellAxis::Y:
         tileSize.y /= 2;
         break;
-      case MapCellAxis::X:
+      case CellAxis::X:
         tileSize.x /= 2;
         break;
     }
@@ -107,7 +107,7 @@ inline namespace v1 {
     return position / tileSize;
   }
 
-  Polyline StaggerHelper::computePolyline(Vector2i coords) const {
+  Polyline StaggeredCells::computePolyline(Vector2i coords) const {
     auto bounds = computeCellBounds(coords);
     float xmin = bounds.min.x;
     float ymin = bounds.min.y;
@@ -122,8 +122,9 @@ inline namespace v1 {
     return line;
   }
 
-  void StaggerHelper::forEachNeighbor(Vector2i coords, Vector2i layerSize, std::function<void(Vector2i)> func) const {
+  std::vector<Vector2i> StaggeredCells::computeNeighbors(Vector2i coords, Vector2i layerSize, Flags<CellNeighborQuery> flags) const {
     // TODO
+    return { };
   }
 
 

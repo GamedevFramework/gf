@@ -1015,17 +1015,17 @@ inline namespace v1 {
       tmx.version =  node.attribute("version").as_string("1.0");
       tmx.tiledVersion = node.attribute("tiledversion").as_string("1.0");
 
-      tmx.orientation = TileOrientation::Unknown;
+      tmx.orientation = CellOrientation::Unknown;
       std::string orientation = required_attribute(node, "orientation").as_string();
 
       if (orientation == "orthogonal") {
-        tmx.orientation = TileOrientation::Orthogonal;
+        tmx.orientation = CellOrientation::Orthogonal;
       } else if (orientation == "isometric") {
-        tmx.orientation = TileOrientation::Isometric;
+        tmx.orientation = CellOrientation::Isometric;
       } else if (orientation == "staggered") {
-        tmx.orientation = TileOrientation::Staggered;
+        tmx.orientation = CellOrientation::Staggered;
       } else if (orientation == "hexagonal") {
-        tmx.orientation = TileOrientation::Hexagonal;
+        tmx.orientation = CellOrientation::Hexagonal;
       } else {
         Log::error("Wrong orientation string: '%s'\n", orientation.c_str());
       }
@@ -1057,29 +1057,29 @@ inline namespace v1 {
 
       tmx.hexSideLength = node.attribute("hexsidelength").as_int(0);
 
-      tmx.mapCellAxis = MapCellAxis::Y;
+      tmx.cellAxis = CellAxis::Y;
 
       if (node.attribute("staggeraxis") != nullptr) {
         std::string mapCellAxis = node.attribute("staggeraxis").as_string();
 
         if (mapCellAxis == "x") {
-          tmx.mapCellAxis = MapCellAxis::X;
+          tmx.cellAxis = CellAxis::X;
         } else if (mapCellAxis == "y") {
-          tmx.mapCellAxis = MapCellAxis::Y;
+          tmx.cellAxis = CellAxis::Y;
         } else {
           Log::error("Wrong stagger axis string: '%s'\n", mapCellAxis.c_str());
         }
       }
 
-      tmx.mapCellIndex = MapCellIndex::Odd;
+      tmx.cellIndex = CellIndex::Odd;
 
       if (node.attribute("staggerindex") != nullptr) {
         std::string mapCellIndex = node.attribute("staggerindex").as_string();
 
         if (mapCellIndex == "odd") {
-          tmx.mapCellIndex = MapCellIndex::Odd;
+          tmx.cellIndex = CellIndex::Odd;
         } else if (mapCellIndex == "even") {
-          tmx.mapCellIndex = MapCellIndex::Even;
+          tmx.cellIndex = CellIndex::Even;
         } else {
           Log::error("Wrong stagger index string: '%s'\n", mapCellIndex.c_str());
         }

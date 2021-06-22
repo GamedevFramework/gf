@@ -25,12 +25,11 @@
 #include <vector>
 
 #include "Array2D.h"
+#include "Cells.h"
+#include "CellTypes.h"
 #include "Flags.h"
 #include "GraphicsApi.h"
-#include "MapCell.h"
-#include "TileProperties.h"
 #include "Tileset.h"
-#include "TileTypes.h"
 #include "Transformable.h"
 #include "VertexArray.h"
 #include "VertexBuffer.h"
@@ -70,9 +69,9 @@ inline namespace v1 {
 
     static TileLayer createOrthogonal(Vector2i layerSize, Vector2i tileSize);
 
-    static TileLayer createStaggered(Vector2i layerSize, Vector2i tileSize, MapCellAxis axis, MapCellIndex index);
+    static TileLayer createStaggered(Vector2i layerSize, Vector2i tileSize, CellAxis axis, CellIndex index);
 
-    static TileLayer createHexagonal(Vector2i layerSize, Vector2i tileSize, int sideLength, MapCellAxis axis, MapCellIndex index);
+    static TileLayer createHexagonal(Vector2i layerSize, Vector2i tileSize, int sideLength, CellAxis axis, CellIndex index);
 
     /**
      * @brief Get the size of the layer
@@ -202,7 +201,7 @@ inline namespace v1 {
     virtual void draw(RenderTarget& target, const RenderStates& states) override;
 
   private:
-    TileLayer(Vector2i layerSize, TileOrientation orientation, std::unique_ptr<TileProperties> properties);
+    TileLayer(Vector2i layerSize, CellOrientation orientation, std::unique_ptr<Cells> properties);
 
   private:
     struct Cell {
@@ -222,8 +221,8 @@ inline namespace v1 {
     RectI computeOffsets() const;
 
   private:
-    TileOrientation m_orientation;
-    std::unique_ptr<TileProperties> m_properties;
+    CellOrientation m_orientation;
+    std::unique_ptr<Cells> m_properties;
 
     Vector2i m_layerSize;
 

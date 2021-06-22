@@ -142,7 +142,7 @@ int main() {
 
   renderer.clear(gf::Color::White);
 
-  gf::TileOrientation orientation = gf::TileOrientation::Orthogonal;
+  gf::CellOrientation orientation = gf::CellOrientation::Orthogonal;
 
   while (window.isOpen()) {
     gf::Event event;
@@ -156,12 +156,12 @@ int main() {
         case gf::EventType::KeyPressed:
           switch (event.key.scancode) {
             case gf::Scancode::Return:
-              if (orientation == gf::TileOrientation::Orthogonal) {
-                orientation = gf::TileOrientation::Staggered;
-              } else if (orientation == gf::TileOrientation::Staggered) {
-                orientation = gf::TileOrientation::Hexagonal;
+              if (orientation == gf::CellOrientation::Orthogonal) {
+                orientation = gf::CellOrientation::Staggered;
+              } else if (orientation == gf::CellOrientation::Staggered) {
+                orientation = gf::CellOrientation::Hexagonal;
               } else {
-                orientation = gf::TileOrientation::Orthogonal;
+                orientation = gf::CellOrientation::Orthogonal;
               }
               break;
 
@@ -186,19 +186,19 @@ int main() {
     renderer.clear();
 
     switch (orientation) {
-      case gf::TileOrientation::Orthogonal:
+      case gf::CellOrientation::Orthogonal:
         for (auto& layer : orthogonalMaker.layers) {
           renderer.draw(layer);
         }
         break;
 
-      case gf::TileOrientation::Staggered:
+      case gf::CellOrientation::Staggered:
         for (auto& layer : staggeredMaker.layers) {
           renderer.draw(layer);
         }
         break;
 
-      case gf::TileOrientation::Hexagonal:
+      case gf::CellOrientation::Hexagonal:
         for (auto& layer : hexagonalMaker.layers) {
           renderer.draw(layer);
         }

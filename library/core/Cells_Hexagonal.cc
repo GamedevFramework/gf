@@ -18,7 +18,7 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#include <gf/Hexagon.h>
+#include <gf/Cells.h>
 
 #include <cassert>
 
@@ -32,11 +32,11 @@ inline namespace v1 {
   namespace {
 
     inline
-    float computeOffset(Vector2f tileSize, float sideLength, MapCellAxis axis) {
+    float computeOffset(Vector2f tileSize, float sideLength, CellAxis axis) {
       switch (axis) {
-        case MapCellAxis::X:
+        case CellAxis::X:
           return (tileSize.width - sideLength) / 2;
-        case MapCellAxis::Y:
+        case CellAxis::Y:
           return (tileSize.height - sideLength) / 2;
       }
 
@@ -46,17 +46,17 @@ inline namespace v1 {
 
   }
 
-  RectF HexagonHelper::computeBounds(Vector2i layerSize) const noexcept {
+  RectF HexagonalCells::computeBounds(Vector2i layerSize) const noexcept {
     Vector2f size;
     float offset = computeOffset(m_tileSize, m_sideLength, m_axis);
 
     switch (m_axis) {
-      case MapCellAxis::X:
+      case CellAxis::X:
         size.height = layerSize.height * m_tileSize.height + m_tileSize.height / 2;
         size.width = layerSize.width * (m_tileSize.width - offset) + offset;
         break;
 
-      case MapCellAxis::Y:
+      case CellAxis::Y:
         size.width = layerSize.width * m_tileSize.width + m_tileSize.width / 2;
         size.height = layerSize.height * (m_tileSize.height - offset) + offset;
         break;
@@ -65,26 +65,26 @@ inline namespace v1 {
     return RectF::fromSize(size);
   }
 
-  RectI HexagonHelper::computeVisibleArea(const RectF& local) const noexcept {
+  RectI HexagonalCells::computeVisibleArea(const RectF& local) const noexcept {
     return RectI::fromMinMax(computeCoordinates(local.min), computeCoordinates(local.max)).grow(2);
   }
 
-  RectF HexagonHelper::computeCellBounds(Vector2i coords) const noexcept {
+  RectF HexagonalCells::computeCellBounds(Vector2i coords) const noexcept {
     Vector2f base;
     float offset = computeOffset(m_tileSize, m_sideLength, m_axis);
 
     switch (m_axis) {
-      case MapCellAxis::X:
+      case CellAxis::X:
         base.x = coords.x * (m_tileSize.width - offset);
         base.y = coords.y * m_tileSize.height;
 
         switch (m_index) {
-          case MapCellIndex::Odd:
+          case CellIndex::Odd:
             if (coords.x % 2 == 1) {
               base.y += m_tileSize.height / 2;
             }
             break;
-          case MapCellIndex::Even:
+          case CellIndex::Even:
             if (coords.x % 2 == 0) {
               base.y += m_tileSize.height / 2;
             }
@@ -92,17 +92,17 @@ inline namespace v1 {
         }
         break;
 
-      case MapCellAxis::Y:
+      case CellAxis::Y:
         base.y = coords.y * (m_tileSize.height - offset);
         base.x = coords.x * m_tileSize.width;
 
         switch (m_index) {
-          case MapCellIndex::Odd:
+          case CellIndex::Odd:
             if (coords.y % 2 == 1) {
               base.x += m_tileSize.width / 2;
             }
             break;
-          case MapCellIndex::Even:
+          case CellIndex::Even:
             if (coords.y % 2 == 0) {
               base.x += m_tileSize.width / 2;
             }
@@ -114,24 +114,24 @@ inline namespace v1 {
     return RectF::fromPositionSize(base, m_tileSize);
   }
 
-  Vector2i HexagonHelper::computeCoordinates(Vector2f position) const noexcept {
+  Vector2i HexagonalCells::computeCoordinates(Vector2f position) const noexcept {
     // good approximation but would need some tweaking
 
     Vector2i coords;
     float offset = computeOffset(m_tileSize, m_sideLength, m_axis);
 
     switch (m_axis) {
-      case MapCellAxis::X:
+      case CellAxis::X:
         coords.x = position.x / (m_tileSize.width - offset);
         switch (m_index) {
-          case MapCellIndex::Odd:
+          case CellIndex::Odd:
             if (coords.x % 2 == 0) {
               coords.y = position.y / m_tileSize.height;
             } else {
               coords.y = (position.y - m_tileSize.height / 2) / m_tileSize.height;
             }
             break;
-          case MapCellIndex::Even:
+          case CellIndex::Even:
             if (coords.x % 2 != 0) {
               coords.y = position.y / m_tileSize.height;
             } else {
@@ -140,17 +140,17 @@ inline namespace v1 {
             break;
         }
         break;
-      case MapCellAxis::Y:
+      case CellAxis::Y:
         coords.y = position.y / (m_tileSize.height - offset);
         switch (m_index) {
-          case MapCellIndex::Odd:
+          case CellIndex::Odd:
             if (coords.y % 2 == 0) {
               coords.x = position.x / m_tileSize.width;
             } else {
               coords.x = (position.x - m_tileSize.width / 2) / m_tileSize.width;
             }
             break;
-          case MapCellIndex::Even:
+          case CellIndex::Even:
             if (coords.y % 2 != 0) {
               coords.x = position.x / m_tileSize.width;
             } else {
@@ -164,7 +164,7 @@ inline namespace v1 {
     return coords;
   }
 
-  Polyline HexagonHelper::computePolyline(Vector2i coords) const {
+  Polyline HexagonalCells::computePolyline(Vector2i coords) const {
     auto bounds = computeCellBounds(coords);
     float xmin = bounds.min.x;
     float ymin = bounds.min.y;
@@ -175,7 +175,7 @@ inline namespace v1 {
     Polyline polyline(Polyline::Loop);
 
     switch (m_axis) {
-      case MapCellAxis::X:
+      case CellAxis::X:
         polyline.addPoint({ xmin,           (ymin + ymax) /2 });
         polyline.addPoint({ xmin + offset,  ymin });
         polyline.addPoint({ xmax - offset,  ymin });
@@ -184,7 +184,7 @@ inline namespace v1 {
         polyline.addPoint({ xmin + offset,  ymax });
         break;
 
-      case MapCellAxis::Y:
+      case CellAxis::Y:
         polyline.addPoint({ (xmin + xmax) / 2,  ymin });
         polyline.addPoint({ xmin,               ymin + offset });
         polyline.addPoint({ xmin,               ymax - offset });
@@ -197,19 +197,20 @@ inline namespace v1 {
     return polyline;
   }
 
-  void HexagonHelper::forEachNeighbor(Vector2i coords, Vector2i layerSize, std::function<void(Vector2i)> func) const {
+  std::vector<Vector2i> HexagonalCells::computeNeighbors(Vector2i coords, Vector2i layerSize, Flags<CellNeighborQuery> flags) const {
     // TODO
+    return { };
   }
 
-  Vector2f HexagonHelper::computeRegularSize(MapCellAxis axis, float radius) {
+  Vector2f HexagonalCells::computeRegularSize(CellAxis axis, float radius) {
     Vector2f size;
 
     switch (axis) {
-      case MapCellAxis::X:
+      case CellAxis::X:
         size = { radius * 2.0f, radius * Sqrt3 };
         break;
 
-      case MapCellAxis::Y:
+      case CellAxis::Y:
         size = { radius * Sqrt3, radius * 2.0f };
         break;
     }

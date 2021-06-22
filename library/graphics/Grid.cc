@@ -20,10 +20,7 @@
  */
 #include <gf/Grid.h>
 
-#include <gf/Hexagon.h>
-#include <gf/Orthogonal.h>
 #include <gf/RenderTarget.h>
-#include <gf/Stagger.h>
 #include <gf/VectorOps.h>
 
 #include <gf/Log.h>
@@ -43,19 +40,19 @@ inline namespace v1 {
   }
 
   Grid Grid::createOrthogonal(Vector2i gridSize, Vector2f cellSize) {
-    return Grid(gridSize, std::make_unique<GenericTileProperties<OrthogonalHelper>>(OrthogonalHelper(cellSize)));
+    return Grid(gridSize, std::make_unique<OrthogonalCells>(cellSize));
   }
 
-  Grid Grid::createStaggered(Vector2i gridSize, Vector2f cellSize, MapCellAxis axis, MapCellIndex index) {
-    return Grid(gridSize, std::make_unique<GenericTileProperties<StaggerHelper>>(StaggerHelper(cellSize, axis, index)));
+  Grid Grid::createStaggered(Vector2i gridSize, Vector2f cellSize, CellAxis axis, CellIndex index) {
+    return Grid(gridSize, std::make_unique<StaggeredCells>(cellSize, axis, index));
   }
 
-  Grid Grid::createHexagonal(Vector2i gridSize, Vector2f cellSize, float sideLength, MapCellAxis axis, MapCellIndex index) {
-    return Grid(gridSize, std::make_unique<GenericTileProperties<HexagonHelper>>(HexagonHelper(cellSize, sideLength, axis, index)));
+  Grid Grid::createHexagonal(Vector2i gridSize, Vector2f cellSize, float sideLength, CellAxis axis, CellIndex index) {
+    return Grid(gridSize, std::make_unique<HexagonalCells>(cellSize, sideLength, axis, index));
   }
 
-  Grid Grid::createHexagonal(Vector2i gridSize, float radius, MapCellAxis axis, MapCellIndex index) {
-    return Grid(gridSize, std::make_unique<GenericTileProperties<HexagonHelper>>(HexagonHelper(radius, axis, index)));
+  Grid Grid::createHexagonal(Vector2i gridSize, float radius, CellAxis axis, CellIndex index) {
+    return Grid(gridSize, std::make_unique<HexagonalCells>(radius, axis, index));
   }
 
   void Grid::setGridSize(Vector2i gridSize) {
@@ -128,7 +125,7 @@ inline namespace v1 {
     }
   }
 
-  Grid::Grid(Vector2i gridSize, std::unique_ptr<TileProperties> properties)
+  Grid::Grid(Vector2i gridSize, std::unique_ptr<Cells> properties)
   : m_properties(std::move(properties))
   , m_gridSize(gridSize)
   , m_color(Color::Black)

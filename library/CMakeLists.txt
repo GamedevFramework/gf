@@ -118,6 +118,10 @@ else()
     core/Array2D.cc
     core/AssetManager.cc
     core/BasicGeometry.cc
+    core/Cells.cc
+    core/Cells_Hexagonal.cc
+    core/Cells_Orthogonal.cc
+    core/Cells_Staggered.cc
     core/Circ.cc
     core/Clock.cc
     core/Collision.cc
@@ -129,7 +133,6 @@ else()
     core/Flags.cc
     core/Geometry.cc
     core/Heightmap.cc
-    core/Hexagon.cc
     core/Image.cc
     core/Log.cc
     core/Map.cc
@@ -143,7 +146,6 @@ else()
     core/Noise.cc
     core/Noises.cc
     core/Orientation.cc
-    core/Orthogonal.cc
     core/Path.cc
     core/PointSequence.cc
     core/Polygon.cc
@@ -159,7 +161,6 @@ else()
     core/Spatial_QuadTree.cc
     core/Spatial_RStarTree.cc
     core/Spatial_SimpleSpatialIndex.cc
-    core/Stagger.cc
     core/Stream.cc
     core/Streams.cc
     core/StringUtils.cc
@@ -234,7 +235,6 @@ else()
     graphics/TextureAtlas.cc
     graphics/Texture.cc
     graphics/TileLayer.cc
-    graphics/TileProperties.cc
     graphics/Tileset.cc
     graphics/TmxOps.cc
     graphics/Transformable.cc

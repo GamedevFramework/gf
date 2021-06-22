@@ -31,14 +31,14 @@ inline namespace v1 {
     TileLayer tiles;
 
     switch (map.orientation) {
-      case TileOrientation::Orthogonal:
+      case CellOrientation::Orthogonal:
         tiles = TileLayer::createOrthogonal(map.mapSize, map.tileSize);
         break;
-      case TileOrientation::Staggered:
-        tiles = TileLayer::createStaggered(map.mapSize, map.tileSize, map.mapCellAxis, map.mapCellIndex);
+      case CellOrientation::Staggered:
+        tiles = TileLayer::createStaggered(map.mapSize, map.tileSize, map.cellAxis, map.cellIndex);
         break;
-      case TileOrientation::Hexagonal:
-        tiles = TileLayer::createHexagonal(map.mapSize, map.tileSize, map.hexSideLength, map.mapCellAxis, map.mapCellIndex);
+      case CellOrientation::Hexagonal:
+        tiles = TileLayer::createHexagonal(map.mapSize, map.tileSize, map.hexSideLength, map.cellAxis, map.cellIndex);
         break;
       default:
         assert(false);
