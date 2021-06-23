@@ -27,7 +27,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup core_utilities
+   * @ingroup core_cells
    * @brief Cell index for staggered or hexagonal maps
    *
    * @sa gf::CellAxis
@@ -38,7 +38,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup core_utilities
+   * @ingroup core_cells
    * @brief Cell axis for staggered or hexagonal maps
    *
    * @sa gf::CellIndex
@@ -49,7 +49,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup core_utilities
+   * @ingroup core_cells
    * @brief The orientation of the cells
    *
    * @sa gf::TileLayer
@@ -63,7 +63,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup core_utilities
+   * @ingroup core_cells
    * @brief A flag to indicate how to flip a tile
    *
    * @sa gf::TileLayer

@@ -36,6 +36,12 @@ namespace gf {
 inline namespace v1 {
 #endif
 
+  /**
+   * @ingroup core_cells
+   * @brief Specification of the query of neighborhood
+   *
+   * @sa gf::Cells
+   */
   enum class CellNeighborQuery {
     Valid               = 0x01,
     Diagonal            = 0x02,
@@ -43,10 +49,13 @@ inline namespace v1 {
 
 
   /**
-   * @ingroup core_utilities
+   * @ingroup core_cells
    * @brief The properties of cells
    *
-   * These properties depend on the orientation of the cells in the map.
+   * These properties depend on the orientation of the cells in the map:
+   * - gf::OrthogonalCells
+   * - gf::StaggeredCells
+   * - gf::HexagonalCells
    *
    * @sa gf::CellOrientation, gf::Grid, gf::TileLayer
    */
@@ -67,7 +76,10 @@ inline namespace v1 {
     virtual std::vector<Vector2i> computeNeighbors(Vector2i coords, Vector2i layerSize, Flags<CellNeighborQuery> flags = gf::None) const = 0;
   };
 
-
+  /**
+   * @ingroup core_cells
+   * @brief Orthogonal cells
+   */
   class GF_CORE_API OrthogonalCells : public Cells {
   public:
     OrthogonalCells(Vector2f tileSize)
@@ -92,6 +104,10 @@ inline namespace v1 {
   };
 
 
+  /**
+   * @ingroup core_cells
+   * @brief Staggered cells
+   */
   class GF_CORE_API StaggeredCells : public Cells {
   public:
     StaggeredCells(Vector2f tileSize, CellAxis axis, CellIndex index)
@@ -120,6 +136,10 @@ inline namespace v1 {
   };
 
 
+  /**
+   * @ingroup core_cells
+   * @brief Hexagonal cells
+   */
   class GF_CORE_API HexagonalCells : public Cells {
   public:
     HexagonalCells(Vector2f tileSize, float sideLength, CellAxis axis, CellIndex index)
