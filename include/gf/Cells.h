@@ -80,7 +80,7 @@ inline namespace v1 {
    * @ingroup core_cells
    * @brief Orthogonal cells
    */
-  class GF_CORE_API OrthogonalCells : public Cells {
+  class GF_CORE_API OrthogonalCells final : public Cells {
   public:
     OrthogonalCells(Vector2f tileSize)
     : m_tileSize(tileSize)
@@ -108,7 +108,7 @@ inline namespace v1 {
    * @ingroup core_cells
    * @brief Staggered cells
    */
-  class GF_CORE_API StaggeredCells : public Cells {
+  class GF_CORE_API StaggeredCells final : public Cells {
   public:
     StaggeredCells(Vector2f tileSize, CellAxis axis, CellIndex index)
     : m_tileSize(tileSize)
@@ -140,7 +140,7 @@ inline namespace v1 {
    * @ingroup core_cells
    * @brief Hexagonal cells
    */
-  class GF_CORE_API HexagonalCells : public Cells {
+  class GF_CORE_API HexagonalCells final : public Cells {
   public:
     HexagonalCells(Vector2f tileSize, float sideLength, CellAxis axis, CellIndex index)
     : m_tileSize(tileSize)
