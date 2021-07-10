@@ -1,6 +1,5 @@
 # Gamedev Framework (gf)
 
-[![Travis](https://img.shields.io/travis/GamedevFramework/gf.svg?style=flat-square)](https://travis-ci.org/GamedevFramework/gf)
 [![AppVeyor](https://img.shields.io/appveyor/ci/jube/gf.svg?style=flat-square)](https://ci.appveyor.com/project/jube/gf)
 [![GitHub license](https://img.shields.io/badge/license-zlib-blue.svg?style=flat-square)](https://raw.githubusercontent.com/GamedevFramework/gf/master/LICENSE)
 [![GitHub tag](https://img.shields.io/github/tag/GamedevFramework/gf.svg?style=flat-square)](https://github.com/GamedevFramework/gf/tags)
