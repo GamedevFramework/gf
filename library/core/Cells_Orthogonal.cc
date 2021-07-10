@@ -54,24 +54,28 @@ inline namespace v1 {
   }
 
   std::vector<Vector2i> OrthogonalCells::computeNeighbors(Vector2i coords, Vector2i layerSize, Flags<CellNeighborQuery> flags) const {
-#if 0
-    if (coords.x > 0) {
-      func(coords + gf::dirx(-1));
+    std::vector<Vector2i> neighbors;
+
+    neighbors.push_back(coords + gf::vec(-1,  0));
+    neighbors.push_back(coords + gf::vec( 1,  0));
+    neighbors.push_back(coords + gf::vec( 0, -1));
+    neighbors.push_back(coords + gf::vec( 0,  1));
+
+    if (flags.test(CellNeighborQuery::Diagonal)) {
+      neighbors.push_back(coords + gf::vec(-1, -1));
+      neighbors.push_back(coords + gf::vec( 1, -1));
+      neighbors.push_back(coords + gf::vec(-1,  1));
+      neighbors.push_back(coords + gf::vec( 1,  1));
     }
 
-    if (coords.x < layerSize.width - 1) {
-      func(coords + gf::dirx(1));
+    if (flags.test(CellNeighborQuery::Valid)) {
+      RectI bounds = RectI::fromSize(layerSize);
+      neighbors.erase(std::remove_if(neighbors.begin(), neighbors.end(), [bounds](Vector2i neighbor) {
+        return !bounds.contains(neighbor);
+      }), neighbors.end());
     }
 
-    if (coords.y > 0) {
-      func(coords + gf::diry(-1));
-    }
-
-    if (coords.y < layerSize.height - 1) {
-      func(coords + gf::diry(1));
-    }
-#endif
-    return { };
+    return neighbors;
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

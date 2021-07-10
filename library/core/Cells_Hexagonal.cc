@@ -22,6 +22,7 @@
 
 #include <cassert>
 
+#include <gf/Span.h>
 #include <gf/VectorOps.h>
 
 namespace gf {
@@ -198,8 +199,51 @@ inline namespace v1 {
   }
 
   std::vector<Vector2i> HexagonalCells::computeNeighbors(Vector2i coords, Vector2i layerSize, Flags<CellNeighborQuery> flags) const {
-    // TODO
-    return { };
+    static constexpr Vector2i XOffsets[2][6] = {
+      { { +1,  0 }, { +1, -1 }, { 0, -1 }, { -1, -1 }, { -1,  0 }, {  0, +1 } },
+      { { +1, +1 }, { +1,  0 }, { 0, -1 }, { -1,  0 }, { -1, +1 }, {  0, +1 } }
+    };
+
+    static constexpr Vector2i YOffsets[2][6] = {
+      { { +1,  0 }, {  0, -1 }, { -1, -1 }, { -1,  0 }, { -1, +1 }, {  0, +1 } },
+      { { +1,  0 }, { +1, -1 }, {  0, -1 }, { -1,  0 }, {  0, +1 }, { +1, +1 } }
+    };
+
+    StaticSpan<const Vector2i, 6> relative;
+
+    switch (m_axis) {
+      case CellAxis::X:
+        if ((m_index == CellIndex::Odd && coords.x % 2 == 0) || (m_index == CellIndex::Even && coords.x % 2 == 1)) {
+          relative = XOffsets[0];
+        } else {
+          relative = XOffsets[1];
+        }
+        break;
+      case CellAxis::Y:
+        if ((m_index == CellIndex::Odd && coords.y % 2 == 0) || (m_index == CellIndex::Even && coords.y % 2 == 1)) {
+          relative = YOffsets[0];
+        } else {
+          relative = YOffsets[1];
+        }
+        break;
+    }
+
+    std::vector<Vector2i> neighbors;
+
+    for (auto offset : relative) {
+      neighbors.push_back(coords + offset);
+    }
+
+    assert(neighbors.size() == 6);
+
+    if (flags.test(CellNeighborQuery::Valid)) {
+      RectI bounds = RectI::fromSize(layerSize);
+      neighbors.erase(std::remove_if(neighbors.begin(), neighbors.end(), [bounds](Vector2i neighbor) {
+        return !bounds.contains(neighbor);
+      }), neighbors.end());
+    }
+
+    return neighbors;
   }
 
   Vector2f HexagonalCells::computeRegularSize(CellAxis axis, float radius) {

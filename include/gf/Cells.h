@@ -189,6 +189,11 @@ inline namespace v1 {
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
+
+template<>
+struct EnableBitmaskOperators<CellNeighborQuery> {
+  static constexpr bool value = true;
+};
 #endif
 }
 
