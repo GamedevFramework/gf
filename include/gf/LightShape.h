@@ -40,7 +40,7 @@ inline namespace v1 {
    *
    * @sa gf::LightShape
    */
-  enum LightShapeVisibility {
+  enum class LightShapeVisibility {
     Apparent,
     Opaque,
   };
