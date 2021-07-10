@@ -9,6 +9,7 @@ include(GenerateExportHeader)
 
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set(CMAKE_VISIBILITY_INLINES_HIDDEN ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 if(NOT MSVC AND (NOT DEFINED CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL ""))
   message(STATUS "Setting build type to 'RelWithDebInfo' as none was specified.")
