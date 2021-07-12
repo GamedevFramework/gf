@@ -21,6 +21,8 @@
 #ifndef GF_CELL_TYPES_H
 #define GF_CELL_TYPES_H
 
+#include <cstdint>
+
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
