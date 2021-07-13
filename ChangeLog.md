@@ -1,5 +1,24 @@
 # ChangeLog for gf
 
+## gf 0.21.0 (14 Jul 2021)
+
+- Core (gf::core)
+  - Remove gf::HexagonHelper, gf::StaggerHelper and gf::OrthogonalHelper
+  - Add gf::Cells and its subclasses gf::HexagonalCells, gf::StaggeredCells, gf::OrthogonalCells
+  - Remove gf::SquareGrid, gf::HexagonalGrid
+  - Add gf::Grid (with gf::Cells)
+  - Rework gf::Tileset (with gf::Cells)
+  - Rename and refactor cell related classes and enums
+- Graphics (gf::graphics)
+  - Add some missing texture format constants
+  - Rework Animation::addTileset and add tileOffset (thanks @mquinson)
+- Network (gf::net)
+- Misc
+  - Add .editorconfig
+  - Changed CI from Travis CI to Buddy.works
+  - Preliminary work for Android compilation
+  - Delete IRC channel on freenode (prefer Discord)
+
 ## gf 0.20.0 (14 Apr 2021)
 
 - Core (gf::core)
