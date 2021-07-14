@@ -67,10 +67,33 @@ inline namespace v1 {
      */
     TileLayer();
 
+    /**
+     * @brief Create an orthogonal tile layer
+     *
+     * @param layerSize The size of the layer
+     * @param tileSize The size of a tile
+     */
     static TileLayer createOrthogonal(Vector2i layerSize, Vector2i tileSize);
 
+    /**
+     * @brief Create a staggered tile layer
+     *
+     * @param layerSize The size of the layer
+     * @param tileSize The size of a tile
+     * @param axis The cells axis
+     * @param index The cells index
+     */
     static TileLayer createStaggered(Vector2i layerSize, Vector2i tileSize, CellAxis axis, CellIndex index);
 
+    /**
+     * @brief Create a hexagonal tile layer
+     *
+     * @param layerSize The size of the layer
+     * @param tileSize The size of a tile
+     * @param sideLength The side length
+     * @param axis The cells axis
+     * @param index The cells index
+     */
     static TileLayer createHexagonal(Vector2i layerSize, Vector2i tileSize, int sideLength, CellAxis axis, CellIndex index);
 
     /**
