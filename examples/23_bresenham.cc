@@ -52,7 +52,8 @@ int main() {
   std::cout << "\tMouse move: Set the second end point\n";
   std::cout << "\tEscape: Close the window\n";
 
-  gf::SquareGrid grid({ GridSize, GridSize }, { CellSize, CellSize }, gf::Color::Azure);
+  gf::Grid grid = gf::Grid::createOrthogonal({ GridSize, GridSize }, { CellSize, CellSize });
+  grid.setColor(gf::Color::Azure);
 
   gf::Vector2i start(30, 30);
   gf::Vector2i end(40, 50);

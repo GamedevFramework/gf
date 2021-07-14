@@ -1,6 +1,6 @@
 # Things to do (or not) in gf
 
-This file is a list of ideas for gf. Some of them will eventually be in gf. Others are just random thoughts. If you are interested in on of these items, read [CONTRIBUTING.md](CONTRIBUTING.md).
+This file is a list of ideas for gf. Some of them will eventually be in gf. Others are just random thoughts. If you are interested in one of these items, read [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## core
 
@@ -37,7 +37,7 @@ This file is a list of ideas for gf. Some of them will eventually be in gf. Othe
 
 ## meta
 
-- (docs) split gf_dev_doc by modules (core, graphics, net)
 - (portability) consider using [hedley](https://nemequ.github.io/hedley/)
   - blocking bug: nemequ/hedley#35
 - (packaging) use CPack to create packages
+- (binding) Python binding with [pybind11](https://github.com/pybind/pybind11)?

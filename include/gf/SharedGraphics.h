@@ -34,9 +34,9 @@ inline namespace v1 {
    * @ingroup graphics_window_monitor
    * @brief A shared OpenGL context with the main thread
    *
-   * This class is useful for load textures asynchronously.
-   * The context will automatically attached to the current
-   * thread at object instantiation and will detached at its
+   * This class is useful for loading textures asynchronously.
+   * The context will automatically be attached to the current
+   * thread at object instantiation and will be detached at its
    * destruction.
    */
   class GF_GRAPHICS_API SharedGraphics {

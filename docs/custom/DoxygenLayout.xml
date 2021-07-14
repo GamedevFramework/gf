@@ -22,7 +22,7 @@
     </tab>
     <tab type="examples" visible="yes" title="" intro=""/>
     <tab type="user" url="https://github.com/GamedevFramework/gf" title="gf on github" />
-    <tab type="user" url="irc://chat.freenode.net/gf-devel" title="#gf-devel on Freenode" />
+    <tab type="user" url="https://discord.gg/2fXM3T4" title="GamedevFramework on Discord" />
     <tab type="user" url="https://www.reddit.com/r/GamedevFramework/" title="/r/GamedevFramework on Reddit" />
   </navindex>
 

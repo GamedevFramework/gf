@@ -18,8 +18,8 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#ifndef GF_TILE_TYPES_H
-#define GF_TILE_TYPES_H
+#ifndef GF_CELL_TYPES_H
+#define GF_CELL_TYPES_H
 
 #include <cstdint>
 
@@ -29,12 +29,34 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup graphics_tiles
-   * @brief The orientation of the tile
+   * @ingroup core_cells
+   * @brief Cell index for staggered or hexagonal maps
+   *
+   * @sa gf::CellAxis
+   */
+  enum class CellIndex {
+    Odd,  ///< A odd cell index
+    Even, ///< An even cell index
+  };
+
+  /**
+   * @ingroup core_cells
+   * @brief Cell axis for staggered or hexagonal maps
+   *
+   * @sa gf::CellIndex
+   */
+  enum class CellAxis {
+    X,  ///< The x cell axis
+    Y,  ///< The y cell axis
+  };
+
+  /**
+   * @ingroup core_cells
+   * @brief The orientation of the cells
    *
    * @sa gf::TileLayer
    */
-  enum class TileOrientation : uint8_t {
+  enum class CellOrientation : uint8_t {
     Unknown     = 0x00, ///< An unknown orientation
     Orthogonal  = 0x01, ///< An orthogonal orientation
     Isometric   = 0x02, ///< An isometric orientation
@@ -43,7 +65,7 @@ inline namespace v1 {
   };
 
   /**
-   * @ingroup graphics_tiles
+   * @ingroup core_cells
    * @brief A flag to indicate how to flip a tile
    *
    * @sa gf::TileLayer
@@ -54,9 +76,10 @@ inline namespace v1 {
     Diagonally    = 0x04, ///< The tile is flipped anti-diagonally
   };
 
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif
 }
 
-#endif // GF_TILE_TYPES_H
+#endif // GF_CELL_TYPES_H

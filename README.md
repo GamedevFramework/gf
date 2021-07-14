@@ -1,6 +1,6 @@
 # Gamedev Framework (gf)
 
-[![Travis](https://img.shields.io/travis/GamedevFramework/gf.svg?style=flat-square)](https://travis-ci.org/GamedevFramework/gf)
+[![Buddy](https://app.buddy.works/jube/gf/pipelines/pipeline/337210/badge.svg?token=23ffd15ec7784efca148879f00926ce2b5dbe8a431c91c1a0836bb04c2124ad1 "Buddy")](https://app.buddy.works/jube/gf/pipelines/pipeline/337210)
 [![AppVeyor](https://img.shields.io/appveyor/ci/jube/gf.svg?style=flat-square)](https://ci.appveyor.com/project/jube/gf)
 [![GitHub license](https://img.shields.io/badge/license-zlib-blue.svg?style=flat-square)](https://raw.githubusercontent.com/GamedevFramework/gf/master/LICENSE)
 [![GitHub tag](https://img.shields.io/github/tag/GamedevFramework/gf.svg?style=flat-square)](https://github.com/GamedevFramework/gf/tags)
@@ -88,7 +88,6 @@ If you want to talk directly with the developpers, you can
 
 - chat on the [Discord server of gf](https://discord.gg/2fXM3T4)
 - post a message on [/r/GamedevFramework](https://www.reddit.com/r/GamedevFramework/).
-- join the [#gf-devel IRC channel on Freenode](irc://chat.freenode.net/gf-devel)
 
 ## Contribution
 

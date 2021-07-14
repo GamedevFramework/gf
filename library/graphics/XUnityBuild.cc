@@ -89,7 +89,6 @@
 #include "TextureAtlas.cc"
 #include "Texture.cc"
 #include "TileLayer.cc"
-#include "TileProperties.cc"
 #include "Tileset.cc"
 #include "TmxOps.cc"
 #include "Transformable.cc"

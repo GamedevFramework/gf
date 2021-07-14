@@ -88,6 +88,10 @@ target_link_libraries(mygame
 @ingroup core
 @brief Serialization
 
+@defgroup core_cells Cells
+@ingroup core
+@brief Cells handling related classes (orthogonal, hexagonal, staggered)
+
 @defgroup core_utilities Utilities
 @ingroup core
 @brief Various game-related utilities

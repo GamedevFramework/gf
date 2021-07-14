@@ -25,12 +25,11 @@
 #include <vector>
 
 #include "Array2D.h"
+#include "Cells.h"
+#include "CellTypes.h"
 #include "Flags.h"
 #include "GraphicsApi.h"
-#include "MapCell.h"
-#include "TileProperties.h"
 #include "Tileset.h"
-#include "TileTypes.h"
 #include "Transformable.h"
 #include "VertexArray.h"
 #include "VertexBuffer.h"
@@ -68,9 +67,34 @@ inline namespace v1 {
      */
     TileLayer();
 
-    static TileLayer createOrthogonal(Vector2i layerSize);
+    /**
+     * @brief Create an orthogonal tile layer
+     *
+     * @param layerSize The size of the layer
+     * @param tileSize The size of a tile
+     */
+    static TileLayer createOrthogonal(Vector2i layerSize, Vector2i tileSize);
 
-    static TileLayer createStaggered(Vector2i layerSize, MapCellAxis axis, MapCellIndex index);
+    /**
+     * @brief Create a staggered tile layer
+     *
+     * @param layerSize The size of the layer
+     * @param tileSize The size of a tile
+     * @param axis The cells axis
+     * @param index The cells index
+     */
+    static TileLayer createStaggered(Vector2i layerSize, Vector2i tileSize, CellAxis axis, CellIndex index);
+
+    /**
+     * @brief Create a hexagonal tile layer
+     *
+     * @param layerSize The size of the layer
+     * @param tileSize The size of a tile
+     * @param sideLength The side length
+     * @param axis The cells axis
+     * @param index The cells index
+     */
+    static TileLayer createHexagonal(Vector2i layerSize, Vector2i tileSize, int sideLength, CellAxis axis, CellIndex index);
 
     /**
      * @brief Get the size of the layer
@@ -116,24 +140,6 @@ inline namespace v1 {
      * @name Tile definition
      * @{
      */
-
-    /**
-     * @brief Set the tile size
-     *
-     * @param tileSize The new tile size, in pixels
-     * @sa getTileSize()
-     */
-    void setTileSize(Vector2i tileSize);
-
-    /**
-     * @brief Get the tile size
-     *
-     * @return The tile size, in pixels
-     * @sa setTileSize()
-     */
-    Vector2i getTileSize() const {
-      return m_tileSize;
-    }
 
     /**
      * @brief Set a tile
@@ -218,7 +224,7 @@ inline namespace v1 {
     virtual void draw(RenderTarget& target, const RenderStates& states) override;
 
   private:
-    TileLayer(Vector2i layerSize, TileOrientation orientation, std::unique_ptr<TileProperties> properties);
+    TileLayer(Vector2i layerSize, CellOrientation orientation, std::unique_ptr<Cells> properties);
 
   private:
     struct Cell {
@@ -238,11 +244,10 @@ inline namespace v1 {
     RectI computeOffsets() const;
 
   private:
-    TileOrientation m_orientation;
-    std::unique_ptr<TileProperties> m_properties;
+    CellOrientation m_orientation;
+    std::unique_ptr<Cells> m_properties;
 
     Vector2i m_layerSize;
-    Vector2i m_tileSize;
 
     std::vector<Sheet> m_sheets;
     RectI m_rect;

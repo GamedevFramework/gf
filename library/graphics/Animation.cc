@@ -20,6 +20,7 @@
  */
 #include <gf/Animation.h>
 
+#include <cassert>
 #include <stdexcept>
 
 namespace gf {
@@ -46,19 +47,22 @@ inline namespace v1 {
     m_frames.push_back({ &texture, bounds, duration });
   }
 
-  void Animation::addTileset(const Texture& texture, Vector2f frameSize, Vector2i layout, int frames, Time duration) {
-    int index = 0;
+  void Animation::addTileset(const Texture& texture, Vector2i layout, Time duration, int frameCount, int frameOffset) {
+    int index = frameOffset;
+    int i = frameOffset % layout.width;
+    int j = frameOffset / layout.width;
+    Vector2f size = 1.0f / layout;
 
-    for (int j = 0; j < layout.height; ++j) {
-      for (int i = 0; i < layout.width; ++i) {
-        // End of function to avoid to add emtpy frame
-        if (index >= frames) {
-          return;
-        }
+    while (index < frameOffset + frameCount) {
+      assert(j < layout.height);
+      auto bounds = RectF::fromPositionSize(gf::vec(i, j) * size, size);
+      addFrame(texture, bounds, duration);
+      ++index;
+      ++i;
 
-        auto textureRect = gf::RectF::fromPositionSize(frameSize * gf::vec(i, j), frameSize);
-        addFrame(texture, textureRect, duration);
-        index++;
+      if (i == layout.width) {
+        i = 0;
+        ++j;
       }
     }
   }

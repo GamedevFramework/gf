@@ -31,18 +31,19 @@ inline namespace v1 {
     TileLayer tiles;
 
     switch (map.orientation) {
-      case TileOrientation::Orthogonal:
-        tiles = TileLayer::createOrthogonal(map.mapSize);
+      case CellOrientation::Orthogonal:
+        tiles = TileLayer::createOrthogonal(map.mapSize, map.tileSize);
         break;
-      case TileOrientation::Staggered:
-        tiles = TileLayer::createStaggered(map.mapSize, map.mapCellAxis, map.mapCellIndex);
+      case CellOrientation::Staggered:
+        tiles = TileLayer::createStaggered(map.mapSize, map.tileSize, map.cellAxis, map.cellIndex);
+        break;
+      case CellOrientation::Hexagonal:
+        tiles = TileLayer::createHexagonal(map.mapSize, map.tileSize, map.hexSideLength, map.cellAxis, map.cellIndex);
         break;
       default:
         assert(false);
         break;
     }
-
-    tiles.setTileSize(map.tileSize);
 
     std::map<const TmxTileset *, std::size_t> mapping;
     int k = 0;
@@ -64,6 +65,7 @@ inline namespace v1 {
           id = it->second;
         } else {
           id = tiles.createTilesetId();
+          mapping.emplace(tileset, id);
 
           assert(tileset->image);
           const gf::Texture& texture = resources.getTexture(tileset->image->source);

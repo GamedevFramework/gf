@@ -136,7 +136,8 @@ int main() {
   std::cout << '\n';
 
   gf::SquareMap map({ GridSize, GridSize });
-  gf::SquareGrid grid({ GridSize, GridSize }, { CellSize, CellSize }, gf::Color::Azure);
+  gf::Grid grid = gf::Grid::createOrthogonal({ GridSize, GridSize }, { CellSize, CellSize });
+  grid.setColor(gf::Color::Azure);
 
   // build a map
 

@@ -21,8 +21,6 @@
 #include <gf/Grid.h>
 
 #include <gf/RenderTarget.h>
-
-#include <gf/Stagger.h>
 #include <gf/VectorOps.h>
 
 #include <gf/Log.h>
@@ -32,28 +30,37 @@ namespace gf {
 inline namespace v1 {
 #endif
 
-  SquareGrid::SquareGrid(Vector2i gridSize, Vector2f cellSize, const Color4f& color, float lineWidth)
-  : m_gridSize(gridSize)
-  , m_cellSize(cellSize)
-  , m_color(color)
-  , m_lineWidth(lineWidth)
+  Grid::Grid()
+  : m_properties(nullptr)
+  , m_gridSize(0, 0)
+  , m_color(gf::Color::Black)
+  , m_lineWidth(1.0f)
   , m_vertices(PrimitiveType::Lines)
   {
-    updateGeometry();
   }
 
-  void SquareGrid::setGridSize(Vector2i gridSize) {
+  Grid Grid::createOrthogonal(Vector2i gridSize, Vector2f cellSize) {
+    return Grid(gridSize, std::make_unique<OrthogonalCells>(cellSize));
+  }
+
+  Grid Grid::createStaggered(Vector2i gridSize, Vector2f cellSize, CellAxis axis, CellIndex index) {
+    return Grid(gridSize, std::make_unique<StaggeredCells>(cellSize, axis, index));
+  }
+
+  Grid Grid::createHexagonal(Vector2i gridSize, Vector2f cellSize, float sideLength, CellAxis axis, CellIndex index) {
+    return Grid(gridSize, std::make_unique<HexagonalCells>(cellSize, sideLength, axis, index));
+  }
+
+  Grid Grid::createHexagonal(Vector2i gridSize, float radius, CellAxis axis, CellIndex index) {
+    return Grid(gridSize, std::make_unique<HexagonalCells>(radius, axis, index));
+  }
+
+  void Grid::setGridSize(Vector2i gridSize) {
     m_gridSize = gridSize;
     updateGeometry();
   }
 
-
-  void SquareGrid::setCellSize(Vector2f cellSize) {
-    m_cellSize = cellSize;
-    updateGeometry();
-  }
-
-  void SquareGrid::setColor(const Color4f& color) {
+  void Grid::setColor(const Color4f& color) {
     m_color = color;
 
     for (std::size_t i = 0; i < m_vertices.getVertexCount(); ++i) {
@@ -61,103 +68,81 @@ inline namespace v1 {
     }
   }
 
-  RectF SquareGrid::getLocalBounds() const {
-    return RectF::fromSize(m_gridSize * m_cellSize);
-  }
+  void Grid::hover(Vector2f pointer) {
+    if (!m_properties) {
+      return;
+    }
 
-  void SquareGrid::setAnchor(Anchor anchor) {
-    setOriginFromAnchorAndBounds(anchor, getLocalBounds());
-  }
+    Vector2f local = gf::transform(getInverseTransform(), pointer);
+    Vector2i selected = m_properties->computeCoordinates(local);
 
-  VertexBuffer SquareGrid::commitGeometry() const {
-    return VertexBuffer(m_vertices.getVertexData(), m_vertices.getVertexCount(), m_vertices.getPrimitiveType());
-  }
+    if (selected == m_selected) {
+      return;
+    }
 
-  void SquareGrid::draw(RenderTarget& target, const RenderStates& states) {
-    RenderStates localStates = states;
-    localStates.transform *= getTransform();
-    localStates.lineWidth = m_lineWidth;
-    target.draw(m_vertices, localStates);
-  }
-
-  void SquareGrid::updateGeometry() {
-    m_vertices.clear();
-    Vector2f max = m_gridSize * m_cellSize;
+    m_selected = selected;
+    m_selectedVertices.clear();
 
     Vertex vertices[2];
-    vertices[0].color = vertices[1].color = m_color;
+    vertices[0].color = vertices[1].color = m_selectedColor;
 
-    for (int i = 0; i <= m_gridSize.width; ++i) {
-      float x = i * m_cellSize.width;
-      vertices[0].position = { x, 0.0f };
-      vertices[1].position = { x, max.y };
+    auto polyline = m_properties->computePolyline(m_selected);
+    assert(polyline.isLoop());
 
-      m_vertices.append(vertices[0]);
-      m_vertices.append(vertices[1]);
-    }
-
-    for (int j = 0; j <= m_gridSize.height; ++j) {
-      float y = j * m_cellSize.height;
-      vertices[0].position = { 0.0f, y };
-      vertices[1].position = { max.x, y };
-
-      m_vertices.append(vertices[0]);
-      m_vertices.append(vertices[1]);
-    }
-
-  }
-
-  HexagonGrid::HexagonGrid(MapCellAxis axis, MapCellIndex index, Vector2i gridSize, float radius, const Color4f& color, float lineWidth)
-  : m_gridSize(gridSize)
-  , m_radius(radius)
-  , m_helper(axis, index)
-  , m_color(color)
-  , m_lineWidth(lineWidth)
-  , m_vertices(PrimitiveType::Lines)
-  {
-    updateGeometry();
-  }
-
-  void HexagonGrid::setGridSize(Vector2i gridSize) {
-    m_gridSize = gridSize;
-    updateGeometry();
-  }
-
-
-  void HexagonGrid::setRadius(float radius) {
-    m_radius = radius;
-    updateGeometry();
-  }
-
-  void HexagonGrid::setColor(const Color4f& color) {
-    m_color = color;
-
-    for (std::size_t i = 0; i < m_vertices.getVertexCount(); ++i) {
-      m_vertices[i].color = m_color;
+    for (std::size_t k = 0; k < polyline.getPointCount(); ++k) {
+      vertices[0].position = polyline.getPoint(k);
+      vertices[1].position = polyline.getNextPoint(k);
+      m_selectedVertices.append(vertices[0]);
+      m_selectedVertices.append(vertices[1]);
     }
   }
 
-  RectF HexagonGrid::getLocalBounds() const {
-    auto bounds = m_helper.computeBounds(m_gridSize, m_radius);
-    return RectF::fromPositionSize({ -m_lineWidth, -m_lineWidth }, bounds.getSize() + 2.0f * m_lineWidth);
+
+  RectF Grid::getLocalBounds() const {
+    if (!m_properties) {
+      return RectF();
+    }
+
+    return m_properties->computeBounds(m_gridSize);
   }
 
-  void HexagonGrid::setAnchor(Anchor anchor) {
+  void Grid::setAnchor(Anchor anchor) {
     setOriginFromAnchorAndBounds(anchor, getLocalBounds());
   }
 
-  VertexBuffer HexagonGrid::commitGeometry() const {
+  VertexBuffer Grid::commitGeometry() const {
     return VertexBuffer(m_vertices.getVertexData(), m_vertices.getVertexCount(), m_vertices.getPrimitiveType());
   }
 
-  void HexagonGrid::draw(RenderTarget& target, const RenderStates& states) {
+  void Grid::draw(RenderTarget& target, const RenderStates& states) {
     RenderStates localStates = states;
     localStates.transform *= getTransform();
     localStates.lineWidth = m_lineWidth;
     target.draw(m_vertices, localStates);
+
+    if (RectI::fromSize(m_gridSize).contains(m_selected)) {
+      target.draw(m_selectedVertices, localStates);
+    }
   }
 
-  void HexagonGrid::updateGeometry() {
+  Grid::Grid(Vector2i gridSize, std::unique_ptr<Cells> properties)
+  : m_properties(std::move(properties))
+  , m_gridSize(gridSize)
+  , m_color(Color::Black)
+  , m_lineWidth(1.0f)
+  , m_vertices(PrimitiveType::Lines)
+  , m_selected(-1, -1)
+  , m_selectedColor(Color::Red)
+  , m_selectedVertices(PrimitiveType::Lines)
+  {
+    updateGeometry();
+  }
+
+  void Grid::updateGeometry() {
+    if (!m_properties) {
+      return;
+    }
+
     m_vertices.clear();
 
     Vertex vertices[2];
@@ -165,23 +150,19 @@ inline namespace v1 {
 
     for (int i = 0; i < m_gridSize.width; ++i) {
       for (int j = 0; j < m_gridSize.height; ++j) {
-        auto corners = m_helper.computeCorners({ i, j }, m_radius);
+        auto polyline = m_properties->computePolyline({ i, j });
+        assert(polyline.isLoop());
 
-        for (unsigned k = 0; k < corners.size() - 1; ++k) {
-          vertices[0].position = corners[k];
-          vertices[1].position = corners[k + 1];
+        for (std::size_t k = 0; k < polyline.getPointCount(); ++k) {
+          vertices[0].position = polyline.getPoint(k);
+          vertices[1].position = polyline.getNextPoint(k);
           m_vertices.append(vertices[0]);
           m_vertices.append(vertices[1]);
         }
-
-        vertices[0].position = corners[5];
-        vertices[1].position = corners[0];
-        m_vertices.append(vertices[0]);
-        m_vertices.append(vertices[1]);
       }
     }
-  }
 
+  }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

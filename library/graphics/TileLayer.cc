@@ -25,9 +25,7 @@
 #include <algorithm>
 
 #include <gf/Log.h>
-#include <gf/Orthogonal.h>
 #include <gf/RenderTarget.h>
-#include <gf/Stagger.h>
 #include <gf/Transform.h>
 #include <gf/VectorOps.h>
 
@@ -41,31 +39,33 @@ inline namespace v1 {
   constexpr int TileLayer::NoTile;
 
   TileLayer::TileLayer()
-  : m_orientation(TileOrientation::Unknown)
+  : m_orientation(CellOrientation::Unknown)
   , m_properties(nullptr)
   , m_layerSize(0, 0)
-  , m_tileSize(0, 0)
   , m_rect(RectI::empty())
   {
   }
 
-  TileLayer::TileLayer(Vector2i layerSize, TileOrientation orientation, std::unique_ptr<TileProperties> properties)
+  TileLayer::TileLayer(Vector2i layerSize, CellOrientation orientation, std::unique_ptr<Cells> properties)
   : m_orientation(orientation)
   , m_properties(std::move(properties))
   , m_layerSize(layerSize)
-  , m_tileSize(0, 0)
   , m_rect(RectI::empty())
   , m_tiles(layerSize)
   {
     clear();
   }
 
-  TileLayer TileLayer::createOrthogonal(Vector2i layerSize) {
-    return TileLayer(layerSize, TileOrientation::Orthogonal, std::make_unique<GenericTileProperties<OrthogonalHelper>>(OrthogonalHelper()));
+  TileLayer TileLayer::createOrthogonal(Vector2i layerSize, Vector2i tileSize) {
+    return TileLayer(layerSize, CellOrientation::Orthogonal, std::make_unique<OrthogonalCells>(tileSize));
   }
 
-  TileLayer TileLayer::createStaggered(Vector2i layerSize, MapCellAxis axis, MapCellIndex index) {
-    return TileLayer(layerSize, TileOrientation::Orthogonal, std::make_unique<GenericTileProperties<StaggerHelper>>(StaggerHelper(axis, index)));
+  TileLayer TileLayer::createStaggered(Vector2i layerSize, Vector2i tileSize, CellAxis axis, CellIndex index) {
+    return TileLayer(layerSize, CellOrientation::Staggered, std::make_unique<StaggeredCells>(tileSize, axis, index));
+  }
+
+  TileLayer TileLayer::createHexagonal(Vector2i layerSize, Vector2i tileSize, int sideLength, CellAxis axis, CellIndex index) {
+    return TileLayer(layerSize, CellOrientation::Hexagonal, std::make_unique<HexagonalCells>(tileSize, sideLength, axis, index));
   }
 
   std::size_t TileLayer::createTilesetId() {
@@ -82,10 +82,6 @@ inline namespace v1 {
   const Tileset& TileLayer::getTileset(std::size_t id) const {
     assert(id < m_sheets.size());
     return m_sheets[id].tileset;
-  }
-
-  void TileLayer::setTileSize(Vector2i tileSize) {
-    m_tileSize = tileSize;
   }
 
   void TileLayer::setTile(Vector2i position, std::size_t tileset, int tile, Flags<Flip> flip) {
@@ -118,7 +114,7 @@ inline namespace v1 {
 
   RectF TileLayer::getLocalBounds() const {
     assert(m_properties);
-    return m_properties->computeBounds(m_layerSize, m_tileSize);
+    return m_properties->computeBounds(m_layerSize);
   }
 
   void TileLayer::setAnchor(Anchor anchor) {
@@ -134,7 +130,7 @@ inline namespace v1 {
   }
 
   void TileLayer::draw(RenderTarget& target, const RenderStates& states) {
-    if (m_sheets.empty() || m_orientation == TileOrientation::Unknown || m_properties == nullptr) {
+    if (m_sheets.empty() || m_orientation == CellOrientation::Unknown || m_properties == nullptr) {
       return;
     }
 
@@ -153,7 +149,7 @@ inline namespace v1 {
     local.extend(toLocal(screen.getBottomRight()));
 
     RectI layer = gf::RectI::fromSize(m_layerSize - 1);
-    RectI visible = m_properties->computeVisibleArea(local, m_tileSize);
+    RectI visible = m_properties->computeVisibleArea(local);
     RectI rect = visible.getIntersection(layer);
 
     // TODO: handle offsets of tilesets
@@ -206,7 +202,7 @@ inline namespace v1 {
 
         // position
 
-        RectF bounds = m_properties->computeCellBounds(coords, m_tileSize);
+        RectF bounds = m_properties->computeCellBounds(coords);
         Vector2f position = bounds.getPosition();
         position += sheet.tileset.getOffset();
 
@@ -266,7 +262,7 @@ inline namespace v1 {
   }
 
   void TileLayer::updateGeometry() {
-    if (m_sheets.empty() || m_tileSize.width == 0 || m_tileSize.height == 0 || m_properties == nullptr) {
+    if (m_sheets.empty() || m_properties == nullptr) {
       return;
     }
 

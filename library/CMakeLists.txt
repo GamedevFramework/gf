@@ -1,12 +1,24 @@
 file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/generated")
 
-add_executable(gfdev_source_file graphics/tools/gfdev_source_file.cc)
+# Create gfdev_source_file tool
 
-set_target_properties(gfdev_source_file
-  PROPERTIES
-    CXX_STANDARD 17
-    CXX_EXTENSIONS OFF
-)
+if (ANDROID)
+  include(ExternalProject)
+
+  ExternalProject_Add(gfdev_source_file
+    SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/graphics/tools"
+    CMAKE_ARGS
+		  -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_CURRENT_BINARY_DIR}
+      -DGFDEV_ANDROID_TOOL=ON
+  )
+
+  # Hack to select the right executable for android cross-compilation
+  set(GFDEV_SOURCE_FILE_EXEC "${CMAKE_CURRENT_BINARY_DIR}/gfdev_source_file")
+else()
+  add_subdirectory(graphics/tools)
+
+  set(GFDEV_SOURCE_FILE_EXEC "gfdev_source_file")
+endif()
 
 # process gamecontrollerdb
 
@@ -23,7 +35,7 @@ foreach(GCDB_RELATIVE_SOURCE ${GCDB_SOURCES})
   set(GCDB_HEADER "${CMAKE_CURRENT_BINARY_DIR}/generated/${GCDB_NAME}.h")
   add_custom_command(
     OUTPUT "${GCDB_HEADER}"
-    COMMAND gfdev_source_file "${GCDB_SOURCE}" "${GCDB_HEADER}" "gamecontrollerdb"
+    COMMAND ${GFDEV_SOURCE_FILE_EXEC} "${GCDB_SOURCE}" "${GCDB_HEADER}" "gamecontrollerdb"
     COMMENT "Compiling ${GCDB_NAME} to header"
     DEPENDS gfdev_source_file "${GCDB_SOURCE}"
   )
@@ -64,7 +76,7 @@ foreach(SHADER_RELATIVE_SOURCE ${SHADER_SOURCES})
   set(SHADER_HEADER "${CMAKE_CURRENT_BINARY_DIR}/generated/${SHADER_NAME}.h")
   add_custom_command(
     OUTPUT "${SHADER_HEADER}"
-    COMMAND gfdev_source_file "${SHADER_SOURCE}" "${SHADER_HEADER}" "${SHADER_VARIABLE}"
+    COMMAND ${GFDEV_SOURCE_FILE_EXEC} "${SHADER_SOURCE}" "${SHADER_HEADER}" "${SHADER_VARIABLE}"
     COMMENT "Compiling ${SHADER_NAME} to header"
     DEPENDS gfdev_source_file "${SHADER_SOURCE}"
   )
@@ -106,6 +118,10 @@ else()
     core/Array2D.cc
     core/AssetManager.cc
     core/BasicGeometry.cc
+    core/Cells.cc
+    core/Cells_Hexagonal.cc
+    core/Cells_Orthogonal.cc
+    core/Cells_Staggered.cc
     core/Circ.cc
     core/Clock.cc
     core/Collision.cc
@@ -117,7 +133,6 @@ else()
     core/Flags.cc
     core/Geometry.cc
     core/Heightmap.cc
-    core/Hexagon.cc
     core/Image.cc
     core/Log.cc
     core/Map.cc
@@ -131,7 +146,6 @@ else()
     core/Noise.cc
     core/Noises.cc
     core/Orientation.cc
-    core/Orthogonal.cc
     core/Path.cc
     core/PointSequence.cc
     core/Polygon.cc
@@ -147,7 +161,6 @@ else()
     core/Spatial_QuadTree.cc
     core/Spatial_RStarTree.cc
     core/Spatial_SimpleSpatialIndex.cc
-    core/Stagger.cc
     core/Stream.cc
     core/Streams.cc
     core/StringUtils.cc
@@ -222,7 +235,6 @@ else()
     graphics/TextureAtlas.cc
     graphics/Texture.cc
     graphics/TileLayer.cc
-    graphics/TileProperties.cc
     graphics/Tileset.cc
     graphics/TmxOps.cc
     graphics/Transformable.cc

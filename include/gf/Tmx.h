@@ -29,13 +29,12 @@
 #include <string>
 #include <vector>
 
+#include "CellTypes.h"
 #include "CoreApi.h"
 #include "Flags.h"
 #include "Id.h"
 #include "Path.h"
 #include "Rect.h"
-#include "Stagger.h"
-#include "TileTypes.h"
 #include "Time.h"
 #include "Vector.h"
 
@@ -594,7 +593,7 @@ inline namespace v1 {
 
     std::string version;        ///< The version of the map
     std::string tiledVersion;   ///< The tiled version of the map
-    TileOrientation orientation;  ///< The orientation of the map
+    CellOrientation orientation;  ///< The orientation of the map
     TmxRenderOrder renderOrder; ///< The render order of the map
 
     bool infinite;              ///< Is the map infinite?
@@ -602,8 +601,8 @@ inline namespace v1 {
     Vector2i tileSize;          ///< The size of the tiles
 
     int hexSideLength;          ///< The length of the side for hexagonal map
-    MapCellAxis mapCellAxis;    ///< The stagger axis for hexagonal map
-    MapCellIndex mapCellIndex;  ///< The stagger index for hexagonal map
+    CellAxis cellAxis;          ///< The stagger axis for hexagonal map
+    CellIndex cellIndex;        ///< The stagger index for hexagonal map
 
     Color4u backgroundColor;    ///< The background color
 
