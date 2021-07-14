@@ -37,15 +37,59 @@ inline namespace v1 {
 
   /**
    * @ingroup graphics_drawables
-   * @brief A grid
+   * @brief A grid of cells
+   *
+   * A grid is a set of regular cells. The cells can be orthogonal, staggered or hexagonal.
+   *
+   * The grid shows the limits of the cells and, optionnaly, the selected cell.
+   * It can be used for debugging purpose.
+   *
+   * @see gf::Cells
    */
   class GF_GRAPHICS_API Grid : public gf::Transformable {
   public:
+    /**
+     * @brief Constructor
+     */
     Grid();
 
+    /**
+     * @brief Create an orthogonal grid
+     *
+     * @param gridSize The size of the grid
+     * @param cellSize The size of a cell
+     */
     static Grid createOrthogonal(Vector2i gridSize, Vector2f cellSize);
+
+    /**
+     * @brief Create a staggered grid
+     *
+     * @param gridSize The size of the grid
+     * @param cellSize The size of a cell
+     * @param axis The cells axis
+     * @param index The cells index
+     */
     static Grid createStaggered(Vector2i gridSize, Vector2f cellSize, CellAxis axis, CellIndex index);
+
+    /**
+     * @brief Create a hexagonal grid
+     *
+     * @param gridSize The size of the grid
+     * @param cellSize The size of a cell
+     * @param sideLength The side length
+     * @param axis The cells axis
+     * @param index The cells index
+     */
     static Grid createHexagonal(Vector2i gridSize, Vector2f cellSize, float sideLength, CellAxis axis, CellIndex index);
+
+    /**
+     * @brief Create a regular hexagonal grid
+     *
+     * @param gridSize The size of the grid
+     * @param radius The radius of the regular hexagon
+     * @param axis The cells axis
+     * @param index The cells index
+     */
     static Grid createHexagonal(Vector2i gridSize, float radius, CellAxis axis, CellIndex index);
 
     /**

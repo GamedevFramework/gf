@@ -43,8 +43,8 @@ inline namespace v1 {
    * @sa gf::Cells
    */
   enum class CellNeighborQuery {
-    Valid               = 0x01,
-    Diagonal            = 0x02,
+    Valid               = 0x01, ///< The neighbors must be valid cells
+    Diagonal            = 0x02, ///< The neighbors may be in diagonal
   };
 
 
@@ -53,6 +53,7 @@ inline namespace v1 {
    * @brief The properties of cells
    *
    * These properties depend on the orientation of the cells in the map:
+   *
    * - gf::OrthogonalCells
    * - gf::StaggeredCells
    * - gf::HexagonalCells
@@ -61,18 +62,59 @@ inline namespace v1 {
    */
   class GF_CORE_API Cells {
   public:
+    /**
+     * @brief Virtual destructor
+     */
     virtual ~Cells();
 
+    /**
+     * @brief Compute the local bounds of the cells
+     *
+     * @param layerSize The size of the layer
+     * @returns The bounds of the cells
+     */
     virtual RectF computeBounds(Vector2i layerSize) const noexcept = 0;
 
+    /**
+     * @brief Compute the visible area in terms of coordinates
+     *
+     * @param local The visible area
+     * @returns The visible coordinates
+     */
     virtual RectI computeVisibleArea(const RectF& local) const noexcept = 0;
 
+    /**
+     * @brief Compute the cell bounds
+     *
+     * @param coords The coordinates of the cell
+     * @returns The rectangular bounding box of the cell
+     */
     virtual RectF computeCellBounds(Vector2i coords) const noexcept = 0;
 
+    /**
+     * @brief Compute the coordinates of a cell
+     *
+     * @param position The local position
+     * @returns The coordinates of the cell
+     */
     virtual Vector2i computeCoordinates(Vector2f position) const noexcept = 0;
 
+    /**
+     * @brief Compute the polyline representing a cell
+     *
+     * @param coords The coordinates of the cell
+     * @returns A polyline (loop) that represents the cell
+     */
     virtual Polyline computePolyline(Vector2i coords) const = 0;
 
+    /**
+     * @brief Compute the neighbors of a cell
+     *
+     * @param coords The coordinates of the cell
+     * @param layerSize The size of the layer
+     * @param flags The parameters of the query
+     * @returns An array of coordinates of the neighbors
+     */
     virtual std::vector<Vector2i> computeNeighbors(Vector2i coords, Vector2i layerSize, Flags<CellNeighborQuery> flags = gf::None) const = 0;
   };
 
@@ -82,6 +124,11 @@ inline namespace v1 {
    */
   class GF_CORE_API OrthogonalCells final : public Cells {
   public:
+    /**
+     * @brief Make orthogonal cells of the specified size
+     *
+     * @param tileSize The size of a cell
+     */
     OrthogonalCells(Vector2f tileSize)
     : m_tileSize(tileSize)
     {
@@ -110,6 +157,13 @@ inline namespace v1 {
    */
   class GF_CORE_API StaggeredCells final : public Cells {
   public:
+    /**
+     * @brief Make staggered cells of the specified size
+     *
+     * @param tileSize The size of a cell
+     * @param axis The cells axis
+     * @param index The cells index
+     */
     StaggeredCells(Vector2f tileSize, CellAxis axis, CellIndex index)
     : m_tileSize(tileSize)
     , m_axis(axis)
@@ -142,6 +196,14 @@ inline namespace v1 {
    */
   class GF_CORE_API HexagonalCells final : public Cells {
   public:
+    /**
+     * @brief Make hexagonal cells of the specified size
+     *
+     * @param tileSize The size of a cell
+     * @param sideLength The length of the side
+     * @param axis The cells axis
+     * @param index The cells index
+     */
     HexagonalCells(Vector2f tileSize, float sideLength, CellAxis axis, CellIndex index)
     : m_tileSize(tileSize)
     , m_sideLength(sideLength)
@@ -150,6 +212,13 @@ inline namespace v1 {
     {
     }
 
+    /**
+     * @brief Make hexagonal cells of the specified size
+     *
+     * @param radius The radius of the regular hexagon
+     * @param axis The cells axis
+     * @param index The cells index
+     */
     HexagonalCells(float radius, CellAxis axis, CellIndex index)
     : m_tileSize(computeRegularSize(axis, radius))
     , m_sideLength(radius)
