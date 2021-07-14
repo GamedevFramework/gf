@@ -37,7 +37,6 @@ This file is a list of ideas for gf. Some of them will eventually be in gf. Othe
 
 ## meta
 
-- (docs) split gf_dev_doc by modules (core, graphics, net)
 - (portability) consider using [hedley](https://nemequ.github.io/hedley/)
   - blocking bug: nemequ/hedley#35
 - (packaging) use CPack to create packages
