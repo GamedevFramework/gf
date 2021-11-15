@@ -1,0 +1,42 @@
+name: UbuntuBuild
+
+on:
+  push:
+    branches: [ master, develop ]
+  pull_request:
+    branches: [ master, develop ]
+
+env:
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y libsdl2-dev libboost-dev libfreetype6-dev zlib1g-dev libpugixml-dev
+
+      - name: Extract branch name (on push)
+        if: github.event_name != 'pull_request'
+        run: echo "::set-env name=BRANCH_NAME::$(echo ${GITHUB_REF#refs/heads/})"
+
+      - name: Extract branch name (on pull request)
+        if: github.event_name == 'pull_request'
+        run: echo "::set-env name=BRANCH_NAME::$(echo ${GITHUB_HEAD_REF})"
+
+      - uses: actions/checkout@v2
+        if: steps.cache-gf.outputs.cache-hit != 'true'
+        with:
+          repository: GamedevFramework/gf
+          submodules: recursive
+          ref: ${{ env.BRANCH_NAME }}
+
+      - name: Configure gf
+        if: steps.cache-gf.outputs.cache-hit != 'true'
+        run: cmake -DGF_BUILD_GAMES=OFF -DGF_BUILD_EXAMPLES=OFF -DGF_BUILD_DOCUMENTATION=OFF -DGF_SINGLE_COMPILTATION_UNIT=OFF -DGF_DEBUG=OFF -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -S ${{ github.workspace }} -B ${{ github.workspace }}/build
+
+      - name: Build gf
+        if: steps.cache-gf.outputs.cache-hit != 'true'
+        run: cmake --build ${{ github.workspace }}/build --config ${{ env.BUILD_TYPE }} --parallel
