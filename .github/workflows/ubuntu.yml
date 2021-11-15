@@ -19,7 +19,6 @@ jobs:
           sudo apt install -y libsdl2-dev libboost-dev libfreetype6-dev zlib1g-dev libpugixml-dev
 
       - name: Extract branch name
-        if: github.event_name != 'pull_request'
         shell: bash
         run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
         id: extract_branch
