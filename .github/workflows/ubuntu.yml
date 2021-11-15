@@ -18,20 +18,17 @@ jobs:
           sudo apt update
           sudo apt install -y libsdl2-dev libboost-dev libfreetype6-dev zlib1g-dev libpugixml-dev
 
-      - name: Extract branch name (on push)
+      - name: Extract branch name
         if: github.event_name != 'pull_request'
-        run: echo "::set-env name=BRANCH_NAME::$(echo ${GITHUB_REF#refs/heads/})"
-
-      - name: Extract branch name (on pull request)
-        if: github.event_name == 'pull_request'
-        run: echo "::set-env name=BRANCH_NAME::$(echo ${GITHUB_HEAD_REF})"
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
 
       - uses: actions/checkout@v2
-        if: steps.cache-gf.outputs.cache-hit != 'true'
         with:
           repository: GamedevFramework/gf
           submodules: recursive
-          ref: ${{ env.BRANCH_NAME }}
+          ref: ${{ steps.extract_branch.outputs.branch }}
 
       - name: Configure gf
         if: steps.cache-gf.outputs.cache-hit != 'true'
