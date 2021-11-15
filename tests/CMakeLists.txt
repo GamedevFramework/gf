@@ -67,3 +67,6 @@ add_test(
   NAME GF_NET_TEST
   COMMAND gf_net_tests
 )
+
+include(GoogleTest)
+gtest_discover_tests(gf_core_tests gf_net_tests)
