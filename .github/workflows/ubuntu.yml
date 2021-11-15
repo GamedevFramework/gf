@@ -37,7 +37,7 @@ jobs:
 
       - name: Run tests
         working-directory: ${{ github.workspace }}/build
-        run: ctest -j $(nproc) -C ${{ env.BUILD_TYPE }} -T test --output-on-failure
+        run: ctest -j $(nproc) -C ${{ env.BUILD_TYPE }} -T test
 
       - name: Create deb file
         working-directory: ${{github.workspace}}/build

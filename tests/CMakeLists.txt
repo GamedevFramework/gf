@@ -1,5 +1,7 @@
 find_package(Threads REQUIRED)
 
+include(CTest)
+
 # gf::core tests
 
 add_executable(gf_core_tests
