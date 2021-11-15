@@ -11,9 +11,8 @@ env:
   VCPKG_COMMIT: 4d878759ad3c6ae2e162e12e0f6cba8df9610865
 
 jobs:
-  runs-on: windows-latest
-
-  dependencies:
+  build:
+    runs-on: windows-latest
     steps:
       - name: VCPKG cache
         id: cache-vcpkg
