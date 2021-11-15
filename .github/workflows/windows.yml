@@ -1,0 +1,61 @@
+name: CMake
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+env:
+  BUILD_TYPE: Release
+  VCPKG_COMMIT: 4d878759ad3c6ae2e162e12e0f6cba8df9610865
+
+jobs:
+  runs-on: windows-latest
+
+  dependencies:
+    steps:
+      - name: VCPKG cache
+        id: cache-vcpkg
+        uses: actions/cache@v2.1.6
+        with:
+          path: vcpkg
+          key: ${{ runner.os }}-vcpkg-${{ env.VCPKG_COMMIT }}
+
+      - name: VCPKG clone
+        uses: actions/checkout@v2
+        if: steps.cache-vcpkg.outputs.cache-hit != 'true'
+        with:
+          repository: Microsoft/vcpkg
+          path: vcpkg
+          ref: ${{ env.VCPKG_COMMIT }}
+
+      - name: VCPKG install
+        if: steps.cache-vcpkg.outputs.cache-hit != 'true'
+        working-directory: ${{github.workspace}}/vcpkg
+        run: |
+          .\bootstrap-vcpkg.bat
+          .\vcpkg.exe install \
+          boost-algorithm:x64-windows \
+          boost-container:x64-windows \
+          boost-filesystem:x64-windows \
+          boost-heap:x64-windows \
+          freetype:x64-windows \
+          pugixml:x64-windows \
+          sdl2:x64-windows \
+          stb:x64-windows \
+          zlib:x64-windows
+
+  # build:
+  #   steps:
+  #     - name: Configure Prises
+  #       run: |
+  #         cmake \
+  #         -S ${{github.workspace}}/gf \
+  #         -B ${{github.workspace}}/gf/build \
+  #         -DCMAKE_TOOLCHAIN_FILE=${{github.workspace}}/vcpkg/scripts/buildsystems/vcpkg.cmake \
+  #         -T host=x64 \
+  #         -A x64
+
+  #     - name: Build Prises
+  #       run: cmake --build ${{github.workspace}}/gf/build --config ${{env.BUILD_TYPE}} --parallel
