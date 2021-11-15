@@ -31,9 +31,7 @@ jobs:
           ref: ${{ steps.extract_branch.outputs.branch }}
 
       - name: Configure gf
-        if: steps.cache-gf.outputs.cache-hit != 'true'
         run: cmake -DGF_BUILD_GAMES=OFF -DGF_BUILD_EXAMPLES=OFF -DGF_BUILD_DOCUMENTATION=OFF -DGF_SINGLE_COMPILTATION_UNIT=OFF -DGF_DEBUG=OFF -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -S ${{ github.workspace }} -B ${{ github.workspace }}/build
 
       - name: Build gf
-        if: steps.cache-gf.outputs.cache-hit != 'true'
         run: cmake --build ${{ github.workspace }}/build --config ${{ env.BUILD_TYPE }} --parallel
