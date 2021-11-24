@@ -68,7 +68,5 @@ add_test(
   COMMAND gf_net_tests
 )
 
-if (NOT WIN32)
-  include(GoogleTest)
-  gtest_discover_tests(gf_core_tests gf_net_tests)
-endif ()
+include(GoogleTest)
+gtest_discover_tests(gf_core_tests gf_net_tests)
