@@ -9,6 +9,7 @@ on:
 env:
   BUILD_TYPE: Release
   VCPKG_COMMIT: 5568f110b509a9fd90711978a7cb76bae75bb092
+  VCPKG_DEFAULT_BINARY_CACHE: ${{ github.workspace }}\vcpkg\binary-cache
 
 jobs:
   build:
@@ -31,10 +32,8 @@ jobs:
       - name: Install vcpkg dependencies
         if: steps.cache-vcpkg.outputs.cache-hit != 'true'
         working-directory: ${{github.workspace}}/vcpkg
-        shell: cmd
         run: |
-          set VCPKG_DEFAULT_BINARY_CACHE=${{github.workspace}}\vcpkg\binary-cache
-          mkdir ${{github.workspace}}\vcpkg\binary-cache
+          echo %VCPKG_DEFAULT_BINARY_CACHE%
           .\bootstrap-vcpkg.bat
           .\vcpkg.exe install boost-algorithm:x64-windows boost-container:x64-windows boost-filesystem:x64-windows boost-heap:x64-windows freetype:x64-windows pugixml:x64-windows sdl2:x64-windows stb:x64-windows zlib:x64-windows
 
