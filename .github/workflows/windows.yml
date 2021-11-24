@@ -19,7 +19,7 @@ jobs:
         uses: actions/cache@v2.1.6
         with:
           path: vcpkg
-          key: ${{ runner.os }}-vcpkg-${{ env.VCPKG_COMMIT }}
+          key: ${{ runner.os }}-vcpkg-${{ env.VCPKG_COMMIT }}-v2
 
       - uses: actions/checkout@v2
         if: steps.cache-vcpkg.outputs.cache-hit != 'true'
