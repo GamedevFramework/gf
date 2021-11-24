@@ -15,22 +15,22 @@ jobs:
   build:
     runs-on: windows-latest
     steps:
-      # - name: vcpkg cache
-      #   id: cache-vcpkg
-      #   uses: actions/cache@v2.1.6
-      #   with:
-      #     path: vcpkg
-      #     key: ${{ runner.os }}-vcpkg-${{ env.VCPKG_COMMIT }}-v3
+      - name: vcpkg cache
+        id: cache-vcpkg
+        uses: actions/cache@v2.1.6
+        with:
+          path: vcpkg
+          key: ${{ runner.os }}-vcpkg-${{ env.VCPKG_COMMIT }}-v3
 
       - uses: actions/checkout@v2
-        # if: steps.cache-vcpkg.outputs.cache-hit != 'true'
+        if: steps.cache-vcpkg.outputs.cache-hit != 'true'
         with:
           repository: Microsoft/vcpkg
           path: vcpkg
           ref: ${{ env.VCPKG_COMMIT }}
 
       - name: Install vcpkg dependencies
-        # if: steps.cache-vcpkg.outputs.cache-hit != 'true'
+        if: steps.cache-vcpkg.outputs.cache-hit != 'true'
         working-directory: ${{github.workspace}}/vcpkg
         run: |
           echo $Env:VCPKG_DEFAULT_BINARY_CACHE
