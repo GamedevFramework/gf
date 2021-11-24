@@ -54,7 +54,6 @@ jobs:
         shell: cmd
         run: |
           set PATH=%PATH%;${{github.workspace}}/gf/build/library/${{ env.BUILD_TYPE }}
-          set VCPKG_DEFAULT_BINARY_CACHE=${{github.workspace}}/vcpkg/binary-cache
           cmake -DGF_BUILD_GAMES=OFF -DGF_BUILD_EXAMPLES=OFF -DGF_BUILD_DOCUMENTATION=OFF -DGF_SINGLE_COMPILTATION_UNIT=OFF -DGF_DEBUG=OFF -DGF_VCPKG=ON -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DCMAKE_TOOLCHAIN_FILE=${{github.workspace}}/vcpkg/scripts/buildsystems/vcpkg.cmake -S ${{ github.workspace }}/gf -B ${{ github.workspace }}/gf/build
 
       - name: Build gf
