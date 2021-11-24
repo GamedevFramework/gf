@@ -34,6 +34,7 @@ jobs:
         shell: cmd
         run: |
           set VCPKG_DEFAULT_BINARY_CACHE=${{github.workspace}}/vcpkg/binary-cache
+          mkdir %VCPKG_DEFAULT_BINARY_CACHE%
           .\bootstrap-vcpkg.bat
           .\vcpkg.exe install boost-algorithm:x64-windows boost-container:x64-windows boost-filesystem:x64-windows boost-heap:x64-windows freetype:x64-windows pugixml:x64-windows sdl2:x64-windows stb:x64-windows zlib:x64-windows
 
