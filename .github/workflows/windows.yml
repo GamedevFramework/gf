@@ -48,16 +48,19 @@ jobs:
           path: gf
 
       - name: Configure gf
+        shell: cmd
         run: |
           set PATH=%PATH%;${{github.workspace}}/gf/build/library/${{ env.BUILD_TYPE }}
           cmake -DGF_BUILD_GAMES=OFF -DGF_BUILD_EXAMPLES=OFF -DGF_BUILD_DOCUMENTATION=OFF -DGF_SINGLE_COMPILTATION_UNIT=OFF -DGF_DEBUG=OFF -DGF_VCPKG=ON -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DCMAKE_TOOLCHAIN_FILE=${{github.workspace}}/vcpkg/scripts/buildsystems/vcpkg.cmake -S ${{ github.workspace }}/gf -B ${{ github.workspace }}/gf/build
 
       - name: Build gf
+        shell: cmd
         run: |
           set PATH=%PATH%;${{github.workspace}}/gf/build/library/${{ env.BUILD_TYPE }}
           cmake --build ${{ github.workspace }}/gf/build --config ${{ env.BUILD_TYPE }} --parallel
 
       - name: Run tests
+        shell: cmd
         working-directory: ${{ github.workspace }}/gf/build
         run: |
           set PATH=%PATH%;${{github.workspace}}/gf/build/library/${{ env.BUILD_TYPE }}
