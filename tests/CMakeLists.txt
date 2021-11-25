@@ -1,6 +1,7 @@
 find_package(Threads REQUIRED)
 
 include(CTest)
+include(GoogleTest)
 
 # gf::core tests
 
@@ -38,10 +39,7 @@ target_link_libraries(gf_core_tests
     Threads::Threads
 )
 
-add_test(
-  NAME GF_CORE_TEST
-  COMMAND gf_core_tests
-)
+gtest_discover_tests(gf_core_tests)
 
 # gf::net tests
 
@@ -63,10 +61,4 @@ target_link_libraries(gf_net_tests
     Threads::Threads
 )
 
-add_test(
-  NAME GF_NET_TEST
-  COMMAND gf_net_tests
-)
-
-include(GoogleTest)
-gtest_discover_tests(gf_core_tests gf_net_tests)
+gtest_discover_tests(gf_net_tests)
