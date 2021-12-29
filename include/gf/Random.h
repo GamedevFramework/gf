@@ -22,6 +22,7 @@
 #define GF_RANDOM_H
 
 #include <cstdint>
+#include <limits>
 #include <random>
 
 #include "Circ.h"
@@ -36,13 +37,46 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup core_utilities
+   * @ingroup core
    * @brief A random engine
    *
-   * gf::Random is a wrapper around [C++11 standard random features](http://en.cppreference.com/w/cpp/numeric/random).
-   * It embeds a Mersenne Twister engine and provides several distributions
-   * above this engine.
    *
+   * @sa gf::Random
+   */
+  class GF_CORE_API RandomEngine {
+  public:
+    using result_type = uint64_t;
+
+    RandomEngine(result_type seed);
+
+    static constexpr result_type min() {
+      return std::numeric_limits<result_type>::min();
+    }
+
+    static constexpr result_type max() {
+      return std::numeric_limits<result_type>::max();
+    }
+
+    result_type operator()();
+
+    void shortJump();
+    void longJump();
+
+  private:
+    uint64_t next();
+
+  private:
+    uint64_t m_state[4];
+  };
+
+  /**
+   * @ingroup core_utilities
+   * @brief A set of random utilities
+   *
+   * gf::Random is a wrapper around [C++11 standard random features](http://en.cppreference.com/w/cpp/numeric/random).
+   * It embeds a random engine and provides several distributions above this engine.
+   *
+   * @sa gf::RandomEngine
    */
   class GF_CORE_API Random {
   public:
@@ -60,13 +94,13 @@ inline namespace v1 {
      * @brief Constructor with simple initialization
      *
      * This constructor initializes the Mersenne Twister with a single seed.
-     * This method is easy but not very good because it allows only @f$ 2^{32} @f$
+     * This method is easy but not very good because it allows only @f$ 2^{64} @f$
      * possible states. Choose this constructor if you need reproducible
      * randomness as a same seed will always provide the same sequence.
      *
      * @param seed The seed for the engine
      */
-    Random(std::uint_fast32_t seed)
+    Random(uint64_t seed)
     : m_engine(seed)
     {
 
@@ -174,12 +208,12 @@ inline namespace v1 {
      *
      * @return A reference to the engine
      */
-    std::mt19937& getEngine() {
+    RandomEngine& getEngine() {
       return m_engine;
     }
 
   private:
-    std::mt19937 m_engine;
+    RandomEngine m_engine;
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
