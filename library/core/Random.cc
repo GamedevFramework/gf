@@ -63,6 +63,13 @@ inline namespace v1 {
 
   // RandomEngine
 
+  RandomEngine::RandomEngine()
+  {
+    for (auto & state : m_state) {
+      state = computeRandomSeed();
+    }
+  }
+
   RandomEngine::RandomEngine(result_type seed)
   {
     SplitMix64 sm(seed);
@@ -161,7 +168,6 @@ inline namespace v1 {
   // Random
 
   Random::Random()
-  : m_engine(computeRandomSeed())
   {
     m_engine.shortJump();
   }

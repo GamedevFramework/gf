@@ -47,6 +47,8 @@ inline namespace v1 {
   public:
     using result_type = uint64_t;
 
+    RandomEngine();
+
     RandomEngine(result_type seed);
 
     static constexpr result_type min() {
