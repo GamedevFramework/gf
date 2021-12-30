@@ -37,7 +37,7 @@ inline namespace v1 {
 #endif
 
   /**
-   * @ingroup core
+   * @ingroup core_utilities
    * @brief A random engine
    *
    *

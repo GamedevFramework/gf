@@ -254,9 +254,10 @@ inline namespace v1 {
     void setPointCount(std::size_t pointCount);
 
     /**
-     * @brief Get the number of points of the polygon
+     * @brief Set a point in the shape
      *
-     * @return Number of points of the polygon
+     * @param index The index of the point
+     * @param point The new point
      *
      * @sa setPointCount(), getPoint()
      */
