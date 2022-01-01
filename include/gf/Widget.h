@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2021 Julien Bernard
+ * Copyright (C) 2016-2022 Julien Bernard
  * Copyright (C) 2018 Lilian Franchi
  *
  * This software is provided 'as-is', without any express or implied
