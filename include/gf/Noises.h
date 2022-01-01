@@ -309,6 +309,21 @@ inline namespace v1 {
     const Vector2d& at(uint8_t i, uint8_t j) const;
   };
 
+  enum class OpenSimplexType {
+    Super,
+    Fast,
+  };
+
+  enum class OpenSimplex2DVariant {
+    Classic,
+    XBeforeY,
+  };
+
+  enum class OpenSimplex3DVariant {
+    Classic,
+    XYBeforeZ,
+    XZBeforeY,
+  };
 
   /**
    * @ingroup core_procedural_generation
@@ -326,14 +341,34 @@ inline namespace v1 {
      *
      * @param random A random engine
      */
-    OpenSimplexNoise2D(Random& random);
+    OpenSimplexNoise2D(Random& random, OpenSimplexType type = OpenSimplexType::Super, OpenSimplex2DVariant variant = OpenSimplex2DVariant::Classic);
+
+    void setType(OpenSimplexType type) {
+      m_type = type;
+    }
+
+    OpenSimplexType getType() const {
+      return m_type;
+    }
+
+    void setVariant(OpenSimplex2DVariant variant) {
+      m_variant = variant;
+    }
+
+    OpenSimplex2DVariant getVariant() const {
+      return m_variant;
+    }
 
     double getValue(double x, double y) override;
 
   private:
-    std::array<uint8_t, 256> m_perm;
+    double getValueBase(double xs, double ys) const;
 
-    const Vector2d& at(uint8_t i, uint8_t j) const;
+  private:
+    OpenSimplexType m_type;
+    OpenSimplex2DVariant m_variant;
+    std::array<uint16_t, 2048> m_perm;
+    std::array<Vector2d, 2048> m_gradients2D;
   };
 
   /**
@@ -352,14 +387,18 @@ inline namespace v1 {
      *
      * @param random A random engine
      */
-    OpenSimplexNoise3D(Random& random);
+    OpenSimplexNoise3D(Random& random, OpenSimplexType type = OpenSimplexType::Super, OpenSimplex3DVariant variant = OpenSimplex3DVariant::Classic);
 
     double getValue(double x, double y, double z) override;
 
   private:
-    std::array<uint8_t, 256> m_perm;
+    double getValueBase(double xr, double yr, double zr) const;
 
-    const Vector3d& at(uint8_t i, uint8_t j, uint8_t k) const;
+  private:
+    OpenSimplexType m_type;
+    OpenSimplex3DVariant m_variant;
+    std::array<uint16_t, 2048> m_perm;
+    std::array<Vector3d, 2048> m_gradients3D;
   };
 
   /**

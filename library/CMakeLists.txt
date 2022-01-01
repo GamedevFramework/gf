@@ -145,6 +145,7 @@ else()
     core/Move.cc
     core/Noise.cc
     core/Noises.cc
+    core/Noises_OpenSimplex.cc
     core/Orientation.cc
     core/Path.cc
     core/PointSequence.cc
