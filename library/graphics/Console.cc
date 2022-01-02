@@ -419,7 +419,7 @@ inline namespace v1 {
 
       for (const auto& paragraph : paragraphs) {
         if (flags.test(PrintOption::CountOnly)) {
-          lineCount += paragraph.lines.size();
+          lineCount += static_cast<int>(paragraph.lines.size());
         } else {
           for (const auto& line : paragraph.lines) {
             if (rect.min.y + lineCount >= rect.max.y) {

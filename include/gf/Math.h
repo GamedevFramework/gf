@@ -264,7 +264,7 @@ inline namespace v1 {
   template<typename T, typename U>
   constexpr
   T lerp(T lhs, T rhs, U t) {
-    return (U(1) - t) * lhs + t * rhs;
+    return T((U(1) - t) * lhs + t * rhs);
   }
 
   /**

@@ -247,14 +247,14 @@ inline namespace v1 {
 
     double value = 0.0f;
 
-    for (int j = -1; j <= 2; ++j) {
-      for (int i = -1; i <= 2; ++i) {
+    for (int j = -1; j < 2; ++j) {
+      for (int i = -1; i < 2; ++i) {
         Vector2d r(rx - i, ry - j);
         double d = gf::squareLength(r);
 
         if (d < 4) {
           double t = 1 - d / 4;
-          value += dot(at(qx + i, qy + j), r) * t * t * t * t * (4 * t - 3);
+          value += dot(at(static_cast<uint8_t>(qx + i), static_cast<uint8_t>(qy + j)), r) * t * t * t * t * (4 * t - 3);
         }
       }
     }
@@ -611,7 +611,7 @@ inline namespace v1 {
     // evaluate quadratic B-spline basis functions
 
     for (std::ptrdiff_t i = 0; i < 3; ++i) {
-      mid[i] = std::ceil(p[i] - 0.5);
+      mid[i] = static_cast<std::ptrdiff_t>(std::ceil(p[i] - 0.5));
       double t = mid[i] - (p[i] - 0.5);
       w[i][0] = t * t / 2;
       w[i][2] = (1 - t) * (1 - t) / 2;

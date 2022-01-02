@@ -228,7 +228,7 @@ inline namespace v1 {
 
   private:
     struct Cell {
-      std::size_t tileset = -1;
+      std::size_t tileset = std::size_t(-1);
       int tile = NoTile;
       Flags<Flip> flip = gf::None;
     };

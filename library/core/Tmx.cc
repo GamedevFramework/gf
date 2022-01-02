@@ -358,7 +358,7 @@ inline namespace v1 {
       std::memset(&stream, 0, sizeof(stream));
 
       stream.next_in = input.data();
-      stream.avail_in = input.size();
+      stream.avail_in = static_cast<uInt>(input.size());
       stream.zalloc = Z_NULL;
       stream.zfree = Z_NULL;
 

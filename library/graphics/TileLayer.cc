@@ -106,7 +106,7 @@ inline namespace v1 {
 
   void TileLayer::clear() {
     for (auto& cell : m_tiles) {
-      cell.tileset = -1;
+      cell.tileset = std::size_t(-1);
       cell.tile = NoTile;
       cell.flip = None;
     }

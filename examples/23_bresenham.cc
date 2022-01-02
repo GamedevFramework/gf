@@ -39,7 +39,7 @@
 
 static constexpr int GridSize = 60;
 static constexpr float CellSize = 10.0f;
-static constexpr int Size = GridSize * CellSize;
+static constexpr int Size = static_cast<int>(GridSize * CellSize);
 
 int main() {
   gf::Window window("23_bresenham", { Size, Size }, ~gf::WindowHints::Resizable);

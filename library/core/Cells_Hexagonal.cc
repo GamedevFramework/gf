@@ -48,7 +48,7 @@ inline namespace v1 {
   }
 
   RectF HexagonalCells::computeBounds(Vector2i layerSize) const noexcept {
-    Vector2f size;
+    Vector2f size = gf::vec(0.0f, 0.0f);
     float offset = computeOffset(m_tileSize, m_sideLength, m_axis);
 
     switch (m_axis) {
@@ -71,7 +71,7 @@ inline namespace v1 {
   }
 
   RectF HexagonalCells::computeCellBounds(Vector2i coords) const noexcept {
-    Vector2f base;
+    Vector2f base = gf::vec(0.0f, 0.0f);
     float offset = computeOffset(m_tileSize, m_sideLength, m_axis);
 
     switch (m_axis) {
@@ -118,44 +118,44 @@ inline namespace v1 {
   Vector2i HexagonalCells::computeCoordinates(Vector2f position) const noexcept {
     // good approximation but would need some tweaking
 
-    Vector2i coords;
+    Vector2i coords = gf::vec(0, 0);
     float offset = computeOffset(m_tileSize, m_sideLength, m_axis);
 
     switch (m_axis) {
       case CellAxis::X:
-        coords.x = position.x / (m_tileSize.width - offset);
+        coords.x = static_cast<int>(position.x / (m_tileSize.width - offset));
         switch (m_index) {
           case CellIndex::Odd:
             if (coords.x % 2 == 0) {
-              coords.y = position.y / m_tileSize.height;
+              coords.y = static_cast<int>(position.y / m_tileSize.height);
             } else {
-              coords.y = (position.y - m_tileSize.height / 2) / m_tileSize.height;
+              coords.y = static_cast<int>((position.y - m_tileSize.height / 2) / m_tileSize.height);
             }
             break;
           case CellIndex::Even:
             if (coords.x % 2 != 0) {
-              coords.y = position.y / m_tileSize.height;
+              coords.y = static_cast<int>(position.y / m_tileSize.height);
             } else {
-              coords.y = (position.y - m_tileSize.height / 2) / m_tileSize.height;
+              coords.y = static_cast<int>((position.y - m_tileSize.height / 2) / m_tileSize.height);
             }
             break;
         }
         break;
       case CellAxis::Y:
-        coords.y = position.y / (m_tileSize.height - offset);
+        coords.y = static_cast<int>(position.y / (m_tileSize.height - offset));
         switch (m_index) {
           case CellIndex::Odd:
             if (coords.y % 2 == 0) {
-              coords.x = position.x / m_tileSize.width;
+              coords.x = static_cast<int>(position.x / m_tileSize.width);
             } else {
-              coords.x = (position.x - m_tileSize.width / 2) / m_tileSize.width;
+              coords.x = static_cast<int>((position.x - m_tileSize.width / 2) / m_tileSize.width);
             }
             break;
           case CellIndex::Even:
             if (coords.y % 2 != 0) {
-              coords.x = position.x / m_tileSize.width;
+              coords.x = static_cast<int>(position.x / m_tileSize.width);
             } else {
-              coords.x = (position.x - m_tileSize.width / 2) / m_tileSize.width;
+              coords.x = static_cast<int>((position.x - m_tileSize.width / 2) / m_tileSize.width);
             }
             break;
         }
@@ -247,7 +247,7 @@ inline namespace v1 {
   }
 
   Vector2f HexagonalCells::computeRegularSize(CellAxis axis, float radius) {
-    Vector2f size;
+    Vector2f size = gf::vec(0.0f, 0.0f);
 
     switch (axis) {
       case CellAxis::X:

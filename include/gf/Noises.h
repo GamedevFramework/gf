@@ -135,7 +135,7 @@ inline namespace v1 {
    * especially the new hash function and filter kernel. This noise is
    * slower than gradient noise but gives better results.
    *
-   * @sa [Better Gradient Noise. A. Kensler, A. Knoll, P. Shirley. 2008](https://www.cs.utah.edu/~aek/research/noise.pdf)
+   * @sa [Better Gradient Noise. A. Kensler, A. Knoll, P. Shirley. 2008](https://sci.utah.edu/publications/SCITechReports/UUSCI-2008-001.pdf)
    */
   class GF_CORE_API BetterGradientNoise2D : public Noise2D {
   public:

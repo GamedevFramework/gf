@@ -106,7 +106,7 @@ inline namespace v1 {
 
   Window::Window(const std::string& title, Vector2i size, Flags<WindowHints> hints)
   : m_window(nullptr)
-  , m_windowId(-1)
+  , m_windowId(0xFFFFFF)
   , m_mainContext(nullptr)
   , m_sharedContext(nullptr)
   , m_shouldClose(false)
@@ -668,7 +668,7 @@ inline namespace v1 {
         case EventType::TextEntered:
           return true;
         default:
-          return false;
+          break;
       }
 
       return false;
@@ -702,7 +702,7 @@ inline namespace v1 {
         case EventType::TextEntered:
           return event.text.windowId;
         default:
-          return uint32_t(-1);
+          break;
       }
 
       return uint32_t(-1);

@@ -24,6 +24,7 @@
 #include <gf/Image.h>
 
 #include <cassert>
+#include <climits>
 #include <algorithm>
 #include <locale>
 #include <string>
@@ -171,7 +172,8 @@ inline namespace v1 {
   : m_size({ 0, 0 })
   {
     int n = 0;
-    uint8_t *pixels = stbi_load_from_memory(content.getData(), content.getSize(), &m_size.width, &m_size.height, &n, STBI_rgb_alpha);
+    assert(content.getSize() < INT_MAX);
+    uint8_t *pixels = stbi_load_from_memory(content.getData(), static_cast<int>(content.getSize()), &m_size.width, &m_size.height, &n, STBI_rgb_alpha);
 
     if (m_size.width == 0 || m_size.height == 0 || pixels == nullptr) {
       Log::warning("Could not load image from memory: %s\n", stbi_failure_reason());
