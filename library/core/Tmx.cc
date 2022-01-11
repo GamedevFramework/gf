@@ -175,7 +175,7 @@ inline namespace v1 {
   }
 
 
-  const TmxTileset *TmxLayers::getTileSetFromGID(int gid) const noexcept {
+  const TmxTileset *TmxLayers::getTileSetFromGID(uint32_t gid) const noexcept {
     for (auto it = tilesets.rbegin(); it != tilesets.rend(); ++it) {
       if (it->firstGid <= gid) {
         return std::addressof(*it);
@@ -441,10 +441,10 @@ inline namespace v1 {
       return data;
     }
 
-    TmxCell decodeGID(int gid) {
-      static constexpr int FlippedHorizontallyFlag = 0x80000000;
-      static constexpr int FlippedVerticallyFlag   = 0x40000000;
-      static constexpr int FlippedDiagonallyFlag   = 0x20000000;
+    TmxCell decodeGID(uint32_t gid) {
+      static constexpr uint32_t FlippedHorizontallyFlag = UINT32_C(0x80000000);
+      static constexpr uint32_t FlippedVerticallyFlag   = UINT32_C(0x40000000);
+      static constexpr uint32_t FlippedDiagonallyFlag   = UINT32_C(0x20000000);
 
       TmxCell cell;
 
@@ -527,7 +527,7 @@ inline namespace v1 {
           assert(size % 4 == 0);
 
           for (std::size_t i = 0; i < size; i += 4) {
-            int gid = buffer[i] | (buffer[i + 1] << 8) | (buffer[i + 2] << 16) | (buffer[i + 3] << 24);
+            uint32_t gid = buffer[i] | (buffer[i + 1] << 8) | (buffer[i + 2] << 16) | (buffer[i + 3] << 24);
             cells.push_back(decodeGID(gid));
           }
 
@@ -541,7 +541,9 @@ inline namespace v1 {
           boost::algorithm::split(items, csv, boost::algorithm::is_any_of(","));
 
           for (auto item : items) {
-            int gid = std::stoi(item);
+            auto raw = std::stoul(item);
+            assert(raw < UINT32_MAX);
+            uint32_t gid = static_cast<uint32_t>(raw);
             cells.push_back(decodeGID(gid));
           }
 
@@ -550,7 +552,7 @@ inline namespace v1 {
 
         case TmxFormat::Xml:
           for (pugi::xml_node tile : node.children("tile")) {
-            int gid = required_attribute(tile, "gid").as_int();
+            uint32_t gid = required_attribute(tile, "gid").as_uint();
             cells.push_back(decodeGID(gid));
           };
 
@@ -729,7 +731,7 @@ inline namespace v1 {
       }
 
       if (node.attribute("gid") != nullptr) {
-        int gid = node.attribute("gid").as_int();
+        uint32_t gid = node.attribute("gid").as_uint();
         TmxCell cell = decodeGID(gid);
 
         auto tmx = std::make_unique<TmxTileObject>();
@@ -990,7 +992,7 @@ inline namespace v1 {
 
       tmx.properties = parseTmxProperties(node);
 
-      tmx.firstGid = required_attribute(node, "firstgid").as_int();
+      tmx.firstGid = required_attribute(node, "firstgid").as_uint();
 
       Path source = node.attribute("source").as_string();
 

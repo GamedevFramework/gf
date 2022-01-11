@@ -277,7 +277,7 @@ inline namespace v1 {
    * @brief A cell in a tile layer
    */
   struct GF_CORE_API TmxCell {
-    int gid;             ///< The global id of the tile
+    uint32_t gid;             ///< The global id of the tile
     Flags<Flip> flip = None;  ///< The flip properties of the tile
   };
 
@@ -380,7 +380,7 @@ inline namespace v1 {
    * @brief An image put in the map identified by its global id
    */
   struct GF_CORE_API TmxTileObject : public TmxObject {
-    int gid;
+    uint32_t gid;
     Flags<Flip> flip;
   };
 
@@ -551,7 +551,7 @@ inline namespace v1 {
   struct GF_CORE_API TmxTileset {
     TmxProperties properties; ///< The properties of the tileset
 
-    int firstGid;             ///< The first global id of the tileset
+    uint32_t firstGid;        ///< The first global id of the tileset
     std::string name;         ///< The name of the tileset
     Vector2i tileSize;        ///< The size of a tile in the tileset
     int spacing;              ///< The spacing between tiles (in pixels)
@@ -618,7 +618,7 @@ inline namespace v1 {
      * @param gid A global id
      * @returns The corresponding tileset
      */
-    const TmxTileset *getTileSetFromGID(int gid) const noexcept;
+    const TmxTileset *getTileSetFromGID(uint32_t gid) const noexcept;
 
     /**
      * @brief Visit the layers with a visitor.

@@ -14,6 +14,7 @@ This file is a list of ideas for gf. Some of them will eventually be in gf. Othe
 
 ## graphics
 
+- (cursor) fix the bug due to image handling
 - (font) use Signed Distance Field for big size fonts
 - (window/events) add a flag in `pollEvent`/`waitEvent` (`EventFlag::TouchAsMouse`, `EventFlag::NoWindowFilter`)
 - (curve/shape) add anti-aliasing to `Curve` and `Shape`
