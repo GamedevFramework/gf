@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2021 Julien Bernard
+ * Copyright (C) 2016-2022 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -254,9 +254,10 @@ inline namespace v1 {
     void setPointCount(std::size_t pointCount);
 
     /**
-     * @brief Get the number of points of the polygon
+     * @brief Set a point in the shape
      *
-     * @return Number of points of the polygon
+     * @param index The index of the point
+     * @param point The new point
      *
      * @sa setPointCount(), getPoint()
      */

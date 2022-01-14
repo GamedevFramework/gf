@@ -1,0 +1,50 @@
+name: UbuntuBuild
+
+on:
+  push:
+    branches: [ master, develop ]
+  pull_request:
+    branches: [ master, develop ]
+
+env:
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y libsdl2-dev libboost-dev libfreetype6-dev zlib1g-dev libpugixml-dev
+
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+
+      - uses: actions/checkout@v2
+        with:
+          repository: GamedevFramework/gf
+          submodules: recursive
+          ref: ${{ steps.extract_branch.outputs.branch }}
+
+      - name: Configure gf
+        run: cmake -DGF_BUILD_GAMES=OFF -DGF_BUILD_EXAMPLES=OFF -DGF_BUILD_DOCUMENTATION=OFF -DGF_SINGLE_COMPILTATION_UNIT=OFF -DGF_DEBUG=OFF -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -S ${{ github.workspace }} -B ${{ github.workspace }}/build
+
+      - name: Build gf
+        run: cmake --build ${{ github.workspace }}/build --config ${{ env.BUILD_TYPE }} --parallel
+
+      - name: Run tests
+        working-directory: ${{ github.workspace }}/build
+        run: ctest -C ${{ env.BUILD_TYPE }} -T test --output-on-failure
+
+      - name: Create deb file
+        working-directory: ${{github.workspace}}/build
+        run: cpack --config CPackConfig.cmake -C ${{env.BUILD_TYPE}}
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: deb-file
+          path: ${{github.workspace}}/build/*.deb
+          if-no-files-found: error

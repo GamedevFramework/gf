@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2021 Julien Bernard
+ * Copyright (C) 2016-2022 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -135,7 +135,7 @@ inline namespace v1 {
    * especially the new hash function and filter kernel. This noise is
    * slower than gradient noise but gives better results.
    *
-   * @sa [Better Gradient Noise. A. Kensler, A. Knoll, P. Shirley. 2008](https://www.cs.utah.edu/~aek/research/noise.pdf)
+   * @sa [Better Gradient Noise. A. Kensler, A. Knoll, P. Shirley. 2008](https://sci.utah.edu/publications/SCITechReports/UUSCI-2008-001.pdf)
    */
   class GF_CORE_API BetterGradientNoise2D : public Noise2D {
   public:
@@ -309,6 +309,21 @@ inline namespace v1 {
     const Vector2d& at(uint8_t i, uint8_t j) const;
   };
 
+  enum class OpenSimplexType {
+    Super,
+    Fast,
+  };
+
+  enum class OpenSimplex2DVariant {
+    Classic,
+    XBeforeY,
+  };
+
+  enum class OpenSimplex3DVariant {
+    Classic,
+    XYBeforeZ,
+    XZBeforeY,
+  };
 
   /**
    * @ingroup core_procedural_generation
@@ -326,14 +341,34 @@ inline namespace v1 {
      *
      * @param random A random engine
      */
-    OpenSimplexNoise2D(Random& random);
+    OpenSimplexNoise2D(Random& random, OpenSimplexType type = OpenSimplexType::Super, OpenSimplex2DVariant variant = OpenSimplex2DVariant::Classic);
+
+    void setType(OpenSimplexType type) {
+      m_type = type;
+    }
+
+    OpenSimplexType getType() const {
+      return m_type;
+    }
+
+    void setVariant(OpenSimplex2DVariant variant) {
+      m_variant = variant;
+    }
+
+    OpenSimplex2DVariant getVariant() const {
+      return m_variant;
+    }
 
     double getValue(double x, double y) override;
 
   private:
-    std::array<uint8_t, 256> m_perm;
+    double getValueBase(double xs, double ys) const;
 
-    const Vector2d& at(uint8_t i, uint8_t j) const;
+  private:
+    OpenSimplexType m_type;
+    OpenSimplex2DVariant m_variant;
+    std::array<uint16_t, 2048> m_perm;
+    std::array<Vector2d, 2048> m_gradients2D;
   };
 
   /**
@@ -352,14 +387,18 @@ inline namespace v1 {
      *
      * @param random A random engine
      */
-    OpenSimplexNoise3D(Random& random);
+    OpenSimplexNoise3D(Random& random, OpenSimplexType type = OpenSimplexType::Super, OpenSimplex3DVariant variant = OpenSimplex3DVariant::Classic);
 
     double getValue(double x, double y, double z) override;
 
   private:
-    std::array<uint8_t, 256> m_perm;
+    double getValueBase(double xr, double yr, double zr) const;
 
-    const Vector3d& at(uint8_t i, uint8_t j, uint8_t k) const;
+  private:
+    OpenSimplexType m_type;
+    OpenSimplex3DVariant m_variant;
+    std::array<uint16_t, 2048> m_perm;
+    std::array<Vector3d, 2048> m_gradients3D;
   };
 
   /**

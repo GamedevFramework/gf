@@ -60,10 +60,6 @@ target_link_libraries(mygame
 @ingroup core
 @brief Spatial indexes
 
-@defgroup core_physics Physics
-@ingroup core
-@brief Physics
-
 @defgroup core_animation Animation
 @ingroup core
 @brief Animation and tweening
@@ -230,6 +226,8 @@ target_link_libraries(mygame
 @ingroup net
 @brief The classes related to socket handling
 
+*/
+/**
 
 @mainpage
 

@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2021 Julien Bernard
+ * Copyright (C) 2016-2022 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -180,7 +180,7 @@ inline namespace v1 {
         return callback(tree, node);
       }
 
-      if (order == Order::Pre) {
+      if constexpr (order == Order::Pre) {
         if (!callback(tree, node)) {
           return false;
         }
@@ -190,7 +190,7 @@ inline namespace v1 {
         return false;
       }
 
-      if (order == Order::In) {
+      if constexpr (order == Order::In) {
         if (!callback(tree, node)) {
           return false;
         }
@@ -200,7 +200,7 @@ inline namespace v1 {
         return false;
       }
 
-      if (order == Order::Post) {
+      if constexpr (order == Order::Post) {
         if (!callback(tree, node)) {
           return false;
         }

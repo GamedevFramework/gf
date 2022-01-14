@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2021 Julien Bernard
+ * Copyright (C) 2016-2022 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -228,7 +228,7 @@ inline namespace v1 {
 
   private:
     struct Cell {
-      std::size_t tileset = -1;
+      std::size_t tileset = std::size_t(-1);
       int tile = NoTile;
       Flags<Flip> flip = gf::None;
     };

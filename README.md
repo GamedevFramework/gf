@@ -1,7 +1,8 @@
 # Gamedev Framework (gf)
 
-[![Buddy](https://app.buddy.works/jube/gf/pipelines/pipeline/337210/badge.svg?token=23ffd15ec7784efca148879f00926ce2b5dbe8a431c91c1a0836bb04c2124ad1 "Buddy")](https://app.buddy.works/jube/gf/pipelines/pipeline/337210)
 [![AppVeyor](https://img.shields.io/appveyor/ci/jube/gf.svg?style=flat-square)](https://ci.appveyor.com/project/jube/gf)
+[![UbuntuBuild](https://github.com/GamedevFramework/gf/actions/workflows/ubuntu.yml/badge.svg)](https://github.com/GamedevFramework/gf/actions/workflows/ubuntu.yml)
+[![WindowsBuild](https://github.com/GamedevFramework/gf/actions/workflows/windows.yml/badge.svg)](https://github.com/GamedevFramework/gf/actions/workflows/windows.yml)
 [![GitHub license](https://img.shields.io/badge/license-zlib-blue.svg?style=flat-square)](https://raw.githubusercontent.com/GamedevFramework/gf/master/LICENSE)
 [![GitHub tag](https://img.shields.io/github/tag/GamedevFramework/gf.svg?style=flat-square)](https://github.com/GamedevFramework/gf/tags)
 

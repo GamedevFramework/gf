@@ -145,6 +145,7 @@ else()
     core/Move.cc
     core/Noise.cc
     core/Noises.cc
+    core/Noises_OpenSimplex.cc
     core/Orientation.cc
     core/Path.cc
     core/PointSequence.cc
@@ -392,8 +393,8 @@ target_link_libraries(gfcore0
   PUBLIC
     Threads::Threads
     Boost::boost
-  PRIVATE
     ZLIB::ZLIB
+  PRIVATE
     pugixml
 )
 
@@ -419,9 +420,9 @@ endif()
 target_link_libraries(gf0
   PUBLIC
     gfcore0
+    Threads::Threads
   PRIVATE
     Freetype::Freetype
-    ZLIB::ZLIB
     pugixml
 )
 

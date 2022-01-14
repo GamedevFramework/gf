@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2021 Julien Bernard
+ * Copyright (C) 2016-2022 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -419,7 +419,7 @@ inline namespace v1 {
 
       for (const auto& paragraph : paragraphs) {
         if (flags.test(PrintOption::CountOnly)) {
-          lineCount += paragraph.lines.size();
+          lineCount += static_cast<int>(paragraph.lines.size());
         } else {
           for (const auto& line : paragraph.lines) {
             if (rect.min.y + lineCount >= rect.max.y) {

@@ -13,7 +13,6 @@ Gamedev Framework (gf) is a game framework, it provides some useful features for
   - @ref core_messages
   - @ref core_procedural_generation
   - @ref core_spatial
-  - @ref core_physics
   - @ref core_animation
   - @ref core_roguelike
   - @ref core_system

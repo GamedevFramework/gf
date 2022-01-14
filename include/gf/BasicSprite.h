@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2021 Julien Bernard
+ * Copyright (C) 2016-2022 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -79,7 +79,7 @@ inline namespace v1 {
      * a pointer to the one that you passed to this function.
      * If the source texture is destroyed and the sprite tries to
      * use it, the behavior is undefined.
-     * 
+     *
      * If `resetRect` is true, the texture rect property of
      * the sprite is automatically adjusted to the size of the new
      * texture. If it is false, the texture rect is left unchanged.
@@ -100,7 +100,7 @@ inline namespace v1 {
      * a pointer to the one that you passed to this function.
      * If the source texture is destroyed and the sprite tries to
      * use it, the behavior is undefined.
-     * 
+     *
      * By default, the sub-rectangle will be reset to the full size of the new texture.
      *
      * @param texture New texture

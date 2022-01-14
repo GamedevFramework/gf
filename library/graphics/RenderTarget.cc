@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2021 Julien Bernard
+ * Copyright (C) 2016-2022 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -258,9 +258,9 @@ inline namespace v1 {
     drawStart(states, locations, buffer.getVertexSize(), attributes);
 
     if (buffer.hasElementArrayBuffer()) {
-      GL_CHECK(glDrawElements(getEnum(buffer.getPrimitiveType()), buffer.getCount(), GL_UNSIGNED_SHORT, nullptr));
+      GL_CHECK(glDrawElements(getEnum(buffer.getPrimitiveType()), static_cast<GLsizei>(buffer.getCount()), GL_UNSIGNED_SHORT, nullptr));
     } else {
-      GL_CHECK(glDrawArrays(getEnum(buffer.getPrimitiveType()), 0, buffer.getCount()));
+      GL_CHECK(glDrawArrays(getEnum(buffer.getPrimitiveType()), 0, static_cast<GLsizei>(buffer.getCount())));
     }
 
     drawFinish(locations);
@@ -347,7 +347,7 @@ inline namespace v1 {
 
       GL_CHECK(glEnableVertexAttribArray(loc));
       const void *pointer = reinterpret_cast<const void *>(info.offset);
-      GL_CHECK(glVertexAttribPointer(loc, info.size, static_cast<GLenum>(info.type), info.normalized ? GL_TRUE : GL_FALSE, size, pointer));
+      GL_CHECK(glVertexAttribPointer(loc, static_cast<GLsizei>(info.size), static_cast<GLenum>(info.type), info.normalized ? GL_TRUE : GL_FALSE, size, pointer));
     }
   }
 

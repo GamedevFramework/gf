@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2021 Julien Bernard
+ * Copyright (C) 2016-2022 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -41,7 +41,7 @@
 
 static constexpr int GridSize = 60;
 static constexpr float CellSize = 10.0f;
-static constexpr int Size = GridSize * CellSize;
+static constexpr int Size = static_cast<int>(GridSize * CellSize);
 
 static const char *ExampleMap[GridSize] = {
   "############################################################",

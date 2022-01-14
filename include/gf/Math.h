@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2021 Julien Bernard
+ * Copyright (C) 2016-2022 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -264,7 +264,7 @@ inline namespace v1 {
   template<typename T, typename U>
   constexpr
   T lerp(T lhs, T rhs, U t) {
-    return (U(1) - t) * lhs + t * rhs;
+    return T((U(1) - t) * lhs + t * rhs);
   }
 
   /**

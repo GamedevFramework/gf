@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2021 Julien Bernard
+ * Copyright (C) 2016-2022 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -73,7 +73,7 @@ inline namespace v1 {
       return;
     }
 
-    std::fseek(m_file, position, SEEK_SET);
+    std::fseek(m_file, static_cast<long>(position), SEEK_SET);
   }
 
   void FileInputStream::skip(std::ptrdiff_t position) {
@@ -81,7 +81,7 @@ inline namespace v1 {
       return;
     }
 
-    std::fseek(m_file, position, SEEK_CUR);
+    std::fseek(m_file, static_cast<long>(position), SEEK_CUR);
   }
 
   bool FileInputStream::isFinished() {
@@ -170,12 +170,12 @@ inline namespace v1 {
 
   std::size_t CompressedInputStream::read(Span<uint8_t> buffer) {
     m_stream.next_out = buffer.getData();
-    m_stream.avail_out = buffer.getSize();
+    m_stream.avail_out = static_cast<uInt>(buffer.getSize());
 
     do {
       if (m_start == m_stop) {
         m_start = 0;
-        m_stop = m_compressed->read(m_buffer); // Flawfinder: ignore
+        m_stop = static_cast<uInt>(m_compressed->read(m_buffer)); // Flawfinder: ignore
       }
 
       uInt remaining = m_stop - m_start;
@@ -387,7 +387,7 @@ inline namespace v1 {
 
   std::size_t CompressedOutputStream::write(Span<const uint8_t> buffer) {
     m_stream.next_in = buffer.getData();
-    m_stream.avail_in = buffer.getSize();
+    m_stream.avail_in = static_cast<uInt>(buffer.getSize());
     m_stream.next_out = m_buffer;
     m_stream.avail_out = BufferSize;
 

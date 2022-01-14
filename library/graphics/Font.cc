@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2021 Julien Bernard
+ * Copyright (C) 2016-2022 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -84,7 +84,7 @@ inline namespace v1 {
         return 0;
       }
 
-      return stream->read(Span<uint8_t>(buffer, count));
+      return static_cast<unsigned long>(stream->read(Span<uint8_t>(buffer, count)));
     }
 
     void callbackClose(FT_Stream rec) {
@@ -177,7 +177,7 @@ inline namespace v1 {
 
     FT_Face face = nullptr;
 
-    if (auto err = FT_New_Memory_Face(library, static_cast<const FT_Byte*>(content.getData()), content.getSize(), 0, &face)) {
+    if (auto err = FT_New_Memory_Face(library, static_cast<const FT_Byte*>(content.getData()), static_cast<FT_Long>(content.getSize()), 0, &face)) {
       Log::error("Could not create the font face: %s\n", FT_ErrorMessage(err));
       throw std::runtime_error("Could not create the font face");
     }

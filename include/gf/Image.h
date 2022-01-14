@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2021 Julien Bernard
+ * Copyright (C) 2016-2022 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -197,10 +197,10 @@ inline namespace v1 {
 
     /**
      * @brief Create a sub-image of the image from a defined area
-     * 
+     *
      * If the area doesn't contain the image, an empty image is returned.
      * If the area is bigger than the size of the image, the image itself is returned.
-     * 
+     *
      * @param area Sub-area of the image
      *
      * @return The sub-image of the image

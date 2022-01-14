@@ -1,6 +1,6 @@
 /*
  * Gamedev Framework (gf)
- * Copyright (C) 2016-2021 Julien Bernard
+ * Copyright (C) 2016-2022 Julien Bernard
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -122,7 +122,7 @@ inline namespace v1 {
     return line;
   }
 
-  std::vector<Vector2i> StaggeredCells::computeNeighbors(Vector2i coords, Vector2i layerSize, Flags<CellNeighborQuery> flags) const {
+  std::vector<Vector2i> StaggeredCells::computeNeighbors([[maybe_unused]] Vector2i coords, [[maybe_unused]] Vector2i layerSize, [[maybe_unused]] Flags<CellNeighborQuery> flags) const {
     // TODO
     return { };
   }
