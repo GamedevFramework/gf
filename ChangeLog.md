@@ -1,5 +1,17 @@
 # ChangeLog for gf
 
+## gf 0.22.0 (14 Jan 2022)
+
+- Core (gf::core)
+  - Replace Mersenne Twister with xoshiro256++
+  - Update OpenSimplex implementation
+  - Fix a bug in TMX CSV parsing
+- Graphics (gf::graphics)
+- Network (gf::net)
+- Misc
+  - Remove Buddy.works as CI
+  - Add Github Actions for building on Linux and Windows
+
 ## gf 0.21.0 (14 Jul 2021)
 
 - Core (gf::core)
