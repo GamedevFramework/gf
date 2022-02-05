@@ -300,6 +300,9 @@ inline namespace v1 {
         case BareTexture::Format::Color:
           shader = &m_defaultShader;
           break;
+        default:
+          assert(false);
+          break;
       }
     }
 
@@ -347,7 +350,7 @@ inline namespace v1 {
 
       GL_CHECK(glEnableVertexAttribArray(loc));
       const void *pointer = reinterpret_cast<const void *>(info.offset);
-      GL_CHECK(glVertexAttribPointer(loc, static_cast<GLsizei>(info.size), static_cast<GLenum>(info.type), info.normalized ? GL_TRUE : GL_FALSE, size, pointer));
+      GL_CHECK(glVertexAttribPointer(loc, static_cast<GLsizei>(info.size), static_cast<GLenum>(info.type), info.normalized ? GL_TRUE : GL_FALSE, static_cast<GLsizei>(size), pointer));
     }
   }
 
