@@ -108,9 +108,9 @@ namespace priv {
     auto ms = duration.asMilliseconds();
 
 #ifdef _WIN32
-    int err = ::WSAPoll(fds.data(), static_cast<ULONG>(fds.size()), ms) > 0;
+    int err = ::WSAPoll(fds.data(), static_cast<ULONG>(fds.size()), ms);
 #else
-    int err = ::poll(fds.data(), static_cast<nfds_t>(fds.size()), ms) > 0;
+    int err = ::poll(fds.data(), static_cast<nfds_t>(fds.size()), ms);
 #endif
 
     if (err < 0) {
