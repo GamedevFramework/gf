@@ -36,50 +36,62 @@ namespace gf {
 inline namespace v1 {
 #endif
 
+  namespace {
+
+    SDL_Cursor *createRawCursor(const uint8_t* pixels, Vector2i size, Vector2i hotspot) {
+      assert(pixels != nullptr && size.width > 0 && size.height > 0);
+
+      Uint32 rmask, gmask, bmask, amask;
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+      rmask = 0xFF000000;
+      gmask = 0x00FF0000;
+      bmask = 0x0000FF00;
+      amask = 0x000000FF;
+#else // little endian, like x86
+      rmask = 0x000000FF;
+      gmask = 0x0000FF00;
+      bmask = 0x00FF0000;
+      amask = 0xFF000000;
+#endif
+
+      SDL_Surface *surface = SDL_CreateRGBSurfaceFrom(const_cast<uint8_t*>(pixels), size.width, size.height, 32, 4 * size.width,
+          rmask, gmask, bmask, amask);
+
+      if (surface == nullptr) {
+        Log::error("Could not create surface for cursor: %s", SDL_GetError());
+        throw std::runtime_error("Could not create surface for cursor");
+      }
+
+      SDL_Cursor *cursor = SDL_CreateColorCursor(surface, hotspot.x, hotspot.y);
+      SDL_FreeSurface(surface);
+
+      if (cursor == nullptr) {
+        Log::error("Could not load cursor: '%s'\n", SDL_GetError());
+        throw std::runtime_error("Could not load cursor");
+      }
+
+      return cursor;
+    }
+
+
+  }
+
   Cursor::Cursor()
   : m_cursor(nullptr)
   {
-
   }
 
   Cursor::Cursor(const uint8_t* pixels, Vector2i size, Vector2i hotspot)
-  : m_cursor(nullptr)
+  : m_cursor(createRawCursor(pixels, size, hotspot))
   {
-    assert(pixels != nullptr && size.width > 0 && size.height > 0);
-
-    Uint32 rmask, gmask, bmask, amask;
-#if SDL_BYTEORDER == SDL_BIG_ENDIAN
-    rmask = 0xFF000000;
-    gmask = 0x00FF0000;
-    bmask = 0x0000FF00;
-    amask = 0x000000FF;
-#else // little endian, like x86
-    rmask = 0x000000FF;
-    gmask = 0x0000FF00;
-    bmask = 0x00FF0000;
-    amask = 0xFF000000;
-#endif
-
-    SDL_Surface *surface = SDL_CreateRGBSurfaceFrom(const_cast<uint8_t*>(pixels), size.width, size.height, 32, 4 * size.width,
-        rmask, gmask, bmask, amask);
-
-    if (surface == nullptr) {
-      Log::error("Could not create surface for cursor: %s", SDL_GetError());
-      throw std::runtime_error("Could not create surface for cursor");
-    }
-
-    m_cursor = SDL_CreateColorCursor(surface, hotspot.x, hotspot.y);
-    SDL_FreeSurface(surface);
-
-    if (m_cursor == nullptr) {
-      Log::error("Could not load cursor: '%s'\n", SDL_GetError());
-      throw std::runtime_error("Could not load cursor");
-    }
   }
 
   Cursor::Cursor(const Image& image, Vector2i hotspot)
-  : Cursor(image.getPixelsPtr(), image.getSize(), hotspot)
+  : m_cursor(nullptr)
   {
+    Image flipped(image);
+    flipped.flipHorizontally();
+    m_cursor = createRawCursor(flipped.getPixelsPtr(), flipped.getSize(), hotspot);
   }
 
   Cursor::Cursor(const Path& path, Vector2i hotspot)
