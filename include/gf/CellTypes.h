@@ -74,6 +74,8 @@ inline namespace v1 {
     Horizontally  = 0x01, ///< The tile is flipped horizontally
     Vertically    = 0x02, ///< The tile is flipped vertically
     Diagonally    = 0x04, ///< The tile is flipped anti-diagonally
+    Rotation60    = 0x04, ///< The tile is rotated 60° clockwise
+    Rotation120   = 0x08, ///< The tile is rotated 120° clockwise
   };
 
 
