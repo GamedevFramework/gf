@@ -100,6 +100,8 @@ target_link_libraries(mygame
 @ingroup core
 @brief TMX (Tiled) support
 
+gf supports TMX 1.5+. In particular, it does not support the old terrain element in favor of wang sets.
+
 @defgroup graphics Graphics
 @brief All the classes related to graphics
 
