@@ -136,6 +136,9 @@ inline namespace v1 {
       { 0x86B0, "COMPRESSED_RGB_FXT1_3DFX" },
       { 0x86B1, "COMPRESSED_RGBA_FXT1_3DFX" },
 
+      // NV_sRGB_formats
+      { 0x88EE, "ETC1_SRGB8_NV" },
+
       // OES_compressed_paletted_texture
       { 0x8B90, "PALETTE4_RGB8_OES" },
       { 0x8B91, "PALETTE4_RGBA8_OES" },
