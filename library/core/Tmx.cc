@@ -255,6 +255,9 @@ inline namespace v1 {
       Color4u color = def;
 
       switch (value.size()) {
+        case 5:
+          value.insert(0, 1, '0');
+          [[fallthrough]];
         case 6:
           color.a = 0xFF;
           color.r = (convertHexChar(value[0]) << 4) + convertHexChar(value[1]);
@@ -262,6 +265,9 @@ inline namespace v1 {
           color.b = (convertHexChar(value[4]) << 4) + convertHexChar(value[5]);
           break;
 
+        case 7:
+          value.insert(0, 1, '0');
+          [[fallthrough]];
         case 8:
           color.a = (convertHexChar(value[0]) << 4) + convertHexChar(value[1]);
           color.r = (convertHexChar(value[2]) << 4) + convertHexChar(value[3]);
@@ -919,7 +925,7 @@ inline namespace v1 {
       tmx.properties = parseTmxProperties(node);
 
       tmx.name = required_attribute(node, "name").as_string();
-      tmx.color = computeColor(required_attribute(node, "trans"));
+      tmx.color = computeColor(required_attribute(node, "color"));
       tmx.tile = required_attribute(node, "tile").as_int();
       tmx.probability = node.attribute("probability").as_int(0);
 
@@ -960,11 +966,11 @@ inline namespace v1 {
       tmx.name = required_attribute(node, "name").as_string();
       tmx.tile = required_attribute(node, "tile").as_int();
 
-      for (pugi::xml_node color : node.child("wangcolor")) {
+      for (pugi::xml_node color : node.children("wangcolor")) {
         tmx.colors.push_back(parseTmxWangColor(color));
       }
 
-      for (pugi::xml_node tile : node.child("wangtile")) {
+      for (pugi::xml_node tile : node.children("wangtile")) {
         tmx.tiles.push_back(parseTmxWangTile(tile));
       }
 
@@ -1007,7 +1013,7 @@ inline namespace v1 {
       pugi::xml_node wangsets = node.child("wangsets");
 
       if (wangsets != nullptr) {
-        for (pugi::xml_node wangset : wangsets.child("wangset")) {
+        for (pugi::xml_node wangset : wangsets.children("wangset")) {
           tmx.wangsets.push_back(parseTmxWangSet(wangset));
         }
       }
