@@ -472,6 +472,10 @@ inline namespace v1 {
    * @brief A layer with objects
    */
   struct GF_CORE_API TmxObjectLayer : public TmxLayer {
+    TmxObjectLayer() = default;
+    TmxObjectLayer(const TmxObjectLayer&) = delete;
+    TmxObjectLayer& operator=(const TmxObjectLayer&) = delete;
+
     Color4u color;  ///< The color of the objects
     TmxDrawOrder drawOrder; ///< The draw order of the objects
     std::vector<std::unique_ptr<TmxObject>> objects;  ///< The objects of the layer
