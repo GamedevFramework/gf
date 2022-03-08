@@ -34,6 +34,7 @@
 #include <vector>
 
 #include "CoreApi.h"
+#include "Flags.h"
 #include "Serialization.h"
 #include "Span.h"
 
@@ -111,6 +112,16 @@ inline namespace v1 {
   Serializer& operator|(Serializer& ar, T data) {
     using U = typename std::underlying_type<T>::type;
     return ar | static_cast<U>(data);
+  }
+
+  /**
+   * @relates Serializer
+   * @brief Serialize flags
+   */
+  template<typename E>
+  inline
+  Serializer& operator|(Serializer& ar, Flags<E> data) {
+    return ar | data.m_data;
   }
 
   /**
@@ -325,6 +336,16 @@ inline namespace v1 {
     ar | underlying;
     data = static_cast<T>(underlying);
     return ar;
+  }
+
+  /**
+   * @relates Deserializer
+   * @brief Deserialize flags
+   */
+  template<typename E>
+  inline
+  Deserializer& operator|(Deserializer& ar, Flags<E>& data) {
+    return ar | data.m_data;
   }
 
   /**

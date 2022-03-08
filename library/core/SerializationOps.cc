@@ -173,14 +173,11 @@ inline namespace v1 {
       return ar;
     }
 
-    auto data = std::make_unique<char[]>(size);
+    str.resize(size);
 
-    if (!ar.readString(data.get(), size)) {
+    if (!ar.readString(str.data(), str.size())) {
       return ar;
     }
-
-    str.clear();
-    str.assign(data.get(), size);
 
     return ar;
   }

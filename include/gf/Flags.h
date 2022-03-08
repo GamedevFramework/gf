@@ -29,6 +29,8 @@ namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
 #endif
+  class Deserializer;
+  class Serializer;
 
   /**
    * @ingroup core_vocabulary
@@ -182,6 +184,11 @@ inline namespace v1 {
     Type getValue() const {
       return m_data;
     }
+
+    template<typename T>
+    friend Serializer& operator|(Serializer& ar, Flags<T> data);
+    template<typename T>
+    friend Deserializer& operator|(Deserializer& ar, Flags<T>& data);
 
   private:
     constexpr Flags(Type data)
