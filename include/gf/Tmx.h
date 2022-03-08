@@ -510,6 +510,10 @@ inline namespace v1 {
    * @brief A layer with other layers
    */
   struct GF_CORE_API TmxGroupLayer : public TmxLayer {
+    TmxGroupLayer() = default;
+    TmxGroupLayer(const TmxGroupLayer&) = delete;
+    TmxGroupLayer& operator=(const TmxGroupLayer&) = delete;
+
     std::vector<std::unique_ptr<TmxLayer>> layers;  ///< The other layers
 
     void accept(const TmxLayers& map, TmxVisitor& visitor) const override;
