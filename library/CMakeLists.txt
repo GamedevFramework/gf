@@ -422,20 +422,10 @@ target_link_libraries(gf0
     gfcore0
     Threads::Threads
   PRIVATE
+    SDL2::SDL2
     Freetype::Freetype
     pugixml
 )
-
-
-if(DEFINED GF_VCPKG)
-  if(BUILD_SHARED_LIBS)
-    target_link_libraries(gf0 PRIVATE SDL2::SDL2)
-  else()
-    target_link_libraries(gf0 PRIVATE SDL2::SDL2-static)
-  endif()
-else()
-  target_link_libraries(gf0 PRIVATE SDL2::SDL2)
-endif()
 
 target_link_libraries(gfnet0
   PUBLIC
