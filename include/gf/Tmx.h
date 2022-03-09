@@ -472,9 +472,12 @@ inline namespace v1 {
    * @brief A layer with objects
    */
   struct GF_CORE_API TmxObjectLayer : public TmxLayer {
+#ifdef _MSC_VER
+    // stupid MSVC!
     TmxObjectLayer() = default;
     TmxObjectLayer(const TmxObjectLayer&) = delete;
     TmxObjectLayer& operator=(const TmxObjectLayer&) = delete;
+#endif
 
     Color4u color;  ///< The color of the objects
     TmxDrawOrder drawOrder; ///< The draw order of the objects
@@ -510,9 +513,12 @@ inline namespace v1 {
    * @brief A layer with other layers
    */
   struct GF_CORE_API TmxGroupLayer : public TmxLayer {
+#ifdef _MSC_VER
+    // stupid MSVC!
     TmxGroupLayer() = default;
     TmxGroupLayer(const TmxGroupLayer&) = delete;
     TmxGroupLayer& operator=(const TmxGroupLayer&) = delete;
+#endif
 
     std::vector<std::unique_ptr<TmxLayer>> layers;  ///< The other layers
 
@@ -648,6 +654,13 @@ inline namespace v1 {
    * @brief A TMX map
    */
   struct GF_CORE_API TmxLayers {
+#ifdef _MSC_VER
+    // stupid MSVC!
+    TmxLayers() = default;
+    TmxLayers(const TmxLayers&) = delete;
+    TmxLayers& operator=(const TmxLayers&) = delete;
+#endif
+
     TmxProperties properties;   ///< The properties of the map
 
     std::string version;        ///< The version of the map
