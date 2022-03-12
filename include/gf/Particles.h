@@ -23,6 +23,7 @@
 
 #include "Circ.h"
 #include "GraphicsApi.h"
+#include "Polygon.h"
 #include "Rect.h"
 #include "Transformable.h"
 #include "VertexArray.h"
@@ -72,6 +73,11 @@ inline namespace v1 {
     ShapeParticles();
 
     /**
+     * @brief Clears the particles
+     */
+    void clear();
+
+    /**
      * @brief Add a circle shape to the particles
      *
      * @param center The center of the circle
@@ -106,6 +112,14 @@ inline namespace v1 {
      * @param color The color of the rectangle
      */
     void addRectangle(const RectF& rect, Color4f color);
+
+    /**
+     * @brief Add a convex polygon shape to the particles
+     *
+     * @param polygon The polygon
+     * @param color The color of the polygon
+     */
+    void addPolygon(const Polygon& polygon, Color4f color);
 
     virtual void draw(RenderTarget& target, const RenderStates& states) override;
 
