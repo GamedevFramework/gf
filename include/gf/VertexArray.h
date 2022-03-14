@@ -242,6 +242,16 @@ inline namespace v1 {
     }
 
     /**
+     * @brief Append a sequence of vertices
+     *
+     * @param vertices The vertices to add
+     */
+    template<typename ... V>
+    void appendAll(V&& ... vertices) {
+      (append(std::forward<V>(vertices)), ...);
+    }
+
+    /**
      * @brief Set the type of primitives to draw
      *
      * This function defines how the vertices must be interpreted
