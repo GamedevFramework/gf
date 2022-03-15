@@ -664,7 +664,7 @@ inline namespace v1 {
    * @sa euclideanLength(), squareDistance()
    */
   template<typename T, std::size_t N>
-  inline
+  constexpr
   T squareLength(Vector<T, N> vec) {
     T out{0};
 
@@ -711,6 +711,21 @@ inline namespace v1 {
   double euclideanLength<double, 2>(Vector<double, 2> vec) {
     return std::hypot(vec.x, vec.y);
   }
+
+  // specializations of euclideanLength for Vector3f and Vector3d using std::hypot
+
+  template<>
+  inline
+  float euclideanLength<float, 3>(Vector<float, 3> vec) {
+    return std::hypot(vec.x, vec.y, vec.z);
+  }
+
+  template<>
+  inline
+  double euclideanLength<double, 3>(Vector<double, 3> vec) {
+    return std::hypot(vec.x, vec.y, vec.z);
+  }
+
 #endif
 
   /**
@@ -797,7 +812,7 @@ inline namespace v1 {
    * @sa squareLength(), euclideanDistance()
    */
   template<typename T, std::size_t N>
-  inline
+  constexpr
   T squareDistance(Vector<T, N> lhs, Vector<T, N> rhs) {
     return squareLength(lhs - rhs);
   }
@@ -1055,6 +1070,34 @@ inline namespace v1 {
       lhs.z * rhs.x - lhs.x * rhs.z,
       lhs.x * rhs.y - lhs.y * rhs.x
     };
+  }
+
+  /**
+   * @relates Vector
+   * @brief Angle between two vectors
+   *
+   * @param lhs A first vector
+   * @param rhs A second vector
+   * @return The signed angle between the two vectors
+   */
+  template<typename T>
+  inline
+  float angleTo(Vector<T, 2> lhs, Vector<T, 2> rhs) {
+    return std::atan2(cross(lhs, rhs), dot(lhs, rhs));
+  }
+
+  /**
+   * @relates Vector
+   * @brief Projection of a vector onto an axis
+   *
+   * @param vec The vector to project
+   * @param axis The vector being projected onto
+   * @return The projection of @c vec onto @c axis
+   */
+  template<typename T>
+  constexpr
+  Vector<T, 2> projectOnto(Vector<T, 2> vec, Vector<T, 2> axis) {
+    return dot(vec, axis) / squareLength(axis) * axis;
   }
 
 
