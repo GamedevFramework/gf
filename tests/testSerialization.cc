@@ -23,7 +23,6 @@
 #include <cstdint>
 #include <cstring>
 
-#include <iostream>
 #include <limits>
 #include <numeric>
 
@@ -52,6 +51,21 @@ namespace {
       gf::Deserializer deserializer(istream);
       deserializer | out;
     }
+  }
+
+  struct SizeWrapper {
+    std::size_t size;
+  };
+
+  gf::Serializer& operator|(gf::Serializer& ar, const SizeWrapper& data) {
+    ar.writeSizeHeader(data.size);
+    return ar;
+  }
+
+  gf::Deserializer& operator|(gf::Deserializer& ar, SizeWrapper& data) {
+    data.size = 0;
+    ar.readSizeHeader(data.size);
+    return ar;
   }
 
 }
@@ -272,6 +286,40 @@ TEST(SerialTest, Double) {
     saveAndLoad(in, out);
     EXPECT_DOUBLE_EQ(in, out);
     EXPECT_EQ(in, out);
+  }
+}
+
+TEST(SerialTest, Size) {
+  static_assert(sizeof(std::size_t) == 8, "Assume size_t is uint64_t");
+
+  std::size_t tests[] = {
+    0,
+    1,
+    42,
+    0xFE,
+    0xFF,
+    0xFFFE,
+    0xFFFF,
+    0xFFFFFE,
+    0xFFFFFF,
+    0xFFFFFFFE,
+    0xFFFFFFFF,
+    0xFFFFFFFFFE,
+    0xFFFFFFFFFF,
+    0xFFFFFFFFFFFE,
+    0xFFFFFFFFFFFF,
+    0xFFFFFFFFFFFFFE,
+    0xFFFFFFFFFFFFFF,
+    0xFFFFFFFFFFFFFFFE,
+    0xFFFFFFFFFFFFFFFF,
+  };
+
+  SizeWrapper out;
+
+  for (auto size : tests) {
+    SizeWrapper in{size};
+    saveAndLoad(in, out);
+    EXPECT_EQ(in.size, out.size);
   }
 }
 

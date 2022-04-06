@@ -171,9 +171,104 @@ inline namespace v1 {
     }
   }
 
+  namespace {
+
+    template<typename I, std::size_t N>
+    void writeInteger(I data, uint8_t (&buf)[N]) {
+      for (std::size_t i = 0; i < N; ++i) {
+        buf[N - i - 1] = static_cast<uint8_t>(data >> (8 * i));
+      }
+    }
+
+  }
+
   void Serializer::writeSizeHeader(std::size_t size) {
-    uint64_t data = static_cast<uint64_t>(size);
-    writeUnsigned64(data);
+    if (size < 0xFF) {
+      uint8_t buf[1];
+      writeInteger(size, buf);
+      assert(buf[0] != 0xFF);
+      m_stream->write(buf);
+      return;
+    }
+
+    writeUnsigned8(0xFF);
+
+    if (size < 0xFFFF) {
+      size -= 0xFF;
+      assert(size < 0xFF00);
+      uint8_t buf[2];
+      writeInteger(size, buf);
+      assert(buf[0] != 0xFF);
+      m_stream->write(buf);
+      return;
+    }
+
+    writeUnsigned8(0xFF);
+
+    if (size < 0xFFFFFF) {
+      size -= 0xFFFF;
+      assert(size < 0xFFFF00);
+      uint8_t buf[3];
+      writeInteger(size, buf);
+      assert(buf[0] != 0xFF);
+      m_stream->write(buf);
+      return;
+    }
+
+    writeUnsigned8(0xFF);
+
+    if (size < 0xFFFFFFFF) {
+      size -= 0xFFFFFF;
+      assert(size < 0xFFFFFF00);
+      uint8_t buf[4];
+      writeInteger(size, buf);
+      assert(buf[0] != 0xFF);
+      m_stream->write(buf);
+      return;
+    }
+
+    writeUnsigned8(0xFF);
+
+    if (size < 0xFFFFFFFFFF) {
+      size -= 0xFFFFFFFF;
+      assert(size < 0xFFFFFFFF00);
+      uint8_t buf[5];
+      writeInteger(size, buf);
+      assert(buf[0] != 0xFF);
+      m_stream->write(buf);
+      return;
+    }
+
+    writeUnsigned8(0xFF);
+
+    if (size < 0xFFFFFFFFFFFF) {
+      size -= 0xFFFFFFFFFF;
+      assert(size < 0xFFFFFFFFFF00);
+      uint8_t buf[6];
+      writeInteger(size, buf);
+      assert(buf[0] != 0xFF);
+      m_stream->write(buf);
+      return;
+    }
+
+    writeUnsigned8(0xFF);
+
+    if (size < 0xFFFFFFFFFFFFFF) {
+      size -= 0xFFFFFFFFFFFF;
+      assert(size < 0xFFFFFFFFFFFF00);
+      uint8_t buf[7];
+      writeInteger(size, buf);
+      assert(buf[0] != 0xFF);
+      m_stream->write(buf);
+      return;
+    }
+
+    writeUnsigned8(0xFF);
+
+    size -= 0xFFFFFFFFFFFFFF;
+    uint8_t buf[8];
+    writeInteger(size, buf);
+    m_stream->write(buf);
   }
 
 
@@ -181,11 +276,7 @@ inline namespace v1 {
     static constexpr std::size_t Size = sizeof(data);
 
     uint8_t buf[Size];
-
-    for (std::size_t i = 0; i < Size; ++i) {
-      buf[Size - i - 1] = static_cast<uint8_t>(data >> (8 * i));
-    }
-
+    writeInteger(data, buf);
     m_stream->write(buf);
   }
 
@@ -193,11 +284,7 @@ inline namespace v1 {
     static constexpr std::size_t Size = sizeof(data);
 
     uint8_t buf[Size];
-
-    for (std::size_t i = 0; i < Size; ++i) {
-      buf[Size - i - 1] = static_cast<uint8_t>(data >> (8 * i));
-    }
-
+    writeInteger(data, buf);
     m_stream->write(buf);
   }
 
@@ -205,11 +292,7 @@ inline namespace v1 {
     static constexpr std::size_t Size = sizeof(data);
 
     uint8_t buf[Size];
-
-    for (std::size_t i = 0; i < Size; ++i) {
-      buf[Size - i - 1] = static_cast<uint8_t>(data >> (8 * i));
-    }
-
+    writeInteger(data, buf);
     m_stream->write(buf);
   }
 
@@ -375,14 +458,77 @@ inline namespace v1 {
     return true;
   }
 
-  bool Deserializer::readSizeHeader(std::size_t& size) {
-    uint64_t data;
+  namespace {
 
-    if (!readUnsigned64(data)) {
-      return false;
+    template<typename I, std::size_t N>
+    I readInteger(uint8_t (&buf)[N]) {
+      I result = 0;
+
+      for (std::size_t i = 0; i < N; ++i) {
+        result = (result << 8) + buf[i];
+      }
+
+      return result;
     }
 
-    size = static_cast<std::size_t>(data);
+  }
+
+  bool Deserializer::readSizeHeader(std::size_t& size) {
+    static constexpr std::size_t Size = sizeof(std::size_t);
+
+    uint8_t data;
+    std::size_t n = 0;
+
+    for (;;) {
+      if (!readUnsigned8(data)) {
+        return false;
+      }
+
+      if (data != 0xFF || n == Size - 1) {
+        break;
+      }
+
+      ++n;
+    }
+
+    if (n == 0) {
+      // early exit
+      size = data;
+      return true;
+    }
+
+    assert(n < Size);
+    uint8_t buf[Size];
+    std::size_t m = Size - n - 1;
+
+    for (std::size_t i = 0; i < m; ++i) {
+      buf[i] = 0x00;
+    }
+
+    buf[m] = data;
+
+    for (std::size_t i = m + 1; i < Size; ++i) {
+      if (!readUnsigned8(buf[i])) {
+        return false;
+      }
+    }
+
+    size = readInteger<std::size_t>(buf);
+
+    switch (n) {
+      case 1: size += 0xFF; break;
+      case 2: size += 0xFFFF; break;
+      case 3: size += 0xFFFFFF; break;
+      case 4: size += 0xFFFFFFFF; break;
+      case 5: size += 0xFFFFFFFFFF; break;
+      case 6: size += 0xFFFFFFFFFFFF; break;
+      case 7: size += 0xFFFFFFFFFFFFFF; break;
+      case 8: size += 0xFFFFFFFFFFFFFFFF; break;
+      default:
+        assert(false);
+        break;
+    }
+
     return true;
   }
 
@@ -394,14 +540,7 @@ inline namespace v1 {
       return false;
     }
 
-    uint64_t result = 0;
-
-    for (std::size_t i = 0; i < Size; ++i) {
-      result = (result << 8) + buf[i];
-    }
-
-    data = result;
-
+    data = readInteger<uint64_t>(buf);
     return true;
   }
 
@@ -413,14 +552,7 @@ inline namespace v1 {
       return false;
     }
 
-    uint32_t result = 0;
-
-    for (std::size_t i = 0; i < Size; ++i) {
-      result = (result << 8) + buf[i];
-    }
-
-    data = result;
-
+    data = readInteger<uint32_t>(buf);
     return true;
   }
 
@@ -432,14 +564,7 @@ inline namespace v1 {
       return false;
     }
 
-    uint16_t result = 0;
-
-    for (std::size_t i = 0; i < Size; ++i) {
-      result = (result << 8) + buf[i];
-    }
-
-    data = result;
-
+    data = readInteger<uint16_t>(buf);
     return true;
   }
 
