@@ -33,6 +33,7 @@ jobs:
         shell: bash
         working-directory: ${{ github.workspace }}
         run: cat library/CMakeLists.txt | sed 's/SDL2::SDL2/\$\{SDL2_LIBRARIES\}/' | tee library/CMakeLists.txt > /dev/null
+        run: echo "include_directories(SYSTEM ${SDL2_INCLUDE_DIRS})" >> library/CMakeLists.txt
 
       - name: Configure gf
         run: cmake -DGF_BUILD_GAMES=OFF -DGF_BUILD_EXAMPLES=OFF -DGF_BUILD_DOCUMENTATION=OFF -DGF_SINGLE_COMPILTATION_UNIT=OFF -DGF_DEBUG=OFF -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -S ${{ github.workspace }} -B ${{ github.workspace }}/build
