@@ -127,7 +127,7 @@ inline namespace v1 {
     vertices[0].color = vertices[1].color = vertices[2].color = color;
     vertices[0].position = polygon.getCenter();
 
-    for (std::size_t i = 0; i < polygon.getPointCount() - 1; ++i) {
+    for (std::size_t i = 0; i < polygon.getPointCount(); ++i) {
       vertices[1].position = polygon.getPoint(i);
       vertices[2].position = polygon.getNextPoint(i);
 
