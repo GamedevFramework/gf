@@ -411,7 +411,7 @@ inline namespace v1 {
       return modifiers;
     }
 
-    bool translateEvent(Vector2i size, const SDL_Event *in, Event& out) {
+    bool translateEvent(Vector2i size, const SDL_Event *in, Event& out, Flags<EventFilter> filters) {
       out.timestamp = in->common.timestamp;
 
       switch (in->type) {
@@ -513,7 +513,7 @@ inline namespace v1 {
           break;
 
         case SDL_MOUSEWHEEL:
-          if (in->wheel.which == SDL_TOUCH_MOUSEID) {
+          if (in->wheel.which == SDL_TOUCH_MOUSEID && !filters.test(EventFilter::TouchAsMouse)) {
             return false;
           }
 
@@ -530,7 +530,7 @@ inline namespace v1 {
         case SDL_MOUSEBUTTONDOWN:
           assert(in->button.state == SDL_PRESSED);
 
-          if (in->button.which == SDL_TOUCH_MOUSEID) {
+          if (in->button.which == SDL_TOUCH_MOUSEID && !filters.test(EventFilter::TouchAsMouse)) {
             return false;
           }
 
@@ -545,7 +545,7 @@ inline namespace v1 {
         case SDL_MOUSEBUTTONUP:
           assert(in->button.state == SDL_RELEASED);
 
-          if (in->button.which == SDL_TOUCH_MOUSEID) {
+          if (in->button.which == SDL_TOUCH_MOUSEID && !filters.test(EventFilter::TouchAsMouse)) {
             return false;
           }
 
@@ -558,7 +558,7 @@ inline namespace v1 {
           break;
 
         case SDL_MOUSEMOTION:
-          if (in->motion.which == SDL_TOUCH_MOUSEID) {
+          if (in->motion.which == SDL_TOUCH_MOUSEID && !filters.test(EventFilter::TouchAsMouse)) {
             return false;
           }
 
@@ -710,7 +710,7 @@ inline namespace v1 {
 
   } // anonymous namespace
 
-  bool Window::pollEvent(Event& event) {
+  bool Window::pollEvent(Event& event, Flags<EventFilter> filters) {
     assert(m_window);
 
     if (pickEventForWindow(m_windowId, event)) {
@@ -726,9 +726,9 @@ inline namespace v1 {
         if (status == 0) {
           return false;
         }
-      } while (!translateEvent(getSize(), &ev, event));
+      } while (!translateEvent(getSize(), &ev, event, filters));
 
-      if (isEventWindowDependent(event) && getWindowIdFromEvent(event) != m_windowId) {
+      if (isEventWindowDependent(event) && (filters.test(EventFilter::AnyWindow) || getWindowIdFromEvent(event) != m_windowId)) {
         g_pendingEvents.push_back(event);
       } else {
         break;
@@ -738,7 +738,7 @@ inline namespace v1 {
     return true;
   }
 
-  bool Window::waitEvent(Event& event) {
+  bool Window::waitEvent(Event& event, Flags<EventFilter> filters) {
     assert(m_window);
     SDL_Event ev;
 
@@ -753,9 +753,9 @@ inline namespace v1 {
         if (status == 0) {
           return false;
         }
-      } while (!translateEvent(getSize(), &ev, event));
+      } while (!translateEvent(getSize(), &ev, event, filters));
 
-      if (isEventWindowDependent(event) && getWindowIdFromEvent(event) != m_windowId) {
+      if (isEventWindowDependent(event) && (filters.test(EventFilter::AnyWindow) || getWindowIdFromEvent(event) != m_windowId)) {
         g_pendingEvents.push_back(event);
       } else {
         break;
