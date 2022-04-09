@@ -144,22 +144,16 @@ inline namespace v1 {
   }
 
   void Serializer::writeFloat(float data) {
-    union {
-      float f32;
-      uint32_t u32;
-    };
-
-    f32 = data;
+    static_assert(sizeof(uint32_t) == sizeof(float), "float should be 32 bits");
+    uint32_t u32;
+    std::memcpy(&u32, &data, sizeof(float));
     writeBigEndian32(u32);
   }
 
   void Serializer::writeDouble(double data) {
-    union {
-      double f64;
-      uint64_t u64;
-    };
-
-    f64 = data;
+    static_assert(sizeof(uint64_t) == sizeof(double), "double should be 64 bits");
+    uint64_t u64;
+    std::memcpy(&u64, &data, sizeof(double));
     writeBigEndian64(u64);
   }
 
@@ -421,31 +415,26 @@ inline namespace v1 {
   }
 
   bool Deserializer::readFloat(float& data) {
-    union {
-      float f32;
-      uint32_t u32;
-    };
+    uint32_t u32;
 
     if (!readBigEndian32(u32)) {
       Log::error("Asking for float but the file is at the end.\n");
       return false;
     }
 
-    data = f32;
+    std::memcpy(&data, &u32, sizeof(float));
     return true;
   }
 
   bool Deserializer::readDouble(double& data) {
-    union {
-      double f64;
-      uint64_t u64;
-    };
+    uint64_t u64;
 
     if (!readBigEndian64(u64)) {
+      Log::error("Asking for double but the file is at the end.\n");
       return false;
     }
 
-    data = f64;
+    std::memcpy(&data, &u64, sizeof(double));
     return true;
   }
 
