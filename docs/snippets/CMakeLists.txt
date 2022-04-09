@@ -13,6 +13,7 @@ add_executable(gfdev_core_doc
   doc_class_clock.cc
   doc_class_flags.cc
   doc_class_image.cc
+  doc_class_rect.cc
   doc_class_time.cc
   doc_struct_circ.cc
   doc_tutorial_id.cc
