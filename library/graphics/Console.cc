@@ -170,30 +170,22 @@ inline namespace v1 {
   Console::Console(const ConsoleFont& font, Vector2i size)
   : m_font(&font)
   , m_data(size)
-  , m_background(Color::Black)
-  , m_foreground(Color::White)
-  , m_effect(ConsoleEffect::None)
-  , m_alignment(ConsoleAlignment::Left)
   , m_fadingAmount(1.0f)
   , m_fadingColor(Color::Black)
   {
     clear();
   }
 
-  void Console::clear() {
+  void Console::clear(const ConsoleStyle& style) {
     for (auto& cell : m_data) {
-      cell.bg = m_background;
-      cell.fg = m_foreground;
+      cell.fg = style.foreground;
+      cell.bg = style.background;
       cell.c = ' ';
     }
   }
 
-  Color4f Console::computeColor(ConsoleEffect effect, const Color4f& existing, const Color4f& current) {
+  Color4f Console::computeColor(ConsoleEffect effect, Color4f existing, Color4f current) {
     Color4f result;
-
-    if (effect.isDefault()) {
-      effect = m_effect;
-    }
 
     switch (effect.getKind()) {
       case ConsoleEffect::None:
@@ -258,16 +250,13 @@ inline namespace v1 {
 
       case ConsoleEffect::Alpha:
         return gf::lerp(existing, current, effect.getAlpha());
-
-      case ConsoleEffect::Default:
-        assert(false);
-        break;
     }
 
+    assert(false);
     return Color::Black;
   }
 
-  void Console::setCharBackground(Vector2i position, const Color4f& color, ConsoleEffect effect) {
+  void Console::setCharBackground(Vector2i position, Color4f color, ConsoleEffect effect) {
     if (!m_data.isValid(position)) {
       return;
     }
@@ -275,12 +264,12 @@ inline namespace v1 {
     m_data(position).bg = computeColor(effect, m_data(position).bg, color);
   }
 
-  const Color4f& Console::getCharBackground(Vector2i position) const {
+  Color4f Console::getCharBackground(Vector2i position) const {
     assert(m_data.isValid(position));
     return m_data(position).bg;
   }
 
-  void Console::setCharForeground(Vector2i position, const Color4f& color) {
+  void Console::setCharForeground(Vector2i position, Color4f color) {
     if (!m_data.isValid(position)) {
       return;
     }
@@ -288,7 +277,7 @@ inline namespace v1 {
     m_data(position).fg = color;
   }
 
-  const Color4f& Console::getCharForeground(Vector2i position) const {
+  Color4f Console::getCharForeground(Vector2i position) const {
     assert(m_data.isValid(position));
     return m_data(position).fg;
   }
@@ -306,18 +295,18 @@ inline namespace v1 {
     return m_data(position).c;
   }
 
-  void Console::putChar(Vector2i position, char16_t c, ConsoleEffect effect) {
+  void Console::putChar(Vector2i position, char16_t c, const ConsoleStyle& style) {
     if (!m_data.isValid(position)) {
       return;
     }
 
     Cell& cell = m_data(position);
-    cell.fg = m_foreground;
-    cell.bg = computeColor(effect, m_data(position).bg, m_background);
+    cell.fg = style.foreground;
+    cell.bg = computeColor(style.effect, m_data(position).bg, style.background);
     cell.c = c;
   }
 
-  void Console::putChar(Vector2i position, char16_t c, const Color4f& foreground, const Color4f& background) {
+  void Console::putChar(Vector2i position, char16_t c, Color4f foreground, Color4f background) {
     if (!m_data.isValid(position)) {
       return;
     }
@@ -325,39 +314,40 @@ inline namespace v1 {
     m_data(position) = { foreground, background, c };
   }
 
-  int Console::putWord(Vector2i position, ConsoleEffect effect, std::string_view message, const Color4f& foreground, const Color4f& background) {
+  int Console::putWord(Vector2i position, std::string_view message, const ConsoleStyle& style) {
     int width = 0;
+    ConsoleStyle localStyle = style;
 
     for (auto c : gf::codepoints(message)) {
       switch (c) {
         case ConsoleColorControl1:
-          m_foreground = m_controls[0].fg;
-          m_background = m_controls[0].bg;
+          localStyle.foreground = m_controls[0].fg;
+          localStyle.background = m_controls[0].bg;
           break;
 
         case ConsoleColorControl2:
-          m_foreground = m_controls[1].fg;
-          m_background = m_controls[1].bg;
+          localStyle.foreground = m_controls[1].fg;
+          localStyle.background = m_controls[1].bg;
           break;
 
         case ConsoleColorControl3:
-          m_foreground = m_controls[2].fg;
-          m_background = m_controls[2].bg;
+          localStyle.foreground = m_controls[2].fg;
+          localStyle.background = m_controls[2].bg;
           break;
 
         case ConsoleColorControl4:
-          m_foreground = m_controls[3].fg;
-          m_background = m_controls[3].bg;
+          localStyle.foreground = m_controls[3].fg;
+          localStyle.background = m_controls[3].bg;
           break;
 
         case ConsoleColorControl5:
-          m_foreground = m_controls[4].fg;
-          m_background = m_controls[4].bg;
+          localStyle.foreground = m_controls[4].fg;
+          localStyle.background = m_controls[4].bg;
           break;
 
         case ConsoleColorControlStop:
-          m_foreground = foreground;
-          m_background = background;
+          localStyle.foreground = style.foreground;
+          localStyle.background = style.background;
           break;
 
         default:
@@ -371,7 +361,7 @@ inline namespace v1 {
             c = '\0';
           }
 
-          putChar(position, static_cast<char16_t>(c), effect);
+          putChar(position, static_cast<char16_t>(c), localStyle);
           ++position.x;
           ++width;
           break;
@@ -381,7 +371,7 @@ inline namespace v1 {
     return width;
   }
 
-  int Console::printInternal(const RectI& rect, ConsoleEffect effect, ConsoleAlignment alignment, const std::string& message, Flags<PrintOption> flags) {
+  int Console::printInternal(const RectI& rect, const std::string& message, const ConsoleStyle& style, Flags<PrintOption> flags) {
     // checks
     Vector2i consoleSize = m_data.getSize();
 
@@ -390,8 +380,6 @@ inline namespace v1 {
       return 0;
     }
 
-    Color4f currentBackground = m_background;
-    Color4f currentForeground = m_foreground;
     int lineCount = 0;
 
     if (flags.test(PrintOption::Split)) {
@@ -399,7 +387,7 @@ inline namespace v1 {
       int paragraphWidth = rect.getWidth();
 
       if (paragraphWidth == 0) {
-        switch (alignment) {
+        switch (style.alignment) {
           case ConsoleAlignment::Left:
             paragraphWidth = consoleSize.width - rect.min.x;
             break;
@@ -414,7 +402,7 @@ inline namespace v1 {
         }
       }
 
-      auto paragraphs = makeParagraphs(message, alignment, paragraphWidth);
+      auto paragraphs = makeParagraphs(message, style.alignment, paragraphWidth);
       Vector2i position = rect.getPosition();
 
       for (const auto& paragraph : paragraphs) {
@@ -431,11 +419,11 @@ inline namespace v1 {
             auto wordCount = line.words.size();
 
             for (auto word : line.words) {
-              localPosition.x += putWord(localPosition, effect, word, currentForeground, currentBackground);
+              localPosition.x += putWord(localPosition, word, style);
               wordCount--;
 
               if (wordCount > 0) {
-                putChar(localPosition, ' ', effect);
+                putChar(localPosition, ' ', style);
                 ++localPosition.x;
               }
             }
@@ -453,7 +441,7 @@ inline namespace v1 {
 
       int width = getWordWidth(message);
 
-      switch (alignment) {
+      switch (style.alignment) {
         case ConsoleAlignment::Left:
           break;
 
@@ -466,50 +454,29 @@ inline namespace v1 {
           break;
       }
 
-      putWord(position, effect, message, currentForeground, currentBackground);
+      putWord(position, message, style);
       lineCount = 1;
     }
 
-    m_background = currentBackground;
-    m_foreground = currentForeground;
     return lineCount;
   }
 
-  void Console::print(Vector2i position, const char *fmt, ...) {
+  void Console::print(Vector2i position, const ConsoleStyle& style, const char *fmt, ...) {
     va_list ap;
     va_start(ap, fmt);
     auto message = formatString(fmt, ap);
     va_end(ap);
 
-    printInternal(RectI::fromPositionSize(position, { 0, 0 }), m_effect, m_alignment, message);
+    printInternal(RectI::fromPositionSize(position, { 0, 0 }), message, style);
   }
 
-  void Console::print(Vector2i position, ConsoleEffect effect, ConsoleAlignment alignment, const char *fmt, ...) {
+  int Console::printRect(const RectI& rect, const ConsoleStyle& style, const char *fmt, ...) {
     va_list ap;
     va_start(ap, fmt);
     auto message = formatString(fmt, ap);
     va_end(ap);
 
-    printInternal(RectI::fromPositionSize(position, { 0, 0 }), effect, alignment, message);
-  }
-
-  int Console::printRect(const RectI& rect, const char *fmt, ...) {
-    va_list ap;
-    va_start(ap, fmt);
-    auto message = formatString(fmt, ap);
-    va_end(ap);
-
-    printInternal(rect, m_effect, m_alignment, message, PrintOption::Split);
-    return 0;
-  }
-
-  int Console::printRect(const RectI& rect, ConsoleEffect effect, ConsoleAlignment alignment, const char *fmt, ...) {
-    va_list ap;
-    va_start(ap, fmt);
-    auto message = formatString(fmt, ap);
-    va_end(ap);
-
-    printInternal(rect, effect, alignment, message, PrintOption::Split);
+    printInternal(rect, message, style, PrintOption::Split);
     return 0;
   }
 
@@ -519,18 +486,17 @@ inline namespace v1 {
     auto message = formatString(fmt, ap);
     va_end(ap);
 
-    printInternal(rect, m_effect, m_alignment, message, gf::Console::PrintOption::Split | gf::Console::PrintOption::CountOnly);
-    return 0;
+    return printInternal(rect, message, ConsoleStyle(), gf::Console::PrintOption::Split | gf::Console::PrintOption::CountOnly);
   }
 
-  void Console::setColorControl(ConsoleColorControl ctrl, const Color4f& foreground, const Color4f& background) {
+  void Console::setColorControl(ConsoleColorControl ctrl, Color4f foreground, Color4f background) {
     assert(1 <= ctrl && ctrl <= ColorControlCount);
     ColorControl& cc = m_controls[ctrl - 1];
     cc.fg = foreground;
     cc.bg = background;
   }
 
-  void Console::drawRectangle(const RectI& rect, PrintAction action, ConsoleEffect effect) {
+  void Console::drawRectangle(const RectI& rect, const ConsoleStyle& style, PrintAction action) {
     Vector2i position;
 
     for (position.x = rect.min.x; position.x < rect.max.x; ++position.x) {
@@ -539,7 +505,7 @@ inline namespace v1 {
           continue;
         }
 
-        setCharBackground(position, m_background, effect);
+        setCharBackground(position, style.background, style.effect);
 
         if (action == PrintAction::Clear) {
           setChar(position, ' ');
@@ -548,22 +514,22 @@ inline namespace v1 {
     }
   }
 
-  void Console::drawHorizontalLine(Vector2i left, int width, ConsoleEffect effect) {
+  void Console::drawHorizontalLine(Vector2i left, int width, const ConsoleStyle& style) {
     for (int i = 0; i < width; ++i) {
-      putChar(left, ConsoleChar::BoxDrawingsLightHorizontal, effect);
+      putChar(left, ConsoleChar::BoxDrawingsLightHorizontal, style);
       ++left.x;
     }
   }
 
-  void Console::drawVerticalLine(Vector2i top, int height, ConsoleEffect effect) {
+  void Console::drawVerticalLine(Vector2i top, int height, const ConsoleStyle& style) {
     for (int i = 0; i < height; ++i) {
-      putChar(top, ConsoleChar::BoxDrawingsLightVertical, effect);
+      putChar(top, ConsoleChar::BoxDrawingsLightVertical, style);
       ++top.y;
     }
   }
 
-  void Console::drawFrame(const RectI& rect, PrintAction action, ConsoleEffect effect, const char *title, ...) {
-    drawRectangle(rect, action, effect);
+  void Console::drawFrame(const RectI& rect, const ConsoleStyle& style, PrintAction action, const char *title, ...) {
+    drawRectangle(rect, style, action);
 
     auto size = rect.getSize();
 
@@ -571,14 +537,14 @@ inline namespace v1 {
     int xEast = rect.max.x - 1;
     int yNorth = rect.min.y;
     int ySouth = rect.max.y - 1;
-    putChar({ xWest, yNorth }, ConsoleChar::BoxDrawingsLightDownAndRight, effect);
-    putChar({ xEast, yNorth }, ConsoleChar::BoxDrawingsLightDownAndLeft, effect);
-    putChar({ xWest, ySouth }, ConsoleChar::BoxDrawingsLightUpAndRight, effect);
-    putChar({ xEast, ySouth }, ConsoleChar::BoxDrawingsLightUpAndLeft, effect);
-    drawHorizontalLine({ xWest + 1, yNorth }, size.width - 2, effect);
-    drawHorizontalLine({ xWest + 1, ySouth }, size.width - 2, effect);
-    drawVerticalLine({ xWest, yNorth + 1 }, size.height - 2, effect);
-    drawVerticalLine({ xEast, yNorth + 1 }, size.height - 2, effect);
+    putChar({ xWest, yNorth }, ConsoleChar::BoxDrawingsLightDownAndRight, style);
+    putChar({ xEast, yNorth }, ConsoleChar::BoxDrawingsLightDownAndLeft, style);
+    putChar({ xWest, ySouth }, ConsoleChar::BoxDrawingsLightUpAndRight, style);
+    putChar({ xEast, ySouth }, ConsoleChar::BoxDrawingsLightUpAndLeft, style);
+    drawHorizontalLine({ xWest + 1, yNorth }, size.width - 2, style);
+    drawHorizontalLine({ xWest + 1, ySouth }, size.width - 2, style);
+    drawVerticalLine({ xWest, yNorth + 1 }, size.height - 2, style);
+    drawVerticalLine({ xEast, yNorth + 1 }, size.height - 2, style);
 
     if (title == nullptr) {
       return;
@@ -589,9 +555,11 @@ inline namespace v1 {
     auto message = formatString(title, ap);
     va_end(ap);
 
-    std::swap(m_background, m_foreground);
-    print({ xWest + 1, yNorth }, ConsoleEffect::Set, ConsoleAlignment::Left, " %s ", message.c_str());
-    std::swap(m_background, m_foreground);
+    ConsoleStyle localStyle = style;
+    std::swap(localStyle.foreground, localStyle.background);
+    localStyle.effect = ConsoleEffect::Set;
+    localStyle.alignment = ConsoleAlignment::Left;
+    print({ xWest + 1, yNorth }, localStyle, " %s ", message.c_str());
   }
 
   void Console::blit(const RectI& src, Console& con, Vector2i dst, float foregroundAlpha, float backgroundAlpha) const {

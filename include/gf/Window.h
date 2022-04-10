@@ -73,6 +73,11 @@ struct EnableBitmaskOperators<WindowHints> {
   static constexpr bool value = true;
 };
 
+template<>
+struct EnableBitmaskOperators<EventFilter> {
+  static constexpr bool value = true;
+};
+
 inline namespace v1 {
 #endif
 

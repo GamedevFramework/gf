@@ -24,7 +24,6 @@ This file is a list of ideas for gf. Some of them will eventually be in gf. Othe
 - (scene) integrate post-processing in `Scene`/`SceneManager`
   - remove `RenderPipeline`
   - rename `Effect` in `PostProcEffect`
-- (console) make style a class and remove internal style state
 - (drawable) Remove `Drawable`, make it a named requirement (or a concept in the future)
 
 ## net

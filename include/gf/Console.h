@@ -27,6 +27,7 @@
 #include "Alignment.h"
 #include "Array2D.h"
 #include "Blend.h"
+#include "Color.h"
 #include "ConsoleFont.h"
 #include "Flags.h"
 #include "GraphicsApi.h"
@@ -110,8 +111,6 @@ inline namespace v1 {
    */
   constexpr ConsoleColorControl ConsoleColorControlStop = '\x06';
 
-
-
   /**
    * @ingroup graphics_console
    * @brief A console effect on the background color
@@ -145,7 +144,6 @@ inline namespace v1 {
       Burn,       ///< @f[ \textbf{r} = \textbf{b} + \textbf{c} - 1 @f]
       Overlay,    ///< @f[ \textbf{r} = \begin{cases} 2 \cdot \textbf{b} \cdot \textbf{c} & \text{if } \textbf{b} \leq 0.5 \\ 1 - 2 \cdot (1 - \textbf{b}) \cdot (1 - \textbf{c}) & \text{otherwise}  \end{cases} @f]
       Alpha,      ///< @f[ \textbf{r} = (1 - \alpha) \cdot \textbf{b} + \alpha \cdot \textbf{c} @f]
-      Default,    ///< Use the default console effect
     };
 
     /**
@@ -187,13 +185,6 @@ inline namespace v1 {
     }
 
     /**
-     * @brief Check if the effect if Console::Default
-     */
-    constexpr bool isDefault() const noexcept {
-      return m_kind == Default;
-    }
-
-    /**
      * @brief Get the alpha value
      */
     constexpr float getAlpha() const noexcept {
@@ -207,19 +198,23 @@ inline namespace v1 {
 
   /**
    * @ingroup graphics_console
+   * @brief A console style
+   *
+   */
+  struct GF_GRAPHICS_API ConsoleStyle {
+    Color4f foreground = Color::White;
+    Color4f background = Color::Black;
+    ConsoleEffect effect = ConsoleEffect(ConsoleEffect::Set);
+    ConsoleAlignment alignment = ConsoleAlignment::Left;
+  };
+
+  /**
+   * @ingroup graphics_console
    * @brief A virtual console
    *
    * A console is a virtual terminal where you can print the characters from a
    * console font. Each cell of the console has a background color, a
    * foreground color and a 8-bit character.
-   *
-   * A console has a state with default values for different aspects:
-   * - a default background color (initiallly gf::Color::Black)
-   * - a default foreground color (initiallly gf::Color::White)
-   * - a default console effect (initiallly gf::ConsoleEffect::None)
-   * - a default alignment (initiallly gf::ConsoleAlignment::Left)
-   *
-   * Several functions use this state to determine actual values.
    *
    * @sa gf::ConsoleFont
    */
@@ -261,54 +256,14 @@ inline namespace v1 {
      */
 
     /**
-     * @brief Set the default background color
-     *
-     * @param color The new background color
-     * @sa getDefaultBackground()
-     */
-    void setDefaultBackground(const Color4f& color) {
-      m_background = color;
-    }
-
-    /**
-     * @brief Get the default background color
-     *
-     * @returns The current default background color
-     * @sa setDefaultBackground()
-     */
-    const Color4f& getDefaultBackground() const {
-      return m_background;
-    }
-
-    /**
-     * @brief Set the default foreground color
-     *
-     * @param color The new foreground color
-     * @sa getDefaultForeground()
-     */
-    void setDefaultForeground(const Color4f& color) {
-      m_foreground = color;
-    }
-
-    /**
-     * @brief Get the default foreground color
-     *
-     * @returns The current default foreground color
-     * @sa setDefaultForeground()
-     */
-    const Color4f& getDefaultForeground() const {
-      return m_foreground;
-    }
-
-    /**
      * @brief Clear the console
      *
      * For each cell of the console, this function:
-     * - sets the background color to the default background color
-     * - sets the foreground color to the default foreground color
+     * - sets the background color to the style background color
+     * - sets the foreground color to the style foreground color
      * - sets the character to space (ASCII 32)
      */
-    void clear();
+    void clear(const ConsoleStyle& style = ConsoleStyle());
 
     /**
      * @brief Set the character background color
@@ -319,7 +274,7 @@ inline namespace v1 {
      *
      * @sa getCharBackground()
      */
-    void setCharBackground(Vector2i position, const Color4f& color, ConsoleEffect effect = ConsoleEffect::Set);
+    void setCharBackground(Vector2i position, Color4f color, ConsoleEffect effect = ConsoleEffect::Set);
 
     /**
      * @brief Get the character background color
@@ -329,7 +284,7 @@ inline namespace v1 {
      *
      * @sa setCharBackground()
      */
-    const Color4f& getCharBackground(Vector2i position) const;
+    Color4f getCharBackground(Vector2i position) const;
 
     /**
      * @brief Set the character foreground color
@@ -339,7 +294,7 @@ inline namespace v1 {
      *
      * @sa getCharForeground()
      */
-    void setCharForeground(Vector2i position, const Color4f& color);
+    void setCharForeground(Vector2i position, Color4f color);
 
     /**
      * @brief Get the character foreground color
@@ -349,7 +304,7 @@ inline namespace v1 {
      *
      * @sa setCharForeground()
      */
-    const Color4f& getCharForeground(Vector2i position) const;
+    Color4f getCharForeground(Vector2i position) const;
 
     /**
      * @brief Set a character
@@ -375,15 +330,15 @@ inline namespace v1 {
      * @brief Modify a cell in the console
      *
      * At the specified position, this function:
-     * - sets the background color thanks to the effect and the default background color
-     * - sets the foreground color thanks to the default foreground color
+     * - sets the background color thanks to the style effect and the style background color
+     * - sets the foreground color thanks to the style foreground color
      * - sets the character to a new value
      *
      * @param position The position of the cell
      * @param c The character to set
-     * @param effect The effect to apply to the background
+     * @param style The style to apply
      */
-    void putChar(Vector2i position, char16_t c, ConsoleEffect effect = ConsoleEffect::Default);
+    void putChar(Vector2i position, char16_t c, const ConsoleStyle& style = ConsoleStyle());
 
     /**
      * @brief Modify a cell in the console
@@ -398,7 +353,7 @@ inline namespace v1 {
      * @param foreground The foreground color to set
      * @param background The background color to set
      */
-    void putChar(Vector2i position, char16_t c, const Color4f& foreground, const Color4f& background);
+    void putChar(Vector2i position, char16_t c, Color4f foreground, Color4f background);
 
     /**
      * @}
@@ -408,68 +363,6 @@ inline namespace v1 {
      * @name String printing
      * @{
      */
-
-    /**
-     * @brief Set the default console effect
-     *
-     * @param effect The new effect
-     *
-     * @sa getDefaultConsoleEffect()
-     */
-    void setDefaultConsoleEffect(ConsoleEffect effect) {
-      if (!effect.isDefault()) {
-        m_effect = effect;
-      }
-    }
-
-    /**
-     * @brief Get the default console effect
-     *
-     * @returns The current default console effect
-     *
-     * @sa setDefaultConsoleEffect()
-     */
-    ConsoleEffect getDefaultConsoleEffect() const {
-      return m_effect;
-    }
-
-    /**
-     * @brief Set the default alignment
-     *
-     * @param alignment The new alignment
-     *
-     * @sa getDefaultAlignment()
-     */
-    void setDefaultAlignment(ConsoleAlignment alignment) {
-      m_alignment = alignment;
-    }
-
-    /**
-     * @brief Get the default alignment
-     *
-     * @returns The current default alignment
-     *
-     * @sa setDefaultAlignment()
-     */
-    ConsoleAlignment getDefaultAlignment() const {
-      return m_alignment;
-    }
-
-    /**
-     * @brief Print a formatted string
-     *
-     * This function uses the default values for background color, foreground
-     * color, console effect and alignment.
-     *
-     * The specified position indicates:
-     * - The first character of the string if the alignment is gf::ConsoleAlignment::Left
-     * - The center character of the string if the alignment is gf::ConsoleAlignment::Center
-     * - The last character of the string if the alignment is gf::ConsoleAlignment::Right
-     *
-     * @param position The position of a cell
-     * @param fmt The [format string](http://en.cppreference.com/w/cpp/io/c/fprintf)
-     */
-    void print(Vector2i position, const char *fmt, ...) GF_FORMAT(3, 4);
 
     /**
      * @brief Print a formatted string
@@ -483,11 +376,10 @@ inline namespace v1 {
      * - The last character of the string if the alignment is gf::ConsoleAlignment::Right
      *
      * @param position The position of a cell
-     * @param effect The effect to apply to the background
-     * @param alignment The alignment of the text
+     * @param style The style to apply to the text
      * @param fmt The [format string](http://en.cppreference.com/w/cpp/io/c/fprintf)
      */
-    void print(Vector2i position, ConsoleEffect effect, ConsoleAlignment alignment, const char *fmt, ...) GF_FORMAT(5, 6);
+    void print(Vector2i position, const ConsoleStyle& style, const char *fmt, ...) GF_FORMAT(4, 5);
 
     /**
      * @brief Print a multi-line formatted string
@@ -498,26 +390,11 @@ inline namespace v1 {
      * string is truncated at the bottom of the console.
      *
      * @param rect The rectangle to print the string
+     * @param style The style to apply to the text
      * @param fmt The [format string](http://en.cppreference.com/w/cpp/io/c/fprintf)
      * @returns The height in console lines of the printed string
      */
-    int printRect(const RectI& rect, const char *fmt, ...) GF_FORMAT(3, 4);
-
-    /**
-     * @brief Print a multi-line formatted string
-     *
-     * The string is split in paragraphs according to new lines and then split
-     * in lines to fit the width of the specified rectangle. If the specified
-     * height is reached, the string is truncated. I the height is 0, then the
-     * string is truncated at the bottom of the console.
-     *
-     * @param rect The rectangle to print the string
-     * @param effect The effect to apply to the background
-     * @param alignment The alignment of the text
-     * @param fmt The [format string](http://en.cppreference.com/w/cpp/io/c/fprintf)
-     * @returns The height in console lines of the printed string
-     */
-    int printRect(const RectI& rect, ConsoleEffect effect, ConsoleAlignment alignment, const char *fmt, ...) GF_FORMAT(5, 6);
+    int printRect(const RectI& rect, const ConsoleStyle& style, const char *fmt, ...) GF_FORMAT(4, 5);
 
     /**
      * @brief Get the expected number of console lines of a multi-line formatted string
@@ -546,7 +423,7 @@ inline namespace v1 {
      *
      * @snippet snippets/doc_class_console.cc console
      */
-    void setColorControl(ConsoleColorControl ctrl, const Color4f& foreground, const Color4f& background);
+    void setColorControl(ConsoleColorControl ctrl, Color4f foreground, Color4f background);
 
     /**
      * @}
@@ -565,10 +442,10 @@ inline namespace v1 {
      * characters inside the rectangle are set to space (ASCII 32).
      *
      * @param rect The rectangle to print the rectangle
+     * @param style The style to apply
      * @param action The action when drawing
-     * @param effect The effect to apply to the background
      */
-    void drawRectangle(const RectI& rect, PrintAction action = PrintAction::None, ConsoleEffect effect = ConsoleEffect::Default);
+    void drawRectangle(const RectI& rect, const ConsoleStyle& style, PrintAction action = PrintAction::None);
 
     /**
      * @brief Draw a horizontal line
@@ -577,9 +454,9 @@ inline namespace v1 {
      *
      * @param left The left end point of the line
      * @param width The width of the line
-     * @param effect The effect to apply to the background
+     * @param style The style to apply
      */
-    void drawHorizontalLine(Vector2i left, int width, ConsoleEffect effect = ConsoleEffect::Default);
+    void drawHorizontalLine(Vector2i left, int width, const ConsoleStyle& style);
 
     /**
      * @brief Draw a vertical line
@@ -588,9 +465,9 @@ inline namespace v1 {
      *
      * @param top The top end point of the line
      * @param height The height of the line
-     * @param effect The effect to apply to the background
+     * @param style The style to apply
      */
-    void drawVerticalLine(Vector2i top, int height, ConsoleEffect effect = ConsoleEffect::Default);
+    void drawVerticalLine(Vector2i top, int height, const ConsoleStyle& style);
 
     /**
      * @brief Draw a frame
@@ -600,11 +477,11 @@ inline namespace v1 {
      * top of the frame with inverted colors.
      *
      * @param rect The rectangle to print the rectangle
+     * @param style The style to apply
      * @param action The action when drawing
-     * @param effect The effect to apply to the background
      * @param title The [format string](http://en.cppreference.com/w/cpp/io/c/fprintf) of the title
      */
-    void drawFrame(const RectI& rect, PrintAction action = PrintAction::None, ConsoleEffect effect = ConsoleEffect::Default, const char *title = nullptr, ...) GF_FORMAT(5, 6);
+    void drawFrame(const RectI& rect, const ConsoleStyle& style, PrintAction action = PrintAction::None, const char *title = nullptr, ...) GF_FORMAT(5, 6);
 
     /**
      * @}
@@ -621,7 +498,7 @@ inline namespace v1 {
      * @param amount The fading amount, with 0 meaning the fading color and 1 meaning no fading
      * @param color The fading color
      */
-    void setFade(float amount, const Color4f& color) {
+    void setFade(float amount, Color4f color) {
       m_fadingAmount = amount;
       m_fadingColor = color;
     }
@@ -640,7 +517,7 @@ inline namespace v1 {
      *
      * @returns The current fading color
      */
-    const Color4f& getFadingColor() const {
+    Color4f getFadingColor() const {
       return m_fadingColor;
     }
 
@@ -662,16 +539,16 @@ inline namespace v1 {
     virtual void draw(RenderTarget& target, const RenderStates& states) override;
 
   private:
-    Color4f computeColor(ConsoleEffect effect, const Color4f& existing, const Color4f& current);
+    Color4f computeColor(ConsoleEffect effect, Color4f existing, Color4f current);
 
-    int putWord(Vector2i position, ConsoleEffect effect, std::string_view message, const Color4f& foreground, const Color4f& background);
+    int putWord(Vector2i position, std::string_view message, const ConsoleStyle& style);
 
     enum class PrintOption {
       Split     = 0x01,
       CountOnly = 0x02,
     };
 
-    int printInternal(const RectI& rect, ConsoleEffect effect, ConsoleAlignment alignment, const std::string& message, Flags<PrintOption> flags = None);
+    int printInternal(const RectI& rect, const std::string& message, const ConsoleStyle& style, Flags<PrintOption> flags = None);
 
   private:
     struct Cell {
@@ -682,11 +559,6 @@ inline namespace v1 {
 
     const ConsoleFont *m_font;
     Array2D<Cell, int> m_data;
-    Color4f m_background;
-    Color4f m_foreground;
-
-    ConsoleEffect m_effect;
-    ConsoleAlignment m_alignment;
 
     struct ColorControl {
       Color4f fg;
