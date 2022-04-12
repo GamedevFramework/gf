@@ -37,7 +37,7 @@ inline namespace v1 {
   {
   }
 
-  void Tileset::setTexture(const Texture& texture) {
+  void Tileset::setTexture(Texture& texture) {
     m_texture = &texture;
     updateSize();
   }

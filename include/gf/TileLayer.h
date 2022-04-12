@@ -133,6 +133,14 @@ inline namespace v1 {
      */
     const Tileset& getTileset(std::size_t id) const;
 
+    /**
+     * @brief Enable or disable the smooth filter on the texture of tilesets
+     *
+     * @param smooth True to enable smoothing, false to disable it
+     *
+     * @see Tileset::setSmooth()
+     */
+    void setTilesetSmooth(bool smooth = true);
 
     /** @} */
 
