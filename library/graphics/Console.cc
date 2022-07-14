@@ -32,7 +32,6 @@
 #include <gf/Log.h>
 #include <gf/RenderTarget.h>
 #include <gf/StringUtils.h>
-#include <gf/Unused.h>
 #include <gf/VectorOps.h>
 #include <gf/VertexArray.h>
 

@@ -22,7 +22,6 @@
 #include <gf/RenderTarget.h>
 #include <gf/Sprite.h>
 #include <gf/Texture.h>
-#include <gf/Unused.h>
 #include <gf/VertexArray.h>
 
 /// [mydrawable]

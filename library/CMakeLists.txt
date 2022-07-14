@@ -203,10 +203,6 @@ else()
     graphics/Grid.cc
     graphics/Keyboard.cc
     graphics/Library.cc
-    graphics/LightPointEmission.cc
-    graphics/LightShape.cc
-    graphics/LightSystem.cc
-    graphics/LightTextures.cc
     graphics/Logo.cc
     graphics/Monitor.cc
     graphics/MouseValues.cc

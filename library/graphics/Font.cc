@@ -33,7 +33,6 @@
 
 #include <gf/Stream.h>
 #include <gf/Log.h>
-#include <gf/Unused.h>
 #include <gf/VectorOps.h>
 
 #include <gfpriv/GlDebug.h>
@@ -87,8 +86,7 @@ inline namespace v1 {
       return static_cast<unsigned long>(stream->read(Span<uint8_t>(buffer, count)));
     }
 
-    void callbackClose(FT_Stream rec) {
-      gf::unused(rec);
+    void callbackClose([[maybe_unused]] FT_Stream rec) {
       // nothing to do
     }
 

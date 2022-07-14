@@ -20,7 +20,6 @@
  */
 #include <gf/Font.h>
 #include <gf/Text.h>
-#include <gf/Unused.h>
 
 void dummyFontUsage() {
   /// [font]

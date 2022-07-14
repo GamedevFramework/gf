@@ -28,7 +28,6 @@
 #include <gf/RenderTarget.h>
 #include <gf/Shapes.h>
 #include <gf/Text.h>
-#include <gf/Unused.h>
 
 Board::Board(gf::Font& font, gf::Random& random)
 : m_font(font)
@@ -118,9 +117,7 @@ bool Board::move(gf::Direction dir) {
   return moved;
 }
 
-void Board::update(gf::Time time) {
-  gf::unused(time);
-
+void Board::update([[maybe_unused]] gf::Time time) {
   gf::Vector2u pos;
 
   for (pos.y = 0; pos.y < Grid::Size; ++pos.y) {

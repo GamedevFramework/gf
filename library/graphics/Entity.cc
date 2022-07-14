@@ -20,8 +20,6 @@
  */
 #include <gf/Entity.h>
 
-#include <gf/Unused.h>
-
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
@@ -29,14 +27,11 @@ inline namespace v1 {
 
   Entity::~Entity() = default;
 
-  void Entity::update(Time time) {
-    gf::unused(time);
+  void Entity::update([[maybe_unused]] Time time) {
     // default: do nothing
   }
 
-  void Entity::render(RenderTarget& target, const RenderStates& states) {
-    gf::unused(target);
-    gf::unused(states);
+  void Entity::render([[maybe_unused]] RenderTarget& target, [[maybe_unused]] const RenderStates& states) {
     // default: do nothing
   }
 

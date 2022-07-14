@@ -19,7 +19,9 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 #include <gf/Time.h>
-#include <gf/Unused.h>
+
+template <typename... Args>
+constexpr void unused(Args&&...) { }
 
 void dummyTimeUsage() {
   /// [time]
@@ -33,7 +35,7 @@ void dummyTimeUsage() {
   float sec = t3.asSeconds(); // -0.8
   /// [time]
 
-  gf::unused(milli, micro, sec);
+  unused(milli, micro, sec);
 
   {
   /// [time_s]
@@ -42,7 +44,7 @@ void dummyTimeUsage() {
   gf::Time time = 66.6_seconds;
   /// [time_s]
 
-  gf::unused(time);
+  unused(time);
   }
 
   {
@@ -52,7 +54,7 @@ void dummyTimeUsage() {
   gf::Time time = 42_milliseconds;
   /// [time_ms]
 
-  gf::unused(time);
+  unused(time);
   }
 
   {
@@ -62,6 +64,6 @@ void dummyTimeUsage() {
   gf::Time time = 13_microseconds;
   /// [time_us]
 
-  gf::unused(time);
+  unused(time);
   }
 }

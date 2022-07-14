@@ -20,7 +20,6 @@
  */
 #include <gf/RenderTarget.h>
 #include <gf/Sprite.h>
-#include <gf/Unused.h>
 
 void dummySpriteUsage(gf::RenderTarget& renderer) {
   /// [sprite]

@@ -24,7 +24,9 @@
 #include <string>
 
 #include <gf/Id.h>
-#include <gf/Unused.h>
+
+template <typename... Args>
+constexpr void unused(Args&&...) { }
 
 /// [using]
 using namespace gf::literals; // necessary to use _id
@@ -48,7 +50,7 @@ void dummyIdUsage() {
   gf::Id id2 = gf::hash(str);
   /// [hash]
 
-  gf::unused(id1, id2);
+  unused(id1, id2);
   }
 
   {
@@ -57,7 +59,7 @@ void dummyIdUsage() {
   gf::Id id2 = "std::string"_id;
   /// [udl]
 
-  gf::unused(id1, id2);
+  unused(id1, id2);
   }
 
   {

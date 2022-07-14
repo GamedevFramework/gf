@@ -21,7 +21,6 @@
 #include <gf/Scene.h>
 
 #include <gf/Color.h>
-#include <gf/Unused.h>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -141,24 +140,20 @@ inline namespace v1 {
     m_hudEntities.render(target, states);
   }
 
-  bool Scene::doEarlyProcessEvent(Event& event) {
-    gf::unused(event);
+  bool Scene::doEarlyProcessEvent([[maybe_unused]] Event& event) {
     // nothing
     return false;
   }
 
-  void Scene::doProcessEvent(Event& event) {
-    gf::unused(event);
+  void Scene::doProcessEvent([[maybe_unused]] Event& event) {
     // nothing
   }
 
-  void Scene::doHandleActions(Window& window) {
-    gf::unused(window);
+  void Scene::doHandleActions([[maybe_unused]] Window& window) {
     // nothing
   }
 
-  void Scene::doUpdate(Time time) {
-    gf::unused(time);
+  void Scene::doUpdate([[maybe_unused]] Time time) {
     // nothing
   }
 
@@ -185,8 +180,7 @@ inline namespace v1 {
     // nothing
   }
 
-  void Scene::onActivityChange(bool active) {
-    gf::unused(active);
+  void Scene::onActivityChange([[maybe_unused]] bool active) {
     // nothing
   }
 

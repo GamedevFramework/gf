@@ -22,7 +22,6 @@
 
 #include <cassert>
 
-#include <gf/Unused.h>
 #include <gf/VectorOps.h>
 
 namespace gf {
@@ -139,9 +138,7 @@ inline namespace v1 {
   {
   }
 
-  ActivityStatus CallbackActivity::run(Time time) {
-    gf::unused(time);
-
+  ActivityStatus CallbackActivity::run([[maybe_unused]] Time time) {
     if (!m_called) {
       m_callback();
       m_called = true;

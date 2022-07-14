@@ -20,7 +20,6 @@
  */
 #include <gf/Entity.h>
 #include <gf/EntityContainer.h>
-#include <gf/Unused.h>
 
 /// [entity]
 class Foo : public gf::Entity {

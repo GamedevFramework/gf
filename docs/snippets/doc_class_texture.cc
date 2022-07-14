@@ -21,7 +21,6 @@
 #include <gf/RenderTarget.h>
 #include <gf/Sprite.h>
 #include <gf/Texture.h>
-#include <gf/Unused.h>
 
 void dummyTextureUsage(gf::RenderTarget& renderer) {
   /// [texture]

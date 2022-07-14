@@ -35,7 +35,6 @@
 #include <gf/Log.h>
 #include <gf/Mouse.h>
 #include <gf/Sleep.h>
-#include <gf/Unused.h>
 #include <gf/Vector.h>
 #include <gf/VectorOps.h>
 
@@ -135,8 +134,6 @@ inline namespace v1 {
 #ifdef GF_OPENGL3
       GL_CHECK(glGenVertexArrays(1, &m_vao));
       GL_CHECK(glBindVertexArray(m_vao));
-#else
-      gf::unused(m_vao);
 #endif
     }
   }

@@ -23,7 +23,6 @@
 #include <gf/Color.h>
 #include <gf/RenderTarget.h>
 #include <gf/Shapes.h>
-#include <gf/Unused.h>
 
 #include "Ball.h"
 #include "Messages.h"
@@ -41,9 +40,7 @@ void Ground::render(gf::RenderTarget& target, const gf::RenderStates& states) {
   target.draw(shape, states);
 }
 
-gf::MessageStatus Ground::onBallLocation(gf::Id id, gf::Message *msg) {
-  gf::unused(id);
-
+gf::MessageStatus Ground::onBallLocation([[maybe_unused]] gf::Id id, gf::Message *msg) {
   auto loc = static_cast<BallLocationMessage*>(msg);
 
   static constexpr float YLimit = Height / 2 - Ball::Radius;

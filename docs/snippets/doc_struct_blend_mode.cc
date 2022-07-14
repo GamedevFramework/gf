@@ -19,7 +19,9 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 #include <gf/Blend.h>
-#include <gf/Unused.h>
+
+template <typename... Args>
+constexpr void unused(Args&&...) { }
 
 void dummyBlendModeUsage() {
 
@@ -30,6 +32,5 @@ void dummyBlendModeUsage() {
   gf::BlendMode noBlending             = gf::BlendNone;
   /// [predefined]
 
-  gf::unused(alphaBlending, additiveBlending, multiplicativeBlending, noBlending);
-
+  unused(alphaBlending, additiveBlending, multiplicativeBlending, noBlending);
 }

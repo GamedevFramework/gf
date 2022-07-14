@@ -20,8 +20,6 @@
  */
 #include <gf/Model.h>
 
-#include <gf/Unused.h>
-
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
@@ -29,9 +27,7 @@ inline namespace v1 {
 
   Model::~Model() = default;
 
-  void Model::update(Time time) {
-    gf::unused(time);
-
+  void Model::update([[maybe_unused]] Time time) {
     // default: do nothing
   }
 

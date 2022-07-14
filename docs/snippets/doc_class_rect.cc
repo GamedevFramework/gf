@@ -19,7 +19,9 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 #include <gf/Rect.h>
-#include <gf/Unused.h>
+
+template <typename... Args>
+constexpr void unused(Args&&...) { }
 
 void dummyRectUsage() {
   /// [rect]
@@ -41,5 +43,5 @@ void dummyRectUsage() {
   // result == (4, 2, 16, 3)
   /// [rect]
 
-  gf::unused(b1, b2, b3);
+  unused(b1, b2, b3);
 }

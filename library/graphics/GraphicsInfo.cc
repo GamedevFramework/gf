@@ -28,7 +28,6 @@
 #include <boost/algorithm/string/classification.hpp>
 
 #include <gf/Log.h>
-#include <gf/Unused.h>
 
 #include <gfpriv/GlDebug.h>
 #include <gfpriv/GlFwd.h>
@@ -245,8 +244,7 @@ inline namespace v1 {
       return "UNKNOWN";
     }
 
-    const char *getShaderFormatName(GLint format) {
-      gf::unused(format);
+    const char *getShaderFormatName([[maybe_unused]] GLint format) {
       return "UNKNOWN";
     }
 

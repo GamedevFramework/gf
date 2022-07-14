@@ -22,7 +22,6 @@
 #include <cassert>
 #include <gf/Message.h>
 #include <gf/MessageManager.h>
-#include <gf/Unused.h>
 #include <gf/Vector.h>
 
 /// [message]
@@ -39,9 +38,7 @@ gf::MessageManager messageManager;
 /// [manager]
 
 // dummy function
-static gf::Vector2f computeNewPosition(gf::Vector2f pos, float dt) {
-  gf::unused(pos);
-  gf::unused(dt);
+static gf::Vector2f computeNewPosition([[maybe_unused]] gf::Vector2f pos, [[maybe_unused]] float dt) {
   return { 0.0f, 0.0f };
 }
 
@@ -73,10 +70,9 @@ public:
   }
 
 private:
-  gf::MessageStatus onHeroPosition(gf::Id id, gf::Message *msg) {
+  gf::MessageStatus onHeroPosition([[maybe_unused]] gf::Id id, gf::Message *msg) {
     // verify that we have the right message type
     assert(id == HeroPosition::type);
-    gf::unused(id); // we do not use id after this
 
     // we can now safely cast the message...
     auto heroPosition = static_cast<HeroPosition*>(msg);
@@ -106,9 +102,7 @@ struct Baz : public gf::Message {
 };
 
 // dummy function
-static void doSomethingUsefulWith(gf::Id id, gf::Message *msg) {
-  gf::unused(id);
-  gf::unused(msg);
+static void doSomethingUsefulWith([[maybe_unused]] gf::Id id, [[maybe_unused]] gf::Message *msg) {
 }
 
 /// [short]

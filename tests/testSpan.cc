@@ -22,8 +22,6 @@
 
 #include "gtest/gtest.h"
 
-#include <gf/Unused.h>
-
 /*
  * Span
  */
@@ -36,8 +34,7 @@ TEST(SpanTest, DefaultCtor) {
     EXPECT_EQ(0u, span.getSize());
     EXPECT_EQ(nullptr, span.getData());
 
-    for (auto item : span) {
-      gf::unused(item);
+    for ([[maybe_unused]] auto item : span) {
       FAIL();
     }
   }
@@ -48,8 +45,7 @@ TEST(SpanTest, DefaultCtor) {
     EXPECT_EQ(0u, span.getSize());
     EXPECT_EQ(nullptr, span.getData());
 
-    for (auto item : span) {
-      gf::unused(item);
+    for ([[maybe_unused]] auto item : span) {
       FAIL();
     }
   }
@@ -188,8 +184,7 @@ TEST(StaticSpanTest, DefaultCtor) {
     EXPECT_EQ(10u, span.getSize());
     EXPECT_EQ(nullptr, span.getData());
 
-    for (auto item : span) {
-      gf::unused(item);
+    for ([[maybe_unused]] auto item : span) {
       FAIL();
     }
   }
@@ -200,8 +195,7 @@ TEST(StaticSpanTest, DefaultCtor) {
     EXPECT_EQ(10u, span.getSize());
     EXPECT_EQ(nullptr, span.getData());
 
-    for (auto item : span) {
-      gf::unused(item);
+    for ([[maybe_unused]] auto item : span) {
       FAIL();
     }
   }

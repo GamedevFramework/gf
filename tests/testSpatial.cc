@@ -24,15 +24,13 @@
 
 #include <gf/Clock.h>
 #include <gf/Random.h>
-#include <gf/Unused.h>
 
 #include "gtest/gtest.h"
 
 namespace {
 
   struct NullCallback {
-    void operator()(const gf::Handle& handle) {
-      gf::unused(handle);
+    void operator()([[maybe_unused]] const gf::Handle& handle) {
     }
   };
 

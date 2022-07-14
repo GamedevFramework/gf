@@ -23,7 +23,9 @@
 #include <gf/Font.h>
 #include <gf/ResourceManager.h>
 #include <gf/Texture.h>
-#include <gf/Unused.h>
+
+template <typename... Args>
+constexpr void unused(Args&&...) { }
 
 /// [entity]
 class MyEntity : public gf::Entity {
@@ -58,9 +60,7 @@ int main() {
   gf::Font& anotherFont = resources.getFont("Arial.ttf"); // the font is not loaded a second time
   /// [resources]
 
-  gf::unused(font);
-  gf::unused(texture);
-  gf::unused(anotherFont);
+  unused(font, texture, anotherFont);
   }
 
 

@@ -20,7 +20,6 @@
  */
 #include <gf/Views.h>
 
-#include <gf/Unused.h>
 #include <gf/VectorOps.h>
 
 namespace gf {
@@ -32,8 +31,7 @@ inline namespace v1 {
    * StretchView
    */
 
-  void StretchView::onFramebufferSizeChange(Vector2i framebufferSize) {
-    gf::unused(framebufferSize);
+  void StretchView::onFramebufferSizeChange([[maybe_unused]] Vector2i framebufferSize) {
     // nothing to do
   }
 
@@ -47,8 +45,7 @@ inline namespace v1 {
     updateView();
   }
 
-  void FitView::onSizeChange(Vector2f size) {
-    gf::unused(size);
+  void FitView::onSizeChange([[maybe_unused]] Vector2f size) {
     updateView();
   }
 
@@ -102,8 +99,7 @@ inline namespace v1 {
     updateView();
   }
 
-  void FillView::onViewportChange(const RectF& viewport) {
-    gf::unused(viewport);
+  void FillView::onViewportChange([[maybe_unused]] const RectF& viewport) {
     updateView();
   }
 
@@ -141,8 +137,7 @@ inline namespace v1 {
     updateView();
   }
 
-  void ExtendView::onViewportChange(const RectF& viewport) {
-    gf::unused(viewport);
+  void ExtendView::onViewportChange([[maybe_unused]] const RectF& viewport) {
     updateView();
   }
 
@@ -225,8 +220,7 @@ inline namespace v1 {
     updateView();
   }
 
-  void ScreenView::onViewportChange(const RectF& viewport) {
-    gf::unused(viewport);
+  void ScreenView::onViewportChange([[maybe_unused]] const RectF& viewport) {
     updateView();
   }
 

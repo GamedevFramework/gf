@@ -20,7 +20,9 @@
  */
 #include <gf/Color.h>
 #include <gf/Console.h>
-#include <gf/Unused.h>
+
+template <typename... Args>
+constexpr void unused(Args&&...) { }
 
 void dummyConsoleUsage(gf::ConsoleFont& font) {
   gf::Vector2i size(70, 40);
@@ -33,5 +35,5 @@ void dummyConsoleUsage(gf::ConsoleFont& font) {
   console.print({ 1, 1 }, style, "String with a %cred%c word.", gf::ConsoleColorControl1, gf::ConsoleColorControlStop);
   /// [console]
 
-  gf::unused(console);
+  unused(console);
 }

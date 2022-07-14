@@ -19,7 +19,9 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 #include <gf/Flags.h>
-#include <gf/Unused.h>
+
+template <typename... Args>
+constexpr void unused(Args&&...) { }
 
 /// [flags_def]
 enum class AnimalProperties {
@@ -48,7 +50,7 @@ void dummyFlagsUsage() {
   bool b = seahawk.test(AnimalProperties::HasClaws); // false
   /// [flags_usage]
 
-  gf::unused(b);
+  unused(b);
 
   /// [flags_all_none]
   gf::Flags<AnimalProperties> unicorn(gf::All);
@@ -56,5 +58,5 @@ void dummyFlagsUsage() {
   gf::Flags<AnimalProperties> rat(gf::None);
   /// [flags_all_none]
 
-  gf::unused(unicorn, rat);
+  unused(unicorn, rat);
 }

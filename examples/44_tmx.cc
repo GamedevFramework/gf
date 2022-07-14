@@ -31,7 +31,6 @@
 #include <gf/TileLayer.h>
 #include <gf/Tmx.h>
 #include <gf/TmxOps.h>
-#include <gf/Unused.h>
 #include <gf/VectorOps.h>
 #include <gf/Views.h>
 #include <gf/ViewContainer.h>
@@ -49,9 +48,7 @@ struct LayersMaker : public gf::TmxVisitor {
     layers.emplace_back(gf::makeTileLayer(map, layer, resources));
   }
 
-  virtual void visitObjectLayer(const gf::TmxLayers& map, const gf::TmxObjectLayer& layer) override {
-    gf::unused(map);
-
+  virtual void visitObjectLayer([[maybe_unused]] const gf::TmxLayers& map, const gf::TmxObjectLayer& layer) override {
     if (!layer.visible) {
       return;
     }
