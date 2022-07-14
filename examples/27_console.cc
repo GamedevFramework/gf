@@ -31,10 +31,11 @@
 #include <gf/Window.h>
 
 int main() {
+  static constexpr float Scale = 2.0f;
   static constexpr gf::Vector2i CharacterSize(12, 12);
   static constexpr gf::Vector2i ConsoleSize(80, 50);
 
-  const gf::Vector2i ScreenSize = CharacterSize * ConsoleSize;
+  const gf::Vector2i ScreenSize = CharacterSize * ConsoleSize * Scale;
 
   gf::Window window("27_console", ScreenSize, ~gf::WindowHints::Resizable);
   gf::RenderWindow renderer(window);
@@ -48,27 +49,35 @@ int main() {
   gf::BitmapConsoleFont font("assets/terminal.png", { gf::ConsoleFontFormat::Grayscale, gf::ConsoleFontFormat::InRow, gf::ConsoleFontFormat::ModifiedCodePage437 });
   assert(CharacterSize == font.getCharacterSize());
 
-  gf::Console console(font, ConsoleSize);
-  console.setDefaultBackground(gf::Color::Gray(0.25f));
+  gf::ConsoleStyle style;
+  style.background = gf::Color::Gray(0.25f);
 
-  console.putChar({ 40, 25 }, '@');
-  console.putChar({ 42, 25 }, gf::ConsoleChar::WhiteSmilingFace);
+  gf::Console console(font, ConsoleSize);
+
+  console.putChar({ 40, 25 }, '@', style);
+  console.putChar({ 42, 25 }, gf::ConsoleChar::WhiteSmilingFace, style);
 
   console.setColorControl(gf::ConsoleColorControl1, gf::Color::Red, gf::Color::Black);
-  console.print({ 1, 1 }, "String with a %cred%c word.", gf::ConsoleColorControl1, gf::ConsoleColorControlStop);
+  console.print({ 1, 1 }, style, "String with a %cred%c word.", gf::ConsoleColorControl1, gf::ConsoleColorControlStop);
 
+  style.alignment = gf::ConsoleAlignment::Right;
   console.setColorControl(gf::ConsoleColorControl2, gf::Color::Orange, gf::Color::Azure);
-  console.print(ConsoleSize - 2, gf::ConsoleEffect::Set, gf::ConsoleAlignment::Right, "Made with %cgf%c!", gf::ConsoleColorControl2, gf::ConsoleColorControlStop);
+  console.print(ConsoleSize - 2, style, "Made with %cgf%c!", gf::ConsoleColorControl2, gf::ConsoleColorControlStop);
 
   console.setColorControl(gf::ConsoleColorControl3, gf::Color::Black, gf::Color::Yellow);
   const char *text = "This is a simple but long text with %cmultiple%c lines.";
 
-  console.printRect(gf::RectI::fromPositionSize({ 2,  5 }, { 16, 5 }), gf::ConsoleEffect::Set, gf::ConsoleAlignment::Left, text, gf::ConsoleColorControl3, gf::ConsoleColorControlStop);
-  console.printRect(gf::RectI::fromPositionSize({ 2, 15 }, { 16, 5 }), gf::ConsoleEffect::Set, gf::ConsoleAlignment::Center, text, gf::ConsoleColorControl3, gf::ConsoleColorControlStop);
-  console.printRect(gf::RectI::fromPositionSize({ 2, 25 }, { 16, 5 }), gf::ConsoleEffect::Set, gf::ConsoleAlignment::Right, text, gf::ConsoleColorControl3, gf::ConsoleColorControlStop);
+  style.alignment = gf::ConsoleAlignment::Left;
+  console.printRect(gf::RectI::fromPositionSize({ 2,  5 }, { 16, 5 }), style, text, gf::ConsoleColorControl3, gf::ConsoleColorControlStop);
+  style.alignment = gf::ConsoleAlignment::Center;
+  console.printRect(gf::RectI::fromPositionSize({ 2, 15 }, { 16, 5 }), style, text, gf::ConsoleColorControl3, gf::ConsoleColorControlStop);
+  style.alignment = gf::ConsoleAlignment::Right;
+  console.printRect(gf::RectI::fromPositionSize({ 2, 25 }, { 16, 5 }), style, text, gf::ConsoleColorControl3, gf::ConsoleColorControlStop);
 
-  console.drawFrame(gf::RectI::fromPositionSize({ 30,  5 }, { 16, 5 }));
-  console.drawFrame(gf::RectI::fromPositionSize({ 30, 15 }, { 16, 5 }), gf::Console::PrintAction::None, gf::ConsoleEffect::Set, "Frame title");
+  console.drawFrame(gf::RectI::fromPositionSize({ 30,  5 }, { 16, 5 }), style);
+  console.drawFrame(gf::RectI::fromPositionSize({ 30, 15 }, { 16, 5 }), style, gf::Console::PrintAction::None, "Frame title");
+
+  console.scale(Scale);
 
   renderer.clear(gf::Color::White);
 

@@ -18,33 +18,30 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#ifndef GF_LIGHT_TEXTURES_H
-#define GF_LIGHT_TEXTURES_H
+#include <gf/Rect.h>
 
-#include "GraphicsApi.h"
-#include "Texture.h"
+template <typename... Args>
+constexpr void unused(Args&&...) { }
 
-namespace gf {
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-inline namespace v1 {
-#endif
+void dummyRectUsage() {
+  /// [rect]
+  // Define a rectangle, located at (0, 0) with a size of 20x5
+  gf::RectI r1 = gf::RectI::fromSize({ 20, 5 });
 
-  /**
-   * @ingroup graphics_light
-   * @brief Light texture creator
-   */
-  struct GF_GRAPHICS_API LightTextures {
+  // Define another rectangle, located at (4, 2) with a size of 18x10
+  gf::Vector2i position(4, 2);
+  gf::Vector2i size(18, 10);
+  gf::RectI r2 = gf::RectI::fromPositionSize(position, size);
 
-    static Texture createSimpleLight(int size);
-    static Texture createRealisticLight(int size, float attenuation = 1.0f, float radius = 0.0f);
+  // Test intersections with the point (3, 1)
+  bool b1 = r1.contains({ 3, 1 }); // true
+  bool b2 = r2.contains({ 3, 1 }); // false
 
-  };
+  // Test the intersection between r1 and r2
+  gf::RectI result;
+  bool b3 = r1.intersects(r2, result); // true
+  // result == (4, 2, 16, 3)
+  /// [rect]
 
-
-
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+  unused(b1, b2, b3);
 }
-#endif
-}
-
-#endif // GF_LIGHT_TEXTURES_H

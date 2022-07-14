@@ -28,7 +28,6 @@
 #include <gf/SegueEffects.h>
 #include <gf/Sprite.h>
 #include <gf/Texture.h>
-#include <gf/Unused.h>
 
 using namespace gf::literals;
 
@@ -166,9 +165,7 @@ namespace {
       setClearColor(gf::Color::fromRgba32(0xC0, 0xC1, 0xEF));
     }
 
-    void doHandleActions(gf::Window& window) override {
-      gf::unused(window);
-
+    void doHandleActions([[maybe_unused]] gf::Window& window) override {
       if (m_backAction.isActive()) {
         replaceScene(m_scenes, m_world, "Scene0"_id, SegueType::None);
       }
@@ -218,9 +215,7 @@ namespace {
 
   };
 
-  void Scene0::doHandleActions(gf::Window& window) {
-    gf::unused(window);
-
+  void Scene0::doHandleActions([[maybe_unused]] gf::Window& window) {
     if (m_segueAction.isActive()) {
       replaceScene(m_scenes, m_world, "Scene1"_id, m_segue);
     }

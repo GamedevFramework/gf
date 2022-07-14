@@ -203,10 +203,6 @@ else()
     graphics/Grid.cc
     graphics/Keyboard.cc
     graphics/Library.cc
-    graphics/LightPointEmission.cc
-    graphics/LightShape.cc
-    graphics/LightSystem.cc
-    graphics/LightTextures.cc
     graphics/Logo.cc
     graphics/Monitor.cc
     graphics/MouseValues.cc
@@ -422,20 +418,10 @@ target_link_libraries(gf0
     gfcore0
     Threads::Threads
   PRIVATE
+    SDL2::SDL2
     Freetype::Freetype
     pugixml
 )
-
-
-if(DEFINED GF_VCPKG)
-  if(BUILD_SHARED_LIBS)
-    target_link_libraries(gf0 PRIVATE SDL2::SDL2)
-  else()
-    target_link_libraries(gf0 PRIVATE SDL2::SDL2-static)
-  endif()
-else()
-  target_link_libraries(gf0 PRIVATE SDL2::SDL2)
-endif()
 
 target_link_libraries(gfnet0
   PUBLIC

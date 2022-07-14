@@ -31,6 +31,10 @@ namespace gf {
 inline namespace v1 {
 #endif
 
+  /*
+   * PointParticles
+   */
+
   PointParticles::PointParticles()
   : m_vertices(PrimitiveType::Points)
   {
@@ -50,10 +54,17 @@ inline namespace v1 {
     target.draw(m_vertices, localStates);
   }
 
+  /*
+   * ShapeParticles
+   */
+
   ShapeParticles::ShapeParticles()
   : m_vertices(PrimitiveType::Triangles)
   {
+  }
 
+  void ShapeParticles::clear() {
+    m_vertices.clear();
   }
 
   void ShapeParticles::addCircle(Vector2f center, float radius, Color4f color, std::size_t pointCount) {
@@ -107,11 +118,34 @@ inline namespace v1 {
     m_vertices.append(vertices[3]);
   }
 
+  void ShapeParticles::addPolygon(const Polygon& polygon, Color4f color) {
+    if (polygon.getPointCount() <= 2) {
+      return;
+    }
+
+    Vertex vertices[3];
+    vertices[0].color = vertices[1].color = vertices[2].color = color;
+    vertices[0].position = polygon.getCenter();
+
+    for (std::size_t i = 0; i < polygon.getPointCount(); ++i) {
+      vertices[1].position = polygon.getPoint(i);
+      vertices[2].position = polygon.getNextPoint(i);
+
+      m_vertices.append(vertices[0]);
+      m_vertices.append(vertices[1]);
+      m_vertices.append(vertices[2]);
+    }
+  }
+
   void ShapeParticles::draw(RenderTarget& target, const RenderStates& states) {
     RenderStates localStates = states;
     localStates.transform *= getTransform();
     target.draw(m_vertices, localStates);
   }
+
+  /*
+   * SpriteParticles
+   */
 
   SpriteParticles::SpriteParticles()
   : m_texture(nullptr)

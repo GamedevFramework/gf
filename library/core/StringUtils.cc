@@ -141,7 +141,7 @@ inline namespace v1 {
   }
 
   namespace {
-    bool is_delimiter(char c, std::string_view delimiters) {
+    bool isDelimiter(char c, std::string_view delimiters) {
       for (auto d : delimiters) {
         if (c == d) {
           return true;
@@ -158,7 +158,7 @@ inline namespace v1 {
       std::vector<std::string_view> result;
 
       while (i < sz) {
-        while (i < sz && is_delimiter(str[i], delimiters)) {
+        while (i < sz && isDelimiter(str[i], delimiters)) {
           ++i;
         }
 
@@ -169,7 +169,7 @@ inline namespace v1 {
         const char *start = str.data() + i;
         size_t len = 0;
 
-        while (i < sz && !is_delimiter(str[i], delimiters)) {
+        while (i < sz && !isDelimiter(str[i], delimiters)) {
           ++i;
           ++len;
         }

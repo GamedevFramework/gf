@@ -19,7 +19,9 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 #include <gf/Circ.h>
-#include <gf/Unused.h>
+
+template <typename... Args>
+constexpr void unused(Args&&...) { }
 
 void dummyCircUsage() {
 
@@ -38,6 +40,6 @@ void dummyCircUsage() {
   bool b3 = c1.intersects(c2); // true
   /// [circ]
 
-  gf::unused(c1, c2, b1, b2, b3);
+  unused(c1, c2, b1, b2, b3);
 
 }

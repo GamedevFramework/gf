@@ -21,7 +21,6 @@
 #include <gf/Font.h>
 #include <gf/RenderTarget.h>
 #include <gf/Text.h>
-#include <gf/Unused.h>
 
 void dummyTextUsage(gf::RenderTarget& renderer) {
   /// [text]

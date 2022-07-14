@@ -55,11 +55,26 @@ inline namespace v1 {
     Decorated = 0x0004, ///< Is the window decorated?
   };
 
+  /**
+   * @ingroup graphics_window_monitor
+   * @brief Filter for events
+   */
+  enum class EventFilter {
+    TouchAsMouse  = 0x0001, ///< Treat touch events as mouse events
+    AnyWindow     = 0x0002, ///< Grab events from any window, not just the created window
+  };
+
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 
 template<>
 struct EnableBitmaskOperators<WindowHints> {
+  static constexpr bool value = true;
+};
+
+template<>
+struct EnableBitmaskOperators<EventFilter> {
   static constexpr bool value = true;
 };
 
@@ -354,7 +369,7 @@ inline namespace v1 {
      * @return True if an event was returned, or false if the event queue was empty
      * @sa waitEvent()
      */
-    bool pollEvent(Event& event);
+    bool pollEvent(Event& event, Flags<EventFilter> filters = None);
 
     /**
      * @brief Wait for an event and return it
@@ -380,7 +395,7 @@ inline namespace v1 {
      * @return False if any error occurred
      * @sa pollEvent()
      */
-    bool waitEvent(Event& event);
+    bool waitEvent(Event& event, Flags<EventFilter> filters = None);
 
     /** @} */
 

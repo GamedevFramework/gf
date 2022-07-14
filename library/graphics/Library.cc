@@ -32,7 +32,6 @@
 #include <boost/version.hpp>
 
 #include <gf/Log.h>
-#include <gf/Unused.h>
 
 #include <gfpriv/SdlDebug.h>
 
@@ -69,16 +68,12 @@ inline namespace v1 {
     }
   }
 
-  Library::Library(Library&& other) noexcept
+  Library::Library([[maybe_unused]] Library&& other) noexcept
   {
-    gf::unused(other);
-
     g_loaded.fetch_add(1);
   }
 
-  Library& Library::operator=(Library&& other) noexcept {
-    gf::unused(other);
-
+  Library& Library::operator=([[maybe_unused]] Library&& other) noexcept {
     g_loaded.fetch_add(1);
     return *this;
   }

@@ -23,8 +23,6 @@
 #include <iterator>
 #include <numeric>
 
-#include <gf/Unused.h>
-
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
@@ -953,9 +951,8 @@ inline namespace v1 {
   }
 
   void RStarTree::validate() const {
-    std::size_t entries = validateNode(m_root);
+    [[maybe_unused]] std::size_t entries = validateNode(m_root);
     assert(entries == m_entries.getAllocated());
-    gf::unused(entries);
   }
 
   std::size_t RStarTree::validateNode(std::size_t nodeIndex) const {
@@ -968,19 +965,17 @@ inline namespace v1 {
       entries += node.members.size();
 
       for (auto& member : node.members) {
-        const Entry& entry = m_entries[member.index];
+        [[maybe_unused]] const Entry& entry = m_entries[member.index];
         assert(entry.bounds == member.bounds);
         assert(entry.node == nodeIndex);
-        gf::unused(entry);
       }
     } else {
       assert(node.type == Node::Branch);
 
       for (auto& member : node.members) {
-        const Node& child = m_nodes[member.index];
+        [[maybe_unused]] const Node& child = m_nodes[member.index];
         assert(child.bounds == member.bounds);
         assert(child.parent == nodeIndex);
-        gf::unused(child);
         entries += validateNode(member.index);
       }
     }

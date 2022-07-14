@@ -14,9 +14,7 @@ This file is a list of ideas for gf. Some of them will eventually be in gf. Othe
 
 ## graphics
 
-- (cursor) fix the bug due to image handling
 - (font) use Signed Distance Field for big size fonts
-- (window/events) add a flag in `pollEvent`/`waitEvent` (`EventFlag::TouchAsMouse`, `EventFlag::NoWindowFilter`)
 - (curve/shape) add anti-aliasing to `Curve` and `Shape`
   - ideas: [vaserenderer](https://github.com/tyt2y3/vaserenderer),
   - ideas: [a forum thread](https://forum.libcinder.org/topic/smooth-thick-lines-using-geometry-shader#23286000001269127)
@@ -26,7 +24,6 @@ This file is a list of ideas for gf. Some of them will eventually be in gf. Othe
 - (scene) integrate post-processing in `Scene`/`SceneManager`
   - remove `RenderPipeline`
   - rename `Effect` in `PostProcEffect`
-- (console) make style a class and remove internal style state
 - (drawable) Remove `Drawable`, make it a named requirement (or a concept in the future)
 
 ## net
@@ -42,4 +39,3 @@ This file is a list of ideas for gf. Some of them will eventually be in gf. Othe
   - blocking bug: nemequ/hedley#35
 - (packaging) use CPack to create packages
 - (binding) Python binding with [pybind11](https://github.com/pybind/pybind11)?
-- (code) remove gf::unused

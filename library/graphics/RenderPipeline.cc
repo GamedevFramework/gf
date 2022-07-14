@@ -23,7 +23,6 @@
 #include <cassert>
 
 #include <gf/PostProcessing.h>
-#include <gf/Unused.h>
 #include <gf/Window.h>
 
 #include <gfpriv/GlDebug.h>
@@ -122,8 +121,7 @@ inline namespace v1 {
     GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, m_buffers[m_current].framebuffer));
   }
 
-  void RenderPipeline::onFramebufferResize(Vector2i size) {
-    gf::unused(size);
+  void RenderPipeline::onFramebufferResize([[maybe_unused]] Vector2i size) {
     // nothing by default
   }
 

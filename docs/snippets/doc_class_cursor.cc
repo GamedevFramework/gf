@@ -19,7 +19,6 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 #include <gf/Cursor.h>
-#include <gf/Unused.h>
 #include <gf/Window.h>
 
 void dummyCursorUsage(gf::Window& window) {

@@ -26,7 +26,6 @@
 #include <gf/Event.h>
 #include <gf/RenderTarget.h>
 #include <gf/Transform.h>
-#include <gf/Unused.h>
 #include <gf/VectorOps.h>
 
 
@@ -126,8 +125,7 @@ inline namespace v1 {
     return invert(getTransform());
   }
 
-  void View::onSizeChange(Vector2f size) {
-    gf::unused(size);
+  void View::onSizeChange([[maybe_unused]] Vector2f size) {
     // nothing by default
   }
 
@@ -140,8 +138,7 @@ inline namespace v1 {
     m_viewport = viewport;
   }
 
-  void View::onViewportChange(const RectF& viewport) {
-    gf::unused(viewport);
+  void View::onViewportChange([[maybe_unused]] const RectF& viewport) {
     // nothing by default
   }
 

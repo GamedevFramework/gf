@@ -25,8 +25,6 @@
 #include <array>
 #include <vector>
 
-#include "Unused.h"
-
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
@@ -87,11 +85,10 @@ inline namespace v1 {
      * @param size The number of elements in the array
      */
     constexpr
-    StaticSpan(T *data, std::size_t size) noexcept
+    StaticSpan(T *data, [[maybe_unused]] std::size_t size) noexcept
     : m_data(data)
     {
       assert(size == Size);
-      gf::unused(size);
     }
 
     /**

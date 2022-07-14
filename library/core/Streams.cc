@@ -28,7 +28,6 @@
 #include <string>
 
 #include <gf/Log.h>
-#include <gf/Unused.h>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -158,9 +157,8 @@ inline namespace v1 {
   {
     m_stream.zalloc = nullptr;
     m_stream.zfree = nullptr;
-    int err = inflateInit(&m_stream);
+    [[maybe_unused]] int err = inflateInit(&m_stream);
     assert(err == Z_OK); // throw?
-    gf::unused(err);
   }
 
   CompressedInputStream::~CompressedInputStream() {
@@ -200,13 +198,11 @@ inline namespace v1 {
     return buffer.getSize();
   }
 
-  void CompressedInputStream::seek(std::ptrdiff_t position) {
-    gf::unused(position);
+  void CompressedInputStream::seek([[maybe_unused]] std::ptrdiff_t position) {
     throw std::runtime_error("Not supported");
   }
 
-  void CompressedInputStream::skip(std::ptrdiff_t position) {
-    gf::unused(position);
+  void CompressedInputStream::skip([[maybe_unused]] std::ptrdiff_t position) {
     throw std::runtime_error("Not supported");
   }
 
@@ -354,9 +350,8 @@ inline namespace v1 {
   {
     m_stream.zalloc = nullptr;
     m_stream.zfree = nullptr;
-    int err = deflateInit(&m_stream, Z_DEFAULT_COMPRESSION);
+    [[maybe_unused]] int err = deflateInit(&m_stream, Z_DEFAULT_COMPRESSION);
     assert(err == Z_OK); // throw?
-    gf::unused(err);
   }
 
   CompressedOutputStream::~CompressedOutputStream() {

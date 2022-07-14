@@ -24,7 +24,6 @@
 
 #include <gf/Color.h>
 #include <gf/Log.h>
-#include <gf/Unused.h>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -259,8 +258,7 @@ inline namespace v1 {
     return m_renderer.mapCoordsToPixel(coords, view);
   }
 
-  void SceneManager::doGlobalProcessEvent(const Event& event) {
-    gf::unused(event);
+  void SceneManager::doGlobalProcessEvent([[maybe_unused]] const Event& event) {
     // nothing by default
   }
 

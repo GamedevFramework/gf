@@ -27,6 +27,7 @@
 #include <map>
 #include <memory>
 #include <string>
+#include <variant>
 #include <vector>
 
 #include "CellTypes.h"
@@ -60,21 +61,6 @@ inline namespace v1 {
    */
   class GF_CORE_API TmxProperties {
   public:
-    /**
-     * @brief Default constructor
-     */
-    TmxProperties() = default;
-
-    /**
-     * @brief Default move constructor
-     */
-    TmxProperties(TmxProperties&&) = default;
-
-    /**
-     * @brief Default move assignment
-     */
-    TmxProperties& operator=(TmxProperties&&) = default;
-
     /**
      * @brief Add a string property
      *
@@ -122,6 +108,22 @@ inline namespace v1 {
      * @param value The value of the property
      */
     void addFileProperty(std::string name, Path value);
+
+    /**
+     * @brief Add an object property
+     *
+     * @param name The name of the property
+     * @param value The value of the property
+     */
+    void addObjectProperty(std::string name, Id value);
+
+    /**
+     * @brief Add a class property
+     *
+     * @param name The name of the property
+     * @param value The value of the property
+     */
+    void addClassProperty(std::string name, TmxProperties value);
 
     /**
      * @brief Get a string property
@@ -177,13 +179,27 @@ inline namespace v1 {
      */
     Path getFileProperty(const std::string& name, const Path& def) const;
 
+    /**
+     * @brief Get an object property
+     *
+     * @param name The name of the property
+     * @param def The default value if the property does not exist
+     * @returns The value of the given property
+     */
+    Id getObjectProperty(const std::string& name, Id def) const;
+
+    /**
+     * @brief Get a class property
+     *
+     * @param name The name of the property
+     * @param def The default value if the property does not exist
+     * @returns The value of the given property
+     */
+    TmxProperties getClassProperty(const std::string& name, const TmxProperties& def) const;
+
   private:
-    std::map<std::string, std::string> m_stringProps;
-    std::map<std::string, int> m_intProps;
-    std::map<std::string, double> m_floatProps;
-    std::map<std::string, bool> m_boolProps;
-    std::map<std::string, Color4u> m_colorProps;
-    std::map<std::string, Path> m_fileProps;
+    using Value = std::variant<bool, int, double, std::string, Color4u, Path, Id, TmxProperties>;
+    std::map<std::string, Value> m_props;
   };
 
   struct TmxLayers;
@@ -456,6 +472,13 @@ inline namespace v1 {
    * @brief A layer with objects
    */
   struct GF_CORE_API TmxObjectLayer : public TmxLayer {
+#ifdef _MSC_VER
+    // stupid MSVC!
+    TmxObjectLayer() = default;
+    TmxObjectLayer(const TmxObjectLayer&) = delete;
+    TmxObjectLayer& operator=(const TmxObjectLayer&) = delete;
+#endif
+
     Color4u color;  ///< The color of the objects
     TmxDrawOrder drawOrder; ///< The draw order of the objects
     std::vector<std::unique_ptr<TmxObject>> objects;  ///< The objects of the layer
@@ -490,6 +513,13 @@ inline namespace v1 {
    * @brief A layer with other layers
    */
   struct GF_CORE_API TmxGroupLayer : public TmxLayer {
+#ifdef _MSC_VER
+    // stupid MSVC!
+    TmxGroupLayer() = default;
+    TmxGroupLayer(const TmxGroupLayer&) = delete;
+    TmxGroupLayer& operator=(const TmxGroupLayer&) = delete;
+#endif
+
     std::vector<std::unique_ptr<TmxLayer>> layers;  ///< The other layers
 
     void accept(const TmxLayers& map, TmxVisitor& visitor) const override;
@@ -516,18 +546,6 @@ inline namespace v1 {
 
   /**
    * @ingroup core_tmx
-   * @brief A description of a kind of terrain on the map
-   *
-   * @sa gf::TmxTileset
-   */
-  struct GF_CORE_API TmxTerrain {
-    TmxProperties properties; ///< The properties of the terrain
-    std::string name;         ///< The name of the terrain
-    int tile;                 ///< The representing tile for the terrain
-  };
-
-  /**
-   * @ingroup core_tmx
    * @brief A rectangular part of a tileset
    *
    * @sa gf::TmxTileset
@@ -536,12 +554,60 @@ inline namespace v1 {
     TmxProperties properties; ///< The properties of the tile
     int id;                   ///< The local id of the tile
     std::string type;         ///< The type of the tile
-    std::array<int, 4> terrain;  ///< The terrain if the corners (top-left, top-right, bottom-left, bottom-right)
     int probability;          ///< The probability of the tile
 
     std::unique_ptr<TmxImage> image;  ///< The image of this tile
     std::unique_ptr<TmxObjectLayer> objects;  ///< The objects in the tile
     std::unique_ptr<TmxAnimation> animation;  ///< The animation data of the tile
+  };
+
+  /**
+   * @ingroup core_tmx
+   * @brief A wang color
+   *
+   * @sa gf::TmxWangSet
+   */
+  struct GF_CORE_API TmxWangColor {
+    TmxProperties properties; ///< The properties of the wang color
+    std::string name;         ///< The name of the wang color
+    Color4u color;            ///< The color of the wang color
+    int tile;                 ///< The id of the tile representing the color
+    int probability;          ///< The probability of the tile
+  };
+
+  /**
+   * @ingroup core_tmx
+   * @brief A wang tile
+   *
+   * @sa gf::TmxWangSet
+   */
+  struct GF_CORE_API TmxWangTile {
+    static constexpr std::size_t Top          = 0; ///< Index of the top color
+    static constexpr std::size_t TopRight     = 1; ///< Index of the top-right color
+    static constexpr std::size_t Right        = 2; ///< Index of the right color
+    static constexpr std::size_t BottomRight  = 3; ///< Index of the bottom-right color
+    static constexpr std::size_t Bottom       = 4; ///< Index of the bottom color
+    static constexpr std::size_t BottomLeft   = 5; ///< Index of the bottom-left color
+    static constexpr std::size_t Left         = 6; ///< Index of the left color
+    static constexpr std::size_t TopLeft      = 7; ///< Index of the top-left color
+
+    int tileid;                 ///< The id of the tile
+    std::array<int, 8> wangid;  ///< the wang colors of the corners and edges (top, top-right, right, bottom-right, bottom, bottom-left, left, top-left)
+  };
+
+  /**
+   * @ingroup core_tmx
+   * @brief A wang set
+   *
+   * @sa gf::TmxTileset
+   */
+  struct GF_CORE_API TmxWangSet {
+    TmxProperties properties; ///< The properties of the wang set
+    std::string name;         ///< The name of the wang set
+    int tile;                 ///< the id of the tile representing the wang set
+
+    std::vector<TmxWangColor> colors;
+    std::vector<TmxWangTile> tiles;
   };
 
   /**
@@ -562,10 +628,9 @@ inline namespace v1 {
     Vector2i offset;          ///< The offset of the tileset
 
     std::unique_ptr<TmxImage> image;  ///< The image of the tileset
-    std::vector<TmxTerrain> terrains; ///< The terrains of the tileset
     std::vector<TmxTile> tiles;       ///< The tiles of the tileset
+    std::vector<TmxWangSet> wangsets; ///< The wang set of the tileset
 
-  public:
     /**
      * @brief Get the tile corresponding to an id.
      *
@@ -589,6 +654,13 @@ inline namespace v1 {
    * @brief A TMX map
    */
   struct GF_CORE_API TmxLayers {
+#ifdef _MSC_VER
+    // stupid MSVC!
+    TmxLayers() = default;
+    TmxLayers(const TmxLayers&) = delete;
+    TmxLayers& operator=(const TmxLayers&) = delete;
+#endif
+
     TmxProperties properties;   ///< The properties of the map
 
     std::string version;        ///< The version of the map

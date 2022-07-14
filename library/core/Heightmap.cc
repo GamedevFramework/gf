@@ -24,7 +24,6 @@
 
 #include <gf/Color.h>
 #include <gf/VectorOps.h>
-#include <gf/Unused.h>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

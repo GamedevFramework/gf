@@ -56,6 +56,7 @@
 #include "Move.cc"
 #include "Noise.cc"
 #include "Noises.cc"
+#include "Noises_OpenSimplex.cc"
 #include "Orientation.cc"
 #include "Path.cc"
 #include "PointSequence.cc"

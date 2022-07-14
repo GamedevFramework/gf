@@ -37,6 +37,44 @@ inline namespace v1 {
   TextureAtlas::TextureAtlas(const Path& filename)
   : m_texture(nullptr)
   {
+    loadXml(filename);
+  }
+
+  TextureAtlas::TextureAtlas(const Path& filename, ResourceManager& resources)
+  : m_texture(nullptr)
+  {
+    gf::Path absolute = resources.getAbsolutePath(filename);
+    loadXml(absolute);
+    Path parent = absolute.parent_path();
+    Texture& texture = resources.getTexture(parent / getTexturePath());
+    setTexture(texture);
+  }
+
+  void TextureAtlas::addSubTexture(std::string name, const RectI& rect) {
+    m_rects.emplace(std::move(name), rect);
+  }
+
+  RectI TextureAtlas::getSubTexture(const std::string& name) const {
+    auto it = m_rects.find(name);
+
+    if (it == m_rects.end()) {
+      return RectI::fromSize({ 1, 1 });
+    }
+
+    return it->second;
+  }
+
+  RectF TextureAtlas::getTextureRect(const std::string& name) const {
+    if (m_texture == nullptr) {
+      return RectF::fromSize({ 1.0f, 1.0f });
+    }
+
+    RectI rect = getSubTexture(name);
+    return m_texture->computeTextureCoords(rect);
+  }
+
+
+  void TextureAtlas::loadXml(const Path& filename) {
     pugi::xml_document doc;
     pugi::xml_parse_result result = doc.load_file(filename.string().c_str());
 
@@ -81,37 +119,6 @@ inline namespace v1 {
     }
   }
 
-  TextureAtlas::TextureAtlas(const Path& filename, ResourceManager& resources)
-  : TextureAtlas(resources.getAbsolutePath(filename))
-  {
-    gf::Path absolute = resources.getAbsolutePath(filename);
-    Path parent = absolute.parent_path();
-    Texture& texture = resources.getTexture(parent / getTexturePath());
-    setTexture(texture);
-  }
-
-  void TextureAtlas::addSubTexture(std::string name, const RectI& rect) {
-    m_rects.emplace(std::move(name), rect);
-  }
-
-  RectI TextureAtlas::getSubTexture(const std::string& name) const {
-    auto it = m_rects.find(name);
-
-    if (it == m_rects.end()) {
-      return RectI::fromSize({ 1, 1 });
-    }
-
-    return it->second;
-  }
-
-  RectF TextureAtlas::getTextureRect(const std::string& name) const {
-    if (m_texture == nullptr) {
-      return RectF::fromSize({ 1.0f, 1.0f });
-    }
-
-    RectI rect = getSubTexture(name);
-    return m_texture->computeTextureCoords(rect);
-  }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }

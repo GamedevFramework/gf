@@ -61,7 +61,7 @@ inline namespace v1 {
      * @param texture New texture
      * @sa getTexture()
      */
-    void setTexture(const Texture& texture);
+    void setTexture(Texture& texture);
 
     /**
      * @brief Get the source texture of the tileset
@@ -74,6 +74,17 @@ inline namespace v1 {
      */
     const Texture& getTexture() const {
       return *m_texture;
+    }
+
+    /**
+     * @brief Enable or disable the smooth filter on the texture
+     *
+     * @param smooth True to enable smoothing, false to disable it
+     *
+     * @see BareTexture::setSmooth()
+     */
+    void setSmooth(bool smooth = true) {
+      m_texture->setSmooth(smooth);
     }
 
     /**
@@ -217,7 +228,7 @@ inline namespace v1 {
     void updateSize();
 
   private:
-    const Texture *m_texture;
+    Texture *m_texture;
     Vector2i m_tileSize;
     Vector2i m_margin;
     Vector2i m_spacing;

@@ -19,7 +19,9 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 #include <gf/Clock.h>
-#include <gf/Unused.h>
+
+template <typename... Args>
+constexpr void unused(Args&&...) { }
 
 void dummyClockUsage() {
 
@@ -31,6 +33,5 @@ void dummyClockUsage() {
   gf::Time time2 = clock.restart();
   /// [clock]
 
-  gf::unused(clock, time1, time2);
-
+  unused(clock, time1, time2);
 }

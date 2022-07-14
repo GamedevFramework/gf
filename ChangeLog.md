@@ -1,5 +1,22 @@
 # ChangeLog for gf
 
+## gf 1.0.0 (14 Jul 2022)
+
+- Core (gf::core)
+  - Add gf::Flags serialization
+  - Add gf::angleTo and gf::projectOnto
+  - Remove gf::unused in favor of `[[maybe_unused]]`
+- Graphics (gf::graphics)
+  - Add VertexArray::appendAll()
+  - Add ShapeParticles::addPolygon()
+  - Add a flag of EventFilter in Window::pollEvent() and Window::waitEvent()
+  - Add gf::ConsoleStyle and update related classes
+  - Add TileLayer::setTilesetSmooth()
+  - Remove gf::LightSystem and related classes (not ready)
+- Network (gf::net)
+- Misc
+  - 6th anniversary!
+
 ## gf 0.22.0 (14 Jan 2022)
 
 - Core (gf::core)

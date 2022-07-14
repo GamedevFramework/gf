@@ -195,6 +195,9 @@ inline namespace v1 {
     RectF getTextureRect(const std::string& name) const;
 
   private:
+    void loadXml(const Path& filename);
+
+  private:
     Path m_texturePath;
     const Texture *m_texture;
     std::map<std::string, RectI> m_rects;

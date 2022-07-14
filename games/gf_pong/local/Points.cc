@@ -23,7 +23,6 @@
 #include <cassert>
 #include <gf/RenderTarget.h>
 #include <gf/Shapes.h>
-#include <gf/Unused.h>
 
 #include "Messages.h"
 #include "Singletons.h"
@@ -143,9 +142,8 @@ void Points::render(gf::RenderTarget& target, const gf::RenderStates& states) {
 }
 
 
-gf::MessageStatus Points::onPoint(gf::Id id, gf::Message *msg) {
+gf::MessageStatus Points::onPoint([[maybe_unused]] gf::Id id, gf::Message *msg) {
   assert(id == PointMessage::type);
-  gf::unused(id);
 
   auto point = static_cast<PointMessage*>(msg);
 

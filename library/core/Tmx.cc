@@ -31,7 +31,6 @@
 #include <zlib.h>
 
 #include <gf/Log.h>
-#include <gf/Unused.h>
 
 #include <pugixml.hpp>
 
@@ -43,81 +42,97 @@ inline namespace v1 {
 #endif
 
   void TmxProperties::addStringProperty(std::string name, std::string value) {
-    m_stringProps.insert({ std::move(name), std::move(value) });
+    m_props.insert({ std::move(name), std::move(value) });
   }
 
   void TmxProperties::addIntProperty(std::string name, int value) {
-    m_intProps.insert({ std::move(name), value });
+    m_props.insert({ std::move(name), value });
   }
 
   void TmxProperties::addFloatProperty(std::string name, double value) {
-    m_floatProps.insert({ std::move(name), value });
+    m_props.insert({ std::move(name), value });
   }
 
   void TmxProperties::addBoolProperty(std::string name, bool value) {
-    m_boolProps.insert({ std::move(name), value });
+    m_props.insert({ std::move(name), value });
   }
 
   void TmxProperties::addColorProperty(std::string name, Color4u value) {
-    m_colorProps.insert({ std::move(name), value });
+    m_props.insert({ std::move(name), value });
   }
 
   void TmxProperties::addFileProperty(std::string name, Path value) {
-    m_fileProps.insert({ std::move(name), std::move(value) });
+    m_props.insert({ std::move(name), std::move(value) });
+  }
+
+  void TmxProperties::addObjectProperty(std::string name, Id value) {
+    m_props.insert({ std::move(name), value });
+  }
+
+  void TmxProperties::addClassProperty(std::string name, TmxProperties value) {
+    m_props.insert({ std::move(name), std::move(value) });
   }
 
   namespace {
 
-    template<typename T>
-    T findOr(const std::map<std::string, T>& prop, const std::string& name, const T& def) {
+    template<typename T, typename U>
+    U findValue(const std::map<std::string, T>& prop, const std::string& name, const U& def) {
       auto it = prop.find(name);
 
-      if (it != prop.end()) {
-        return it->second;
+      if (it == prop.end()) {
+        return def;
       }
 
-      return def;
+      if (!std::holds_alternative<U>(it->second)) {
+        return def;
+      }
+
+      return std::get<U>(it->second);
     }
 
   }
 
   std::string TmxProperties::getStringProperty(const std::string& name, const std::string& def) const {
-    return findOr(m_stringProps, name, def);
+    return findValue(m_props, name, def);
   }
 
   int TmxProperties::getIntProperty(const std::string& name, int def) const {
-    return findOr(m_intProps, name, def);
+    return findValue(m_props, name, def);
   }
 
   double TmxProperties::getFloatProperty(const std::string& name, double def) const {
-    return findOr(m_floatProps, name, def);
+    return findValue(m_props, name, def);
   }
 
   bool TmxProperties::getBoolProperty(const std::string& name, bool def) const {
-    return findOr(m_boolProps, name, def);
+    return findValue(m_props, name, def);
   }
 
   Color4u TmxProperties::getColorProperty(const std::string& name, const Color4u& def) const {
-    return findOr(m_colorProps, name, def);
+    return findValue(m_props, name, def);
   }
 
   Path TmxProperties::getFileProperty(const std::string& name, const Path& def) const {
-    return findOr(m_fileProps, name, def);
+    return findValue(m_props, name, def);
   }
 
+  Id TmxProperties::getObjectProperty(const std::string& name, Id def) const {
+    return findValue(m_props, name, def);
+  }
+
+  TmxProperties TmxProperties::getClassProperty(const std::string& name, const TmxProperties& def) const {
+    return findValue(m_props, name, def);
+  }
 
   TmxVisitor::~TmxVisitor() = default;
 
-  void TmxVisitor::visitTileLayer(const TmxLayers& map, const TmxTileLayer& layer) {
-    gf::unused(map, layer);
+  void TmxVisitor::visitTileLayer([[maybe_unused]] const TmxLayers& map, [[maybe_unused]] const TmxTileLayer& layer) {
   }
 
-  void TmxVisitor::visitObjectLayer(const TmxLayers& map, const TmxObjectLayer& layer) {
-    gf::unused(map, layer);
+  void TmxVisitor::visitObjectLayer([[maybe_unused]] const TmxLayers& map, [[maybe_unused]] const TmxObjectLayer& layer) {
   }
 
-  void TmxVisitor::visitImageLayer(const TmxLayers& map, const TmxImageLayer& layer) {
-    gf::unused(map, layer);
+  void TmxVisitor::visitImageLayer([[maybe_unused]] const TmxLayers& map, [[maybe_unused]] const TmxImageLayer& layer) {
   }
 
   void TmxVisitor::visitGroupLayer(const TmxLayers& map, const TmxGroupLayer& layer) {
@@ -240,6 +255,9 @@ inline namespace v1 {
       Color4u color = def;
 
       switch (value.size()) {
+        case 5:
+          value.insert(0, 1, '0');
+          [[fallthrough]];
         case 6:
           color.a = 0xFF;
           color.r = (convertHexChar(value[0]) << 4) + convertHexChar(value[1]);
@@ -247,6 +265,9 @@ inline namespace v1 {
           color.b = (convertHexChar(value[4]) << 4) + convertHexChar(value[5]);
           break;
 
+        case 7:
+          value.insert(0, 1, '0');
+          [[fallthrough]];
         case 8:
           color.a = (convertHexChar(value[0]) << 4) + convertHexChar(value[1]);
           color.r = (convertHexChar(value[2]) << 4) + convertHexChar(value[3]);
@@ -445,6 +466,7 @@ inline namespace v1 {
       static constexpr uint32_t FlippedHorizontallyFlag = UINT32_C(0x80000000);
       static constexpr uint32_t FlippedVerticallyFlag   = UINT32_C(0x40000000);
       static constexpr uint32_t FlippedDiagonallyFlag   = UINT32_C(0x20000000);
+      static constexpr uint32_t RotatedHexagonal120Flag = UINT32_C(0x10000000);
 
       TmxCell cell;
 
@@ -461,8 +483,12 @@ inline namespace v1 {
         cell.flip.set(Flip::Diagonally);
       }
 
+      if ((gid & RotatedHexagonal120Flag) != 0) {
+        cell.flip.set(Flip::Rotation120);
+      }
+
       // Clear the flags
-      cell.gid = gid & ~(FlippedHorizontallyFlag | FlippedVerticallyFlag | FlippedDiagonallyFlag);
+      cell.gid = gid & ~(FlippedHorizontallyFlag | FlippedVerticallyFlag | FlippedDiagonallyFlag | RotatedHexagonal120Flag);
 
       return cell;
     }
@@ -490,6 +516,10 @@ inline namespace v1 {
               tmx.addColorProperty(std::move(name), computeColor(required_attribute(property, "value")));
             } else if (type == "file") {
               tmx.addFileProperty(std::move(name), required_attribute(property, "value").as_string());
+            } else if (type == "object") {
+              tmx.addObjectProperty(std::move(name), required_attribute(property, "value").as_uint());
+            } else if (type == "class") {
+              tmx.addClassProperty(std::move(name), parseTmxProperties(property));
             } else {
               Log::error("Wrong type string: '%s'\n", type.c_str());
             }
@@ -861,25 +891,7 @@ inline namespace v1 {
       tmx.id = required_attribute(node, "id").as_int();
       tmx.type = node.attribute("type").as_string();
 
-      static constexpr int Invalid = -1;
-
-      tmx.terrain = { { Invalid, Invalid, Invalid, Invalid } };
-
-      std::string terrain = node.attribute("terrain").as_string();
-
-      if (!terrain.empty()) {
-        std::vector<std::string> items;
-        boost::algorithm::split(items, terrain, boost::algorithm::is_any_of(","));
-        int t = 0;
-
-        for (auto item : items) {
-          if (!item.empty()) {
-            tmx.terrain[t++] = std::stoi(item);
-          }
-        }
-      }
-
-      tmx.probability = node.attribute("probability").as_int(100u);
+      tmx.probability = node.attribute("probability").as_int(0);
 
       tmx.image = nullptr;
       pugi::xml_node image = node.child("image");
@@ -905,15 +917,62 @@ inline namespace v1 {
       return tmx;
     }
 
-    TmxTerrain parseTmxTerrain(const pugi::xml_node node) {
-      assert(node.name() == "terrain"s);
+    TmxWangColor parseTmxWangColor(const pugi::xml_node node) {
+      assert(node.name() == "wangcolor"s);
 
-      TmxTerrain tmx;
+      TmxWangColor tmx;
+
+      tmx.properties = parseTmxProperties(node);
+
+      tmx.name = required_attribute(node, "name").as_string();
+      tmx.color = computeColor(required_attribute(node, "color"));
+      tmx.tile = required_attribute(node, "tile").as_int();
+      tmx.probability = node.attribute("probability").as_int(0);
+
+      return tmx;
+    }
+
+    TmxWangTile parseTmxWangTile(const pugi::xml_node node) {
+      assert(node.name() == "wangtile"s);
+
+      TmxWangTile tmx;
+      tmx.tileid = required_attribute(node, "tileid").as_int();
+      tmx.wangid = { 0, 0, 0, 0, 0, 0, 0, 0 };
+
+      std::string wangid = node.attribute("wangid").as_string();
+
+      if (!wangid.empty()) {
+        std::vector<std::string> items;
+        boost::algorithm::split(items, wangid, boost::algorithm::is_any_of(","));
+        assert(items.size() == 8);
+        std::size_t index = 0;
+
+        for (auto item : items) {
+          assert(!item.empty());
+          tmx.wangid[index++] = std::stoi(item);
+        }
+      }
+
+      return tmx;
+    }
+
+    TmxWangSet parseTmxWangSet(const pugi::xml_node node) {
+      assert(node.name() == "wangset"s);
+
+      TmxWangSet tmx;
 
       tmx.properties = parseTmxProperties(node);
 
       tmx.name = required_attribute(node, "name").as_string();
       tmx.tile = required_attribute(node, "tile").as_int();
+
+      for (pugi::xml_node color : node.children("wangcolor")) {
+        tmx.colors.push_back(parseTmxWangColor(color));
+      }
+
+      for (pugi::xml_node tile : node.children("wangtile")) {
+        tmx.tiles.push_back(parseTmxWangTile(tile));
+      }
 
       return tmx;
     }
@@ -947,17 +1006,18 @@ inline namespace v1 {
         tmx.image = parseTmxImage(image, ctx);
       }
 
-      pugi::xml_node terrains = node.child("terraintypes");
-
-      if (terrains != nullptr) {
-        for (pugi::xml_node terrain : terrains.children("terrain")) {
-          tmx.terrains.push_back(parseTmxTerrain(terrain));
-        }
-      }
-
       for (pugi::xml_node tile : node.children("tile")) {
         tmx.tiles.push_back(parseTmxTile(tile, ctx));
       }
+
+      pugi::xml_node wangsets = node.child("wangsets");
+
+      if (wangsets != nullptr) {
+        for (pugi::xml_node wangset : wangsets.children("wangset")) {
+          tmx.wangsets.push_back(parseTmxWangSet(wangset));
+        }
+      }
+
     }
 
     void parseTmxTilesetFromFile(const Path& source, TmxTileset& tmx, TmxParserCtx& ctx) {

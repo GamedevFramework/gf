@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 project(GF
-  VERSION 0.22.0
+  VERSION 1.0.0
   LANGUAGES CXX C
 )
 
@@ -35,10 +35,6 @@ set(GF_SHARED ${BUILD_SHARED_LIBS})
 
 include(GNUInstallDirs)
 set(GF_DATADIR ${CMAKE_INSTALL_FULL_DATADIR})
-
-if(NOT DEFINED GF_VCPKG)
-  list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
-endif()
 
 set(SDL2_BUILDING_LIBRARY TRUE)
 find_package(SDL2 REQUIRED)

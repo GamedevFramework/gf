@@ -22,8 +22,6 @@
 
 #include <algorithm>
 
-#include <gf/Unused.h>
-
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
@@ -42,9 +40,8 @@ inline namespace v1 {
     m_entries[index].bounds = bounds;
 
     assert(m_root != Null);
-    bool inserted = doInsert(index, m_root);
+    [[maybe_unused]] bool inserted = doInsert(index, m_root);
     assert(inserted);
-    gf::unused(inserted);
 
     return static_cast<SpatialId>(index);
   }

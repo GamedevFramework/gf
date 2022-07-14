@@ -8,7 +8,7 @@ on:
 
 env:
   BUILD_TYPE: Release
-  VCPKG_COMMIT: 5568f110b509a9fd90711978a7cb76bae75bb092
+  VCPKG_COMMIT: af2287382b1991dbdcb7e5112d236f3323b9dd7a
   VCPKG_DEFAULT_BINARY_CACHE: ${{ github.workspace }}\vcpkg\binary-cache
 
 jobs:
@@ -20,7 +20,7 @@ jobs:
         uses: actions/cache@v2.1.6
         with:
           path: vcpkg
-          key: ${{ runner.os }}-vcpkg-${{ env.VCPKG_COMMIT }}-v3
+          key: ${{ runner.os }}-vcpkg-${{ env.VCPKG_COMMIT }}-v1
 
       - uses: actions/checkout@v2
         if: steps.cache-vcpkg.outputs.cache-hit != 'true'

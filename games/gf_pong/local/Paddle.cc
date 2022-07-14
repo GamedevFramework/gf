@@ -22,7 +22,6 @@
 
 #include <gf/RenderTarget.h>
 #include <gf/Shapes.h>
-#include <gf/Unused.h>
 
 #include "Ball.h"
 #include "Ground.h"
@@ -60,9 +59,7 @@ void Paddle::update(gf::Time time) {
   }
 }
 
-gf::MessageStatus Paddle::onBallLocation(gf::Id id, gf::Message *msg) {
-  gf::unused(id);
-
+gf::MessageStatus Paddle::onBallLocation([[maybe_unused]] gf::Id id, gf::Message *msg) {
   auto loc = static_cast<BallLocationMessage*>(msg);
 
   gf::Vector2f n = loc->position - m_position;

@@ -19,11 +19,9 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 #include <gf/Event.h>
-#include <gf/Unused.h>
 #include <gf/Window.h>
 
-void doSomethingWithTheNewSize(gf::Vector2i size) {
-  gf::unused(size);
+void doSomethingWithTheNewSize([[maybe_unused]] gf::Vector2i size) {
 }
 
 void dummyEventUsage(gf::Window& window) {
