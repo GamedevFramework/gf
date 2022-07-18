@@ -96,7 +96,7 @@ inline namespace v1 {
    */
   inline
   bool operator==(const RenderStates& lhs, const RenderStates& rhs) {
-    return lhs.mode == rhs.mode && lhs.transform == rhs.transform && lhs.texture == rhs.texture && lhs.shader == rhs.shader;
+    return lhs.mode == rhs.mode && lhs.transform == rhs.transform && lhs.texture[0] == rhs.texture[0] && lhs.texture[1] == rhs.texture[1] && lhs.shader == rhs.shader;
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
