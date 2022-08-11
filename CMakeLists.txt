@@ -106,9 +106,9 @@ install(
 )
 
 if (UNIX AND NOT APPLE)
-  set(CPACK_PACKAGE_FILE_NAME "gf-dev-${CMAKE_PROJECT_VERSION}-${CMAKE_SYSTEM_NAME}")
-  string(TOLOWER "${CPACK_PACKAGE_FILE_NAME}" CPACK_PACKAGE_FILE_NAME)
   set(CPACK_DEBIAN_PACKAGE_NAME "gf-dev")
+  set(CPACK_PACKAGE_FILE_NAME "${CPACK_DEBIAN_PACKAGE_NAME}-${CMAKE_PROJECT_VERSION}-${CMAKE_SYSTEM_NAME}")
+  string(TOLOWER "${CPACK_PACKAGE_FILE_NAME}" CPACK_PACKAGE_FILE_NAME)
   set(CPACK_GENERATOR "DEB")
   set(CPACK_DEBIAN_PACKAGE_DEPENDS "libsdl2-dev,libboost-dev,libfreetype6-dev,zlib1g-dev,libpugixml-dev")
   set(CPACK_PACKAGE_DESCRIPTION "Gamedev Framework (gf) is a framework to build 2D games in C++17. It is based on SDL and OpenGL ES 2.0, and presents an API that is very similar to the graphics module of SFML with additional features.")
