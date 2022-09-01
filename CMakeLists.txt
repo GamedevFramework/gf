@@ -27,6 +27,8 @@ option(GF_BUILD_GAMES "Build games" OFF)
 option(GF_SINGLE_COMPILTATION_UNIT "Build the library in a single file (unity build)" OFF)
 option(GF_USE_EMBEDDED_LIBS "Build the library with the submodule libraries" ON)
 
+set(GF_PACKAGE_SUFFIX "~${CMAKE_SYSTEM_NAME}" CACHE STRING "CPack package suffix")
+
 if(UNIX)
   option(GF_DEV_ENABLE_ASAN "Enable Address Sanitizer" OFF)
 endif()
@@ -107,7 +109,7 @@ install(
 
 if (UNIX AND NOT APPLE)
   set(CPACK_DEBIAN_PACKAGE_NAME "gf-dev")
-  set(CPACK_PACKAGE_FILE_NAME "${CPACK_DEBIAN_PACKAGE_NAME}-${CMAKE_PROJECT_VERSION}-${CMAKE_SYSTEM_NAME}")
+  set(CPACK_PACKAGE_FILE_NAME "${CPACK_DEBIAN_PACKAGE_NAME}-${CMAKE_PROJECT_VERSION}-${GF_PACKAGE_SUFFIX}")
   string(TOLOWER "${CPACK_PACKAGE_FILE_NAME}" CPACK_PACKAGE_FILE_NAME)
   set(CPACK_GENERATOR "DEB")
   set(CPACK_DEBIAN_PACKAGE_DEPENDS "libsdl2-dev,libboost-dev,libfreetype6-dev,zlib1g-dev,libpugixml-dev")
