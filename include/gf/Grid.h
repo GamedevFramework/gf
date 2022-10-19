@@ -129,9 +129,7 @@ inline namespace v1 {
      *
      * @param color The new color of the selected cell
      */
-    void setSelectedColor(const Color4f& selectedColor){
-      m_selectedColor = selectedColor;
-    }
+    void setSelectedColor(const Color4f& color);
 
     /**
      * @brief Get the color of the selected cell
