@@ -67,6 +67,10 @@ inline namespace v1 {
       m_vertices[i].color = m_color;
     }
   }
+  
+  void Grid::setSelectedColor(const Color4f& color){
+    m_selectedColor=color;
+  }
 
   void Grid::hover(Vector2f pointer) {
     if (!m_properties) {
