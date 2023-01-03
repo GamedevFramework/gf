@@ -41,7 +41,7 @@ inline namespace v1 {
   FileInputStream::FileInputStream(const Path& path)
   : m_file(nullptr)
   {
-    if (!std::filesystem::is_regular_file(path)) {
+    if (!boost::filesystem::is_regular_file(path)) {
       Log::error("Could not find the following file for streaming: %s\n", path.string().c_str()); // throw?
       return;
     }

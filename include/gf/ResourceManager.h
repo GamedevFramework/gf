@@ -35,6 +35,9 @@
 #include "Texture.h"
 #include "Window.h"
 
+#include <boost/filesystem.hpp>
+#include <boost/container_hash/hash.hpp>
+
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline namespace v1 {
@@ -100,7 +103,7 @@ inline namespace v1 {
         }
       }
 
-      std::size_t h = std::filesystem::hash_value(filename);
+      std::size_t h = boost::filesystem::hash_value(filename);
 
       auto it = m_cache.find(h);
 

@@ -1175,7 +1175,7 @@ inline namespace v1 {
   }
 
   bool TmxLayers::loadFromFile(const Path& filename) {
-    if (!std::filesystem::is_regular_file(filename)) {
+    if (!boost::filesystem::is_regular_file(filename)) {
       Log::error("Unknown TMX file: '%s'\n", filename.string().c_str());
       return false;
     }

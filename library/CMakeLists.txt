@@ -389,6 +389,7 @@ target_link_libraries(gfcore0
   PUBLIC
     Threads::Threads
     Boost::boost
+    Boost::filesystem
     ZLIB::ZLIB
   PRIVATE
     pugixml
