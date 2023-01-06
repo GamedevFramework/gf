@@ -28,7 +28,7 @@ macro (load_dependencies component)
   # For gf::core
   if (${component} STREQUAL "core")
     find_dependency(Threads)
-    find_dependency(Boost REQUIRED)
+    find_dependency(Boost REQUIRED COMPONENTS filesystem)
     find_dependency(ZLIB)
     if (NOT BUILD_SHARED_LIBS)
       find_dependency(pugixml)
