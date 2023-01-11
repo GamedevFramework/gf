@@ -24,8 +24,7 @@
 #include <gf/ResourceManager.h>
 #include <gf/Texture.h>
 
-template <typename... Args>
-constexpr void unused(Args&&...) { }
+#include "doc_utils.h"
 
 /// [entity]
 class MyEntity : public gf::Entity {

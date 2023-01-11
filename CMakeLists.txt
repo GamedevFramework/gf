@@ -24,7 +24,6 @@ option(GF_BUILD_WITH_OPENGL3 "Build with OpenGL 3.3 instead of OpenGL ES 2.0" OF
 option(GF_BUILD_EXAMPLES "Build examples" ON)
 option(GF_BUILD_DOCUMENTATION "Build documentation (needs Doxygen)" ON)
 option(GF_BUILD_GAMES "Build games" OFF)
-option(GF_SINGLE_COMPILTATION_UNIT "Build the library in a single file (unity build)" OFF)
 option(GF_USE_EMBEDDED_LIBS "Build the library with the submodule libraries" ON)
 
 if(UNIX)

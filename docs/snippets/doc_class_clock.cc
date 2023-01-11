@@ -20,8 +20,7 @@
  */
 #include <gf/Clock.h>
 
-template <typename... Args>
-constexpr void unused(Args&&...) { }
+#include "doc_utils.h"
 
 void dummyClockUsage() {
 

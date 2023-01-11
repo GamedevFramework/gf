@@ -19,10 +19,10 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-/*
- * This file is meant for single compilation unit (a.k.a. unity build)
- * See: https://en.wikipedia.org/wiki/Single_Compilation_Unit
- */
+#ifndef GF_DOC_UTILS
+#define GF_DOC_UTILS
 
-#include "local/Board.cc"
-#include "local/Grid.cc"
+template <typename... Args>
+constexpr void unused(Args&&...) { }
+
+#endif // GF_DOC_UTILS
