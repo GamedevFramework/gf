@@ -23,7 +23,7 @@ jobs:
         run: echo "branch=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_OUTPUT
         id: extract_branch
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           repository: GamedevFramework/gf
           submodules: recursive
@@ -43,7 +43,7 @@ jobs:
         working-directory: ${{github.workspace}}/build
         run: cpack --config CPackConfig.cmake -C ${{env.BUILD_TYPE}}
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: deb-file
           path: ${{github.workspace}}/build/*.deb
