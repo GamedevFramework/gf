@@ -8,7 +8,7 @@ on:
 
 env:
   BUILD_TYPE: Release
-  VCPKG_COMMIT: af2287382b1991dbdcb7e5112d236f3323b9dd7a
+  VCPKG_COMMIT: f14984af3738e69f197bf0e647a8dca12de92996
   VCPKG_DEFAULT_BINARY_CACHE: ${{ github.workspace }}\vcpkg\binary-cache
 
 jobs:
@@ -17,12 +17,12 @@ jobs:
     steps:
       - name: vcpkg cache
         id: cache-vcpkg
-        uses: actions/cache@v2.1.6
+        uses: actions/cache@v3
         with:
           path: vcpkg
-          key: ${{ runner.os }}-vcpkg-${{ env.VCPKG_COMMIT }}-v1
+          key: ${{ runner.os }}-vcpkg-${{ env.VCPKG_COMMIT }}
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         if: steps.cache-vcpkg.outputs.cache-hit != 'true'
         with:
           repository: Microsoft/vcpkg
@@ -40,10 +40,10 @@ jobs:
 
       - name: Extract branch name
         shell: bash
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        run: echo "branch=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_OUTPUT
         id: extract_branch
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           repository: GamedevFramework/gf
           submodules: recursive
@@ -54,7 +54,7 @@ jobs:
         shell: cmd
         run: |
           set PATH=%PATH%;${{github.workspace}}/gf/build/library/${{ env.BUILD_TYPE }}
-          cmake -DGF_BUILD_GAMES=OFF -DGF_BUILD_EXAMPLES=OFF -DGF_BUILD_DOCUMENTATION=OFF -DGF_SINGLE_COMPILTATION_UNIT=OFF -DGF_DEBUG=OFF -DGF_VCPKG=ON -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DCMAKE_TOOLCHAIN_FILE=${{github.workspace}}/vcpkg/scripts/buildsystems/vcpkg.cmake -S ${{ github.workspace }}/gf -B ${{ github.workspace }}/gf/build
+          cmake -DGF_USE_EMBEDDED_LIBS=OFF -DGF_BUILD_GAMES=OFF -DGF_BUILD_EXAMPLES=OFF -DGF_BUILD_DOCUMENTATION=OFF -DGF_DEBUG=OFF -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DCMAKE_TOOLCHAIN_FILE=${{github.workspace}}/vcpkg/scripts/buildsystems/vcpkg.cmake -S ${{ github.workspace }}/gf -B ${{ github.workspace }}/gf/build
 
       - name: Build gf
         shell: cmd
