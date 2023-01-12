@@ -20,8 +20,7 @@
  */
 #include <gf/Flags.h>
 
-template <typename... Args>
-constexpr void unused(Args&&...) { }
+#include "doc_utils.h"
 
 /// [flags_def]
 enum class AnimalProperties {

@@ -21,8 +21,7 @@
 #include <gf/Color.h>
 #include <gf/Console.h>
 
-template <typename... Args>
-constexpr void unused(Args&&...) { }
+#include "doc_utils.h"
 
 void dummyConsoleUsage(gf::ConsoleFont& font) {
   gf::Vector2i size(70, 40);

@@ -25,8 +25,7 @@
 
 #include <gf/Id.h>
 
-template <typename... Args>
-constexpr void unused(Args&&...) { }
+#include "doc_utils.h"
 
 /// [using]
 using namespace gf::literals; // necessary to use _id

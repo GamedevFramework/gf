@@ -20,8 +20,7 @@
  */
 #include <gf/Rect.h>
 
-template <typename... Args>
-constexpr void unused(Args&&...) { }
+#include "doc_utils.h"
 
 void dummyRectUsage() {
   /// [rect]
