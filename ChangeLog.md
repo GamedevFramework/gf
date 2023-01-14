@@ -1,5 +1,16 @@
 # ChangeLog for gf
 
+## gf 1.1.0 (14 Jan 2023)
+
+- Core (gf::core)
+- Graphics (gf::graphics)
+  - Add Grid::setSelectedColor() implementation!
+  - Add Scene::getWorldEntities() and Scene::getHudEntities()
+- Network (gf::net)
+  - Add MSG_NOSIGNAL to send flags if available
+- Misc
+  - Update CPack configuration
+
 ## gf 1.0.0 (14 Jul 2022)
 
 - Core (gf::core)

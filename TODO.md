@@ -29,8 +29,6 @@ This file is a list of ideas for gf. Some of them will eventually be in gf. Othe
 ## net
 
 - (socket) add `peekRawBytes()` with `MSG_PEEK`
-- (socket) add `MSG_NOSIGNAL` flag when using `send()` for Linux to prevent `SIGPIPE`s
-  - SO: [How to prevent SIGPIPEs (or handle them properly)](https://stackoverflow.com/questions/108183/how-to-prevent-sigpipes-or-handle-them-properly)
 - (async) add `SocketAsyncManager`
 
 ## meta
