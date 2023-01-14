@@ -375,6 +375,20 @@ inline namespace v1 {
     }
 
     /**
+     * @brief Get the world entities
+     */
+    EntityContainer& getWorldEntities() {
+      return m_worldEntities;
+    }
+
+    /**
+     * @brief Get the HUD entities
+     */
+    EntityContainer& getHudEntities() {
+      return m_hudEntities;
+    }
+
+    /**
      * @brief Customization point for processEvent()
      *
      * @returns True if the event should not be passed to the other actions
