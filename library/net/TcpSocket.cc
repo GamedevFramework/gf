@@ -76,7 +76,12 @@ inline namespace v1 {
   }
 
   SocketDataResult TcpSocket::sendRawBytes(Span<const uint8_t> buffer) {
-    int res = ::send(getHandle(), priv::sendPointer(buffer), priv::sendLength(buffer), priv::NoFlag);
+#ifdef MSG_NOSIGNAL
+    static constexpr int SendFlags = MSG_NOSIGNAL;
+#else
+    static constexpr int SendFlags = priv::NoFlag;
+#endif
+    int res = ::send(getHandle(), priv::sendPointer(buffer), priv::sendLength(buffer), SendFlags);
 
     if (res == priv::InvalidCommunication) {
       if (priv::nativeWouldBlock(priv::getErrorCode())) {
