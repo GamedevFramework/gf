@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 project(GF
-  VERSION 1.0.0
+  VERSION 1.1.0
   LANGUAGES CXX C
 )
 
