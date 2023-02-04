@@ -213,7 +213,7 @@ inline namespace v1 {
         Vector2f position = bounds.getPosition();
         position += sheet.tileset.getOffset();
 
-        RectF box = RectF::fromPositionSize(position, sheet.tileset.getTileSize());
+        RectF box = RectF::fromPositionSize(position, bounds.getSize());
 
         // texture coords
 
