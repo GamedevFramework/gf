@@ -115,6 +115,11 @@ inline namespace v1 {
      */
     void reset();
 
+    /**
+     * @brief Tell if the animation is finished
+     */
+    bool isFinished() const;
+
   private:
     struct Frame {
       const Texture *texture;

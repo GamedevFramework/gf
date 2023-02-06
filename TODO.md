@@ -14,6 +14,7 @@ This file is a list of ideas for gf. Some of them will eventually be in gf. Othe
 
 ## graphics
 
+- (event) add AnyScancode, AnyKeycode and AnyGamepadButton
 - (font) use Signed Distance Field for big size fonts
 - (curve/shape) add anti-aliasing to `Curve` and `Shape`
   - ideas: [vaserenderer](https://github.com/tyt2y3/vaserenderer),

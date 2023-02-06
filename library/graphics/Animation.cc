@@ -111,6 +111,10 @@ inline namespace v1 {
     m_currentDurationInFrame = Time::zero();
   }
 
+  bool Animation::isFinished() const {
+    return !m_loop && m_currentDurationInFrame < Time::zero() && m_currentFrame + 1 >= m_frames.size();
+  }
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif
