@@ -2,23 +2,8 @@ file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/generated")
 
 # Create gfdev_source_file tool
 
-if (ANDROID)
-  include(ExternalProject)
-
-  ExternalProject_Add(gfdev_source_file
-    SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/graphics/tools"
-    CMAKE_ARGS
-		  -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_CURRENT_BINARY_DIR}
-      -DGFDEV_ANDROID_TOOL=ON
-  )
-
-  # Hack to select the right executable for android cross-compilation
-  set(GFDEV_SOURCE_FILE_EXEC "${CMAKE_CURRENT_BINARY_DIR}/gfdev_source_file")
-else()
-  add_subdirectory(graphics/tools)
-
-  set(GFDEV_SOURCE_FILE_EXEC "gfdev_source_file")
-endif()
+add_subdirectory(graphics/tools)
+set(GFDEV_SOURCE_FILE_EXEC "gfdev_source_file")
 
 # process gamecontrollerdb
 
