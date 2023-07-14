@@ -46,7 +46,7 @@ inline namespace v1 {
    * @ingroup graphics_devices
    * @brief Scancodes
    *
-   * These codes corresponds to [USB key codes](http://www.usb.org/developers/hidpage/Hut1_12v2.pdf).
+   * These codes corresponds to [USB key codes](https://www.usb.org/documents).
    */
   enum class Scancode : int {
     Unknown = 0,

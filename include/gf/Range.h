@@ -207,7 +207,7 @@ inline namespace v1 {
     }
 
     /**
-     * @brief Check is the range is valid
+     * @brief Check if the range is valid
      *
      * @return True if the range is valid
      * @sa isEmpty()
