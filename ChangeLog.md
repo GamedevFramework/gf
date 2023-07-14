@@ -1,5 +1,14 @@
 # ChangeLog for gf
 
+## gf 1.2.0 (14 Jul 2023)
+
+- Core (gf::core)
+- Graphics (gf::graphics)
+  - Add Animation::isFinished()
+  - Fix a bug in TileLayer
+- Network (gf::net)
+- Misc
+
 ## gf 1.1.0 (14 Jan 2023)
 
 - Core (gf::core)
