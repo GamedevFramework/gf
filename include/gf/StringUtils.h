@@ -23,6 +23,7 @@
 
 #include <cassert>
 #include <cstdarg>
+#include <cstdint>
 
 #include <vector>
 #include <string>
