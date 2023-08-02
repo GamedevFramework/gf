@@ -43,11 +43,11 @@ struct NamedGrid {
 using namespace std::literals;
 
 int main() {
-  static constexpr gf::Vector2i ScreenSize(640, 480);
+  static constexpr gf::Vector2i ScreenSize(1600, 900);
   constexpr gf::Vector2i GridSize = { 7, 7 };
-  constexpr float HexagonRadius = 32.0f;
-  constexpr gf::Vector2f CellSize = { 64.0f, 64.0f };
-  constexpr gf::Vector2f StaggeredCellSize = { 64.0f, 56.0f };
+  constexpr float HexagonRadius = 64.0f;
+  constexpr gf::Vector2f CellSize = { 128.0f, 128.0f };
+  constexpr gf::Vector2f StaggeredCellSize = { 128.0f, 112.0f };
 
   gf::Window window("29_grid", ScreenSize, ~gf::WindowHints::Resizable);
   gf::RenderWindow renderer(window);

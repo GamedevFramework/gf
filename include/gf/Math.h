@@ -353,6 +353,13 @@ inline namespace v1 {
     return lhs > rhs ? lhs - rhs : rhs - lhs;
   }
 
+  template<typename T>
+  constexpr
+  int parity(T val) {
+    return (val % 2 == 0) ? 0 : 1;
+  }
+
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif

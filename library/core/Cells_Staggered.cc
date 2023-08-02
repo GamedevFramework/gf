@@ -20,6 +20,7 @@
  */
 #include <gf/Cells.h>
 
+#include <gf/Log.h>
 #include <gf/VectorOps.h>
 
 namespace gf {
@@ -91,20 +92,55 @@ inline namespace v1 {
     return RectF::fromPositionSize(base, m_tileSize);
   }
 
-  Vector2i StaggeredCells::computeCoordinates(Vector2f position) const noexcept {
-    // TODO: quick approximation but not really good
-    auto tileSize = m_tileSize;
+  namespace {
 
-    switch (m_axis) {
-      case CellAxis::Y:
-        tileSize.y /= 2;
-        break;
-      case CellAxis::X:
-        tileSize.x /= 2;
-        break;
+    bool isDiagonallySplit(CellIndex index, int x, int y) {
+      return (index == CellIndex::Even) == (parity(x) == parity(y));
     }
 
-    return position / tileSize;
+  }
+
+  Vector2i StaggeredCells::computeCoordinates(Vector2f position) const noexcept {
+    const Vector2f half = m_tileSize / 2.0f;
+
+    const float qx = std::floor(position.x / half.x);
+    const float rx = (position.x - qx * half.x) / half.x;
+    assert(0 <= rx && rx < 1.0f);
+
+    const float qy = std::floor(position.y / half.y);
+    const float ry = (position.y - qy * half.y) / half.y;
+    assert(0 <= ry && ry < 1.0f);
+
+    const int x = static_cast<int>(qx);
+    const int y = static_cast<int>(qy);
+
+    gf::Vector2i coords = vec(x, y);
+
+    if (m_axis == CellAxis::X) {
+      if ((isDiagonallySplit(m_index, x, y) && rx < ry) || (!isDiagonallySplit(m_index, x, y) && (rx + ry) < 1)) {
+        --coords.x;
+      }
+
+      coords.y = y / 2;
+
+      if (parity(y) == 0 && ((isDiagonallySplit(m_index, x, y) && rx > ry) || (!isDiagonallySplit(m_index, x, y) && (rx + ry) < 1))) {
+        --coords.y;
+      }
+
+      // Log::info("position: %g %g\tq: %g %g\tr: %g %g\tcoords: %d %d\n", position.x, position.y, qx, qy, rx, ry, coords.x, coords.y);
+    } else {
+      if ((isDiagonallySplit(m_index, x, y) && rx > ry) || (!isDiagonallySplit(m_index, x, y) && (rx + ry) < 1)) {
+        --coords.y;
+      }
+
+      coords.x = x / 2;
+
+      if (parity(x) == 0 && ((isDiagonallySplit(m_index, x, y) && rx < ry) || (!isDiagonallySplit(m_index, x, y) && (rx + ry) < 1))) {
+        --coords.x;
+      }
+    }
+
+    return coords;
   }
 
   Polyline StaggeredCells::computePolyline(Vector2i coords) const {
