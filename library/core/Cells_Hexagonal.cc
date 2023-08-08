@@ -27,7 +27,7 @@
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
-inline namespace v1 {
+namespace v1 {
 #endif
 
   namespace {
@@ -265,4 +265,245 @@ inline namespace v1 {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 }
 #endif
+
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+inline namespace v2 {
+#endif
+
+  namespace {
+
+    inline
+    float computeOffset(Vector2f tileSize, float sideLength, CellAxis axis) {
+      switch (axis) {
+        case CellAxis::X:
+          return (tileSize.width - sideLength) / 2;
+        case CellAxis::Y:
+          return (tileSize.height - sideLength) / 2;
+      }
+
+      assert(false);
+      return 0.0f;
+    }
+
+  }
+
+  RectF HexagonalCells::computeBounds() const noexcept {
+    Vector2f size = gf::vec(0.0f, 0.0f);
+    float offset = computeOffset(m_tileSize, m_sideLength, m_axis);
+
+    switch (m_axis) {
+      case CellAxis::X:
+        size.height = m_layerSize.height * m_tileSize.height + m_tileSize.height / 2;
+        size.width = m_layerSize.width * (m_tileSize.width - offset) + offset;
+        break;
+
+      case CellAxis::Y:
+        size.width = m_layerSize.width * m_tileSize.width + m_tileSize.width / 2;
+        size.height = m_layerSize.height * (m_tileSize.height - offset) + offset;
+        break;
+    }
+
+    return RectF::fromSize(size);
+  }
+
+  RectI HexagonalCells::computeVisibleArea(const RectF& local) const noexcept {
+    return RectI::fromMinMax(computeCoordinates(local.min), computeCoordinates(local.max)).grow(2);
+  }
+
+  RectF HexagonalCells::computeCellBounds(Vector2i coords) const noexcept {
+    Vector2f base = gf::vec(0.0f, 0.0f);
+    float offset = computeOffset(m_tileSize, m_sideLength, m_axis);
+
+    switch (m_axis) {
+      case CellAxis::X:
+        base.x = coords.x * (m_tileSize.width - offset);
+        base.y = coords.y * m_tileSize.height;
+
+        switch (m_index) {
+          case CellIndex::Odd:
+            if (coords.x % 2 == 1) {
+              base.y += m_tileSize.height / 2;
+            }
+            break;
+          case CellIndex::Even:
+            if (coords.x % 2 == 0) {
+              base.y += m_tileSize.height / 2;
+            }
+            break;
+        }
+        break;
+
+      case CellAxis::Y:
+        base.y = coords.y * (m_tileSize.height - offset);
+        base.x = coords.x * m_tileSize.width;
+
+        switch (m_index) {
+          case CellIndex::Odd:
+            if (coords.y % 2 == 1) {
+              base.x += m_tileSize.width / 2;
+            }
+            break;
+          case CellIndex::Even:
+            if (coords.y % 2 == 0) {
+              base.x += m_tileSize.width / 2;
+            }
+            break;
+        }
+        break;
+    }
+
+    return RectF::fromPositionSize(base, m_tileSize);
+  }
+
+  Vector2i HexagonalCells::computeCoordinates(Vector2f position) const noexcept {
+    // good approximation but would need some tweaking
+
+    Vector2i coords = gf::vec(0, 0);
+    float offset = computeOffset(m_tileSize, m_sideLength, m_axis);
+
+    switch (m_axis) {
+      case CellAxis::X:
+        coords.x = static_cast<int>(position.x / (m_tileSize.width - offset));
+        switch (m_index) {
+          case CellIndex::Odd:
+            if (coords.x % 2 == 0) {
+              coords.y = static_cast<int>(position.y / m_tileSize.height);
+            } else {
+              coords.y = static_cast<int>((position.y - m_tileSize.height / 2) / m_tileSize.height);
+            }
+            break;
+          case CellIndex::Even:
+            if (coords.x % 2 != 0) {
+              coords.y = static_cast<int>(position.y / m_tileSize.height);
+            } else {
+              coords.y = static_cast<int>((position.y - m_tileSize.height / 2) / m_tileSize.height);
+            }
+            break;
+        }
+        break;
+      case CellAxis::Y:
+        coords.y = static_cast<int>(position.y / (m_tileSize.height - offset));
+        switch (m_index) {
+          case CellIndex::Odd:
+            if (coords.y % 2 == 0) {
+              coords.x = static_cast<int>(position.x / m_tileSize.width);
+            } else {
+              coords.x = static_cast<int>((position.x - m_tileSize.width / 2) / m_tileSize.width);
+            }
+            break;
+          case CellIndex::Even:
+            if (coords.y % 2 != 0) {
+              coords.x = static_cast<int>(position.x / m_tileSize.width);
+            } else {
+              coords.x = static_cast<int>((position.x - m_tileSize.width / 2) / m_tileSize.width);
+            }
+            break;
+        }
+        break;
+    }
+
+    return coords;
+  }
+
+  Polyline HexagonalCells::computePolyline(Vector2i coords) const {
+    auto bounds = computeCellBounds(coords);
+    float xmin = bounds.min.x;
+    float ymin = bounds.min.y;
+    float xmax = bounds.max.x;
+    float ymax = bounds.max.y;
+    float offset = computeOffset(m_tileSize, m_sideLength, m_axis);;
+
+    Polyline polyline(Polyline::Loop);
+
+    switch (m_axis) {
+      case CellAxis::X:
+        polyline.addPoint({ xmin,           (ymin + ymax) /2 });
+        polyline.addPoint({ xmin + offset,  ymin });
+        polyline.addPoint({ xmax - offset,  ymin });
+        polyline.addPoint({ xmax,           (ymin + ymax) /2 });
+        polyline.addPoint({ xmax - offset,  ymax });
+        polyline.addPoint({ xmin + offset,  ymax });
+        break;
+
+      case CellAxis::Y:
+        polyline.addPoint({ (xmin + xmax) / 2,  ymin });
+        polyline.addPoint({ xmin,               ymin + offset });
+        polyline.addPoint({ xmin,               ymax - offset });
+        polyline.addPoint({ (xmin + xmax) / 2,  ymax });
+        polyline.addPoint({ xmax,               ymax - offset });
+        polyline.addPoint({ xmax,               ymin + offset });
+        break;
+    }
+
+    return polyline;
+  }
+
+  std::vector<Vector2i> HexagonalCells::computeNeighbors(Vector2i coords, Flags<CellNeighborQuery> flags) const {
+    static constexpr Vector2i XOffsets[2][6] = {
+      { { +1,  0 }, { +1, -1 }, { 0, -1 }, { -1, -1 }, { -1,  0 }, {  0, +1 } },
+      { { +1, +1 }, { +1,  0 }, { 0, -1 }, { -1,  0 }, { -1, +1 }, {  0, +1 } }
+    };
+
+    static constexpr Vector2i YOffsets[2][6] = {
+      { { +1,  0 }, {  0, -1 }, { -1, -1 }, { -1,  0 }, { -1, +1 }, {  0, +1 } },
+      { { +1,  0 }, { +1, -1 }, {  0, -1 }, { -1,  0 }, {  0, +1 }, { +1, +1 } }
+    };
+
+    StaticSpan<const Vector2i, 6> relative;
+
+    switch (m_axis) {
+      case CellAxis::X:
+        if ((m_index == CellIndex::Odd && coords.x % 2 == 0) || (m_index == CellIndex::Even && coords.x % 2 == 1)) {
+          relative = XOffsets[0];
+        } else {
+          relative = XOffsets[1];
+        }
+        break;
+      case CellAxis::Y:
+        if ((m_index == CellIndex::Odd && coords.y % 2 == 0) || (m_index == CellIndex::Even && coords.y % 2 == 1)) {
+          relative = YOffsets[0];
+        } else {
+          relative = YOffsets[1];
+        }
+        break;
+    }
+
+    std::vector<Vector2i> neighbors;
+
+    for (auto offset : relative) {
+      neighbors.push_back(coords + offset);
+    }
+
+    assert(neighbors.size() == 6);
+
+    if (flags.test(CellNeighborQuery::Valid)) {
+      RectI bounds = RectI::fromSize(m_layerSize);
+      neighbors.erase(std::remove_if(neighbors.begin(), neighbors.end(), [bounds](Vector2i neighbor) {
+        return !bounds.contains(neighbor);
+      }), neighbors.end());
+    }
+
+    return neighbors;
+  }
+
+  Vector2f HexagonalCells::computeRegularSize(CellAxis axis, float radius) {
+    Vector2f size = gf::vec(0.0f, 0.0f);
+
+    switch (axis) {
+      case CellAxis::X:
+        size = { radius * 2.0f, radius * Sqrt3 };
+        break;
+
+      case CellAxis::Y:
+        size = { radius * Sqrt3, radius * 2.0f };
+        break;
+    }
+
+    return size;
+  }
+
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+}
+#endif
+
 }

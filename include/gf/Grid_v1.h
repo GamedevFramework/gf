@@ -18,8 +18,8 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#ifndef GF_GRID_V2_H
-#define GF_GRID_V2_H
+#ifndef GF_GRID_H
+#define GF_GRID_H
 
 #include <memory>
 
@@ -32,7 +32,7 @@
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
-inline namespace v2 {
+inline namespace v1 {
 #endif
 
   /**
@@ -60,14 +60,6 @@ inline namespace v2 {
      * @param cellSize The size of a cell
      */
     static Grid createOrthogonal(Vector2i gridSize, Vector2f cellSize);
-
-    /**
-     * @brief Create an isometric grid
-     *
-     * @param gridSize The size of the grid
-     * @param cellSize The size of a cell
-     */
-    static Grid createIsometric(Vector2i gridSize, Vector2f cellSize);
 
     /**
      * @brief Create a staggered grid
@@ -101,11 +93,11 @@ inline namespace v2 {
     static Grid createHexagonal(Vector2i gridSize, float radius, CellAxis axis, CellIndex index);
 
     /**
-     * @brief Get the underlying cells
+     * @brief Set the grid size
+     *
+     * @param gridSize The new grid size
      */
-    const Cells& getCells() const {
-      return *m_properties;
-    }
+    void setGridSize(Vector2i gridSize);
 
     /**
      * @brief Get the grid size
@@ -227,4 +219,4 @@ inline namespace v2 {
 #endif
 }
 
-#endif // GF_GRID_V2_H
+#endif // GF_GRID_H

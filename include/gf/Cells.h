@@ -47,6 +47,13 @@ inline namespace v1 {
     Diagonal            = 0x02, ///< The neighbors may be in diagonal
   };
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+}
+#endif
+
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+namespace v1 {
+#endif
 
   /**
    * @ingroup core_cells
@@ -257,6 +264,264 @@ inline namespace v1 {
   };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
+}
+#endif
+
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+inline namespace v2 {
+
+  /**
+   * @ingroup core_cells
+   * @brief The properties of cells
+   *
+   * These properties depend on the orientation of the cells in the map:
+   *
+   * - gf::OrthogonalCells
+   * - gf::IsometricCells
+   * - gf::StaggeredCells
+   * - gf::HexagonalCells
+   *
+   * @sa gf::CellOrientation, gf::Grid, gf::TileLayer
+   */
+  class GF_CORE_API Cells {
+  public:
+    /**
+     * @brief Virtual destructor
+     */
+    virtual ~Cells();
+
+    /**
+     * @brief Compute the local bounds of the cells
+     *
+     * @returns The bounds of the cells
+     */
+    virtual RectF computeBounds() const noexcept = 0;
+
+    /**
+     * @brief Compute the visible area in terms of coordinates
+     *
+     * @param local The visible area
+     * @returns The visible coordinates
+     */
+    virtual RectI computeVisibleArea(const RectF& local) const noexcept = 0;
+
+    /**
+     * @brief Compute the cell bounds
+     *
+     * @param coords The coordinates of the cell
+     * @returns The rectangular bounding box of the cell
+     */
+    virtual RectF computeCellBounds(Vector2i coords) const noexcept = 0;
+
+    /**
+     * @brief Compute the coordinates of a cell
+     *
+     * @param position The local position
+     * @returns The coordinates of the cell
+     */
+    virtual Vector2i computeCoordinates(Vector2f position) const noexcept = 0;
+
+    /**
+     * @brief Compute the polyline representing a cell
+     *
+     * @param coords The coordinates of the cell
+     * @returns A polyline (loop) that represents the cell
+     */
+    virtual Polyline computePolyline(Vector2i coords) const = 0;
+
+    /**
+     * @brief Compute the neighbors of a cell
+     *
+     * @param coords The coordinates of the cell
+     * @param flags The parameters of the query
+     * @returns An array of coordinates of the neighbors
+     */
+    virtual std::vector<Vector2i> computeNeighbors(Vector2i coords, Flags<CellNeighborQuery> flags = gf::None) const = 0;
+  };
+
+  /**
+   * @ingroup core_cells
+   * @brief Orthogonal cells
+   */
+  class GF_CORE_API OrthogonalCells final : public Cells {
+  public:
+    /**
+     * @brief Make orthogonal cells of the specified size
+     *
+     * @param layerSize The size of the layer
+     * @param tileSize The size of a cell
+     */
+    OrthogonalCells(Vector2i layerSize, Vector2f tileSize)
+    : m_layerSize(layerSize)
+    , m_tileSize(tileSize)
+    {
+    }
+
+    RectF computeBounds() const noexcept override;
+
+    RectI computeVisibleArea(const RectF& local) const noexcept override;
+
+    RectF computeCellBounds(Vector2i coords) const noexcept override;
+
+    Vector2i computeCoordinates(Vector2f position) const noexcept override;
+
+    Polyline computePolyline(Vector2i coords) const override;
+
+    std::vector<Vector2i> computeNeighbors(Vector2i coords, Flags<CellNeighborQuery> flags = gf::None) const override;
+
+  private:
+    Vector2i m_layerSize;
+    Vector2f m_tileSize;
+  };
+
+  /**
+   * @ingroup core_cells
+   * @brief Isometric cells
+   */
+  class GF_CORE_API IsometricCells final : public Cells {
+  public:
+    /**
+     * @brief Make orthogonal cells of the specified size
+     *
+     * @param layerSize The size of the layer
+     * @param tileSize The size of a cell
+     */
+    IsometricCells(Vector2i layerSize, Vector2f tileSize)
+    : m_layerSize(layerSize)
+    , m_tileSize(tileSize)
+    {
+    }
+
+    RectF computeBounds() const noexcept override;
+
+    RectI computeVisibleArea(const RectF& local) const noexcept override;
+
+    RectF computeCellBounds(Vector2i coords) const noexcept override;
+
+    Vector2i computeCoordinates(Vector2f position) const noexcept override;
+
+    Polyline computePolyline(Vector2i coords) const override;
+
+    std::vector<Vector2i> computeNeighbors(Vector2i coords, Flags<CellNeighborQuery> flags = gf::None) const override;
+
+  private:
+    Vector2i m_layerSize;
+    Vector2f m_tileSize;
+  };
+
+  /**
+   * @ingroup core_cells
+   * @brief Staggered cells
+   */
+  class GF_CORE_API StaggeredCells final : public Cells {
+  public:
+    /**
+     * @brief Make staggered cells of the specified size
+     *
+     * @param layerSize The size of the layer
+     * @param tileSize The size of a cell
+     * @param axis The cells axis
+     * @param index The cells index
+     */
+    StaggeredCells(Vector2i layerSize, Vector2f tileSize, CellAxis axis, CellIndex index)
+    : m_layerSize(layerSize)
+    , m_tileSize(tileSize)
+    , m_axis(axis)
+    , m_index(index)
+    {
+    }
+
+    RectF computeBounds() const noexcept override;
+
+    RectI computeVisibleArea(const RectF& local) const noexcept override;
+
+    RectF computeCellBounds(Vector2i coords) const noexcept override;
+
+    Vector2i computeCoordinates(Vector2f position) const noexcept override;
+
+    Polyline computePolyline(Vector2i coords) const override;
+
+    std::vector<Vector2i> computeNeighbors(Vector2i coords, Flags<CellNeighborQuery> flags = gf::None) const override;
+
+  private:
+    Vector2i m_layerSize;
+    Vector2f m_tileSize;
+    CellAxis m_axis;
+    CellIndex m_index;
+  };
+
+
+  /**
+   * @ingroup core_cells
+   * @brief Hexagonal cells
+   */
+  class GF_CORE_API HexagonalCells final : public Cells {
+  public:
+    /**
+     * @brief Make hexagonal cells of the specified size
+     *
+     * @param layerSize The size of the layer
+     * @param tileSize The size of a cell
+     * @param sideLength The length of the side
+     * @param axis The cells axis
+     * @param index The cells index
+     */
+    HexagonalCells(Vector2i layerSize, Vector2f tileSize, float sideLength, CellAxis axis, CellIndex index)
+    : m_layerSize(layerSize)
+    , m_tileSize(tileSize)
+    , m_sideLength(sideLength)
+    , m_axis(axis)
+    , m_index(index)
+    {
+    }
+
+    /**
+     * @brief Make hexagonal cells of the specified size
+     *
+     * @param layerSize The size of the layer
+     * @param radius The radius of the regular hexagon
+     * @param axis The cells axis
+     * @param index The cells index
+     */
+    HexagonalCells(Vector2i layerSize, float radius, CellAxis axis, CellIndex index)
+    : m_layerSize(layerSize)
+    , m_tileSize(computeRegularSize(axis, radius))
+    , m_sideLength(radius)
+    , m_axis(axis)
+    , m_index(index)
+    {
+    }
+
+    RectF computeBounds() const noexcept override;
+
+    RectI computeVisibleArea(const RectF& local) const noexcept override;
+
+    RectF computeCellBounds(Vector2i coords) const noexcept override;
+
+    Vector2i computeCoordinates(Vector2f position) const noexcept override;
+
+    Polyline computePolyline(Vector2i coords) const override;
+
+    std::vector<Vector2i> computeNeighbors(Vector2i coords, Flags<CellNeighborQuery> flags = gf::None) const override;
+
+    /**
+     * @brief Get the size of a regular hexagon
+     *
+     * @param axis The hexagon axis
+     * @param radius Radius of hexagon
+     *
+     * @returns The size of the bounding box of the hexagon
+     */
+    static Vector2f computeRegularSize(CellAxis axis, float radius);
+
+  private:
+    Vector2i m_layerSize;
+    Vector2f m_tileSize;
+    float m_sideLength;
+    CellAxis m_axis;
+    CellIndex m_index;
+  };
+
 }
 
 template<>

@@ -60,6 +60,7 @@ int main() {
 
   NamedGrid grids[] = {
     { "Orthogonal"s, gf::Grid::createOrthogonal(GridSize, CellSize) },
+    { "Isometric"s, gf::Grid::createIsometric(GridSize, CellSize) },
     { "Staggered X Odd"s, gf::Grid::createStaggered(GridSize, StaggeredCellSize, gf::CellAxis::X, gf::CellIndex::Odd) },
     { "Staggered X Even"s, gf::Grid::createStaggered(GridSize, StaggeredCellSize, gf::CellAxis::X, gf::CellIndex::Even) },
     { "Staggered Y Odd"s, gf::Grid::createStaggered(GridSize, StaggeredCellSize, gf::CellAxis::Y, gf::CellIndex::Odd) },
@@ -117,6 +118,14 @@ int main() {
         case gf::EventType::MouseMoved:
           grids[current].grid.hover(renderer.mapPixelToCoords(event.mouseCursor.coords));
           break;
+
+        case gf::EventType::MouseButtonPressed:
+        {
+          auto coords = renderer.mapPixelToCoords(event.mouseButton.coords);
+          auto localCoords = gf::transform(grids[current].grid.getInverseTransform(), coords);
+          auto position = grids[current].grid.getCells().computeCoordinates(localCoords);
+          std::cout << "Position: " << position.x << ',' << position.y << '\n';
+        }
 
         default:
           break;

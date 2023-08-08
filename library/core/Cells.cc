@@ -22,7 +22,17 @@
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
-inline namespace v1 {
+namespace v1 {
+#endif
+
+  Cells::~Cells() = default;
+
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+}
+#endif
+
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+inline namespace v2 {
 #endif
 
   Cells::~Cells() = default;
