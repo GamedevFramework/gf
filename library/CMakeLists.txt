@@ -321,8 +321,13 @@ target_include_directories(gfcore0
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
   PRIVATE
-    "${Stb_INCLUDE_DIR}"
     "${CMAKE_SOURCE_DIR}/include-priv"
+)
+
+target_include_directories(gfcore0
+  SYSTEM
+  PRIVATE
+    "${Stb_INCLUDE_DIR}"
 )
 
 target_include_directories(gf0
@@ -346,11 +351,13 @@ target_include_directories(gfnet0
 
 if (APPLE)
   target_include_directories(gf0
+    SYSTEM
     PRIVATE
       ${OPENGL_INCLUDE_DIR}
   )
 else()
   target_include_directories(gf0
+    SYSTEM
     PRIVATE
       "${CMAKE_CURRENT_SOURCE_DIR}/${GF_GLAD_INCLUDE_DIR}"
   )
