@@ -353,6 +353,12 @@ inline namespace v1 {
     return lhs > rhs ? lhs - rhs : rhs - lhs;
   }
 
+  /**
+   * @ingroup core_maths
+   * @brief Parity of an integer
+   *
+   * @returns 0 if the number is even or 1 if the number is odd
+   */
   template<typename T>
   constexpr
   int parity(T val) {
