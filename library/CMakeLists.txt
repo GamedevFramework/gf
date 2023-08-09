@@ -92,7 +92,6 @@ add_library(gfcore0
   core/BasicGeometry.cc
   core/Cells.cc
   core/Cells_Hexagonal.cc
-  core/Cells_Isometric.cc
   core/Cells_Orthogonal.cc
   core/Cells_Staggered.cc
   core/Circ.cc

@@ -24,7 +24,7 @@
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
-namespace v1 {
+inline namespace v1 {
 #endif
 
   RectF OrthogonalCells::computeBounds(Vector2i layerSize) const noexcept {
@@ -70,65 +70,6 @@ namespace v1 {
 
     if (flags.test(CellNeighborQuery::Valid)) {
       RectI bounds = RectI::fromSize(layerSize);
-      neighbors.erase(std::remove_if(neighbors.begin(), neighbors.end(), [bounds](Vector2i neighbor) {
-        return !bounds.contains(neighbor);
-      }), neighbors.end());
-    }
-
-    return neighbors;
-  }
-
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-}
-#endif
-
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-inline namespace v2 {
-#endif
-
-  RectF OrthogonalCells::computeBounds() const noexcept {
-    return RectF::fromSize(m_layerSize * m_tileSize);
-  }
-
-  RectI OrthogonalCells::computeVisibleArea(const RectF& local) const noexcept {
-    return RectI::fromMinMax(local.min / m_tileSize, local.max / m_tileSize);
-  }
-
-  RectF OrthogonalCells::computeCellBounds(Vector2i coords) const noexcept {
-    return RectF::fromPositionSize(coords * m_tileSize, m_tileSize);
-  }
-
-  Vector2i OrthogonalCells::computeCoordinates(Vector2f position) const noexcept {
-    return gf::vec(std::floor(position.x / m_tileSize.width), std::floor(position.y / m_tileSize.height));
-  }
-
-  Polyline OrthogonalCells::computePolyline(Vector2i coords) const {
-    RectF rect = computeCellBounds(coords);
-    Polyline line(Polyline::Loop);
-    line.addPoint(rect.getTopRight());
-    line.addPoint(rect.getTopLeft());
-    line.addPoint(rect.getBottomLeft());
-    line.addPoint(rect.getBottomRight());
-    return line;
-  }
-
-  std::vector<Vector2i> OrthogonalCells::computeNeighbors(Vector2i coords, Flags<CellNeighborQuery> flags) const {
-    std::vector<Vector2i> neighbors;
-
-    neighbors.push_back(coords + gf::vec(-1,  0));
-    neighbors.push_back(coords + gf::vec( 1,  0));
-    neighbors.push_back(coords + gf::vec( 0, -1));
-    neighbors.push_back(coords + gf::vec( 0,  1));
-
-    if (flags.test(CellNeighborQuery::Diagonal)) {
-      neighbors.push_back(coords + gf::vec(-1, -1));
-      neighbors.push_back(coords + gf::vec( 1, -1));
-      neighbors.push_back(coords + gf::vec(-1,  1));
-      neighbors.push_back(coords + gf::vec( 1,  1));
-    }
-
-    if (flags.test(CellNeighborQuery::Valid)) {
-      RectI bounds = RectI::fromSize(m_layerSize);
       neighbors.erase(std::remove_if(neighbors.begin(), neighbors.end(), [bounds](Vector2i neighbor) {
         return !bounds.contains(neighbor);
       }), neighbors.end());
