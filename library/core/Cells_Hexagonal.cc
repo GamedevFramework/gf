@@ -22,6 +22,7 @@
 
 #include <cassert>
 
+#include <gf/Log.h>
 #include <gf/Span.h>
 #include <gf/VectorOps.h>
 
@@ -116,50 +117,113 @@ inline namespace v1 {
   }
 
   Vector2i HexagonalCells::computeCoordinates(Vector2f position) const noexcept {
-    // good approximation but would need some tweaking
-
-    Vector2i coords = gf::vec(0, 0);
     float offset = computeOffset(m_tileSize, m_sideLength, m_axis);
+    Vector2i coords = {};
 
     switch (m_axis) {
-      case CellAxis::X:
-        coords.x = static_cast<int>(position.x / (m_tileSize.width - offset));
-        switch (m_index) {
-          case CellIndex::Odd:
-            if (coords.x % 2 == 0) {
-              coords.y = static_cast<int>(position.y / m_tileSize.height);
-            } else {
-              coords.y = static_cast<int>((position.y - m_tileSize.height / 2) / m_tileSize.height);
-            }
-            break;
-          case CellIndex::Even:
-            if (coords.x % 2 != 0) {
-              coords.y = static_cast<int>(position.y / m_tileSize.height);
-            } else {
-              coords.y = static_cast<int>((position.y - m_tileSize.height / 2) / m_tileSize.height);
-            }
-            break;
+      case CellAxis::X: {
+        const float lx = m_tileSize.width - offset;
+
+        const float qx = std::floor(position.x / lx);
+        const float rx = position.x - qx * lx;
+        const float nrx = rx / offset;
+
+        const float halfy = m_tileSize.height / 2.0f;
+        const float qy = std::floor(position.y / halfy);
+        const float ry = position.y - qy * halfy;
+        const float nry = ry / halfy;
+
+        const int x = static_cast<int>(qx);
+        const int y = static_cast<int>(qy);
+
+        coords = vec(x, y);
+
+        if ((m_index == CellIndex::Even) == (parity(x) == 0)) {
+          --coords.y;
         }
-        break;
-      case CellAxis::Y:
-        coords.y = static_cast<int>(position.y / (m_tileSize.height - offset));
-        switch (m_index) {
-          case CellIndex::Odd:
-            if (coords.y % 2 == 0) {
-              coords.x = static_cast<int>(position.x / m_tileSize.width);
+
+        coords.y = static_cast<int>(std::floor(coords.y / 2.0f));
+
+        if (rx < offset) {
+          if ((m_index == CellIndex::Even) == (parity(x) == 0)) {
+            if (parity(y) == 0) {
+              if (nrx < nry) {
+                --coords.x;
+                ++coords.y;
+              }
             } else {
-              coords.x = static_cast<int>((position.x - m_tileSize.width / 2) / m_tileSize.width);
+              if (nrx + nry < 1) {
+                --coords.x;
+              }
             }
-            break;
-          case CellIndex::Even:
-            if (coords.y % 2 != 0) {
-              coords.x = static_cast<int>(position.x / m_tileSize.width);
+          } else {
+            if (parity(y) == 0) {
+              if (nrx + nry < 1) {
+                --coords.x;
+                --coords.y;
+              }
             } else {
-              coords.x = static_cast<int>((position.x - m_tileSize.width / 2) / m_tileSize.width);
+              if (nrx < nry) {
+                --coords.x;
+              }
             }
-            break;
+          }
         }
+
         break;
+      }
+
+      case CellAxis::Y: {
+        const float ly = m_tileSize.height - offset;
+
+        const float qy = std::floor(position.y / ly);
+        const float ry = position.y - qy * ly;
+        const float nry = ry / offset;
+
+        const float halfx = m_tileSize.width / 2.0f;
+        const float qx = std::floor(position.x / halfx);
+        const float rx = position.x - qx * halfx;
+        const float nrx = rx / halfx;
+
+        const int x = static_cast<int>(qx);
+        const int y = static_cast<int>(qy);
+
+        coords = vec(x, y);
+
+        if ((m_index == CellIndex::Even) == (parity(y) == 0)) {
+          --coords.x;
+        }
+
+        coords.x = static_cast<int>(std::floor(coords.x / 2.0f));
+
+        if (ry < offset) {
+          if ((m_index == CellIndex::Even) == (parity(y) == 0)) {
+            if (parity(x) == 0) {
+              if (nrx > nry) {
+                --coords.y;
+                ++coords.x;
+              }
+            } else {
+              if (nrx + nry < 1) {
+                --coords.y;
+              }
+            }
+          } else {
+            if (parity(x) == 0) {
+              if (nrx + nry < 1) {
+                --coords.y;
+                --coords.x;
+              }
+            } else {
+              if (nrx > nry) {
+                --coords.y;
+              }
+            }
+          }
+        }
+
+        break;
+      }
     }
 
     return coords;

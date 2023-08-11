@@ -93,6 +93,13 @@ inline namespace v1 {
     static Grid createHexagonal(Vector2i gridSize, float radius, CellAxis axis, CellIndex index);
 
     /**
+     * @brief Get the underlying cells
+     */
+    const Cells& getCells() const {
+      return *m_properties;
+    }
+
+    /**
      * @brief Set the grid size
      *
      * @param gridSize The new grid size

@@ -92,14 +92,6 @@ inline namespace v1 {
     return RectF::fromPositionSize(base, m_tileSize);
   }
 
-  namespace {
-
-    bool isDiagonallySplit(CellIndex index, int x, int y) {
-      return (index == CellIndex::Even) == (parity(x) == parity(y));
-    }
-
-  }
-
   Vector2i StaggeredCells::computeCoordinates(Vector2f position) const noexcept {
     const Vector2f half = m_tileSize / 2.0f;
 
@@ -116,26 +108,28 @@ inline namespace v1 {
 
     gf::Vector2i coords = vec(x, y);
 
+    const bool isDiagonallySplit = (m_index == CellIndex::Even) == (parity(x) == parity(y));
+
     if (m_axis == CellAxis::X) {
-      if ((isDiagonallySplit(m_index, x, y) && rx < ry) || (!isDiagonallySplit(m_index, x, y) && (rx + ry) < 1)) {
+      if ((isDiagonallySplit && rx < ry) || (!isDiagonallySplit && (rx + ry) < 1)) {
         --coords.x;
       }
 
-      coords.y = y / 2;
+      coords.y = static_cast<int>(std::floor(qy / 2));
 
-      if (parity(y) == 0 && ((isDiagonallySplit(m_index, x, y) && rx > ry) || (!isDiagonallySplit(m_index, x, y) && (rx + ry) < 1))) {
+      if (parity(y) == 0 && ((isDiagonallySplit && rx > ry) || (!isDiagonallySplit && (rx + ry) < 1))) {
         --coords.y;
       }
 
       // Log::info("position: %g %g\tq: %g %g\tr: %g %g\tcoords: %d %d\n", position.x, position.y, qx, qy, rx, ry, coords.x, coords.y);
     } else {
-      if ((isDiagonallySplit(m_index, x, y) && rx > ry) || (!isDiagonallySplit(m_index, x, y) && (rx + ry) < 1)) {
+      if ((isDiagonallySplit && rx > ry) || (!isDiagonallySplit && (rx + ry) < 1)) {
         --coords.y;
       }
 
-      coords.x = x / 2;
+      coords.x = static_cast<int>(std::floor(qx / 2));
 
-      if (parity(x) == 0 && ((isDiagonallySplit(m_index, x, y) && rx < ry) || (!isDiagonallySplit(m_index, x, y) && (rx + ry) < 1))) {
+      if (parity(x) == 0 && ((isDiagonallySplit && rx < ry) || (!isDiagonallySplit && (rx + ry) < 1))) {
         --coords.x;
       }
     }

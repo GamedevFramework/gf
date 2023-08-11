@@ -118,6 +118,15 @@ int main() {
           grids[current].grid.hover(renderer.mapPixelToCoords(event.mouseCursor.coords));
           break;
 
+        case gf::EventType::MouseButtonPressed:
+        {
+          auto coords = renderer.mapPixelToCoords(event.mouseButton.coords);
+          auto localCoords = gf::transform(grids[current].grid.getInverseTransform(), coords);
+          auto position = grids[current].grid.getCells().computeCoordinates(localCoords);
+          std::cout << "Position: " << position.x << ',' << position.y << '\n';
+          break;
+        }
+
         default:
           break;
       }

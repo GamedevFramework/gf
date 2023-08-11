@@ -40,7 +40,7 @@ inline namespace v1 {
   }
 
   Vector2i OrthogonalCells::computeCoordinates(Vector2f position) const noexcept {
-    return position / m_tileSize;
+    return vec(static_cast<int>(std::floor(position.x / m_tileSize.width)), static_cast<int>(std::floor(position.y / m_tileSize.height)));
   }
 
   Polyline OrthogonalCells::computePolyline(Vector2i coords) const {
