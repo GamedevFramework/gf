@@ -317,11 +317,11 @@ endif()
 
 target_include_directories(gfcore0
   PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
   PRIVATE
-    "${CMAKE_SOURCE_DIR}/include-priv"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../include-priv"
 )
 
 target_include_directories(gfcore0
@@ -332,21 +332,21 @@ target_include_directories(gfcore0
 
 target_include_directories(gf0
   PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
   PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}"
-    "${CMAKE_SOURCE_DIR}/include-priv"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../include-priv"
 )
 
 target_include_directories(gfnet0
   PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
   PRIVATE
-    "${CMAKE_SOURCE_DIR}/include-priv"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../include-priv"
 )
 
 if (APPLE)
