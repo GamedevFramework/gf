@@ -212,8 +212,16 @@ inline namespace v1 {
         RectF bounds = m_properties->computeCellBounds(coords);
         Vector2f position = bounds.getPosition();
         position += sheet.tileset.getOffset();
+        Vector2f boxSize = bounds.getSize();
 
-        RectF box = RectF::fromPositionSize(position, bounds.getSize());
+        // Keep the tile ratio
+        const Vector2f tileSize = sheet.tileset.getTileSize();
+        if ((tileSize.width / tileSize.height) != 1.0f)  {
+          const Vector2f ratio = tileSize / boxSize;
+          boxSize *= ratio;
+        }
+
+        RectF box = RectF::fromPositionSize(position, boxSize);
 
         // texture coords
 
