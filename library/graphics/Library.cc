@@ -24,7 +24,7 @@
 #include <cassert>
 #include <cstdio>
 
-#include <SDL.h>
+#include <SDL2/SDL.h>
 
 #include <ft2build.h>
 #include FT_FREETYPE_H

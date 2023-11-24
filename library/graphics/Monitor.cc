@@ -22,7 +22,7 @@
 
 #include <cassert>
 
-#include <SDL.h>
+#include <SDL2/SDL.h>
 
 #include <gf/Log.h>
 

@@ -24,7 +24,7 @@
 #include <cinttypes>
 #include <cstring>
 
-#include <SDL.h>
+#include <SDL2/SDL.h>
 
 #include <gf/Event.h>
 #include <gf/Log.h>

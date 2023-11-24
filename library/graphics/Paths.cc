@@ -20,7 +20,7 @@
  */
 #include <gf/Paths.h>
 
-#include <SDL.h>
+#include <SDL2/SDL.h>
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

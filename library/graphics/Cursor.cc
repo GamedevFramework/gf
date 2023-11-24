@@ -26,7 +26,7 @@
 #include <cassert>
 #include <utility>
 
-#include <SDL.h>
+#include <SDL2/SDL.h>
 
 #include <gf/Image.h>
 #include <gf/Log.h>

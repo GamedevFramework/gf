@@ -1167,7 +1167,7 @@ inline namespace v1 {
         } else if (name == "group") {
           tmx.layers.push_back(parseTmxGroupLayer(layer, ctx));
         }
-      };
+      }
 
       return true;
     }
