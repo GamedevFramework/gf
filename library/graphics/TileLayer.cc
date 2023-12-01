@@ -211,7 +211,7 @@ inline namespace v1 {
 
         RectF bounds = m_properties->computeCellBounds(coords);
         Vector2f position = bounds.getPosition();
-        position.y += bounds.getSize().width - sheet.tileset.getTileSize().width;
+        position.y += bounds.getSize().height - sheet.tileset.getTileSize().height;
         position += sheet.tileset.getOffset();
         Vector2f size = sheet.tileset.getTileSize();
 
