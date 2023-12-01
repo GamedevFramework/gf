@@ -211,17 +211,11 @@ inline namespace v1 {
 
         RectF bounds = m_properties->computeCellBounds(coords);
         Vector2f position = bounds.getPosition();
+        position.y += bounds.getSize().width - sheet.tileset.getTileSize().width;
         position += sheet.tileset.getOffset();
-        Vector2f boxSize = bounds.getSize();
+        Vector2f size = sheet.tileset.getTileSize();
 
-        // Keep the tile ratio
-        const Vector2f tileSize = sheet.tileset.getTileSize();
-        if ((tileSize.width / tileSize.height) != 1.0f)  {
-          const Vector2f ratio = tileSize / boxSize;
-          boxSize *= ratio;
-        }
-
-        RectF box = RectF::fromPositionSize(position, boxSize);
+        bounds = RectF::fromPositionSize(position, size);
 
         // texture coords
 
@@ -231,10 +225,10 @@ inline namespace v1 {
 
         Vertex vertices[4];
 
-        vertices[0].position = box.getTopLeft();
-        vertices[1].position = box.getTopRight();
-        vertices[2].position = box.getBottomLeft();
-        vertices[3].position = box.getBottomRight();
+        vertices[0].position = bounds.getTopLeft();
+        vertices[1].position = bounds.getTopRight();
+        vertices[2].position = bounds.getBottomLeft();
+        vertices[3].position = bounds.getBottomRight();
 
         vertices[0].texCoords = gf::priv::computeTextureCoords(textureCoords.getTopLeft());
         vertices[1].texCoords = gf::priv::computeTextureCoords(textureCoords.getTopRight());

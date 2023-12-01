@@ -385,9 +385,7 @@ inline namespace v1 {
 
       inflateInit2(&stream, 15 + 32); // allow to decode gzip and zlib format
 
-      int n = 0;
       for (;;) {
-        n++;
         stream.next_out = tmp;
         stream.avail_out = TmpLength;
 
@@ -437,7 +435,7 @@ inline namespace v1 {
     }
 
     std::vector<uint8_t> parseDataBuffer(const pugi::xml_node node, TmxFormat format) {
-      assert(node.name() == "data"s);
+      assert(node.name() == "data"s || node.name() == "chunk"s);
 
       std::vector<uint8_t> data;
 
