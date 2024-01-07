@@ -1,0 +1,6 @@
+CompileFlags:
+    CompilationDatabase: build
+Index:
+    StandardLibrary: Yes
+Diagnostics:
+    UnusedIncludes: Strict
