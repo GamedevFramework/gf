@@ -47,6 +47,8 @@ find_package(ZLIB REQUIRED)
 
 find_package(Threads REQUIRED)
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+
 if(GF_USE_EMBEDDED_LIBS)
   message(STATUS "Build with embedded libraries")
   set(Stb_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/library/vendor/stb")
