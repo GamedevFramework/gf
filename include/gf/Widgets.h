@@ -501,6 +501,31 @@ inline namespace v1 {
      */
     void setAnchor(Anchor anchor);
 
+     /**
+     * @brief Set the global color of the sprite
+     *
+     * This color is modulated (multiplied) with the sprite's
+     * texture. It can be used to colorize the sprite, or change
+     * its global opacity.
+     *
+     * By default, the sprite's color is opaque white.
+     *
+     * @param color New color of the sprite
+     *
+     * @sa getColor()
+     */
+    void setColor(const Color4f& color);
+
+    /**
+     * @brief Get the global color of the sprite
+     *
+     * @return Global color of the sprite
+     *
+     * @sa setColor()
+     */
+    const Color4f& getColor() const;
+
+
   private:
     void updateGeometry();
 
@@ -583,6 +608,8 @@ inline namespace v1 {
      * @sa setEmptySprite()
      */
     void setChosenSprite(const Texture& texture, const RectF& textureRect);
+
+   
 
   protected:
     void triggered() override;
