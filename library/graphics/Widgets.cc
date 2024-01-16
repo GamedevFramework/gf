@@ -341,11 +341,10 @@ inline namespace v1 {
 
   void SpriteWidget::draw(RenderTarget &target, const RenderStates& states) {
     const BasicSprite& sprite = getSprite();
-
     if (!sprite.hasTexture()) {
       return;
     }
-
+    
     RenderStates localStates = states;
 
     localStates.transform *= getTransform();
@@ -443,6 +442,17 @@ inline namespace v1 {
 
     assert(false);
     return m_defaultSprite;
+  }
+
+  
+  void SpriteWidget::setColor(const gf::Color4f& color) {
+    for (Vertex& vertex : m_vertices) {
+      vertex.color = color;
+    }
+  }
+
+  const Color4f& SpriteWidget::getColor() const {
+    return m_vertices[0].color;
   }
 
   /*

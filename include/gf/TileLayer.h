@@ -160,6 +160,8 @@ inline namespace v1 {
      */
     void setTile(Vector2i position, std::size_t tileset, int tile, Flags<Flip> flip = None);
 
+    void updateGeometry();
+
     /**
      * @brief Get a tile
      *
@@ -245,10 +247,10 @@ inline namespace v1 {
       Tileset tileset;
       VertexArray vertices;
     };
-
+    
   private:
     void fillVertexArray(std::vector<Sheet>& sheets, RectI rect) const;
-    void updateGeometry();
+    
     RectI computeOffsets() const;
 
   private:
