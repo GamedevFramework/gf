@@ -490,6 +490,16 @@ inline namespace v1 {
      */
     void setMouseCursor(const Cursor& cursor);
 
+    /**
+     * @brief Set relative mouse mode
+     *
+     * If relative, the mouse is grabbed and invisible but events are sent for
+     * relative displacement.
+     *
+     * @param relative True if the mode is relative
+     */
+    void setMouseRelative(bool relative);
+
     /** @} */
 
 

@@ -808,6 +808,12 @@ inline namespace v1 {
     SDL_CHECK(SDL_SetCursor(cursor.m_cursor));
   }
 
+  void Window::setMouseRelative(bool relative) {
+    if (SDL_SetRelativeMouseMode(relative ? SDL_TRUE : SDL_FALSE) != 0) {
+      Log::warning("Relative mode is not available.\n");
+    }
+  }
+
   void Window::makeMainContextCurrent() {
     if (SDL_CHECK_EXPR(SDL_GL_GetCurrentContext()) != m_mainContext) {
       SDL_CHECK(SDL_GL_MakeCurrent(m_window, m_mainContext));
