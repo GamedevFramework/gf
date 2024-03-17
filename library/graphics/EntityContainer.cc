@@ -40,8 +40,10 @@ inline namespace v1 {
       return e1.getPriority() < e2.getPriority();
     });
 
-    for (Entity& entity : m_entities) {
-      entity.update(time);
+    // Index-based iteration to prevent undefined behavior in case of iterator
+    // invalidation: the update member function might add new entities
+    for (size_t i = 0; i < m_entities.size(); ++i) {
+      m_entities[i].get().update(time);
     }
   }
 
