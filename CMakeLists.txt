@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.12)
 
 project(GF
   VERSION 1.2.0
@@ -84,6 +84,10 @@ if(UNIX)
   if(GF_DEV_ENABLE_ASAN)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address")
   endif()
+endif()
+
+if(NOT APPLE)
+  set(CMAKE_INSTALL_RPATH $ORIGIN)
 endif()
 
 add_subdirectory(library)
