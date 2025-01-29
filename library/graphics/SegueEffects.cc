@@ -20,16 +20,16 @@
  */
 #include <gf/SegueEffects.h>
 
-#include "generated/blackout.frag.h"
-#include "generated/checkerboard.frag.h"
-#include "generated/circle.frag.h"
-#include "generated/default.vert.h"
-#include "generated/fade.frag.h"
-#include "generated/glitch.frag.h"
-#include "generated/slide.frag.h"
-#include "generated/pixelate.frag.h"
-#include "generated/radial.frag.h"
-#include "generated/zoomblur.frag.h"
+#include "data/shaders/blackout.frag.h"
+#include "data/shaders/checkerboard.frag.h"
+#include "data/shaders/circle.frag.h"
+#include "data/shaders/default.vert.h"
+#include "data/shaders/fade.frag.h"
+#include "data/shaders/glitch.frag.h"
+#include "data/shaders/slide.frag.h"
+#include "data/shaders/pixelate.frag.h"
+#include "data/shaders/radial.frag.h"
+#include "data/shaders/zoomblur.frag.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

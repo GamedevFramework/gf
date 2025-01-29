@@ -1,77 +1,3 @@
-file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/generated")
-
-# Create gfdev_source_file tool
-
-add_subdirectory(graphics/tools)
-set(GFDEV_SOURCE_FILE_EXEC "gfdev_source_file")
-
-# process gamecontrollerdb
-
-set(GCDB_SOURCES
-  gamecontrollerdb.txt
-)
-
-set(GCDB_HEADERS "")
-
-foreach(GCDB_RELATIVE_SOURCE ${GCDB_SOURCES})
-  set(GCDB_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/vendor/SDL_GameControllerDB/${GCDB_RELATIVE_SOURCE}")
-  get_filename_component(GCDB_NAME ${GCDB_RELATIVE_SOURCE} NAME)
-  string(REPLACE "." "_" GCDB_VARIABLE ${GCDB_NAME})
-  set(GCDB_HEADER "${CMAKE_CURRENT_BINARY_DIR}/generated/${GCDB_NAME}.h")
-  add_custom_command(
-    OUTPUT "${GCDB_HEADER}"
-    COMMAND ${GFDEV_SOURCE_FILE_EXEC} "${GCDB_SOURCE}" "${GCDB_HEADER}" "gamecontrollerdb"
-    COMMENT "Compiling ${GCDB_NAME} to header"
-    DEPENDS gfdev_source_file "${GCDB_SOURCE}"
-  )
-  list(APPEND GCDB_HEADERS ${GCDB_HEADER})
-endforeach()
-
-add_custom_target(gf0_gamecontrollerdb ALL DEPENDS ${GCDB_HEADERS})
-
-# process shader files
-
-set(SHADER_SOURCES
-  graphics/data/shaders/blackout.frag
-  graphics/data/shaders/color_matrix.frag
-  graphics/data/shaders/default_alpha.frag
-  graphics/data/shaders/default.frag
-  graphics/data/shaders/default.vert
-  graphics/data/shaders/edge.frag
-  graphics/data/shaders/fxaa.frag
-#   data/shaders/simple_fxaa.frag
-  graphics/data/shaders/fade.frag
-  graphics/data/shaders/slide.frag
-  graphics/data/shaders/glitch.frag
-  graphics/data/shaders/checkerboard.frag
-  graphics/data/shaders/circle.frag
-  graphics/data/shaders/pixelate.frag
-  graphics/data/shaders/radial.frag
-  graphics/data/shaders/zoomblur.frag
-  graphics/data/shaders/light_shape.frag
-  graphics/data/shaders/light_unshadow.frag
-)
-
-set(SHADER_HEADERS "")
-
-foreach(SHADER_RELATIVE_SOURCE ${SHADER_SOURCES})
-  set(SHADER_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/${SHADER_RELATIVE_SOURCE}")
-  get_filename_component(SHADER_NAME ${SHADER_RELATIVE_SOURCE} NAME)
-  string(REPLACE "." "_" SHADER_VARIABLE ${SHADER_NAME})
-  set(SHADER_HEADER "${CMAKE_CURRENT_BINARY_DIR}/generated/${SHADER_NAME}.h")
-  add_custom_command(
-    OUTPUT "${SHADER_HEADER}"
-    COMMAND ${GFDEV_SOURCE_FILE_EXEC} "${SHADER_SOURCE}" "${SHADER_HEADER}" "${SHADER_VARIABLE}"
-    COMMENT "Compiling ${SHADER_NAME} to header"
-    DEPENDS gfdev_source_file "${SHADER_SOURCE}"
-  )
-  list(APPEND SHADER_HEADERS ${SHADER_HEADER})
-endforeach()
-
-add_custom_target(gf0_shader_headers ALL DEPENDS ${SHADER_HEADERS})
-
-# build library
-
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h @ONLY)
 
 if (NOT APPLE)
@@ -256,11 +182,6 @@ generate_export_header(gfnet0
   EXPORT_FILE_NAME NetApi.h
   STATIC_DEFINE STATIC
   PREFIX_NAME GF_
-)
-
-add_dependencies(gf0
-  gf0_shader_headers
-  gf0_gamecontrollerdb
 )
 
 if (GF_BUILD_WITH_OPENGL3)

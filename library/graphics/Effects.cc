@@ -20,11 +20,11 @@
  */
 #include <gf/Effects.h>
 
-#include "generated/default.frag.h"
-#include "generated/default.vert.h"
-#include "generated/color_matrix.frag.h"
-#include "generated/edge.frag.h"
-#include "generated/fxaa.frag.h"
+#include "data/shaders/default.frag.h"
+#include "data/shaders/default.vert.h"
+#include "data/shaders/color_matrix.frag.h"
+#include "data/shaders/edge.frag.h"
+#include "data/shaders/fxaa.frag.h"
 
 #include "config.h"
 

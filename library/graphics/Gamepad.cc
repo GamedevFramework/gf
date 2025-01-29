@@ -32,7 +32,7 @@
 #include <gfpriv/SdlDebug.h>
 
 #define GF_IMPLEMENTATION
-#include "generated/gamecontrollerdb.txt.h"
+#include "data/gamecontrollerdb.txt.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

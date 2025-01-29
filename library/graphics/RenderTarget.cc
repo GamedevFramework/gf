@@ -36,9 +36,9 @@
 #include <gfpriv/GlDebug.h>
 #include <gfpriv/GlFwd.h>
 
-#include "generated/default_alpha.frag.h"
-#include "generated/default.frag.h"
-#include "generated/default.vert.h"
+#include "data/shaders/default_alpha.frag.h"
+#include "data/shaders/default.frag.h"
+#include "data/shaders/default.vert.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
