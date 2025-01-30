@@ -16,9 +16,9 @@ jobs:
       fail-fast: false
       matrix:
         configurations:
-        - { name: Windows,  shared: "ON",   mode: Debug     }
-        - { name: Windows,  shared: "ON",   mode: Release   }
-        - { name: Windows,  shared: "OFF",  mode: Debug     }
+        - { name: Windows,  shared: "BUILD_SHARED_LIBS=ON",   mode: Debug     }
+        - { name: Windows,  shared: "BUILD_SHARED_LIBS=ON",   mode: Release   }
+        - { name: Windows,  shared: "BUILD_SHARED_LIBS=OFF",  mode: Debug     }
 
     name: Windows (${{ matrix.configurations.kind }} ${{ matrix.configurations.mode }})
     runs-on: windows-latest
@@ -62,7 +62,7 @@ jobs:
         shell: cmd
         run: |
           set PATH=%PATH%;${{github.workspace}}/gf/build/library/${{ matrix.configurations.mode }}
-          cmake  -DBUILD_SHARED_LIBS=${{ matrix.configurations.shared }} -DCMAKE_BUILD_TYPE=${{ matrix.configurations.mode }} -DGF_BUILD_GAMES=OFF -DGF_BUILD_EXAMPLES=OFF -DGF_BUILD_DOCUMENTATION=OFF -DCMAKE_TOOLCHAIN_FILE=${{github.workspace}}/vcpkg/scripts/buildsystems/vcpkg.cmake -S ${{ github.workspace }}/gf -B ${{ github.workspace }}/gf/build
+          cmake  -D${{ matrix.configurations.shared }} -DCMAKE_BUILD_TYPE=${{ matrix.configurations.mode }} -DGF_BUILD_GAMES=OFF -DGF_BUILD_EXAMPLES=OFF -DGF_BUILD_DOCUMENTATION=OFF -DCMAKE_TOOLCHAIN_FILE=${{github.workspace}}/vcpkg/scripts/buildsystems/vcpkg.cmake -S ${{ github.workspace }}/gf -B ${{ github.workspace }}/gf/build
 
       - name: Build gf
         shell: cmd
