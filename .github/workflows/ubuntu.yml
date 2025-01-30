@@ -39,8 +39,8 @@ jobs:
         run: cmake -DBUILD_SHARED_LIBS=${{ matrix.configurations.shared }} -DCMAKE_BUILD_TYPE=${{ matrix.configurations.mode }} -DGF_BUILD_GAMES=OFF -DGF_BUILD_EXAMPLES=OFF -DGF_BUILD_DOCUMENTATION=OFF -DCMAKE_UNITY_BUILD=ON -S ${{ github.workspace }} -B ${{ github.workspace }}/build
 
       - name: Build gf
-        run: cmake --build ${{ github.workspace }}/build --config ${{ env.BUILD_TYPE }} --parallel
+        run: cmake --build ${{ github.workspace }}/build --config ${{ matrix.configurations.mode }} --parallel
 
       - name: Run tests
         working-directory: ${{ github.workspace }}/build
-        run: ctest -C ${{ env.BUILD_TYPE }} -T test --output-on-failure
+        run: ctest -C ${{ matrix.configurations.mode }} -T test --output-on-failure

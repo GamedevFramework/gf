@@ -64,7 +64,7 @@ target("gf0")
     add_includedirs("include-priv")
     add_includedirs("$(buildir)/config")
     add_includedirs("library/vendor/glad/gles20/include")
-    add_packages("opengl-headers", "libsdl", "freetype")
+    add_packages("opengl-headers", "libsdl", "freetype", "pugixml")
     add_deps("gfcore0")
     set_license("Zlib")
 

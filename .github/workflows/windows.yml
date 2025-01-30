@@ -61,18 +61,18 @@ jobs:
       - name: Configure gf
         shell: cmd
         run: |
-          set PATH=%PATH%;${{github.workspace}}/gf/build/library/${{ env.BUILD_TYPE }}
+          set PATH=%PATH%;${{github.workspace}}/gf/build/library/${{ matrix.configurations.mode }}
           cmake  -DBUILD_SHARED_LIBS=${{ matrix.configurations.shared }} -DCMAKE_BUILD_TYPE=${{ matrix.configurations.mode }} -DGF_BUILD_GAMES=OFF -DGF_BUILD_EXAMPLES=OFF -DGF_BUILD_DOCUMENTATION=OFF -DCMAKE_TOOLCHAIN_FILE=${{github.workspace}}/vcpkg/scripts/buildsystems/vcpkg.cmake -S ${{ github.workspace }}/gf -B ${{ github.workspace }}/gf/build
 
       - name: Build gf
         shell: cmd
         run: |
-          set PATH=%PATH%;${{github.workspace}}/gf/build/library/${{ env.BUILD_TYPE }}
-          cmake --build ${{ github.workspace }}/gf/build --config ${{ env.BUILD_TYPE }} --parallel
+          set PATH=%PATH%;${{github.workspace}}/gf/build/library/${{ matrix.configurations.mode }}
+          cmake --build ${{ github.workspace }}/gf/build --config ${{ matrix.configurations.mode }} --parallel
 
       - name: Run tests
         shell: cmd
         working-directory: ${{ github.workspace }}/gf/build
         run: |
-          set PATH=%PATH%;${{github.workspace}}/gf/build/library/${{ env.BUILD_TYPE }}
-          ctest -C ${{ env.BUILD_TYPE }} --output-on-failure
+          set PATH=%PATH%;${{github.workspace}}/gf/build/library/${{ matrix.configurations.mode }}
+          ctest -C ${{ matrix.configurations.mode }} --output-on-failure
