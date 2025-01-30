@@ -6,18 +6,15 @@ on:
   pull_request:
     branches: [ master, develop ]
 
-env:
-  BUILD_TYPE: Release
-
 jobs:
   build:
     strategy:
       fail-fast: false
       matrix:
         configurations:
-        - { name: Linux,  shared: ON,   mode: Debug     }
-        - { name: Linux,  shared: ON,   mode: Release   }
-        - { name: Linux,  shared: OFF,  mode: Debug     }
+        - { name: Linux,  shared: "ON",   mode: Debug     }
+        - { name: Linux,  shared: "ON",   mode: Release   }
+        - { name: Linux,  shared: "OFF",  mode: Debug     }
 
     name: Linux (${{ matrix.configurations.kind }} ${{ matrix.configurations.mode }})
     runs-on: ubuntu-latest
@@ -39,7 +36,7 @@ jobs:
           ref: ${{ steps.extract_branch.outputs.branch }}
 
       - name: Configure gf
-        run: cmake -DBUILD_SHARED_LIBS=${{ matrix.configurations.shared }} -DCMAKE_BUILD_TYPE=${{ matrix.configurations.mode }} -DGF_BUILD_GAMES=OFF -DGF_BUILD_EXAMPLES=OFF -DGF_BUILD_DOCUMENTATION=OFF -DCMAKE_UNITY_BUILD=ON -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -S ${{ github.workspace }} -B ${{ github.workspace }}/build
+        run: cmake -DBUILD_SHARED_LIBS=${{ matrix.configurations.shared }} -DCMAKE_BUILD_TYPE=${{ matrix.configurations.mode }} -DGF_BUILD_GAMES=OFF -DGF_BUILD_EXAMPLES=OFF -DGF_BUILD_DOCUMENTATION=OFF -DCMAKE_UNITY_BUILD=ON -S ${{ github.workspace }} -B ${{ github.workspace }}/build
 
       - name: Build gf
         run: cmake --build ${{ github.workspace }}/build --config ${{ env.BUILD_TYPE }} --parallel

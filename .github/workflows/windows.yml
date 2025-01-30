@@ -7,7 +7,6 @@ on:
     branches: [ master, develop ]
 
 env:
-  BUILD_TYPE: Release
   VCPKG_COMMIT: 6f29f12e82a8293156836ad81cc9bf5af41fe836
   VCPKG_DEFAULT_BINARY_CACHE: ${{ github.workspace }}\vcpkg\binary-cache
 
@@ -17,9 +16,9 @@ jobs:
       fail-fast: false
       matrix:
         configurations:
-        - { name: Windows,  shared: ON,   mode: Debug     }
-        - { name: Windows,  shared: ON,   mode: Release   }
-        - { name: Windows,  shared: OFF,  mode: Debug     }
+        - { name: Windows,  shared: "ON",   mode: Debug     }
+        - { name: Windows,  shared: "ON",   mode: Release   }
+        - { name: Windows,  shared: "OFF",  mode: Debug     }
 
     name: Windows (${{ matrix.configurations.kind }} ${{ matrix.configurations.mode }})
     runs-on: windows-latest
@@ -63,7 +62,7 @@ jobs:
         shell: cmd
         run: |
           set PATH=%PATH%;${{github.workspace}}/gf/build/library/${{ env.BUILD_TYPE }}
-          cmake  -DBUILD_SHARED_LIBS=${{ matrix.configurations.shared }} -DCMAKE_BUILD_TYPE=${{ matrix.configurations.mode }} -DGF_BUILD_GAMES=OFF -DGF_BUILD_EXAMPLES=OFF -DGF_BUILD_DOCUMENTATION=OFF -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DCMAKE_TOOLCHAIN_FILE=${{github.workspace}}/vcpkg/scripts/buildsystems/vcpkg.cmake -S ${{ github.workspace }}/gf -B ${{ github.workspace }}/gf/build
+          cmake  -DBUILD_SHARED_LIBS=${{ matrix.configurations.shared }} -DCMAKE_BUILD_TYPE=${{ matrix.configurations.mode }} -DGF_BUILD_GAMES=OFF -DGF_BUILD_EXAMPLES=OFF -DGF_BUILD_DOCUMENTATION=OFF -DCMAKE_TOOLCHAIN_FILE=${{github.workspace}}/vcpkg/scripts/buildsystems/vcpkg.cmake -S ${{ github.workspace }}/gf -B ${{ github.workspace }}/gf/build
 
       - name: Build gf
         shell: cmd
