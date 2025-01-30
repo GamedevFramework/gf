@@ -32,7 +32,7 @@ if(UNIX)
   option(GF_DEV_ENABLE_ASAN "Enable Address Sanitizer" OFF)
 endif()
 
-set(GF_SHARED ${BUILD_SHARED_LIBS})
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 include(GNUInstallDirs)
 set(GF_DATADIR ${CMAKE_INSTALL_FULL_DATADIR})
@@ -43,19 +43,10 @@ find_package(SDL2 REQUIRED)
 find_package(Boost REQUIRED)
 find_package(Freetype REQUIRED)
 find_package(pugixml REQUIRED)
+find_package(Stb REQUIRED)
 find_package(ZLIB REQUIRED)
 
 find_package(Threads REQUIRED)
-
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
-
-if(GF_USE_EMBEDDED_LIBS)
-  message(STATUS "Build with embedded libraries")
-  set(Stb_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/library/vendor/stb")
-else()
-  # works on vcpkg
-  find_package(Stb REQUIRED)
-endif()
 
 if(APPLE)
   # on macos, always use OpenGL 3.3

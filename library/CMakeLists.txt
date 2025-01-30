@@ -160,30 +160,6 @@ add_library(gfnet0
   net/UdpSocket.cc
 )
 
-generate_export_header(gfcore0
-  BASE_NAME core
-  EXPORT_MACRO_NAME CORE_API
-  EXPORT_FILE_NAME CoreApi.h
-  STATIC_DEFINE STATIC
-  PREFIX_NAME GF_
-)
-
-generate_export_header(gf0
-  BASE_NAME graphics
-  EXPORT_MACRO_NAME GRAPHICS_API
-  EXPORT_FILE_NAME GraphicsApi.h
-  STATIC_DEFINE STATIC
-  PREFIX_NAME GF_
-)
-
-generate_export_header(gfnet0
-  BASE_NAME net
-  EXPORT_MACRO_NAME NET_API
-  EXPORT_FILE_NAME NetApi.h
-  STATIC_DEFINE STATIC
-  PREFIX_NAME GF_
-)
-
 if (GF_BUILD_WITH_OPENGL3)
   target_compile_definitions(gf0
     PRIVATE GF_OPENGL3
@@ -254,7 +230,6 @@ target_include_directories(gfcore0
 target_include_directories(gf0
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
   PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}"
@@ -264,7 +239,6 @@ target_include_directories(gf0
 target_include_directories(gfnet0
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
   PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../include-priv"
