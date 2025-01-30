@@ -8,7 +8,7 @@ on:
 
 env:
   BUILD_TYPE: Release
-  VCPKG_COMMIT: a42af01b72c28a8e1d7b48107b33e4f286a55ef6
+  VCPKG_COMMIT: 6f29f12e82a8293156836ad81cc9bf5af41fe836
   VCPKG_DEFAULT_BINARY_CACHE: ${{ github.workspace }}\vcpkg\binary-cache
 
 jobs:

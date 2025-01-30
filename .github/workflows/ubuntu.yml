@@ -16,7 +16,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y libsdl2-dev libboost-dev libfreetype6-dev zlib1g-dev libpugixml-dev
+          sudo apt-get install -y libsdl2-dev libboost-dev libfreetype6-dev zlib1g-dev libpugixml-dev libstb-dev
 
       - name: Extract branch name
         shell: bash
