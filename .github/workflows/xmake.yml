@@ -1,0 +1,73 @@
+name: XMakeBuild
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        configurations:
+        - { name: Windows,  runner: windows-latest, shell: pwsh, plat: windows, arch: x64,    kind: shared, mode: debug       }
+        - { name: Windows,  runner: windows-latest, shell: pwsh, plat: windows, arch: x64,    kind: shared, mode: release     }
+        - { name: Windows,  runner: windows-latest, shell: pwsh, plat: windows, arch: x64,    kind: static, mode: debug       }
+        - { name: Linux,    runner: ubuntu-latest,  shell: bash, plat: linux,   arch: x86_64, kind: shared, mode: debug       }
+        - { name: Linux,    runner: ubuntu-latest,  shell: bash, plat: linux,   arch: x86_64, kind: shared, mode: release     }
+        - { name: Linux,    runner: ubuntu-latest,  shell: bash, plat: linux,   arch: x86_64, kind: shared, mode: sanitizers  }
+        - { name: Linux,    runner: ubuntu-latest,  shell: bash, plat: linux,   arch: x86_64, kind: static, mode: debug       }
+
+    defaults:
+      run:
+        shell: ${{ matrix.configurations.shell }}
+
+    name: ${{ matrix.configurations.name }} ${{ matrix.configurations.arch }} (${{ matrix.configurations.kind }} ${{ matrix.configurations.mode }})
+    runs-on: ${{ matrix.configurations.runner }}
+    steps:
+      - name: Checkout gf
+        uses: actions/checkout@v4
+
+      - name: Configure xmake environment
+        run: echo "XMAKE_GLOBALDIR=${{ runner.workspace }}/xmake" >> $GITHUB_ENV
+        shell: bash
+
+      - name: Setup xmake
+        uses: xmake-io/github-action-setup-xmake@v1
+        with:
+          xmake-version: latest
+          actions-cache-folder: '.xmake-cache'
+          actions-cache-key: ${{ matrix.configurations.name }}-${{ matrix.configurations.arch }}
+
+      - name: Update xmake repository
+        run: xmake repo --update
+
+      - name: Retrieve dependencies hash
+        id: deps_hash
+        run: echo "hash=$(xmake l utils.ci.packageskey)" >> $GITHUB_OUTPUT
+        shell: bash
+
+      - name: Restore cached dependencies
+        id: restore-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ env.XMAKE_GLOBALDIR }}/.xmake/packages
+          key: ${{ matrix.configurations.plat }}-${{ matrix.configurations.arch }}-${{ matrix.configurations.kind }}-${{ matrix.configurations.mode }}-${{ steps.deps_hash.outputs.hash }}
+
+      - name: Install gf dependencies
+        run: xmake config --plat=${{ matrix.configurations.plat }} --arch=${{ matrix.configurations.arch }} --kind=${{ matrix.configurations.kind }} --mode=${{ matrix.configurations.mode }} --yes
+
+      - name: Save cached xmake dependencies
+        if: ${{ !steps.restore-cache.outputs.cache-hit }}
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ env.XMAKE_GLOBALDIR }}/.xmake/packages
+          key: ${{ steps.restore-cache.outputs.cache-primary-key }}
+
+      - name: Build gf
+        run: xmake --yes
+
+      - name: Test gf
+        run: xmake test -v
