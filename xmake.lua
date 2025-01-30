@@ -50,6 +50,7 @@ target("gfcore0")
     add_includedirs("$(buildir)/config")
     add_packages("pugixml", "stb")
     add_packages("boost", "zlib", { public = true })
+    add_rpathdirs("$ORIGIN")
     set_license("Zlib")
 
 target("gf0")
@@ -67,6 +68,7 @@ target("gf0")
     add_includedirs("library/vendor/glad/gles20/include")
     add_packages("opengl-headers", "libsdl", "freetype", "pugixml")
     add_deps("gfcore0")
+    add_rpathdirs("$ORIGIN")
     set_license("Zlib")
 
 target("gfnet0")
@@ -81,6 +83,7 @@ target("gfnet0")
     add_includedirs("include", { public = true })
     add_includedirs("include-priv")
     add_deps("gfcore0")
+    add_rpathdirs("$ORIGIN")
     if is_plat("linux") then
         add_defines("_POSIX_C_SOURCE=200809L")
     end
