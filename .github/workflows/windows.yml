@@ -54,7 +54,7 @@ jobs:
         shell: cmd
         run: |
           set PATH=%PATH%;${{github.workspace}}/gf/build/library/${{ env.BUILD_TYPE }}
-          cmake -DGF_USE_EMBEDDED_LIBS=OFF -DGF_BUILD_GAMES=OFF -DGF_BUILD_EXAMPLES=OFF -DGF_BUILD_DOCUMENTATION=OFF -DGF_DEBUG=OFF -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DCMAKE_TOOLCHAIN_FILE=${{github.workspace}}/vcpkg/scripts/buildsystems/vcpkg.cmake -S ${{ github.workspace }}/gf -B ${{ github.workspace }}/gf/build
+          cmake -DGF_BUILD_GAMES=OFF -DGF_BUILD_EXAMPLES=OFF -DGF_BUILD_DOCUMENTATION=OFF -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DCMAKE_TOOLCHAIN_FILE=${{github.workspace}}/vcpkg/scripts/buildsystems/vcpkg.cmake -S ${{ github.workspace }}/gf -B ${{ github.workspace }}/gf/build
 
       - name: Build gf
         shell: cmd
@@ -67,4 +67,4 @@ jobs:
         working-directory: ${{ github.workspace }}/gf/build
         run: |
           set PATH=%PATH%;${{github.workspace}}/gf/build/library/${{ env.BUILD_TYPE }}
-          ctest -j $(nproc) -C ${{ env.BUILD_TYPE }} --output-on-failure
+          ctest -C ${{ env.BUILD_TYPE }} --output-on-failure
