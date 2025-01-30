@@ -244,9 +244,6 @@ inline namespace v1 {
       return getNeighborDiamondRange(pos, 2);
     }
 
-    /** @} */
-
-  private:
     NeighborSquareRange<I> getNeighborSquareRange(Vector<I, 2> pos, I n) const noexcept {
       assert(isValid(pos));
 
@@ -268,6 +265,8 @@ inline namespace v1 {
 
       return NeighborDiamondRange<I>{ Range<I>{ colMin, colMax + 1 }, Range<I>{ rowMin, rowMax + 1 }, pos, n };
     }
+
+    /** @} */
 
   private:
     Vector<I, 2> m_size;
