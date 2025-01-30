@@ -26,9 +26,6 @@
 #include <ctime>
 
 #include <chrono>
-#include <utility>
-
-#include "config.h"
 
 namespace gf {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -36,13 +33,7 @@ inline namespace v1 {
 #endif
 
   // default value
-  Log::Level Log::s_level =
-#if GF_DEBUG
-    Log::Debug
-#else
-    Log::Warn
-#endif
-  ;
+  Log::Level Log::s_level = Log::Debug;
 
   void Log::setLevel(Level level) {
     s_level = level;

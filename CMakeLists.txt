@@ -5,26 +5,17 @@ project(GF
   LANGUAGES CXX C
 )
 
-include(GenerateExportHeader)
-
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set(CMAKE_VISIBILITY_INLINES_HIDDEN ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-if(NOT MSVC AND (NOT DEFINED CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL ""))
-  message(STATUS "Setting build type to 'RelWithDebInfo' as none was specified.")
-  set(CMAKE_BUILD_TYPE "RelWithDebInfo")
-endif()
-
 option(BUILD_SHARED_LIBS "Build the library as a shared library" ON)
 option(BUILD_TESTING "Build tests" ON)
 
-option(GF_DEBUG "Activate debug build" ON)
 option(GF_BUILD_WITH_OPENGL3 "Build with OpenGL 3.3 instead of OpenGL ES 2.0" OFF)
 option(GF_BUILD_EXAMPLES "Build examples" ON)
 option(GF_BUILD_DOCUMENTATION "Build documentation (needs Doxygen)" ON)
 option(GF_BUILD_GAMES "Build games" OFF)
-option(GF_USE_EMBEDDED_LIBS "Build the library with the submodule libraries" ON)
 
 set(GF_PACKAGE_SUFFIX "~${CMAKE_SYSTEM_NAME}" CACHE STRING "CPack package suffix")
 
@@ -52,23 +43,6 @@ if(APPLE)
   # on macos, always use OpenGL 3.3
   set(GF_BUILD_WITH_OPENGL3 ON)
   find_package(OpenGL REQUIRED)
-endif()
-
-if(MSVC)
-  message(STATUS "Using MSVC compiler")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /DNOMINMAX /W4 /utf-8")
-  link_directories(${Boost_LIBRARY_DIRS})
-  # for more information on the last two switches:
-  # - https://blogs.msdn.microsoft.com/vcblog/2016/06/07/standards-version-switches-in-the-compiler/
-  # - https://blogs.msdn.microsoft.com/vcblog/2016/11/16/permissive-switch/
-else()
-  message(STATUS "Using GCC or Clang compiler")
-  # assume it's a GNU-like compiler (GCC, clang)
-  set(CMAKE_CXX_FLAGS                 "-Wall -Wextra -pedantic")
-  set(CMAKE_CXX_FLAGS_DEBUG           "-O1 -g")
-  set(CMAKE_CXX_FLAGS_MINSIZEREL      "-Os -DNDEBUG")
-  set(CMAKE_CXX_FLAGS_RELEASE         "-O3 -DNDEBUG")
-  set(CMAKE_CXX_FLAGS_RELWITHDEBINFO  "-O2 -g")
 endif()
 
 if(UNIX)
