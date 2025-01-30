@@ -53,6 +53,10 @@ if(NOT APPLE)
   set(CMAKE_INSTALL_RPATH $ORIGIN)
 endif()
 
+if(MSVC)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /DNOMINMAX /utf-8 /wd4251")
+endif()
+
 add_subdirectory(library)
 
 if(GF_BUILD_EXAMPLES)
