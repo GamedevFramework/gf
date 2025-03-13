@@ -1,7 +1,7 @@
 set_project("gf")
 set_version("1.3.0", { soname = true })
 
-add_requires("freetype", "libsdl", "opengl-headers", "pugixml", "zlib")
+add_requires("freetype", "libsdl2", "opengl-headers", "pugixml", "zlib")
 add_requires("boost", { configs = { container = true }})
 add_requires("gtest", { configs = { gmock = false }})
 add_requires("stb", { system = false })
