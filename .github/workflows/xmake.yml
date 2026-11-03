@@ -28,14 +28,14 @@ jobs:
     runs-on: ${{ matrix.configurations.runner }}
     steps:
       - name: Checkout gf
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Configure xmake environment
         run: echo "XMAKE_GLOBALDIR=${{ runner.workspace }}/xmake" >> $GITHUB_ENV
         shell: bash
 
       - name: Setup xmake
-        uses: xmake-io/github-action-setup-xmake@v1
+        uses: xmake-io/github-action-setup-xmake@v1.2.5
         with:
           xmake-version: latest
           actions-cache-folder: '.xmake-cache'
@@ -51,7 +51,7 @@ jobs:
 
       - name: Restore cached dependencies
         id: restore-cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v6
         with:
           path: ${{ env.XMAKE_GLOBALDIR }}/.xmake/packages
           key: ${{ matrix.configurations.plat }}-${{ matrix.configurations.arch }}-${{ matrix.configurations.kind }}-${{ matrix.configurations.mode }}-${{ steps.deps_hash.outputs.hash }}
@@ -61,7 +61,7 @@ jobs:
 
       - name: Save cached xmake dependencies
         if: ${{ !steps.restore-cache.outputs.cache-hit }}
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@v6
         with:
           path: ${{ env.XMAKE_GLOBALDIR }}/.xmake/packages
           key: ${{ steps.restore-cache.outputs.cache-primary-key }}
