@@ -7,7 +7,7 @@ on:
     branches: [ master, develop ]
 
 env:
-  VCPKG_COMMIT: 6f29f12e82a8293156836ad81cc9bf5af41fe836
+  VCPKG_COMMIT: afa249f12f52ed8a3b919f195495ba8b330288d1
   VCPKG_DEFAULT_BINARY_CACHE: ${{ github.workspace }}\vcpkg\binary-cache
 
 jobs:
@@ -25,12 +25,12 @@ jobs:
     steps:
       - name: vcpkg cache
         id: cache-vcpkg
-        uses: actions/cache@v3
+        uses: actions/cache@v6
         with:
           path: vcpkg
           key: ${{ runner.os }}-vcpkg-${{ env.VCPKG_COMMIT }}
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
         if: steps.cache-vcpkg.outputs.cache-hit != 'true'
         with:
           repository: Microsoft/vcpkg
@@ -51,7 +51,7 @@ jobs:
         run: echo "branch=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_OUTPUT
         id: extract_branch
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
         with:
           repository: GamedevFramework/gf
           submodules: recursive
